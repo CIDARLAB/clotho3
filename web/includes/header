@@ -1,0 +1,30 @@
+<div id="header" class="condensed"> 
+    <div class="container"> 
+        <div id="logo">
+            <h1><a href="/servlet/page?HOMEPAGE"><span>Clotho Domain Hub</span></a></h1> 
+        </div>
+        <div id="nav">
+            <div id="tab_nav_container">
+                <a class="navLink navBorder" id="seeTabs">Tabs <span style="font-size: 18px; vertical-align:sub">&#x25BC;</span></a>
+                <div id="tab_nav"></div>
+            </div>
+            <a class="navLink" id="browse" href="/servlet/page?BROWSE">Browse</a>
+            <a class="navLink" id="learn" href="/servlet/page?TRAILS">Learn</a>
+            <a class="navLink" id="work" href="/servlet/page?WORKSPACE">Work</a>
+            <a class="navLink" id="mystuff" href="#mystuff">My Stuff</a>
+            <a class="navLink user" id="bio" href="/servlet/page?BIO">Welcome, User</a>
+        </div> 
+    </div>
+</div> 
+
+<div id="command-bar"> 
+    <div class="container" id="command-bar-container">
+        <div id="theQuery-help"><a href="#help"><span>Help</span></a></div>
+        <form id="commandBar" method="get" action="http://www.clothocad.org/search">
+        <input type="text" id="theQuery" name="q" size="255" maxlength="255" value="Enter your command or search term" onfocus="if(theQuery.value=='Enter your command or search term'){theQuery.value=''}" onBlur="if(theQuery.value==''){theQuery.value='Enter your command or search term'}"/>
+        <!--<input type="submit" id="theQuery-button" id="sbb" alt="Search" onclick="if(theQuery.value=='' || theQuery.value=='Enter your command or search term'){theQuery.value='DEFAULT_TERM'}"/>-->
+        </form>
+        <div id="theQuery-button"><a href="#submit"><span>Go</span></a></div>
+        <div id="theQuery-suggestions"><ul><h5>Top Hits</h5><li><a class="theQuery-command">yada yadyadadadda</a></li><li><a class="theQuery-command">alskjdfsldjfhsakldf</a></li></ul><ul><h5>Other Recommendations</h5><li><a>I'm a link but dont update the dialog</a></li><li>This one isn't a link</li></ul></div>
+    </div> 
+</div>

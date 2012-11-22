@@ -1,0 +1,60 @@
+<html><head><title></title>
+<script language="JavaScript">
+<!--
+
+var numQues = 1;
+var numChoi = 3;
+
+var answers = new Array(1);
+answers[0] = "C▼TCGA  G";
+
+function getScore(form) {
+  var score = 0;
+  var currElt;
+  var currSelection;
+
+  for (i=0; i<numQues; i++) {
+	currElt = i*numChoi;
+	for (j=0; j<numChoi; j++) {
+	  currSelection = form.elements[currElt + j];
+	  if (currSelection.checked) {
+		if (currSelection.value == answers[i]) {
+		  score++;
+		  break;
+		}
+	  }
+	}
+  }
+
+  score = Math.round(score/numQues*100);
+  form.percentage.value = score + "%";
+
+  var correctAnswers = "";
+  for (i=1; i<=numQues; i++) {
+	correctAnswers += i + ". " + answers[i-1] + "\r\n";
+  }
+  form.solutions.value = correctAnswers;
+
+}
+
+// -->
+</script>
+</head>
+
+<body>
+
+<form name="quiz">
+1. What is the recognition sequence for XhoI?<br>
+<input type="radio" name="q1" value="C▼TCGA  G">C▼TCGA  G<br>
+<input type="radio" name="q1" value="C▼ATTA  G">C▼ATTA  G<br>
+<input type="radio" name="q1" value="A▼CGCG  T">A▼CGCG  T<br>
+<p>
+
+<input type="button" value="Get score" onClick="getScore(this.form)">
+<input type="reset" value="Clear"><p>
+Score = <input type=text size=15 name="percentage"><br>
+Correct answers:<br>
+<textarea name="solutions" wrap="virtual" rows="4" cols="40"></textarea>
+</form>
+
+</body></html>

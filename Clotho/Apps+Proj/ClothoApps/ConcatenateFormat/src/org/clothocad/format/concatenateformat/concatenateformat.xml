@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<plugin>
+<type>ClothoFormat</type>
+<version>1.0</version>
+<classname>org-clothocad-format-concatenateformat-connect</classname>
+<description>Format with no rules on sequence, it just concatenates parts and vectors</description>
+<help>http://wiki.bu.edu/ece-clotho/index.php/Format:_Concatenate_Format</help>
+<displayname>Concatenate Format</displayname>
+<uuid>org-clothocad-format-concatenateformat-connect</uuid>
+<downloadlink>http://wiki.bu.edu/ece-clotho/index.php/Format:_Concatenate_Format</downloadlink>
+<author>J. Christopher Anderson</author>
+<iconpath>org/clothocad/format/concatenateformat/logo.png</iconpath>
+</plugin>-->
+<plugin>
+    <type>ClothoFormat</type>
+    <version>1.0</version>
+    <classname>org-clothocad-format-concatenateformat-connect</classname>
+    <description>Format with no rules on sequence, it just concatenates parts and vectors</description>
+    <displayname>Concatenate Format</displayname>
+    <uuid>org-clothocad-format-concatenateformat-connect</uuid>
+    <!--<screenshotpath></screenshotpath>-->
+    <author>J.Christopher Anderson</author>
+    <iconpath>org/clothocad/format/concatenateformat/logo.png</iconpath>
+    <!--<dependency>none</dependency>-->
+    <!--<dependency>none2</dependency>-->
+    <help>
+        <helpurl>http://wiki.bu.edu/ece-clotho/index.php/Format:_Concatenate_Format</helpurl>
+        <helpdescription>For more information please see the help url</helpdescription>
+        <!--<helpcommand>Command1</helpcommand>-->
+        <!--<helpcommand>Command2</helpcommand>-->
+    </help>
+</plugin>

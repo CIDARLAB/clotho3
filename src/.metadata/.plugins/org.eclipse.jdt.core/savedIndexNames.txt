@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+C:\Users\Kevin Meng\Documents\3 Anderson Lab\NewClotho\src\.metadata\.plugins\org.eclipse.jdt.core
+1353419357.index

@@ -1,0 +1,10 @@
+#quiz_workspace {background: #363636; min-height: 600px; margin: 0; padding: 20px; min-width: 910px; position:relative;}
+#quiz_droppables {position: relative; background:#484848; display:block;}
+#quiz_answers {position: absolute; margin: 10px auto; bottom:0;}
+.answer_container {float: left; display: block; width: 240px; height: 215px; margin: 0 10px 10px 0; padding: 15px 0 0; background:#7F7F7F;}
+.answer_container h5 {padding: 0 10px 5px; text-align:center}
+.droppable-quiz-item {float: left; display: block; width: 200px; height: 40px; padding: 5px; margin: 0 10px 10px 0; background: #3D586B; z-index: 3; border: 1px solid #009;}
+.droppable-quiz-item.success {background: #0C6;}
+.droppable-answer {float: left; display: block; width: 240px; height:200px; padding:0; background:#999999;}
+#quiz_feedback {}
+#quiz_submit {display: block; width: 50px; height: 50px;}

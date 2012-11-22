@@ -1,0 +1,23 @@
+<div class="clear"></div>
+<div id="footer">
+    <div class="container">
+    <div id="footerNav">
+        <ul id="footer_links">
+            <li><a href="http://www.clothocad.org/index.php/background/">Background</a></li>
+            <li><a href="http://www.clothocad.org/index.php/team/">Team</a></li>
+            <li><a href="http://www.clothocad.org/index.php/how_to/">How-to</a></li>
+            <li><a href="http://www.clothocad.org/index.php/forum/">Forum</a></li>
+            <li><a href="http://clothohelp.org" target="_blank">Wiki</a></li>
+            <li><a href="http://www.clothocad.org/index.php/contact/">Contact</a></li>
+            <li><a href="http://www.clothocad.org/index.php/download/">Download Clotho</a></li>
+            <li class="last"><a href="http://www.clothocad.org/index.php/app_store/">App Store</a></li>
+        </ul>
+    </div>
+    <div id="footer_copyright">Copyright 2012 Clotho</div>
+    <div id="footer_logos">
+        <a href="http://www.autodesk.com" class="autodesk_logo" target="_blank"></a>
+        <a href="http://www.quintarabio.com/" class="quintara_logo" target="_blank"></a>
+        <a href="http://www.synberc.org" class="synberc_logo" target="_blank"></a>
+        <a href="http://qb3.org" class="qb3_logo" target="_blank"></a>
+    </div> 
+</div>

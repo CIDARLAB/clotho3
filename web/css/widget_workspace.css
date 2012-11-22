@@ -1,0 +1,7 @@
+#widget_space_root {background: #363636; min-height: 700px; max-height: 700px; margin: 0; padding: 20px; min-width: 910px; position: relative;}
+.widget {background: #BBBBBB; border: 0; float: left; display: block; position: absolute; padding: 1.5em; margin: 0;}
+.widget-container {height: inherit; width: inherit; overflow: hidden;}
+.square-widget {width: 150px; height: 150px;}
+.resizable {}
+#add_widget {z-index: 1000; display: block; position: absolute; left: 10px; bottom: 10px; width: 36px; height: 36px; background: url(../resources/add_circle.png) top left no-repeat; cursor: pointer;}
+.widget_close_button {display: block; position: absolute; top: -8px; left: -9px; width: 29px; height: 29px; background: url(../resources/close-button.png) top left no-repeat; cursor: pointer; z-index: 1000}

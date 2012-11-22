@@ -1,0 +1,125 @@
+<!--#include virtual="include/top" -->
+	<title>Clotho - bio prototype</title>
+	<meta name="description" content="Clotho Project homepage" />
+    <!--resources-->
+<!--#include virtual="include/css" -->
+<!--#include virtual="include/scripts" -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("a.rolloverThumb").click(function(e) {
+				e.preventDefault(); 
+				galleryRollover($(this).attr("uuid"));
+			});
+			
+			function galleryRollover(uuid) {
+				//This is the default stuff that is shown
+				var material = '<h3 class="bottom">' + $("a[uuid=" + uuid+ "]").attr("title") + '</h3><p>This is some placeholder we could probably do without...</p> \n\
+				<div class="preview_vidContainer"><iframe width="420" height="315" src="http://www.youtube.com/embed/8aTDCZIhcY8" frameborder="0" allowfullscreen></iframe></div>';
+				//wrap
+				var wrapped = '<div id="previewContainer"><div class="preview_close_button"></div>' + material + '</div>';
+				//show
+				$("#gallery_bigPreview").empty().html(wrapped);
+				activate_close();
+				
+			}
+			
+			function activate_close() {
+				$(".preview_close_button").click(function() {$(this).parent().slideUp(200)})
+			}
+			
+		});
+	</script>
+</head>
+<body>
+<div id="page_wrapper" class="light">
+<!--#include virtual="include/header" -->
+	<div id="wrapper"> 
+		<div class="container" id="main-container">
+		<div id="main-content">
+			<div id="main-content-dialog"></div>
+			
+			<div id="profile">
+				<div id="prof_left" class="span-7">
+					<div id="prof_picture" class="shadowBox prof_picture_default"><!--will insert image if a user has one, otherwise add class default--></div>
+					<div class="shadowBox padded">
+						<h3 class="bottom">Badges</h3>
+						<p>this is going to be dynamicly generated down the line. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+					</div>
+					<div class="shadowBox padded">
+						<h3 class="bottom">Certifications</h3>
+						<p>this is going to be dynamicly generated down the line. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+					</div>
+					<div class="shadowBox padded">
+						<h3 class="bottom">Accounts</h3>
+						<p>this is going to be dynamicly generated down the line. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+					</div>
+					
+				</div>
+				<div id="prof_right" class="span-17 last">
+					<div id="prof_overview" class="shadowBox">
+						<div class="padded"> 
+							<h2>Bob Jones</h2>
+							<h3>User's Headline</h3>
+							<h4>Clotho User Status</h4>
+						</div>
+						<div id="prof_blurb"><div class="padded">
+							<p>this is a blurb. they talk about themselves. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+						</div></div>
+					</div>
+					
+					<div class="shadowBox padded">
+						<h3>My Stuff</h3>
+						<p class="red">Will be thumbs. -- Want 2 rows. public = show contributions... owner = saved/most-used</p>
+						<h4>Educational</h4>
+						<ul class="previewGallery">
+							<li><a class="rolloverThumb" title="FIRST lecture item" uuid="tester"><img src="/resources/lecture.png" /></a></li>
+							<li><a class="rolloverThumb" title="SECOND lecture item" uuid="2222222"><img src="/resources/lecture.png" /></a></li>
+							<li><a class="rolloverThumb" title="THIRD lecture item" uuid="3333333"><img src="/resources/lecture.png" /></a></li>
+							<li><a class="rolloverThumb" title="FOURTH lecture item" uuid="4444444"><img src="/resources/lecture.png" /></a></li>
+							<li><a class="rolloverThumb" title="FIFTH lecture item" uuid="5555555"><img src="/resources/lecture.png" /></a></li>
+						</ul>
+						
+						<div id="gallery_bigPreview"></div>
+						
+						<h4>Clotho Additions</h4>
+						<ul class="previewGallery">
+							<li><a class="rolloverThumb" title="FIRST resource item" uuid="tester1"><img src="/resources/DNA.png" /></a></li>
+							<li><a class="rolloverThumb" title="SECOND resource item" uuid="tester2"><img src="/resources/DNA.png" /></a></li>
+							<li><a class="rolloverThumb" title="THIRD resource item" uuid="tester3"><img src="/resources/DNA.png" /></a></li>
+							<li><a class="rolloverThumb" title="FOURTH resource item" uuid="tester4"><img src="/resources/DNA.png" /></a></li>
+							<li><a class="rolloverThumb" title="FIFTH resource item" uuid="tester5"><img src="/resources/DNA.png" /></a></li>
+						</ul>
+						<a href="#mystuff" class="gallery_more">More...</a>
+					</div>
+					
+					<div class="shadowBox padded">
+						<h3>Education</h3>
+						<h4>UC Berkeley</h4>
+						<p>this is some div that will be dynamicly generated down the line. they will go here if they exist in the JSON object passed (which means there should be a clear heirarchical structure to the object, so that any objects inside a certain parent object will be pushed to this part of the page.</p>
+					</div>
+					
+					<div class="shadowBox padded">
+						<h3 class="bottom">Work</h3>
+						<p>this is going to be dynamicly generated down the line. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+					</div>
+					
+					<div class="shadowBox padded">
+						<h3 class="bottom">Publications</h3>
+						<p>this is going to be dynamicly generated down the line. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+					</div>
+					
+					<div class="shadowBox padded">
+						<h3 class="bottom">Patents</h3>
+						<p>this is going to be dynamicly generated down the line. blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb blurb</p>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		</div>
+	</div>
+<!--#include virtual="include/footer" -->
+</div>
+</body>
+</html>

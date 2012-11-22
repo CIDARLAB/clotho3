@@ -1,0 +1,17 @@
+<script src="/scripts/jquery.js" type="text/javascript"></script>
+<script src="/scripts/jquery-ui.min.js" type="text/javascript"></script> <!--later we'll move these to the google CDN hosted ones - they're faster and stuff -->
+<script src="/scripts/clotholib/libpage.js" type="text/javascript"></script>
+<script src="/scripts/clotholib/libcookie.js" type="text/javascript"></script>
+<script src="/scripts/clotholib/libtransport.js" type="text/javascript"></script>
+<script src="/scripts/clotholib/libsend.js" type="text/javascript"></script>
+
+<script src="/scripts/command_bar.js" type="text/javascript"></script>
+<script src="/scripts/navigation_bar.js" type="text/javascript"></script>
+<script src="/scripts/help_framework.js" type="text/javascript"></script>
+<script src="/scripts/widget_space.js" type="text/javascript"></script>
+<script src="/scripts/schema_editor.js" type="text/javascript"></script>
+
+<script src="/scripts/clotholib/collector.js" type="text/javascript"></script>
+<script src="/scripts/clotholib/librecv.js" type="text/javascript"></script>
+<script src="/scripts/clotholib/libsignal.js" type="text/javascript"></script>
+<script src="/scripts/clotholib/API.js" type="text/javascript"></script>
