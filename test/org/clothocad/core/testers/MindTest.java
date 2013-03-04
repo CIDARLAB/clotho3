@@ -22,11 +22,11 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
 
-package Testers;
+package org.clothocad.core.testers;
 
 import javax.script.ScriptException;
-import org.clothocad.core.aspects.Communicator.Mind.Mind;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.layers.communication.mind.Mind;
 
 /**
  * @author John Christopher Anderson

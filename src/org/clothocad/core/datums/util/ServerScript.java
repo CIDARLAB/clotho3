@@ -23,15 +23,19 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.datums.util;
 
-import org.clothocad.core.aspects.Communicator.ServerSideAPI;
+import java.util.Iterator;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.layers.communication.ServerSideAPI;
+import org.clothocad.core.util.Logger;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.python.core.Py;
+import org.python.core.PySystemState;
 
 /* This one deals with passing json:
  * http://stackoverflow.com/questions/1078419/java-scriptengine-using-value-on-java-side
@@ -67,18 +71,55 @@ public class ServerScript implements Script {
     }
 
  
-    public String run(JSONObject jsondata) throws Exception {
-        //Create the engnine for the language of this script
-        ScriptEngineManager sem = new ScriptEngineManager();
-        ScriptEngine engine = sem.getEngineByName(language.name());
+    public String run(JSONObject jsondata) 
+    		throws Exception {
+    	
 
+        if(Language.JavaScript.toString().equals(language.name())) {
+            ScriptEngine engine = new ScriptEngineManager().getEngineByName(language.name());
+    		return this.runJavaScript(engine, jsondata);
+    	} else if(Language.python.toString().equals(language.name())) {
+        	PySystemState engineSys = new PySystemState();
+        	engineSys.path.append(Py.newString("/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7"));
+        	engineSys.path.append(Py.newString("/Library/Python/2.7/site-packages/biopython-1.60-py2.7-macosx-10.7-intel.egg"));
+        	Py.setSystemState(engineSys);
+
+        	//Create the engine for the language of this script
+            ScriptEngine engine = new ScriptEngineManager().getEngineByName(language.name());
+    		return this.runPython(engine, jsondata);
+    	} else {
+    		throw new Exception("Clotho does not support the "+language.name()+" scripting language!");
+    	}
+    }
+    
+    private String runPython(ScriptEngine engine, JSONObject jsondata) 
+        	throws ScriptException, JSONException {
+
+    	Iterator<String> it = jsondata.keys();
+    	while(it.hasNext()) {
+    		String key = it.next();
+    		engine.put(key, jsondata.get(key));
+    	}    	
+    	engine.eval(script);
+    	
+        try {
+            Boolean out = (Boolean) true;
+            return "{ return: "+out.toString()+" }";
+        } catch(ClassCastException e) {}
+
+        return (String)null;
+    }
+
+    private String runJavaScript(ScriptEngine engine, JSONObject jsondata) 
+    	throws ScriptException, JSONException {
         String methodName = "runMethod";
         
         //Inject the api into the engineServerSideAPI.get();
         engine.put("clotho", api);
         
         //Inject the input object into engine
-        engine.put("myJSONtext", jsondata.toString());        
+        engine.put("myJSONtext", jsondata.toString());      
+        
         engine.eval("var inputs = eval('(' + myJSONtext + ')');");
         
         JSONArray array = jsondata.names();
@@ -87,7 +128,7 @@ public class ServerScript implements Script {
             engine.eval("var " + token + " = inputs." + token + ";");
         }
         
-    //    engine.eval("println('...js script handling ' + JSON.stringify(inputs));");
+        // engine.eval("println('...js script handling ' + JSON.stringify(inputs));");
         String runscript = "function " + methodName + "(inputs) { " + script + "}";
         Logger.log(Logger.Level.INFO, "...about to execute script");
 
@@ -99,7 +140,8 @@ public class ServerScript implements Script {
 
         // invoke the run function
         Logger.log(Logger.Level.INFO, "About to evaluate:");
-        engine.eval("println('232inputs : ' + JSON.stringify(inputs));");
+        engine.eval("println('232inputs : ' + inputs);");
+        //engine.eval("println('232inputs : ' + JSON.stringify(inputs));");
         engine.eval("println('233runmethod is : ' + runMethod);");
 
         Object oresult = engine.eval("runMethod(inputs);");
@@ -131,7 +173,7 @@ public class ServerScript implements Script {
         } catch(Exception e) {}
 
         Logger.log(Logger.Level.WARN, "...returning null");
-        return null;
+        return (String)null;
     }
     
     private String script;

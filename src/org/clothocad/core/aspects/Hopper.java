@@ -27,6 +27,7 @@ package org.clothocad.core.aspects;
 import java.util.HashMap;
 import java.util.UUID;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.util.Logger;
 
 /**
  * The hopper is where Doo's are held while a process is going on elsewhere.

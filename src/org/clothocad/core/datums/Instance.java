@@ -37,17 +37,29 @@ import org.json.JSONObject;
  */
 
 
-public class Instance extends JSONObject implements Sharable {
+public class Instance 
+	extends JSONObject 
+	implements Sharable {
 
+	private Schema schema;
+	
     public Instance() {}
     
-    protected Instance(String json) throws JSONException, org.json.JSONException {
+    protected Instance(String json) 
+    		throws JSONException, org.json.JSONException {
         super(json);
     }
     
+    public Instance(String json, Schema schema) 
+    		throws Exception {
+        super(json);
+        this.schema = schema;
+    }
+
     public static Instance create(Person author, Schema schema, String json) {
         try {
-            Instance out = new Instance(json);
+        	
+            Instance out = new Instance(json, schema);
             out.put("schemaId", schema.getId());
             if(author!=null) {
                 out.put("authorId", author.getId());
@@ -67,6 +79,12 @@ public class Instance extends JSONObject implements Sharable {
     }
 
 
+    /**
+    public Schema getSchema() {
+    	return this.schema;
+    }
+    **/
+    
     @Override
     public Person extractAuthor() {
         try {

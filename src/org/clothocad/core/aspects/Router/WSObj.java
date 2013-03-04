@@ -26,12 +26,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
 import org.eclipse.jetty.websocket.WebSocket;
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.util.Logger;
 
 /**
  * @author Kelvin Li
  */
-class WSObj implements WebSocket.OnTextMessage {
+public class WSObj implements WebSocket.OnTextMessage {
     private WSObj() {}
 
     @Override

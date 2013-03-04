@@ -27,14 +27,14 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.aspects.Communicator.Communicator;
-import org.clothocad.core.aspects.Communicator.Mind.Mind;
-import org.clothocad.core.aspects.Communicator.Mind.PageMode;
-import org.clothocad.core.aspects.Communicator.SendChannels;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.layers.communication.Communicator;
+import org.clothocad.core.layers.communication.SendChannels;
+import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.layers.communication.mind.PageMode;
+import org.clothocad.core.util.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -76,8 +76,8 @@ public class Router implements Aspect {
      * propagate incoming messages "upward"
      * 
      * JCA:  This is the first bottleneck entry point for a command coming from the Client
-     * Previous to this call, the message could be handled by different mechnisms such as WebSocket
-     * or Servelets, but they all get relayed here into this one spot, regardless of channels or 
+     * Previous to this call, the message could be handled by different mechanisms such as WebSocket
+     * or Servlets, but they all get relayed here into this one spot, regardless of channels or 
      * anything like that.  All client traffic comes through this point.
      */
     void receiveMessage(String socket_id,
@@ -150,10 +150,10 @@ public class Router implements Aspect {
             doo.message = new JSONObject(doo.messageStr);
             String ephemeral_id = doo.message.getString("ephemeral_link_page_id");
             String page_mode = doo.message.getString("page_mode");
-Logger.log(Logger.Level.INFO, "linking w/ ephemeral ID: " + ephemeral_id);
+            Logger.log(Logger.Level.INFO, "linking w/ ephemeral ID: " + ephemeral_id);
             mind.linkPage(doo.socketId,
                           ephemeral_id,
-//JCA:  this is ackward calls, should do it some other way
+//JCA:  this is akward calls, should do it some other way
                           Enum.valueOf(PageMode.class, page_mode));
     }
 

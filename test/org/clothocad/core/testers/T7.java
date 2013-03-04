@@ -21,7 +21,7 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-package Testers;
+package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.List;

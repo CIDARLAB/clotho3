@@ -1,6 +1,6 @@
 package org.clothocad.core.aspects.Interpreter;
 
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.util.Logger;
 
 /**
  * Singleton trainer used as developer interface to store all command-to-action 

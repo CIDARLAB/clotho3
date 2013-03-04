@@ -1,8 +1,8 @@
-package Testers;
+package org.clothocad.core.testers;
 
 import java.util.Set;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.util.Logger;
 
 class IntprT1 {
     public static void test1() {

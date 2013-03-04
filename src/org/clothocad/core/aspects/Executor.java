@@ -26,6 +26,8 @@ package org.clothocad.core.aspects;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.util.ServerScript;
+import org.clothocad.core.layers.communication.Callback;
+import org.clothocad.core.util.Logger;
 import org.json.JSONObject;
 
 /*
@@ -67,7 +69,10 @@ public final class Executor implements Aspect {
         doo.setMessage("Executor Starting to run doo");
         if(runCanDooIt(doo)) {
             doo.setMessage("Executor says it can runCanDooIt");
+
             JSONObject result = runDooit(doo);
+            System.out.println("[Executor.run] got JSONObject -> "+result);
+            
             if(result==null) {
                 doo.setMessage("Executor results of runDooIt were null");
                 callback.onFailure(null);
@@ -81,23 +86,24 @@ public final class Executor implements Aspect {
     
     //7/1 correct
     private synchronized boolean runCanDooIt( ExecutorDoo doo ) {
-        try {
-            //Get the language and script
-            doo.setMessage("Executor.runCanDooIt about to test");
-            ServerScript candooit = doo.assistant.getCanDooIt();
-            
-            
-            String resultStr = candooit.run(doo.inputs);
-            Boolean bool = Boolean.parseBoolean(resultStr);
-            return bool;
-        } catch (Exception e) {
-            doo.setMessage("Executor.runCanDooIt threw an exception for some reason");
-            Logger.log(Logger.Level.WARN,
-                       "This needs to relay a developer message as the candooit method failed to run properly",
-                       e);
-            doo.terminate();
-            return false;
-        }
+    	if(null != doo) {
+	        try {
+	            //Get the language and script
+	            doo.setMessage("Executor.runCanDooIt about to test");
+	            ServerScript candooit = doo.assistant.getCanDooIt();            
+	            
+	            String resultStr = candooit.run(doo.inputs);
+	            Boolean bool = Boolean.parseBoolean(resultStr);
+	            return bool;
+	        } catch (Exception e) {
+	            doo.setMessage("Executor.runCanDooIt threw an exception for some reason");
+	            Logger.log(Logger.Level.WARN,
+	                       "This needs to relay a developer message as the candooit method failed to run properly",
+	                       e);
+	            doo.terminate();
+	        }
+    	}
+        return false;
     }
     
     private synchronized String escape(String input) {
@@ -127,7 +133,7 @@ public final class Executor implements Aspect {
                        "This needs to relay a developer message as the rundooit method failed to run properly",
                        e);
             doo.terminate();
-            return null;
+            return (JSONObject)null;
         }
     }
 

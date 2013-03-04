@@ -83,7 +83,7 @@ public class Person extends Instance {
     }
     
     public static Schema getSchema() {
-        if(personSchema==null) {
+    	if(personSchema == null) {
             String json = ""
                     + "{\"authorId\":\"static-admin-instance-is-uuid\",\"dateCreated\":{\"absolute\":1345997642813,\"day\":26,\"hour\":9,\"millis\":813,\"minute\":14,\"month\":\"August\",\"second\":2,\"year\":2012},\"dateLastAccessed\":{\"absolute\":1345997642814,\"day\":26,\"hour\":9,\"millis\":814,\"minute\":14,\"month\":\"August\",\"second\":2,\"year\":2012},\"dateLastModified\":{\"absolute\":1345997642814,\"day\":26,\"hour\":9,\"millis\":814,\"minute\":14,\"month\":\"August\",\"second\":2,\"year\":2012},\"description\":\"The Sharable representation of a singular human being.\",\"fields\":{\"middlename\":{\"example\":\"Marcus\",\"permissions\":1,\"type\":\"STRING\"},\"nickname\":{\"example\":\"Bob\",\"permissions\":1,\"type\":\"STRING\"},\"email\":{\"example\":\"bob@bob.com\",\"permissions\":1,\"type\":\"STRING\"},\"givenname\":{\"example\":\"William\",\"permissions\":1,\"type\":\"STRING\"},\"surname\":{\"example\":\"Fiddleston\",\"permissions\":1,\"type\":\"STRING\"},\"displayname\":{\"example\":\"bob.fiddleston\",\"permissions\":1,\"type\":\"STRING\"}},\"id\":\"static-person-schema-is-uuid\",\"indexingScript\":{\"language\":\"JavaScript\",\"script\":\"return true;\"},\"instanceCount\":0,\"largeIconURL\":null,\"name\":\"Person\",\"permissions\":{\"entries\":[],\"restOfWorld\":0},\"queryingScript\":{\"language\":\"JavaScript\",\"script\":\"return true;\"},\"smallIconURL\":null,\"validationScript\":{\"language\":\"JavaScript\",\"script\":\"return true;\"},\"viewId\":null}"
                     + "";
@@ -174,12 +174,12 @@ public class Person extends Instance {
     }
 
     public static void main(String[] args) {
-        System.out.println(Person.getSchema().toJSON());
+        //System.out.println(Person.getSchema().toJSON());
 
         //http://jsonformatter.curiousconcept.com/
         //http://www.freeformatter.com/json-formatter.html
     }
 
-private static Schema personSchema = null;
-private static Person adminPerson = null;
+    private static Schema personSchema = null;
+    private static Person adminPerson = null;
 }

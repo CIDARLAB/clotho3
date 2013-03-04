@@ -4,10 +4,13 @@
  */
 package org.clothocad.core.datums;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jcanderson
  */
-public interface Datum {
-    String getId();
+public interface Datum 
+	extends Serializable {
+	String getId();
 }

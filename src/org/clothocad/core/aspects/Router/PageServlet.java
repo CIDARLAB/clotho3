@@ -6,8 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.ssi.SSIServlet;
+import org.clothocad.core.layers.communication.mind.PageMode;
 import org.clothocad.core.settings.Settings;
-import org.clothocad.core.aspects.Communicator.Mind.PageMode;
 
 class PageServlet extends SSIServlet {
     @Override

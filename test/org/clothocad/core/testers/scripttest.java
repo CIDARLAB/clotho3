@@ -3,7 +3,7 @@
  * Expects the file 'scripttest.js' to be in the current working
  * directory of the running Java process.
  */
-package Testers;
+package org.clothocad.core.testers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.util.Logger;
 
 public class scripttest {
     public static void main(String[] args) {

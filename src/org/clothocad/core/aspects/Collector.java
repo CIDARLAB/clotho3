@@ -26,8 +26,11 @@ package org.clothocad.core.aspects;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
+
+import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.objbases.Person;
+import org.clothocad.core.util.Logger;
 
 /**
  * @author jcanderson

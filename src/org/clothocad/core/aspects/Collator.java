@@ -23,6 +23,8 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects;
 
+import org.clothocad.core.aspects.Aspect;
+
 /**
  * @author jcanderson
  */

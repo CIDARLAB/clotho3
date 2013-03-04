@@ -25,7 +25,7 @@ package org.clothocad.core.aspects.Router;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.util.Logger;
 
 /**
  * Helper object to parse/serialize (socket_id, channel, message, flags)

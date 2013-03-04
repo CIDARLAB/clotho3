@@ -187,7 +187,7 @@ public class Ambassador implements Aspect {
     	}
         if (count % 30 == 0) {
             if (a) {
-                sendClothoMessage();     // Try to send to the port it is currently listening to the new IP address
+                sendClothoMessage(null, null);     // Try to send to the port it is currently listening to the new IP address
             }
         }
     }

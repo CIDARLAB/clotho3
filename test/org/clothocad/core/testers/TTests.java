@@ -20,22 +20,18 @@ PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS.
  */
-package org.clothocad.core.aspects.Communicator;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
-import org.clothocad.core.datums.Doo;
-import org.clothocad.core.aspects.Communicator.Mind.Mind;
+package org.clothocad.core.testers;
 
-class CommunicatorDoo extends Doo {
-    public CommunicatorDoo(Doo doo) {
-        super(doo, false);
-        setMessage("Submitting a runSubmission");
-    }        
-    Mind mind = null;
-    /*TODO: Page is not publicly accessible*/
-    /*Page page = null;*/
-    JSONObject message = null;
-    JSONObject result;
+/**
+ * @author John Christopher Anderson
+ */
+public class TTests {
+    public static void main(String[] args) {
+        T1.main(args);
+        T2.main(args);
+        T3.main(args);
+        T4.main(args);
+        T6.main(args);
+    }
 }

@@ -73,9 +73,9 @@ public class Registrar {
             if(true) {
                 return out.toJSON();
             }
-            return null;
+            //return null;
         } catch(Exception err) {
-            return null;
         }
+        return (JSONObject)null;
     }
 }

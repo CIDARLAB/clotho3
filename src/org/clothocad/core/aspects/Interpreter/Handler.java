@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Iterator;
-import org.clothocad.core.aspects.Logger;
+
+import org.clothocad.core.util.Logger;
+
 import static org.clothocad.core.aspects.Interpreter.Utilities.comb;
 
 class Handler {

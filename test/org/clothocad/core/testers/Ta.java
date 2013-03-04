@@ -21,7 +21,7 @@ PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
-package Testers;
+package org.clothocad.core.testers;
 
 import flexjson.JSONSerializer;
 import java.util.ArrayList;

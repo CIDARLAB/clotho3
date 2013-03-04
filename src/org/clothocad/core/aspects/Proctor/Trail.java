@@ -27,12 +27,12 @@ package org.clothocad.core.aspects.Proctor;
 import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable.SharableType;
 import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.datums.util.Permissions;
+import org.clothocad.core.util.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

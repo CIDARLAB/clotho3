@@ -30,8 +30,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.clothocad.core.aspects.FileUtils;
-import org.clothocad.core.aspects.Logger;
+
+import org.clothocad.core.util.FileUtils;
+import org.clothocad.core.util.Logger;
 
 /* TODO: special-case the root path "/" */
 class StaticServlet extends HttpServlet {

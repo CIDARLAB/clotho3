@@ -1,4 +1,4 @@
-package Testers;
+package org.clothocad.core.testers;
 
 import java.util.Set;
 import org.clothocad.core.aspects.Interpreter.Interpreter;

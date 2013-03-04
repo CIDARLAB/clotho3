@@ -21,13 +21,12 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
 
-package Testers;
+package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Instance;
@@ -37,12 +36,13 @@ import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.FieldType;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.datums.util.ServerScript;
+import org.clothocad.core.util.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 /**
- * This test creates the makeabuddy assisant, which I've already renamed accordingly the uuid
+ * This test creates the makeabuddy assistant, which I've already renamed accordingly the uuid
  * @author John Christopher Anderson
  */
 
@@ -132,5 +132,5 @@ public class T3 {
             System.exit(0);
             return null;
         }
-}
+    }
 }

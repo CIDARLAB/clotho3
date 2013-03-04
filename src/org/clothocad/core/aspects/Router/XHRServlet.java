@@ -38,8 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import org.clothocad.core.aspects.Logger;
-import org.clothocad.core.aspects.FileUtils;
+import org.clothocad.core.util.FileUtils;
+import org.clothocad.core.util.Logger;
 
 /**
  * @author Kelvin Li

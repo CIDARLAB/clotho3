@@ -37,9 +37,9 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.clothocad.core.aspects.FileUtils;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.settings.Settings;
+import org.clothocad.core.util.FileUtils;
+import org.clothocad.core.util.Logger;
 
 /**
  * This class exists merely to keep `Router.java` short and sweet
@@ -92,7 +92,7 @@ class RouterServer {
         context.addServlet(new ServletHolder(new StaticServlet()), "/");
 
         List<EchoServlet> echo_servlets =
-            createEchoServlets("./web/includes/");
+            createEchoServlets("./trunk/web/includes/");
         if (echo_servlets == null)
             return null;
         for (EchoServlet s : echo_servlets) {

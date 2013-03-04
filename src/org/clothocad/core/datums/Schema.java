@@ -43,12 +43,18 @@ import org.json.JSONObject;
  */
 
 /**
- * A Schema is the schema that must be obeyed by an ObjBase
+ * A Schema is the schema that must be obeyed by an Instance
  * @author jcanderson
  */
 public class Schema implements Sharable {
 
     private Schema() {
+    
+    }
+    
+    public Schema(String sName, List<ClothoField> lstFields) {
+    	this.name = sName;
+    	this.fields = lstFields;    	
     }
     
     /**

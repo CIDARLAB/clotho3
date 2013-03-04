@@ -40,9 +40,33 @@ public class ClothoField {
         this.permissions = permissions;
     }
     
+    public ClothoField(String token, FieldType type) {
+        this.token = token;
+        this.type = type;
+        this.example = null;
+        this.permissions = -1;
+    }
+
     
      public String token;     //Whatever token is used for the thing
-     public FieldType type;   // such as SCHEMA, INT, LIST, etc.
+     public String getToken() {
+		return token;
+	}
+
+	public FieldType getType() {
+		return type;
+	}
+
+	public String getExample() {
+		return example;
+	}
+
+	public int getPermissions() {
+		return permissions;
+	}
+
+
+	public FieldType type;   // such as SCHEMA, INT, LIST, etc.
      public String example;   //A string representation of a primitive, or a uuid ref to a Schema
      public int permissions;  //the Visible Anywhere kinds of stuff
 }

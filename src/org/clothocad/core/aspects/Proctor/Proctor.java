@@ -28,11 +28,11 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.aspects.Communicator.Mind.PageMode;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ServerScript;
+import org.clothocad.core.layers.communication.mind.PageMode;
 import org.json.JSONObject;
 
 /**

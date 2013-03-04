@@ -1,8 +1,9 @@
 package org.clothocad.core.aspects.Interpreter;
 
-import org.clothocad.core.aspects.FileUtils;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.util.FileUtils;
+import org.clothocad.core.util.Logger;
+
 import com.thoughtworks.xstream.XStream;
 import java.util.TreeMap;
 import java.util.HashSet;

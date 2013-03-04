@@ -21,12 +21,12 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
 
-package Testers;
+package org.clothocad.core.testers;
 
 import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.datums.Instance;
 import org.clothocad.core.datums.Schema;
+import org.clothocad.core.util.Logger;
 
 /**
  * Confirms that the Persistor finds the Feature and gfp datums

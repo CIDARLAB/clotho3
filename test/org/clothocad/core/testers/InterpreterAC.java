@@ -1,8 +1,8 @@
-package Testers;
+package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
-import org.clothocad.core.aspects.Logger;
+import org.clothocad.core.util.Logger;
 
 class InterpreterAC {
     public static AutoComplete completer1() {

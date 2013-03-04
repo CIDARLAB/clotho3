@@ -50,7 +50,7 @@ public class Function implements Sharable {
      * them and outputs new ones.
      * 
      * @param name is a name for the Assistant
-     * @param description a natural language description of the function of the assistnt
+     * @param description a natural language description of the function of the assistant
      * @param dooIt a Script that inputs the inputArguments, runs its thing, and returns outputArguments
      * @param canDooIt a Script that inputs the inputArguments and returns true or false
      * @param inputArguments a map of tokens, like "my_sequence" to a Schema UUID (it remains loosely-coupled)

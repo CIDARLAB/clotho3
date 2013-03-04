@@ -21,14 +21,14 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-package Testers;
+package org.clothocad.core.testers;
 
 import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.aspects.Communicator.Mind.Mind;
-import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.objbases.Person;
+import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.util.Logger;
 
 /**
  * Tests the NameSpace functionality of the Mind

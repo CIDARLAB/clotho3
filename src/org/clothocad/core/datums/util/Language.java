@@ -30,7 +30,7 @@ public enum Language {
     
         JavaScript,
         PERL,
-        PYTHON,
+        python,
         GROOVY,
         WEB_WIDGET_JS,
         WEB_WIDGET_HTML,

@@ -23,12 +23,15 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects;
 
-import java.io.File;
 import java.util.HashMap;
-import com.thoughtworks.xstream.XStream;
 import java.util.List;
+
+import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Datum;
-import org.clothocad.core.datums.Datum;
+import org.clothocad.core.util.FileUtils;
+import org.clothocad.core.util.Logger;
+
+import com.thoughtworks.xstream.XStream;
 
 /**
  * @author jcanderson
@@ -59,6 +62,7 @@ public class Persistor implements Aspect {
 
     public List<String> loadWordBank () {
         String xml = FileUtils.readFile(dir + "WordBank/words");
+        
         if (xml == "") {
             Logger.log(Logger.Level.WARN, 
                         "No word bank existing.");
