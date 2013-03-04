@@ -1,0 +1,10 @@
+There's a sort of "management" hierarchy among the classes in
+the packages `Communicator` and `Communicator.Mind`.
+
+Communicator.Communicator (public, singleton)
+  |-Communicator.CL*
+  \-Communicator.Mind.Mind (public)
+      |-Communicator.Mind.AddPageDoo
+      \-Communicator.Mind.ClientConfiguration
+          \-Communicator.Mind.Page
+              \-Communicator.Mind.Widget
