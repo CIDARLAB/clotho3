@@ -103,7 +103,8 @@ public class T3 {
         }
     }
     
-    public static Person createCindyPersonInstance() {
+    public static void createCindyPersonInstance() {
+    	/**
         try {
             JSONObject fields = new JSONObject();
             
@@ -126,11 +127,10 @@ public class T3 {
             cindy = Person.create(obj);
             Persistor.get().persistDatum(cindy);
             Logger.log(Logger.Level.INFO, cindy.getId() + "   " + cindy.getName() + "\n...was created successfully, all good!");
-            return cindy;
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(0);
-            return null;
         }
+        **/
     }
 }

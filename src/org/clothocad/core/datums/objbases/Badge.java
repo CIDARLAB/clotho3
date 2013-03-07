@@ -25,6 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.datums.objbases;
 
 import org.clothocad.core.datums.Instance;
+import org.clothocad.core.datums.Sharable;
 
 
 /**
@@ -49,8 +50,14 @@ import org.clothocad.core.datums.Instance;
  */
 
 
-public class Badge extends Instance {
-//
+public class Badge 
+		extends Sharable {
+
+	public Badge(Person author) {
+		super(author, SharableType.BADGE);
+	}
+
+	//
 //    @Override
 //    public boolean canView(String userId) {
 //        //Badges are always viewable by anybody

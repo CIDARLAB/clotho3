@@ -35,9 +35,13 @@ import org.clothocad.core.util.Logger;
 public class T2 {
     public static void main(String[] args) {
         //Get the "Person" schema's contents
-        Schema feature = (Schema) Collector.get().getDatum("specific-simplefeature-is-uuid");
+    	
+    	// instead of querying by UUID we can now query by name
+        //Schema feature = (Schema) Collector.get().getDatum("specific-simplefeature-is-uuid");
+        Schema feature = (Schema) Collector.get().getDatum("SimpleFeature");
+        
         if (feature == null) {
-            Logger.log(Logger.Level.FATAL, "Could not retrieve 'specific-simplefeature-is-uuid'");
+            Logger.log(Logger.Level.FATAL, "Could not retrieve 'SimpleFeature'");
             return;
         }
         Logger.log(Logger.Level.INFO, feature.getId());

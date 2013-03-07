@@ -42,9 +42,14 @@ import org.json.JSONObject;
  */
 
 
-public class Trail extends Paver {
+public class Trail 
+		extends Paver {
 
-    /**
+    public Trail(Person author) {
+		super(author, SharableType.TRAIL);
+	}
+
+	/**
      * This is the commandList for the entire trail, which basically means relay
      * the first Paver's makeCommandList to display the first paver
      * @return 
@@ -104,15 +109,6 @@ public class Trail extends Paver {
        return displayData;
     }
 
-    @Override
-    public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    @Override
-    public SharableType type() {
-        return SharableType.TRAIL;
-    }
     //Trail-specific fields
     private ArrayList<String> pavers = new ArrayList<String>();  //Is really a List<Paver>, loose-coupled
 }

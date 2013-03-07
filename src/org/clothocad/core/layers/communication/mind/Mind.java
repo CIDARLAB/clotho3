@@ -60,7 +60,9 @@ import org.clothocad.core.util.Logger;
  * @author John Christopher Anderson
  */
 
-public final class Mind implements Datum, Aspect {
+public final class Mind 
+		extends Datum
+		implements Aspect {
     /**
      * This is not a serverside API method
      * @param client

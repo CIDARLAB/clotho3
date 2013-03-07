@@ -23,90 +23,60 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Datum;
-import org.clothocad.core.util.FileUtils;
-import org.clothocad.core.util.Logger;
-
-import com.thoughtworks.xstream.XStream;
+import org.clothocad.core.layers.persistence.flat.FlatFilePersistor;
+import org.clothocad.core.layers.persistence.mongodb.MongoDBPersistor;
 
 /**
  * @author jcanderson
  */
-public class Persistor implements Aspect {
-    public Datum loadDatum (String uuid) {
-        String xml = FileUtils.readFile(dir + "Datum/" + uuid);
-        if (xml.equals("")) {
-            Logger.log(Logger.Level.WARN,
-                       "There is no data with that uuid");
-            return null;
-        } else {
-            return (Datum) xstream.fromXML(xml);
-        }
-    }
+public abstract class Persistor 
+	implements Aspect {
 
-    public HashMap<String, Integer> loadFeature (String feature) {
-        String xml = FileUtils.readFile(dir + "FeaturesDB/" + feature);
-        if (xml == "") {
-            return null;
-        } else {
-            @SuppressWarnings("unchecked")
-            HashMap<String, Integer> out = (HashMap<String, Integer>)
-                                                    xstream.fromXML(xml);
-            return out;
-        }
-    }
+	private static final int N = 1;     
+		// N==1 -> MongoDB persistor
+		// N==2 -> FlotFile persistor
+	
+	public abstract boolean persist(Collection<Datum> col);	
+    public abstract boolean persistDatum(Datum datum);
 
-    public List<String> loadWordBank () {
-        String xml = FileUtils.readFile(dir + "WordBank/words");
-        
-        if (xml == "") {
-            Logger.log(Logger.Level.WARN, 
-                        "No word bank existing.");
-            return null;
-        } else {
-            return (List<String>) xstream.fromXML(xml);
-        }
-    }
+	public abstract Datum loadDatum (String uuid);
+    public abstract HashMap<String, Integer> loadFeature (String feature);
+    public abstract List<String> loadWordBank ();
+    public abstract void persistFeature (Object obj, String filePath);
+    public abstract void persistWordBank (List<String> wordBank);
 
-    public void persistDatum (Datum obj) {
-        String path = FileUtils.getFilePath(obj.getId(), dir + "Datum");
-        try {
-            String xml = xstream.toXML(obj);
-            FileUtils.writeFile(xml, path);
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-    }
-
-    public void persistFeature (Object obj, String filePath) {
-        String path = FileUtils.getFilePath(filePath, dir + "FeaturesDB");
-        try {
-            String xml = xstream.toXML(obj);
-            FileUtils.writeFile(xml, path);
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-    }
-
-    public void persistWordBank (List<String> wordBank) {
-        String path = FileUtils.getFilePath("words", dir + "WordBank/");
-        try {
-            String xml = xstream.toXML(wordBank);
-            FileUtils.writeFile(xml, path);
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-    }
-
+    
+    
     public static Persistor get() {
-        return singleton;
+    	switch(N) {
+    	case 1:
+    		return getMongoDBPersistor();    		
+    	case 2:
+    		return getFlatFilePersistor();
+    	}
+    	return (Persistor)null;
     }
     
-    private static final Persistor singleton = new Persistor();
-    public static final String dir = "database/";
-    private XStream xstream = new XStream();
+    private static MongoDBPersistor mongo = null;
+    private static MongoDBPersistor getMongoDBPersistor() {
+    	if(null == mongo) {
+    		mongo = new MongoDBPersistor();
+    	}
+    	return mongo;
+    }
+
+    private static FlatFilePersistor flat = null;
+    private static FlatFilePersistor getFlatFilePersistor() {
+    	if(null == flat) {
+    		flat = new FlatFilePersistor();
+    	}
+    	return flat;
+    }
+
 }

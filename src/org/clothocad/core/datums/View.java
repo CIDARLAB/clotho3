@@ -1,19 +1,14 @@
 package org.clothocad.core.datums;
 
-import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
 import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.util.ServerScript;
-import org.json.JSONObject;
-import org.json.JSONException;
 import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Permissions;
+import org.clothocad.core.datums.util.ServerScript;
+
+import flexjson.JSONDeserializer;
 
 
 /**
@@ -23,14 +18,10 @@ import org.clothocad.core.datums.util.Permissions;
  * 
  * @author John Christopher Anderson
  */
-public class View implements Sharable {
+public class View 
+		extends Sharable {
 
-    private View() {
-        
-    }
-
-    public static View create(
-            Person author, 
+    private View(Person author, 
             String name, 
             String description,
             List<ClothoField> inputArguments,
@@ -38,29 +29,38 @@ public class View implements Sharable {
             String graphicsScript,
             String onShowScript,
             String onUpdateScript) {
+    	
+    	super(author, SharableType.VIEW);
         
-        View out = new View();
-        if(author!=null) {
-            out.authorId = author.getId();
-        }
-        out.inputArguments = inputArguments;
-        out.canUpdate = canUpdate;
-        out.graphicsScript = graphicsScript;
-        out.onShowScript = onShowScript;
-        out.onUpdateScript = onUpdateScript;
-        out.name = name;
-        out.description = description;
+        this.inputArguments = inputArguments;
+        this.canUpdate = canUpdate;
+        this.graphicsScript = graphicsScript;
+        this.onShowScript = onShowScript;
+        this.onUpdateScript = onUpdateScript;
+        this.name = name;
+        this.description = description;
         
-        Collector.get().add(out);
-        return out;
-    }
-    
-    @Override
-    public Person extractAuthor() {
-        Person out = (Person) Collector.get().getDatum(authorId);
-        return out;
     }
 
+    public static View create(
+            Person author, 
+            String name, 
+            String description,
+            List<ClothoField> inputArgs,
+            ServerScript canUpdate, 
+            String graphicsScript,
+            String onShowScript,
+            String onUpdateScript) {
+        
+    	View view = new View(author, name, description, 
+    			inputArgs, canUpdate, graphicsScript, 
+    			onShowScript, onUpdateScript);
+    	
+        Collector.get().add(view);
+        return view;
+    }
+    
+    /***
     @Override
     public JSONObject toJSON() {
         try {
@@ -72,33 +72,13 @@ public class View implements Sharable {
             return null;
         }
     }
-
+	***/
+    
     public static View deserialize(String json) {
         View out = new JSONDeserializer<View>().deserialize(json, View.class);
         return out;
     }
 
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public String getAuthorId() {
-        return authorId;
-    }
-
-    public ClothoDate getDateCreated() {
-        return dateCreated;
-    }
-
-    public ClothoDate getDateLastAccessed() {
-        return dateLastAccessed;
-    }
-
-    public ClothoDate getDateLastModified() {
-        return dateLastModified;
-    }
 
     public String getDescription() {
         return description;
@@ -144,26 +124,6 @@ public class View implements Sharable {
         return this.onShowScript;
     }
 
-    @Override
-    public SharableType type() {
-        return SharableType.VIEW;
-    }
-
-    @Override
-    public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
-        //Check that the requestor has set permissions on this object, if not return false
-        
-        //Run validation on newvalue, if it fails, return false
-        
-        
-        //set the new data
-        View newView = deserialize(newvalue.toString());
-        
-        //Save things
-        Persistor.get().persistDatum(newView);
-        return true;
-    }
-    
     //Still need to implement this:
     private List<ClothoField> inputArguments;
     private ServerScript canUpdate;
@@ -184,10 +144,4 @@ public class View implements Sharable {
     private String largeIconURL;
     
     private int instanceCount = 0;
-    
-    private ClothoDate dateCreated = new ClothoDate();
-    private ClothoDate dateLastModified = new ClothoDate();
-    private ClothoDate dateLastAccessed = new ClothoDate();
-
-
 }

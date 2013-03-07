@@ -292,7 +292,7 @@ private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:ev
             data.put("description", description.getText());
             
             //Save it
-            view.set(data, Person.getAdmin(), null);
+            //view.set(data, Person.getAdmin(), null);
         } catch (JSONException ex) {
             Logger.getLogger(ViewEditor.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -3,7 +3,7 @@
  * Expects the file 'scripttest.js' to be in the current working
  * directory of the running Java process.
  */
-package org.clothocad.core.testers;
+package org.clothocad.core.scripting;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +41,7 @@ public class scripttest {
         engine.put("eggs", j_eggs);
 
         /* Feed file handle of script into engine and execute */
-        File f = new File("scripttest.js");
+        File f = new File("test/org/clothocad/core/scripting/scripttest.js");
         engine.eval(new FileReader(f));
 
         /* Get output */

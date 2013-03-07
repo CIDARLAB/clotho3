@@ -60,14 +60,11 @@ public class Settings {
         return 1025;
     }
 
-    private class SettingsDatum implements Datum {
+    private class SettingsDatum 
+    		extends Datum {
         private boolean recordAllDoos = false;
         private String id = "settings-datum-is-uuid";
-
-        @Override
-        public String getId() {
-            return id;
-        }
     }
+    
     private static SettingsDatum datum;
 }

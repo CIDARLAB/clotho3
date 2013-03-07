@@ -24,12 +24,11 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums;
 
-import org.clothocad.core.datums.util.ClothoDate;
-import org.clothocad.core.datums.util.Permissions;
-import org.clothocad.core.datums.objbases.Person;
-import java.util.UUID;
 import org.clothocad.core.aspects.Collector;
-import org.codehaus.jettison.json.JSONException;
+import org.clothocad.core.datums.objbases.Person;
+import org.clothocad.core.datums.util.Permissions;
+import org.clothocad.core.util.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -38,79 +37,55 @@ import org.json.JSONObject;
 
 
 public class Instance 
-	extends JSONObject 
-	implements Sharable {
+	extends Sharable {
+
+	private static final long serialVersionUID = 7626966374337532946L;
 
 	private Schema schema;
-	
-    public Instance() {}
-    
-    protected Instance(String json) 
-    		throws JSONException, org.json.JSONException {
-        super(json);
-    }
-    
-    public Instance(String json, Schema schema) 
-    		throws Exception {
-        super(json);
-        this.schema = schema;
-    }
+    private Permissions perms = new Permissions();
 
-    public static Instance create(Person author, Schema schema, String json) {
-        try {
-        	
-            Instance out = new Instance(json, schema);
-            out.put("schemaId", schema.getId());
-            if(author!=null) {
-                out.put("authorId", author.getId());
-            }
-            out.put("id", UUID.randomUUID().toString());
-            ClothoDate date = new ClothoDate();
-            out.put("dateCreated", date.toJSON());
-            out.put("dateLastModified", date.toJSON());
-            out.put("dateLastAccessed", date.toJSON());
-            Permissions perms = new Permissions();
-            out.put("permissions", perms.toJSON());
-            return out;
-        } catch(Exception err) {
-            err.printStackTrace();
-            return null;
-        }
+	private Instance(Person author, Schema schema, String json) 
+			throws JSONException {
+		super(author, SharableType.INSTANCE);
+		this.json = new JSONObject(json);
+		
+		this.schema = schema;
+	}
+
+
+    public static Instance create(Person author, Schema schema, String json) 
+    		throws JSONException {
+    	Instance inst = new Instance(author, schema, json);
+    	Collector.get().add(inst);
+    	return inst;
     }
 
 
-    /**
     public Schema getSchema() {
     	return this.schema;
     }
-    **/
     
-    @Override
-    public Person extractAuthor() {
-        try {
-            String authorId = super.getString("authorId");
-            Person out = (Person) Collector.get().getDatum(authorId);
-            return out;
-        } catch(Exception err) {
-            err.printStackTrace();
-            return null;
-        }
+    
+    public String getString(String key) {
+    	if(null != this.json && null != key) {
+    		try {
+				return json.getString(key);
+			} catch (JSONException e) {
+	            Logger.log(Logger.Level.WARN, key+" not found!", e);
+			}
+    	}
+    	return null;
     }
     
-    @Override
-    public JSONObject toJSON() {
-        JSONObject out = new JSONObject();
-        return this;
-    }
-
     public static Instance deserialize(String jsonstr) {
         try {
-            return new Instance(jsonstr);
+            return new Instance(null, null, jsonstr);
         } catch (Exception ex) {
             return null;
         }
     }
     
+    /**
     @Override
     public String getId() {
         try {
@@ -119,14 +94,12 @@ public class Instance
             return null;
         }
     }
-
+    **/
+    
+    /***
     @Override
     public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    @Override
-    public SharableType type() {
-        return SharableType.INSTANCE;
-    }
+    ***/    
 }

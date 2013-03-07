@@ -33,14 +33,14 @@ import org.clothocad.core.datums.Datum;
  */
 
 
-public class Sister implements Datum {
+public class Sister 
+		extends Datum {
     public Sister(String id, String url, int port) {
         this.id = id;
         this.url = url;
         this.port = port;
     }
 
-    @Override
     public String getId() {
         return id;
     }

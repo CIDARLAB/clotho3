@@ -40,9 +40,26 @@ import org.json.JSONObject;
  * TODO: *ADD ADD AND REMOVE METHODS FOR ARGUMENTS
  * @author John Christopher Anderson
  */
-public class Function implements Sharable {
+public class Function 
+		extends Sharable {
 
-    private Function() { 
+    private Function(Person author,
+            String name, 
+            String description,
+            ServerScript dooIt,
+            ServerScript canDooIt,
+            List<ClothoField> inputArguments,
+            List<ClothoField> outputArguments) {
+    	
+    	super(author, SharableType.FUNCTION);
+    	
+        this.name = name;
+        this.description = description;
+        this.id = UUID.randomUUID().toString();
+        this.dooIt = dooIt;
+        this.canDooIt = canDooIt;
+        this.inputArguments = inputArguments;
+        this.outputArguments = outputArguments;
     }
 
     /**
@@ -62,20 +79,11 @@ public class Function implements Sharable {
             String description,
             ServerScript dooIt,
             ServerScript canDooIt,
-            List<ClothoField> inputArguments,
-            List<ClothoField> outputArguments ) {
+            List<ClothoField> inputArgs,
+            List<ClothoField> outputArgs ) {
         
-        Function out = new Function();
-        out.name = name;
-        out.description = description;
-        if(author!=null) {
-            out.authorId = author.getId();
-        }
-        out.id = UUID.randomUUID().toString();
-        out.dooIt = dooIt;
-        out.canDooIt = canDooIt;
-        out.inputArguments = inputArguments;
-        out.outputArguments = outputArguments;
+        Function out = new Function(
+        		author, name, description, dooIt, canDooIt, inputArgs, outputArgs);
         
         Collector.get().add(out);
         return out;
@@ -95,12 +103,8 @@ public class Function implements Sharable {
 
     }
 
-    @Override
-    public Person extractAuthor() {
-        Person out = (Person) Collector.get().getDatum(authorId);
-        return out;
-    }
-    
+
+    /***
     @Override
     public JSONObject toJSON() {
         try {
@@ -112,6 +116,7 @@ public class Function implements Sharable {
             return null;
         }
     }
+    **/
     
     public static Function deserialize(String json) {
         Function out = new JSONDeserializer<Function>().deserialize(json, Function.class);
@@ -129,18 +134,6 @@ public class Function implements Sharable {
 
     public ServerScript getCanDooIt() {
         return canDooIt;
-    }
-
-    public ClothoDate getDateCreated() {
-        return dateCreated;
-    }
-
-    public ClothoDate getDateLastAccessed() {
-        return dateLastAccessed;
-    }
-
-    public ClothoDate getDateLastModified() {
-        return dateLastModified;
     }
 
     public String getDescription() {
@@ -179,6 +172,7 @@ public class Function implements Sharable {
         return smallIconURL;
     }
 
+    /***
     @Override
     public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -188,6 +182,7 @@ public class Function implements Sharable {
     public SharableType type() {
         return SharableType.FUNCTION;
     }
+    ***/
     
     private ServerScript dooIt;
     private ServerScript canDooIt;
@@ -196,10 +191,8 @@ public class Function implements Sharable {
     private List<ClothoField> inputArguments;
     private List<ClothoField> outputArguments;
 
-
     //Permissions
     private Permissions permissions = new Permissions();
-
     
     //Metadata
     private String id;
@@ -211,9 +204,4 @@ public class Function implements Sharable {
     private String largeIconURL;
     
     private int instanceCount = 0;
-    
-    private ClothoDate dateCreated = new ClothoDate();
-    private ClothoDate dateLastModified = new ClothoDate();
-    private ClothoDate dateLastAccessed = new ClothoDate();
-
 }

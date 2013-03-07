@@ -45,7 +45,7 @@ public class Collector implements Aspect {
             if (datumBag.containsKey(uuid)) {
                 return datumBag.get(uuid);
             } else {
-                if(uuid.startsWith("static")) {
+                if(uuid.startsWith("static")) {                	
                     return getStaticDatum(uuid);
                 } else {
                     return Persistor.get().loadDatum(uuid);
@@ -82,13 +82,17 @@ public class Collector implements Aspect {
 //        Persistor.get().persistDatum(obj); //I don't know that this should be here
     }
 
-    private Collector() { }
+    private Collector() { 
+    }
     
+    private static Collector collector = null;
     public static Collector get() {
-        return singleton;
+    	if(null == collector) {
+    		collector = new Collector();
+    	}
+    	return collector;
     }
 
-    private static final Collector singleton = new Collector();
 
     
     //this list of Datums currently in RAM

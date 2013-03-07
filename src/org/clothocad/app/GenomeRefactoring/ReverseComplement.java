@@ -76,12 +76,7 @@ public class ReverseComplement {
 
 		// first, we load a specific DNA component from the DB, i.e. GFP
         Instance gfp = (Instance) Collector.get().getDatum("specific-gfpuv-is-uuid");
-        try {
-			Logger.log(Logger.Level.INFO, "SimpleFeature: " + gfp.getString("sequence"));
-		} catch (JSONException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		Logger.log(Logger.Level.INFO, "SimpleFeature: " + gfp.getString("sequence"));
 		
         /* Question:
          * How can we retrieve the reverseComplement() function if the 

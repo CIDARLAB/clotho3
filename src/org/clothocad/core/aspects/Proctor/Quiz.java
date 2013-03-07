@@ -50,9 +50,27 @@ import org.json.JSONObject;
  */
 
 
-public class Quiz extends Paver {
+public class Quiz 
+		extends Paver {
 
-    public static Quiz create(Person author,
+    private Quiz(Person author,
+    		String name, 
+    		String description,
+    		View view,
+    		List<Question> questions,
+    		boolean doRandom,
+    		ServerScript rubric) {
+		super(author, SharableType.QUIZ);
+
+        this.description = description;
+        this.viewId = view.getId();
+        this.questions = questions;
+        this.doRandom = doRandom;
+        this.rubric = rubric;
+	}
+
+
+	public static Quiz create(Person author,
                                 String name, 
                                 String description,
                                 View view,
@@ -64,18 +82,10 @@ public class Quiz extends Paver {
             //CHECK THE DATA FOR WELL-FORMEDNESS
 
             //Create the Quiz object
-            Quiz out = new Quiz();
+            Quiz quiz = new Quiz(author, name, description, view, questions, doRandom, rubric);
 
-            out.authorId = author.getId();
-            out.id = UUID.randomUUID().toString();
-            out.description = description;
-            out.viewId = view.getId();
-            out.questions = questions;
-            out.doRandom = doRandom;
-            out.rubric = rubric;
-
-            Collector.get().add(out);
-            return out;
+            Collector.get().add(quiz);
+            return quiz;
         } catch(Exception err) {
             err.printStackTrace();
             return null;
@@ -107,16 +117,6 @@ public class Quiz extends Paver {
         return rubric;
     }  
     
-    @Override
-    public SharableType type() {
-        return SharableType.QUIZ;
-    }
-
-    @Override
-    public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
     public JSONObject makeCommandList() throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import org.clothocad.core.aspects.Persistor;
+import org.json.JSONObject;
 
 /**
  * This the serverside implementation of the Client
@@ -38,8 +39,8 @@ import org.clothocad.core.aspects.Persistor;
  */
 
 
-public class Client implements Datum {
-
+public class Client 
+		extends Datum {
     
     private String macAddress; //The actual UUID of the client
     private String userId;

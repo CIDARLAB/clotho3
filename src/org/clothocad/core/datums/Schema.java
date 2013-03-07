@@ -46,15 +46,30 @@ import org.json.JSONObject;
  * A Schema is the schema that must be obeyed by an Instance
  * @author jcanderson
  */
-public class Schema implements Sharable {
+public class Schema 
+		extends Sharable {
 
-    private Schema() {
-    
-    }
-    
-    public Schema(String sName, List<ClothoField> lstFields) {
-    	this.name = sName;
-    	this.fields = lstFields;    	
+	public Schema() {}
+	
+    private Schema(Person author,
+            String name, 
+            String description,
+            List<ClothoField> fields,
+            ServerScript indexer,
+            ServerScript queryer,
+            ServerScript validator) {
+    	
+    	super(author, SharableType.SCHEMA);
+    	
+    	this.name = name;
+    	this.fields = fields;    	
+        this.name = name;
+        this.description = description;
+        this.fields = fields;
+        this.indexingScript = indexer;
+        this.validationScript = validator;
+        this.queryingScript = queryer;
+
     }
     
     /**
@@ -78,21 +93,10 @@ public class Schema implements Sharable {
         //CHECK THE DATA FOR WELL-FORMEDNESS
         
         //Return the schema
-        Schema out = new Schema();
-
-        if(author!=null) {   //PROBABLY SHOULD GET RID OF THIS LATER
-            out.authorId = author.getId();
-        }
-        out.name = name;
-        out.id = UUID.randomUUID().toString();
-        out.description = description;
-        out.fields = fields;
-        out.indexingScript = indexer;
-        out.validationScript = validator;
-        out.queryingScript = queryer;
-
-        Collector.get().add(out);
-        return out;
+        Schema schema = new Schema(author, name, description, fields, indexer, queryer, validator);
+        
+        Collector.get().add(schema);
+        return schema;
     }
 
     public boolean validate(String jsondata) {
@@ -105,6 +109,7 @@ public class Schema implements Sharable {
         return out;
     }
     
+    /***
     @Override
     public JSONObject toJSON() {
         try {
@@ -116,10 +121,10 @@ public class Schema implements Sharable {
             return null;
         }
     }
+    ***/
     
     public static Schema deserialize(String json) {
-        Schema out = new JSONDeserializer<Schema>().deserialize(json, Schema.class);
-        return out;
+        return new JSONDeserializer<Schema>().deserialize(json, Schema.class);
     }
 
     public String getDescription() {
@@ -150,18 +155,6 @@ public class Schema implements Sharable {
         return authorId;
     }
 
-    public ClothoDate getDateCreated() {
-        return dateCreated;
-    }
-
-    public ClothoDate getDateLastAccessed() {
-        return dateLastAccessed;
-    }
-
-    public ClothoDate getDateLastModified() {
-        return dateLastModified;
-    }
-
     public int getInstanceCount() {
         return instanceCount;
     }
@@ -181,21 +174,13 @@ public class Schema implements Sharable {
     public String getViewId() {
         return viewId;
     }
-    
-    @Override
-    public String getId() {
-        return id;
-    }
 
-    @Override
-    public SharableType type() {
-        return SharableType.SCHEMA;
-    }
-
+    /***
     @Override
     public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    ***/
     
     private ServerScript indexingScript;
     private ServerScript queryingScript;
@@ -208,7 +193,6 @@ public class Schema implements Sharable {
 
     
     //Metadata
-    private String id;
     private String name;
     private String description;
     
@@ -218,9 +202,5 @@ public class Schema implements Sharable {
     private String largeIconURL;
     
     private int instanceCount = 0;
-    
-    private ClothoDate dateCreated = new ClothoDate();
-    private ClothoDate dateLastModified = new ClothoDate();
-    private ClothoDate dateLastAccessed = new ClothoDate();
 }
 

@@ -96,9 +96,15 @@ public final class ServerSideAPI {
     public final void set(String sharableId, String newvalue) {
         Sharable sharable = (Sharable) resolveToDatum(sharableId);
         JSONObject value = this.resolveToJSONObject(newvalue);
+        
+        /** this should be done differently
+         * e.g. Collector.set(sharableId, value)
+         * 
+         * 
         if (sharable.set(value, this.getPerson(), new ShowDoo(null))) {
             //RETURN A COMMAND TO SAY SOMETHING I THE CONSOLE, AND CALL UPDATE ON ALL LISTENERS TO THIS SHARABLE
         }
+        ***/
     }
 
     public final JSONObject create(String schemaRef, String jsonArgs) {
@@ -116,7 +122,7 @@ public final class ServerSideAPI {
 
             Instance out = Instance.create(author, schema, json.toString());
             return out.toJSON();
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
             Logger.log(Logger.Level.WARN, "not a Schema: " + schemaRef, e);
         }
         return new JSONObject();
@@ -137,7 +143,7 @@ public final class ServerSideAPI {
         try {
             Sharable sharable = (Sharable) resolveToDatum(sharableRef);
 
-            switch (sharable.type()) {
+            switch (sharable.getType()) {
                 case SCHEMA:
                     Schema schema = (Schema) sharable;
                     //Pop up the page, push in data
@@ -273,6 +279,7 @@ public final class ServerSideAPI {
         Interpreter.get().learnNative(nativeCmd, jsCmd);
     }
 
+    /**
     public final void testout() {
         List<Sharable> listy = new ArrayList<Sharable>();
         listy.add(Person.getAdmin());
@@ -294,7 +301,8 @@ public final class ServerSideAPI {
             ex.printStackTrace();
         }
     }
-
+     **/
+    
     /**
     //if a command has a callback, handle it here
     //minimally removes the doo from the dooHopper   

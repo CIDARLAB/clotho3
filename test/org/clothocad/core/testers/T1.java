@@ -25,12 +25,11 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.testers;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
 import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.Schema;
 import org.clothocad.core.datums.Instance;
+import org.clothocad.core.datums.Schema;
 import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.FieldType;

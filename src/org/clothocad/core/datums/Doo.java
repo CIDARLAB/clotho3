@@ -29,11 +29,13 @@ import java.util.UUID;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.settings.Settings;
+import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson
  */
-public class Doo implements Datum {
+public class Doo 
+		extends Datum {
     public Doo(Doo parent, boolean saveit) {
         if(parent == null) {
             parentDooId = null;
@@ -94,8 +96,4 @@ public class Doo implements Datum {
     private String id = UUID.randomUUID().toString();
     private Exception abortErr;
 
-    @Override
-    public String getId() {
-        return id;
-    }
 }

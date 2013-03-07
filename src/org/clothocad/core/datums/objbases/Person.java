@@ -25,30 +25,34 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.datums.objbases;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.clothocad.core.aspects.Collector;
+import org.clothocad.core.datums.Datum;
+import org.clothocad.core.datums.Instance;
+import org.clothocad.core.datums.Schema;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.FieldType;
-import org.clothocad.core.datums.Instance;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.datums.Schema;
 import org.clothocad.core.datums.util.ServerScript;
-import org.codehaus.jettison.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson
  */
+public class Person 
+		extends Datum {
 
+	private static final long serialVersionUID = -5721110846830687539L;
 
-public class Person extends Instance {
-    private Person(String json) throws Exception {
+	private Person(String json) 
+    		throws Exception {
         super(json);
     }
-    
+	
+    /**
     public String getName() {
         try {
             return this.getString("displayname");
@@ -56,7 +60,9 @@ public class Person extends Instance {
             return "exception";
         }
     }
+    **/
     
+	/**
     public static Person create(Instance obj) {
         try {
             JSONObject json = obj.toJSON();
@@ -68,7 +74,8 @@ public class Person extends Instance {
             return null;
         }
     }
-    
+    **/
+	
     public static Person getById(String uuid) {
         try {
             Instance obj = (Instance) Collector.get().getDatum(uuid);
@@ -80,7 +87,7 @@ public class Person extends Instance {
         } catch (Exception ex) {
             return null;
         }
-    }
+    }	
     
     public static Schema getSchema() {
     	if(personSchema == null) {
@@ -89,24 +96,23 @@ public class Person extends Instance {
                     + "";
             personSchema = Schema.deserialize(json);
         }
-
         return personSchema;
     }    
 
     public static Person getAdmin() {
         try {
-            if(adminPerson==null) {
+            if(adminPerson == null) {
                 adminPerson = new Person(""
                         + "{\"email\":\"yourhandle@yourdomain.com\",\"displayname\":\"admin\",\"givenname\":\"Admin\",\"middlename\":\"I\",\"surname\":\"Strator\",\"nickname\":\"admin\",\"schemaId\":\"static-person-schema-is-uuid\",\"id\":\"static-admin-instance-is-uuid\",\"dateCreated\":{\"absolute\":1345997642929,\"day\":26,\"hour\":9,\"millis\":929,\"minute\":14,\"month\":\"August\",\"second\":2,\"year\":2012},\"dateLastModified\":{\"absolute\":1345997642929,\"day\":26,\"hour\":9,\"millis\":929,\"minute\":14,\"month\":\"August\",\"second\":2,\"year\":2012},\"dateLastAccessed\":{\"absolute\":1345997642929,\"day\":26,\"hour\":9,\"millis\":929,\"minute\":14,\"month\":\"August\",\"second\":2,\"year\":2012},\"permissions\":{\"entries\":[],\"restOfWorld\":0}}"
                         + "");
-            }
+            }            
             return adminPerson;
         } catch (Exception ex) {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
-
+    
     public static Schema createStaticPersonClass() {
         List<ClothoField> fields = new ArrayList<ClothoField>();
 
@@ -151,7 +157,8 @@ public class Person extends Instance {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    /**
     public static void createRandomPersonInstance() {
         try {
             JSONObject fields = new JSONObject();
@@ -172,14 +179,14 @@ public class Person extends Instance {
             Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public static void main(String[] args) {
-        //System.out.println(Person.getSchema().toJSON());
-
-        //http://jsonformatter.curiousconcept.com/
-        //http://www.freeformatter.com/json-formatter.html
-    }
-
+	**/
+    
     private static Schema personSchema = null;
     private static Person adminPerson = null;
+    
+	@Override
+	public JSONObject toJSON() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

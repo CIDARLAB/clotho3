@@ -25,8 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Proctor;
 
 import java.util.ArrayList;
-import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.Sharable.SharableType;
+
 import org.clothocad.core.datums.objbases.Person;
 import org.json.JSONObject;
 
@@ -36,9 +35,15 @@ import org.json.JSONObject;
  */
 
 
-public class Content extends Paver {
+public class Content 
+		extends Paver {
+	
 
-    @Override
+    public Content(Person author, SharableType type) {
+		super(author, SharableType.CONTENT);
+	}
+
+	@Override
     public JSONObject makeCommandList() throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -56,16 +61,6 @@ public class Content extends Paver {
     }
 
     @Override
-    public SharableType type() {
-        return SharableType.CONTENT;
-    }
-
-    @Override
-    public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public String getId() {
         return id;
     }
@@ -76,5 +71,6 @@ public class Content extends Paver {
     }
     
     //Content-specific fields
-    private ArrayList<ViewElements> viewElements = new ArrayList<ViewElements>();  //Pairings of Views and Instance data to stuff in them
+    private ArrayList<ViewElements> viewElements = 
+    		new ArrayList<ViewElements>();  //Pairings of Views and Instance data to stuff in them
 }

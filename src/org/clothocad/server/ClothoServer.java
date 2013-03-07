@@ -1,5 +1,6 @@
 package org.clothocad.server;
 
+import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.clothocad.core.layers.communication.ClothoConstants;
 import org.clothocad.core.layers.communication.activemq.ChannelListener;
@@ -9,16 +10,23 @@ public class ClothoServer {
 	private ChannelListener listener = null;
 	
 	public ClothoServer() {
-        this.broker = new BrokerService();
+		this.broker = new BrokerService(); 
+		/** todo: using a configuration file 
+		this.broker = BrokerFactory.createBroker(
+				"xbean:src/release/conf/activemq.xml");
+		**/
+		
+		// here is the broker
+        this.broker.setPersistent(false); // non-persistent
+        this.broker.setUseJmx(true);        
     }
 	
 	public void start() {
     	try {
-            this.broker.setPersistent(false); // non-persistent
-            this.broker.setUseJmx(false);
-            this.broker.addConnector(ClothoConstants.SERVER_URL); // this is the server's URL
+            this.broker.addConnector(ClothoConstants.SERVER_URL); // this is the server's URL                    
             this.broker.start(); // start the Broker
 
+            
             System.out.println("Clotho's Broker is now running at "+ClothoConstants.SERVER_URL+"...");
             
            	this.listener = 

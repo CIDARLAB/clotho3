@@ -63,7 +63,9 @@ import org.clothocad.core.aspects.Persistor;
  */
 
 
-public class User implements Datum {
+public class User 
+		extends Datum {
+	
     public User() {
         //YEAH, I DON'T KNOW WHAT THIS AUTHENTICATION KEY IS ABOUT, BUT NOT SURE ITS NEEDED
         authenticationKey = UUID.randomUUID().toString();

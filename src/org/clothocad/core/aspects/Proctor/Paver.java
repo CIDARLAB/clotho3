@@ -38,8 +38,13 @@ import org.json.JSONObject;
 /**
  * @author John Christopher Anderson
  */
-public abstract class Paver implements Sharable {
+public abstract class Paver 
+		extends Sharable {
 
+	public Paver(Person author, SharableType type) {
+		super(author, type);
+	}
+	
     public abstract JSONObject makeCommandList() throws Exception;
     public abstract JSONObject makeTocJSON() throws Exception;
     
