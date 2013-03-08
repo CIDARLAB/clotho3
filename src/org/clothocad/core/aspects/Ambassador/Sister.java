@@ -26,6 +26,7 @@ package org.clothocad.core.aspects.Ambassador;
 
 import java.util.UUID;
 import org.clothocad.core.datums.Datum;
+import org.clothocad.core.datums.ObjBase;
 
 /**
  * A Sister is the representation of another ClothoCore
@@ -34,7 +35,7 @@ import org.clothocad.core.datums.Datum;
 
 
 public class Sister 
-		extends Datum {
+		extends ObjBase {
     public Sister(String id, String url, int port) {
         this.id = id;
         this.url = url;

@@ -24,6 +24,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.settings;
 
 import org.clothocad.core.datums.Datum;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 
 /**
@@ -61,7 +62,7 @@ public class Settings {
     }
 
     private class SettingsDatum 
-    		extends Datum {
+    		extends ObjBase {
         private boolean recordAllDoos = false;
         private String id = "settings-datum-is-uuid";
     }

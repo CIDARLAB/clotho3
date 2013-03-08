@@ -46,7 +46,7 @@ public class T6 {
         } else {
             mind = new Mind();
             mind.SUPERILLEGAL_SETUUID("mind-instance-test7-uuid");
-            Persistor.get().persistDatum(mind);
+            mind.save();
         }
 
         /* TODO: put Doo back */

@@ -68,7 +68,7 @@ try {
             JSONObject obj = view.toJSON();
             obj.put("id", "uuidis_youtube-view");
             view = View.deserialize(obj.toString());
-            Persistor.get().persistDatum(view);
+            view.save();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

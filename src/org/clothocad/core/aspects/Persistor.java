@@ -27,8 +27,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Datum;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.persistence.flat.FlatFilePersistor;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBPersistor;
 
@@ -42,15 +44,20 @@ public abstract class Persistor
 		// N==1 -> MongoDB persistor
 		// N==2 -> FlotFile persistor
 	
-	public abstract boolean persist(Collection<Datum> col);	
-    public abstract boolean persistDatum(Datum datum);
+	public abstract boolean persist(Collection<ObjBase> col);	
+    public abstract boolean persist(ObjBase obj);
 
+    public abstract Datum get(Class c, ObjBase obj);
+	public abstract Datum get(Class c, ObjectId id);
+	public abstract ObjBase[] get(ObjBase obj);
+	public abstract <T> T[] get(Class<T> t);
+	public abstract boolean clearDB();	
+	
 	public abstract Datum loadDatum (String uuid);
     public abstract HashMap<String, Integer> loadFeature (String feature);
     public abstract List<String> loadWordBank ();
     public abstract void persistFeature (Object obj, String filePath);
     public abstract void persistWordBank (List<String> wordBank);
-
     
     
     public static Persistor get() {

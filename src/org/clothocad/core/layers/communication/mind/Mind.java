@@ -38,6 +38,7 @@ import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Instance;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.util.Logger;
 
@@ -61,7 +62,7 @@ import org.clothocad.core.util.Logger;
  */
 
 public final class Mind 
-		extends Datum
+		extends ObjBase
 		implements Aspect {
     /**
      * This is not a serverside API method
@@ -74,7 +75,7 @@ public final class Mind
         //Create the new Mind object
         Mind out = new Mind();
         out.personId = person.getId();
-        Persistor.get().persistDatum(out);
+        out.save();
         return out;
     }
 
@@ -177,7 +178,7 @@ public final class Mind
                          String ephemeral_link_page_id,
                          PageMode page_mode) {
         config.addPage(socket_id, page_mode);
-        Persistor.get().persistDatum(this);
+        this.save();
         if (doos.containsKey(ephemeral_link_page_id)) {
             AddPageDoo add_page_doo =
                 (AddPageDoo) doos.get(ephemeral_link_page_id);
@@ -203,14 +204,14 @@ public final class Mind
     /* client lost a page--update config */
     public void unlinkPage(String socket_id) {
         config.removePage(socket_id);
-        Persistor.get().persistDatum(this);
+        this.save();
     }
     
     public void setVisible(Page page, boolean new_visibility) {
         /* TODO: DO WHATEVER IT TAKES TO programmatically show or hide the tab */
         
         page.toggleVisible(new_visibility ^ page.toggleVisible(false));
-        Persistor.get().persistDatum(this);
+        this.save();
     }
 
     public Iterable<Map<String, String>> getPageSummary() {
@@ -229,7 +230,7 @@ public final class Mind
     public void removeWidget(Page page, Widget widget) {
         /* TODO: remove the widget from the client's page */
         page.removeWidget(widget.getId());
-        Persistor.get().persistDatum(this);
+        this.save();
     }
 
     public void unlinkWidget(String socket_id, String widget_id) {
@@ -240,7 +241,7 @@ public final class Mind
             return;
         }
         target_page.removeWidget(widget_id);
-        Persistor.get().persistDatum(this);
+        this.save();
     }
 
     public void moveWidget(Widget widget,
@@ -254,7 +255,7 @@ public final class Mind
         widget.setPositionAbsolute(posx, posy);
         widget.setDimensions(width, Widget.SizeType.RELATIVE, height, Widget.SizeType.RELATIVE);
         
-        Persistor.get().persistDatum(this);
+        this.save();
     }
 
     /* TODO: this shouldn't be exposed */

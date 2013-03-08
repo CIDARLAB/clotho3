@@ -93,7 +93,13 @@ public class T3 {
             JSONObject obj = asst.toJSON();
             obj.put("id", "specific-makeabuddy-is-uuid");
             asst = Function.deserialize(obj.toString());
-            Persistor.get().persistDatum(asst);
+            
+            // Chris' version:
+            Persistor.get().persist(asst);
+            
+            // Stephanie's version:
+            asst.save();
+                        
             Logger.log(Logger.Level.INFO, asst.getId() + "   " + asst.getName() + "\n" + asst.getDescription() + "\n...was created successfully, all good!");
             return asst;
         } catch (JSONException ex) {

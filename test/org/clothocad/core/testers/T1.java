@@ -86,7 +86,13 @@ public class T1 {
             obj.put("id", "specific-simplefeature-is-uuid");
 
             featureSchema = Schema.deserialize(obj.toString());
-            Persistor.get().persistDatum(featureSchema);
+            
+            // Chris' version:
+            Persistor.get().persist(featureSchema);
+            
+            // Stephanie's version:
+            //featureSchema.save();
+            
             Logger.log(Logger.Level.INFO, featureSchema.getId() + "  " + featureSchema.getName() + "\n" + featureSchema.getDescription() + "\n...was created successfully, all good!");
             return featureSchema;
         } catch (Exception ex) {
@@ -110,7 +116,13 @@ public class T1 {
             JSONObject obj = gfp.toJSON();
             obj.put("id", "specific-gfpuv-is-uuid");
             gfp = Instance.deserialize(obj.toString());
-            Persistor.get().persistDatum(gfp);
+            
+            // Chris' version:
+            Persistor.get().persist(gfp);
+            
+            // Stephanie's version:
+            //gfp.save();
+            
             Logger.log(Logger.Level.INFO, gfp.getId() + "   " + gfp.getString("name") + "\n" + gfp.getString("sequence") + "\n...was created successfully, all good!");
             return gfp;
         } catch (Exception ex) {

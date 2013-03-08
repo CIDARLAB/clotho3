@@ -35,7 +35,7 @@ import org.json.JSONObject;
  * @author John Christopher Anderson
  */
 public class Doo 
-		extends Datum {
+		extends ObjBase {
     public Doo(Doo parent, boolean saveit) {
         if(parent == null) {
             parentDooId = null;
@@ -73,14 +73,17 @@ public class Doo
         //  Persistor.get().save(this);
     }
     
-    private void save() {
+    @Override
+    public boolean save() {
         if(!savePolicy) {
-            return;
+            return false;
         }
         
         if(Settings.isRecordAllDoos()) {
-            Persistor.get().persistDatum(this);
+            //Persistor.get().persistDatum(this);
+        	this.save();
         }
+        return true;
     }
     
     private static class MsgLine {

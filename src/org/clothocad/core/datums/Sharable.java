@@ -12,7 +12,7 @@ import org.clothocad.core.datums.objbases.Person;
  * @author jcanderson
  */
 public abstract class Sharable 
-		extends Datum {
+		extends ObjBase {
 	
 	private Person author;
 	private SharableType type;

@@ -59,7 +59,7 @@ public class TrailTest {
             JSONObject obj = view.toJSON();
             obj.put("id", "CT-sample-view");
             view = View.deserialize(obj.toString());
-            Persistor.get().persistDatum(view);
+            view.save();
 
         } catch (Exception ex) {
             ex.printStackTrace();

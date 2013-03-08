@@ -67,7 +67,7 @@ public class ReverseComplement {
         		outputArgs);
         
         // now, store the reverseComplement() function in the DB
-        Persistor.get().persistDatum(fReverseComplement);
+        Persistor.get().persist(fReverseComplement);
 	}
 	
 	private void testReverseComplementFunction() {

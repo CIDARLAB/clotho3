@@ -40,7 +40,7 @@ import org.json.JSONObject;
 
 
 public class Client 
-		extends Datum {
+		extends ObjBase {
     
     private String macAddress; //The actual UUID of the client
     private String userId;
@@ -50,12 +50,17 @@ public class Client
             
     void lockout() {
         isLoggedIn = false;
-        Persistor.get().persistDatum(this);
+        
+        //Persistor.get().persist(this);
+        // new:
+        this.save();
     }
     
     void login() {
         isLoggedIn = true;
-        Persistor.get().persistDatum(this);
+        //Persistor.get().persist(this);
+        // new:
+        this.save();
     }
 
     @Override

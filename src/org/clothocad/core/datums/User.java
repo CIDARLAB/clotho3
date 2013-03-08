@@ -64,7 +64,7 @@ import org.clothocad.core.aspects.Persistor;
 
 
 public class User 
-		extends Datum {
+		extends ObjBase {
 	
     public User() {
         //YEAH, I DON'T KNOW WHAT THIS AUTHENTICATION KEY IS ABOUT, BUT NOT SURE ITS NEEDED
@@ -80,7 +80,9 @@ public class User
         for(Client device : clients) {
             device.lockout();
         }
-        Persistor.get().persistDatum(this);
+        //Persistor.get().persist(this);
+        // new:
+        this.save();
     }
     
     /**
@@ -90,7 +92,9 @@ public class User
     public void logIn(Client device) {
         isLoggedIn = true;
         device.login();
-        Persistor.get().persistDatum(this);
+        //Persistor.get().persist(this);
+        // new:
+        this.save();
     }
 
     @Override

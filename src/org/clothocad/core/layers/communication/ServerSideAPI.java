@@ -195,7 +195,7 @@ public final class ServerSideAPI {
                     commandMessageArray.toString());
 
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-            Persistor.get().persistDatum(mind);
+            mind.save();
         } catch (Exception e) {
             Logger.log(Logger.Level.WARN, "", e);
             e.printStackTrace();
@@ -248,7 +248,7 @@ public final class ServerSideAPI {
                     doo.commandMessageArray.toString());
 
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-            Persistor.get().persistDatum(mind);
+            mind.save();
         } catch (Exception e) {
             Logger.log(Logger.Level.WARN, "", e);
             e.printStackTrace();

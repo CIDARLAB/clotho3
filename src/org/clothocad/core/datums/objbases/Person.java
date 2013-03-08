@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.Instance;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Schema;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.FieldType;
@@ -43,7 +44,7 @@ import org.json.JSONObject;
  * @author John Christopher Anderson
  */
 public class Person 
-		extends Datum {
+		extends ObjBase {
 
 	private static final long serialVersionUID = -5721110846830687539L;
 
