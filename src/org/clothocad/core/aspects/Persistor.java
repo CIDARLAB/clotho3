@@ -40,7 +40,7 @@ import org.clothocad.core.layers.persistence.mongodb.MongoDBPersistor;
 public abstract class Persistor 
 	implements Aspect {
 
-	private static final int N = 1;     
+	private static final int N = 2;     
 		// N==1 -> MongoDB persistor
 		// N==2 -> FlotFile persistor
 	

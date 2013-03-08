@@ -43,8 +43,8 @@ public class FlatFilePersistor
 		extends Persistor {
 	
 	public boolean persist(Collection<ObjBase> col) {
-		for(Datum datum : col) {
-			if(!this.persistDatum(datum)) {
+		for(ObjBase obj : col) {
+			if(!this.persistDatum(obj)) {
 				return false;
 			}
 		}
@@ -53,7 +53,7 @@ public class FlatFilePersistor
 	
 	public boolean persist(ObjBase obj) {
 		// here, we forward the datum to the MongoDBPersistor
-		return obj.save();
+		return this.persistDatum(obj);
 	}
 
 	public Datum loadDatum (String uuid) {		
