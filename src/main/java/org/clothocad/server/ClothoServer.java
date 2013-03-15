@@ -1,6 +1,5 @@
 package org.clothocad.server;
 
-import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.clothocad.core.layers.communication.ClothoConstants;
 import org.clothocad.core.layers.communication.activemq.ChannelListener;

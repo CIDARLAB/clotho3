@@ -9,8 +9,19 @@
 	<link href="css/jquery-ui.css" rel="stylesheet" type="text/css" media="screen" />
 	<script src="scripts/jquery.min.js" type="text/javascript"></script>
 	<script src="scripts/jquery-ui.min.js" type="text/javascript"></script> <!--later we'll move these to the google CDN hosted ones - they're faster and stuff -->
-</head>
 
+
+<script language="javascript">
+function login() {	
+	$.post("http://localhost:8080",
+		{username: $("#Email").val(), password:$("#Password").val()},
+		function(data,status){
+			alert("data:...\n"+data+"\n"+"status:...\n"+status);
+		});
+}
+</script>
+
+</head>
 <body>
 <div id="page_wrapper">
 
@@ -36,7 +47,7 @@
 			<div id="log_in">
 				<div class="default-form">
 					<h2>Sign in <strong></strong></h2>
-					<form id="loginform" action="https://accounts.clothocad.org/login_handler" method="post">
+					<form id="loginform" action="javascript:login()" method="post">
 						<div class="text-div email-div">
 							<label for="Email"><strong class="email-label">Email</strong></label>
 							<input type="text" spellcheck="false"  name="Email" id="Email" value="" />

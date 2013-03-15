@@ -1,55 +1,66 @@
 package org.clothocad.core.jetty;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.clothocad.core.settings.Settings;
-import org.clothocad.core.util.FileUtils;
-import org.clothocad.core.util.Logger;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 
 public class ClothoWebServer {
-	public static void main(String[] args) 
+	
+	private boolean running = false;
+	
+	public ClothoWebServer() {
+		running = false;
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public void start() 
 			throws Exception {
+        
 		
-        HandlerList handlers = new HandlerList();
+		/**
         ServletContextHandler context0 = createContext();
         if (context0 == null) {
             Logger.log(Logger.Level.FATAL, "Cannot create context");
             return;
         }
         handlers.setHandlers(new Handler[] {context0});
+		**/
+        
+		SocketConnector coreConnector = new SocketConnector();
+        coreConnector.setHost(Settings.getHost());
+        coreConnector.setPort(Settings.getPort());
 
-        SelectChannelConnector connector0 = new SelectChannelConnector();
-        connector0.setHost(Settings.getHost());
-        connector0.setPort(Settings.getPort());
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setDirectoriesListed(false);
+        resourceHandler.setWelcomeFiles(new String[]{ "login.html" }); 
+        resourceHandler.setResourceBase("./web/");
 
-		Server server = new Server(8080);
-        server.setConnectors(new Connector[] {connector0});
+        HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] { resourceHandler, new RESTHandler() });        
+
+        // now, start the server
+		Server server = new Server();
+        server.setConnectors(new Connector[] {coreConnector});
         server.setHandler(handlers);
-        try {
-            server.start();
-        } catch (Exception e) {
-            Logger.log(Logger.Level.FATAL, "Cannot start", e);
-            return;
-        }
-        Logger.log(Logger.Level.INFO, "Running");
+        server.start();
+        
+        System.out.println("Clotho's web server is running on 8080...");
     }
 
+	/***
     private static ServletContextHandler createContext() {
         ServletContextHandler context =
             new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
+        
+        
+        context.setContextPath("/web");
 
         context.addServlet(new ServletHolder(WSServlet.get()),
                            "/servlet/websocket");
@@ -69,7 +80,9 @@ public class ClothoWebServer {
         }
         return context;
     }
-
+	***/
+	
+	/***
     private static List<EchoServlet> createEchoServlets(String path) {
         File includes_dir = new File(path);
         File[] includes_files = includes_dir.listFiles();
@@ -100,4 +113,6 @@ public class ClothoWebServer {
         }
         return out;
     }
+    ***/
+	
 }

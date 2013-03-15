@@ -21,18 +21,18 @@
       <version>20080701</version>
       <type>jar</type>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
-      <version>2.10.1</version>
-      <type>jar</type>
-    </dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.0.1</version>
+		<scope>provided</scope>
+	</dependency>
+
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>mongo-java-driver</artifactId>
+		<version>1.3</version>
+	</dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-websocket</artifactId>
@@ -54,18 +54,17 @@
       <version>6.0.30</version>
       <type>jar</type>
     </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <version>7.0.0.v20091005</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-      <version>7.0.0.v20091005</version>
-      <type>jar</type>
-    </dependency>
+    
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-server</artifactId>
+		<version>8.1.9.v20130131</version>
+	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-servlet</artifactId>
+		<version>8.1.9.v20130131</version>
+	</dependency>
     <dependency>
       <groupId>org.python</groupId>
       <artifactId>jython</artifactId>
@@ -120,5 +119,11 @@
       <version>10.0.1</version>
       <type>jar</type>
     </dependency>
-  </dependencies>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>1.7.2</version>
+	</dependency>
+	
+	</dependencies>
 </project>

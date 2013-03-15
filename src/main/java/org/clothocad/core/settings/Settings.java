@@ -58,7 +58,7 @@ public class Settings {
     }
 
     public static Integer getPort() {
-        return 1025;
+        return 8080;
     }
 
     private class SettingsDatum 
