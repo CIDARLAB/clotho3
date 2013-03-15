@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.mongodb.BasicDBObject;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
@@ -54,7 +53,7 @@ public class MongoDBTester {
         ObjectId id = i.getUUID();
         i = null;
         
-        BasicDBObject query = new BasicDBObject("name", "Test institution");  // ???
+        //BasicDBObject query = new BasicDBObject("name", "Test institution");  // ???
         
         i = (Institution)Persistor.get().get(Institution.class, id);
         assertEquals("Townsville",i.getCity());
