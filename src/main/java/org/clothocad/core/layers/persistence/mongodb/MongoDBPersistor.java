@@ -10,8 +10,6 @@ import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 
-import com.mongodb.BasicDBObject;
-
 public class MongoDBPersistor 
 		extends Persistor {
 
@@ -174,7 +172,7 @@ public class MongoDBPersistor
 	}
 
 	public Datum get(Class c, ObjectId id) {
-        return this.connection.get(c, id);
+            return (Datum)this.connection.get(c, id);
 	}
 	
 	// this get() method returns an array of all T objects ...

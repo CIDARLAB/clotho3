@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.clothocad</groupId>
-  <artifactId>clotho</artifactId>
+  <artifactId>clotho-3</artifactId>
   <version>3.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Clotho</name>
+  <name>clotho-3</name>
   <url>http://clothocad.org</url>
 
   <properties>
@@ -15,12 +15,13 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20080701</version>
-      <type>jar</type>
-    </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20080701</version>
+            <type>jar</type>
+        </dependency>
+	
 	<dependency>
 		<groupId>javax.servlet</groupId>
 		<artifactId>javax.servlet-api</artifactId>
@@ -28,16 +29,14 @@
 		<scope>provided</scope>
 	</dependency>
 
-	<dependency>
-		<groupId>org.mongodb</groupId>
-		<artifactId>mongo-java-driver</artifactId>
-		<version>1.3</version>
-	</dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-websocket</artifactId>
-      <version>8.1.9.v20130131</version>
-    </dependency>
+    
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>bson</artifactId>
+            <version>2.5.1</version>
+        </dependency>        
+            
+
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
@@ -60,11 +59,22 @@
 		<artifactId>jetty-server</artifactId>
 		<version>8.1.9.v20130131</version>
 	</dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-client</artifactId>
+      <version>8.1.9.v20130131</version>
+    </dependency>
 	<dependency>
 		<groupId>org.eclipse.jetty</groupId>
 		<artifactId>jetty-servlet</artifactId>
 		<version>8.1.9.v20130131</version>
 	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-websocket</artifactId>
+		<version>8.1.9.v20130131</version>
+	</dependency>
+
     <dependency>
       <groupId>org.python</groupId>
       <artifactId>jython</artifactId>
@@ -124,6 +134,11 @@
 		<artifactId>slf4j-api</artifactId>
 		<version>1.7.2</version>
 	</dependency>
-	
-	</dependencies>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongo-java-driver</artifactId>
+      <version>2.10.0</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
 </project>

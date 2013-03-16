@@ -1,5 +1,6 @@
 package org.clothocad.core.jetty;
 
+import org.clothocad.core.jetty.rest.ClothoRestServlet;
 import org.clothocad.core.settings.Settings;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -7,6 +8,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 public class ClothoWebServer {
 	
@@ -32,7 +35,15 @@ public class ClothoWebServer {
         }
         handlers.setHandlers(new Handler[] {context0});
 		**/
+
+        ServletContextHandler context =
+                new ServletContextHandler(ServletContextHandler.SESSIONS);
         
+        
+        context.addServlet(
+        		new ServletHolder(new ClothoRestServlet()),
+                "/servlet/websocket");
+            
 		SocketConnector coreConnector = new SocketConnector();
         coreConnector.setHost(Settings.getHost());
         coreConnector.setPort(Settings.getPort());
