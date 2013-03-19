@@ -25,36 +25,36 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import java.util.Arrays;
 
 /**
  *
  * @author spaige
  */
-public class MongoDBConnection 
-		implements ClothoConnection {
-    
-    
+public class MongoDBConnection
+        implements ClothoConnection {
+
     private String host = "localhost";
     private int port = 27017;
     private String dbName = "clotho";
-    
     //the demo will break if you change this without changing the Entity annotation on ObjBase
-    private String dataCollName = "data"; 
-    
+    private String dataCollName = "data";
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
-    {{
-        MapperOptions opts = new MapperOptions();
-        opts.objectFactory = new PolymorphicObjectFactory();
-        morphia = new Morphia(new DefaultMapper(opts));
-    }}
-    
+
+    {
+        {
+            MapperOptions opts = new MapperOptions();
+            opts.objectFactory = new PolymorphicObjectFactory();
+            morphia = new Morphia(new DefaultMapper(opts));
+        }
+    }
     private MongoClient connection;
     private DB db;
     private DBCollection data;
     private Datastore dataStore;
     private Mapper mapper;
-    
+
     @Override
     public boolean connect() {
         try {
@@ -63,21 +63,18 @@ public class MongoDBConnection
             data = db.getCollection(dataCollName);
             dataStore = new DatastoreImpl(morphia, connection, dbName);
             mapper = dataStore.getMapper();
-        }
-        catch (UnknownHostException e){
+        } catch (UnknownHostException e) {
             return false;
-        }
-        catch (MongoException e){
+        } catch (MongoException e) {
             return false;
         }
         return true;
-        
+
     }
 
     public void clearDB() {
-    	
     }
-    
+
     @Override
     public boolean isAClothoDatabase() {
         return db != null;
@@ -104,12 +101,12 @@ public class MongoDBConnection
         //needs to check if thing actually needs saving
         //needs to validate object
         obj.setLastModified(new ClothoDate());
-        if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))){
+        if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
             dataStore.save(obj);
         }
-            
+
         return true;
     }
 
@@ -117,27 +114,27 @@ public class MongoDBConnection
     public int save(Collection<ObjBase> objs) {
         int i = 0;
         boolean saved;
-        for (ObjBase o : objs){
+        for (ObjBase o : objs) {
             saved = save(o);
-            if (saved) i ++;
+            if (saved) {
+                i++;
+            }
         }
         return i;
     }
-    
-    public boolean save(BSONObject obj){
+
+    public boolean save(BSONObject obj) {
         data.save(new BasicDBObject(obj.toMap()));
         return true;
     }
-    
 
     @Override
     //TODO: check for references in database
     //TODO: move to 'deleted' collection instead of just deleting
     public boolean delete(ObjBase obj) {
-        try{
+        try {
             dataStore.delete(obj);
-        }
-        catch(MongoException e){
+        } catch (MongoException e) {
             return false;
         }
         return true;
@@ -147,9 +144,11 @@ public class MongoDBConnection
     public int delete(Collection<ObjBase> objs) {
         int i = 0;
         boolean deleted;
-        for (ObjBase o : objs){
+        for (ObjBase o : objs) {
             deleted = delete(o);
-            if (deleted) i ++;
+            if (deleted) {
+                i++;
+            }
         }
         return i;
     }
@@ -165,42 +164,40 @@ public class MongoDBConnection
     public <T> T get(Class<T> type, ObjectId uuid) {
         return dataStore.get(type, uuid);
     }
-    
+
     @Override
-    public BSONObject getAsBSON(ObjectId uuid){
-        return data.findOne(new BasicDBObject("_id",uuid));
+    public BSONObject getAsBSON(ObjectId uuid) {
+        return data.findOne(new BasicDBObject("_id", uuid));
     }
-    
+
     /*Query construction forthcoming
      * @Override
-    public ObjBase getOne(BasicDBObject query) {
-        Collection<ObjBase> results = get(query);
-        for (ObjBase obj : results){
-            return obj;
-        }
-        return null;
-    }
-    */
-
+     public ObjBase getOne(BasicDBObject query) {
+     Collection<ObjBase> results = get(query);
+     for (ObjBase obj : results){
+     return obj;
+     }
+     return null;
+     }
+     */
     @Override
     public List<ObjBase> get(BSONObject query) {
         List<ObjBase> results = new ArrayList<ObjBase>();
         DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
-             
-        try{
-            while(cursor.hasNext()){
+
+        try {
+            while (cursor.hasNext()) {
                 results.add((ObjBase) mapper.fromDBObject(null, cursor.next(), mapper.createEntityCache()));
             }
-        }
-        finally {
+        } finally {
             cursor.close();
         }
         return results;
     }
-    
+
     public BSONObject getAsBSON(BSONObject query) {
-        DBCursor cursor  = data.find(new BasicDBObject(query.toMap()));
-        return new BasicDBObject("results", cursor.toArray());        
+        DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
+        return new BasicDBObject("results", cursor.toArray());
     }
 
     @Override
@@ -212,24 +209,63 @@ public class MongoDBConnection
         DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
-    
-    
+
     public ObjBase[] getTableAsArray(ObjBase obj) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> T[] getTableAsArray(Class<T> type) {
-		BasicDBObject query = new BasicDBObject("className", type.getCanonicalName());		
-		List<ObjBase> lst = this.get(query);
+        BasicDBObject query = new BasicDBObject("className", type.getCanonicalName());
+        List<ObjBase> lst = this.get(query);
 
-		T[] array = (T[])Array.newInstance(type, lst.size());
-		return lst.toArray(array);
+        T[] array = (T[]) Array.newInstance(type, lst.size());
+        return lst.toArray(array);
     }
 
-	@Override
-	public boolean clear() {
-		this.data.drop();
-		return true;
-	}
+    @Override
+    public boolean clear() {
+        this.data.drop();
+        return true;
+    }
+    
+    public ObjectId[] chain(BSONObject query){
+        DBCursor results = data.find(new BasicDBObject(query.toMap()), new BasicDBObject());
+        //TODO: could cause problems with large queries - should chunk w/ skip & limit
+        ObjectId[] output = new ObjectId[results.length()];
+        for (int i=0;results.hasNext();i++){
+            DBObject result = results.next();
+            output[i] = (ObjectId) result.get("_id");
+        }
+        
+        return output;
+    }
+    
+    public List<ObjBase> recurseQuery(BSONObject query, String[] path){
+        return recurseQuery(query, path, new ArrayList<ObjectId>());
+    }
+    
+    
+    //NB: this mutates query
+    public List<ObjBase> recurseQuery(BSONObject query, String[] path, List<ObjectId> ids){
+        boolean go = true;
+        setPath(query, path, ids);
+        int origSize;
+        while (go){
+            origSize = ids.size();
+            ids.addAll(Arrays.asList(chain(query)));
+            go = ids.size() > origSize;
+        }
+        
+        return get(query);
+    }
+    
+    private static void setPath(BSONObject b, String[] path, Object o){
+        if (path.length == 0) return;
+        for (int i = 0; i + 1 < path.length; i++){
+            b = (BSONObject) b.get(path[i]);
+        }
+        
+        b.put(path[path.length-1], o);
+    }
 }
