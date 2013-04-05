@@ -69,14 +69,21 @@ public final class Communicator implements Aspect {
     }
 
 
-    private Communicator() {
-    }
+	/** DOUBLE-CHECKED LOCKING **/
+	private static volatile Communicator communicator;
 
     public static Communicator get() {
-        return singleton;
+    	Communicator c = communicator;
+		if(c == null) {
+			synchronized(Communicator.class) {
+				c = communicator;
+				if(c == null) {
+					communicator = c = new Communicator();
+				}
+			}
+		}
+		return c;
     }
-
-    private static final Communicator singleton = new Communicator();
 
     /* maps from "auth_key" to Mind */
     private Map<String, Mind> auth_minds = new HashMap<String, Mind>();

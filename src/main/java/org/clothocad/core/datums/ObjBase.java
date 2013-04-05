@@ -34,7 +34,9 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 public abstract class ObjBase 
 		implements Datum {
 	
-    public ObjBase(String name) {
+	private static final long serialVersionUID = -1585051234016915083L;
+
+	public ObjBase(String name) {
         this.name = name;
     }
 
@@ -68,6 +70,14 @@ public abstract class ObjBase
 		return this.uuid;
 	}
 	**/
+	
+	public void update() {
+		
+		// here we need to call the client-side API
+		// which forwards the update message 
+		// to ``subscribed'' clients
+		
+	}
 	
 	public String getId() {
 		if(null == this.UUID) {

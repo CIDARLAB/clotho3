@@ -38,8 +38,7 @@ public class ClothoWebServer {
 
         ServletContextHandler context =
                 new ServletContextHandler(ServletContextHandler.SESSIONS);
-        
-        
+                
         context.addServlet(
         		new ServletHolder(new ClothoRestServlet()),
                 "/servlet/websocket");

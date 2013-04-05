@@ -7,10 +7,20 @@ import org.json.JSONObject;
 
 public class Router {
 
-	private static Router singleton = new Router();
+	/** DOUBLE-CHECKED LOCKING **/
+	private static volatile Router router;
 
     public static Router get() {
-        return singleton;
+    	Router result = router;
+		if(result == null) {
+			synchronized(Router.class) {
+				result = router;
+				if(result == null) {
+					router = result = new Router();
+				}
+			}
+		}
+		return result;
     }
     
 	// send message

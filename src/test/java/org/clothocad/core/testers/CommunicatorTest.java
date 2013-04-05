@@ -10,9 +10,8 @@ import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.FieldType;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.datums.util.ServerScript;
+import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Communicator;
-import org.clothocad.core.layers.communication.ServerSideAPI;
-import org.clothocad.core.aspects.Router.Router;
 import org.json.JSONObject;
 
 /**
@@ -23,14 +22,19 @@ import org.json.JSONObject;
  * @author Kelvin Li
  */
 public class CommunicatorTest {
+	
+	// In Communicator test we ``push'' a View datum to the client...
+	
     public static void main(String[] args) {
-        makeSampleDatums();
-        
-        // create a new Router instance (following the Singleton pattern)
-        Router.get();
+    	makeSampleView();
         
         // create a new Communicator instance (following the Singleton pattern)
-        Communicator.get();
+        //Communicator.get().sendClientMessage("???", Channel.NOTIFICATION, message);
+        
+        // what should this message contain?
+        // - the view object (in JSON)
+        // - 
+        
        
         // Ambassador.get();
 
@@ -46,10 +50,6 @@ public class CommunicatorTest {
          ***/
     }
 
-    /* TODO: remove all of these functions */
-    private static void makeSampleDatums() {
-        makeSampleView();
-    }
 
     private static void makeSampleView() {
         try {
