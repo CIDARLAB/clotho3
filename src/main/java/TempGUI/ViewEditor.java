@@ -302,7 +302,7 @@ private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         try {
             JSONArray inputArgs = data.getJSONArray("inputArguments");
             if(this.selectedIndex < inputArgs.length()) {
-                inputArgs.remove(this.selectedIndex);
+                //inputArgs.remove(this.selectedIndex);
             }
         } catch (JSONException ex) {
             Logger.getLogger(ViewEditor.class.getName()).log(Level.SEVERE, null, ex);
@@ -314,7 +314,7 @@ private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     void updateToken(JSONObject newData) throws Exception  {
         JSONArray inputArgs = data.getJSONArray("inputArguments");
         if(this.selectedIndex < inputArgs.length()) {
-            inputArgs.remove(this.selectedIndex);
+            //inputArgs.remove(this.selectedIndex);
         }
         inputArgs.put(this.selectedIndex, newData); //Replace a given index with this new data
     }
