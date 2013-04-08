@@ -23,10 +23,7 @@ import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
 
-public class MongoDBTester {
-    
-    public MongoDBTester() {
-    }
+public class MongoDBTest {
     
     public static void saveAndGet(ObjBase o){
         o.save();
