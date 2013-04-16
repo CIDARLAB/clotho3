@@ -9,7 +9,6 @@ public class EugeneScripter extends WebSocketServlet {
 
 	private static final long serialVersionUID = 7273380517601018886L;
 
-	@Override
 	public WebSocket doWebSocketConnect(HttpServletRequest request, String sProtocol) {
 		if(sProtocol.equals("eugene")) {
 			System.out.println("executing eugene script -> ");

@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.clothocad</groupId>
@@ -25,14 +27,14 @@
     <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
+    
   <dependencies>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20080701</version>
-            <type>jar</type>
-        </dependency>
+	<dependency>
+    	<groupId>org.json</groupId>
+    	<artifactId>json</artifactId>
+    	<version>20080701</version>
+    	<type>jar</type>
+    </dependency>
 	
 	<dependency>
 		<groupId>javax.servlet</groupId>
@@ -40,23 +42,24 @@
 		<version>3.0.1</version>
 	</dependency>
 
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>bson</artifactId>
-            <version>2.5.1</version>
-        </dependency>        
+	<dependency>
+		<groupId>org.mongodb</groupId>
+		<artifactId>bson</artifactId>
+		<version>2.5.1</version>
+	</dependency>        
             
-
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
       <version>1.4.4</version>
     </dependency>
+    
     <dependency>
       <groupId>net.sf.flexjson</groupId>
       <artifactId>flexjson</artifactId>
       <version>3.0</version>
     </dependency>
+    
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>catalina</artifactId>
@@ -69,16 +72,19 @@
 		<artifactId>jetty-server</artifactId>
 		<version>8.1.9.v20130131</version>
 	</dependency>
+	
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-client</artifactId>
       <version>8.1.9.v20130131</version>
     </dependency>
+    
 	<dependency>
 		<groupId>org.eclipse.jetty</groupId>
 		<artifactId>jetty-servlet</artifactId>
 		<version>8.1.9.v20130131</version>
 	</dependency>
+	
 	<dependency>
 		<groupId>org.eclipse.jetty</groupId>
 		<artifactId>jetty-websocket</artifactId>
@@ -91,54 +97,63 @@
       <version>2.5.3</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-jms_1.1_spec</artifactId>
       <version>1.1.1</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-core</artifactId>
       <version>5.7.0</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>0.11.6</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>com.github.jmkgreen.morphia</groupId>
       <artifactId>morphia</artifactId>
       <version>1.2.2</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <version>1.0.0.GA</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>4.3.1.Final</version>
       <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>10.0.1</version>
       <type>jar</type>
     </dependency>
+    
 	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
@@ -151,6 +166,7 @@
       <version>1</version>
       <type>jar</type>
     </dependency>
+
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongo-java-driver</artifactId>

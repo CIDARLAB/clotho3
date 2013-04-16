@@ -15,17 +15,17 @@ import org.clothocad.model.Part;
  */
 public class FreeForm implements Format {
 
-    @Override
+	@Override
     public boolean checkPart(Part p) {
         return true;
     }
 
-    @Override
+	@Override
     public boolean checkComposite(List<Part> composition, Object additionalRequirements) {
         return true;
     }
 
-    @Override
+	@Override
     public NucSeq generateCompositeSequence(List<Part> composition, Object additionalRequirements) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
