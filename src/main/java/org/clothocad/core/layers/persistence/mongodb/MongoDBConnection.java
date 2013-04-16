@@ -26,6 +26,9 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -56,23 +59,13 @@ public class MongoDBConnection
     private Mapper mapper;
 
     @Override
-    public boolean connect() {
-        try {
-            connection = new MongoClient(host, port);
-            db = connection.getDB(dbName);
-            data = db.getCollection(dataCollName);
-            dataStore = new DatastoreImpl(morphia, connection, dbName);
-            mapper = dataStore.getMapper();
-        } catch (UnknownHostException e) {
-            return false;
-        } catch (MongoException e) {
-            return false;
-        }
-        return true;
+    public void connect() throws UnknownHostException {
 
-    }
-
-    public void clearDB() {
+        connection = new MongoClient(host, port);
+        db = connection.getDB(dbName);
+        data = db.getCollection(dataCollName);
+        dataStore = new DatastoreImpl(morphia, connection, dbName);
+        mapper = dataStore.getMapper();
     }
 
     @Override
@@ -81,22 +74,54 @@ public class MongoDBConnection
     }
 
     @Override
-    public boolean disconnect() {
+    public void disconnect() {
         connection.close();
         connection = null;
         db = null;
         data = null;
         dataStore = null;
-        return true;
     }
 
     @Override
     public boolean isConnected() {
         return db != null;
     }
-
+    
     @Override
-    public boolean save(ObjBase obj) {
+    //Cascade save
+    public void save(ObjBase obj){
+        save(obj, new HashSet<ObjBase>());
+    }
+    
+    //actual meat of cascade save in here
+    private boolean save(ObjBase obj, Set<ObjBase> exclude){
+        boolean newId = obj.getUUID() == null;
+        if(newId) obj.setUUID(ObjectId.get());
+        exclude.add(obj);        
+        
+        //recurse on object's children
+        for (ObjBase child: obj.getChildren()) {
+            //TODO: needs to detect and skip proxies if lazy loading is used
+            if (!exclude.contains(child) && child != null){
+                if (!save(child, exclude)){
+                    return false;
+                }
+            }
+        }
+        
+        //write obj to DB
+        try {
+            singleSave(obj);
+        }
+        catch (Exception e){
+            //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
+            if (newId) obj.setUUID(null);
+            return false;
+        }
+        return true;
+    }
+    
+    public void singleSave(ObjBase obj) {
         //needs to update lastUpdated field only if save succeeds
         //needs to check if thing actually needs saving
         //needs to validate object
@@ -107,47 +132,47 @@ public class MongoDBConnection
             dataStore.save(obj);
         }
 
-        return true;
     }
 
     @Override
     public int save(Collection<ObjBase> objs) {
         int i = 0;
-        boolean saved;
         for (ObjBase o : objs) {
-            saved = save(o);
-            if (saved) {
+            try{
+                save(o);
                 i++;
+            } catch (Exception e) {
+                //logger.error();
+                //aggregate errors and pass back to user - not sure on details yet
             }
         }
         return i;
     }
-
-    public boolean save(BSONObject obj) {
+    
+    @Override
+    //non-cascade save
+    public void save(BSONObject obj) {
         data.save(new BasicDBObject(obj.toMap()));
-        return true;
     }
 
     @Override
     //TODO: check for references in database
-    //TODO: move to 'deleted' collection instead of just deleting
-    public boolean delete(ObjBase obj) {
-        try {
+    //TODO: move to 'deleted' collection instead of hard deleting
+    public void delete(ObjBase obj) {
             dataStore.delete(obj);
-        } catch (MongoException e) {
-            return false;
-        }
-        return true;
     }
 
     @Override
     public int delete(Collection<ObjBase> objs) {
         int i = 0;
-        boolean deleted;
         for (ObjBase o : objs) {
-            deleted = delete(o);
-            if (deleted) {
+            try {
+                delete(o);
                 i++;
+            }
+            catch (Exception e) {
+                //logger.error();
+                //aggregate errors and pass back to user - not sure on details yet 
             }
         }
         return i;
@@ -180,6 +205,7 @@ public class MongoDBConnection
      return null;
      }
      */
+    
     @Override
     public List<ObjBase> get(BSONObject query) {
         List<ObjBase> results = new ArrayList<ObjBase>();
@@ -195,38 +221,33 @@ public class MongoDBConnection
         return results;
     }
 
-    public BSONObject getAsBSON(BSONObject query) {
+    
+    @Override    
+    public Collection<BSONObject> getAsBSON(BSONObject query) {
         DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
-        return new BasicDBObject("results", cursor.toArray());
+        Collection<BSONObject> result = new ArrayList<BSONObject>();
+        while (cursor.hasNext()){
+            result.add(cursor.next());
+        }
+        
+        return result;
     }
 
-    @Override
-    public ClothoQuery createQuery(Class type) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    @Override    
     public <T> T getOne(Class<T> type, BSONObject query) {
         DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
 
-    public ObjBase[] getTableAsArray(ObjBase obj) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
-    public <T> T[] getTableAsArray(Class<T> type) {
-        BasicDBObject query = new BasicDBObject("className", type.getCanonicalName());
-        List<ObjBase> lst = this.get(query);
-
-        T[] array = (T[]) Array.newInstance(type, lst.size());
-        return lst.toArray(array);
+    public BSONObject getOneAsBSON(BSONObject query) {
+        return data.findOne(new BasicDBObject(query.toMap()));
     }
-
+    
+    
     @Override
-    public boolean clear() {
+    public void deleteAll() {
         this.data.drop();
-        return true;
     }
     
     public ObjectId[] chain(BSONObject query){
@@ -268,4 +289,30 @@ public class MongoDBConnection
         
         b.put(path[path.length-1], o);
     }
+
+    public void delete(ObjectId id) {
+        data.remove(new BasicDBObject("_id", id));           
+    }
+
+    public Collection<ObjBase> get(String name) {
+        return get(new BasicDBObject("_id", name));
+    }
+
+    public Collection<BSONObject> getAsBSON(String name) {
+        return getAsBSON(new BasicDBObject("_id", name));
+    }
+
+    public <T> T getOne(Class<T> type, String name) {
+        return getOne(type, new BasicDBObject("_id", name));
+    }
+
+    public BSONObject getOneAsBSON(String name) {
+        return getOneAsBSON(new BasicDBObject("_id", name));
+    }
+
+    @Override
+    public <T extends ObjBase> Collection<T> getAll(Class<T> type) {
+        return (Collection<T>) get(new BasicDBObject("$type", type.getName()));
+    }
+
 }
