@@ -23,67 +23,34 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects;
 
+import java.net.UnknownHostException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-
+import javax.inject.Inject;
+import lombok.Delegate;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.layers.persistence.flat.FlatFilePersistor;
-import org.clothocad.core.layers.persistence.mongodb.MongoDBPersistor;
+import org.clothocad.core.layers.persistence.ClothoConnection;
 
 /**
  * @author jcanderson
+ * 
+ * Manages writing/reading objects to/from the DB, and will eventually also coordinate that with caching
+ * Right now is a very simple pass-through class.
  */
-public abstract class Persistor 
-	implements Aspect {
-
-	private static final int N = 2;     
-		// N==1 -> MongoDB persistor
-		// N==2 -> FlotFile persistor
-	
-	public abstract boolean persist(Collection<ObjBase> col);	
-    public abstract boolean persist(ObjBase obj);
-
-    public abstract Datum get(Class c, ObjBase obj);
-	public abstract Datum get(Class c, ObjectId id);
-	public abstract ObjBase[] get(ObjBase obj);
-	public abstract <T> T[] get(Class<T> t);
-	public abstract boolean clearDB();	
-	
-	public abstract Datum loadDatum (String uuid);
-    public abstract HashMap<String, Integer> loadFeature (String feature);
-    public abstract List<String> loadWordBank ();
-    public abstract void persistFeature (Object obj, String filePath);
-    public abstract void persistWordBank (List<String> wordBank);
+public class Persistor implements Aspect {
     
-    
-    public static Persistor get() {
-    	switch(N) {
-    	case 1:
-    		return getMongoDBPersistor();    		
-    	case 2:
-    		return getFlatFilePersistor();
-    	}
-    	return (Persistor)null;
+    @Inject
+    public Persistor(ClothoConnection connection) throws UnknownHostException{
+        this.connection = connection;
+            connection.connect();
     }
     
-    private static MongoDBPersistor mongo = null;
-    private static MongoDBPersistor getMongoDBPersistor() {
-    	if(null == mongo) {
-    		mongo = new MongoDBPersistor();
-    	}
-    	return mongo;
+    private interface Connect {
+        void connect() throws UnknownHostException;
     }
-
-    private static FlatFilePersistor flat = null;
-    private static FlatFilePersistor getFlatFilePersistor() {
-    	if(null == flat) {
-    		flat = new FlatFilePersistor();
-    	}
-    	return flat;
-    }
-
+    
+    @Delegate(excludes=Connect.class)
+    private ClothoConnection connection;
 }

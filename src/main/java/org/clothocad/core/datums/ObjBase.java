@@ -106,66 +106,33 @@ public abstract class ObjBase
     	// map datums into JSON/BSON format
     	return new JSONObject();
     }
-
-    /**
-    @Override
-    public String getId() {
-        return name;
-    }
-    **/    
     
-    //lastmodified updated on save
-    
-    // introspection
-    //save children
-    public boolean save() {
-        return save(new HashSet<ObjBase>());
-    }
-    
-    public boolean save(Set<ObjBase> exclude) {
-        boolean newId = this.UUID == null;
-        if(newId) this.UUID = ObjectId.get();
-        exclude.add(this);        
+    public List<ObjBase> getChildren(){
         ArrayList<ObjBase> children = new ArrayList<ObjBase>();
         
         for (Field f : getAllReferences(this.getClass())){
             boolean accessible = f.isAccessible();
-            try {
-                f.setAccessible(true);
-                Object value = f.get(this);
-                //reference might be a collection of references
-                if (java.util.Collection.class.isInstance(value)){
-                    //TODO: not typesafe
-                    children.addAll((java.util.Collection) value);
-                } else {
-                    children.add((ObjBase) value);
+                try {
+                    f.setAccessible(true);
+                    Object value = f.get(this);
+                    //reference might be a collection of references
+                    if (java.util.Collection.class.isInstance(value)){
+                        //TODO: not typesafe
+                        children.addAll((java.util.Collection) value);
+                        
+                    } else {
+                        children.add((ObjBase) value);
+                    }
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(ObjBase.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(ObjBase.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    f.setAccessible(accessible);
                 }
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ObjBase.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(ObjBase.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                f.setAccessible(accessible);
-            }
         }
         
-        for (ObjBase child: children) {
-            //TODO: needs to detect and skip proxies if lazy loading is used
-            if (!exclude.contains(child) && child != null){
-                if (!child.save(exclude)){
-                    return false;
-                }
-            }
-        }
-        
-        //save self
-        
-        if  (!Persistor.get().persist(this)) {
-            //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
-            if (newId) this.UUID = null;
-            return false;
-        }
-        return true;
+        return children;
     }
     
     private static List<Field> getAllReferences(Class c){

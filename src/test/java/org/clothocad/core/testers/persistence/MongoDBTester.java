@@ -18,30 +18,51 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClient;
+import java.net.UnknownHostException;
+import org.clothocad.core.layers.persistence.ClothoConnection;
+import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
+import org.junit.After;
+import org.junit.AfterClass;
 
 public class MongoDBTester {
     
     public MongoDBTester() {
     }
     
+    static private MongoClient mongo;
+    static private ClothoConnection conn;
+    
+    @BeforeClass
+    public static void setUpClass() throws UnknownHostException {
+        
+        mongo = new MongoClient();
+        conn = new MongoDBConnection();
+    }
+    
+    @Before
+    public void setUp() {
+        mongo.dropDatabase("clotho");
+
+    }
+    
+    @After
+    public void tearDown() {
+
+    }
+    // TODO: tests that only test MongoDBConnection
+    
     public static void saveAndGet(ObjBase o){
         o.save();
         ObjectId id = o.getUUID();
         Class c = o.getClass();
         o = null;
-        Persistor.get().get(c, id);
-    }
-    
-    @BeforeClass
-    public static void clearDB() {    	
-    	// clear the DB content before running the unit tests...
-    	// so we can look into the DB content after the unit tests
-    	Persistor.get().clearDB();
+        conn.get(c, id);
     }
     
     @Test
@@ -53,10 +74,8 @@ public class MongoDBTester {
         assertTrue(status);
         ObjectId id = i.getUUID();
         i = null;
-        
-        BasicDBObject query = new BasicDBObject("name", "Test institution");  // ???
-        
-        i = (Institution)Persistor.get().get(Institution.class, id);
+        BasicDBObject query = new BasicDBObject("name", "Test institution");
+        i =  conn.get(Institution.class, id);
         assertEquals("Townsville",i.getCity());
         assertEquals("Massachusetts",i.getState());
         assertEquals("United States of America",i.getCountry());
@@ -78,11 +97,13 @@ public class MongoDBTester {
         //can now find testPerson in DB
         assertNotNull(testPerson.getUUID());
         
+
         testPerson.setDisplayName("Different Name");
         status = part2.save();
-        assertTrue(status);        
+        assertTrue(status);
         
-        part1 = (Part)Persistor.get().get(Part.class, id1);
+        
+        part1 = conn.get(Part.class, id1);
         
         //changes in one composite cause changes in the other
         String name = part1.getAuthor().getDisplayName();
@@ -95,7 +116,7 @@ public class MongoDBTester {
         p.save();
         
         ObjectId id = p.getUUID();
-        ExtendedPart ep = (ExtendedPart)Persistor.get().get(ExtendedPart.class, id);
+        ExtendedPart ep = conn.get(ExtendedPart.class, id);
         
         assertEquals(p.getUUID(), ep.getUUID());
         assertEquals("test part",ep.getName());
@@ -105,14 +126,14 @@ public class MongoDBTester {
         
         ep.save();
         ep = null;
-        
-        p = (Part)Persistor.get().get(Part.class, id);
+        p = conn.get(Part.class, id);
         p.setName("renamed part");
         p.save();
         
-        ep = (ExtendedPart)Persistor.get().get(ExtendedPart.class, id);
+        ep = conn.get(ExtendedPart.class, id);
         assertEquals("test params",ep.getAdditionalParameters() );
-        assertEquals("renamed part",ep.getName());        
+        assertEquals("renamed part",ep.getName());
+        
     }
     
     
@@ -126,10 +147,9 @@ public class MongoDBTester {
     @Test 
     public void testCompositeObjectThroughDBConnection() throws IOException{
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
-        i.save();
-
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
-        lab.save();
+        conn.save(i);
+        conn.save(lab);
     }
     @Test
     public void testIdAssociation(){
@@ -145,13 +165,19 @@ public class MongoDBTester {
         ObjectId id = ObjectId.get();
         i.setUUID(id);
         i.save();
-        Institution j = (Institution)Persistor.get().get(Institution.class, id);
+        Institution j = conn.get(Institution.class, id);
         assertEquals(i.getUUID(), j.getUUID());
         assertEquals(i.getCity(), j.getCity());
         assertEquals(i.getCountry(), j.getCountry());
         assertEquals(i.getState(), j.getState());
         
     }
+    
+    
+    /*@Test
+    public void testConflict(){
+        //figure out what to do when overwriting more recent changes
+    }*/
     
     @Test
     public void testCircular(){
@@ -169,10 +195,11 @@ public class MongoDBTester {
     
     @Test
     public void testCreateGFPInstance(){
-        Feature gfp = Feature.generateFeature("GFPuv", 
-        		"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA", 
-                null, true);
-        saveAndGet(gfp);                
+        Feature gfp = Feature.generateFeature("GFPuv", "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA", 
+                    null, true);
+        saveAndGet(gfp);
+        
+        
     }
     
     @Test
@@ -186,8 +213,8 @@ public class MongoDBTester {
     	}
     	
     	// then, retrieve all parts
-    	Part[] arr = Persistor.get().get(Part.class);
-    	assertEquals(arr.length, N+3);  // +3 since 3 parts have been inserted by the earlier tests
+    	Part[] arr = conn.get(Part.class);
+    	assertEquals(arr.length, N); 
     }
     
     @Test
