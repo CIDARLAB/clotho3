@@ -86,37 +86,6 @@ public class MongoDBConnection
     public boolean isConnected() {
         return db != null;
     }
-
-    
-    
-    
-    /*
-    private boolean save(Set<ObjBase> exclude) {
-        boolean newId = this.UUID == null;
-        if(newId) this.UUID = ObjectId.get();
-        exclude.add(this);        
-        List<ObjBase> children = getChildren();
-        
-        for (ObjBase child: children) {
-            //TODO: needs to detect and skip proxies if lazy loading is used
-            if (!exclude.contains(child) && child != null){
-                if (!child.save(exclude)){
-                    return false;
-                }
-            }
-        }
-        
-        //save self
-        
-        if  (!Persistor.get().persist(this)) {
-            //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
-            if (newId) this.UUID = null;
-            return false;
-        }
-        return true;
-    }     */
-    
-    
     
     @Override
     //Cascade save
@@ -319,6 +288,26 @@ public class MongoDBConnection
         }
         
         b.put(path[path.length-1], o);
+    }
+
+    public void delete(ObjectId id) {
+        data.remove(new BasicDBObject("_id", id));           
+    }
+
+    public Collection<ObjBase> get(String name) {
+        return get(new BasicDBObject("_id", name));
+    }
+
+    public Collection<BSONObject> getAsBSON(String name) {
+        return getAsBSON(new BasicDBObject("_id", name));
+    }
+
+    public <T> T getOne(Class<T> type, String name) {
+        return getOne(type, new BasicDBObject("_id", name));
+    }
+
+    public BSONObject getOneAsBSON(String name) {
+        return getOneAsBSON(new BasicDBObject("_id", name));
     }
 
 }

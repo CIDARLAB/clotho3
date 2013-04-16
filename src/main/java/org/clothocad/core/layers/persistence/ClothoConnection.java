@@ -93,6 +93,7 @@ public interface ClothoConnection {
      * @return
      */
     void delete( ObjBase obj );
+    void delete(ObjectId id);
 
     /**
      * Deletes the given set of objects from the database.
@@ -100,6 +101,7 @@ public interface ClothoConnection {
      * @return number of objects deleted
      */
     int delete( Collection<ObjBase> objs );
+    
 
     /**
      * Returns the time the given ObjBase object was modified in the database.
@@ -116,7 +118,7 @@ public interface ClothoConnection {
      * @param uuid
      * @return
      */
-    <T> T get( Class<T> type, ObjectId uuid );
+    <T> T get(Class<T> type, ObjectId uuid);
     BSONObject getAsBSON(ObjectId uuid);
 
     /**
@@ -132,10 +134,14 @@ public interface ClothoConnection {
      * @return
      */
     Collection<ObjBase> get(BSONObject query );
+    Collection<ObjBase> get(String name);
     Collection<BSONObject> getAsBSON(BSONObject query);
+    Collection<BSONObject> getAsBSON(String name);    
     
     <T> T getOne(Class<T> type, BSONObject query);
+    <T> T getOne(Class<T> type, String name);
     BSONObject getOneAsBSON(BSONObject query);
+    BSONObject getOneAsBSON(String name);
     
     //Deletes everything
     void deleteAll();
