@@ -1,7 +1,7 @@
-package org.clothocad.core.jetty;
+package org.clothocad.webserver.jetty;
 
-import org.clothocad.core.jetty.rest.ClothoRestServlet;
 import org.clothocad.core.settings.Settings;
+import org.clothocad.webserver.jetty.rest.ClothoRestServlet;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;

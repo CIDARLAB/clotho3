@@ -1,4 +1,4 @@
-package org.clothocad.core.jetty.rest;
+package org.clothocad.webserver.jetty.rest;
 
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocket.Connection;

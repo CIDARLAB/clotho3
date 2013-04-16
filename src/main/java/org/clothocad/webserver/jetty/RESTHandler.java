@@ -1,4 +1,4 @@
-package org.clothocad.core.jetty;
+package org.clothocad.webserver.jetty;
 
 import java.io.IOException;
 import java.util.Enumeration;

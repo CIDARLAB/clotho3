@@ -24,10 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.testers;
 
 import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.aspects.Executor;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Instance;
 import org.clothocad.core.layers.communication.Callback;
+import org.clothocad.core.layers.execution.Executor;
 import org.clothocad.core.util.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;

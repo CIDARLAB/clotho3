@@ -4,33 +4,26 @@ import java.util.Hashtable;
 
 public class CallbackHandlerTable {
 
-	private static Hashtable<String, CallbackHandler> htSessions;
+	// key   ... the message's correlation id
+	// value ... the callback-handler object 
+	private static Hashtable<String, CallbackHandler> htCallbackHandlers;
 	
-	public static String put(CallbackHandler cbh) {
-		if(null == htSessions) {
-			htSessions = new Hashtable<String, CallbackHandler>();
+	public static void put(String sCorrelationID, CallbackHandler cbh) {
+		if(null == htCallbackHandlers) {
+			htCallbackHandlers = new Hashtable<String, CallbackHandler>();
 		}
 		
-		String sKey = String.valueOf(cbh.hashCode());
-		if(!htSessions.containsKey(sKey)) {
-			htSessions.put(sKey, cbh);
+		if(!htCallbackHandlers.containsKey(sCorrelationID)) {
+			htCallbackHandlers.put(sCorrelationID, cbh);
 		}
-		return sKey;
 	}
 	
-	public static CallbackHandler get(String sKey) {
-		if(null != htSessions) {
-			return htSessions.get(sKey);
+	public static CallbackHandler get(String sCorrelationID) {
+		if(null != htCallbackHandlers) {
+			CallbackHandler cbh = htCallbackHandlers.get(sCorrelationID);
+			htCallbackHandlers.remove(sCorrelationID);
+			return cbh;
 		}
 		return (CallbackHandler)null;
-	}
-	
-	public static void remove(CallbackHandler cbh) {
-		if (null != htSessions) {
-			String sKey = String.valueOf(cbh.hashCode());
-			if(htSessions.containsKey(sKey)) {
-				htSessions.remove(sKey);
-			}
-		}
 	}
 }
