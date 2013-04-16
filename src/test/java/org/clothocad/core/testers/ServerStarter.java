@@ -1,6 +1,6 @@
 package org.clothocad.core.testers;
 
-import org.clothocad.server.ClothoCore;
+import org.clothocad.core.ClothoCore;
 
 public class ServerStarter {
 

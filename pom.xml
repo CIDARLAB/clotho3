@@ -89,8 +89,8 @@
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-core</artifactId>
       <version>5.7.0</version>
-      <type>jar</type>
     </dependency>
+    
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -132,11 +132,55 @@
 		<artifactId>slf4j-api</artifactId>
 		<version>1.7.2</version>
 	</dependency>
+	
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongo-java-driver</artifactId>
       <version>2.10.0</version>
       <type>jar</type>
     </dependency>
+
+	<dependency>
+		<groupId>org.fusesource.stompjms</groupId>
+		<artifactId>stompjms-client</artifactId>
+		<version>1.13</version>
+	</dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>apollo-broker</artifactId>
+      <version>1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>apollo-stomp</artifactId>
+      <version>1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>apollo-leveldb</artifactId>
+      <version>1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>apollo-web</artifactId>
+      <version>1.6</version>
+    </dependency>
+
   </dependencies>
-</project>
+  
+	<build>
+    	<plugins>
+      		<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-compiler-plugin</artifactId>
+        		<version>3.1</version>
+        		<configuration>
+          			<source>1.6</source>
+          			<target>1.6</target>
+        		</configuration>
+      		</plugin>
+    	</plugins>
+  	</build>
+  
+  </project>

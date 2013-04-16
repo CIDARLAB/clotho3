@@ -6,20 +6,17 @@ import org.json.JSONObject;
 public class ClothoMessageProducer 
 		implements Callback {
 	
-	private String sCallbackHandlerID;
+	private String sCorrelationID;
 	
-	public ClothoMessageProducer(String sCallbackHandlerID) {
-		this.sCallbackHandlerID = sCallbackHandlerID;
+	public ClothoMessageProducer(String sCorrelationID) {
+		this.sCorrelationID = sCorrelationID;
 	}
 
 	@Override
 	public void onSuccess(JSONObject json) {
-		CallbackHandler cbh = CallbackHandlerTable.get(sCallbackHandlerID);
+		CallbackHandler cbh = CallbackHandlerTable.get(sCorrelationID);
 		if(null != cbh) {
-			cbh.respond(json);
-			
-			// then, remove the Callback handler from the Callback-handler table...
-			CallbackHandlerTable.remove(cbh);
+			cbh.respond(json);			
 		}
 	}
 

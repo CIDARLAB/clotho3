@@ -12,7 +12,7 @@
 //limitations under the License.
 //========================================================================
 
-package org.clothocad.core.jetty.rest;
+package org.clothocad.webserver.jetty.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;

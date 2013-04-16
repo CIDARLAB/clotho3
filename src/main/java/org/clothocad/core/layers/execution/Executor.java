@@ -21,8 +21,9 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
 
-package org.clothocad.core.aspects;
+package org.clothocad.core.layers.execution;
 
+import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.util.ServerScript;

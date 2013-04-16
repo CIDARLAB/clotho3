@@ -142,7 +142,7 @@ public class Router implements Aspect {
             out.put(page_info);
         }
         Communicator.get().sendClientMessage(doo.socketId,
-                                             SendChannels.showTabList,
+                                             SendChannels.showTabList.toString(),
                                              out.toString());
     }
 
@@ -248,7 +248,7 @@ public class Router implements Aspect {
         JSONObject out = getSuggestions(doo.messageStr);
         Communicator.get().sendClientMessage(
                                         doo.socketId,
-                                        SendChannels.showQueryCompletions,
+                                        SendChannels.showQueryCompletions.toString(),
                                         out.toString());
     }
     

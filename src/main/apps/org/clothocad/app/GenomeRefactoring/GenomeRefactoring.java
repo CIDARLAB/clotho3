@@ -3,7 +3,6 @@ package org.clothocad.app.GenomeRefactoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.clothocad.core.aspects.Executor;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Schema;
@@ -13,6 +12,7 @@ import org.clothocad.core.datums.util.FieldType;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.datums.util.ServerScript;
 import org.clothocad.core.layers.communication.Callback;
+import org.clothocad.core.layers.execution.Executor;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.core.util.Logger;
 import org.json.JSONException;
