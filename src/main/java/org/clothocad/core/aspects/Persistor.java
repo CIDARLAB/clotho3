@@ -31,7 +31,9 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.persistence.ClothoConnection;
+import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 
 /**
  * @author jcanderson
@@ -53,4 +55,21 @@ public class Persistor implements Aspect {
     
     @Delegate(excludes=Connect.class)
     private ClothoConnection connection;
+    
+    
+	private static volatile Persistor persistor;
+
+    public static Persistor get() 
+    		throws Exception {
+    	Persistor result = persistor;
+		if(result == null) {
+			synchronized(Persistor.class) {
+				result = persistor;
+				if(result == null) {
+					persistor = result = new Persistor(new MongoDBConnection());
+				}
+			}
+		}
+		return result;
+    }
 }

@@ -37,7 +37,6 @@ public class CallbackHandler {
 			response.setJMSCorrelationID(request.getJMSCorrelationID());
 			response.setStringProperty(ActionType.RESPONSE.toString(), json.toString());
 
-			System.out.println("[CallbackHandler.respond] -> "+response.getJMSCorrelationID()+" -> "+response.getStringProperty(ActionType.RESPONSE.toString()));
 			this.replyProducer.send(response);
 		} catch(javax.jms.InvalidDestinationException e) {
 			// something went wrong while responding to the client...

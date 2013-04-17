@@ -35,6 +35,13 @@ public class Router {
 		}
 	}
 	
+	// publish messages to subscribed clients
+	public void publish(JSONObject json) {
+		try {
+			new ClothoPublisher().publish(json);
+		} catch(Exception e) {}
+	}
+	
 	// receive message
 	public void receiveMessage(String socket_id, String channel, JSONObject json) {
 		try {

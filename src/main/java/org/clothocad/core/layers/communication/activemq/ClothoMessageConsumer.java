@@ -36,8 +36,6 @@ public class ClothoMessageConsumer
 				JSONObject json = new JSONObject(
 						message.getStringProperty("request"));
 				
-				System.out.println("[MessageConsumer.run] -> "+json.toString());
-				
 				// get the message's correlation id
 				String sCorrelationID = this.message.getJMSCorrelationID();
 				if(null == sCorrelationID) {
