@@ -24,14 +24,8 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.aspects;
 
 import java.net.UnknownHostException;
-import java.util.Collection;
 import javax.inject.Inject;
 import lombok.Delegate;
-import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.datums.Datum;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 
@@ -44,20 +38,14 @@ import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 public class Persistor implements Aspect {
     
     @Inject
-    public Persistor(ClothoConnection connection) throws UnknownHostException{
+    public Persistor(ClothoConnection connection){
         this.connection = connection;
-            connection.connect();
     }
     
-    private interface Connect {
-        void connect() throws UnknownHostException;
-    }
-    
-    @Delegate(excludes=Connect.class)
+    @Delegate
     private ClothoConnection connection;
     
-    
-	private static volatile Persistor persistor;
+    private static volatile Persistor persistor;
 
     public static Persistor get() 
     		throws Exception {
