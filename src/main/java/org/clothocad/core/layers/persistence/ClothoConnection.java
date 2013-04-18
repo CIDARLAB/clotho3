@@ -86,6 +86,7 @@ public interface ClothoConnection {
      * @return the number of objects successfully saved
      */
     int save(Collection<ObjBase> objs);
+    int saveBSON(Collection<BSONObject> objs);
 
     /**
      * Delete the object from the database.
@@ -118,7 +119,7 @@ public interface ClothoConnection {
      * @param uuid
      * @return
      */
-    <T> T get(Class<T> type, ObjectId uuid);
+    <T extends ObjBase> T get(Class<T> type, ObjectId uuid);
     BSONObject getAsBSON(ObjectId uuid);
 
     /**
@@ -133,17 +134,25 @@ public interface ClothoConnection {
      * @param query
      * @return
      */
-    Collection<ObjBase> get(BSONObject query );
-    Collection<ObjBase> get(String name);
-    Collection<BSONObject> getAsBSON(BSONObject query);
-    Collection<BSONObject> getAsBSON(String name);    
+    List<ObjBase> get(BSONObject query);
+    List<ObjBase> get(String name);
+    <T extends ObjBase> List<T> get(Class<T> type, BSONObject query);
+    <T extends ObjBase> List<T> get(Class<T> type, String name);
     
-    <T> T getOne(Class<T> type, BSONObject query);
-    <T> T getOne(Class<T> type, String name);
+    List<BSONObject> getAsBSON(BSONObject query);
+    List<BSONObject> getAsBSON(String name);    
+    <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, BSONObject query);
+    <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, String name);
+    
+    <T extends ObjBase> T getOne(Class<T> type, BSONObject query);
+    <T extends ObjBase> T getOne(Class<T> type, String name);
+    
     BSONObject getOneAsBSON(BSONObject query);
     BSONObject getOneAsBSON(String name);
+    <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, BSONObject query);
+    <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, String name);
     
-    <T extends ObjBase> Collection<T> getAll(Class<T> type);
+    <T extends ObjBase> List<T> getAll(Class<T> type);
     
     //Deletes everything
     void deleteAll();

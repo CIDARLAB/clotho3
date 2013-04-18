@@ -186,7 +186,7 @@ public class MongoDBConnection
     }
 
     @Override
-    public <T> T get(Class<T> type, ObjectId uuid) {
+    public <T extends ObjBase> T get(Class<T> type, ObjectId uuid) {
         return dataStore.get(type, uuid);
     }
 
@@ -223,18 +223,28 @@ public class MongoDBConnection
 
     
     @Override    
-    public Collection<BSONObject> getAsBSON(BSONObject query) {
+    public List<BSONObject> getAsBSON(BSONObject query) {
         DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
-        Collection<BSONObject> result = new ArrayList<BSONObject>();
+        List<BSONObject> result = new ArrayList<BSONObject>();
         while (cursor.hasNext()){
             result.add(cursor.next());
         }
         
         return result;
     }
+    
+    @Override 
+    public <T extends ObjBase> List<T> get(Class<T> type, BSONObject query) {
+        return null;
+    }
 
+    @Override 
+    public <T extends ObjBase> List<T> get(Class<T> type, String name) {
+        return dataStore.find(type, "name", name).asList();
+    }
+    
     @Override    
-    public <T> T getOne(Class<T> type, BSONObject query) {
+    public <T extends ObjBase> T getOne(Class<T> type, BSONObject query) {
         DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
@@ -294,15 +304,15 @@ public class MongoDBConnection
         data.remove(new BasicDBObject("_id", id));           
     }
 
-    public Collection<ObjBase> get(String name) {
+    public List<ObjBase> get(String name) {
         return get(new BasicDBObject("_id", name));
     }
 
-    public Collection<BSONObject> getAsBSON(String name) {
+    public List<BSONObject> getAsBSON(String name) {
         return getAsBSON(new BasicDBObject("_id", name));
     }
 
-    public <T> T getOne(Class<T> type, String name) {
+    public <T extends ObjBase> T getOne(Class<T> type, String name) {
         return getOne(type, new BasicDBObject("_id", name));
     }
 
@@ -311,8 +321,35 @@ public class MongoDBConnection
     }
 
     @Override
-    public <T extends ObjBase> Collection<T> getAll(Class<T> type) {
-        return (Collection<T>) get(new BasicDBObject("$type", type.getName()));
+    public <T extends ObjBase> List<T> getAll(Class<T> type) {
+        return dataStore.find(type).asList();
+    }
+
+    @Override
+    public int saveBSON(Collection<BSONObject> objs) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, BSONObject query) {
+        query.put(Mapper.CLASS_NAME_FIELDNAME, type.getName());
+        return getAsBSON(query);
+    }
+
+    @Override
+    public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, String name) {
+        return getAsBSON(new BasicDBObject("name", name));
+    }
+
+    @Override
+    public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, BSONObject query) {
+        query.put(Mapper.CLASS_NAME_FIELDNAME, type.getName());
+        return getOneAsBSON(query);
+    }
+
+    @Override
+    public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, String name) {
+        return getOneAsBSON(new BasicDBObject("name", name));
     }
 
 }
