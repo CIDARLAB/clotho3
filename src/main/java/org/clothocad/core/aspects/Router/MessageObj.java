@@ -24,8 +24,8 @@ package org.clothocad.core.aspects.Router;
 
 import org.json.JSONObject;
 import org.json.JSONException;
-
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper object to parse/serialize (socket_id, channel, message, flags)
@@ -34,6 +34,7 @@ import org.clothocad.core.util.Logger;
  * @author Kelvin Li
  */
 class MessageObj {
+    static final Logger logger = LoggerFactory.getLogger(MessageObj.class);
     static MessageObj fromJSONString(String json_string) {
         MessageObj mobj = new MessageObj();
         try {
@@ -43,14 +44,14 @@ class MessageObj {
             mobj.message = (String) json.get("message");
             mobj.flags = (String) json.get("flags");
         } catch (JSONException e) {
-            Logger.log(Logger.Level.WARN,
-                       "failed parsing " + json_string,
+            logger.warn(
+                       "failed parsing {} {}", json_string,
                        e);
             return null;
         } catch (ClassCastException e) {
-            Logger.log(Logger.Level.WARN,
-                       "failed parsing " + json_string,
-                       e);
+            logger.warn(
+                       "failed parsing {} {}", json_string,
+                       e);;
             return null;
         }
         return mobj;
@@ -77,8 +78,8 @@ class MessageObj {
             json.put("flags", flags);
             return json;
         } catch (JSONException e) {
-            Logger.log(Logger.Level.WARN,
-                       "failed constructing json",
+            logger.warn(
+                       "failed constructingjson",
                        e);
             return null;
         }

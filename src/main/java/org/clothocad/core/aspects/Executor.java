@@ -25,10 +25,10 @@ package org.clothocad.core.aspects;
 
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.util.ServerScript;
 import org.clothocad.core.layers.communication.Callback;
-import org.clothocad.core.util.Logger;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * So, I didn't make up the word Executor, it's an interesting Java interface of thread managers:
@@ -49,6 +49,7 @@ import org.json.JSONObject;
  * @author jcanderson
  */
 public final class Executor implements Aspect {
+    static final Logger logger = LoggerFactory.getLogger(Executor.class);
     /**
      * This is the big important method exposed in api to run an assistant
      * on a list of inputs and a callback (asynchronously).
@@ -90,15 +91,10 @@ public final class Executor implements Aspect {
 	        try {
 	            //Get the language and script
 	            doo.setMessage("Executor.runCanDooIt about to test");
-	            ServerScript candooit = doo.assistant.getCanDooIt();            
-	            
-	            String resultStr = candooit.run(doo.inputs);
-	            Boolean bool = Boolean.parseBoolean(resultStr);
-	            return bool;
+	            return doo.assistant.canDooIt();
 	        } catch (Exception e) {
 	            doo.setMessage("Executor.runCanDooIt threw an exception for some reason");
-	            Logger.log(Logger.Level.WARN,
-	                       "This needs to relay a developer message as the candooit method failed to run properly",
+	            logger.warn("This needs to relay a developer message as the candooit method failed to run properly",
 	                       e);
 	            doo.terminate();
 	        }
@@ -122,14 +118,12 @@ public final class Executor implements Aspect {
     private synchronized JSONObject runDooit(ExecutorDoo doo) {
         try {
             //Get the language and script
-            ServerScript dooit = doo.assistant.getDooIt();
-            Logger.log(Logger.Level.INFO, "rundooit about to call run");
-            String resultStr = dooit.run(doo.inputs);
-            JSONObject result = new JSONObject(resultStr);
+            logger.info( "rundooit about to call run");
+            JSONObject result = (JSONObject) doo.assistant.execute(); //XXX: unpack doo input, fix returntype
             return result;
         } catch (Exception e) {
-            doo.setMessage("Executor.runCanDooIt threw an exception for some reason");
-            Logger.log(Logger.Level.WARN,
+            doo.setMessage("Executor.runDooIt threw an exception for some reason");
+            logger.warn(
                        "This needs to relay a developer message as the rundooit method failed to run properly",
                        e);
             doo.terminate();

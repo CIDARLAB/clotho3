@@ -3,9 +3,7 @@ package org.clothocad.core.datums;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,14 +13,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.util.ClothoDate;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import java.util.Date;
+import java.util.Map;
+import lombok.Getter;
+import org.json.JSONObject;
 
 /**
  *
@@ -31,84 +29,36 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 @Entity("data")
 @Data
 @NoArgsConstructor
-public abstract class ObjBase 
-		implements Datum {
-	
+public abstract class ObjBase {
+
     public ObjBase(String name) {
         this.name = name;
     }
-
-    // null iff not associated with a db document
+    
     @Id
     private ObjectId UUID = null;
     
-    //auto-populate dates for new entries without messing up deserialization
-    //semantics - constructor for brand new entries, deserializer for preexisting entries
-    //remove dateCreated getter
-    @Setter(AccessLevel.PUBLIC)
     private String name;    
     private boolean isDeleted;    
-	private ClothoDate dateCreated;
-	private ClothoDate lastModified;
-	private ClothoDate lastAccessed;
-	
-    protected JSONObject json;
-	
-	public ObjBase(JSONObject json) 
-			throws JSONException {
-		this.dateCreated = new ClothoDate();
-		this.lastModified = new ClothoDate();
-		this.lastAccessed = new ClothoDate();
-		this.json = json;
-		this.UUID = ObjectId.get();
-	}
-	
-	/**
-	public UUID getUUID() {
-		return this.uuid;
-	}
-	**/
-	
-	public String getId() {
-		if(null == this.UUID) {
-			this.UUID = ObjectId.get();
-		}
-		return this.UUID.toString();
-	}
-	
-	public ClothoDate getDateCreated() {
-		return this.dateCreated;
-	}
-	
-	public void setLastModified(ClothoDate lastModified) {
-		this.lastModified = lastModified;
-	}
-	
-	public ClothoDate getLastModified() {
-		return this.lastModified;
-	}
-	
-	
-	public void setLastAccessed(ClothoDate lastAccessed) {
-		this.lastAccessed = lastAccessed;
-	}
-	
-	public ClothoDate getLastAccessed() {
-		return this.lastAccessed;
-	}
-	
-    // every Datum must implement the toJSON method
-    public JSONObject toJSON()  {   
-    	if (null != json) {
-    		return this.json;
-    	}
-    	// here we can utilize Stephanie's introspection code to 
-    	// map datums into JSON/BSON format
-    	return new JSONObject();
-    }
     
+    @Setter(AccessLevel.NONE)
+    private Date dateCreated;
+    private Date lastModified, lastAccessed;
+	
+	public void onUpdate() {
+		
+            
+            
+		// here we need to call the client-side API
+		// which forwards the update message 
+		// to ``subscribed'' clients
+            
+            //so, do all setters need to check to see if the value changed and then call onUpdate?
+		
+	}
+        
     public List<ObjBase> getChildren(){
-        ArrayList<ObjBase> children = new ArrayList<ObjBase>();
+        ArrayList<ObjBase> children = new ArrayList<>();
         
         for (Field f : getAllReferences(this.getClass())){
             boolean accessible = f.isAccessible();
@@ -146,6 +96,11 @@ public abstract class ObjBase
             c = c.getSuperclass();
         }
         return output;
+    }
+    
+    //TODO:
+    public JSONObject toJSON(){
+        throw new UnsupportedOperationException();
     }
     
 }

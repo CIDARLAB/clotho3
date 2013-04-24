@@ -3,7 +3,7 @@
  * Expects the file 'scripttest.js' to be in the current working
  * directory of the running Java process.
  */
-package org.clothocad.core.scripting;
+package org.clothocad.core.testers.execution;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,14 +13,16 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class scripttest {
+    static final Logger logger = LoggerFactory.getLogger(scripttest.class);
     public static void main(String[] args) {
         try {
             test();
         } catch (Exception e) {
-            Logger.log(Logger.Level.FATAL, "", e);
+            logger.error("",e);
         }
     }
 
@@ -49,9 +51,9 @@ public class scripttest {
         Double j_eggs_age = j_eggs.getDouble("age");
 
         /* Print output */
-        Logger.log(Logger.Level.INFO,
-                   "j_eggs is called '" + j_eggs_name + "'");
-        Logger.log(Logger.Level.INFO,
-                   "j_eggs is " + String.valueOf(j_eggs_age) + " days old");
+        logger.info(
+                   "j_eggs is called '{}'", j_eggs_name);
+        logger.info(
+                   "j_eggs is {} days old", String.valueOf(j_eggs_age));
     }
 }

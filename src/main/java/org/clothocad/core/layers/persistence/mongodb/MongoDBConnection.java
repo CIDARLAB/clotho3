@@ -9,7 +9,6 @@ import java.util.List;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 
 import com.github.jmkgreen.morphia.Datastore;
@@ -156,7 +155,7 @@ public class MongoDBConnection
         //needs to update lastUpdated field only if save succeeds
         //needs to check if thing actually needs saving
         //needs to validate object
-        obj.setLastModified(new ClothoDate());
+        obj.setLastModified(new Date());
         if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
@@ -210,7 +209,7 @@ public class MongoDBConnection
     }
 
     @Override
-    public ClothoDate getTimeModified(ObjBase obj) {
+    public Date getTimeModified(ObjBase obj) {
         //TODO: just fetch LastModified field instead of entire object
         ObjBase result = dataStore.get(obj);
         return result.getLastModified();

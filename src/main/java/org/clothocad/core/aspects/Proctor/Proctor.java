@@ -30,9 +30,9 @@ import java.util.logging.Logger;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.util.ServerScript;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.layers.communication.mind.PageMode;
+import org.clothocad.model.Person;
 import org.json.JSONObject;
 
 /**
@@ -53,8 +53,8 @@ public class Proctor implements Aspect {
     public void initiateTrail(Person student, Trail trail, Doo parentDoo) throws Exception {
         //Create a QuizDoo to manage the task
         ProctorDoo doo = new ProctorDoo(parentDoo);
-        doo.trailId = trail.getId();
-        doo.studentId = student.getId();
+        doo.trailId = trail.getUUID().toString();
+        doo.studentId = student.getUUID().toString();
         
         //The Trail data contains in the TOC, construct the widget code
         
@@ -77,12 +77,12 @@ public class Proctor implements Aspect {
      */
     public boolean gradeQuiz(JSONObject submittedAnswer, Person person, Quiz quiz, Doo doo) {
         ProctorDoo qdoo = new ProctorDoo(doo);
-        qdoo.quizId = quiz.getId();
-        qdoo.studentId = person.getId();
+        qdoo.quizId = quiz.getUUID().toString();
+        qdoo.studentId = person.getUUID().toString();
         
-        ServerScript rubric = quiz.getRubric();
+        Function rubric = quiz.getRubric();
         try {
-            String resultStr = rubric.run(submittedAnswer);
+            String resultStr = (String) rubric.execute(submittedAnswer);
             JSONObject result = new JSONObject(resultStr);
             
             //NEED TO SEE WHAT THIS LOOKS LIKE.  WE'RE PROBABLY AT THE POINT WHERE WE NEED TO FIX THIS

@@ -1117,7 +1117,8 @@ public class NucSeq
     }
 
     private static void generateFeatureTable( boolean init, boolean backgroundMode ) {
-        Feature[] features = Persistor.get().get(Feature.class);
+        //FIXME
+       /* Feature[] features = Persistor.get().get(Feature.class);
         for ( int i = 0; i < features.length; i++ ) {
             try {
             String astring = features[i].getSequence().getSeq();
@@ -1127,7 +1128,7 @@ public class NucSeq
                 featureTable.put(features[i], "XXXXXXXXXXXXXXXXXX");
             }
         }
-        featuresInitiated = true;
+        featuresInitiated = true;*/
     }
 
     /**

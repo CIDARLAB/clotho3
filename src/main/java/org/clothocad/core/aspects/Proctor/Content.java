@@ -25,8 +25,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Proctor;
 
 import java.util.ArrayList;
+import org.clothocad.model.Person;
 
-import org.clothocad.core.datums.objbases.Person;
 import org.json.JSONObject;
 
 
@@ -39,8 +39,8 @@ public class Content
 		extends Paver {
 	
 
-    public Content(Person author, SharableType type) {
-		super(author, SharableType.CONTENT);
+    public Content(Person author) {
+		super(author);
 	}
 
 	@Override
@@ -53,16 +53,11 @@ public class Content
        JSONObject displayData = new JSONObject();
        displayData.put("title", this.title);
        displayData.put("description", this.description);
-       displayData.put("author_id", this.authorId);
+       displayData.put("author_id", this.getAuthor().getUUID());
        displayData.put("rating", this.calculateRating());
        //PROBABLY A FEW MORE METADATA FIELDS
        
        return displayData;
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
     
     public class ViewElements {

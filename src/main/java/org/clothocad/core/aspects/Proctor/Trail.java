@@ -26,15 +26,12 @@ package org.clothocad.core.aspects.Proctor;
 
 import flexjson.JSONSerializer;
 import java.util.ArrayList;
-import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.Sharable.SharableType;
-import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.util.ClothoDate;
-import org.clothocad.core.datums.util.Permissions;
-import org.clothocad.core.util.Logger;
+import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,9 +41,11 @@ import org.json.JSONObject;
 
 public class Trail 
 		extends Paver {
+    
+    private static Logger logger = LoggerFactory.getLogger(Trail.class);
 
     public Trail(Person author) {
-		super(author, SharableType.TRAIL);
+		super(author);
 	}
 
 	/**
@@ -71,11 +70,11 @@ public class Trail
      * @param index
      * @return 
      * @author John Christopher Anderson
-     * @status correct as of 10/11/12
+     * @status unnecessary with persistor changes 4/22/13
      */
     private Paver fetchPaver(int index) {
         String uuid = pavers.get(index);
-        Paver first = (Paver) Collector.get().getDatum(uuid);
+        Paver first = null;// (Paver) Collector.get().getDatum(uuid);
         return first;
     }
 
@@ -100,7 +99,7 @@ public class Trail
        for(int i=0; i<pavers.size(); i++) {
            Paver paver = fetchPaver(i);
            if(paver==null) {
-               Logger.log(Logger.Level.WARN, "Error fetching a");
+               logger.warn("Error fetching a");
                continue;
            }
            tocArray.put(paver.makeTocJSON());

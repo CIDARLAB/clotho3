@@ -5,13 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Random;
 
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.ObjBase;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,7 +26,6 @@ import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
 import org.junit.After;
-import org.junit.AfterClass;
 
 public class MongoDBTester {
     

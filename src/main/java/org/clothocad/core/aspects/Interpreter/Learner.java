@@ -1,18 +1,16 @@
 package org.clothocad.core.aspects.Interpreter;
 
-import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.util.FileUtils;
-import org.clothocad.core.util.Logger;
-
-import com.thoughtworks.xstream.XStream;
-import java.util.TreeMap;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
-import java.io.File;
+import java.util.TreeMap;
+import org.clothocad.core.aspects.Persistor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 class Learner{
+    final static Logger logger = LoggerFactory.getLogger(Learner.class);
 
     /**
      * Provided the list of n-gram features and the action that they map to,
@@ -84,10 +82,10 @@ class Learner{
         try {
             chosenCmd = (String) ActionList.keySet().toArray()[choice - 1];
         } catch (IndexOutOfBoundsException ie) {
-            Logger.log(Logger.Level.FATAL, "Your choice was invalid", ie);
+            logger.error("Your choice was invalid: {}", ie);
             return null;
         }
-        Logger.log(Logger.Level.INFO, "Your choice was " + chosenCmd);
+        logger.info("Your choice was {}", chosenCmd);
         return chosenCmd;
     }
 
@@ -96,9 +94,9 @@ class Learner{
      */
     private static void giveOptions(TreeMap<String, Double> ActionList) {
         int cardNum = 1;
-        Logger.log(Logger.Level.INFO, "Choose your best option");
+        logger.info("Choose your best option");
         for (String action : ActionList.keySet()) {
-            Logger.log(Logger.Level.INFO, cardNum + ". " + action);
+            logger.info("{}. {}", cardNum, action);
             cardNum ++;
         }
     }
@@ -108,7 +106,8 @@ class Learner{
      * @param feature 
      */
     public static HashMap<String, Integer> getIndexEntry(String feature) {
-        HashMap<String, Integer> out = Persistor.get().loadFeature(feature);
+        //FIXME:
+        HashMap<String, Integer> out = null;// = Persistor.get().loadFeature(feature);
         return out;
     }
 
@@ -118,7 +117,8 @@ class Learner{
      * @param HashMap 
      */
     private static void saveIndexEntry(HashMap<String, Integer> StoreGrams, String feature) {
-        Persistor.get().persistFeature(StoreGrams, feature);
+        //FIXME:
+        //Persistor.get().persistFeature(StoreGrams, feature);
     }
 
     /* TODO replace autocollapse's job with Decider. If decide to keep then replace 
@@ -160,5 +160,4 @@ class Learner{
             indexEntry.remove(str);
         }
     }
-    private static XStream xstream = new XStream();
 }

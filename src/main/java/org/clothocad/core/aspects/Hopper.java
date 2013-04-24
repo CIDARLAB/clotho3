@@ -27,7 +27,8 @@ package org.clothocad.core.aspects;
 import java.util.HashMap;
 import java.util.UUID;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The hopper is where Doo's are held while a process is going on elsewhere.
@@ -52,6 +53,7 @@ import org.clothocad.core.util.Logger;
 
 
 public class Hopper implements Aspect {
+    public static Logger logger = LoggerFactory.getLogger(Hopper.class);
     /**
      * Pull the Doo out of the Hopper and return it
      * @param dooId
@@ -76,7 +78,7 @@ public class Hopper implements Aspect {
 
         if(doo==null) {
             //THIS SHOULD BE AN ERROR-MESSAGE SCENARIO FOR SURE AS IT DROPPED A DOO, WHICH IS A NO-NO FOR SURE.
-            Logger.log(Logger.Level.FATAL, dooId);
+            logger.error(dooId);
             return false;
         }
         //IF THE DOO TELLS CLOTHO TO DO ANYTHING NOW, DOO IT HERE
@@ -93,7 +95,7 @@ public class Hopper implements Aspect {
      * @param doo 
      */
     public void add(Doo doo) {
-        dooList.put(doo.getId(), doo);
+        dooList.put(doo.getUUID().toString(), doo);
     }
     
     //Singleton stuff

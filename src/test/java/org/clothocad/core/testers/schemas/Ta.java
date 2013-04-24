@@ -21,23 +21,27 @@ PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
-package org.clothocad.core.testers;
+package org.clothocad.core.testers.schemas;
 
+import static com.google.common.collect.Sets.newHashSet;
+import com.mongodb.BasicDBObject;
 import flexjson.JSONSerializer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import org.clothocad.core.aspects.Collector;
+import java.util.Set;
+import org.bson.BSONObject;
+import org.bson.types.ObjectId;
+import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.datums.ObjBase;
+
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.datums.util.FieldType;
-import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.datums.Instance;
-import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.Schema;
-import org.clothocad.core.datums.util.ServerScript;
+import org.clothocad.core.layers.persistence.DBClassLoader;
+import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.schema.ClothoSchema;
+import org.clothocad.core.schema.JavaSchema;
+import org.clothocad.core.schema.Schema;
+import org.clothocad.model.Person;
 import org.json.JSONObject;
+import static org.objectweb.asm.Opcodes.*;
 
 /**
  * @author John Christopher Anderson
@@ -46,6 +50,9 @@ import org.json.JSONObject;
 
 public class Ta {
     public static void main(String[] args) throws Exception {
+        Persistor persistor = new Persistor(new MongoDBConnection());
+        DBClassLoader cl = new DBClassLoader(persistor);
+        
         //Create a schema and test
         System.out.println("\n\n+++++++++++ Testing out schema");
         Schema schema = createSchema();
@@ -53,44 +60,29 @@ public class Ta {
         
         //Create and test an ObjBase
         System.out.println("\n\n+++++++++++ Testing out objbase");
-        String serial = createFeature();
-        Instance obj = Instance.create(Person.getAdmin(), schema, serial);
-        System.out.println(obj.toJSON().toString());
-        System.out.println("Id is: " + obj.getId());
-        testObjBase(obj);
-        
-        //Try to load a Person object
-        Person aperson = Person.getAdmin();
-        System.out.println(aperson.toJSON().toString());
+        BSONObject serial = createFeature();
+        persistor.save(serial);
+        ObjBase feature = persistor.get(schema.getEnclosedClass(cl), new ObjectId((String) serial.get("_id")));
+        System.out.println(feature.toJSON().toString());
+        System.out.println("Id is: " + feature.getUUID());
+        testObjBase(feature);
     }
 
-    private static String createFeature() {
-        HashMap afeat = new HashMap();
+    private static BSONObject createFeature() {
+        BSONObject afeat = new BasicDBObject();
             afeat.put("name", "mRFP1");
             afeat.put("sequence", "atgcatcatcatcatcatcatta");
         
-        JSONSerializer serializer = new JSONSerializer().exclude("*.class");
-        serializer.prettyPrint(true);
-        String serial = serializer.deepSerialize( afeat );
-        System.out.println(serial);
-        return serial;
+        return afeat;
     }
    
     
     private static Schema createSchema(){
-        ServerScript indexer = new ServerScript("return true;", Language.JavaScript);
-        ServerScript queryer = new ServerScript("return true;", Language.JavaScript);
-        ServerScript validator = new ServerScript("return true;", Language.JavaScript);
         
-        List<ClothoField> thefields = new ArrayList<ClothoField>();
-        
-        ClothoField name = new ClothoField("name", FieldType.NAME, "GFPmut3", 0);
-        thefields.add(name);
-        
-        ClothoField sequence = new ClothoField("sequence", FieldType.STRING, "atgcatgagatcatgcagccaactatttattaa", 0);
-        thefields.add(sequence);
+        Set<ClothoField> thefields = newHashSet(new ClothoField("name", String.class, "GFPmut3", "the feature name", null, false, ACC_PUBLIC),
+                                                new ClothoField("sequence", String.class, "atgcatgagatcatgcagccaactatttattaa", "the feature sequence", null, false, ACC_PUBLIC));
 
-        Schema schema = Schema.create(Person.getAdmin(), "Feature", "Act ontology standard representation of a genetic feature", thefields, indexer, queryer, validator);
+        Schema schema = new ClothoSchema("Feature", "Act ontology standard representation ofa genetic feature", null, null, thefields);
         System.out.println(schema.toJSON().toString());
         return schema;
     }
@@ -100,12 +92,12 @@ public class Ta {
             //Convert to JSON
             JSONObject json = schema.toJSON();
             //Convert back to Schema
-            Schema converted = Schema.deserialize(json.toString());
+            JavaSchema converted = null; //TODO: JavaSchema.deserialize(json.toString());
 
             System.out.println(converted.toJSON()); 
             
             
-            if(!converted.getId().equals(schema.getId())) {
+            if(!converted.getUUID().equals(schema.getUUID())) {
                 return false;
             }
             
@@ -118,17 +110,15 @@ public class Ta {
         }
     }
 
-    private static boolean testObjBase(Instance obj) {
+    private static boolean testObjBase(ObjBase obj) {
         try {
             //Convert to JSON
             JSONObject json = obj.toJSON();
             //Convert back to Schema
-            Instance converted = Instance.deserialize(json.toString());
-
-            System.out.println(converted.toJSON()); 
+            ObjBase converted = null; //TODO: deserialize here 
             
             
-            if(!converted.getId().equals(obj.getId())) {
+            if(obj.getUUID().equals(converted.getUUID())) {
                 return false;
             }
             

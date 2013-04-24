@@ -23,6 +23,8 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.datums.util;
 
+import org.clothocad.core.datums.ObjBase;
+
 /* This one deals with passing json:
  * http://stackoverflow.com/questions/1078419/java-scriptengine-using-value-on-java-side
  * http://docs.oracle.com/javase/6/docs/technotes/guides/scripting/programmer_guide/index.html
@@ -31,7 +33,7 @@ package org.clothocad.core.datums.util;
 /**
  * @author John Christopher Anderson
  */
-public class ClientScript implements Script {
+public class ClientScript extends ObjBase {
     private ClientScript() { }
     
     public ClientScript(String js, String html, Language language) {
@@ -40,7 +42,6 @@ public class ClientScript implements Script {
         this.language = language;
     }
 
-    @Override
     public Language getLanguage() {
         return language;
     }

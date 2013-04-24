@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
 import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /* TODO: Move this functionality (and the related methods in Mind)
  *       to Interpreter.
@@ -14,6 +15,8 @@ import org.clothocad.core.util.Logger;
  * 10000 items, but it will drop old tokens over time to let in new ones.
  */
 class NameSpace {
+    static final Logger logger = LoggerFactory.getLogger(NameSpace.class);
+    
     public void put(String token, String cmd) {
         //If the token bank hasn't seen this token
         if(!tokenBank.containsKey(token)) {
@@ -69,9 +72,9 @@ class NameSpace {
              * already instantiate engine */
 //            newMind.getMyEngine().eval(cmd);  //this method is problematic as it is now taking in arguments for show and trying to show them
             put(token, cmd);
-            mind.save();
+            //XXX: mind.save();
         } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "won't learn command: " + cmd);
+            logger.warn( "won't learn command: {}");
             return;
         }
     }

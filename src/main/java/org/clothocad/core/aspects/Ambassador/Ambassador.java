@@ -27,7 +27,6 @@ package org.clothocad.core.aspects.Ambassador;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.aspects.Ambassador.Sister.TrustLevel;
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable;
@@ -50,6 +49,7 @@ import java.util.logging.Logger;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.bson.types.ObjectId;
 
 /**
  * The Connector and Communicator have somewhat similar functions but not identical.
@@ -78,6 +78,8 @@ import javax.servlet.http.*;
 
 
 public class Ambassador implements Aspect {
+    
+    Persistor persistor;
     
     private Ambassador() {
         System.out.println("The ambassador has been initiated");
@@ -258,7 +260,7 @@ public class Ambassador implements Aspect {
             //
             doo.sisterId = doo.jsonObj.getString("sister_id");
             doo.port = doo.jsonObj.getInt("port");
-            Sister sister = (Sister) Collector.get().getDatum(doo.sisterId);
+            Sister sister = persistor.get(Sister.class, new ObjectId(doo.sisterId));
             if(sister==null) {
                 //Create a new Sister to represent this newcomer
                 sister = new Sister(doo.sisterId, doo.url, doo.port);
@@ -275,7 +277,7 @@ public class Ambassador implements Aspect {
                 sister.setUrl(doo.url);
             }
             
-            Persistor.get().persist(sister);
+            persistor.save(sister);
             
             //
             //Extract any security codes, and the cmd token
@@ -363,7 +365,7 @@ public class Ambassador implements Aspect {
             //
             //Go fetch the sharable, wrap it into the response, then send it back
             //
-            Sharable sharable = (Sharable) Collector.get().getDatum(doo.itemId);
+            Sharable sharable = persistor.get(Sharable.class, new ObjectId(doo.itemId));
             doo.sharableJSON = sharable.toJSON();
             doo.response = new JSONObject();
             doo.response.put("sharable_item", doo.sharableJSON);
@@ -402,7 +404,7 @@ public class Ambassador implements Aspect {
             //Go fetch the Badge in question and check if person has that badge
             //
             String badgeId = doo.itemId;
-            Badge badge = (Badge) Collector.get().getDatum(badgeId);
+            Badge badge = persistor.get(Badge.class, new ObjectId(badgeId));
             boolean out = badge.hasBadge(doo.callerDooId);
             
             //

@@ -28,8 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
-import org.clothocad.core.aspects.Collector;
+import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.aspects.Executor;
 import org.clothocad.core.aspects.Hopper;
@@ -40,20 +41,20 @@ import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Sharable;
-import org.clothocad.core.datums.Instance;
-import org.clothocad.core.datums.Schema;
+import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.datums.View;
-import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Page;
 import org.clothocad.core.layers.communication.mind.PageMode;
 import org.clothocad.core.layers.communication.mind.Widget;
-import org.clothocad.core.util.Logger;
+import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client on
@@ -69,6 +70,9 @@ import org.json.JSONTokener;
  * @author John Christopher Anderson
  */
 public final class ServerSideAPI {
+    static final Logger logger = LoggerFactory.getLogger(ServerSideAPI.class);
+    @Inject
+    private static Persistor persistor;
 
     public ServerSideAPI(String socket_id, Mind mind) {
         this.socket_id = socket_id;
@@ -79,18 +83,15 @@ public final class ServerSideAPI {
      ********  Public API methods  ********
     \*                                  */
     public final JSONObject get(String uuid) {
-        try {
-            Datum datum = Collector.get().getDatum(uuid);
-            Sharable obj = (Sharable) datum;
-//            Logger.log(Logger.Level.INFO, "received sharable: " + uuid);
-            JSONObject result = obj.toJSON();
-            return result;
+        /*try {
+            return persistor.getAsBSON(new ObjectId(uuid));
         } catch (ClassCastException e) {
-            Logger.log(Logger.Level.WARN,
+            logger.warn(
                     "could not find sharable: " + uuid,
                     e);
         }
-        return new JSONObject();
+        return new JSONObject();*/
+        throw new UnsupportedOperationException();
     }
 
     public final void set(String sharableId, String newvalue) {
@@ -108,8 +109,8 @@ public final class ServerSideAPI {
     }
 
     public final JSONObject create(String schemaRef, String jsonArgs) {
-        try {
-            Schema schema = (Schema) resolveToDatum(schemaRef);
+        /*try {
+            JavaSchema schema = (JavaSchema) resolveToDatum(schemaRef);
             if (schema == null) {
                 return null;
             }
@@ -118,14 +119,15 @@ public final class ServerSideAPI {
             /**
              * Note:  somehow we need to get the Person from the client
              */
-            Person author = Person.getAdmin();
+            /*Person author = Person.getAdmin();
 
             Instance out = Instance.create(author, schema, json.toString());
             return out.toJSON();
         } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "not a Schema: " + schemaRef, e);
+            logger.warn( "not a Schema: " + schemaRef, e);
         }
-        return new JSONObject();
+        return new JSONObject*/
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -140,12 +142,12 @@ public final class ServerSideAPI {
      * @param sharableRef 
      */
     public final void edit(String sharableRef) {
-        try {
+        /*try {
             Sharable sharable = (Sharable) resolveToDatum(sharableRef);
 
             switch (sharable.getType()) {
                 case SCHEMA:
-                    Schema schema = (Schema) sharable;
+                    JavaSchema schema = (JavaSchema) sharable;
                     //Pop up the page, push in data
                     return;
                 case INSTANCE:
@@ -156,27 +158,29 @@ public final class ServerSideAPI {
             //Pop up a new window of 
         } catch (Exception err) {
             err.printStackTrace();
-        }
+        }*/
+        throw new UnsupportedOperationException();
     }
 
     public final void run(String asstRef, String jsonArgs) {
-        Logger.log(Logger.Level.INFO, "received: " + asstRef + "   " + jsonArgs);
+        /*logger.info( "received: " + asstRef + "   " + jsonArgs);
         try {
             Function assistant = (Function) resolveToDatum(asstRef);
             JSONObject json = resolveToExecutionArguments(assistant,
                     resolveToJSONObject(jsonArgs));
-            Logger.log(Logger.Level.INFO,
+            logger.info(
                     "Got Asst " + assistant.getName() + " w/ args " + json.toString());
             Executor.get().run(null, assistant, json, callback);
         } catch (JSONException e) {
-            Logger.log(Logger.Level.WARN, "", e);
-        }
+            logger.warn( "", e);
+        }*/
+        throw new UnsupportedOperationException();
     }
 
     public final void say(String msg) {
         /* TODO this really should be a relay of the command back to the client
          * command bar output stream. */
-        Logger.log(Enum.valueOf(Logger.Level.class, "INFO"), msg);
+        logger.info(msg);
     }
 
     public final void newPage() throws Exception {
@@ -195,9 +199,9 @@ public final class ServerSideAPI {
                     commandMessageArray.toString());
 
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-            mind.save();
+            //XXX: mind.save();
         } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "", e);
+            logger.warn( "", e);
             e.printStackTrace();
             //REVERT THE MIND
             //SEND CLIENT MESSAGE TELLING THAT IT FAILED
@@ -212,7 +216,7 @@ public final class ServerSideAPI {
      * @param sloppy_args 
      */
     public final void show(String viewId, String sharables, String position) {
-        try {
+        /*try {
 
             //IF THE PROCESS WAS TIED TO A COMMAND-INITIATED PROCESS THERE WOULD BE A PARENT DOO THAT NEEDS TO BE FOUND.
             Doo parentDoo = Hopper.get().extract(null);
@@ -250,11 +254,12 @@ public final class ServerSideAPI {
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
             mind.save();
         } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "", e);
+            logger.warn( "", e);
             e.printStackTrace();
             //REVERT THE MIND
             //SEND CLIENT MESSAGE TELLING THAT IT FAILED
-        }
+        }*/
+        throw new UnsupportedOperationException();
     }
 
     public final void startTrail(String trailRef) {
@@ -267,7 +272,7 @@ public final class ServerSideAPI {
             Proctor.get().initiateTrail(student, trail, parentDoo);
 
         } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "", e);
+            logger.warn( "", e);
             e.printStackTrace();
         }
     }
@@ -296,7 +301,7 @@ public final class ServerSideAPI {
                     SendChannels.commandList,
                     msg.toString());
         } catch (Exception ex) {
-            Logger.log(Logger.Level.WARN,
+            logger.warn(
                     "Error sending Sharables to the client");
             ex.printStackTrace();
         }
@@ -405,7 +410,7 @@ public final class ServerSideAPI {
         JSONObject inputs = new JSONObject();
         for (int i = 0; i < fields.size(); i++) {
             ClothoField field = fields.get(i);
-            inputs.put(field.token, sharables.get(i).getId());
+            inputs.put(field.getName(), sharables.get(i).getUUID());
         }
         updateCmd.put("inputArgs", inputs);
         updateCmd.put("script", replaceWidgetId(widget.getView().getOnUpdateScript(), "")); //how do i get widgetID's again?
@@ -423,20 +428,14 @@ public final class ServerSideAPI {
         return callBackCmd;
     }
 
-    //JCA:  I DON'T KNOW ABOUT THIS ONE...THAT REQUIRES SOME THINKING AS TO WHETHER THIS IS AN OPTION, AND IF SO, HOW IT OCCURS
-    //THERE MINIMALLY SHOULD BE SOME DOOS INVOLVED WITH A LOGGING PROCESS
-    public void log(String logLevel, String msg) {
-        Logger.log(Enum.valueOf(Logger.Level.class, logLevel),
-                "@@@@@@@@@@ " + msg);
-    }
-
     /***                                ***\
      ********  Utility methods  ********
     \*                                  */
     private JSONObject resolveToExecutionArguments(Function asst, JSONObject input) throws JSONException {
         //Do type validation of the arguments, not call candooit
-        List<ClothoField> inputTypes = asst.getInputArguments();
-        return argumentsRelay(inputTypes, input);
+        //List<ClothoField> inputTypes = asst.getInputArguments();
+        //return argumentsRelay(inputTypes, input);
+        throw new UnsupportedOperationException();
     }
 
     private static JSONObject argumentsRelay(List<ClothoField> inputTypes,
@@ -444,7 +443,7 @@ public final class ServerSideAPI {
         //For each token of this schema, see if the input object has the token
         /* TODO: is this right? */
         for (ClothoField field : inputTypes) {
-            String token = field.token;
+            String token = field.getName();
             if (!input.has(token)) {
                 break;
             }
@@ -457,7 +456,7 @@ public final class ServerSideAPI {
         try {
             JSONObject out = new JSONObject();
             for (ClothoField field : inputTypes) {
-                String token = field.token;
+                String token = field.getName();
                 out.put(token, input);
             }
             return out;
@@ -473,8 +472,9 @@ public final class ServerSideAPI {
      * @return 
      */
     private Datum resolveToDatum(Object datumRef) {
-        Datum out = null;
-        Logger.log(Logger.Level.INFO, "resolveToDatum has " + datumRef);
+        throw new UnsupportedOperationException();
+        /*Datum out = null;
+        logger.info( "resolveToDatum has " + datumRef);
 
         //If it's a Datum object
         try {
@@ -482,12 +482,12 @@ public final class ServerSideAPI {
             String uuid = aschmema.getId();
 
             //Fetch the real version of the Datum
-            out = Collector.get().getDatum(uuid);
+            out = persistor.get(uuid);
             if (out != null) {
                 return out;
             }
         } catch (Exception e) {
-            Logger.log(Logger.Level.INFO, "It wasn't a Datum object");
+            logger.info( "It wasn't a Datum object");
         }
 
         //If it's a String
@@ -495,7 +495,7 @@ public final class ServerSideAPI {
             String str = (String) datumRef;
 
             //See if it's a uuid String
-            out = Collector.get().getDatum(str);
+            out = persistor.get(str);
             if (out != null) {
                 return out;
             }
@@ -505,7 +505,7 @@ public final class ServerSideAPI {
             JSONObject jsonobj = new JSONObject(tokener);
 
             String uuid = jsonobj.getString("uuid");
-            out = Collector.get().getDatum(uuid);
+            out = persistor.get(uuid);
             if (out != null) {
                 return out;
             }
@@ -514,10 +514,11 @@ public final class ServerSideAPI {
             //THIS INVOLVES COLLATOR FUNCTIONALITY
 
         } catch (Exception e) {
-            Logger.log(Logger.Level.INFO, "It wasn't a string of json");
+            logger.info( "It wasn't a string of json");
         }
 
         return out;
+        */
     }
 
     /**
@@ -527,12 +528,13 @@ public final class ServerSideAPI {
      * @return 
      */
     public static final JSONObject resolveToJSONObject(Object jsonArgs) {
-        //If it's a JSONObject
+        throw new UnsupportedOperationException();
+        /*//If it's a JSONObject
         try {
             JSONObject out = (JSONObject) jsonArgs;
             return out;
         } catch (Exception e) {
-//            Logger.log(Logger.Level.INFO, "It wasn't a jsonobject");
+//            logger.info( "It wasn't a jsonobject");
         }
 
         //If it's a String representation of json
@@ -542,22 +544,23 @@ public final class ServerSideAPI {
             JSONObject out = new JSONObject(tokener);
             return out;
         } catch (Exception err) {
-//            Logger.log(Logger.Level.INFO, "It wasn't a string of json");
+//            logger.info( "It wasn't a string of json");
         }
 
         //If it's a String uuid
         try {
             String uuid = (String) jsonArgs;
-            Datum d = Collector.get().getDatum(uuid);
+            Datum d = persistor.get(uuid);
             Sharable share = (Sharable) d;
             return share.toJSON();
         } catch (Exception err) {
-//            Logger.log(Logger.Level.INFO, "It wasn't a string of uuid");
+//            logger.info( "It wasn't a string of uuid");
         }
 
         //If it's some other kind of object
-        Logger.log(Logger.Level.WARN, String.valueOf(jsonArgs));
+        logger.warn( String.valueOf(jsonArgs));
         return null;
+        */
     }
 
     /**
@@ -573,7 +576,7 @@ public final class ServerSideAPI {
         JSONArray array = resolveToJSONArray(sharables);
         for (int i = 0; i < array.length(); i++) {
             String uuid = array.getString(i);
-            Sharable sharable = (Sharable) Collector.get().getDatum(uuid);
+            Sharable sharable = persistor.get(Sharable.class, new ObjectId(uuid));
             out.add(sharable);
         }
         return out;
@@ -612,7 +615,7 @@ public final class ServerSideAPI {
         }
 
         //If it's some other kind of object
-        Logger.log(Logger.Level.WARN, "The jsonArgs could not be resolved");
+        logger.warn( "The jsonArgs could not be resolved");
         return null;
     }
 
@@ -658,13 +661,13 @@ public final class ServerSideAPI {
 
         @Override
         public void onSuccess(JSONObject outputData) {
-            Logger.log(Logger.Level.INFO,
+            logger.info(
                     "All done! outputData = " + String.valueOf(outputData));
         }
 
         @Override
         public void onFailure(Throwable e) {
-            Logger.log(Logger.Level.WARN, "All done! but failed", e);
+            logger.warn( "All done! but failed", e);
         }
     };
 
@@ -674,10 +677,11 @@ public final class ServerSideAPI {
      * @return 
      */
     private Person getPerson() {
-        if (person != null) {
+        throw new UnsupportedOperationException();
+        /*if (person != null) {
             return person;
         }
-        return Person.getById(mind.getPersonId());
+        return Person.getById(mind.getPersonId());*/
     }
     private final String socket_id;
     private final Mind mind;

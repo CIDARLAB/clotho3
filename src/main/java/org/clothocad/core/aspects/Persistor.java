@@ -23,14 +23,9 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects;
 
-import java.net.UnknownHostException;
-import java.util.Collection;
+import com.google.common.cache.Cache;
 import javax.inject.Inject;
 import lombok.Delegate;
-import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.datums.Datum;
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 
 /**
@@ -38,19 +33,29 @@ import org.clothocad.core.layers.persistence.ClothoConnection;
  * 
  * Manages writing/reading objects to/from the DB, and will eventually also coordinate that with caching
  * Right now is a very simple pass-through class.
+ * 
+ * queries do not check the cache
+ * 
+ * fooAsBSON does not check or populate the cache - maintaining a separate BSON cache would be complicating but might help performance-wise
+ * 
+ * should probably get the cache to cooperate with the object deserializer (or pass the cache in for query methods)
+ * possible refactoring: separate deserializer from connection?
+ * 
+ * having multiple threads have access to the same object sounds like a recipe for disaster -
+ * Persistor should hand out copies
+ * 
+ *   
  */
 public class Persistor implements Aspect {
     
-    @Inject
-    public Persistor(ClothoConnection connection) throws UnknownHostException{
-        this.connection = connection;
-            connection.connect();
-    }
-    
-    private interface Connect {
-        void connect() throws UnknownHostException;
-    }
-    
-    @Delegate(excludes=Connect.class)
+    @Delegate
     private ClothoConnection connection;
+    
+    private Cache cache;
+    
+    @Inject
+    public Persistor(ClothoConnection connection){
+        this.connection = connection;
+        //cache = new  CacheBuilder<ObjectId, ObjBase>().
+    }
 }

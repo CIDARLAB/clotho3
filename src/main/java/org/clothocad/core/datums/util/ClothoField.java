@@ -24,49 +24,35 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
+import lombok.Getter;
+import org.clothocad.core.datums.Function;
 /**
  * @author John Christopher Anderson
  */
 
-
+@Getter
 public class ClothoField {
     
     private ClothoField() {}
     
-    public ClothoField(String token, FieldType type, String example, int permissions) {
-        this.token = token;
+    public ClothoField(String name, Class type, String example, String description, Function validate, boolean reference, int access) {
+        this.name = name;
         this.type = type;
         this.example = example;
-        this.permissions = permissions;
+        this.access = access; 
+        this.reference = reference;
+        this.validate = validate;
+        this.description = description;
     }
     
-    public ClothoField(String token, FieldType type) {
-        this.token = token;
-        this.type = type;
-        this.example = null;
-        this.permissions = -1;
-    }
 
+    private String name;
+    private Class type;
+    private String example;   //A string representation/explanation of an expected value
+    private int access;  //uses asm opcodes
+    private boolean reference;
+    private Function validate;
     
-     public String token;     //Whatever token is used for the thing
-     public String getToken() {
-		return token;
-	}
-
-	public FieldType getType() {
-		return type;
-	}
-
-	public String getExample() {
-		return example;
-	}
-
-	public int getPermissions() {
-		return permissions;
-	}
-
-
-	public FieldType type;   // such as SCHEMA, INT, LIST, etc.
-     public String example;   //A string representation of a primitive, or a uuid ref to a Schema
-     public int permissions;  //the Visible Anywhere kinds of stuff
+    //metadata
+    private String description;
 }

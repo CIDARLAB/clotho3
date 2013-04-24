@@ -24,8 +24,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.objbases;
 
-import org.clothocad.core.datums.Instance;
 import org.clothocad.core.datums.Sharable;
+import org.clothocad.model.Person;
 
 
 /**
@@ -54,7 +54,7 @@ public class Badge
 		extends Sharable {
 
 	public Badge(Person author) {
-		super(author, SharableType.BADGE);
+		super("", author);
 	}
 
 	//

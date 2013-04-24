@@ -28,7 +28,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import org.clothocad.core.aspects.Collector;
+import org.bson.types.ObjectId;
+import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
@@ -40,10 +41,11 @@ import org.json.JSONObject;
 
 
 public class UpdateIndex {
+    Persistor persistor;
 
     public void register(Sharable sharable, Widget widget, Mind mind) {
         //Register the sharable --> widget hash
-        String sharableId = sharable.getId();
+        String sharableId = sharable.getUUID().toString();
         Set<Widget> widgets = null;
         if(sharableToWidget.containsKey(sharableId)) {
             widgets = sharableToWidget.get(sharableId);
@@ -58,12 +60,12 @@ public class UpdateIndex {
     }
     
     public void update(String sharableId) {
-        Sharable sharable = (Sharable) Collector.get().getDatum(sharableId);
+        Sharable sharable = persistor.get(Sharable.class, new ObjectId(sharableId));
         update(sharable);
     }
     
     public void update(Sharable sharable) {
-        Set<Widget> widgets = sharableToWidget.get(sharable.getId());
+        Set<Widget> widgets = sharableToWidget.get(sharable.getUUID().toString());
         if(widgets==null) {
             System.out.println("UpdateIndex.update(...) has null for widgets, so aborting.");
             return;

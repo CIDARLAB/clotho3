@@ -37,10 +37,11 @@ import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.Instance;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.ServerSideAPI;
-import org.clothocad.core.util.Logger;
+import org.clothocad.model.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A 'Mind' is the thing on the server that connects up a User and a Client.  Minds talk
@@ -64,18 +65,19 @@ import org.clothocad.core.util.Logger;
 public final class Mind 
 		extends ObjBase
 		implements Aspect {
+    static final Logger logger = LoggerFactory.getLogger(Mind.class);
     /**
      * This is not a serverside API method
      * @param client
      * @param person
      * @return 
      */
-    public static Mind create(Instance person) {
+    public static Mind create(Person person) {
         /*TODO check if this Mind already exists */
         //Create the new Mind object
         Mind out = new Mind();
-        out.personId = person.getId();
-        out.save();
+        out.personId = person.getUUID().toString();
+        //out.save();
         return out;
     }
 
@@ -140,7 +142,7 @@ public final class Mind
             String token = splitted[i];
             if(token.equals("var")) {
                 String word = splitted[i+1];
-                Logger.log(Logger.Level.INFO, word);
+                logger.info(word);
                 nameSpace.learn(word, cmd, this);
             }
         }
@@ -160,12 +162,12 @@ public final class Mind
                         //Otherwise, inject that object into the scriptengine
                         engine.eval(helperCMD);
                     } else {
-                        Logger.log(Logger.Level.INFO,
-                                   "token already in scriptengine: " + token);
+                        logger.info(
+                                   "token already in scriptengine: {}");
                     }
                 } catch (ScriptException e) { 
                     /*TODO this is a hack */
-                    Logger.log(Logger.Level.WARN, "", e);
+                    logger.warn("", e);
                 }
             }
         }
@@ -178,7 +180,7 @@ public final class Mind
                          String ephemeral_link_page_id,
                          PageMode page_mode) {
         config.addPage(socket_id, page_mode);
-        this.save();
+        //XXX: this.save();
         if (doos.containsKey(ephemeral_link_page_id)) {
             AddPageDoo add_page_doo =
                 (AddPageDoo) doos.get(ephemeral_link_page_id);
@@ -188,9 +190,9 @@ public final class Mind
                  * call some sort of callback for the caller of addPage
                  */
             } else {
-                Logger.log(Logger.Level.FATAL,
-                           "linkNewPage got page mode mismatch: " +
-                           page_mode.name() + ", " +
+                logger.error(
+                           "linkNewPage got page mode mismatch: {}, {}",
+                           page_mode.name(),
                            add_page_doo.getPageMode().name());
             }
         }
@@ -204,14 +206,14 @@ public final class Mind
     /* client lost a page--update config */
     public void unlinkPage(String socket_id) {
         config.removePage(socket_id);
-        this.save();
+        //XXX: this.save();
     }
     
     public void setVisible(Page page, boolean new_visibility) {
         /* TODO: DO WHATEVER IT TAKES TO programmatically show or hide the tab */
         
         page.toggleVisible(new_visibility ^ page.toggleVisible(false));
-        this.save();
+        //XXX: this.save();
     }
 
     public Iterable<Map<String, String>> getPageSummary() {
@@ -230,18 +232,17 @@ public final class Mind
     public void removeWidget(Page page, Widget widget) {
         /* TODO: remove the widget from the client's page */
         page.removeWidget(widget.getId());
-        this.save();
+        //XXX: this.save();
     }
 
     public void unlinkWidget(String socket_id, String widget_id) {
         Page target_page = config.getPage(socket_id);
         if (target_page == null) {
-            Logger.log(Logger.Level.FATAL,
-                       "can't get page with socket_id: " + socket_id);
+            logger.error("can't get page with socket_id: " + socket_id);
             return;
         }
         target_page.removeWidget(widget_id);
-        this.save();
+        //XXX: this.save();
     }
 
     public void moveWidget(Widget widget,
@@ -255,7 +256,7 @@ public final class Mind
         widget.setPositionAbsolute(posx, posy);
         widget.setDimensions(width, Widget.SizeType.RELATIVE, height, Widget.SizeType.RELATIVE);
         
-        this.save();
+        //XXX: this.save();
     }
 
     /* TODO: this shouldn't be exposed */
@@ -275,11 +276,6 @@ public final class Mind
 
     public String getPersonId() {
         return personId;
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
     
     /**

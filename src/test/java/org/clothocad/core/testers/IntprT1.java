@@ -2,9 +2,12 @@ package org.clothocad.core.testers;
 
 import java.util.Set;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 class IntprT1 {
+    static final Logger logger = LoggerFactory.getLogger(IntprT1.class);
     public static void test1() {
         Interpreter.get().learnNative("walk my cat", "run(assistantWalker, Cat)");
         Interpreter.get().learnNative("walk my dog", "run(assistantWalker, Dog)");
@@ -47,8 +50,9 @@ class IntprT1 {
     }
 
     public static void check(String act, String pred) {
+        //TODO: convert to Assert.assertEqual
         if (!act.equals(pred)) {
-            Logger.log(Logger.Level.WARN, act + " is not " + pred);
+            logger.warn( act + " is not " + pred);
         }
     }
 
