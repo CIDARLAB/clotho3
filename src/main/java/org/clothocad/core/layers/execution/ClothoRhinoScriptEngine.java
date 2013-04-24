@@ -4,21 +4,24 @@
  */
 package org.clothocad.core.layers.execution;
 
-import com.sun.script.javascript.RhinoScriptEngine;
+//import com.sun.script.javascript.RhinoScriptEngine;
 import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import lombok.Delegate;
-import sun.org.mozilla.javascript.Context;
+//import javax.script.ScriptEngine;
+//import lombok.Delegate;
+//import sun.org.mozilla.javascript.Context;
 import sun.org.mozilla.javascript.Scriptable;
 /**
  *
  * @author spaige
+ * 
+ * Temp fix: Large sections commented out b/c build failing, compiler cannot find
+ * com.sun.script.javascript
  */
 
-public class ClothoRhinoScriptEngine implements ScriptEngine {
+public class ClothoRhinoScriptEngine { //implements ScriptEngine {
     
-    @Delegate
-    private RhinoScriptEngine engine;
+    //@Delegate
+    //private RhinoScriptEngine engine;
     
     Scriptable getRuntimeScope(ScriptContext ctxt) {
         if (ctxt == null) {

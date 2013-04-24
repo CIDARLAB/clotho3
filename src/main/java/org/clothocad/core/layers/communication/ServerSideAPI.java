@@ -25,14 +25,11 @@ package org.clothocad.core.layers.communication;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.inject.Inject;
-import javax.xml.parsers.ParserConfigurationException;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.aspects.Executor;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.aspects.Proctor.Proctor;
@@ -41,12 +38,9 @@ import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Sharable;
-import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.clothocad.core.layers.communication.mind.Page;
-import org.clothocad.core.layers.communication.mind.PageMode;
 import org.clothocad.core.layers.communication.mind.Widget;
 import org.clothocad.model.Person;
 import org.json.JSONArray;
@@ -194,9 +188,9 @@ public final class ServerSideAPI {
 //            Hopper.get().add(doo);
 
             //Send the commands
-            Communicator.get().sendClientMessage(socket_id,
-                    SendChannels.commandList,
-                    commandMessageArray.toString());
+           // Communicator.get().sendClientMessage(socket_id,
+           //         SendChannels.commandList,
+           //         commandMessageArray.toString());
 
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
             //XXX: mind.save();
