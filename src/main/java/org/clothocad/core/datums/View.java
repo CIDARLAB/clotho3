@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.clothocad.core.datums.util.ClothoField;
 
-import flexjson.JSONDeserializer;
 import org.clothocad.model.Person;
 
 
@@ -71,10 +70,6 @@ public class View
     }
 	***/
     
-    public static View deserialize(String json) {
-        View out = new JSONDeserializer<View>().deserialize(json, View.class);
-        return out;
-    }
 
 
     public String getDescription() {

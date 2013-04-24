@@ -24,9 +24,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects.Proctor;
 
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
-import org.clothocad.core.datums.Doo;
 import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONObject;

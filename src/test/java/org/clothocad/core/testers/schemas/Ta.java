@@ -25,8 +25,6 @@ package org.clothocad.core.testers.schemas;
 
 import static com.google.common.collect.Sets.newHashSet;
 import com.mongodb.BasicDBObject;
-import flexjson.JSONSerializer;
-import java.util.HashMap;
 import java.util.Set;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
@@ -39,7 +37,6 @@ import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
-import org.clothocad.model.Person;
 import org.json.JSONObject;
 import static org.objectweb.asm.Opcodes.*;
 

@@ -58,7 +58,7 @@ public class TrailTest {
             //Change the Id
             JSONObject obj = view.toJSON();
             obj.put("id", "CT-sample-view");
-            view = View.deserialize(obj.toString());
+            //view = View.deserialize(obj.toString());
             //XXX: view.save();
 
         } catch (Exception ex) {

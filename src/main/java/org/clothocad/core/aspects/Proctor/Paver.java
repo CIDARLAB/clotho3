@@ -24,7 +24,6 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects.Proctor;
 
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.datums.Sharable;
@@ -45,17 +44,6 @@ public abstract class Paver
     public abstract JSONObject makeCommandList() throws Exception;
     public abstract JSONObject makeTocJSON() throws Exception;
     
-    @Override
-    public JSONObject toJSON() {
-        try {
-            JSONSerializer serializer = new JSONSerializer().exclude("*.class");
-            serializer.prettyPrint(true);
-            String serial = serializer.deepSerialize( this );
-            return new JSONObject(serial);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
     
     /**
      * For the Yay's, Nay's, and usage of this Paver, calculate

@@ -36,8 +36,8 @@ public class MongoDBTest {
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
         
-        mongo = new MongoClient();
         conn = new MongoDBConnection();
+        conn.connect();
     }
     
     @Before

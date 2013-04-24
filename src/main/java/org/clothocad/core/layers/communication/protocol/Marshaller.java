@@ -5,8 +5,6 @@ import java.net.InetAddress;
 import org.clothocad.core.datums.Datum;
 import org.json.JSONObject;
 
-import flexjson.JSONSerializer;
-
 public class Marshaller {
 
 	public static JSONObject marshal(ActionType action, JSONObject json) {

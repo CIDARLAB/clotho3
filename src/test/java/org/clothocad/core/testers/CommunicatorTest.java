@@ -2,14 +2,10 @@ package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.clothocad.core.aspects.Ambassador.Ambassador;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.layers.communication.Channel;
-import org.clothocad.core.layers.communication.Communicator;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
 
@@ -77,7 +73,7 @@ public class CommunicatorTest {
             //Change the Id
             JSONObject obj = view.toJSON();
             obj.put("id", "CT-sample-view");
-            view = View.deserialize(obj.toString());
+            //XXX: view = View.deserialize(obj.toString());
                         
            persistor.save(view);
         } catch (Exception ex) {
