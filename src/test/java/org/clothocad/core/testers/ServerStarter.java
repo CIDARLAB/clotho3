@@ -1,6 +1,6 @@
 package org.clothocad.core.testers;
 
-import org.clothocad.server.ClothoServer;
+import org.clothocad.core.ClothoCore;
 
 public class ServerStarter {
 
@@ -23,7 +23,11 @@ public class ServerStarter {
     	}
     	**/
 
-		new ClothoServer().start();
+		try {
+			new ClothoCore();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -85,37 +85,6 @@ public class MongoDBConnection
     public boolean isConnected() {
         return db != null;
     }
-
-    
-    
-    
-    /*
-    private boolean save(Set<ObjBase> exclude) {
-        boolean newId = this.UUID == null;
-        if(newId) this.UUID = ObjectId.get();
-        exclude.add(this);        
-        List<ObjBase> children = getChildren();
-        
-        for (ObjBase child: children) {
-            //TODO: needs to detect and skip proxies if lazy loading is used
-            if (!exclude.contains(child) && child != null){
-                if (!child.save(exclude)){
-                    return false;
-                }
-            }
-        }
-        
-        //save self
-        
-        if  (!Persistor.get().persist(this)) {
-            //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
-            if (newId) this.UUID = null;
-            return false;
-        }
-        return true;
-    }     */
-    
-    
     
     @Override
     //Cascade save
@@ -216,7 +185,7 @@ public class MongoDBConnection
     }
 
     @Override
-    public <T> T get(Class<T> type, ObjectId uuid) {
+    public <T extends ObjBase> T get(Class<T> type, ObjectId uuid) {
         return dataStore.get(type, uuid);
     }
 
@@ -253,18 +222,28 @@ public class MongoDBConnection
 
     
     @Override    
-    public Collection<BSONObject> getAsBSON(BSONObject query) {
+    public List<BSONObject> getAsBSON(BSONObject query) {
         DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
-        Collection<BSONObject> result = new ArrayList<BSONObject>();
+        List<BSONObject> result = new ArrayList<BSONObject>();
         while (cursor.hasNext()){
             result.add(cursor.next());
         }
         
         return result;
     }
+    
+    @Override 
+    public <T extends ObjBase> List<T> get(Class<T> type, BSONObject query) {
+        return null;
+    }
 
+    @Override 
+    public <T extends ObjBase> List<T> get(Class<T> type, String name) {
+        return dataStore.find(type, "name", name).asList();
+    }
+    
     @Override    
-    public <T> T getOne(Class<T> type, BSONObject query) {
+    public <T extends ObjBase> T getOne(Class<T> type, BSONObject query) {
         DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
@@ -318,6 +297,58 @@ public class MongoDBConnection
         }
         
         b.put(path[path.length-1], o);
+    }
+
+    public void delete(ObjectId id) {
+        data.remove(new BasicDBObject("_id", id));           
+    }
+
+    public List<ObjBase> get(String name) {
+        return get(new BasicDBObject("_id", name));
+    }
+
+    public List<BSONObject> getAsBSON(String name) {
+        return getAsBSON(new BasicDBObject("_id", name));
+    }
+
+    public <T extends ObjBase> T getOne(Class<T> type, String name) {
+        return getOne(type, new BasicDBObject("_id", name));
+    }
+
+    public BSONObject getOneAsBSON(String name) {
+        return getOneAsBSON(new BasicDBObject("_id", name));
+    }
+
+    @Override
+    public <T extends ObjBase> List<T> getAll(Class<T> type) {
+        return dataStore.find(type).asList();
+    }
+
+    @Override
+    public int saveBSON(Collection<BSONObject> objs) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, BSONObject query) {
+        query.put(Mapper.CLASS_NAME_FIELDNAME, type.getName());
+        return getAsBSON(query);
+    }
+
+    @Override
+    public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, String name) {
+        return getAsBSON(new BasicDBObject("name", name));
+    }
+
+    @Override
+    public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, BSONObject query) {
+        query.put(Mapper.CLASS_NAME_FIELDNAME, type.getName());
+        return getOneAsBSON(query);
+    }
+
+    @Override
+    public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, String name) {
+        return getOneAsBSON(new BasicDBObject("name", name));
     }
 
 }

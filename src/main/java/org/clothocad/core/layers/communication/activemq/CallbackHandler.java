@@ -6,6 +6,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 import org.clothocad.core.layers.communication.protocol.ActionType;
+import org.fusesource.stomp.jms.StompJmsDestination;
 import org.json.JSONObject;
 
 public class CallbackHandler {
@@ -21,8 +22,10 @@ public class CallbackHandler {
 		try {
 			// Setup a message producer to respond to messages from clients, we will get the destination
 	        // to send to from the JMSReplyTo header field from a Message
-	        this.replyProducer = this.session.createProducer(null);
+	        this.replyProducer = this.session.createProducer(
+	        		new StompJmsDestination("/queue/CLOTHORESPONSE"));
 	        this.replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -32,14 +35,12 @@ public class CallbackHandler {
 		try {
 			Message response = session.createMessage();
 			response.setJMSCorrelationID(request.getJMSCorrelationID());
-			response.setStringProperty(ActionType.SERVER_RESPONSE.toString(), json.toString());
-			
-			replyProducer.send(
-					request.getJMSReplyTo(), 
-					response);			
+			response.setStringProperty(ActionType.RESPONSE.toString(), json.toString());
+
+			this.replyProducer.send(response);
 		} catch(javax.jms.InvalidDestinationException e) {
 			// something went wrong while responding to the client...
-			System.err.println("The client does not run anymore...");
+			e.printStackTrace();
 		} catch(javax.jms.JMSException e) {
 			// something went wrong with the message ...
 		}

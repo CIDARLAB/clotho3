@@ -25,8 +25,9 @@ package org.clothocad.core.layers.communication;
 import java.util.Map;
 import java.util.HashMap;
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.aspects.Router.Router;
 import org.clothocad.core.layers.communication.mind.Mind;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -50,9 +51,15 @@ import org.clothocad.core.layers.communication.mind.Mind;
 
 public final class Communicator implements Aspect {
     public void sendClientMessage(String socket_id,
-                                  SendChannels channel,
+                                  String channel,
                                   String message) {
-        Router.get().sendMessage(socket_id, channel.name(), message, "");
+    	JSONObject json = new JSONObject();
+    	try {
+			json.put("message", message);
+	        Router.get().sendMessage(socket_id, channel, json);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
     }
     
     public Mind getMind(String auth_key) {
@@ -69,14 +76,21 @@ public final class Communicator implements Aspect {
     }
 
 
-    private Communicator() {
-    }
+	/** DOUBLE-CHECKED LOCKING **/
+	private static volatile Communicator communicator;
 
     public static Communicator get() {
-        return singleton;
+    	Communicator c = communicator;
+		if(c == null) {
+			synchronized(Communicator.class) {
+				c = communicator;
+				if(c == null) {
+					communicator = c = new Communicator();
+				}
+			}
+		}
+		return c;
     }
-
-    private static final Communicator singleton = new Communicator();
 
     /* maps from "auth_key" to Mind */
     private Map<String, Mind> auth_minds = new HashMap<String, Mind>();
