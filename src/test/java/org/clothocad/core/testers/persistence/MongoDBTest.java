@@ -37,7 +37,7 @@ public class MongoDBTest {
     
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
-        MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
+        //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
         
         conn = new MongoDBConnection();
         conn.connect();
