@@ -1346,16 +1346,4 @@ public class NucSeq
     //uppercases feature sequence
    private static Map<Feature, String> featureTable;
 
-    /******* FIELDS *******/
-    public static enum Fields {
-        NAME,
-        DATE_CREATED,
-        LAST_MODIFIED,
-        SEQUENCE,
-        VECTORS,
-        PARTS,
-        ANNOTATIONS,
-        FEATURES,
-        OLIGOS
-    }
 }

@@ -45,7 +45,7 @@ import static org.objectweb.asm.Opcodes.*;
  */
 
 
-public class Ta {
+public class SchemaATest {
     public static void main(String[] args) throws Exception {
         Persistor persistor = new Persistor(new MongoDBConnection());
         DBClassLoader cl = new DBClassLoader(persistor);

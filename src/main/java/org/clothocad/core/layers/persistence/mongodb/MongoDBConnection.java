@@ -234,6 +234,7 @@ public class MongoDBConnection
     
     @Override 
     public <T extends ObjBase> List<T> get(Class<T> type, BSONObject query) {
+        //TODO:
         return null;
     }
 
@@ -321,7 +322,9 @@ public class MongoDBConnection
 
     @Override
     public <T extends ObjBase> List<T> getAll(Class<T> type) {
-        return dataStore.find(type).asList();
+        return dataStore.find(type).disableValidation().field(Mapper.CLASS_NAME_FIELDNAME).equal(type.getName()).asList();
+        //DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
+        //return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
 
     @Override

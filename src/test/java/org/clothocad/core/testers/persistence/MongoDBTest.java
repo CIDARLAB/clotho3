@@ -1,6 +1,7 @@
 
 package org.clothocad.core.testers.persistence;
 
+import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -27,14 +28,16 @@ import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
 import org.junit.After;
+import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
 
 public class MongoDBTest {
     
-    static private MongoClient mongo;
+    //static private MongoClient mongo;
     static private ClothoConnection conn;
     
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
+        MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
         
         conn = new MongoDBConnection();
         conn.connect();
@@ -42,7 +45,7 @@ public class MongoDBTest {
     
     @Before
     public void setUp() {
-        mongo.dropDatabase("clotho");
+        conn.deleteAll();
 
     }
     
@@ -116,7 +119,7 @@ public class MongoDBTest {
         
         ep.setAdditionalParameters("test params");
         
-        conn.save(p);
+        conn.save(ep);
         ep = null;
         p = conn.get(Part.class, id);
         p.setName("renamed part");

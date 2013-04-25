@@ -47,7 +47,7 @@ import static org.junit.Assert.*;
  * 
  * @author John Christopher Anderson
  */
-public class T1 {
+public class Schema1Test {
     
     Persistor p = new Persistor(new MongoDBConnection());
     DBClassLoader cl = new DBClassLoader(p);
