@@ -6,12 +6,14 @@ package org.clothocad.core.schema;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Set;
+import lombok.NoArgsConstructor;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
 import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.Type;
 
@@ -20,6 +22,7 @@ import org.objectweb.asm.Type;
  * @author spaige
  */
 public class ClothoSchema extends Schema {
+    public ClothoSchema() {}
     
     protected Set<ClothoField> fields;
     protected Set<Function> methods;
@@ -55,11 +58,20 @@ public class ClothoSchema extends Schema {
         
         cw.visit(V1_7, ACC_PUBLIC, this.getInternalName(), null, superClassName, new String[]{});
         //store original name
-        cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "SCHEMA_NAME", Type.getType(String.class).getInternalName(), null, this.getName()).visitEnd();
+        cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "SCHEMA_NAME", Type.getType(String.class).getDescriptor(), null, this.getName()).visitEnd();
+        
+        //no-args constructor
+        MethodVisitor constructorVisitor = cw.visitMethod(ACC_PUBLIC, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}), null, null);
+        constructorVisitor.visitCode();
+        constructorVisitor.visitVarInsn(ALOAD, 0);
+        constructorVisitor.visitMethodInsn(INVOKESPECIAL, superClassName, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}));
+        constructorVisitor.visitInsn(RETURN);
+        constructorVisitor.visitMaxs(1,1);
+        constructorVisitor.visitEnd();
         
         //fields
         for (ClothoField field : fields){
-            FieldVisitor fv = cw.visitField(field.getAccess(), field.getName(), Type.getType(field.getType()).getInternalName(), null, null);
+            FieldVisitor fv = cw.visitField(field.getAccess(), field.getName(), Type.getType(field.getType()).getDescriptor(), null, null);
             //TODO: annotating embed vs reference
             if (field.isReference()){
                 fv.visitAnnotation(Type.getType(Reference.class).getInternalName(), true).visitEnd();

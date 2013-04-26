@@ -6,6 +6,7 @@ package org.clothocad.core.schema;
 
 import java.util.Map;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
@@ -17,8 +18,8 @@ import org.clothocad.model.Person;
  * @author spaige
  */
 @Data
+@NoArgsConstructor
 public abstract class Schema extends Sharable {
-    public Schema() {}
     
     public Schema(String name, String description, Person author){
         super(name, author);
@@ -56,5 +57,10 @@ public abstract class Schema extends Sharable {
     //the classloader can only find saved schemas, so if this throws an exception, try saving the schema
     public <T extends ObjBase> Class<T> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
         return (Class<T>) cl.loadClass(getBinaryName());
+    }
+    
+    public static String extractIdFromClassName(String className){
+        String[] a =  className.split("\\.");
+        return a[a.length-1];
     }
 }

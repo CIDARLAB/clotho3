@@ -9,6 +9,7 @@ import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
 import com.github.jmkgreen.morphia.mapping.DefaultCreator;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
+import java.lang.reflect.Modifier;
 
 /**
  *
@@ -20,7 +21,7 @@ public class PolymorphicObjectFactory extends DefaultCreator {
     @Override 
     public Object createInstance(Class clazz, DBObject dbObj) {
         Class c = clazz;
-        if (c == null)
+        if (c == null  || Modifier.isAbstract(c.getModifiers())) //punt to stored class if clazz is abstract
             c = getClass(dbObj);
         return createInstance(c);
     }

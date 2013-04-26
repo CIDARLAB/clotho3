@@ -24,8 +24,11 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.testers.schemas;
 
+import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
+import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
+import java.net.UnknownHostException;
 import java.util.Set;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
@@ -40,6 +43,7 @@ import org.junit.Test;
 import static org.objectweb.asm.Opcodes.*;
 
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 /**
  * Create a schema to represent a DNA sequence, and then
@@ -49,15 +53,25 @@ import static org.junit.Assert.*;
  */
 public class Schema1Test {
     
-    Persistor p = new Persistor(new MongoDBConnection());
-    DBClassLoader cl = new DBClassLoader(p);
+    
+    static {
+    MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
+    }
+    
+    @BeforeClass
+    public static void setUpClass() throws UnknownHostException {
+        p.connect();
+    }
+    
+    static Persistor p = new Persistor(new MongoDBConnection());
+    static DBClassLoader cl = new DBClassLoader(p);
     
     private Schema createFeatureSchema() {
             Set<ClothoField> fields = Sets.newHashSet(new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, ACC_PUBLIC));
         
             ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
 
-            ObjectId id = new ObjectId("specific-simplefeature-is-uuid");
+            ObjectId id = new ObjectId();
             featureSchema.setUUID(id);
             p.save(featureSchema);
             
@@ -75,7 +89,7 @@ public class Schema1Test {
             
             data.put("name",  "GFPuv" );
             data.put("sequence",  sequence) ; //"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA" );
-            ObjectId id = new ObjectId("specific-gfpuv-is-uuid");
+            ObjectId id = new ObjectId();
             data.put("_id", id);
             
             p.save(data);
@@ -93,10 +107,9 @@ public class Schema1Test {
         
         assertEquals(ObjBase.class, featureClass.getSuperclass());
         
-        assertEquals(1, featureClass.getDeclaredFields().length);
+        assertEquals(2, featureClass.getDeclaredFields().length);
+        //SCHEMA_NAME and sequence are the declared fields
         assertNotNull(featureClass.getDeclaredField("sequence"));
-        
-        assertTrue(featureClass.getDeclaredField("sequence").isAccessible());
         
     }
     
