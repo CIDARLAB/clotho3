@@ -8,6 +8,7 @@ import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.Communicator;
+import org.clothocad.core.schema.Access;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
 import static org.objectweb.asm.Opcodes.*;
@@ -43,7 +44,7 @@ public class TrailTest {
             String onUpdate = "alert(JSON.stringify(person));";
             
             List<ClothoField> inputArgs = new ArrayList<ClothoField>();
-            inputArgs.add(new ClothoField("person", Person.class, null, null, null, true, ACC_PUBLIC));
+            inputArgs.add(new ClothoField("person", Person.class, null, null, null, true, Access.PUBLIC));
             
             View view = View.create(
                          null,

@@ -5,11 +5,14 @@
 package org.clothocad.core.schema;
 
 import java.util.Map;
+import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
 
@@ -35,7 +38,11 @@ public abstract class Schema extends Sharable {
     protected String smallIconURL;
     protected String source;
     
-    //Do we need the field/method metadata in all schemas, or just clothoschema?
+    //These are settable only in ClothoSchema - they are derived from source in other languages
+    
+    protected Set<ClothoField> fields;
+    protected Set<Function> methods;
+    protected Schema superClass;
 
     
     public abstract Language getLanguage();

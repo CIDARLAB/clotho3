@@ -26,10 +26,16 @@ package org.clothocad.core.testers.schemas;
 
 import com.github.jmkgreen.morphia.logging.MorphiaLoggerFactory;
 import com.github.jmkgreen.morphia.logging.slf4j.SLF4JLogrImplFactory;
+import com.github.jmkgreen.morphia.mapping.DefaultMapper;
+import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.constraints.Pattern;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
@@ -37,7 +43,9 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.persistence.DBClassLoader;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.ClothoSchema;
+import org.clothocad.core.schema.Constraint;
 import org.clothocad.core.schema.Schema;
 import org.junit.Test;
 import static org.objectweb.asm.Opcodes.*;
@@ -51,11 +59,15 @@ import org.junit.BeforeClass;
  * 
  * @author John Christopher Anderson
  */
-public class Schema1Test {
+public class ClothoSchemaTest {
+    
+    //TODO: 
+    // validation
+    // reference to other class
     
     
     static {
-    MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
+    //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
     }
     
     @BeforeClass
@@ -65,9 +77,13 @@ public class Schema1Test {
     
     static Persistor p = new Persistor(new MongoDBConnection());
     static DBClassLoader cl = new DBClassLoader(p);
+    static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     private Schema createFeatureSchema() {
-            Set<ClothoField> fields = Sets.newHashSet(new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, ACC_PUBLIC));
+        
+            ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, Access.PUBLIC);
+            field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
+            Set<ClothoField> fields = Sets.newHashSet(field);
         
             ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
 
@@ -76,6 +92,15 @@ public class Schema1Test {
             p.save(featureSchema);
             
             return p.get(ClothoSchema.class, id);
+    }
+    
+    private ObjBase instantiateSchema(BSONObject data, Schema schema) throws ClassNotFoundException{
+        ObjectId id = new ObjectId();
+        data.put("_id", id);        
+        
+        p.save(data);
+        
+        return p.get(schema.getEnclosedClass(cl), id);
     }
     
     
@@ -88,17 +113,31 @@ public class Schema1Test {
             String sequence = "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA";
             
             data.put("name",  "GFPuv" );
-            data.put("sequence",  sequence) ; //"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA" );
-            ObjectId id = new ObjectId();
-            data.put("_id", id);
+            data.put("sequence",  sequence); //"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA" );
             
-            p.save(data);
-            
-            ObjBase featureInstance = p.get(featureSchema.getEnclosedClass(cl), id);
+            ObjBase featureInstance = instantiateSchema(data, featureSchema);
             
             assertEquals("GFPuv", featureInstance.getName());
             assertEquals(sequence, featureInstance.getClass().getDeclaredField("sequence").get(featureInstance));
     }
+    
+    @Test
+    public void testClothoSchemaValidate() throws ClassNotFoundException {
+        Schema featureSchema = createFeatureSchema();
+        BSONObject data = new BasicDBObject();
+        data.put("name", "BadSequence");
+        data.put("sequence", "This is not a valid sequence.");
+        ObjBase featureInstance = instantiateSchema(data, featureSchema);
+        
+        Set<ConstraintViolation<ObjBase>> cvs = validator.validate(featureInstance);
+        
+        assertTrue(cvs.size() > 0);
+        
+        //SimpleSequence test = new SimpleSequence("BadSequence", "This is not a valid sequence.");
+        //cvs = validator.validate(p, types)
+        
+    }
+    
     
     @Test
     public void testClothoSchemaCompile() throws ClassNotFoundException, NoSuchFieldException {
@@ -111,6 +150,13 @@ public class Schema1Test {
         //SCHEMA_NAME and sequence are the declared fields
         assertNotNull(featureClass.getDeclaredField("sequence"));
         
+    }
+    
+    @Test 
+    public void testToBSON(){
+        Schema featureSchema = createFeatureSchema();
+        Mapper mapper = new DefaultMapper();
+        System.out.println(mapper.toDBObject(featureSchema));
     }
     
 }

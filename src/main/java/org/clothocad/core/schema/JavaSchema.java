@@ -32,19 +32,9 @@ import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.util.compiler.DynamicFileManager;
 import org.clothocad.core.util.compiler.JavaSourceFromString;
 import org.clothocad.model.Person;
+import org.objectweb.asm.ClassReader;
 
 
-
-/**
- * @author John Christopher Anderson
- */
-
-/**
- * A Schema is the schema that must be obeyed by an Instance
- * @author jcanderson
- */
-
-@Data
 public class JavaSchema 
 		extends Schema {
 
@@ -60,6 +50,9 @@ public class JavaSchema
         this.description = description;
         setSource(source);
     } 
+    
+    
+    protected byte[][] innerClasses;
     
     //TODO:
     public JavaSchema(String source){
@@ -86,14 +79,17 @@ public class JavaSchema
         
         this.classData = fileManager.getOutputFile().getBytes();
         //patch references to other db-residing classes to uuid instead of 'pretty' id
+        //TODO: how to manage external dependencies?
+        //complain if non objbase class
 
     }
     
-    //TODO:
     private void extractMetadata(){
+        ClassReader reader = new ClassReader(classData);
+        reader.accept(new ClassParser(this), 0);   
         //fields
         //methods
-        //also author/name/description later
+        //author/name/description 
     }
 
     @Override
