@@ -5,6 +5,7 @@
 package org.clothocad.core.schema;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.Set;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.TraceClassVisitor;
 
 /**
  *
@@ -51,8 +54,12 @@ public class ClothoSchema extends Schema {
         return classData;
     }
     
-    private byte[] generateClassData(){
-        ClassWriter cw = new ClassWriter(0);
+    protected byte[] generateClassData(){
+        ClassWriter cwriter = new ClassWriter(0);
+        TraceClassVisitor tcv = new TraceClassVisitor(cwriter, new PrintWriter(System.out));
+        CheckClassAdapter cw = new CheckClassAdapter(tcv);
+        
+        //ClassWriter cw = new ClassWriter(0);
         String superClassName = this.superClass == null ? "org/clothocad/core/datums/ObjBase" : this.superClass.getInternalName();
         
         cw.visit(V1_7, ACC_PUBLIC, this.getInternalName(), null, superClassName, new String[]{});
@@ -120,7 +127,7 @@ public class ClothoSchema extends Schema {
         }*/
 
         cw.visitEnd();
-        return cw.toByteArray();
+        return cwriter.toByteArray();
     }
     
     public static int accessToOpcode(Access access){

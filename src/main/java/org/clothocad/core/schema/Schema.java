@@ -54,7 +54,7 @@ public abstract class Schema extends Sharable {
     //can get bytecode from functions? 
    
     public String getBinaryName(){
-        return BASE_PACKAGE_BINARY + this.getUUID();
+        return BASE_PACKAGE_BINARY + "C"+ this.getUUID();
     }
     
     public String getInternalName(){
@@ -68,6 +68,6 @@ public abstract class Schema extends Sharable {
     
     public static String extractIdFromClassName(String className){
         String[] a =  className.split("\\.");
-        return a[a.length-1];
+        return a[a.length-1].substring(1);
     }
 }

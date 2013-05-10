@@ -79,10 +79,10 @@ public class ClothoSchemaTest {
     static DBClassLoader cl = new DBClassLoader(p);
     static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
-    private Schema createFeatureSchema() {
+    public static Schema createFeatureSchema() {
         
             ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, Access.PUBLIC);
-            field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
+            field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*")));// , "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
             Set<ClothoField> fields = Sets.newHashSet(field);
         
             ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
@@ -90,7 +90,7 @@ public class ClothoSchemaTest {
             ObjectId id = new ObjectId();
             featureSchema.setUUID(id);
             p.save(featureSchema);
-            
+                
             return p.get(ClothoSchema.class, id);
     }
     
@@ -122,20 +122,27 @@ public class ClothoSchemaTest {
     }
     
     @Test
-    public void testClothoSchemaValidate() throws ClassNotFoundException {
+    public void testClothoSchemaValidate() throws ClassNotFoundException {        
         Schema featureSchema = createFeatureSchema();
         BSONObject data = new BasicDBObject();
         data.put("name", "BadSequence");
         data.put("sequence", "This is not a valid sequence.");
         ObjBase featureInstance = instantiateSchema(data, featureSchema);
-        
+         
         Set<ConstraintViolation<ObjBase>> cvs = validator.validate(featureInstance);
         
-        assertTrue(cvs.size() > 0);
+        assertTrue(cvs.size() == 1);
         
-        //SimpleSequence test = new SimpleSequence("BadSequence", "This is not a valid sequence.");
-        //cvs = validator.validate(p, types)
+        String sequence = "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA";
+            
+        data.put("name",  "GFPuv" );
+        data.put("sequence",  sequence); //"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA" );
+            
+        featureInstance = instantiateSchema(data, featureSchema);
         
+        cvs = validator.validate(featureInstance);
+        
+        assertTrue(cvs.isEmpty());
     }
     
     
