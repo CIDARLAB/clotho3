@@ -21,12 +21,16 @@ import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author spaige
  */
 public class ClothoSchema extends Schema {
+    static final Logger logger = LoggerFactory.getLogger(ClothoSchema.class);
+    
     public ClothoSchema() {}
 
     
@@ -55,9 +59,11 @@ public class ClothoSchema extends Schema {
     }
     
     protected byte[] generateClassData(){
+        logger.trace("generating class bytecode for schema {} ({})", this.getName(), this.getUUID());
+        
         ClassWriter cwriter = new ClassWriter(0);
-        TraceClassVisitor tcv = new TraceClassVisitor(cwriter, new PrintWriter(System.out));
-        CheckClassAdapter cw = new CheckClassAdapter(tcv);
+        //TraceClassVisitor tcv = new TraceClassVisitor(cwriter, new PrintWriter(System.out));
+        CheckClassAdapter cw = new CheckClassAdapter(cwriter);
         
         //ClassWriter cw = new ClassWriter(0);
         String superClassName = this.superClass == null ? "org/clothocad/core/datums/ObjBase" : this.superClass.getInternalName();
@@ -67,6 +73,7 @@ public class ClothoSchema extends Schema {
         cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "SCHEMA_NAME", Type.getType(String.class).getDescriptor(), null, this.getName()).visitEnd();
         
         //no-args constructor
+        logger.trace("Creating no-args constructor.");
         MethodVisitor constructorVisitor = cw.visitMethod(ACC_PUBLIC, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[] {}), null, null);
         constructorVisitor.visitCode();
         constructorVisitor.visitVarInsn(ALOAD, 0);
@@ -77,18 +84,23 @@ public class ClothoSchema extends Schema {
         
         //fields
         for (ClothoField field : fields){
+            logger.trace("{}.visitField({},{},{},{},{})", cw, accessToOpcode(field.getAccess()), field.getName(), Type.getType(field.getType()).getDescriptor(),null,null);
             FieldVisitor fv = cw.visitField(accessToOpcode(field.getAccess()), field.getName(), Type.getType(field.getType()).getDescriptor(), null, null);
             //TODO: annotating embed vs reference
             if (field.isReference()){
+                logger.trace("{}.visitAnnotation({},{}).visitEnd()", Type.getType(Reference.class).getInternalName(), true);
                 fv.visitAnnotation(Type.getType(Reference.class).getInternalName(), true).visitEnd();
             }
             for (Constraint c : field.getConstraints()){
+                logger.trace("{}.visitAnnotation({},{})", fv, Type.getDescriptor(c.getAnnotation()), true);
                AnnotationVisitor av =  fv.visitAnnotation(Type.getDescriptor(c.getAnnotation()), true);
                for (String value : c.getValues()){
                    handleAnnotationValue(av,value,c.getValue(value));
                }
+               logger.trace("{}.visitEnd", av);
                av.visitEnd();
             }
+            logger.trace("{}.visitEnd", fv);
             fv.visitEnd();
             //getters and setters
             if (field.getAccess() != Access.PRIVATE){
@@ -139,17 +151,22 @@ public class ClothoSchema extends Schema {
         for (Object value : a){
             handleAnnotationValue(arrayVisitor, null, value);
         }
+        logger.trace("{}.visitEnd()", arrayVisitor);
+        arrayVisitor.visitEnd();
     }
     
     private void handleAnnotationValue(AnnotationVisitor visitor, String name, Object value){
         if (value.getClass().isArray()){
+            logger.trace("{}.visitArray({})", visitor, name);
             handleAnnotationArray(visitor.visitArray(name), (Object[]) value);
         }
         else if (value instanceof Enum){
+            logger.trace("{}.visitEnum({},{},{})", visitor, Type.getDescriptor(value.getClass()), value.toString());
             visitor.visitEnum(name, Type.getDescriptor(value.getClass()), value.toString());
         }
         //XXX: not handling the annotation case right now; no use case at the moment
         else{
+            logger.trace("{}.visit({},{})", visitor, name, value);
             visitor.visit(name, value);
         }
     }

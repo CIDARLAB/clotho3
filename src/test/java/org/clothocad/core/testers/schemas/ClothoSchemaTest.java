@@ -73,16 +73,18 @@ public class ClothoSchemaTest {
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
         p.connect();
+        featureSchema = createFeatureSchema();
     }
     
     static Persistor p = new Persistor(new MongoDBConnection());
     static DBClassLoader cl = new DBClassLoader(p);
     static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    static Schema featureSchema;
     
     public static Schema createFeatureSchema() {
         
             ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, Access.PUBLIC);
-            field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*")));// , "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
+            field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
             Set<ClothoField> fields = Sets.newHashSet(field);
         
             ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
@@ -106,7 +108,6 @@ public class ClothoSchemaTest {
     
     @Test
     public void testClothoSchemaInstantiate() throws ClassNotFoundException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-            Schema featureSchema = createFeatureSchema();
         
             BSONObject data = new BasicDBObject();
             
@@ -123,7 +124,6 @@ public class ClothoSchemaTest {
     
     @Test
     public void testClothoSchemaValidate() throws ClassNotFoundException {        
-        Schema featureSchema = createFeatureSchema();
         BSONObject data = new BasicDBObject();
         data.put("name", "BadSequence");
         data.put("sequence", "This is not a valid sequence.");
@@ -132,12 +132,13 @@ public class ClothoSchemaTest {
         Set<ConstraintViolation<ObjBase>> cvs = validator.validate(featureInstance);
         
         assertTrue(cvs.size() == 1);
+        ConstraintViolation<ObjBase> violation = cvs.iterator().next();
+        assertEquals(violation.getMessage(), "must match \"[ATUCGRYKMSWBDHVN]*\"");
         
-        String sequence = "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA";
+        String sequence = "atgaGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA";
             
         data.put("name",  "GFPuv" );
-        data.put("sequence",  sequence); //"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA" );
-            
+        data.put("sequence",  sequence); 
         featureInstance = instantiateSchema(data, featureSchema);
         
         cvs = validator.validate(featureInstance);
@@ -164,6 +165,7 @@ public class ClothoSchemaTest {
         Schema featureSchema = createFeatureSchema();
         Mapper mapper = new DefaultMapper();
         System.out.println(mapper.toDBObject(featureSchema));
+        assertFalse(true);
     }
     
 }
