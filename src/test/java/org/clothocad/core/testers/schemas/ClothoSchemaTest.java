@@ -100,7 +100,7 @@ public class ClothoSchemaTest {
         ObjectId id = new ObjectId();
         data.put("_id", id);        
         
-        p.save(data);
+        p.save(data.toMap());
         
         return p.get(schema.getEnclosedClass(cl), id);
     }
@@ -166,6 +166,28 @@ public class ClothoSchemaTest {
         Mapper mapper = new DefaultMapper();
         System.out.println(mapper.toDBObject(featureSchema));
         assertFalse(true);
+        /*
+         * { "className" : "org.clothocad.core.schema.ClothoSchema" , 
+         * "classData" : <Binary Data> , 
+         * "description" : "A simple and sloppy representation of a Feature or other DNA sequence" , 
+         * "fields" : [ {   "name" : "sequence" , 
+         *                  "type" : "java.lang.String" , 
+         *                  "example" : "ATACCGGA" , 
+         *                  "access" : "PUBLIC" , 
+         *                  "reference" : false , 
+         *                  "constraints" : [ { "values" : { "flags" : [ "CASE_INSENSITIVE"] , "regexp" : "[ATUCGRYKMSWBDHVN]*"}}],
+         *                  "description" : "the sequence of the feature"}] ,
+         * "_id" : { "$oid" : "51917d4c986cc1a16577933e"} , 
+         * "name" : "SimpleFeature" , 
+         * "isDeleted" : false , 
+         * "lastModified" : { "$date" : "2013-05-13T23:54:52.476Z"}}
+         */
+        
+        //Clotho Json vs Morphia BSON
+        // className -> schema language
+        // isDeleted -> 
+        // lastModified -> 
+        // constraint -> better constraint format
     }
     
 }

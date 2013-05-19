@@ -27,7 +27,7 @@ abstract public class AbstractScriptAPI implements ScriptAPI {
         BSONObject query = new BasicBSONObject("name", functionName);
         query.put("className","org.clothocad.core.execution.Function");
         
-        return connection.getOne(Function.class, query);
+        return connection.getOne(Function.class, query.toMap());
     }
     
     //should check if already loaded a la Function

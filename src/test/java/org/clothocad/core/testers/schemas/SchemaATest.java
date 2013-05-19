@@ -59,7 +59,7 @@ public class SchemaATest {
         //Create and test an ObjBase
         System.out.println("\n\n+++++++++++ Testing out objbase");
         BSONObject serial = createFeature();
-        persistor.save(serial);
+        persistor.save(serial.toMap());
         ObjBase feature = persistor.get(schema.getEnclosedClass(cl), new ObjectId((String) serial.get("_id")));
         System.out.println(feature.toJSON().toString());
         System.out.println("Id is: " + feature.getUUID());
