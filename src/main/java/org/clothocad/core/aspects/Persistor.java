@@ -46,6 +46,8 @@ import org.clothocad.core.layers.persistence.ClothoConnection;
  * 
  *   
  */
+
+//TODO: thread saftey
 public class Persistor implements Aspect {
     
     @Delegate

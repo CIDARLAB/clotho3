@@ -5,10 +5,14 @@
 package org.clothocad.core.schema;
 
 import java.util.Map;
+import java.util.Set;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
 
@@ -17,8 +21,8 @@ import org.clothocad.model.Person;
  * @author spaige
  */
 @Data
+@NoArgsConstructor
 public abstract class Schema extends Sharable {
-    public Schema() {}
     
     public Schema(String name, String description, Person author){
         super(name, author);
@@ -34,7 +38,11 @@ public abstract class Schema extends Sharable {
     protected String smallIconURL;
     protected String source;
     
-    //Do we need the field/method metadata in all schemas, or just clothoschema?
+    //These are settable only in ClothoSchema - they are derived from source in other languages
+    
+    protected Set<ClothoField> fields;
+    protected Set<Function> methods;
+    protected Schema superClass;
 
     
     public abstract Language getLanguage();
@@ -46,7 +54,7 @@ public abstract class Schema extends Sharable {
     //can get bytecode from functions? 
    
     public String getBinaryName(){
-        return BASE_PACKAGE_BINARY + this.getUUID();
+        return BASE_PACKAGE_BINARY + "C"+ this.getUUID();
     }
     
     public String getInternalName(){
@@ -56,5 +64,10 @@ public abstract class Schema extends Sharable {
     //the classloader can only find saved schemas, so if this throws an exception, try saving the schema
     public <T extends ObjBase> Class<T> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
         return (Class<T>) cl.loadClass(getBinaryName());
+    }
+    
+    public static String extractIdFromClassName(String className){
+        String[] a =  className.split("\\.");
+        return a[a.length-1].substring(1);
     }
 }

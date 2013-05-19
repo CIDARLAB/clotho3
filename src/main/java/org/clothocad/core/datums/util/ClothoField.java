@@ -24,18 +24,24 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
+import java.util.Map;
+import java.util.Set;
 import lombok.Getter;
+import lombok.Setter;
 import org.clothocad.core.datums.Function;
+import org.clothocad.core.schema.Access;
+import org.clothocad.core.schema.Constraint;
 /**
  * @author John Christopher Anderson
  */
 
 @Getter
+@Setter
 public class ClothoField {
     
     private ClothoField() {}
     
-    public ClothoField(String name, Class type, String example, String description, Function validate, boolean reference, int access) {
+    public ClothoField(String name, Class type, String example, String description, Function validate, boolean reference, Access access) {
         this.name = name;
         this.type = type;
         this.example = example;
@@ -49,10 +55,43 @@ public class ClothoField {
     private String name;
     private Class type;
     private String example;   //A string representation/explanation of an expected value
-    private int access;  //uses asm opcodes
+    private Access access;  
     private boolean reference;
     private Function validate;
+    private Set<Constraint>  constraints;
     
     //metadata
     private String description;
+    
+    public String getSetterName(){
+        return "set" + capitalize(name);
+    }
+    
+    public String getGetterName(){
+        if (this.type == Boolean.class) return "is" + capitalize(name);
+        else return "get" + capitalize(name);
+    }
+    
+    private static String capitalize(String s){
+        if (s.length() == 0) return s;
+        return s.substring(0,1).toUpperCase() + s.substring(1);
+    }
+    
+    //Constraints
+    
+    //#
+    //multipleof
+    //maximum
+    //exclusivemaximum
+    //minimum
+    //exclusiveminimum
+    
+    //size
+    //pattern (regex match)
+    
+    
+    //notnull
+    
+    
+    
 }

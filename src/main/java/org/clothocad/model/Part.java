@@ -74,6 +74,7 @@ public class Part extends ObjBase {
     
     @Getter
     @Setter
+    @Reference
     private List<Part> composition;
     
     @Getter

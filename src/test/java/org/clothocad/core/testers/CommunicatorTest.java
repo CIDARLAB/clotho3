@@ -6,6 +6,7 @@ import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
+import org.clothocad.core.schema.Access;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
 
@@ -56,7 +57,7 @@ public class CommunicatorTest {
             String onUpdate = "";//alert(JSON.stringify(person));";
             
             List<ClothoField> inputArgs = new ArrayList<ClothoField>();
-            inputArgs.add(new ClothoField("person", Person.class, "", "", null, false, 0));
+            inputArgs.add(new ClothoField("person", Person.class, "", "", null, false, Access.PUBLIC));
             
             Function canUpdate = new Function() ; //XXX: "", String[]{}, null, null "return true;", Language.JAVASCRIPT);
             

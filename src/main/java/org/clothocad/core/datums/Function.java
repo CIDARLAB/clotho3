@@ -22,9 +22,9 @@ public class Function extends ObjBase {
     
     public Function(){};
     
-    public Function(String name, String[] argNames, Class[] input, Class[] output, String source, Language language){
+    public Function(String name, String[] argNames, Class[] input, Class output, String source, Language language){
         this.inputTypes = input;
-        this.outputTypes = output;
+        this.outputType = output;
         this.setName(name);
         //this.action = new ScriptEngineScript(name, source, language);
         this.argNames = argNames;
@@ -41,7 +41,7 @@ public class Function extends ObjBase {
     
     private Class[] inputTypes;
     //XXX: losing some duck-typing style flexibility
-    private Class[] outputTypes;
+    private Class outputType;
     //XXX: if single return type, could make things more typesafe java-side
     //XXX: I don't even know what to do with this
     //XXX: all our target languages have single return value, so multiple return value is undefined
