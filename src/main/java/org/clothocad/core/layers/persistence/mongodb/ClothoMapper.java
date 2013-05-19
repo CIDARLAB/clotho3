@@ -15,12 +15,15 @@ import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author spaige
  */
 public class ClothoMapper extends DefaultMapper {
+    ClassLoader cl;
 
     @Override
     public Object fromDBObject(Class entityClass, DBObject dbObject, EntityCache cache) {
@@ -64,5 +67,15 @@ public class ClothoMapper extends DefaultMapper {
             mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
 
         return dbObject;
+    }
+    
+    public DBObject toClothoJSON(DBObject data){
+        try {
+            Class c = Class.forName((String) data.get("className"), true, cl); //inject classloader
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClothoMapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
 }

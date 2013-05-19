@@ -165,7 +165,7 @@ public class ClothoSchemaTest {
         Schema featureSchema = createFeatureSchema();
         Mapper mapper = new DefaultMapper();
         System.out.println(mapper.toDBObject(featureSchema));
-        assertFalse(true);
+        //assertFalse(true);
         /*
          * { "className" : "org.clothocad.core.schema.ClothoSchema" , 
          * "classData" : <Binary Data> , 

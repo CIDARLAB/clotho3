@@ -20,6 +20,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Date;
 import java.util.Map;
 import lombok.Getter;
+import org.clothocad.core.layers.persistence.Remove;
 import org.json.JSONObject;
 
 /**
@@ -38,11 +39,13 @@ public abstract class ObjBase {
     @Id
     private ObjectId UUID = null;
     
-    private String name;    
+    private String name;
+    @Remove
     private boolean isDeleted;    
     
     @Setter(AccessLevel.NONE)
     private Date dateCreated;
+    @Remove
     private Date lastModified, lastAccessed;
 	
 	public void onUpdate() {

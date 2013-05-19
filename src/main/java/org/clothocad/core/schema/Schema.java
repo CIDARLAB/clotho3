@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.schema;
 
+import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Map;
 import java.util.Set;
 import lombok.Data;
@@ -14,6 +15,8 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.layers.persistence.Add;
+import org.clothocad.core.layers.persistence.Remove;
 import org.clothocad.model.Person;
 
 /**
@@ -22,6 +25,7 @@ import org.clothocad.model.Person;
  */
 @Data
 @NoArgsConstructor
+@Add(name="language", providedBy="getLanguage")
 public abstract class Schema extends Sharable {
     
     public Schema(String name, String description, Person author){
@@ -31,6 +35,7 @@ public abstract class Schema extends Sharable {
     
     protected static final String BASE_PACKAGE_BINARY = "org.clothocad.loadedschemas.";
     
+    @Remove
     protected byte[] classData;
     protected Map<String, ObjectId> dependencies;
     protected String description;
@@ -42,6 +47,8 @@ public abstract class Schema extends Sharable {
     
     protected Set<ClothoField> fields;
     protected Set<Function> methods;
+    
+    @Reference
     protected Schema superClass;
 
     
