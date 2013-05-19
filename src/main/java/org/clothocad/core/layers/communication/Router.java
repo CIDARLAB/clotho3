@@ -26,7 +26,40 @@ public class Router {
 		return result;
     }
     
-	// send message
+    public void route(JSONObject json) 
+    		throws Exception {
+		System.out.println("[Router.route] "+json);
+    	
+    	String channel, action;
+    	JSONObject data;
+    	
+    	if(null != json) {
+    		
+    		if((channel=json.getString(ClothoConstants.CHANNEL)) != null) {
+    		   	
+    			// check the channel
+    			
+    		} else {
+    			throw new Exception("NO CHANNEL PROVIDED!");
+    		}
+
+    		if((action=json.getString(ClothoConstants.ACTION)) != null) {
+    		   	
+    			// check the action (according to the channel)
+    			
+    		} else {
+    			throw new Exception("NO ACTION PROVIDED!");
+    		}
+
+    		data = json.getJSONObject(ClothoConstants.DATA);
+    		
+    		System.out.println("[Router.route] "+channel+", "+action+", "+data.toString());
+    	}
+    	throw new Exception("INVALID MESSAGE!");
+    }
+	
+    
+    // send message    
 	public void sendMessage(String socket_id, String channel, JSONObject json) {
 		try {
 			new ClothoMessageProducer(socket_id).onSuccess(json);
@@ -37,9 +70,9 @@ public class Router {
 	
 	// publish messages to subscribed clients
 	public void publish(JSONObject json) {
-		try {
-			new ClothoPublisher().publish(json);
-		} catch(Exception e) {}
+		//try {
+		//	new ClothoPublisher().publish(json);
+		//} catch(Exception e) {}
 	}
 	
 	// receive message

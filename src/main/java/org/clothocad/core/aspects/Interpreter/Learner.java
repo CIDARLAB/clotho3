@@ -108,8 +108,9 @@ class Learner{
      * @param feature 
      */
     public static HashMap<String, Integer> getIndexEntry(String feature) {
-        HashMap<String, Integer> out = Persistor.get().loadFeature(feature);
-        return out;
+        //HashMap<String, Integer> out = Persistor.get().loadFeature(feature);
+        //return out;
+    	return null;
     }
 
     /**
@@ -118,7 +119,7 @@ class Learner{
      * @param HashMap 
      */
     private static void saveIndexEntry(HashMap<String, Integer> StoreGrams, String feature) {
-        Persistor.get().persistFeature(StoreGrams, feature);
+        //Persistor.get().persistFeature(StoreGrams, feature);
     }
 
     /* TODO replace autocollapse's job with Decider. If decide to keep then replace 

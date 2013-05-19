@@ -13,7 +13,7 @@
 
 <script language="javascript">
 function login() {	
-	$.post("http://localhost:8080",
+	$.post("ws://localhost:61623",
 		{username: $("#Email").val(), password:$("#Password").val()},
 		function(data,status){
 			alert("data:...\n"+data+"\n"+"status:...\n"+status);
@@ -24,7 +24,6 @@ function login() {
 </head>
 <body>
 <div id="page_wrapper">
-
 	<div id="header" class="condensed"> 
 		<div class="container"> 
 			<div id="logo">

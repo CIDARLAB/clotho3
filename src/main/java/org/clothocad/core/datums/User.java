@@ -82,7 +82,7 @@ public class User
         }
         //Persistor.get().persist(this);
         // new:
-        this.save();
+        //this.save();
     }
     
     /**
@@ -94,7 +94,7 @@ public class User
         device.login();
         //Persistor.get().persist(this);
         // new:
-        this.save();
+        //this.save();
     }
 
     @Override

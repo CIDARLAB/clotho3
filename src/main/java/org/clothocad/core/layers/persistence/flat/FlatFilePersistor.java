@@ -31,6 +31,7 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.layers.persistence.ClothoConnection;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.core.util.Logger;
 
@@ -42,6 +43,11 @@ import com.thoughtworks.xstream.XStream;
 public class FlatFilePersistor 
 		extends Persistor {
 	
+	public FlatFilePersistor(ClothoConnection connection) {
+		super(connection);
+		// TODO Auto-generated constructor stub
+	}
+
 	public boolean persist(Collection<ObjBase> col) {
 		for(ObjBase obj : col) {
 			if(!this.persistDatum(obj)) {
@@ -131,21 +137,14 @@ public class FlatFilePersistor
         throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	public Datum get(Class c, ObjectId id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-	}
-    
-	@Override
 	public ObjBase[] get(ObjBase obj) {
         throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	@Override
 	public <T> T[] get(Class<T> t) {
         throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	@Override
 	public boolean clearDB() {
 		// TODO Auto-generated method stub
 		return false;

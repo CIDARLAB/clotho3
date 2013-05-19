@@ -67,7 +67,10 @@ public class ReverseComplement {
         		outputArgs);
         
         // now, store the reverseComplement() function in the DB
-        Persistor.get().persist(fReverseComplement);
+        //Persistor.get().persist(fReverseComplement);
+        
+        // this is how it should look like ultimately
+        //Clotho.save(fReverseComplement);
 	}
 	
 	private void testReverseComplementFunction() {

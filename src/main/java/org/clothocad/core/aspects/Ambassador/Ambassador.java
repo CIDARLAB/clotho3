@@ -275,7 +275,7 @@ public class Ambassador implements Aspect {
                 sister.setUrl(doo.url);
             }
             
-            Persistor.get().persist(sister);
+            //Persistor.get().persist(sister);
             
             //
             //Extract any security codes, and the cmd token

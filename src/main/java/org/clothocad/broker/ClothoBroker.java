@@ -77,27 +77,25 @@ public class ClothoBroker {
         tcpConnector.bind = "tcp://0.0.0.0:61613";
         broker.connectors.add(tcpConnector);
 
+        /**
         AcceptingConnectorDTO tlsConnector = new AcceptingConnectorDTO();
         tlsConnector.id = "tls";
         tlsConnector.bind = "tls://0.0.0.0:61614";
         broker.connectors.add(tlsConnector);
+		**/
 
         AcceptingConnectorDTO wsConnector = new AcceptingConnectorDTO();
         wsConnector.id = "ws";
         wsConnector.bind = "ws://0.0.0.0:61623";
         broker.connectors.add(wsConnector);
-        
+
+        /**
         AcceptingConnectorDTO wssConnector = new AcceptingConnectorDTO();
         wssConnector.id = "wss";
         wssConnector.bind = "wss://0.0.0.0:61624";
         broker.connectors.add(wssConnector);
-
-        //
-        // Fires up the web admin console on HTTP.
-        //WebAdminDTO webadmin = new WebAdminDTO();
-        //webadmin.bind = "http://0.0.0.0:8080";
-        //broker.web_admins.add(webadmin);
-
+		**/
+        
         return broker;
     }
 

@@ -53,14 +53,14 @@ public class Client
         
         //Persistor.get().persist(this);
         // new:
-        this.save();
+        //this.save();
     }
     
     void login() {
         isLoggedIn = true;
         //Persistor.get().persist(this);
         // new:
-        this.save();
+        //this.save();
     }
 
     @Override

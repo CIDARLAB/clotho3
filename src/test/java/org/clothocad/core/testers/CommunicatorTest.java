@@ -79,7 +79,7 @@ public class CommunicatorTest {
             obj.put("id", "CT-sample-view");
             view = View.deserialize(obj.toString());
                         
-            view.save();
+            //view.save();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

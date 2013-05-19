@@ -1117,6 +1117,7 @@ public class NucSeq
     }
 
     private static void generateFeatureTable( boolean init, boolean backgroundMode ) {
+    	/**
         Feature[] features = Persistor.get().get(Feature.class);
         for ( int i = 0; i < features.length; i++ ) {
             try {
@@ -1128,6 +1129,7 @@ public class NucSeq
             }
         }
         featuresInitiated = true;
+        **/
     }
 
     /**

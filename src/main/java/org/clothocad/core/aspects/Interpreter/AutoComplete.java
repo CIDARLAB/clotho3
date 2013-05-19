@@ -66,13 +66,13 @@ public class AutoComplete {
         trie.put(word, word);
         if(!wordBank.contains(word)) {
             wordBank.add(word);
-            Persistor.get().persistWordBank(wordBank);
+            //Persistor.get().persistWordBank(wordBank);
         }
     }
     
     private List<String> getWordBank() {
         if(wordBank==null) {
-            wordBank = Persistor.get().loadWordBank();
+            //wordBank = Persistor.get().loadWordBank();
             if(wordBank==null) {
                 wordBank = new ArrayList<String>();
             }

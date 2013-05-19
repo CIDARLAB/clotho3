@@ -73,7 +73,7 @@ public class Doo
         //  Persistor.get().save(this);
     }
     
-    @Override
+    //@Override
     public boolean save() {
         if(!savePolicy) {
             return false;

@@ -48,7 +48,8 @@ public class Collector implements Aspect {
                 if(uuid.startsWith("static")) {                	
                     return getStaticDatum(uuid);
                 } else {
-                    return Persistor.get().loadDatum(uuid);
+                	return null;
+                    //return Persistor.get().loadDatum(uuid);
                 }
             }
         } catch(Exception err) {

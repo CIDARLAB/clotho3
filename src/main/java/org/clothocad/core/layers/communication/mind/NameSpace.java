@@ -69,7 +69,7 @@ class NameSpace {
              * already instantiate engine */
 //            newMind.getMyEngine().eval(cmd);  //this method is problematic as it is now taking in arguments for show and trying to show them
             put(token, cmd);
-            mind.save();
+            //mind.save();
         } catch (Exception e) {
             Logger.log(Logger.Level.WARN, "won't learn command: " + cmd);
             return;

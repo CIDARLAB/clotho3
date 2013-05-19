@@ -75,7 +75,7 @@ public final class Mind
         //Create the new Mind object
         Mind out = new Mind();
         out.personId = person.getId();
-        out.save();
+        //out.save();
         return out;
     }
 
@@ -178,7 +178,7 @@ public final class Mind
                          String ephemeral_link_page_id,
                          PageMode page_mode) {
         config.addPage(socket_id, page_mode);
-        this.save();
+        //this.save();
         if (doos.containsKey(ephemeral_link_page_id)) {
             AddPageDoo add_page_doo =
                 (AddPageDoo) doos.get(ephemeral_link_page_id);
@@ -204,14 +204,14 @@ public final class Mind
     /* client lost a page--update config */
     public void unlinkPage(String socket_id) {
         config.removePage(socket_id);
-        this.save();
+        //this.save();
     }
     
     public void setVisible(Page page, boolean new_visibility) {
         /* TODO: DO WHATEVER IT TAKES TO programmatically show or hide the tab */
         
         page.toggleVisible(new_visibility ^ page.toggleVisible(false));
-        this.save();
+        //this.save();
     }
 
     public Iterable<Map<String, String>> getPageSummary() {
@@ -230,7 +230,7 @@ public final class Mind
     public void removeWidget(Page page, Widget widget) {
         /* TODO: remove the widget from the client's page */
         page.removeWidget(widget.getId());
-        this.save();
+        //this.save();
     }
 
     public void unlinkWidget(String socket_id, String widget_id) {
@@ -241,7 +241,7 @@ public final class Mind
             return;
         }
         target_page.removeWidget(widget_id);
-        this.save();
+        //this.save();
     }
 
     public void moveWidget(Widget widget,
@@ -255,7 +255,7 @@ public final class Mind
         widget.setPositionAbsolute(posx, posy);
         widget.setDimensions(width, Widget.SizeType.RELATIVE, height, Widget.SizeType.RELATIVE);
         
-        this.save();
+        //this.save();
     }
 
     /* TODO: this shouldn't be exposed */
