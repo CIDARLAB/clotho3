@@ -24,17 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects.Proctor;
 
-import flexjson.JSONSerializer;
 import java.util.List;
-import java.util.UUID;
-import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.datums.Doo;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.View;
-import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.util.ClothoDate;
-import org.clothocad.core.datums.util.Permissions;
-import org.clothocad.core.datums.util.ServerScript;
-import org.json.JSONArray;
+import org.clothocad.model.Person;
 import org.json.JSONObject;
 
 /**
@@ -59,11 +52,11 @@ public class Quiz
     		View view,
     		List<Question> questions,
     		boolean doRandom,
-    		ServerScript rubric) {
-		super(author, SharableType.QUIZ);
+    		Function rubric) {
+		super(author);
 
         this.description = description;
-        this.viewId = view.getId();
+        this.viewId = view.getUUID().toString();
         this.questions = questions;
         this.doRandom = doRandom;
         this.rubric = rubric;
@@ -76,15 +69,13 @@ public class Quiz
                                 View view,
                                 List<Question> questions,
                                 boolean doRandom,
-                                ServerScript rubric) {
+                                Function rubric) {
 
         try {
             //CHECK THE DATA FOR WELL-FORMEDNESS
 
             //Create the Quiz object
             Quiz quiz = new Quiz(author, name, description, view, questions, doRandom, rubric);
-
-            Collector.get().add(quiz);
             return quiz;
         } catch(Exception err) {
             err.printStackTrace();
@@ -113,7 +104,7 @@ public class Quiz
         return badgeId;
     }
 
-    public ServerScript getRubric() {
+    public Function getRubric() {
         return rubric;
     }  
     
@@ -137,6 +128,6 @@ public class Quiz
     private List<Question> questions;  //the data and answers that go into the quiz
     private boolean doRandom;  //Should select the questions randomly?
     private String badgeId;    //The badge that can be earned by passing this quiz
-    private ServerScript rubric;   //This reference to a Function needs to input the data from the client and output some score
+    private Function rubric;   //This reference to a Function needs to input the data from the client and output some score
     
 }

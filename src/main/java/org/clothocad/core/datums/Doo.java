@@ -24,10 +24,11 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.datums;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.settings.Settings;
 import org.json.JSONObject;
 
@@ -40,7 +41,7 @@ public class Doo
         if(parent == null) {
             parentDooId = null;
         } else {
-            parentDooId = parent.getId();
+            parentDooId = parent.getUUID();
         }
         savePolicy = saveit;
         save();
@@ -68,12 +69,11 @@ public class Doo
     
     public void terminate() {
         setMessage("Doo terminated by Doo.terminate()");
-        dateEnded = new ClothoDate();
+        dateEnded = new Date();
       //if global settings say to....
         //  Persistor.get().save(this);
     }
     
-    //@Override
     public boolean save() {
         if(!savePolicy) {
             return false;
@@ -81,22 +81,20 @@ public class Doo
         
         if(Settings.isRecordAllDoos()) {
             //Persistor.get().persistDatum(this);
-        	this.save();
+        	this.save(); //why infinite loop?
         }
         return true;
     }
     
     private static class MsgLine {
         String msg;
-        ClothoDate date;
+        Date date;
     }
     
-    private final String parentDooId;    
+    private final ObjectId parentDooId;    
     private List<MsgLine> messages = new ArrayList<MsgLine>();
-    private ClothoDate dateCreated = new ClothoDate();
-    private ClothoDate dateEnded = null;
+    private Date dateEnded = null;
     private boolean savePolicy = false;
-    private String id = UUID.randomUUID().toString();
     private Exception abortErr;
 
 }

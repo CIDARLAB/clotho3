@@ -23,19 +23,16 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.testers;
 
-import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Datum;
-import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.clothocad.core.util.Logger;
 
 /**
  * Tests the NameSpace functionality of the Mind
  * Create a Mind, populate it with stuff, clear it, then run something namespaced
  */
 public class T6 {
-    private static final int counter = 2;
+    /*private static final int counter = 2;
     
     public static void main(String[] args) {
         //Create or get a static mind reference
@@ -51,7 +48,7 @@ public class T6 {
 
         /* TODO: put Doo back */
         /* Doo doo = new Doo(null, false); */
-        
+        /*
         //Put in some commands
         Datum personSchema = Person.getSchema() ;
         for(int i=0; i<counter; i++) {
@@ -83,5 +80,5 @@ public class T6 {
         mind.runCommand(null, "afunc(person1);");
         mind.clear();
         mind.runCommand(null, "afunc(person1);");
-    }
+    }*/
 }

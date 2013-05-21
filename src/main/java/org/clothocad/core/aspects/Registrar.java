@@ -24,6 +24,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects;
 
+import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.objbases.Badge;
 import org.json.JSONObject;
@@ -44,9 +45,12 @@ public class Registrar {
      * @param badgeId
      * @return 
      */
+    
+    Persistor persistor;
+    
     public boolean hasBadge(String personId, String badgeId) {
         try {
-            Badge badge = (Badge) Collector.get().getDatum(badgeId);
+            Badge badge = persistor.get(Badge.class, new ObjectId(badgeId));
             return badge.hasBadge(personId);
         } catch(Exception err) {
             return false;
@@ -68,7 +72,7 @@ public class Registrar {
      */
     public JSONObject get(String personId, String sharableId) {
         try {
-            Sharable out = (Sharable) Collector.get().getDatum(sharableId);
+            Sharable out = persistor.get(Sharable.class, new ObjectId(sharableId));
 //            if(out.canShare(personId)) {
             if(true) {
                 return out.toJSON();

@@ -2,9 +2,11 @@ package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class InterpreterAC {
+    final static Logger logger = LoggerFactory.getLogger(InterpreterAC.class);
     public static AutoComplete completer1() {
         String[] word_bank1 = {
             "walk my cat",
@@ -62,13 +64,13 @@ class InterpreterAC {
 
     public static void check(String x, String y) {
         if (!x.equals(y)) {
-            Logger.log(Logger.Level.WARN, x + " is not " + y);
+            logger.warn("{} is not {}", x, y);
         }
     }
      public static void check(int actual, int expected) {
+         //TODO: Convert to Assert.assertEquals
          if (actual != expected) {
-             Logger.log(Logger.Level.WARN, "Expected: " + expected +
-                                            "\nGot: " + actual);
+             logger.warn( "Expected: {}\nGot: {}", expected, actual);
          }
      }
 

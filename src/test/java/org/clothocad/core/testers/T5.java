@@ -26,14 +26,10 @@ package org.clothocad.core.testers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.Schema;
+import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.datums.View;
-import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.datums.util.FieldType;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.datums.util.ServerScript;
-import org.clothocad.core.util.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -30,6 +30,8 @@ import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
 
 public class AutoComplete {
+    Persistor persistor;
+    
     /* AutoComplete Contructor */
     public AutoComplete () {
         trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
@@ -66,12 +68,13 @@ public class AutoComplete {
         trie.put(word, word);
         if(!wordBank.contains(word)) {
             wordBank.add(word);
-            //Persistor.get().persistWordBank(wordBank);
+            //FIXME: persistor.save(wordBank); (make a wordbank class)
         }
     }
     
     private List<String> getWordBank() {
         if(wordBank==null) {
+            //FIXME: persistor.get(...) 
             //wordBank = Persistor.get().loadWordBank();
             if(wordBank==null) {
                 wordBank = new ArrayList<String>();

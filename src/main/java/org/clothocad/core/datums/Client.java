@@ -24,11 +24,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import org.clothocad.core.aspects.Persistor;
-import org.json.JSONObject;
 
 /**
  * This the serverside implementation of the Client
@@ -46,7 +43,6 @@ public class Client
     private String userId;
     private boolean isLoggedIn = false; //The maintainence of login state for this Client
     private Set<User> users = new HashSet<User>(); //Stores the links to the users that have used this Client
-    private String id;
             
     void lockout() {
         isLoggedIn = false;
@@ -61,10 +57,5 @@ public class Client
         //Persistor.get().persist(this);
         // new:
         //this.save();
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
 }

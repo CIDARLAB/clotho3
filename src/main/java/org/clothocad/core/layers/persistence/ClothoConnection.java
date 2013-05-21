@@ -27,10 +27,11 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.util.ClothoDate;
+
 
 /**
  *
@@ -78,7 +79,7 @@ public interface ClothoConnection {
      * @param obj
      */
     void save(ObjBase obj);
-    void save(BSONObject obj);
+    void save(Map obj);
     
     /**
      * Saves the given collection of objects to the database.
@@ -86,7 +87,7 @@ public interface ClothoConnection {
      * @return the number of objects successfully saved
      */
     int save(Collection<ObjBase> objs);
-    int saveBSON(Collection<BSONObject> objs);
+    int saveBSON(Collection<Map> objs);
 
     /**
      * Delete the object from the database.
@@ -109,7 +110,7 @@ public interface ClothoConnection {
      * @param obj
      * @return
      */
-    ClothoDate getTimeModified( ObjBase obj );
+    Date getTimeModified( ObjBase obj );
 
     /**
      * Gets the object with the given uuid as the specified class,
@@ -134,22 +135,22 @@ public interface ClothoConnection {
      * @param query
      * @return
      */
-    List<ObjBase> get(BSONObject query);
+    List<ObjBase> get(Map query);
     List<ObjBase> get(String name);
-    <T extends ObjBase> List<T> get(Class<T> type, BSONObject query);
+    <T extends ObjBase> List<T> get(Class<T> type, Map query);
     <T extends ObjBase> List<T> get(Class<T> type, String name);
     
-    List<BSONObject> getAsBSON(BSONObject query);
+    List<BSONObject> getAsBSON(Map query);
     List<BSONObject> getAsBSON(String name);    
-    <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, BSONObject query);
+    <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, Map query);
     <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, String name);
     
-    <T extends ObjBase> T getOne(Class<T> type, BSONObject query);
+    <T extends ObjBase> T getOne(Class<T> type, Map query);
     <T extends ObjBase> T getOne(Class<T> type, String name);
     
-    BSONObject getOneAsBSON(BSONObject query);
+    BSONObject getOneAsBSON(Map query);
     BSONObject getOneAsBSON(String name);
-    <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, BSONObject query);
+    <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, Map query);
     <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, String name);
     
     <T extends ObjBase> List<T> getAll(Class<T> type);

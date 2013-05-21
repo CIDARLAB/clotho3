@@ -29,12 +29,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * @author sixpi
  */
 public class FileUtils {
+    final static Logger logger = LoggerFactory.getLogger(FileUtils.class);
     /**
      * dump an InputStream, returning a newly created byte[] array
      * @author Kelvin Li
@@ -52,7 +55,7 @@ public class FileUtils {
             try {
                 increment = instream.read(A, lastindex, A.length - lastindex);
             } catch (IOException e) {
-                Logger.log(Logger.Level.WARN, "cannot read InputStream", e);
+                logger.warn("cannot read InputStream", e);
                 throw e;
             }
             if (increment == -1)
@@ -93,7 +96,7 @@ public class FileUtils {
         try {
             s = new FileInputStream(f);
         } catch (FileNotFoundException e) {
-            Logger.log(Logger.Level.WARN, "", e);
+            logger.warn("", e);
             return "";
         }
 
@@ -145,7 +148,7 @@ public class FileUtils {
             }
         }
         if (limit == 0) {
-            Logger.log(Logger.Level.WARN, "Directory was not created.");
+            logger.warn("Directory was not created.");
         }
     }
 }

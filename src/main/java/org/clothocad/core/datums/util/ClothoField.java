@@ -24,49 +24,74 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
+import java.util.Map;
+import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
+import org.clothocad.core.datums.Function;
+import org.clothocad.core.schema.Access;
+import org.clothocad.core.schema.Constraint;
 /**
  * @author John Christopher Anderson
  */
 
-
+@Getter
+@Setter
 public class ClothoField {
     
     private ClothoField() {}
     
-    public ClothoField(String token, FieldType type, String example, int permissions) {
-        this.token = token;
+    public ClothoField(String name, Class type, String example, String description, Function validate, boolean reference, Access access) {
+        this.name = name;
         this.type = type;
         this.example = example;
-        this.permissions = permissions;
+        this.access = access; 
+        this.reference = reference;
+        this.validate = validate;
+        this.description = description;
     }
     
-    public ClothoField(String token, FieldType type) {
-        this.token = token;
-        this.type = type;
-        this.example = null;
-        this.permissions = -1;
-    }
 
+    private String name;
+    private Class type;
+    private String example;   //A string representation/explanation of an expected value
+    private Access access;  
+    private boolean reference;
+    private Function validate;
+    private Set<Constraint>  constraints;
     
-     public String token;     //Whatever token is used for the thing
-     public String getToken() {
-		return token;
-	}
-
-	public FieldType getType() {
-		return type;
-	}
-
-	public String getExample() {
-		return example;
-	}
-
-	public int getPermissions() {
-		return permissions;
-	}
-
-
-	public FieldType type;   // such as SCHEMA, INT, LIST, etc.
-     public String example;   //A string representation of a primitive, or a uuid ref to a Schema
-     public int permissions;  //the Visible Anywhere kinds of stuff
+    //metadata
+    private String description;
+    
+    public String getSetterName(){
+        return "set" + capitalize(name);
+    }
+    
+    public String getGetterName(){
+        if (this.type == Boolean.class) return "is" + capitalize(name);
+        else return "get" + capitalize(name);
+    }
+    
+    private static String capitalize(String s){
+        if (s.length() == 0) return s;
+        return s.substring(0,1).toUpperCase() + s.substring(1);
+    }
+    
+    //Constraints
+    
+    //#
+    //multipleof
+    //maximum
+    //exclusivemaximum
+    //minimum
+    //exclusiveminimum
+    
+    //size
+    //pattern (regex match)
+    
+    
+    //notnull
+    
+    
+    
 }

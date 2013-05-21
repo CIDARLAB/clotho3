@@ -1117,8 +1117,9 @@ public class NucSeq
     }
 
     private static void generateFeatureTable( boolean init, boolean backgroundMode ) {
-    	/**
-        Feature[] features = Persistor.get().get(Feature.class);
+        //FIXME
+       /* Feature[] features = Persistor.get().get(Feature.class);
+
         for ( int i = 0; i < features.length; i++ ) {
             try {
             String astring = features[i].getSequence().getSeq();
@@ -1128,8 +1129,7 @@ public class NucSeq
                 featureTable.put(features[i], "XXXXXXXXXXXXXXXXXX");
             }
         }
-        featuresInitiated = true;
-        **/
+        featuresInitiated = true;*/
     }
 
     /**
@@ -1347,16 +1347,4 @@ public class NucSeq
     //uppercases feature sequence
    private static Map<Feature, String> featureTable;
 
-    /******* FIELDS *******/
-    public static enum Fields {
-        NAME,
-        DATE_CREATED,
-        LAST_MODIFIED,
-        SEQUENCE,
-        VECTORS,
-        PARTS,
-        ANNOTATIONS,
-        FEATURES,
-        OLIGOS
-    }
 }

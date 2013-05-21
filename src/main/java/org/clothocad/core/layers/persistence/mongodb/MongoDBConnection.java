@@ -9,7 +9,6 @@ import java.util.List;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 
 import com.github.jmkgreen.morphia.Datastore;
@@ -28,7 +27,11 @@ import com.mongodb.MongoException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -36,6 +39,8 @@ import java.util.Set;
  */
 public class MongoDBConnection
         implements ClothoConnection {
+    
+    private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
     private String host = "localhost";
     private int port = 27017;
@@ -125,7 +130,7 @@ public class MongoDBConnection
         //needs to update lastUpdated field only if save succeeds
         //needs to check if thing actually needs saving
         //needs to validate object
-        obj.setLastModified(new ClothoDate());
+        obj.setLastModified(new Date());
         if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
@@ -142,19 +147,25 @@ public class MongoDBConnection
                 save(o);
                 i++;
             } catch (Exception e) {
-                //logger.error();
+                logger.error("Error while saving collection", e);
                 //aggregate errors and pass back to user - not sure on details yet
             }
         }
         return i;
     }
     
-    @Override
+
     //non-cascade save
     public void save(BSONObject obj) {
-        data.save(new BasicDBObject(obj.toMap()));
+        save(obj.toMap());
     }
 
+    @Override
+    public void save(Map obj) {
+        data.save(new BasicDBObject(obj));
+    }
+    
+    
     @Override
     //TODO: check for references in database
     //TODO: move to 'deleted' collection instead of hard deleting
@@ -171,7 +182,7 @@ public class MongoDBConnection
                 i++;
             }
             catch (Exception e) {
-                //logger.error();
+                logger.error("Error while deleting object in collection", e);
                 //aggregate errors and pass back to user - not sure on details yet 
             }
         }
@@ -179,7 +190,7 @@ public class MongoDBConnection
     }
 
     @Override
-    public ClothoDate getTimeModified(ObjBase obj) {
+    public Date getTimeModified(ObjBase obj) {
         //TODO: just fetch LastModified field instead of entire object
         ObjBase result = dataStore.get(obj);
         return result.getLastModified();
@@ -206,10 +217,15 @@ public class MongoDBConnection
      }
      */
     
+
+    public List<ObjBase> get(BSONObject query){
+        return get(query.toMap());
+    }
+    
     @Override
-    public List<ObjBase> get(BSONObject query) {
+    public List<ObjBase> get(Map query) {
         List<ObjBase> results = new ArrayList<ObjBase>();
-        DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
+        DBCursor cursor = data.find(new BasicDBObject(query));
 
         try {
             while (cursor.hasNext()) {
@@ -222,9 +238,14 @@ public class MongoDBConnection
     }
 
     
-    @Override    
+
     public List<BSONObject> getAsBSON(BSONObject query) {
-        DBCursor cursor = data.find(new BasicDBObject(query.toMap()));
+        return getAsBSON(query.toMap());
+    }
+
+    @Override    
+    public List<BSONObject> getAsBSON(Map query) {
+        DBCursor cursor = data.find(new BasicDBObject(query));
         List<BSONObject> result = new ArrayList<BSONObject>();
         while (cursor.hasNext()){
             result.add(cursor.next());
@@ -234,7 +255,8 @@ public class MongoDBConnection
     }
     
     @Override 
-    public <T extends ObjBase> List<T> get(Class<T> type, BSONObject query) {
+    public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
+        //TODO:
         return null;
     }
 
@@ -244,14 +266,14 @@ public class MongoDBConnection
     }
     
     @Override    
-    public <T extends ObjBase> T getOne(Class<T> type, BSONObject query) {
-        DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
+    public <T extends ObjBase> T getOne(Class<T> type, Map query) {
+        DBObject dbResult = data.findOne(new BasicDBObject(query));
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
 
     @Override
-    public BSONObject getOneAsBSON(BSONObject query) {
-        return data.findOne(new BasicDBObject(query.toMap()));
+    public BSONObject getOneAsBSON(Map query) {
+        return data.findOne(new BasicDBObject(query));
     }
     
     
@@ -260,8 +282,8 @@ public class MongoDBConnection
         this.data.drop();
     }
     
-    public ObjectId[] chain(BSONObject query){
-        DBCursor results = data.find(new BasicDBObject(query.toMap()), new BasicDBObject());
+    public ObjectId[] chain(Map query){
+        DBCursor results = data.find(new BasicDBObject(query), new BasicDBObject());
         //TODO: could cause problems with large queries - should chunk w/ skip & limit
         ObjectId[] output = new ObjectId[results.length()];
         for (int i=0;results.hasNext();i++){
@@ -272,13 +294,13 @@ public class MongoDBConnection
         return output;
     }
     
-    public List<ObjBase> recurseQuery(BSONObject query, String[] path){
+    public List<ObjBase> recurseQuery(Map query, String[] path){
         return recurseQuery(query, path, new ArrayList<ObjectId>());
     }
     
     
     //NB: this mutates query
-    public List<ObjBase> recurseQuery(BSONObject query, String[] path, List<ObjectId> ids){
+    public List<ObjBase> recurseQuery(Map query, String[] path, List<ObjectId> ids){
         boolean go = true;
         setPath(query, path, ids);
         int origSize;
@@ -291,10 +313,10 @@ public class MongoDBConnection
         return get(query);
     }
     
-    private static void setPath(BSONObject b, String[] path, Object o){
+    private static void setPath(Map b, String[] path, Object o){
         if (path.length == 0) return;
         for (int i = 0; i + 1 < path.length; i++){
-            b = (BSONObject) b.get(path[i]);
+            b = (Map) b.get(path[i]);
         }
         
         b.put(path[path.length-1], o);
@@ -305,11 +327,11 @@ public class MongoDBConnection
     }
 
     public List<ObjBase> get(String name) {
-        return get(new BasicDBObject("_id", name));
+        return get(new BasicDBObject("_id", name).toMap());
     }
 
     public List<BSONObject> getAsBSON(String name) {
-        return getAsBSON(new BasicDBObject("_id", name));
+        return getAsBSON(new BasicDBObject("_id", name).toMap());
     }
 
     public <T extends ObjBase> T getOne(Class<T> type, String name) {
@@ -322,27 +344,29 @@ public class MongoDBConnection
 
     @Override
     public <T extends ObjBase> List<T> getAll(Class<T> type) {
-        return dataStore.find(type).asList();
+        return dataStore.find(type).disableValidation().field(Mapper.CLASS_NAME_FIELDNAME).equal(type.getName()).asList();
+        //DBObject dbResult = data.findOne(new BasicDBObject(query.toMap()));
+        //return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
 
     @Override
-    public int saveBSON(Collection<BSONObject> objs) {
+    public int saveBSON(Collection<Map> objs) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, BSONObject query) {
+    public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, Map query) {
         query.put(Mapper.CLASS_NAME_FIELDNAME, type.getName());
         return getAsBSON(query);
     }
 
     @Override
     public <T extends ObjBase> List<BSONObject> getAsBSON(Class<T> type, String name) {
-        return getAsBSON(new BasicDBObject("name", name));
+        return getAsBSON(new BasicDBObject("name", name).toMap());
     }
 
     @Override
-    public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, BSONObject query) {
+    public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, Map query) {
         query.put(Mapper.CLASS_NAME_FIELDNAME, type.getName());
         return getOneAsBSON(query);
     }

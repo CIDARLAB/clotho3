@@ -2,13 +2,9 @@ package org.clothocad.core.datums;
 
 import java.util.List;
 
-import org.clothocad.core.aspects.Collector;
-import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.datums.util.Permissions;
-import org.clothocad.core.datums.util.ServerScript;
 
-import flexjson.JSONDeserializer;
+import org.clothocad.model.Person;
 
 
 /**
@@ -25,12 +21,12 @@ public class View
             String name, 
             String description,
             List<ClothoField> inputArguments,
-            ServerScript canUpdate, 
+            Function canUpdate, 
             String graphicsScript,
             String onShowScript,
             String onUpdateScript) {
     	
-    	super(author, SharableType.VIEW);
+    	super(name, author);
         
         this.inputArguments = inputArguments;
         this.canUpdate = canUpdate;
@@ -47,7 +43,7 @@ public class View
             String name, 
             String description,
             List<ClothoField> inputArgs,
-            ServerScript canUpdate, 
+            Function canUpdate, 
             String graphicsScript,
             String onShowScript,
             String onUpdateScript) {
@@ -56,7 +52,7 @@ public class View
     			inputArgs, canUpdate, graphicsScript, 
     			onShowScript, onUpdateScript);
     	
-        Collector.get().add(view);
+        //Collector.get().add(view);
         return view;
     }
     
@@ -74,10 +70,6 @@ public class View
     }
 	***/
     
-    public static View deserialize(String json) {
-        View out = new JSONDeserializer<View>().deserialize(json, View.class);
-        return out;
-    }
 
 
     public String getDescription() {
@@ -96,10 +88,6 @@ public class View
         return name;
     }
 
-    public Permissions getPermissions() {
-        return permissions;
-    }
-
     public String getSmallIconURL() {
         return smallIconURL;
     }
@@ -108,7 +96,7 @@ public class View
         return inputArguments;
     }
 
-    public ServerScript getCanUpdate() {
+    public Function getCanUpdate() {
         return canUpdate;
     }
 
@@ -126,13 +114,11 @@ public class View
 
     //Still need to implement this:
     private List<ClothoField> inputArguments;
-    private ServerScript canUpdate;
+    private Function canUpdate;
     private String onUpdateScript;
     private String graphicsScript;
     private String onShowScript;
     
-    //Permissions
-    private Permissions permissions = new Permissions();
 
     //Metadata
     private String id;

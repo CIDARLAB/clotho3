@@ -2,7 +2,7 @@ package org.clothocad;
 
 import org.clothocad.broker.ClothoBroker;
 import org.clothocad.core.ClothoCore;
-import org.clothocad.ws.ClothoWebSocketClient;
+import org.clothocad.webserver.jetty.ClothoWebserver;
 
 public class ClothoStarter {
 	public static void main(String[] args) 
@@ -20,7 +20,8 @@ public class ClothoStarter {
 		// wait a bit until the broker is running
 		Thread.sleep(4000);
 		
-		new ClothoWebSocketClient();
+		// start the Jetty webserver
+		new ClothoWebserver();
 		
 		Object lock = new Object();
         synchronized (lock) {

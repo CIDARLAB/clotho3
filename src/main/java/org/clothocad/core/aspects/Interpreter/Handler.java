@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Iterator;
 
-import org.clothocad.core.util.Logger;
-
 import static org.clothocad.core.aspects.Interpreter.Utilities.comb;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class Handler {
+    public static Logger logger = LoggerFactory.getLogger(Handler.class);
      /**
      * Fetch the list of actions with unsorted score and return them in a
      * TreeMap sorted by Value. All of the values must sum up to 1.
@@ -150,7 +151,7 @@ class Handler {
             throw new Exception();
             }
         } catch (Exception e) {
-            Logger.log(Logger.Level.FATAL,
+            logger.error(
                        "Probability badly calculated, values summed up to" + total,
                        e);
         }

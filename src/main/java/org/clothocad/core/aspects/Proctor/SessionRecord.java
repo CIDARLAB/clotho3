@@ -24,8 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects.Proctor;
 
-import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.util.ClothoDate;
+import java.util.Date;
+import org.bson.types.ObjectId;
+import org.clothocad.model.Person;
+
 
 /**
  * @author John Christopher Anderson
@@ -34,14 +36,14 @@ import org.clothocad.core.datums.util.ClothoDate;
 
 public class SessionRecord {
     public SessionRecord(Person person) {
-        this.personId = person.getId();
+        this.personId = person.getUUID();
     }
     
     public void timestampCompletion() {
-        timeFinished = new ClothoDate();
+        timeFinished = new Date();
     }
     
-    final ClothoDate timeInitiated = new ClothoDate(); //When they called initiateTrail or accessed the data on a Paver
-    ClothoDate timeFinished;  //When they went to the next Paver or closed the Page
-    final String personId; //Whoever accessed this Paver
+    final Date timeInitiated = new Date(); //When they called initiateTrail or accessed the data on a Paver
+    Date timeFinished;  //When they went to the next Paver or closed the Page
+    final ObjectId personId; //Whoever accessed this Paver
 }

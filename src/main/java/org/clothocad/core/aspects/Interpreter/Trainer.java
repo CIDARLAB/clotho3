@@ -1,6 +1,6 @@
 package org.clothocad.core.aspects.Interpreter;
-
-import org.clothocad.core.util.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Singleton trainer used as developer interface to store all command-to-action 
@@ -9,6 +9,7 @@ import org.clothocad.core.util.Logger;
 /* TODO: make not public. Finally intgrate some parts into Communicator which is 
  * the only entry point from the outside */
 public class Trainer {
+    final static Logger logger = LoggerFactory.getLogger(Trainer.class);
 
     /* Instantiating Trainers own scanner. This is temporary */
     private static StdIn inputReader = new StdIn();
@@ -28,13 +29,13 @@ public class Trainer {
                 System.out.println("Train with exactly two arguments");
                 break;
             case BADLY_FORMED_MULTI_TRAIN:
-                Logger.log(Logger.Level.WARN,
+                logger.warn(
                        "Badly formed multi train, use 'Multi train:(num_rep)");
                 break;
             case OK:
                 break;
             default:
-                Logger.log(Logger.Level.FATAL, "Badly formed enums");
+                logger.error("Badly formed enums");
                 break;
             }
 

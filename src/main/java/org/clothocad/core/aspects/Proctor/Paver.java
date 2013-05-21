@@ -24,14 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects.Proctor;
 
-import flexjson.JSONSerializer;
 import java.util.ArrayList;
 import java.util.List;
-import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.datums.Sharable;
-import org.clothocad.core.datums.objbases.Person;
-import org.clothocad.core.datums.util.ClothoDate;
-import org.clothocad.core.datums.util.Permissions;
+import org.clothocad.model.Person;
 import org.json.JSONObject;
 
 
@@ -41,35 +37,13 @@ import org.json.JSONObject;
 public abstract class Paver 
 		extends Sharable {
 
-	public Paver(Person author, SharableType type) {
-		super(author, type);
+	public Paver(Person author) {
+		super("", author);
 	}
 	
     public abstract JSONObject makeCommandList() throws Exception;
     public abstract JSONObject makeTocJSON() throws Exception;
     
-    @Override
-    public JSONObject toJSON() {
-        try {
-            JSONSerializer serializer = new JSONSerializer().exclude("*.class");
-            serializer.prettyPrint(true);
-            String serial = serializer.deepSerialize( this );
-            return new JSONObject(serial);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
-    @Override
-    public Person extractAuthor() {
-        Person out = (Person) Collector.get().getDatum(authorId);
-        return out;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
     
     /**
      * For the Yay's, Nay's, and usage of this Paver, calculate
@@ -92,7 +66,7 @@ public abstract class Paver
         long[] durations = new long[sessionRecords.size()];
         for(int i=0; i<sessionRecords.size(); i++) {
             SessionRecord record = sessionRecords.get(i);
-            durations[i] = record.timeFinished.getAbsolute() - record.timeInitiated.getAbsolute();
+            durations[i] = record.timeFinished.getTime()- record.timeInitiated.getTime();
         }
         
         //Ideally this would do something fancier, but I have it doing the average
@@ -104,14 +78,9 @@ public abstract class Paver
         return (int) daverage;
     }
 
-    //Permissions
-    private Permissions permissions = new Permissions();
-    
     //Metadata
-    protected String id;
     protected String title;
     protected String description;
-    protected String authorId;
     protected String smallIconURL;
     protected String largeIconURL;
     
@@ -120,7 +89,4 @@ public abstract class Paver
     private int timesAccessed = 0;
     private List<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
     
-    private ClothoDate dateCreated = new ClothoDate();
-    private ClothoDate dateLastModified = new ClothoDate();
-    private ClothoDate dateLastAccessed = new ClothoDate();
 }

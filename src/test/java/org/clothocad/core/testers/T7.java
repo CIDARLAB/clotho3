@@ -27,10 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.View;
-import org.clothocad.core.datums.objbases.Person;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.datums.util.ServerScript;
 import org.json.JSONObject;
 
 /**
@@ -44,8 +42,8 @@ public class T7 {
      * @param args 
      */
     public static void main(String[] args) {
-try {
-            ServerScript canUpdate =
+/*try {
+            /*ServerScript canUpdate =
                 new ServerScript("outputs.put('is_valid', true);",
                                  Language.JavaScript);
           
@@ -71,6 +69,6 @@ try {
             view.save();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 }

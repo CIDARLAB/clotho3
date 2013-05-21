@@ -2,6 +2,7 @@ package org.clothocad.core.layers.communication;
 
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.layers.communication.activemq.ClothoMessageProducer;
+import org.clothocad.core.layers.communication.activemq.ClothoPublisher;
 import org.clothocad.core.layers.communication.protocol.ActionType;
 import org.clothocad.core.layers.execution.Executor;
 import org.clothocad.core.layers.execution.ExecutorThread;

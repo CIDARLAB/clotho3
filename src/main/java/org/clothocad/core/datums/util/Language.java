@@ -27,17 +27,16 @@ package org.clothocad.core.datums.util;
  * @author John Christopher Anderson
  */
 public enum Language {
+    JAVASCRIPT("JavaScript"),
+    PYTHON("Python"),
+    GROOVY("Groovy"),
+    JAVA("Java"),
+    JSONSCHEMA("JSON Schema");
     
-        JavaScript,
-        PERL,
-        python,
-        GROOVY,
-        WEB_WIDGET_JS,
-        WEB_WIDGET_HTML,
-        CELL_WIDGET,
-        TABLET_HTML,
-        
-        //Compiled things
-        ANDROID_APP,
-        RICH_CLIENT,
+    private Language(final String s){stringValue=s;}
+    
+    @Override
+    public String toString() {return stringValue;}
+    private final String stringValue;
+
 }

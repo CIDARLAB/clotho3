@@ -68,7 +68,7 @@ public class User
 	
     public User() {
         //YEAH, I DON'T KNOW WHAT THIS AUTHENTICATION KEY IS ABOUT, BUT NOT SURE ITS NEEDED
-        authenticationKey = UUID.randomUUID().toString();
+        //authenticationKey = UUID.randomUUID().toString();
     }
     
     /**
@@ -96,15 +96,8 @@ public class User
         // new:
         //this.save();
     }
-
-    @Override
-    public String getId() {
-        return id;
-    }
     
-    private String id;
-    private String password;  //THIS SHOULD BE CHANGED TO BE SHA1 ENCRYPTED, 2.0 HAS THAT CODE
-    private String authenticationKey;  //DID KELVIN ADD THIS?  NOT SURE WHAT THAT MEANS
+    private String passwordHash;
     private Set<Client> clients = new HashSet<Client>();
     
     //This is where the login state of the user is stored globally (so you can log yourself out everywhere by setting to false anywhere)
