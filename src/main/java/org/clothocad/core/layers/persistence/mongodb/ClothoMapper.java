@@ -4,78 +4,116 @@
  */
 package org.clothocad.core.layers.persistence.mongodb;
 
-import com.github.jmkgreen.morphia.annotations.PrePersist;
-import com.github.jmkgreen.morphia.annotations.PreSave;
 import com.github.jmkgreen.morphia.mapping.DefaultMapper;
 import com.github.jmkgreen.morphia.mapping.MappedClass;
 import com.github.jmkgreen.morphia.mapping.MappedField;
-import static com.github.jmkgreen.morphia.mapping.Mapper.CLASS_NAME_FIELDNAME;
-import com.github.jmkgreen.morphia.mapping.MappingException;
-import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
+import com.github.jmkgreen.morphia.mapping.MapperOptions;
+import com.github.jmkgreen.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
+import org.bson.BSONObject;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.layers.persistence.Add;
+import org.clothocad.core.layers.persistence.DBOnly;
+import org.clothocad.core.layers.persistence.Replace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author spaige
  */
-public class ClothoMapper extends DefaultMapper {
-    ClassLoader cl;
 
-    @Override
-    public Object fromDBObject(Class entityClass, DBObject dbObject, EntityCache cache) {
-        return super.fromDBObject(entityClass, dbObject, cache); //To change body of generated methods, choose Tools | Templates.
+//TODO: perferentially remove schema classes from cache
+import org.clothocad.core.aspects.JSONSerializer;
+public class ClothoMapper extends DefaultMapper implements JSONSerializer{
+    public ClothoMapper(MapperOptions opts){
+        super(opts);
     }
-
-    @Override
-    public DBObject toDBObject(Object entity, Map<Object, DBObject> involvedObjects) {
-        return toDBObject(entity, involvedObjects); //To change body of generated methods, choose Tools | Templates.
-    }
-    //TODO:
-    //example of whole-object validation
-    //transform and filter json
-        //remove internal references (to class names)
-        //normalize w/ sharable json
-        //filter DB-specific info (like isDeleted, classData)
-        
     
-    DBObject toDBObject(Object entity, Map<Object, DBObject> involvedObjects, boolean lifecycle) {
+    public ClothoMapper(){
+        super(defaultOptions);
+    }
+    
+    static final Logger logger = LoggerFactory.getLogger(ClothoMapper.class);
+    static final MapperOptions defaultOptions = new MapperOptions();
+    static {
+        defaultOptions.objectFactory = new PolymorphicObjectFactory();
+    }
+    static {
+        //add our annotations to the interesting annotations lists
+        MappedClass.interestingAnnotations.add(Add.class);
+        MappedField.interestingAnnotations.add(DBOnly.class);
+        MappedField.interestingAnnotations.add(Replace.class);
+    }
+    @Getter  
+    @Setter
+    //XXX: circular reference (this -> cl -> persistor -> this)
+    ClassLoader cl;
+    
 
-        DBObject dbObject = new BasicDBObject();
-        MappedClass mc = getMappedClass(entity);
-
-        if (mc.getEntityAnnotation() == null || !mc.getEntityAnnotation().noClassnameStored())
-            dbObject.put(CLASS_NAME_FIELDNAME, entity.getClass().getName());
-
-        if (lifecycle)
-            dbObject = (DBObject) mc.callLifecycleMethods(PrePersist.class, entity, dbObject, this);
-
-        for (MappedField mf : mc.getMappedFields()) {
-            try {
-                writeMappedField(dbObject, mf, entity, involvedObjects);
-            } catch (Exception e) {
-                throw new MappingException("Error mapping field:" + mf.getFullName(), e);
+    
+    public BSONObject toJSON(Map data){
+        //TODO: cache
+        Set<String> excludes =  new HashSet<>();
+        Set<String> virtuals = new HashSet<>();
+        excludes.add("className"); //always strip out class name
+        DBObject output = new BasicDBObject();
+        try {
+            MappedClass mc = getMappedClass(Class.forName((String) data.get("className"), true, cl)); 
+            for (MappedField field : mc.getMappedFields()){
+                if (field.hasAnnotation(DBOnly.class) || field.hasAnnotation(Replace.class)){
+                    excludes.add(field.getNameToStore());
+                } else if (field.getField() == null && field.getNameToStore().startsWith(ClothoMappedField.VIRTUAL_FIELD_PREFIX)){
+                    virtuals.add(field.getNameToStore());
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            logger.error("Schema not found", ex); 
+        }
+        
+        for (Object key : data.keySet()){
+            if (!excludes.contains(key)){
+                String keyString = (String) key;
+                if (virtuals.contains(keyString)){
+                    keyString = keyString.substring(ClothoMappedField.VIRTUAL_FIELD_PREFIX.length());
+                }
+                output.put(keyString, data.get(key));
             }
         }
-        if (involvedObjects != null)
-            involvedObjects.put(entity, dbObject);
 
-        if (lifecycle)
-            mc.callLifecycleMethods(PreSave.class, entity, dbObject, this);
-
-        return dbObject;
+        return output;
     }
     
-    public DBObject toClothoJSON(DBObject data){
-        try {
-            Class c = Class.forName((String) data.get("className"), true, cl); //inject classloader
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClothoMapper.class.getName()).log(Level.SEVERE, null, ex);
+    public BSONObject toJSON(ObjBase obj){
+        return toJSON(toDBObject(obj).toMap());
+    }
+
+    @Override
+    public MappedClass getMappedClass(Object obj) {
+        if (obj == null)
+            return null;
+
+        Class type = (obj instanceof Class) ? (Class) obj : obj.getClass();
+        if (ProxyHelper.isProxy(obj))
+            type = ProxyHelper.getReferentClass(obj);
+
+        MappedClass mc = mappedClasses.get(type.getName());
+        if (mc == null) {
+            mc = new ClothoMappedClass(type, this);
+            // no validation
+            addMappedClass(mc, false);
         }
-        
-        return null;
+        return mc;
+    }
+
+    @Override
+    public MappedClass addMappedClass(Class c) {
+        MappedClass mc = new ClothoMappedClass(c, this);
+        return addMappedClass(mc, true);
     }
 }

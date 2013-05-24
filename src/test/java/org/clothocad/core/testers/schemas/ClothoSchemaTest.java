@@ -31,6 +31,7 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -41,7 +42,9 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.ClothoField;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.persistence.DBClassLoader;
+import org.clothocad.core.layers.persistence.mongodb.ClothoMapper;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.ClothoSchema;
@@ -76,8 +79,15 @@ public class ClothoSchemaTest {
         featureSchema = createFeatureSchema();
     }
     
-    static Persistor p = new Persistor(new MongoDBConnection());
-    static DBClassLoader cl = new DBClassLoader(p);
+    static Persistor p;
+    static DBClassLoader cl;
+    static {
+        ClothoMapper mapper = new ClothoMapper();
+        p = new Persistor(new MongoDBConnection(mapper), mapper);
+        cl = new DBClassLoader(p);
+        mapper.setCl(cl);
+    }
+
     static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     static Schema featureSchema;
     
@@ -163,31 +173,18 @@ public class ClothoSchemaTest {
     @Test 
     public void testToBSON(){
         Schema featureSchema = createFeatureSchema();
-        Mapper mapper = new DefaultMapper();
-        System.out.println(mapper.toDBObject(featureSchema));
-        //assertFalse(true);
-        /*
-         * { "className" : "org.clothocad.core.schema.ClothoSchema" , 
-         * "classData" : <Binary Data> , 
-         * "description" : "A simple and sloppy representation of a Feature or other DNA sequence" , 
-         * "fields" : [ {   "name" : "sequence" , 
-         *                  "type" : "java.lang.String" , 
-         *                  "example" : "ATACCGGA" , 
-         *                  "access" : "PUBLIC" , 
-         *                  "reference" : false , 
-         *                  "constraints" : [ { "values" : { "flags" : [ "CASE_INSENSITIVE"] , "regexp" : "[ATUCGRYKMSWBDHVN]*"}}],
-         *                  "description" : "the sequence of the feature"}] ,
-         * "_id" : { "$oid" : "51917d4c986cc1a16577933e"} , 
-         * "name" : "SimpleFeature" , 
-         * "isDeleted" : false , 
-         * "lastModified" : { "$date" : "2013-05-13T23:54:52.476Z"}}
-         */
+        Map output = p.toJSON(featureSchema).toMap();
         
-        //Clotho Json vs Morphia BSON
-        // className -> schema language
-        // isDeleted -> 
-        // lastModified -> 
-        // constraint -> better constraint format
+        assertFalse(output.containsKey("isDeleted"));
+        assertFalse(output.containsKey("lastUpdated")||output.containsKey("lastAccessed"));
+        assertEquals(null, output.get("schema")); //how to handle 'hardcoded' schemas?
+        assertEquals(Language.JSONSCHEMA.name(), output.get("language"));
+        
+        p.delete(featureSchema.getUUID());
+        
+        p.save(output);
+        Schema secondSchema = p.get(ClothoSchema.class, featureSchema.getUUID());
+        Map secondOutput = p.getAsBSON(featureSchema.getUUID()).toMap();
     }
     
 }

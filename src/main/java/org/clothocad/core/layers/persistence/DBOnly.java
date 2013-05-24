@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
  *
  * @author spaige
  */
-@Target(value = {ElementType.FIELD, ElementType.TYPE})
+@Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface Remove {
+public @interface DBOnly {
     
 }

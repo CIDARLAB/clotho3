@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,17 @@ import org.slf4j.LoggerFactory;
 public class MongoDBConnection
         implements ClothoConnection {
     
+    public MongoDBConnection() {
+
+        morphia = new Morphia(new ClothoMapper());
+    }
+    
+    @Inject 
+    public MongoDBConnection(Mapper mapper) {
+        morphia = new Morphia(mapper);
+    }
+    
+    
     private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
     private String host = "localhost";
@@ -49,14 +61,7 @@ public class MongoDBConnection
     private String dataCollName = "data";
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
-
-    {
-        {
-            MapperOptions opts = new MapperOptions();
-            opts.objectFactory = new PolymorphicObjectFactory();
-            morphia = new Morphia(new DefaultMapper(opts));
-        }
-    }
+        
     private MongoClient connection;
     private DB db;
     private DBCollection data;

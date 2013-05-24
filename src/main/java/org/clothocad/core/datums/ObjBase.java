@@ -20,7 +20,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Date;
 import java.util.Map;
 import lombok.Getter;
-import org.clothocad.core.layers.persistence.Remove;
+import org.clothocad.core.layers.persistence.DBOnly;
 import org.json.JSONObject;
 
 /**
@@ -40,12 +40,12 @@ public abstract class ObjBase {
     private ObjectId UUID = null;
     
     private String name;
-    @Remove
+    @DBOnly
     private boolean isDeleted;    
     
     @Setter(AccessLevel.NONE)
     private Date dateCreated;
-    @Remove
+    @DBOnly
     private Date lastModified, lastAccessed;
 	
 	public void onUpdate() {
@@ -99,6 +99,10 @@ public abstract class ObjBase {
             c = c.getSuperclass();
         }
         return output;
+    }
+    
+    public static List<Field> getAllFields(Class c){
+        return null;
     }
     
     //TODO:
