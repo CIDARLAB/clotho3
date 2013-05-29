@@ -31,7 +31,6 @@ import java.util.Map;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.util.ClothoDate;
 import org.json.JSONObject;
 
 
@@ -115,7 +114,7 @@ public interface ClothoConnection {
      * @param obj
      * @return
      */
-    ClothoDate getTimeModified( ObjBase obj );
+    Date getTimeModified( ObjBase obj );
 
     /**
      * Gets the object with the given uuid as the specified class,

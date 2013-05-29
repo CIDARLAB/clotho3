@@ -77,19 +77,12 @@ public class Content
 		return null;
 	}
 
-	@Override
 	public Person extractAuthor() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public SharableType type() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
 	public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
 		// TODO Auto-generated method stub
 		return false;

@@ -67,7 +67,7 @@ public class ClothoSchemaTest {
     
     
     static {
-    //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
+        MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
     }
     
     @BeforeClass
@@ -165,7 +165,6 @@ public class ClothoSchemaTest {
         Schema featureSchema = createFeatureSchema();
         Mapper mapper = new DefaultMapper();
         System.out.println(mapper.toDBObject(featureSchema));
-        assertFalse(true);
         /*
          * { "className" : "org.clothocad.core.schema.ClothoSchema" , 
          * "classData" : <Binary Data> , 

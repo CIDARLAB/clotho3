@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.bson.types.ObjectId;
-import org.clothocad.core.datums.util.ClothoDate;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
@@ -43,8 +42,8 @@ public abstract class ObjBase {
     private boolean isDeleted;    
     
     @Setter(AccessLevel.NONE)
-    private ClothoDate dateCreated;
-    private ClothoDate lastModified, lastAccessed;
+    private Date dateCreated;
+    private Date lastModified, lastAccessed;
 	
 	public void onUpdate() {
 		
@@ -58,11 +57,6 @@ public abstract class ObjBase {
 		
 	}
         
-	
-	public String getId() {
-		return this.UUID.toString();
-	}
-	
     public List<ObjBase> getChildren(){
         ArrayList<ObjBase> children = new ArrayList<ObjBase>();
         

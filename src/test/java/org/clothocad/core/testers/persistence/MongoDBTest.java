@@ -35,9 +35,9 @@ public class MongoDBTest {
     //static private MongoClient mongo;
     static private ClothoConnection conn;
     
+    
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
-        //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
         
         conn = new MongoDBConnection();
         conn.connect();

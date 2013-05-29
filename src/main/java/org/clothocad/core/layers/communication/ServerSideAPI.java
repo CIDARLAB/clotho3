@@ -464,7 +464,7 @@ public final class ServerSideAPI {
         JSONObject inputs = new JSONObject();
         for (int i = 0; i < fields.size(); i++) {
             ClothoField field = fields.get(i);
-            inputs.put(field.token, sharables.get(i).getId());
+            inputs.put(field.getName(), sharables.get(i).getUUID());
         }
         updateCmd.put("inputArgs", inputs);
         updateCmd.put("script", replaceWidgetId(widget.getView().getOnUpdateScript(), "")); //how do i get widgetID's again?
@@ -492,10 +492,12 @@ public final class ServerSideAPI {
     /***                                ***\
      ********  Utility methods  ********
     \*                                  */
+    //XXX: needs updating
     private JSONObject resolveToExecutionArguments(Function asst, JSONObject input) throws JSONException {
         //Do type validation of the arguments, not call candooit
-        List<ClothoField> inputTypes = asst.getInputArguments();
-        return argumentsRelay(inputTypes, input);
+        //List<ClothoField> inputTypes = asst.;
+        //return argumentsRelay(inputTypes, input);
+        throw new UnsupportedOperationException();
     }
 
     private static JSONObject argumentsRelay(List<ClothoField> inputTypes,
@@ -503,7 +505,7 @@ public final class ServerSideAPI {
         //For each token of this schema, see if the input object has the token
         /* TODO: is this right? */
         for (ClothoField field : inputTypes) {
-            String token = field.token;
+            String token = field.getName();
             if (!input.has(token)) {
                 break;
             }
@@ -516,7 +518,7 @@ public final class ServerSideAPI {
         try {
             JSONObject out = new JSONObject();
             for (ClothoField field : inputTypes) {
-                String token = field.token;
+                String token = field.getName();
                 out.put(token, input);
             }
             return out;

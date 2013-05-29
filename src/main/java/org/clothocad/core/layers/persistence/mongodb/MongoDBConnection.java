@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 public class MongoDBConnection
         implements ClothoConnection {
     
-    private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
     private String host = "localhost";
     private int port = 27017;
@@ -53,12 +52,11 @@ public class MongoDBConnection
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
 
-    {
-        {
+    static {
+        
             MapperOptions opts = new MapperOptions();
             opts.objectFactory = new PolymorphicObjectFactory();
             morphia = new Morphia(new DefaultMapper(opts));
-        }
     }
     private MongoClient connection;
     private DB db;
@@ -133,7 +131,7 @@ public class MongoDBConnection
         //needs to update lastUpdated field only if save succeeds
         //needs to check if thing actually needs saving
         //needs to validate object
-        obj.setLastModified(new ClothoDate());
+        obj.setLastModified(new Date());
         if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
@@ -150,7 +148,7 @@ public class MongoDBConnection
                 save(o);
                 i++;
             } catch (Exception e) {
-                logger.error("Error while saving collection", e);
+                //logger.error("Error while saving collection", e);
                 //aggregate errors and pass back to user - not sure on details yet
             }
         }
@@ -185,7 +183,7 @@ public class MongoDBConnection
                 i++;
             }
             catch (Exception e) {
-                logger.error("Error while deleting object in collection", e);
+                //logger.error("Error while deleting object in collection", e);
                 //aggregate errors and pass back to user - not sure on details yet 
             }
         }
@@ -193,7 +191,7 @@ public class MongoDBConnection
     }
 
     @Override
-    public ClothoDate getTimeModified(ObjBase obj) {
+    public Date getTimeModified(ObjBase obj) {
         //TODO: just fetch LastModified field instead of entire object
         ObjBase result = dataStore.get(obj);
         return result.getLastModified();
