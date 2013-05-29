@@ -16,7 +16,8 @@ public class Publisher {
 
 	public void publish(JSONObject json) {
 		try {
-			Router.get().sendMessage("", Channel.UPDATES.toString(), json);
+			// TODO:
+			//Router.get().sendMessage("", Channel.UPDATES.toString(), json);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

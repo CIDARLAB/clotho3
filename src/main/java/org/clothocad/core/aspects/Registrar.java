@@ -50,8 +50,11 @@ public class Registrar {
     
     public boolean hasBadge(String personId, String badgeId) {
         try {
+        	return true;
+        	/** TODO!!
             Badge badge = persistor.get(Badge.class, new ObjectId(badgeId));
             return badge.hasBadge(personId);
+            **/
         } catch(Exception err) {
             return false;
         }
@@ -72,11 +75,13 @@ public class Registrar {
      */
     public JSONObject get(String personId, String sharableId) {
         try {
+        	/*** TODO!
             Sharable out = persistor.get(Sharable.class, new ObjectId(sharableId));
 //            if(out.canShare(personId)) {
             if(true) {
                 return out.toJSON();
             }
+            ***/
             //return null;
         } catch(Exception err) {
         }

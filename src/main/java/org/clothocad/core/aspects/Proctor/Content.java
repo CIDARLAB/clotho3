@@ -25,6 +25,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Proctor;
 
 import java.util.ArrayList;
+
+import org.clothocad.core.datums.Doo;
 import org.clothocad.model.Person;
 
 import org.json.JSONObject;
@@ -68,4 +70,28 @@ public class Content
     //Content-specific fields
     private ArrayList<ViewElements> viewElements = 
     		new ArrayList<ViewElements>();  //Pairings of Views and Instance data to stuff in them
+
+	@Override
+	public JSONObject toJSON() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Person extractAuthor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SharableType type() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

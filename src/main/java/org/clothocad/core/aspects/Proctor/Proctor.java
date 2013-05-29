@@ -80,6 +80,7 @@ public class Proctor implements Aspect {
         qdoo.quizId = quiz.getUUID().toString();
         qdoo.studentId = person.getUUID().toString();
         
+        /** TODO:
         Function rubric = quiz.getRubric();
         try {
             String resultStr = (String) rubric.execute(submittedAnswer);
@@ -93,7 +94,7 @@ public class Proctor implements Aspect {
         } catch (Exception ex) {
             Logger.getLogger(Proctor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        **/
         return false;
     }
     

@@ -1,0 +1,12 @@
+{
+    "$clotho" : {
+        "schema" : "schema_person",
+        "uuid" : "inst_second"
+    },
+    "displayName" : "Second Person",
+    "city" : "Another Place",
+    "state" : "Guadalajara",
+    "country" : "Mexico",
+    "biography" : "Second person was born in a small town...",
+    "userAccess" : true
+}

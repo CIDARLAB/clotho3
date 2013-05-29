@@ -1,0 +1,12 @@
+{
+    "$clotho" : {
+        "schema" : "schema_institution",
+        "uuid" : "inst_first"
+    },
+    "displayName" : "Remote File Person",
+    "email" : "example@blah.com",
+    "city" : "Internet",
+    "state" : "CA",
+    "country" : "United States",
+    "userAccess" : false
+}

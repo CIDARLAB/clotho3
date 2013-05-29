@@ -7,6 +7,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.clothocad.core.layers.communication.Router;
+import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.fusesource.stomp.jms.message.StompJmsMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,9 +49,12 @@ public class ClothoMessageConsumer
 						sCorrelationID, 
 						new CallbackHandler(this.session, this.message));
 				
+				ApolloConnection connection = new ApolloConnection(
+						session, sCorrelationID);
+				
 				// route the message
 				Router.get().receiveMessage(
-						sCorrelationID,
+						connection,
 						json.getString("channel"), 
 						json);
 			}

@@ -1,0 +1,40 @@
+<div id="clothoSearchbarAutocomplete" class="dropdown pull-left" ng-show="display.autocomplete" ><!-- can't prevent propagation to children currently. see google group question. ng-mouseleave="undetail($event);"-->
+    <ul class="dropdown-menu span4 inline-block" >
+        <a class="close" ng-click="display.hide('autocomplete'); undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
+
+        <li ng-repeat="item in (filtered = (autocompletions | filter:{text:query})) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
+            <a ng-mouseenter="detail({{item.uuid}})">{{item.text}}</a>
+        </li>
+
+        <li ng-show="!filtered.length"><a class="text-error"><i class="icon-exclamation-sign"></i> No results...</a></li>
+
+    </ul>
+
+    <div id="clothoSearchbarAutocompleteDetail" class="popover inline" ng-show="display.autocompleteDetail" ng-cloak>
+        <div class="popover-content">
+            <a class="close" ng-click="undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
+            <div style="margin-bottom: 10px;">
+                <button class="pull-right btn btn-primary top" ng-click="execute('{{autoDetail.uuid}}')">Execute</button>
+                <h4 style="margin: 5px 0;">{{autoDetail.text}}</h4>
+                <code><small>{{autoDetail.command}}</small></code>
+            </div>
+            <table class="table table-bordered" id="clothoSearchbarAutocompleteDetailVersions">
+                <!--<thead>
+                    <tr>
+                        <th>Command</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>-->
+                <tr ng-repeat="item in autoDetail.versions | limitTo:3">
+                    <td ng-class="{'info': item === detailModel}"><a ng-click="detailInfo('command', $index)">{{item.text}}</a></td>
+                    <td ng-class="{'info': item.author === detailModel}"><a ng-click="detailInfo('author', $index)">{{item.author.name}}</a></td>
+                </tr>
+            </table>
+
+            <div ng-include src="detailTemplate" ng-show="display.autocompleteDetailInfo" ng-model="detailModel">
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,58 @@
+<div class="container" ng-controller="EditorCtrl">
+    <div class="row">
+
+        <form sharable-editor name="sharableEditor" schema="Institution" uuid="{{uuid}}" class="span6 form-horizontal well" style="padding: 15px; border: 1px solid #ddd; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;" novalidate>
+            <legend>{{schemaName}} View</legend>
+            <fieldset>
+                <div class="control-group" ng-repeat="field in schema">
+                    <label class="control-label" for="{{field.name}}">{{field.readable}}</label>
+                    <div class="controls">
+
+                        <!--TODO : more dynamic templating? Need support for file, textarea, select, etc? We'd need a switch or something to handle the template... probably move directly into the directive-->
+                        <!--ng-model thing is weird here, waiting for fix: https://github.com/angular/angular.js/issues/768 -->
+
+                        <input type="{{field.type}}" id="{{field.name}}" name="{{field.name}}" placeholder="{{field.placeholder}}" ng-disabled="!editMode" ng-required="{{field.required}}" ng-model="sharable[field.name]" />
+                        <!--These statements don't work. Should go by name, not model, so not sure why
+                        examples:
+                        http://jsfiddle.net/PHBnH/
+                        http://docs.angularjs.org/api/ng.directive:form
+
+                        - sharableEditor.{{field.name}} isn't being parsed
+                        -->
+                        <span ng-show="sharableEditor.{{field.name}}.$pristine">clean</span>
+                        <span ng-show="sharableEditor.{{field.name}}.$invalid">invalid</span>
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <div class="form-actions" ng-hide="editMode">
+                <button class="btn" type="button" ng-click="edit()">Edit</button>
+            </div>
+
+            <div class="form-actions" ng-show="editMode">
+                <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="sharableEditor.$invalid">Save</button>
+                <button type="submit" class="btn btn-danger" ng-click="discard()">Discard</button>
+                <button type="button" class="btn btn-warning" ng-click="reset()" ng-show="formDirty">Reset</button>
+            </div>
+
+        </form>
+
+        <div class="row">
+            <div class="span3 well">
+                <h6>Change Institution:</h6>
+                <div class="btn-group">
+                    <button class="btn" type="button" ng-click="setUUID('first')">First</button>
+                    <button class="btn" type="button" ng-click="setUUID('second')">Second</button>
+                    <button class="btn btn-info" type="button" ng-click="setNewFirst()">New 1st</button>
+                </div>
+
+                <button style="margin-top: 15px" class="btn btn-warning" type="button" ng-click="clearStorage()">Clear Local Storage</button>
+
+                <button style="margin-top: 15px" class="btn btn-info" type="button" ng-click="emitEvent('model_change', ['first'])">Emit Model Change</button>
+            </div>
+        </div>
+
+    </div>
+</div>

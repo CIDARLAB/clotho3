@@ -9,6 +9,7 @@ import java.util.List;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 
 import com.github.jmkgreen.morphia.Datastore;
@@ -29,6 +30,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +133,7 @@ public class MongoDBConnection
         //needs to update lastUpdated field only if save succeeds
         //needs to check if thing actually needs saving
         //needs to validate object
-        obj.setLastModified(new Date());
+        obj.setLastModified(new ClothoDate());
         if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
@@ -190,7 +193,7 @@ public class MongoDBConnection
     }
 
     @Override
-    public Date getTimeModified(ObjBase obj) {
+    public ClothoDate getTimeModified(ObjBase obj) {
         //TODO: just fetch LastModified field instead of entire object
         ObjBase result = dataStore.get(obj);
         return result.getLastModified();
@@ -206,6 +209,11 @@ public class MongoDBConnection
         return data.findOne(new BasicDBObject("_id", uuid));
     }
 
+    public String save(JSONObject json) {
+    	System.out.println("[MongoDBConnection.save] -> "+json);
+    	
+    	return UUID.randomUUID().toString();
+    }
     /*Query construction forthcoming
      * @Override
      public ObjBase getOne(BasicDBObject query) {

@@ -1,20 +1,21 @@
 package org.clothocad.core.layers.communication.activemq;
 
 import org.clothocad.core.layers.communication.Callback;
+import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.json.JSONObject;
 
 public class ClothoMessageProducer 
 		implements Callback {
 	
-	private String sCorrelationID;
-	
-	public ClothoMessageProducer(String sCorrelationID) {
-		this.sCorrelationID = sCorrelationID;
+	private ApolloConnection connection;
+	public ClothoMessageProducer(ApolloConnection connection) {
+		this.connection = connection;
 	}
 
 	@Override
 	public void onSuccess(JSONObject json) {
-		CallbackHandler cbh = CallbackHandlerTable.get(sCorrelationID);
+		CallbackHandler cbh = CallbackHandlerTable.get(
+				connection.getCorrelationId());
 		if(null != cbh) {
 			cbh.respond(json);			
 		}

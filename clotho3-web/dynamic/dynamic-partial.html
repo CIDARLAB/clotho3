@@ -1,0 +1,62 @@
+<div ng-controller="DynamicCtrl" class="container">
+    <div class="row">
+
+        <div class="span7">
+            <h3>Dynamic resolve + partial</h3>
+            <h4>Model
+                <button class="btn btn-small" ng-click="Clotho.edit(model.$clotho.uuid)">Clotho.edit()</button>
+            </h4>
+            <p ng-bind="model | json"></p>
+
+            <hr />
+
+            <h4>Template</h4>
+            <div ng-include="template_url"></div>
+        </div>
+
+        <div class="span4 offset1">
+            <h3>Caching Templates</h3>
+            <strong>DL</strong>
+            <button class="btn" ng-click="Clotho.get_template('dyn-partial')">Template 1</button>
+            <button class="btn" ng-click="Clotho.get_template('dyn2-partial')">Template 2</button>
+            <br />
+            <strong>Show</strong>
+            <button class="btn" ng-click="showTemplate('dyn-partial')">Template 1</button>
+            <button class="btn" ng-click="showTemplate('dyn2-partial')">Template 2</button>
+
+            <ng-include src="customTemplate"></ng-include>
+            <hr />
+
+            <h3>Caching Scripts</h3>
+            <button class="btn" ng-click="Clotho.get_script('simple-executable')">Get Simple Script</button>
+            <br />
+            <button class="btn" ng-click="Clotho.get_script('dyn-controller')">(1) Get Controller</button>
+            <button class="btn" ng-click="showDynamic('dyn2-partial')">(2) Show template</button>
+
+            <ng-include src="dynTemplate"></ng-include>
+
+            <hr />
+            <h3>Add dependencies</h3>
+            <button class="btn" ng-click="addDirective()">Add Directive</button>
+            <newDirective></newDirective>
+            <button class="btn" ng-click="addController()">Add Controller</button>
+            <newController></newController>
+            <button class="btn" ng-click="addFilter()">Add Filter</button>
+            <newFilter></newFilter>
+
+
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="span12">
+            <h2>Async Added Module</h2>
+            <button class="btn btn-small" ng-click="Clotho.broadcast('testMessage', 'emitted string')">Emit Test Message</button>
+            {{testData}}
+
+            <hr />
+            <button class="btn" ng-click="bootstrapWidgetOne()">Bootstrap ONE</button>
+            <button class="btn" ng-click="bootstrapWidgetTwo()">Bootstrap TWO</button>
+        </div>
+    </div>
+</div>

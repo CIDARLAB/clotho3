@@ -25,6 +25,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Proctor;
 
 import java.util.ArrayList;
+
+import org.clothocad.core.datums.Doo;
 import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -108,4 +110,28 @@ public class Trail
 
     //Trail-specific fields
     private ArrayList<String> pavers = new ArrayList<String>();  //Is really a List<Paver>, loose-coupled
+
+	@Override
+	public JSONObject toJSON() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Person extractAuthor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SharableType type() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

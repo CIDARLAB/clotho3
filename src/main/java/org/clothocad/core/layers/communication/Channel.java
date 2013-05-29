@@ -5,5 +5,6 @@ public enum Channel {
 	AUTOCOMPLETION,
 	NOTIFICATION,
 	ACCESS,
-	UPDATES   // a channel where the server can push updates to subscribed clients
+	UPDATES,   // a channel where the server can push updates to subscribed clients
+	RESPONSE
 }

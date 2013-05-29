@@ -1,0 +1,56 @@
+{
+    "uuid" : "trail_140l",
+    "title" : "Combinatorial Libraries",
+    "author" : "Chris Anderson",
+    "description" : "<blockquote><p>In this trail you will learn about Combinatorial Libraries. Some more text. blah blah blah blah blah blah </p><p><small>Chris Anderson</small></p></blockquote>",
+
+    "contents" : [
+        {
+            "module_title" : "Combinatorial Libraries",
+            "pavers" : [
+                {
+                    "paver_title" : "Introduction",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/8BDTS9NK7Zg"
+                },
+                {
+                    "paver_title" : "Diversity and Sampling",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/TcokQWySo4Y"
+                },
+                {
+                    "paver_title" : "Library Design",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/rhguyAUGN6A"
+                },
+                {
+                    "paver_title" : "Selection Methods",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/08MUBVp2RQ4"
+                },
+                {
+                    "paver_title" : "Quiz",
+                    "type" : "quiz",
+                    "quiz" : [
+                        {
+                            "title" : "Question 1",
+                            "type" : "multiple",
+                            "question" : "What is a plasmid?",
+                            "options" : [
+                                "A bacterial genome",
+                                "A viral genome",
+                                "Like an organelle",
+                                "None of the above"
+                            ]
+                        },
+                        {
+                            "title" : "Question 1",
+                            "type" : "fillin",
+                            "question" : "Describe an operon"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

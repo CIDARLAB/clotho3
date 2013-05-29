@@ -24,8 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.objbases;
 
+import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.model.Person;
+import org.json.JSONObject;
 
 
 /**
@@ -132,6 +134,30 @@ return true;
      * of how meaningful these badges are so it can sort them appropriately and automatically highlight
      * individuals one day
      */
+
+	@Override
+	public JSONObject toJSON() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Person extractAuthor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SharableType type() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
     
     
     /**

@@ -1,0 +1,20 @@
+{
+    "channel": "collect",
+    "data": {
+        "uuid": "inst_first",
+        "type": "json",
+        "model": {
+            "$clotho": {
+                "schema": "schema_institution",
+                "uuid": "inst_first"
+            },
+            "displayName": "Remote File Person",
+            "email": "example@blah.com",
+            "city": "Internet",
+            "state": "CA",
+            "country": "United States",
+            "userAccess": false
+        },
+        "isURL": false
+    }
+}

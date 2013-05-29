@@ -120,7 +120,7 @@ public class Ambassador implements Aspect {
 
             for (int i = startPortRange; i <= stopPortRange; i++) {
                 try {
-                    Socket ServerSok = new Socket("127.0.0.1", i);;
+                    Socket ServerSok = new Socket("127.0.0.1", i);
                     System.out.println("Port usable: " + i);
                     port = i;
                     ServerSok.close();

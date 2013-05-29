@@ -25,6 +25,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Proctor;
 
 import java.util.List;
+
+import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.View;
 import org.clothocad.model.Person;
@@ -129,5 +131,31 @@ public class Quiz
     private boolean doRandom;  //Should select the questions randomly?
     private String badgeId;    //The badge that can be earned by passing this quiz
     private Function rubric;   //This reference to a Function needs to input the data from the client and output some score
+	@Override
+	public JSONObject toJSON() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Person extractAuthor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public SharableType type() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
     
 }

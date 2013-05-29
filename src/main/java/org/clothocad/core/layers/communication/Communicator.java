@@ -49,14 +49,18 @@ import org.json.JSONObject;
  * @author John Christopher Anderson
  */
 
-public final class Communicator implements Aspect {
-    public void sendClientMessage(String socket_id,
+public final class Communicator 
+		implements Aspect {
+	
+    public void sendClientMessage(String connection_id,
                                   String channel,
                                   String message) {
     	JSONObject json = new JSONObject();
     	try {
 			json.put("message", message);
-	        Router.get().sendMessage(socket_id, channel, json);
+			
+			// TODO:
+	        //Router.get().sendMessage(connection_id, channel, json);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

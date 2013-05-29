@@ -1,0 +1,64 @@
+<div class="container" ng-controller="ChatCtrl" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+
+
+        <div class="span5">
+            <h3>Chat Module</h3>
+            <form name="chatForm" novalidate class="simple-form">
+
+                <textarea class="span5" name="message" ng-model="chat.message" placeholder="Enter your Chat Message" ng-required="true"></textarea>
+                <button class="btn btn-info" ng-click="chat_send(chat.message); chat.message='';" ng-disabled="chatForm.message.$invalid">Send Message</button>
+            </form>
+
+            <span class="badge badge-inverse"><ng-pluralize count="users.data.length"
+                                                            when="{'0': '? users',
+                           '1': 'Only You -- Open another tab!',
+                           '2': 'One Other User',
+                           'other': '{} Users'}">
+            </ng-pluralize></span>
+
+            <hr />
+            <div id="chat_messages"  style="border: 1px solid #DEDEDE; padding: 0 15px">
+
+                <h4>Messages
+                    <span class="badge pull-right"><ng-pluralize count="messages.data.length"
+                                                                 when="{'0': 'No Messages',
+                       'one': '1 Message',
+                       'other': '{} Messages'}">
+                    </ng-pluralize></span>
+                </h4>
+
+                <div class="scrollable" style="max-height: 300px;">
+                    <div class="well well-small" ng-repeat="msg in messages.data | orderBy:$index:true">
+                        <span class="pull-right badge">#{{$index}}</span>
+                        <h5 class="{{(msg.uuid == 'CHATROOM') && 'text-error' || ''}}" style="margin:0">{{msg.uuid}}</h5>
+                        <span>{{msg.data}}</span>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="span7">
+            <h3>Requesting Models</h3>
+
+            <input type="text" class="input-large" ng-model="uuid" />
+            <button class="btn btn-info" ng-click="request_getModel(uuid)">Request Model</button>
+            <button class="btn btn-info" disabled ng-click="request_getModelURL(uuid)">Request Model URL</button>
+
+            <hr />
+
+            <input type="text" class="input-large" ng-model="requested.$clotho.uuid" placeholder="Requested uuid"/>
+            <textarea class="span4" placeholder="Requested data">{{requested | json}}</textarea>
+
+
+
+            <form sharable-editor name="sharableEditor" uuid="uuid" sharable="requested" class="span6 form-horizontal well" ng-show="schema" style="padding: 15px; border: 1px solid #ddd; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;" novalidate></form>
+
+        </div>
+
+
+    </div>
+</div>

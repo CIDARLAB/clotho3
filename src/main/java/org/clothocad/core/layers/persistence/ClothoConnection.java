@@ -31,6 +31,8 @@ import java.util.Map;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.util.ClothoDate;
+import org.json.JSONObject;
 
 
 /**
@@ -89,6 +91,9 @@ public interface ClothoConnection {
     int save(Collection<ObjBase> objs);
     int saveBSON(Collection<Map> objs);
 
+    
+    String save(JSONObject json);
+    
     /**
      * Delete the object from the database.
      * @param obj
@@ -110,7 +115,7 @@ public interface ClothoConnection {
      * @param obj
      * @return
      */
-    Date getTimeModified( ObjBase obj );
+    ClothoDate getTimeModified( ObjBase obj );
 
     /**
      * Gets the object with the given uuid as the specified class,

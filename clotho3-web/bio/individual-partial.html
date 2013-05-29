@@ -1,0 +1,39 @@
+<div class="container ng-cloak" ng-controller="IndividualCtrl" style="padding-top: 20px;">
+
+    <div class="row">
+        <div class="span4">
+            <img ng-src="{{indiv.headshot}}" alt="{{indiv.name}}" />
+        </div>
+
+        <div class="span8">
+            <div class="pull-right btn-group">
+                <!--<button class="btn" ng-click="previous()" alt="Previous"><i class="icon-chevron-left"></i></button>-->
+                <button class="btn" ng-click="home()" alt="Home"><i class="icon-home"></i></button>
+                <!--<button class="btn" ng-click="next()" alt="Next"><i class="icon-chevron-right"></i></button>-->
+            </div>
+
+            <h1 style="margin-top: 0;">{{indiv.name}}</h1>
+
+            <h4>{{indiv.position}} in {{indiv.department}}</h4>
+            <h6><a ng-href="mailto:{{indiv.contact.email}}">{{indiv.contact.email}}</a></h6>
+
+            <div ng-switch="indiv.status">
+                <small ng-switch-when="current">Member since: {{indiv.join | date:short}}</small>
+                <small ng-switch-when="alumnus">Joined {{indiv.join | date:short}} and graduated {{indiv.leave | date:short}}<br />Current location: {{indiv.current_location}}</small>
+                <small ng-switch-default>Member from {{indiv.join | date:short}} to {{indiv.leave | date:short}}</small>
+            </div>
+
+            <hr />
+            <p>{{indiv.biography}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <div class="well">
+                <h3>{{indiv.project.title}}</h3>
+                <p>{{indiv.project.description}}</p>
+            </div>
+        </div>
+    </div>
+</div>

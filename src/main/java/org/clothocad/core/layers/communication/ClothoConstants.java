@@ -7,5 +7,6 @@ public class ClothoConstants {
 	public static final String CHANNEL = "channel";
 	public static final String ACTION = "action";
 	public static final String DATA = "data";
-	
+	public static final String CORRELATION_ID = "correlation";
+	public static final String AUTHENTICATION = "authentication";
 }

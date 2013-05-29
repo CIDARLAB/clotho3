@@ -75,7 +75,7 @@ public final class Mind
      * @return 
      */
     public static Mind create(Person person) {
-        /*TODO check if this Mind already exists */
+        /* TODO check if this Mind already exists */
         //Create the new Mind object
         Mind out = new Mind();
         out.personId = person.getUUID().toString();
@@ -306,6 +306,11 @@ public final class Mind
         return engine;
     }
 
+    public Person getPerson() {
+    	return this.person;
+    }
+    
+    private Person person;
     private String personId;
     private transient ScriptEngine engine;
     

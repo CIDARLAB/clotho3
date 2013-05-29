@@ -5,6 +5,10 @@ import java.util.List;
 import org.clothocad.core.datums.util.ClothoField;
 
 import org.clothocad.model.Person;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import flexjson.JSONSerializer;
 
 
 /**
@@ -56,7 +60,6 @@ public class View
         return view;
     }
     
-    /***
     @Override
     public JSONObject toJSON() {
         try {
@@ -68,7 +71,6 @@ public class View
             return null;
         }
     }
-	***/
     
 
 
@@ -130,4 +132,22 @@ public class View
     private String largeIconURL;
     
     private int instanceCount = 0;
+
+	@Override
+	public Person extractAuthor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SharableType type() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean set(JSONObject newvalue, Person requestor, Doo doo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

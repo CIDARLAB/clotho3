@@ -1,11 +1,13 @@
 package org.clothocad.core.layers.communication;
 
-import org.clothocad.core.aspects.Persistor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.clothocad.core.layers.communication.activemq.ClothoMessageProducer;
-import org.clothocad.core.layers.communication.activemq.ClothoPublisher;
+import org.clothocad.core.layers.communication.connection.ClientConnection;
+import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
+import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.protocol.ActionType;
-import org.clothocad.core.layers.execution.Executor;
-import org.clothocad.core.layers.execution.ExecutorThread;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,72 +29,65 @@ public class Router {
 		return result;
     }
     
-    public void route(JSONObject json) 
-    		throws Exception {
-		System.out.println("[Router.route] "+json);
+    private ExecutorService pool;
+    
+    public Router() {    	
     	
-    	String channel, action;
-    	JSONObject data;
-    	
-    	if(null != json) {
-    		
-    		if((channel=json.getString(ClothoConstants.CHANNEL)) != null) {
-    		   	
-    			// check the channel
-    			
-    		} else {
-    			throw new Exception("NO CHANNEL PROVIDED!");
-    		}
-
-    		if((action=json.getString(ClothoConstants.ACTION)) != null) {
-    		   	
-    			// check the action (according to the channel)
-    			
-    		} else {
-    			throw new Exception("NO ACTION PROVIDED!");
-    		}
-
-    		data = json.getJSONObject(ClothoConstants.DATA);
-    		
-    		System.out.println("[Router.route] "+channel+", "+action+", "+data.toString());
-    	}
-    	throw new Exception("INVALID MESSAGE!");
+    	// create the thread-pool of ssAPI objects
+    	this.pool = Executors.newFixedThreadPool(100);
     }
-	
     
     // send message    
-	public void sendMessage(String socket_id, String channel, JSONObject json) {
+	public void sendMessage(
+			ClientConnection connection, String channel, JSONObject data) {
+		
+		
+		// create the message's JSON object
+		JSONObject message = new JSONObject();
 		try {
-			new ClothoMessageProducer(socket_id).onSuccess(json);
+			message.put(ClothoConstants.CHANNEL, channel);
+			message.put(ClothoConstants.DATA, data);
+
+			if(connection instanceof ClothoWebSocket) {
+				ClothoWebSocket websocket = (ClothoWebSocket)connection;
+				if(null != websocket) {				
+					websocket.sendMessage(message.toString());
+				}
+			} else if(connection instanceof ApolloConnection) {				
+				new ClothoMessageProducer((ApolloConnection)connection).onSuccess(message);
+			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	// publish messages to subscribed clients
-	public void publish(JSONObject json) {
-		//try {
-		//	new ClothoPublisher().publish(json);
-		//} catch(Exception e) {}
-	}
-	
 	// receive message
-	public void receiveMessage(String socket_id, String channel, JSONObject json) {
+	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
+		System.out.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
+		
 		try {
-			if(Channel.ACCESS.toString().equals(channel)) {
+			if(Channel.ACCESS.toString().equalsIgnoreCase(channel)) {
 				// we immediately respond to the client on the synchronous ACCESS channel
+				
+				JSONObject response = this.access(json);
+				
 				this.sendMessage(
-						socket_id,  
-						channel, 
-						this.access(json));
-			} else if(Channel.EXECUTION.toString().equals(channel)) {
+						connection, channel, response);
+			} else if(Channel.EXECUTION.toString().equalsIgnoreCase(channel)) {								
+				
 				// here we should get rid of giving socket_id, channel, and the JSON object to the Executor
-				//this.execute(json);
-				new Thread(new ExecutorThread(socket_id, channel, json)).start();				
-			} else if(Channel.NOTIFICATION.toString().equals(channel)) {
+				this.execute(connection, json);
+				
+				// ultimately:
+				// this.execute(json);
+				
+			} else if(Channel.NOTIFICATION.toString().equalsIgnoreCase(channel)) {
 				// TODO
-			} else if(Channel.AUTOCOMPLETION.toString().equals(channel)) {
+			} else if(Channel.AUTOCOMPLETION.toString().equalsIgnoreCase(channel)) {
 				// TODO
+
+			} else if("say".equals(channel)) {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -103,7 +98,7 @@ public class Router {
 			throws JSONException {
 
 		// here, we need to invoke the data-base layer to access to requested data
-		JSONObject ret = new JSONObject();
+		JSONObject response = new JSONObject();
 		
 		// first, get the action of the JSON object
 		String sAction = json.getString("action");
@@ -117,17 +112,28 @@ public class Router {
 					String.valueOf(datum.get("password")));
 			**/
 			
-			ret.put("valid", true);
-			
-		} else if(ActionType.GET.toString().equals(sAction)) {
-			/**
-			Object obj = Database.get().get(
-					String.valueOf(json.get("id")));
-			**/
-			
-			//ret.put("datum", null);
+			response.put("valid", true);
 		}
 
-		return ret;
+		return response;
+	}
+	
+	private void execute(ClientConnection connection, JSONObject json) 
+			throws Exception {
+		// first, get the action of the JSON object
+		String action = json.getString(ClothoConstants.ACTION);
+
+		// get the correlation-id too
+		String correlationId = json.getString(ClothoConstants.CORRELATION_ID);
+		
+		// and the authentication key
+		String authKey = json.getString(ClothoConstants.AUTHENTICATION);
+		
+		// that's the data of the incoming request
+		
+		JSONObject data = new JSONObject(json.get(ClothoConstants.DATA));
+		
+		this.pool.execute(
+				new RequestProcessor(connection, action, correlationId, data));		
 	}
 }
