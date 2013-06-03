@@ -9,7 +9,8 @@ import javax.script.ScriptContext;
 //import javax.script.ScriptEngine;
 //import lombok.Delegate;
 //import sun.org.mozilla.javascript.Context;
-import sun.org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Scriptable;
+
 /**
  *
  * @author spaige
