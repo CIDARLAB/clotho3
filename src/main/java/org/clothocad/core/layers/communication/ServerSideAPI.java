@@ -226,6 +226,9 @@ public final class ServerSideAPI {
     }
 
     public final void say(String msg) {
+    	// recipient
+    	// message
+    	
         /* TODO this really should be a relay of the command back to the client
          * command bar output stream. */
         Logger.log(Enum.valueOf(Logger.Level.class, "INFO"), msg);

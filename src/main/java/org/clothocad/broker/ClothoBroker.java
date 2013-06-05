@@ -84,10 +84,12 @@ public class ClothoBroker {
         broker.connectors.add(tlsConnector);
 		**/
 
+        /**
         AcceptingConnectorDTO wsConnector = new AcceptingConnectorDTO();
         wsConnector.id = "ws";
-        wsConnector.bind = "ws://0.0.0.0:61623";
+        wsConnector.bind = "ws://localhost:61623";
         broker.connectors.add(wsConnector);
+		**/
 
         /**
         AcceptingConnectorDTO wssConnector = new AcceptingConnectorDTO();

@@ -17,7 +17,7 @@ public class ClothoWebserver {
 	public ClothoWebserver() 
 			throws Exception {
 		
-        Server server = new Server(8080);
+		Server server = new Server(8080);
  
         /** for WEB resources (HTML, CSS, JavaScript etc.) **/
         ResourceHandler resHandler = new ResourceHandler();
@@ -48,5 +48,15 @@ public class ClothoWebserver {
  
         server.start();
         server.join();
+        
+        System.out.println("The Clotho Webserver is running...");
     }
+	
+	public static void main(String[] args) {
+		try {
+			new ClothoWebserver();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

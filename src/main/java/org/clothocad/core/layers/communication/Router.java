@@ -67,6 +67,7 @@ public class Router {
 		System.out.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
 		
 		try {
+
 			if(Channel.ACCESS.toString().equalsIgnoreCase(channel)) {
 				// we immediately respond to the client on the synchronous ACCESS channel
 				
