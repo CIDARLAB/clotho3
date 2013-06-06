@@ -34,11 +34,10 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.ServerSideAPI;
+import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +86,7 @@ public final class Mind
     public Mind() {
         nameSpace = new NameSpace();
         config = new ClientConfiguration();
-        engine = getEngine(null);
+        engine = getEngine();
     }
 
     /**
@@ -103,7 +102,7 @@ public final class Mind
      * Used for the "serverEval" channel. */
     public synchronized boolean eval(String socket_id, String cmd) {
         try {
-            getEngine(socket_id).eval(cmd);
+            getEngine().eval(cmd);
             return true;
         } catch (ScriptException e) {
             return false;
@@ -119,17 +118,13 @@ public final class Mind
      * @return 
      */
     /* TODO: race condition. ScriptEngine execution needs to be serialized. */
-    public synchronized boolean runCommand(String socket_id, String cmd) {
+    public synchronized boolean runCommand(String cmd) {
         try {
-            getEngine(socket_id).eval(cmd);
+            getEngine().eval(cmd);
         } catch (ScriptException e) {
-//            Logger.log(Logger.Level.WARN, "plain eval failed: " + cmd);
             try {
                 runCommandWithNamespace(cmd);
             } catch (Exception e2) {
-//                Logger.log(Logger.Level.WARN,
-//                           "eval with namespace failed: " + cmd,
-//                           e2);
                 return false;
             }
         }
@@ -296,23 +291,35 @@ public final class Mind
      * Injects a new ServerScriptAPI with `socket_id`
      * `socket_id` may be null if this request is not bound to a page.
      */
-    private ScriptEngine getEngine(String socket_id) {
+    public ScriptEngine getEngine() {
         if (engine == null) {
             engine = new ScriptEngineManager().getEngineByName("JavaScript");
+            ServerSideAPI api = getAPI();
+            engine.put("clotho", api);
         }
-
-        ServerSideAPI api = new ServerSideAPI(socket_id, this);
-        engine.put("clotho", api);
         return engine;
     }
 
+    public ServerSideAPI getAPI() {
+        if (ssAPI == null) {
+            ssAPI = new ServerSideAPI(this);
+        }
+        return ssAPI;
+    }
+    
     public Person getPerson() {
     	return this.person;
+    }
+    
+    public void setClientConnection(ClientConnection conn) {
+        connection = conn;
     }
     
     private Person person;
     private String personId;
     private transient ScriptEngine engine;
+    private transient ServerSideAPI ssAPI;
+    private transient ClientConnection connection;
     
     private Map<Date, String> commandHistory;
 
@@ -342,4 +349,9 @@ public void SUPERILLEGAL_SETUUID(String string) {
     public ClientConfiguration getConfig() {
         return config;
     }
+
+    public ClientConnection getClientConnection() {
+       return this.connection;
+   }
+
 }

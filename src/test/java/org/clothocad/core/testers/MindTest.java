@@ -40,18 +40,18 @@ public class MindTest {
         /* TODO: put Doo back */
         /* Doo doo = new Doo(null, false); */
         
-        mind.runCommand(null, "clotho.say('hi');");
-        mind.runCommand(null, "clotho.say('makeabuddy');");
-        mind.runCommand(null, "var asst = clotho.get('makeabuddyassistantisuuid');");
-        mind.runCommand(null, "clotho.say('I have assistant: ' + asst);");
+        mind.runCommand("clotho.say('hi');");
+        mind.runCommand("clotho.say('makeabuddy');");
+        mind.runCommand("var asst = clotho.get('makeabuddyassistantisuuid');");
+        mind.runCommand("clotho.say('I have assistant: ' + asst);");
         
-        mind.runCommand(null, "var cind = clotho.get('cindysuobjbasetypeperson');");
-        mind.runCommand(null, "clotho.say('I have cind: ' + cind);");
+        mind.runCommand("var cind = clotho.get('cindysuobjbasetypeperson');");
+        mind.runCommand("clotho.say('I have cind: ' + cind);");
         
-        mind.runCommand(null, "clotho.run(asst, 'cindysuobjbasetypeperson');");
+        mind.runCommand("clotho.run(asst, 'cindysuobjbasetypeperson');");
 
-        mind.runCommand(null, "var dd = clotho.create('personschemaisuuid', '{\"name\":\"dougd\",\"email\":\"doug@bob.com\"}');");
-        mind.runCommand(null, "clotho.say('I have dd: ' + dd);");
-        mind.runCommand(null, "clotho.run(asst, dd);");
+        mind.runCommand("var dd = clotho.create('personschemaisuuid', '{\"name\":\"dougd\",\"email\":\"doug@bob.com\"}');");
+        mind.runCommand("clotho.say('I have dd: ' + dd);");
+        mind.runCommand("clotho.run(asst, dd);");
     }
 }

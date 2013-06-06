@@ -2,11 +2,15 @@ package org.clothocad.core.layers.communication;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.bson.types.ObjectId;
+import org.clothocad.core.aspects.Interpreter.AutoComplete;
+import org.clothocad.core.datums.Doo;
 
 import org.clothocad.core.layers.communication.activemq.ClothoMessageProducer;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
+import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.protocol.ActionType;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,14 +43,9 @@ public class Router {
     
     // send message    
 	public void sendMessage(
-			ClientConnection connection, String channel, JSONObject data) {
-		
-		
-		// create the message's JSON object
-		JSONObject message = new JSONObject();
+			ClientConnection connection, JSONObject message) {
+
 		try {
-			message.put(ClothoConstants.CHANNEL, channel);
-			message.put(ClothoConstants.DATA, data);
 
 			if(connection instanceof ClothoWebSocket) {
 				ClothoWebSocket websocket = (ClothoWebSocket)connection;
@@ -65,76 +64,56 @@ public class Router {
 	// receive message
 	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
 		System.out.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
-		
+            
 		try {
+                    RouterDoo doo = new RouterDoo();
+                    
+                    String auth_key = null;
+                    try {
+                         auth_key = json.getString("auth_key");
+                    } catch(Exception error) {
+                    }
+                    
+                    Mind mind = Communicator.get().getMind(auth_key);
+                    mind.setClientConnection(connection);
+                    doo.mindId = mind.getUUID();
+                    doo.message = json;
+                    ServerSideAPI api = mind.getAPI();
 
-			if(Channel.ACCESS.toString().equalsIgnoreCase(channel)) {
-				// we immediately respond to the client on the synchronous ACCESS channel
-				
-				JSONObject response = this.access(json);
-				
-				this.sendMessage(
-						connection, channel, response);
-			} else if(Channel.EXECUTION.toString().equalsIgnoreCase(channel)) {								
-				
-				// here we should get rid of giving socket_id, channel, and the JSON object to the Executor
-				this.execute(connection, json);
-				
-				// ultimately:
-				// this.execute(json);
-				
-			} else if(Channel.NOTIFICATION.toString().equalsIgnoreCase(channel)) {
-				// TODO
-			} else if(Channel.AUTOCOMPLETION.toString().equalsIgnoreCase(channel)) {
-				// TODO
+			if(Channel.autocomplete.toString().equalsIgnoreCase(channel)) {
+                            api.autocomplete(json.getJSONObject("data").getString("query"));
+			} else if(Channel.submit.toString().equalsIgnoreCase(channel)) {								
+                            api.submit(json.getJSONObject("data").getString("query"));
+			} else if(Channel.login.toString().equalsIgnoreCase(channel)) {
 
-			} else if("say".equals(channel)) {
+			} else if(Channel.logout.toString().equalsIgnoreCase(channel)) {
+
+			} else if(Channel.changePassword.toString().equalsIgnoreCase(channel)) {								
+
+			} else if(Channel.say.toString().equalsIgnoreCase(channel)) {
+                            api.say(json.getJSONObject("query").getString("text"));
+			} else if(Channel.log.toString().equalsIgnoreCase(channel)) {
+
 			}
+                        //Etcetera for remaining ssAPI methods
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}	
-	
-	private JSONObject access(JSONObject json) 
-			throws JSONException {
+        
+    /**
+     * The Doo's that manage any Client-derived message.  Doo's handle even key
+     * commands to avoid synchronization issues.
+     */
+    public class RouterDoo extends Doo {
+        public RouterDoo() {
+            super(null, false);
+        }
 
-		// here, we need to invoke the data-base layer to access to requested data
-		JSONObject response = new JSONObject();
-		
-		// first, get the action of the JSON object
-		String sAction = json.getString("action");
-
-		if(ActionType.LOGIN.toString().equals(sAction)) {			
-
-			// here, we need to call the database layer to check if the login-data is valid
-			/**
-			boolean b = Database.get().login(
-					String.valueOf(datum.get("username")), 
-					String.valueOf(datum.get("password")));
-			**/
-			
-			response.put("valid", true);
-		}
-
-		return response;
-	}
-	
-	private void execute(ClientConnection connection, JSONObject json) 
-			throws Exception {
-		// first, get the action of the JSON object
-		String action = json.getString(ClothoConstants.ACTION);
-
-		// get the correlation-id too
-		String correlationId = json.getString(ClothoConstants.CORRELATION_ID);
-		
-		// and the authentication key
-		String authKey = json.getString(ClothoConstants.AUTHENTICATION);
-		
-		// that's the data of the incoming request
-		
-		JSONObject data = new JSONObject(json.get(ClothoConstants.DATA));
-		
-		this.pool.execute(
-				new RequestProcessor(connection, action, correlationId, data));		
-	}
+        JSONObject message;
+        ObjectId mindId;
+    }
+    
+    
+    
 }

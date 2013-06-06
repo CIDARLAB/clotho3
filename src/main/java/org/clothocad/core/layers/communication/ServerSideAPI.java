@@ -24,13 +24,17 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.layers.communication;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import javax.swing.JOptionPane;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.clothocad.core.aspects.Collector;
+import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
@@ -69,33 +73,18 @@ public final class ServerSideAPI {
     private String socket_id;
     private ClothoWebSocket socket;
     private Mind mind;
-
-    private ClientConnection connection;
-    
-    public ServerSideAPI(String socket_id, Mind mind) {
-        this.socket_id = socket_id;
-        this.mind = mind;
-    }
     
     public ServerSideAPI(ClothoWebSocket socket) {
     	this.socket = socket;
     	this.mind = null;
     }
-    
-    public ServerSideAPI(ClientConnection connection) {
-    	this.connection = connection;
-    }
-    
-    public ServerSideAPI() {
-    	this.socket_id = null;
-    	this.socket = null;
-    	this.mind = null;
+    public ServerSideAPI(Mind mind) {
+        this.mind = mind;
     }
     
     public void setSocket(ClothoWebSocket socket) {
     	this.socket = socket;
     }
-    
     public void setMind(Mind mind) {
     	this.mind = mind;
     }
@@ -103,6 +92,56 @@ public final class ServerSideAPI {
     /***                                ***\
      ********  Public API methods  ********
     \*                                  */
+    
+
+    public final void autocomplete(String userText) {
+        try {
+            ArrayList<String> completions = completer.getCompletions(userText);
+            JSONArray data = new JSONArray(); //The list of JSONObjects each for an autocomplete
+            for(String str : completions) {
+                JSONObject obj = new JSONObject();
+                obj.put("text", str);
+                obj.put("uuid", "irrelevent_uuid");
+                obj.put("type", "phrase");
+                data.put(obj);
+            }
+            
+            JSONObject msg = new JSONObject();
+            msg.put("channel", "autcomplete");
+            msg.put("data", data);
+            Router.get().sendMessage(mind.getClientConnection(), msg);
+        } catch(Exception err) {
+            err.printStackTrace();
+        }
+    }
+    
+    //JCA:  as 0f 6/6/2013 submit seems to work
+    public final void submit(String userText) {
+        if (!mind.runCommand(userText)) {
+            disambiguate(userText);
+            completer.put(userText);
+        }
+    }
+
+    //JCA:  as 0f 6/6/2013 say seems to work
+    public final void say(String message) {
+        System.out.println("say has : " + message);
+
+        try {
+            JSONObject msg = new JSONObject();
+                JSONObject data = new JSONObject();
+                data.put("text", message);
+                data.put("from", "toBeWorkedOutLater");
+                data.put("class", "text-error");
+                data.put("timestamp", new Date().getTime());
+            msg.put("channel", "say");
+            msg.put("data", data);
+            Router.get().sendMessage(mind.getClientConnection(), msg);
+        } catch(Exception err) {
+            err.printStackTrace();
+        }
+    }
+    
     public final JSONObject get(String uuid) {
     	/**
         try {
@@ -225,14 +264,6 @@ public final class ServerSideAPI {
         ***/    	
     }
 
-    public final void say(String msg) {
-    	// recipient
-    	// message
-    	
-        /* TODO this really should be a relay of the command back to the client
-         * command bar output stream. */
-        Logger.log(Enum.valueOf(Logger.Level.class, "INFO"), msg);
-    }
 
     public final void newPage() throws Exception {
     	/***
@@ -746,5 +777,39 @@ public final class ServerSideAPI {
         return Person.getById(mind.getPersonId());
         **/    	
     }
+
+        private void disambiguate(String nativeCmd) {
+            Set<String> cmdResults = Interpreter.get().receiveNative(nativeCmd);
+
+            if(cmdResults.isEmpty()) {
+                /* TODO */
+                //Communicator.get().say("(no search results available)");
+                Logger.log(Logger.Level.WARN, "I got no search results");
+            } else {
+                //Send the search results
+
+//TODO: TEMP ALERT THE USER
+                Object[] possibilities = cmdResults.toArray();
+                String assoc_cmd = (String)JOptionPane.showInputDialog(
+                        null,
+                        "Which to run?",
+                        "Customized Dialog",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        possibilities,
+                        "ham");
+
+                if (mind.runCommand(assoc_cmd)) {
+                    // learn to associate nativeCmd with assoc_cmd
+                } else {
+                    // tell the user that native cmd failed, so the overall action requested was aborted.
+                    //Commicator.get().say("sorry man...no dice");
+                }
+                //IT SHOULD RETURN THE SEARCH RESULTS TO THE CLIENT, THEN LET THEM EXECUTE, BUT SINCE WE DON'T HAVE THAT NOW, IT WILL JUST RUN IT
+                //I SEE A POTENTIAL ISSUE HERE OF NOT HAVING ACCESS TO THE MIND IN QUESTION
+            }
+        }
+    
     //private transient Person person;
+    private static final AutoComplete completer = new AutoComplete();
 }

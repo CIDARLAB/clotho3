@@ -78,6 +78,10 @@ public class AutoComplete {
             //wordBank = Persistor.get().loadWordBank();
             if(wordBank==null) {
                 wordBank = new ArrayList<String>();
+                wordBank.add("walk the dog");
+                wordBank.add("walk the cat");
+                wordBank.add("walk the caterpillar");
+                
             }
         }
         return wordBank;
