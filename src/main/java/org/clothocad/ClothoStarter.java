@@ -4,6 +4,7 @@ import org.clothocad.broker.ClothoBroker;
 import org.clothocad.core.ClothoCore;
 import org.clothocad.webserver.jetty.ClothoWebserver;
 
+//Start then navigate to:  http://localhost:8080/#/
 public class ClothoStarter {
 	public static void main(String[] args) 
 			throws Exception {
