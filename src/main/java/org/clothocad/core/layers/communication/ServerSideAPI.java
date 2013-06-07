@@ -93,7 +93,7 @@ public final class ServerSideAPI {
      ********  Public API methods  ********
     \*                                  */
     
-
+    //JCA:  as of 6/6/2013 autcomplete works.  Wordlist is not persisted, but the completer does learn submitted phrases.
     public final void autocomplete(String userText) {
         try {
             ArrayList<String> completions = completer.getCompletions(userText);
@@ -107,7 +107,7 @@ public final class ServerSideAPI {
             }
             
             JSONObject msg = new JSONObject();
-            msg.put("channel", "autcomplete");
+            msg.put("channel", "autocomplete");
             msg.put("data", data);
             Router.get().sendMessage(mind.getClientConnection(), msg);
         } catch(Exception err) {
