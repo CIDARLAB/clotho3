@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
+import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Doo;
 
 import org.clothocad.core.layers.communication.activemq.ClothoMessageProducer;
@@ -12,6 +13,7 @@ import org.clothocad.core.layers.communication.connection.apollo.ApolloConnectio
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.protocol.ActionType;
+import org.clothocad.model.Institution;
 import org.json.JSONException;
 import org.json.JSONObject;
 

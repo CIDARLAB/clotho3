@@ -22,4 +22,5 @@ public abstract class Sharable extends ObjBase {
         super(name);
         this.author = author;
     }
+    
 }

@@ -24,9 +24,13 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.aspects;
 
 import com.google.common.cache.Cache;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import lombok.Delegate;
 import org.clothocad.core.layers.persistence.ClothoConnection;
+import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 
 /**
  * @author jcanderson
@@ -59,5 +63,24 @@ public class Persistor implements Aspect {
     public Persistor(ClothoConnection connection){
         this.connection = connection;
         //cache = new  CacheBuilder<ObjectId, ObjBase>().
+    }
+
+    public static Persistor get() {
+        return singleton;
+    }
+    
+    /**
+     * JCA:  Yes, I know this is ugly.  You can change to some dependency injection thing later.
+     */
+    private static  Persistor singleton;
+    static {
+        try {
+            MongoDBConnection conn = new MongoDBConnection();
+            conn.connect();
+            singleton = new Persistor(conn);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+            System.exit(0);
+        }
     }
 }

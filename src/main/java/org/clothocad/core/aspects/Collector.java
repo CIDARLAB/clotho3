@@ -27,8 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.logging.Logger;
-
-import org.clothocad.core.datums.Datum;
+import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjBase;
 
 /**
  * @author jcanderson
@@ -36,15 +36,15 @@ import org.clothocad.core.datums.Datum;
 public class Collector implements Aspect {
 
     /**
-     * Getting datums from cache
+     * Getting objBases from cache
      */
-    public Datum getDatum (String uuid) {
+    public ObjBase getObjBase (String uuid) {
         try {
-            if (datumBag.containsKey(uuid)) {
-                return datumBag.get(uuid);
+            if (objBaseBag.containsKey(uuid)) {
+                return objBaseBag.get(uuid);
             } else {
-            	// TODO: access the Persistor to get the datum
-            	return (Datum)null;
+            	ObjBase obj = Persistor.get().get(ObjBase.class, new ObjectId(uuid));
+            	return obj;
             }
         } catch(Exception err) {
             return null;
@@ -52,24 +52,24 @@ public class Collector implements Aspect {
     }
 
     /**
-     * Log a Datum into the cache.
+     * Log a ObjBase into the cache.
      * 
-     * This also puts the Datum in the "oldest" list
+     * This also puts the ObjBase in the "oldest" list
      * @param obj 
      */
-    public synchronized void add (Datum obj) {
+    public synchronized void add (ObjBase obj) {
         /* Logger.log(Logger.Level.INFO, obj.getUUID() + " is the obj"); */
-        datumBag.put(obj.getId(), obj);
+        objBaseBag.put(obj.getUUID(), obj);
         dateAccessedMap.put(new Date(), obj);
         
         //Start dropping objbases if it's full
-        if(datumBag.size()>MAXCACHESIZE || dateAccessedMap.size()>MAXCACHESIZE) {
-            Datum oldestDatum = dateAccessedMap.firstEntry().getValue();
+        if(objBaseBag.size()>MAXCACHESIZE || dateAccessedMap.size()>MAXCACHESIZE) {
+            ObjBase oldestObjBase = dateAccessedMap.firstEntry().getValue();
             dateAccessedMap.remove(dateAccessedMap.firstEntry().getKey());
-            datumBag.remove(oldestDatum.getId());
+            objBaseBag.remove(oldestObjBase.getUUID());
         }
         /* TODO: shouldn't save each time, but rather flush periodically */
-//        Persistor.get().persistDatum(obj); //I don't know that this should be here
+//        Persistor.get().persistObjBase(obj); //I don't know that this should be here
     }
 
     private Collector() { }
@@ -81,11 +81,11 @@ public class Collector implements Aspect {
     private static final Collector singleton = new Collector();
 
     
-    //this list of Datums currently in RAM
-    private final HashMap<String,Datum> datumBag = new HashMap<String,Datum>();
-    private final TreeMap<Date,Datum> dateAccessedMap = new TreeMap<Date,Datum>();
+    //this list of ObjBases currently in RAM
+    private final HashMap<ObjectId,ObjBase> objBaseBag = new HashMap<ObjectId,ObjBase>();
+    private final TreeMap<Date,ObjBase> dateAccessedMap = new TreeMap<Date,ObjBase>();
 
-    //How many datums to hold in RAM before dropping things
+    //How many objBases to hold in RAM before dropping things
     private static final Integer MAXCACHESIZE = 20000;
     
 }

@@ -2,7 +2,7 @@ package org.clothocad.core.layers.communication.protocol;
 
 import java.net.InetAddress;
 
-import org.clothocad.core.datums.Datum;
+import org.clothocad.core.datums.ObjBase;
 import org.json.JSONObject;
 
 public class Marshaller {
@@ -20,7 +20,7 @@ public class Marshaller {
 		return json;
 	}
 
-	public static JSONObject toJSON(ActionType action, Datum datum) {
+	public static JSONObject toJSON(ActionType action, ObjBase datum) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("ip", InetAddress.getLocalHost());

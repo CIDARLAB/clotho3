@@ -25,7 +25,6 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Ambassador;
 
 import java.util.UUID;
-import org.clothocad.core.datums.Datum;
 import org.clothocad.core.datums.ObjBase;
 
 /**

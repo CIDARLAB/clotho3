@@ -20,6 +20,9 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Date;
 import java.util.Map;
 import lombok.Getter;
+import org.bson.BSONObject;
+import org.clothocad.core.aspects.Persistor;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -36,7 +39,7 @@ public abstract class ObjBase {
     }
     
     @Id
-    private ObjectId UUID = null;
+    private ObjectId UUID = new ObjectId();
     
     private String name;    
     private boolean isDeleted;    
@@ -100,7 +103,16 @@ public abstract class ObjBase {
     
     //TODO:
     public JSONObject toJSON(){
-        throw new UnsupportedOperationException();
+        
+        //JCA's hack of re-pulling from db to serialize.  Please change.
+        try {
+            BSONObject bson = Persistor.get().getAsBSON(UUID);
+            JSONObject out = new JSONObject(bson.toString());
+            return out;
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
     
 }

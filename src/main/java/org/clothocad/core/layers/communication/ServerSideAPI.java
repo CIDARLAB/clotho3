@@ -33,14 +33,16 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 
 import javax.xml.parsers.ParserConfigurationException;
+import org.bson.types.ObjectId;
 
 import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.datums.Datum;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
@@ -48,8 +50,10 @@ import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
+import org.clothocad.core.layers.persistence.ClothoConnection;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.model.Institution;
 import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,10 +130,11 @@ public final class ServerSideAPI {
         }
         
     }
+    
     //JCA:  as 0f 6/6/2013 submit seems to work
     public final void submit(String userText) {
         if (!mind.runCommand(userText)) {
-            disambiguate(userText);
+//            disambiguate(userText);  //JCA:  temporarily disabled for testing, also not fully hooked up
             completer.put(userText);
         }
     }
@@ -153,18 +158,84 @@ public final class ServerSideAPI {
         }
     }
     
+    //JCA:  Java side looks fine, but client code crashes browser
+    //clotho.alert("this is an alert!");
+    public final void alert(String message) {
+        System.out.println("alert has : " + message);
+
+        try {
+            JSONObject msg = new JSONObject();
+            msg.put("channel", "alert");
+            msg.put("data", message);
+            Router.get().sendMessage(mind.getClientConnection(), msg);
+        } catch(Exception err) {
+            err.printStackTrace();
+        }
+    }
+    
+    
+    //JCA:  This runs, and the message goes to the console.log spot.
+    //clotho.log("I did some minipreps today");
+    public final void log(String message) {
+        System.out.println("log has : " + message);
+
+        try {
+            JSONObject msg = new JSONObject();
+            msg.put("channel", "log");
+            msg.put("data", message);
+            Router.get().sendMessage(mind.getClientConnection(), msg);
+        } catch(Exception err) {
+            err.printStackTrace();
+        }
+    }
+    
+    //Make note of this message in my notebook
+    public final void note(String message) {
+        System.out.println("I need to put this in your notebook, but i'm not implemented");
+        //These have the same structure as a say, but they are stored.
+        
+        say("I've stored your note (but not really): " + message);
+    }
+    
+    public final void test() {
+        System.out.println("Test has been invoked");
+        Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
+
+        System.out.println("Institution i has been created: " + i.toString());
+        
+        Persistor.get().save(i);
+        ObjectId id = i.getUUID();
+        
+        String uuid = id.toString();
+
+        say(id.toString());
+        
+        ObjBase reclaimed =  Persistor.get().get(ObjBase.class, new ObjectId(uuid));
+        
+        System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
+    }
+    
+    //clotho.get("51b29e7450765ced18af0d33");
+    //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
     public final JSONObject get(String uuid) {
 
         try {
-            Datum datum = Collector.get().getDatum(uuid);
-            Sharable obj = (Sharable) datum;
-//            Logger.log(Logger.Level.INFO, "received sharable: " + uuid);
+            //Pull the object from the db
+            ObjBase datum = Collector.get().getObjBase(uuid);
+            Sharable obj = (Sharable) datum;  //not being casted to Sharable
             JSONObject result = obj.toJSON();
+            say("I found " + obj.getName());
+            say("It has the value" + result.toString());
+            
+            //If the requestor is a client (not implemented) push the data to the client
+            if(true) {
+                JSONObject msg = makeCollect(obj);
+                Router.get().sendMessage(mind.getClientConnection(), msg);
+            }
+            
             return result;
-        } catch (ClassCastException e) {
-            Logger.log(Logger.Level.WARN,
-                    "could not find sharable: " + uuid,
-                    e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
         return new JSONObject();
@@ -172,23 +243,23 @@ public final class ServerSideAPI {
 
     public final void set(String sharableId, String newvalue) {
     	/**
-        Sharable sharable = (Sharable) resolveToDatum(sharableId);
+        Sharable sharable = (Sharable) resolveToObjBase(sharableId);
         JSONObject value = this.resolveToJSONObject(newvalue);
         if (sharable.set(value, this.getPerson(), new ShowDoo(null))) {
             //RETURN A COMMAND TO SAY SOMETHING I THE CONSOLE, AND CALL UPDATE ON ALL LISTENERS TO THIS SHARABLE
         }
         **/
     }
-    
-    public final void submit(JSONObject data) {
-    	
-    	// process the data in the JSON object
-    	
-    }
+//    
+//    public final void submit(JSONObject data) {
+//    	
+//    	// process the data in the JSON object
+//    	
+//    }
 
     public final String create(JSONObject json) {
     
-    	System.out.println("[ServerSideAPI.create] "+json);
+    	System.out.println("[ServerSideAPI.create] " + json);
     	
     	try {
     		
@@ -208,7 +279,7 @@ public final class ServerSideAPI {
     public final JSONObject create(String schemaRef, String jsonArgs) {
     	/***
         try {
-            Schema schema = (Schema) resolveToDatum(schemaRef);
+            Schema schema = (Schema) resolveToObjBase(schemaRef);
             if (schema == null) {
                 return null;
             }
@@ -240,7 +311,7 @@ public final class ServerSideAPI {
     public final void edit(String sharableRef) {
     	/**
         try {
-            Sharable sharable = (Sharable) resolveToDatum(sharableRef);
+            Sharable sharable = (Sharable) resolveToObjBase(sharableRef);
 
             switch (sharable.type()) {
                 case SCHEMA:
@@ -263,7 +334,7 @@ public final class ServerSideAPI {
     	/***
         Logger.log(Logger.Level.INFO, "received: " + asstRef + "   " + jsonArgs);
         try {
-            Function assistant = (Function) resolveToDatum(asstRef);
+            Function assistant = (Function) resolveToObjBase(asstRef);
             JSONObject json = resolveToExecutionArguments(assistant,
                     resolveToJSONObject(jsonArgs));
             Logger.log(Logger.Level.INFO,
@@ -293,7 +364,7 @@ public final class ServerSideAPI {
                     commandMessageArray.toString());
 
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-            Persistor.get().persistDatum(mind);
+            Persistor.get().persistObjBase(mind);
         } catch (Exception e) {
             Logger.log(Logger.Level.WARN, "", e);
             e.printStackTrace();
@@ -318,7 +389,7 @@ public final class ServerSideAPI {
             ShowDoo doo = new ShowDoo(parentDoo);
 
             //Gather up referenced objects
-            View view = (View) resolveToDatum(viewId);
+            View view = (View) resolveToObjBase(viewId);
             List<Sharable> shareList = resolveToSharables(sharables);
 
             //Create the widget and put it on its page
@@ -347,7 +418,7 @@ public final class ServerSideAPI {
                     doo.commandMessageArray.toString());
 
             //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-            Persistor.get().persistDatum(mind);
+            Persistor.get().persistObjBase(mind);
         } catch (Exception e) {
             Logger.log(Logger.Level.WARN, "", e);
             e.printStackTrace();
@@ -362,7 +433,7 @@ public final class ServerSideAPI {
         try {
             //Grab a Doo if something is awaiting one
             Doo parentDoo = Hopper.get().extract(null);
-            Trail trail = (Trail) resolveToDatum(trailRef);
+            Trail trail = (Trail) resolveToObjBase(trailRef);
             Person student = this.getPerson();
 
             Proctor.get().initiateTrail(student, trail, parentDoo);
@@ -439,16 +510,18 @@ public final class ServerSideAPI {
      * @return
      * @throws Exception 
      */
-    public static JSONObject makeCollect(List<Sharable> sharables) throws Exception {
-        JSONObject out = new JSONObject();
-        JSONArray data = new JSONArray();
-        for (Sharable sharable : sharables) {
-            data.put(sharable.toJSON());
-        }
-        out.put("data", data);
-        out.put("command", "collect");
+    public static JSONObject makeCollect(Sharable sharable) throws Exception {
+        JSONObject msg = new JSONObject();
+            JSONObject data = new JSONObject();
+            data.put("uuid", sharable.getUUID());
+            data.put("type", "json");
+            data.put("model", sharable.toJSON());
+            data.put("isURL", "false");
+        msg.put("data", data);
+        msg.put("channel", "collect");
 
-        return out;
+        System.out.println("Make Collect has:\n " + msg.toString(2));
+        return msg;
     }
 
     /**
@@ -527,12 +600,7 @@ public final class ServerSideAPI {
         return callBackCmd;
     }
 
-    //JCA:  I DON'T KNOW ABOUT THIS ONE...THAT REQUIRES SOME THINKING AS TO WHETHER THIS IS AN OPTION, AND IF SO, HOW IT OCCURS
-    //THERE MINIMALLY SHOULD BE SOME DOOS INVOLVED WITH A LOGGING PROCESS
-    public void log(String logLevel, String msg) {
-        Logger.log(Enum.valueOf(Logger.Level.class, logLevel),
-                "@@@@@@@@@@ " + msg);
-    }
+
 
     /***                                ***\
      ********  Utility methods  ********
@@ -578,22 +646,22 @@ public final class ServerSideAPI {
      * @param schemaRef
      * @return 
      */
-    private Datum resolveToDatum(Object datumRef) {
-        Datum out = null;
-        Logger.log(Logger.Level.INFO, "resolveToDatum has " + datumRef);
+    private ObjBase resolveToObjBase(Object datumRef) {
+        ObjBase out = null;
+        Logger.log(Logger.Level.INFO, "resolveToObjBase has " + datumRef);
 
-        //If it's a Datum object
+        //If it's a ObjBase object
         try {
-            Datum aschmema = (Datum) datumRef;
-            String uuid = aschmema.getId();
+            ObjBase aschmema = (ObjBase) datumRef;
+            ObjectId uuid = aschmema.getUUID();
 
-            //Fetch the real version of the Datum
-            out = Collector.get().getDatum(uuid);
+            //Fetch the real version of the ObjBase
+            out = Collector.get().getObjBase(uuid.toString());
             if (out != null) {
                 return out;
             }
         } catch (Exception e) {
-            Logger.log(Logger.Level.INFO, "It wasn't a Datum object");
+            Logger.log(Logger.Level.INFO, "It wasn't a ObjBase object");
         }
 
         //If it's a String
@@ -601,22 +669,22 @@ public final class ServerSideAPI {
             String str = (String) datumRef;
 
             //See if it's a uuid String
-            out = Collector.get().getDatum(str);
+            out = Collector.get().getObjBase(str);
             if (out != null) {
                 return out;
             }
 
-            //See if it's a json string representation of a Datum
+            //See if it's a json string representation of a ObjBase
             JSONTokener tokener = new JSONTokener(str);
             JSONObject jsonobj = new JSONObject(tokener);
 
             String uuid = jsonobj.getString("uuid");
-            out = Collector.get().getDatum(uuid);
+            out = Collector.get().getObjBase(uuid);
             if (out != null) {
                 return out;
             }
 
-            //See if it's the proper value of a NameField of some Datum
+            //See if it's the proper value of a NameField of some ObjBase
             //THIS INVOLVES COLLATOR FUNCTIONALITY
 
         } catch (Exception e) {
@@ -654,7 +722,7 @@ public final class ServerSideAPI {
         //If it's a String uuid
         try {
             String uuid = (String) jsonArgs;
-            Datum d = Collector.get().getDatum(uuid);
+            ObjBase d = Collector.get().getObjBase(uuid);
             Sharable share = (Sharable) d;
             return share.toJSON();
         } catch (Exception err) {
@@ -679,7 +747,7 @@ public final class ServerSideAPI {
         JSONArray array = resolveToJSONArray(sharables);
         for (int i = 0; i < array.length(); i++) {
             String uuid = array.getString(i);
-            Sharable sharable = (Sharable) Collector.get().getDatum(uuid);
+            Sharable sharable = (Sharable) Collector.get().getObjBase(uuid);
             out.add(sharable);
         }
         return out;

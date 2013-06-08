@@ -9,13 +9,14 @@ import org.clothocad.core.datums.ObjBase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.clothocad.core.datums.Sharable;
 
 /**
  *
  * @author jcanderson
  */
 @NoArgsConstructor
-public class Institution extends ObjBase {
+public class Institution extends Sharable {
 
     /**
      * Constructor from raw data
@@ -31,7 +32,7 @@ public class Institution extends ObjBase {
     
     //TODO:unique name constraint
     public Institution( String name, String city, String state, String country ) {
-        super(name);
+        super(name, null);
         this.city = city;
         this.state = state;
         this.country = country;
