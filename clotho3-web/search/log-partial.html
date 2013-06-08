@@ -1,0 +1,17 @@
+<div id="clothoSearchbarLog" class="popover bottom" ng-show="display.log">
+    <div class="arrow"></div>
+    <h3 class="popover-title">Activity Log
+        <button class="btn btn-info" ng-click="sayTest()"><i class="icon-comment"></i> Say()</button>
+    </h3>
+    <div class="scrollable popover-content" style="max-height: 400px;">
+        <div ng-repeat="entry in log.entries | orderBy:'timestamp':true" class="clearfix">
+            <div ng-class="{'pull-right': entry.from == 'client', 'text-right': entry.from == 'client'}" class="logEntry {{entry.class}}">
+                <span>{{entry.text}}</span>
+                <br />
+                <small ng-class="{'text-right': entry.from == 'client'}">
+                    {{entry.timestamp | date:dateFilter}}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
