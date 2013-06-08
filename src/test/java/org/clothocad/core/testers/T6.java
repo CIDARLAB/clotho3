@@ -24,6 +24,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.testers;
 
 import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.datums.Datum;
 import org.clothocad.core.layers.communication.mind.Mind;
 
 /**

@@ -33,7 +33,6 @@ import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.layers.communication.mind.PageMode;
 import org.clothocad.model.Person;
-import org.clothocad.model.Trail;
 import org.json.JSONObject;
 
 /**
