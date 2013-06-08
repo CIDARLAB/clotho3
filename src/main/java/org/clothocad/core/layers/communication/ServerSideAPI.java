@@ -136,6 +136,8 @@ public final class ServerSideAPI {
     public final void submit(String userText) {
         if (!mind.runCommand(userText)) {
 //            disambiguate(userText);  //JCA:  temporarily disabled for testing, also not fully hooked up
+            say("Clotho was unable to satisfy that request");
+        } else {
             completer.put(userText);
         }
     }
