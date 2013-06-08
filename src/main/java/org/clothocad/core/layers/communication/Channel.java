@@ -3,6 +3,7 @@ package org.clothocad.core.layers.communication;
 public enum Channel {
 
     autocomplete, //Return potential commands that start with this substring
+    autocompleteDetail, //Return the metadata for a Sharable
     submit, //Run this sloppy or concrete command
     login, //Log me into Clotho on this client with this login/password
     logout, //Log me out of Clotho

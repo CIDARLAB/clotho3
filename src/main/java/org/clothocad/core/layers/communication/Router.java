@@ -86,6 +86,9 @@ public class Router {
                             api.submit(json.getJSONObject("data").getString("query"));
 			} else if(Channel.login.toString().equalsIgnoreCase(channel)) {
 
+			} else if(Channel.autocompleteDetail.toString().equalsIgnoreCase(channel)) {
+                            String uuid = json.getString("data");
+                            api.autocompleteDetail(uuid);
 			} else if(Channel.logout.toString().equalsIgnoreCase(channel)) {
 
 			} else if(Channel.changePassword.toString().equalsIgnoreCase(channel)) {								
