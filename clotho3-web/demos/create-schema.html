@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Clotho3 --- Create Schema</title>
+
+<script src="../scripts/clotho.js"></script>
+
+<script type="text/javascript">
+
+// we need to connect to the clotho websocket
+server.connect();
+
+
+function $() {
+	return document.getElementById(arguments[0]);
+}
+function $F() {
+	return document.getElementById(arguments[0]).value;
+}
+</script>
+</head>
+<body>
+
+<textarea rows="4" cols="50" id="schema">
+{
+        "uuid": "schema_institution",
+        "type": "json",
+        "model": {
+            "schema": [
+                       {
+                       "name": "displayName",
+                       "readable": "Display Name",
+                       "type": "text",
+                       "placeholder": "Your Name",
+                       "required": true
+                       },
+                       {
+                       "name": "email",
+                       "readable": "Email",
+                       "type": "email",
+                       "placeholder": "Your Email",
+                       "required": true
+                       },
+                       {
+                       "name": "city",
+                       "readable": "City",
+                       "type": "text",
+                       "placeholder": "Your City",
+                       "required": true
+                       },
+                       {
+                       "name": "state",
+                       "readable": "State",
+                       "type": "text",
+                       "placeholder": "Your State",
+                       "required": true
+                       },
+                       {
+                       "name": "country",
+                       "readable": "Country",
+                       "type": "text",
+                       "placeholder": "Your Country",
+                       "required": true
+                       },
+                       {
+                       "name": "userAccess",
+                       "readable": "Access?",
+                       "type": "checkbox",
+                       "placeholder": false,
+                       "required": false
+                       }
+          			]
+      	}
+}
+</textarea>
+<br/>
+<input type="button" id="submit" value="create"></input>
+
+		<script type='text/javascript'>
+			$('submit').onclick = function(event) {
+				server.send('execution', 'create', $F('schema'));
+			};
+		</script>
+
+</body>
+</html>

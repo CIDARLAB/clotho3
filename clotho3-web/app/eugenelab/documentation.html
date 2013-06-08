@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EugeneLab</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="shortcut icon" href="images/shortcutIcon.ico">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+    </head>
+    <body data-spy="scroll" data-target="#sidebar">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <a class="brand" href="index.html">EugeneLab</a>
+                <ul class="nav">
+                    <li><a href="eugenelab.html">Design</a></li>
+                    <li class="active"><a href="documentation.html">How to</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div id="loginArea">
+                    <div id="loginArea"><form id="loginForm" class="navbar-form pull-right" action="AuthenticationServlet" method="POST">
+                            <input name="user" type="text" class="span2" placeholder="Login">
+                            <input name="password" type="password" class="span2" placeholder="Password">
+                            <input type="submit" value="Login" class="btn"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-header" style="margin-top:50px">
+            <h1>EugeneLab <small>Learn how our algorithms and tools can help you today</small></h1>
+        </div>
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span2">
+                    <div id="sidebar">
+                        <ul  class=" well nav nav-list affix">
+                            <li class="active"><a href="#overview">Overview</a></li>
+                            <li><a href="#video">Demo</a></li>
+                            <li><a href="#help">Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="span10">
+                    <div class="well" id="overview">
+                        <h3>EugeneLab Overview</h3>
+                        <hr/>
+                        <p>two paragraph description of what EugeneLab is</p>
+                    </div>
+                    <div id="video" class="well">
+                        <h3>Demonstration Video</h3>
+                        <hr/>
+                        <div align="center">    
+                            <iframe width="640" height="480" src="http://www.youtube.com/embed/TeIG-r5-jLU" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                    <div class="well" id="help">
+                        <h3>Help</h3>
+                        <hr/>
+                        <p>FAQ and contact information</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--scripts placed at the end to enhance page loading speed--> 
+        <script type="text/javascript" src="jsLibraries/jquery-1.9.1.min.js"></script> 
+        <script src="jsLibraries/bootstrap.min.js"></script> 
+        <footer>
+            <div class="container" align="center">
+                <p>Designed and built by <a href="contact.html">Jenhan Tao</a>, <a href="contact.html">Ernst Oberortner</a> and <a href="contact.html">Erik Lindgren</a></p>
+                <p>Code licensed under <a href="license.html">LICENSE</a></p>
+            </div>
+        </footer>
+    </body>
+</html>
