@@ -1,8 +1,0 @@
-{"items" : [
-    {"uuid" : "trail_super", "title" : "Transclude Trails", "author" : "Max Bates"},
-    {"uuid" : "trail_140l", "title" : "140L Combinatorial Videos", "author" : "Chris Anderson"},
-    {"uuid" : "trail_123", "title" : "Biosafety Module", "author" : "UC Berkeley"},
-    {"uuid" : "trail_456", "title" : "Make a plasmid", "author" : "Joe Schmo"},
-    {"uuid" : "trail_789", "title" : "Another something!", "author" : ""},
-    {"uuid" : "trail_012", "title" : "This is a really long title that overflows just to show what this could look like", "author" : "A really long author to go with it too because why not"}
-]}
