@@ -55,6 +55,7 @@ import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Person;
+import org.clothocad.model.Trail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -197,24 +198,31 @@ public final class ServerSideAPI {
         say("I've stored your note (but not really): " + message);
     }
     
+    //clotho.get("51b35e425076cbdd5cd29fb2");
     public final void test() {
-        System.out.println("Test has been invoked");
-        Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
+        try {
+            System.out.println("Test has been invoked");
+            JSONObject trail = new JSONObject("{\"uuid\":\"trail_123\",\"title\":\"Biosafety Module\",\"author\":\"UC Berkeley\",\"description\":\"<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>\",\"contents\":[{\"module_title\":\"The Basics\",\"pavers\":[{\"paver_title\":\"Introduction\",\"type\":\"template\",\"template\":\"/app/partials/trail_123_1.html\"}]},{\"module_title\":\"Biosafety Levels\",\"pavers\":[{\"paver_title\":\"Introduction\"},{\"paver_title\":\"Biosafety Level 1-2\"},{\"paver_title\":\"Biosafety Level 3-4\"}]},{\"module_title\":\"Assessment\",\"pavers\":[{\"paver_title\":\"Review\"}],\"assessment\":[{\"type\":\"quiz\",\"title\":\"Final Quiz\"}]}]}");
+            Trail i = new Trail("Biosafety Module", trail);
 
-        System.out.println("Institution i has been created: " + i.toString());
-        
-        Persistor.get().save(i);
-        ObjectId id = i.getUUID();
-        
-        String uuid = id.toString();
+            System.out.println("Trail i has been created: " + i.toString());
+            
+            Persistor.get().save(i);
+            ObjectId id = i.getUUID();
+            
+            String uuid = id.toString();
 
-        say(id.toString());
-        
-        ObjBase reclaimed =  Persistor.get().get(ObjBase.class, new ObjectId(uuid));
-        
-        System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
+            say(id.toString());
+            
+            ObjBase reclaimed =  Collector.get().getObjBase(uuid);
+            
+            System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
+        } catch (JSONException ex) {
+            java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
+    //clotho.get("51b362f15076024ba019a642");  for a trail
     //clotho.get("51b29e7450765ced18af0d33");
     //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
     public final JSONObject get(String uuid) {
@@ -235,7 +243,7 @@ public final class ServerSideAPI {
             
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            say("Error retrieving " + uuid);
         }
         
         return new JSONObject();
