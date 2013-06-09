@@ -134,7 +134,7 @@ public final class ServerSideAPI {
      */
     //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message, String severity) {
-        System.out.println("say has : " + message);
+//        System.out.println("say has : " + message);
 
         try {
             JSONObject msg = new JSONObject();
@@ -201,11 +201,11 @@ public final class ServerSideAPI {
 
         try {
             //Pull the object from the db
-            ObjBase datum = Collector.get().getObjBase(uuid);
+            ObjBase datum = Collector.get().getObjBase(uuid.trim());
             Sharable obj = (Sharable) datum;
             JSONObject result = obj.toJSON();
-            say("I found " + obj.getName());
-            say("It has the value" + result.toString());
+            say("I found " + obj.getName(), "text-success");
+            say("It has the value" + result.toString(), "text-success");
             
             //If the requestor is a client (not implemented) push the data to the client
             if(true) {
@@ -215,7 +215,7 @@ public final class ServerSideAPI {
             
             return result;
         } catch (Exception e) {
-            say("Error retrieving " + uuid);
+            say("Error retrieving " + uuid, "text-error");
         }
         
         return new JSONObject();
@@ -224,7 +224,7 @@ public final class ServerSideAPI {
     public final void set(String sharableId, String newvalue) {
         try {
             //Pull the object from the db
-            ObjBase datum = Collector.get().getObjBase(sharableId);
+            ObjBase datum = Collector.get().getObjBase(sharableId.trim());
             Sharable obj = (Sharable) datum;
 //            obj.obj
         } catch (Exception e) {
@@ -272,24 +272,27 @@ public final class ServerSideAPI {
         return new JSONObject();
     }
     
-    public final void destroy(String sharableId, String newvalue) {
+    public final void destroy(String sharableId) {
         try {
-            //Pull the object from the db
-            ObjBase datum = Collector.get().getObjBase(sharableId);
+            //Pull the object from the db and delete
+            ObjBase datum = Collector.get().getObjBase(sharableId.trim());
             Sharable obj = (Sharable) datum;
-//            obj.obj
+            String name = obj.getName();
+            String id = obj.getUUID().toString();
+            Persistor.get().delete(obj);
+            say("Sharable " + name + " with UUID " + id +  " has been destroyed", "text-success");
         } catch (Exception e) {
-            say("Error retrieving " + sharableId);
+            say("Error destroying " + sharableId, "text-error");
         }
     }
-    
+    //clotho.query("city","Townsville");
     //JCA:  as of 6/9/2013 it queries and pushes results to server.  There is no permission checking
     //and the returned List isn't accessible in the scriptengine for some reason.
     //Test:  var query = clotho.query("city","Townsville");
     public final List<Sharable> query(String fieldToken, String queryValue) {
         try {
             HashMap<String, String> query = new HashMap<String, String>();
-            query.put(fieldToken, queryValue);
+            query.put(fieldToken.trim(), queryValue);
             List<ObjBase> objs = Persistor.get().get(query);
             List<Sharable> out = new ArrayList<Sharable>();
             
@@ -302,10 +305,14 @@ public final class ServerSideAPI {
                     Router.get().sendMessage(mind.getClientConnection(), msg);
                 } catch(Exception err) {}
             }
-            say("Clotho found " + out.size() + " Sharables that satisfy your query");
+            say("Clotho found " + out.size() + " Sharables that satisfy your query",  "text-success");
+            for(int i = 0; i<Math.min(10, out.size()); i++) {
+                Sharable sharable = out.get(i);
+                say(sharable.getName() + "  " + sharable.getUUID(), "text-success");
+            }
             return out;
         } catch (Exception e) {
-            say("Error querying " + queryValue);
+            say("Error querying " + queryValue,  "text-error");
             return new ArrayList<Sharable>();
         }
     }
