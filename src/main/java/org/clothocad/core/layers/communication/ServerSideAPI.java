@@ -23,16 +23,16 @@ ENHANCEMENTS, OR MODIFICATIONS.
  */
 package org.clothocad.core.layers.communication;
 
+import com.mongodb.BasicDBObject;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
+import org.bson.BSONObject;
 
-import javax.xml.parsers.ParserConfigurationException;
 import org.bson.types.ObjectId;
 
 import org.clothocad.core.aspects.Collector;
@@ -40,20 +40,15 @@ import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
-import org.clothocad.core.layers.persistence.ClothoConnection;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
-import org.clothocad.core.schema.Schema;
-import org.clothocad.model.Institution;
 import org.clothocad.model.Person;
 import org.clothocad.model.Trail;
 import org.json.JSONArray;
@@ -76,29 +71,7 @@ import org.json.JSONTokener;
  */
 public final class ServerSideAPI {
 
-    private String socket_id;
-    private ClothoWebSocket socket;
-    private Mind mind;
-    
-    public ServerSideAPI(ClothoWebSocket socket) {
-    	this.socket = socket;
-    	this.mind = null;
-    }
-    public ServerSideAPI(Mind mind) {
-        this.mind = mind;
-    }
-    
-    public void setSocket(ClothoWebSocket socket) {
-    	this.socket = socket;
-    }
-    public void setMind(Mind mind) {
-    	this.mind = mind;
-    }
-    
-    /***                                ***\
-     ********  Public API methods  ********
-    \*                                  */
-    
+// <editor-fold defaultstate="collapsed" desc="Human Interaction">      
     //JCA:  as of 6/6/2013 autcomplete works.  Wordlist is not persisted, but the completer does learn submitted phrases.
     public final void autocomplete(String userText) {
         try {
@@ -141,9 +114,26 @@ public final class ServerSideAPI {
             completer.put(userText);
         }
     }
+    
+    public final void learn(String nativeCmd, String jsCmd) {
+        Interpreter.get().learnNative(nativeCmd, jsCmd);
+    }
+// </editor-fold> 
 
-    //JCA:  as 0f 6/6/2013 say seems to work
+// <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
+    //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message) {
+        say(message, "text");
+    }
+    
+    /**
+     * 
+     * @param message
+     * @param severity  "text-error", "text", "text-warning", "text-success"
+     *  see search-directives.js for 'from', is client or server
+     */
+    //JCA:  as 0f 6/9/2013 say seems to work
+    public final void say(String message, String severity) {
         System.out.println("say has : " + message);
 
         try {
@@ -151,7 +141,7 @@ public final class ServerSideAPI {
                 JSONObject data = new JSONObject();
                 data.put("text", message);
                 data.put("from", "toBeWorkedOutLater");
-                data.put("class", "text-error");
+                data.put("class", severity);
                 data.put("timestamp", new Date().getTime());
             msg.put("channel", "say");
             msg.put("data", data);
@@ -200,30 +190,10 @@ public final class ServerSideAPI {
         say("I've stored your note (but not really): " + message);
     }
     
-    //clotho.get("51b35e425076cbdd5cd29fb2");
-    public final void test() {
-        try {
-            System.out.println("Test has been invoked");
-            JSONObject trail = new JSONObject("{\"uuid\":\"trail_123\",\"title\":\"Biosafety Module\",\"author\":\"UC Berkeley\",\"description\":\"<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>\",\"contents\":[{\"module_title\":\"The Basics\",\"pavers\":[{\"paver_title\":\"Introduction\",\"type\":\"template\",\"template\":\"/app/partials/trail_123_1.html\"}]},{\"module_title\":\"Biosafety Levels\",\"pavers\":[{\"paver_title\":\"Introduction\"},{\"paver_title\":\"Biosafety Level 1-2\"},{\"paver_title\":\"Biosafety Level 3-4\"}]},{\"module_title\":\"Assessment\",\"pavers\":[{\"paver_title\":\"Review\"}],\"assessment\":[{\"type\":\"quiz\",\"title\":\"Final Quiz\"}]}]}");
-            Trail i = new Trail("Biosafety Module", trail);
-
-            System.out.println("Trail i has been created: " + i.toString());
-            
-            Persistor.get().save(i);
-            ObjectId id = i.getUUID();
-            
-            String uuid = id.toString();
-
-            say(id.toString());
-            
-            ObjBase reclaimed =  Collector.get().getObjBase(uuid);
-            
-            System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
-        } catch (JSONException ex) {
-            java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+// </editor-fold> 
     
+// <editor-fold defaultstate="collapsed" desc="Data Manipulation"> 
+
     //clotho.get("51b362f15076024ba019a642");  for a trail
     //clotho.get("51b29e7450765ced18af0d33");
     //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
@@ -232,7 +202,7 @@ public final class ServerSideAPI {
         try {
             //Pull the object from the db
             ObjBase datum = Collector.get().getObjBase(uuid);
-            Sharable obj = (Sharable) datum;  //not being casted to Sharable
+            Sharable obj = (Sharable) datum;
             JSONObject result = obj.toJSON();
             say("I found " + obj.getName());
             say("It has the value" + result.toString());
@@ -252,20 +222,15 @@ public final class ServerSideAPI {
     }
 
     public final void set(String sharableId, String newvalue) {
-    	/**
-        Sharable sharable = (Sharable) resolveToObjBase(sharableId);
-        JSONObject value = this.resolveToJSONObject(newvalue);
-        if (sharable.set(value, this.getPerson(), new ShowDoo(null))) {
-            //RETURN A COMMAND TO SAY SOMETHING I THE CONSOLE, AND CALL UPDATE ON ALL LISTENERS TO THIS SHARABLE
+        try {
+            //Pull the object from the db
+            ObjBase datum = Collector.get().getObjBase(sharableId);
+            Sharable obj = (Sharable) datum;
+//            obj.obj
+        } catch (Exception e) {
+            say("Error retrieving " + sharableId);
         }
-        **/
     }
-//    
-//    public final void submit(JSONObject data) {
-//    	
-//    	// process the data in the JSON object
-//    	
-//    }
 
     public final String create(JSONObject json) {
     
@@ -306,6 +271,47 @@ public final class ServerSideAPI {
         ***/
         return new JSONObject();
     }
+    
+    public final void destroy(String sharableId, String newvalue) {
+        try {
+            //Pull the object from the db
+            ObjBase datum = Collector.get().getObjBase(sharableId);
+            Sharable obj = (Sharable) datum;
+//            obj.obj
+        } catch (Exception e) {
+            say("Error retrieving " + sharableId);
+        }
+    }
+    
+    //JCA:  as of 6/9/2013 it queries and pushes results to server.  There is no permission checking
+    //and the returned List isn't accessible in the scriptengine for some reason.
+    //Test:  var query = clotho.query("city","Townsville");
+    public final List<Sharable> query(String fieldToken, String queryValue) {
+        try {
+            HashMap<String, String> query = new HashMap<String, String>();
+            query.put(fieldToken, queryValue);
+            List<ObjBase> objs = Persistor.get().get(query);
+            List<Sharable> out = new ArrayList<Sharable>();
+            
+            for(ObjBase obj : objs) {
+                try {
+                    Sharable shar = (Sharable) obj;
+                    //TODO: if current user has access to shar, otherwise ignore it
+                    out.add(shar);
+                    JSONObject msg = makeCollect(shar);
+                    Router.get().sendMessage(mind.getClientConnection(), msg);
+                } catch(Exception err) {}
+            }
+            say("Clotho found " + out.size() + " Sharables that satisfy your query");
+            return out;
+        } catch (Exception e) {
+            say("Error querying " + queryValue);
+            return new ArrayList<Sharable>();
+        }
+    }
+// </editor-fold> 
+    
+// <editor-fold defaultstate="collapsed" desc="Execution"> 
 
     /**
      * Invoke the hard-coded editor appropriate for this particular object
@@ -355,35 +361,8 @@ public final class ServerSideAPI {
         }
         ***/    	
     }
-
-
-    public final void newPage() throws Exception {
-    	/***
-        try {
-            JSONArray commandMessageArray = new JSONArray();
-            commandMessageArray.put(makeNewPage(UUID.randomUUID().toString()));
-
-//            
-//            
-//            //Put the doo into the hopper to await a callback
-//            Hopper.get().add(doo);
-
-            //Send the commands
-            Communicator.get().sendClientMessage(socket_id,
-                    SendChannels.commandList,
-                    commandMessageArray.toString());
-
-            //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-            Persistor.get().persistObjBase(mind);
-        } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "", e);
-            e.printStackTrace();
-            //REVERT THE MIND
-            //SEND CLIENT MESSAGE TELLING THAT IT FAILED
-        }
-		***/
-    }
-
+    
+    
     /**
      * Relay method for receiving a show command
      * @param viewRef
@@ -454,37 +433,94 @@ public final class ServerSideAPI {
         }
         ***/
     }
+    
+// </editor-fold> 
 
-    public final void gradeQuiz(String answerData) {
+    // <editor-fold defaultstate="collapsed" desc="Setup"> 
+ 
+    public ServerSideAPI(ClothoWebSocket socket) {
+    	this.socket = socket;
+    	this.mind = null;
     }
-
-    public final void learn(String nativeCmd, String jsCmd) {
-        Interpreter.get().learnNative(nativeCmd, jsCmd);
+    public ServerSideAPI(Mind mind) {
+        this.mind = mind;
     }
+    
+    public void setSocket(ClothoWebSocket socket) {
+    	this.socket = socket;
+    }
+    public void setMind(Mind mind) {
+    	this.mind = mind;
+    }
+// </editor-fold>
 
-    public final void testout() {
-    	/**
-        List<Sharable> listy = new ArrayList<Sharable>();
-        listy.add(Person.getAdmin());
-        listy.add(Person.getSchema());
+    //clotho.get("51b35e425076cbdd5cd29fb2");
+    public final void test() {
         try {
-            JSONArray data = new JSONArray();
-            for (Sharable item : listy) {
-                data.put(item.toJSON());
-            }
+            System.out.println("Test has been invoked");
+            JSONObject trail = new JSONObject("{\"uuid\":\"trail_123\",\"title\":\"Biosafety Module\",\"author\":\"UC Berkeley\",\"description\":\"<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>\",\"contents\":[{\"module_title\":\"The Basics\",\"pavers\":[{\"paver_title\":\"Introduction\",\"type\":\"template\",\"template\":\"/app/partials/trail_123_1.html\"}]},{\"module_title\":\"Biosafety Levels\",\"pavers\":[{\"paver_title\":\"Introduction\"},{\"paver_title\":\"Biosafety Level 1-2\"},{\"paver_title\":\"Biosafety Level 3-4\"}]},{\"module_title\":\"Assessment\",\"pavers\":[{\"paver_title\":\"Review\"}],\"assessment\":[{\"type\":\"quiz\",\"title\":\"Final Quiz\"}]}]}");
+            Trail i = new Trail("Biosafety Module", trail);
 
-            JSONObject msg = new JSONObject();
-            msg.put("collect", data);
+            System.out.println("Trail i has been created: " + i.toString());
+            
+            Persistor.get().save(i);
+            ObjectId id = i.getUUID();
+            
+            String uuid = id.toString();
+
+            say(id.toString());
+            
+            ObjBase reclaimed =  Collector.get().getObjBase(uuid);
+            
+            System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
+        } catch (JSONException ex) {
+            java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+
+    /**
+     * Return the Person object associated with the Mind into which this SS API
+     * has been injected
+     * @return 
+     */
+    private Person getPerson() {
+    	return mind.getPerson();
+    	/**
+        if (person != null) {
+            return person;
+        }
+        return Person.getById(mind.getPersonId());
+        **/    	
+    }
+
+    public final void newPage() throws Exception {
+    	/***
+        try {
+            JSONArray commandMessageArray = new JSONArray();
+            commandMessageArray.put(makeNewPage(UUID.randomUUID().toString()));
+
+//            
+//            
+//            //Put the doo into the hopper to await a callback
+//            Hopper.get().add(doo);
+
+            //Send the commands
             Communicator.get().sendClientMessage(socket_id,
                     SendChannels.commandList,
-                    msg.toString());
-        } catch (Exception ex) {
-            Logger.log(Logger.Level.WARN,
-                    "Error sending Sharables to the client");
-            ex.printStackTrace();
+                    commandMessageArray.toString());
+
+            //Save everything whose state was changed  //JCA:  THIS NEEDS A CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
+            Persistor.get().persistObjBase(mind);
+        } catch (Exception e) {
+            Logger.log(Logger.Level.WARN, "", e);
+            e.printStackTrace();
+            //REVERT THE MIND
+            //SEND CLIENT MESSAGE TELLING THAT IT FAILED
         }
-        **/
+		***/
     }
+
 
     /**
     //if a command has a callback, handle it here
@@ -499,7 +535,7 @@ public final class ServerSideAPI {
     //that a process has completed, and everything should probably call this.  The doo
     //hopper maybe should even be an Aspect with this being relayed there.  Yeah.  That's
     //it.*/
-    public final void callback(String dooID) {
+    public final void notify(String dooID) {
     	/**
         System.out.println("calling back!");
         //Grab the Doo and perhaps perform any commands embedded in there
@@ -508,10 +544,10 @@ public final class ServerSideAPI {
         Hopper.get().terminate(dooID);
         **/
     }
+    
+    // <editor-fold defaultstate="collapsed" desc="Command Factories"> 
 
-    /***                                     ***\
-     ********  Client Command Factories  ********
-    \*                                        */
+
     /**
      * Instruct the client to receive a List of Sharables and log
      * those objects into the clientside collector
@@ -815,58 +851,6 @@ public final class ServerSideAPI {
         return null;
     }
 
-    
-    /***                       ***\
-     ********  VARIABLES  ********
-    \*                         */
-    /*
-    JCA:  I SORTOVE DON'T LIKE THIS CALLBACK BUSINESS ANYMORE.  THERE SHOULD BE A DOO IN A DOO
-    HOPPER BEHAVING AS THE CALLBACK, NOT A GENERIC CALLBACK.  THIS DOESN'T ALLOW A
-    LOGGING OF THE CHAIN OF EVENTS THAT LED TO THE CALLBACK.
-    
-    ALSO, EVERYTHING GOING ON WITH EXECUTION IS GOING TO BE SINGLE THREADED WITH THE NON-BLOCKING LOOP
-    BUSINESS HANDLING ONLY INCOMING MESSAGES.  SO, THIS IS GETTING EXECUTED IN A FULLY SYNCHRONIZED
-    AND UNINTERUPTED MANNER THROUGH TO COMPLETION WHATEVER IT IS.  SO, IT'S NOT GOING TO BE AN
-    ASYNCHRONOUS PATTERN
-    
-    WELL, OK, I DON'T KNOW.  MAYBE YOU DO WANT EXECUTION TO BE INTERNALLY ASYNCHRONOUS TOO, OR PERHAPS
-    YOU WANT ASSISTANTS TO BE MULTITHREADED SO THAT YOU CAN ISSUE A SET OF COMMANDS THAT EACH INVOLVE
-    SAY WAITING FOR A PUBMED RESPONSE.  THAT WOULD BE INTERNALLY ASYNCHRONOUS.  I'M NOT SURE, SO I'M
-    GOING TO LEAVE THIS FOR SOMEONE ELSE TO RESOLVE.  YOU DON'T WANT THE ENTIRE CLOTHO HELD UP BECAUSE
-    IT'S WAITING FOR AN ATTEMPT TO CONNECT TO ANOTHER SERVER TO TIME-OUT, WHICH YOU'D GET IF IT WAS
-    ENTIRELY SINGLE-THREADED.  IT PROBABLY DOES ALL HAVE TO BE ASYNCHRONOUS, BUT IT SHOULDN'T BE VANILLA
-    CALLBACKS, IT SHOULD BE DOOS.  THE ABILITY TO TRACK AND NOT LOSE DO'S ULTIMATELY WILL BE VERY IMPORTANT
-    FOR ENABLING LOGGING, MAINTAINING STATISTICS ABOUT THINGS, TRACKING HISTORY OF EVENTS FOR SECURITY AND
-    LEGAL REASONS.  DOOS ARE FOR ALL SORTS OF STUFF, SO THEY NEED TO BE PASSED AROUND CONSTANTLY.*/
-    private Callback callback = new Callback() {
-
-        @Override
-        public void onSuccess(JSONObject outputData) {
-            Logger.log(Logger.Level.INFO,
-                    "All done! outputData = " + String.valueOf(outputData));
-        }
-
-        @Override
-        public void onFailure(Throwable e) {
-            Logger.log(Logger.Level.WARN, "All done! but failed", e);
-        }
-    };
-
-    /**
-     * Return the Person object associated with the Mind into which this SS API
-     * has been injected
-     * @return 
-     */
-    private Person getPerson() {
-    	return mind.getPerson();
-    	/**
-        if (person != null) {
-            return person;
-        }
-        return Person.getById(mind.getPersonId());
-        **/    	
-    }
-
         private void disambiguate(String nativeCmd) {
             Set<String> cmdResults = Interpreter.get().receiveNative(nativeCmd);
 
@@ -899,6 +883,13 @@ public final class ServerSideAPI {
             }
         }
     
+    // </editor-fold> 
+    
+        
+    /********  VARIABLES  ********/
     //private transient Person person;
     private static final AutoComplete completer = new AutoComplete();
+    private String socket_id;
+    private ClothoWebSocket socket;
+    private Mind mind;
 }

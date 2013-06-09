@@ -23,7 +23,7 @@ public class ClothoWebSocket
 	}
 
 	public void sendMessage(String data) throws IOException {
-		System.out.println("[ClothoWebSocket.sendMessage] -> "+data);		
+//		System.out.println("[ClothoWebSocket.sendMessage] -> "+data);		
 		connection.sendMessage(data);
 	}
 
@@ -31,7 +31,7 @@ public class ClothoWebSocket
 	public void onMessage(String message) {
 		// here, we need to forward the message dependent on its content
 		
-		System.out.println("[ClothoWebSocket.onMessage] -> "+message);
+//		System.out.println("[ClothoWebSocket.onMessage] -> "+message);
 
 		/**
 		obj = JSON.parse(obj);

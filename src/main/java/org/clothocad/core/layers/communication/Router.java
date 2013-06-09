@@ -65,7 +65,7 @@ public class Router {
 	
 	// receive message
 	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
-		System.out.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
+//		System.out.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
             
 		try {
                     RouterDoo doo = new RouterDoo();
