@@ -24,6 +24,9 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects;
 
+import org.clothocad.core.datums.Sharable;
+import org.clothocad.model.Person;
+
 /**
  * The Authenticator is responsible for keeping track of the Users and Persons
  * that are registered on this instance of Clotho.
@@ -58,4 +61,41 @@ public class Authenticator implements Aspect {
     }
 
     private static final Authenticator singleton = new Authenticator();
+
+    public boolean hasWriteAccess(Person person, Sharable sharable) {
+        System.out.println("Authenticator haswriteAccess:  Stephanie implement me!");
+        return true;
+    }
+
+    public boolean hasReadAccess(Person person, Sharable sharable) {
+        System.out.println("Authenticator hasReadAccess:  Stephanie implement me!");
+        return true;    
+    }
+
+    public boolean hasExecuteAccess(Person person, Sharable sharable) {
+        System.out.println("Authenticator hasExecuteAccess:  Stephanie implement me!");
+        return true;    
+    }
+
+    public boolean hasCreateAccess(Person person) {
+        System.out.println("Authenticator hasCreateAccess:  Stephanie implement me!");
+        return true;
+    }
+    
+    public void giveWriteAccess(Person person, Sharable sharable) {
+        System.out.println("Authenticator giveWriteAccess:  Stephanie implement me!");
+    }
+    
+    public void giveReadAccess(Person person, Sharable sharable) {
+        System.out.println("Authenticator giveReadAccess:  Stephanie implement me!");
+    }
+    
+    public void giveExecuteAccess(Person person, Sharable sharable) {
+        System.out.println("Authenticator giveExecuteAccess:  Stephanie implement me!");
+    }
+    
+    public void giveCreateAccess(Person person) {
+        System.out.println("Authenticator giveCreateAccess:  Stephanie implement me!");
+    }
 }
+

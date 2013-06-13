@@ -4,9 +4,6 @@
  */
 package org.clothocad.model;
 
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,5 +42,9 @@ public class Trail extends Sharable {
             return null;
         }
     }
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        return true;    }
 
 }

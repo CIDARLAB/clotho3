@@ -25,12 +25,18 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
+import com.mongodb.util.JSON;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import org.bson.BasicBSONObject;
+import org.json.JSONException;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -91,6 +97,48 @@ public class MongoDBConnection
     @Override
     public boolean isConnected() {
         return db != null;
+    }
+
+//var inst = {"city":"Paris","className":"org.clothocad.model.Institution","country":"United States of America","isDeleted":false,"lastModified":{"$date":"2013-06-08T02:48:10.254Z"},"name":"Test institution","state":"SC"};clotho.say(inst.city);   var obj = clotho.create(inst);
+    /**
+     * JCA:  This is a hard save to the database with no verification of the data or authorization.  Those checks are done by the calling Aspect.  However, the setting of the UUID is done here.
+     * @param json
+     * @return H
+     */
+    public String save(JSONObject json) {
+        try {
+            System.out.println("JCA implemented, Stephanie change this probably [MongoDBConnection.save] -> "+json);
+            
+            //Figure out the uuid
+            ObjectId id = null;
+            if(json.has("id")) {
+                id = new ObjectId(json.getString("id"));  //If there is an id field, reuse that UUID
+            } else {
+                id = ObjectId.get();                      //Otherwise create a new UUID
+            }
+            
+            //Destroy any other UUID references
+            json.put("id", "");
+            json.put("uuid", "");
+            json.put("_id", "");
+            json.remove("id");
+            json.remove("uuid");
+            json.remove("_id");
+            
+            //Convert it to a BSON
+            String jsonstr = json.toString();
+            DBObject bson = ( DBObject ) JSON.parse( jsonstr );
+
+            //Install the OID object
+            bson.put("_id", id);
+            
+            //Save it to the database and return the uuid
+            data.save(new BasicDBObject(bson.toMap()));
+            return id.toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
     
     @Override
@@ -205,12 +253,6 @@ public class MongoDBConnection
     @Override
     public BSONObject getAsBSON(ObjectId uuid) {
         return data.findOne(new BasicDBObject("_id", uuid));
-    }
-
-    public String save(JSONObject json) {
-    	System.out.println("[MongoDBConnection.save] -> "+json);
-    	
-    	return UUID.randomUUID().toString();
     }
     /*Query construction forthcoming
      * @Override

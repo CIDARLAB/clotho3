@@ -15,6 +15,7 @@ import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
+import org.json.JSONObject;
 
 /**
  *
@@ -44,7 +45,6 @@ public abstract class Schema extends Sharable {
     protected Set<Function> methods;
     protected Schema superClass;
 
-    
     public abstract Language getLanguage();
 
     //TODO: handle files that result in multiple source files;

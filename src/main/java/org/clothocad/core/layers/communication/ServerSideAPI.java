@@ -24,17 +24,20 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.layers.communication;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import javax.script.ScriptEngine;
 import javax.swing.JOptionPane;
 import org.bson.BSONObject;
-
 import org.bson.types.ObjectId;
-
+import org.clothocad.core.aspects.Authenticator;
 import org.clothocad.core.aspects.Collector;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Logger;
@@ -65,7 +68,16 @@ import org.json.JSONTokener;
  * 
  * It also is for securing the non-secure methods in the Aspects.
  * 
- * So, it's just a wrapper really.
+ * So, it's just a wrapper really.  It's all expressed in terms of JSONObjects
+ * and JSONArrays to facilitate conversions.  Each different context (Mind, REST, 
+ * websocket, java client, etc.) is expecting slightly different object representations
+ * and synchronization models, so there is necessarily interpretor logic in Router/
+ * Communicator that handles this.
+ * 
+ * I started implementing this at the level of Sharables, but that was super hard.  I
+ * then went to doing it with JSONObject and JSONArray and got stuck on implementing 
+ * create.  In the end, everything goes through a String representation somewhere, so
+ * that will be the interface -- String representations of JSON
  * 
  * @author John Christopher Anderson
  */
@@ -73,7 +85,7 @@ public final class ServerSideAPI {
 
 // <editor-fold defaultstate="collapsed" desc="Human Interaction">      
     //JCA:  as of 6/6/2013 autcomplete works.  Wordlist is not persisted, but the completer does learn submitted phrases.
-    public final void autocomplete(String userText) {
+    public final String autocomplete(String userText) {
         try {
             ArrayList<String> completions = completer.getCompletions(userText);
             JSONArray data = new JSONArray(); //The list of JSONObjects each for an autocomplete
@@ -89,18 +101,21 @@ public final class ServerSideAPI {
             msg.put("channel", "autocomplete");
             msg.put("data", data);
             Router.get().sendMessage(mind.getClientConnection(), msg);
+            return data.toString();
         } catch(Exception err) {
             err.printStackTrace();
+            return null;
         }
     }
     
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
-    public final void autocompleteDetail(String uuid) {
+    public final String autocompleteDetail(String uuid) {
         try {
             JSONObject msg = new JSONObject("{\"channel\":\"autocompleteDetail\",\"data\":{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"command\":\"clotho.run('230sdv-232', '18919e-18')\",\"versions\":[{\"uuid\":\"uuid123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"uuid\":\"uuid_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"uuid\":\"uuid456\",\"text\":\"pBca 1256\",\"author\":{\"uuid\":\"uuid_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
-            Router.get().sendMessage(mind.getClientConnection(), msg);
+            return msg.getJSONObject("data").toString();
         } catch (JSONException ex) {
             ex.printStackTrace();
+            return null;
         }
         
     }
@@ -109,7 +124,7 @@ public final class ServerSideAPI {
     public final void submit(String userText) {
         if (!mind.runCommand(userText)) {
 //            disambiguate(userText);  //JCA:  temporarily disabled for testing, also not fully hooked up
-            say("Clotho was unable to satisfy that request");
+            say("Clotho was unable to satisfy that request", "text-error");
         } else {
             completer.put(userText);
         }
@@ -191,12 +206,13 @@ public final class ServerSideAPI {
     }
     
 // </editor-fold> 
-    
+
 // <editor-fold defaultstate="collapsed" desc="Data Manipulation"> 
 
     //clotho.get("51b362f15076024ba019a642");  for a trail
     //clotho.get("51b29e7450765ced18af0d33");
     //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
+    //JCA:  result is also injected into the Mind's scriptengine as a proper object
     public final JSONObject get(String uuid) {
 
         try {
@@ -221,57 +237,126 @@ public final class ServerSideAPI {
         return new JSONObject();
     }
 
-    public final void set(String sharableId, String newvalue) {
+    public final String set(String value) {
         try {
             //Pull the object from the db
-            ObjBase datum = Collector.get().getObjBase(sharableId.trim());
-            Sharable obj = (Sharable) datum;
-//            obj.obj
+            JSONObject newval = new JSONObject(value);
+            
+            //Check that a UUID has been provided
+            String uuid = null;
+            try {
+                uuid = newval.getString("id");
+            } catch(Exception err) {
+                say("The arguments lack an 'id' field. Clotho does not know what object to alter");
+                return null;
+            }
+            
+            //Grab the object to be altered
+            Sharable obj = null;
+            try {
+                ObjBase datum = Collector.get().getObjBase(uuid);
+                obj = (Sharable) datum;
+            } catch(Exception err) {
+                say("No object with this id exists for Clotho to modify");
+                return null;
+            }
+                    
+                
+            //Check that the current user has write access
+            if(!Authenticator.get().hasWriteAccess(getPerson(), obj)) {
+                say("The current user does not have write access for " + obj.getUUID().toString());
+                return null;
+            }
+            
+            //Complete the new data
+            JSONObject existing = obj.toJSON();
+            Iterator iterator = newval.keys();
+            while(iterator.hasNext()) {
+                String key = (String) iterator.next();
+                Object val = newval.get(key);
+                existing.put(key, val);
+            }
+            
+            //Validate the data
+            System.out.println("Stephanie needs to add set and create validation");
+            if(false) {
+                say("The data you wish to create did not pass validation.  No object was created" , "text-error");
+                return null;
+            }
+
+            //Try to create the object and clobber the uuid
+            String resultId = Persistor.get().save(existing);
+            if(!resultId.equals(uuid)) {
+                System.out.println("!resultId.equals(uuid) This should never happen");
+                throw new Exception();
+            }
+
+            //Add the object to the Collector
+            ObjBase object = Collector.get().temporaryRefetchMethod(uuid);
+
+            //Contact the user to notify them that they modified an object
+            say("You successfully modified: " + object.getName() + " with UUID: " + object.getUUID().toString(), "text-success");
+
+            //Relay the data change to listening clients
+            System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
+
+            //Return the modified data to the calling script
+            return object.toString();
         } catch (Exception e) {
-            say("Error retrieving " + sharableId);
+            say("Error setting " + value.toString(), "text-error");
+            return null;
         }
     }
 
-    public final String create(JSONObject json) {
-    
-    	System.out.println("[ServerSideAPI.create] " + json);
-    	
+    public final String create(String json) {
+
     	try {
-    		
-    		String uuid = json.getString("uuid");
-    		JSONObject model = json.getJSONObject("model");
-    	
-    		// here we need to forward the model to the Persistor
-    		Persistor persistor = new Persistor(new MongoDBConnection());
-    		return persistor.save(model);
-    		
+            //Determine whether the currently logged in person has permission to create
+            if(!Authenticator.get().hasCreateAccess(getPerson())) {
+                say("The current user does not have write access for this domain");
+                return null;
+            }
+
+            //Construct the JSONObject
+            JSONObject newval = new JSONObject(json);
+            
+            //Confirm that there is no pre-existing object with this uuid
+            if(newval.has("id")) {
+                String uuid = newval.getString("id");
+                ObjBase datum = Collector.get().getObjBase(uuid);
+                if(datum!=null) {
+                    say("An object with the uuid " + uuid + " already exists.  No object was created." , "text-error");
+                    return null;
+                }
+            }
+            
+            //Validate the data
+            System.out.println("Stephanie needs to add set and create validation");
+            if(false) {
+                say("The data you wish to create did not pass validation.  No object was created" , "text-error");
+                return null;
+            }
+            
+            //Try to create the object and clobber the uuid
+            JSONObject obj = new JSONObject(json);
+            String uuidRes = Persistor.get().save(obj);
+            
+            //Add the object to the Collector and return its json
+            ObjBase object = Collector.get().getObjBase(uuidRes);
+
+            //Relay the data change to listening clients
+            System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
+
+            //Return the JSON of the new object as a String
+            say("You successfully created: " + object.getName() + " with UUID: " + object.getUUID().toString(), "text-success");
+            return object.toString();
     	} catch(Exception e) {
-    		e.printStackTrace();
-    		return e.getMessage();
+            e.printStackTrace();
+            return null;
     	}
     }
     
-    public final JSONObject create(String schemaRef, String jsonArgs) {
-    	/***
-        try {
-            Schema schema = (Schema) resolveToObjBase(schemaRef);
-            if (schema == null) {
-                return null;
-            }
-            JSONObject json = resolveToJSONObject(jsonArgs);
-
-            //Note:  somehow we need to get the Person from the client
-            Person author = Person.getAdmin();
-
-            Instance out = Instance.create(author, schema, json.toString());
-            return out.toJSON();
-        } catch (ClassCastException e) {
-            Logger.log(Logger.Level.WARN, "not a Schema: " + schemaRef, e);
-        }
-        ***/
-        return new JSONObject();
-    }
-    
+    //JCA:  as of 6/9/2013 works
     public final void destroy(String sharableId) {
         try {
             //Pull the object from the db and delete
@@ -285,35 +370,71 @@ public final class ServerSideAPI {
             say("Error destroying " + sharableId, "text-error");
         }
     }
-    //clotho.query("city","Townsville");
-    //JCA:  as of 6/9/2013 it queries and pushes results to server.  There is no permission checking
-    //and the returned List isn't accessible in the scriptengine for some reason.
-    //Test:  var query = clotho.query("city","Townsville");
-    public final List<Sharable> query(String fieldToken, String queryValue) {
+    
+    //clotho.query({"city","Townsville"});
+    public final String query(String args) {
         try {
+            //Execute the query
+            System.out.println("Stephanie:  extract the query out more cleanly and define the scope of args (ssAPI.query())");
+            JSONObject json = new JSONObject(args);
             HashMap<String, String> query = new HashMap<String, String>();
-            query.put(fieldToken.trim(), queryValue);
+            Iterator iterator = json.keys();
+            while(iterator.hasNext()) {
+                String key = (String) iterator.next();
+                query.put(key, (String) json.get(key));
+            }
+
+            //Relay the query to Persistor and return the hits
+            System.out.println("Stephanie:  the persistor method should take an int for limiting the number of hits");
+            //List<ObjBase> objs = Persistor.get().get(query, 100); //Should be like this
             List<ObjBase> objs = Persistor.get().get(query);
-            List<Sharable> out = new ArrayList<Sharable>();
             
+            //Wrap up results in a JSONArray
+            JSONArray out = new JSONArray();
             for(ObjBase obj : objs) {
                 try {
                     Sharable shar = (Sharable) obj;
                     //TODO: if current user has access to shar, otherwise ignore it
-                    out.add(shar);
+                    if(!Authenticator.get().hasReadAccess(getPerson(), shar)) {
+                        continue;
+                    }
+                    JSONObject json2 = new JSONObject(shar.toString());
+                    if(json2==null) {
+                        continue;
+                    }
+                    out.put(json2);
+                } catch(Exception err) {
+                    err.printStackTrace();
+                }
+            }
+
+            //Push results to the client (needs to move to context-specific)
+            System.out.println("JCA:  you need to move this out to Router");
+            for(ObjBase obj : objs) {
+                try {
+                    Sharable shar = (Sharable) obj;
+                    if(shar==null) {
+                        continue;
+                    }
                     JSONObject msg = makeCollect(shar);
                     Router.get().sendMessage(mind.getClientConnection(), msg);
-                } catch(Exception err) {}
+                } catch(Exception err) {
+                    err.printStackTrace();
+                }
             }
-            say("Clotho found " + out.size() + " Sharables that satisfy your query",  "text-success");
-            for(int i = 0; i<Math.min(10, out.size()); i++) {
-                Sharable sharable = out.get(i);
-                say(sharable.getName() + "  " + sharable.getUUID(), "text-success");
+            
+            //Say something to client in response
+            System.out.println("JCA:  this too belongs only in Router");
+            StringBuilder sb = new StringBuilder();
+            for(ObjBase obj : objs) {
+                sb.append("\n");
+                sb.append(obj.getUUID().toString());
             }
-            return out;
+            say("Clotho found " + out.length()+ " Sharables that satisfy your query: " + sb.toString(),  "text-success");
+            return out.toString();
         } catch (Exception e) {
-            say("Error querying " + queryValue,  "text-error");
-            return new ArrayList<Sharable>();
+            say("Error querying ",  "text-error");
+            return "[]";
         }
     }
 // </editor-fold> 
@@ -461,29 +582,28 @@ public final class ServerSideAPI {
     }
 // </editor-fold>
 
-    //clotho.get("51b35e425076cbdd5cd29fb2");
-    public final void test() {
-        try {
-            System.out.println("Test has been invoked");
-            JSONObject trail = new JSONObject("{\"uuid\":\"trail_123\",\"title\":\"Biosafety Module\",\"author\":\"UC Berkeley\",\"description\":\"<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>\",\"contents\":[{\"module_title\":\"The Basics\",\"pavers\":[{\"paver_title\":\"Introduction\",\"type\":\"template\",\"template\":\"/app/partials/trail_123_1.html\"}]},{\"module_title\":\"Biosafety Levels\",\"pavers\":[{\"paver_title\":\"Introduction\"},{\"paver_title\":\"Biosafety Level 1-2\"},{\"paver_title\":\"Biosafety Level 3-4\"}]},{\"module_title\":\"Assessment\",\"pavers\":[{\"paver_title\":\"Review\"}],\"assessment\":[{\"type\":\"quiz\",\"title\":\"Final Quiz\"}]}]}");
-            Trail i = new Trail("Biosafety Module", trail);
-
-            System.out.println("Trail i has been created: " + i.toString());
-            
-            Persistor.get().save(i);
-            ObjectId id = i.getUUID();
-            
-            String uuid = id.toString();
-
-            say(id.toString());
-            
-            ObjBase reclaimed =  Collector.get().getObjBase(uuid);
-            
-            System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
-        } catch (JSONException ex) {
-            java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public final void test() {
+//        try {
+//            System.out.println("Test has been invoked");
+//            JSONObject trail = new JSONObject("{\"uuid\":\"trail_123\",\"title\":\"Biosafety Module\",\"author\":\"UC Berkeley\",\"description\":\"<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>\",\"contents\":[{\"module_title\":\"The Basics\",\"pavers\":[{\"paver_title\":\"Introduction\",\"type\":\"template\",\"template\":\"/app/partials/trail_123_1.html\"}]},{\"module_title\":\"Biosafety Levels\",\"pavers\":[{\"paver_title\":\"Introduction\"},{\"paver_title\":\"Biosafety Level 1-2\"},{\"paver_title\":\"Biosafety Level 3-4\"}]},{\"module_title\":\"Assessment\",\"pavers\":[{\"paver_title\":\"Review\"}],\"assessment\":[{\"type\":\"quiz\",\"title\":\"Final Quiz\"}]}]}");
+//            Trail i = new Trail("Biosafety Module", trail);
+//
+//            System.out.println("Trail i has been created: " + i.toString());
+//            
+//            Persistor.get().save(i);
+//            ObjectId id = i.getUUID();
+//            
+//            String uuid = id.toString();
+//
+//            say(id.toString());
+//            
+//            ObjBase reclaimed =  Collector.get().getObjBase(uuid);
+//            
+//            System.out.println("After re-retrieval from db I have: " + reclaimed.toString());
+//        } catch (JSONException ex) {
+//            java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
 
     /**
@@ -570,10 +690,11 @@ public final class ServerSideAPI {
             data.put("type", "json");
             data.put("model", sharable.toJSON());
             data.put("isURL", "false");
+            
         msg.put("data", data);
         msg.put("channel", "collect");
 
-        System.out.println("Make Collect has:\n " + msg.toString(2));
+//        System.out.println("Make Collect has:\n " + msg.toString(2));
         return msg;
     }
 
@@ -600,7 +721,7 @@ public final class ServerSideAPI {
      * @return
      * @throws Exception 
      */
-    public static JSONObject makeShowWidget(Widget widget, String position) throws Exception {
+    public JSONObject makeShowWidget(Widget widget, String position) throws Exception {
         JSONObject out = new JSONObject();
         JSONObject positioninfo = resolveToJSONObject(position);
         View view = widget.getView();
@@ -753,7 +874,8 @@ public final class ServerSideAPI {
      * @param jsonArgs
      * @return 
      */
-    public static final JSONObject resolveToJSONObject(Object jsonArgs) {
+    public final JSONObject resolveToJSONObject(Object jsonArgs) {
+        System.out.println(jsonArgs.getClass().toString());
         //If it's a JSONObject
         try {
             JSONObject out = (JSONObject) jsonArgs;
@@ -761,7 +883,7 @@ public final class ServerSideAPI {
         } catch (Exception e) {
 //            Logger.log(Logger.Level.INFO, "It wasn't a jsonobject");
         }
-
+        
         //If it's a String representation of json
         try {
             String str = (String) jsonArgs;
@@ -782,9 +904,11 @@ public final class ServerSideAPI {
 //            Logger.log(Logger.Level.INFO, "It wasn't a string of uuid");
         }
 
+        
         //If it's some other kind of object
         Logger.log(Logger.Level.WARN, String.valueOf(jsonArgs));
         return null;
+        
     }
 
     /**

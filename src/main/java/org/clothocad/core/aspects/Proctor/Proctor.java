@@ -67,38 +67,38 @@ public class Proctor implements Aspect {
         //Put the doo in the hopper
         Hopper.get().add(doo);
     }
-
-    /**
-     * Run the rubric on an answer
-     * 
-     * @param submittedAnswer
-     * @param person
-     * @param doo
-     * @return 
-     */
-    public boolean gradeQuiz(JSONObject submittedAnswer, Person person, Quiz quiz, Doo doo) {
-        ProctorDoo qdoo = new ProctorDoo(doo);
-        qdoo.quizId = quiz.getUUID().toString();
-        qdoo.studentId = person.getUUID().toString();
-        
-        /** TODO:
-        Function rubric = quiz.getRubric();
-        try {
-            String resultStr = (String) rubric.execute(submittedAnswer);
-            JSONObject result = new JSONObject(resultStr);
-            
-            //NEED TO SEE WHAT THIS LOOKS LIKE.  WE'RE PROBABLY AT THE POINT WHERE WE NEED TO FIX THIS
-            //YEAH, NEED TO WORK OUT THE SERVERSCRIPT EXECUTION ISSUE
-            
-            
-            
-        } catch (Exception ex) {
-            Logger.getLogger(Proctor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        **/
-        return false;
-    }
-    
+//
+//    /**
+//     * Run the rubric on an answer
+//     * 
+//     * @param submittedAnswer
+//     * @param person
+//     * @param doo
+//     * @return 
+//     */
+//    public boolean gradeQuiz(JSONObject submittedAnswer, Person person, Quiz quiz, Doo doo) {
+//        ProctorDoo qdoo = new ProctorDoo(doo);
+//        qdoo.quizId = quiz.getUUID().toString();
+//        qdoo.studentId = person.getUUID().toString();
+//        
+//        /** TODO:
+//        Function rubric = quiz.getRubric();
+//        try {
+//            String resultStr = (String) rubric.execute(submittedAnswer);
+//            JSONObject result = new JSONObject(resultStr);
+//            
+//            //NEED TO SEE WHAT THIS LOOKS LIKE.  WE'RE PROBABLY AT THE POINT WHERE WE NEED TO FIX THIS
+//            //YEAH, NEED TO WORK OUT THE SERVERSCRIPT EXECUTION ISSUE
+//            
+//            
+//            
+//        } catch (Exception ex) {
+//            Logger.getLogger(Proctor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        **/
+//        return false;
+//    }
+//    
     private class ProctorDoo extends Doo {
         public ProctorDoo(Doo parent) {
             super(parent, true);

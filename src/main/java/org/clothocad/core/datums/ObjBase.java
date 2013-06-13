@@ -106,11 +106,18 @@ public abstract class ObjBase {
         
         //JCA's hack of re-pulling from db to serialize.  Please change.
         try {
-            BSONObject bson = Persistor.get().getAsBSON(UUID);
+            //Pull the object from db, convert to JSONObject
+            ObjectId uuid = this.getUUID();
+            BSONObject bson = Persistor.get().getAsBSON(uuid);
             JSONObject out = new JSONObject(bson.toString());
+            
+            out.put("_id", "toberemoved");
+            out.remove("_id");
+            String uuidstr = uuid.toString();
+            out.put("id", uuidstr);
             return out;
-        } catch (JSONException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("There appears to be some damaged data in your database, I'll ignore it");
             return null;
         }
     }

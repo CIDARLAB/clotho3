@@ -23,6 +23,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.layers.communication.mind;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
+import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +125,7 @@ public final class Mind
             getEngine().eval(cmd);
         } catch (ScriptException e) {
             try {
-                runCommandWithNamespace(cmd);
+//                runCommandWithNamespace(cmd);
             } catch (Exception e2) {
                 return false;
             }
@@ -295,7 +297,14 @@ public final class Mind
         if (engine == null) {
             engine = new ScriptEngineManager().getEngineByName("JavaScript");
             ServerSideAPI api = getAPI();
-            engine.put("clotho", api);
+            engine.put("clothoJava", api);
+            
+            try {
+                engine.eval(initializationScript);
+            } catch (ScriptException ex) {
+                System.out.println("Error running initialization Script!");
+                ex.printStackTrace();
+            }
         }
         return engine;
     }
@@ -354,4 +363,9 @@ public void SUPERILLEGAL_SETUUID(String string) {
        return this.connection;
    }
 
+    private static  String initializationScript;
+    static {
+        System.out.println("Someone:  Probably should pull this from elsewhere");
+        initializationScript = FileUtils.readFile("js_engine_initiation.js");
+    }
 }
