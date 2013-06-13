@@ -7,8 +7,9 @@
  */
 /*
 Test sequence for testing CRUD operations:
-//Create an object like Stephanie's test institution object
 
+//Create an object like Stephanie's test institution object
+clotho.create( {"lastModified":{"$date":"2013-06-13T02:47:51.288Z"},"name":"Test institution","state":"Massachusetts","className":"org.clothocad.model.Institution","isDeleted":false,"country":"United States of America","city":"Townsville"} );
 
 //Query for objects matching args, then grab the first one
 var listy = clotho.query({"city" : "Townsville"});
@@ -74,6 +75,11 @@ clotho.say = function(args, callback) {
     if(callback) callback();
 };
 
+//function say(args, callback) {
+//    clothoJava.say(args);
+//    if(callback) callback();
+//}
+
 clotho.alert = function(args, callback) {
     clothoJava.alert(args);
     if(callback) callback();
@@ -100,9 +106,6 @@ clotho.get = function(args, callback) {
     else return result;
 };
 
-
-
-
 clotho.set = function(value, callback) {
     var jsonstr = JSON.stringify(value);
     var sresult = clothoJava.set(jsonstr);
@@ -122,7 +125,7 @@ clotho.create = function(args, callback) {
     else return result;
 };
 
-clotho.destroy = function(sharableId) {
+clotho.destroy = function(sharableId, callback) {
     clothoJava.destroy(sharableId);
     if(callback) callback( );
 };
@@ -137,3 +140,24 @@ clotho.query = function(query, callback) {
     else return listy;
 };
 
+clotho.edit = function(sharableId, callback) {
+    clothoJava.edit(sharableId);
+    if(callback) callback();
+};
+
+clotho.run = function(funcRef, jsonArgs) {
+    clothoJava.run(funcRef, jsonArgs);
+    if(callback) callback();
+};
+
+clotho.show = function(viewRef, sharables, position) {
+    var sharToString = JSON.stringify(sharables);
+    var posToString = JSON.stringify(position);
+    clothoJava.show(viewRef, sharToString, posToString);
+    if(callback) callback();
+};
+
+clotho.startTrail = function(trailRef) {
+    clothoJava.startTrail(trailRef);
+    if(callback) callback();
+};

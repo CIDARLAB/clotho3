@@ -122,6 +122,7 @@ public final class ServerSideAPI {
     
     //JCA:  as 0f 6/6/2013 submit seems to work
     public final void submit(String userText) {
+        say(userText, "muted", true);
         if (!mind.runCommand(userText)) {
 //            disambiguate(userText);  //JCA:  temporarily disabled for testing, also not fully hooked up
             say("Clotho was unable to satisfy that request", "text-error");
@@ -150,12 +151,20 @@ public final class ServerSideAPI {
     //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message, String severity) {
 //        System.out.println("say has : " + message);
+        say(message, severity, false);
 
+    }
+    
+    private final void say(String message, String severity, boolean isUser) {
         try {
+            String source = "server";
+            if(isUser) {
+                source = "client";
+            }
             JSONObject msg = new JSONObject();
                 JSONObject data = new JSONObject();
                 data.put("text", message);
-                data.put("from", "toBeWorkedOutLater");
+                data.put("from", source);
                 data.put("class", severity);
                 data.put("timestamp", new Date().getTime());
             msg.put("channel", "say");
