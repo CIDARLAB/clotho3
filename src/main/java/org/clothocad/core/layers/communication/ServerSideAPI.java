@@ -148,7 +148,7 @@ public final class ServerSideAPI {
 //            disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
             say("Clotho was unable to satisfy that request", "text-error");
         } else {
-            completer.put(message);
+            
         }
     }
     
@@ -156,6 +156,7 @@ public final class ServerSideAPI {
     
     public final void learn(String nativeCmd, String jsCmd) {
         Interpreter.get().learnNative(nativeCmd, jsCmd);
+        completer.put(nativeCmd);
     }
     
     public final void login(String personRef, String password) {

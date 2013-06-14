@@ -94,7 +94,9 @@ public class AutoComplete {
                 }
                 return wordBank;
             }
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         
         return wordBank;
     }
