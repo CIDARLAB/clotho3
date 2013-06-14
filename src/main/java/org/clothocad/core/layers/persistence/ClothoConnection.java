@@ -81,6 +81,7 @@ public interface ClothoConnection {
      */
     void save(ObjBase obj);
     void save(Map obj);
+    String save(JSONObject json);
     
     /**
      * Saves the given collection of objects to the database.
@@ -90,8 +91,6 @@ public interface ClothoConnection {
     int save(Collection<ObjBase> objs);
     int saveBSON(Collection<Map> objs);
 
-    
-    String save(JSONObject json);
     
     /**
      * Delete the object from the database.

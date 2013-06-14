@@ -24,13 +24,23 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.aspects;
 
 import com.google.common.cache.Cache;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import lombok.Delegate;
+import org.bson.BSONObject;
+import org.bson.types.ObjectId;
 import org.clothocad.core.layers.persistence.ClothoConnection;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author jcanderson
@@ -83,4 +93,82 @@ public class Persistor implements Aspect {
             System.exit(0);
         }
     }
+
+    public void persistFeature(HashMap<String, Integer> StoreGrams, String feature) {
+        System.out.println("Stephanie:  features should be stored in a separate spot than ObjBases.  They aren't UUID-based.  They are are feature-word based");
+        try {
+            //Convert the StoreGrams to a JSONArray in a JSONObject
+            JSONObject bolus = new JSONObject();
+            JSONArray data = new JSONArray();
+            for(String key : StoreGrams.keySet()) {
+                Integer count = StoreGrams.get(key);
+                JSONObject item = new JSONObject();
+                item.put("command", key);
+                item.put("count", count);
+                data.put(item);
+            }
+            bolus.put("data", data);
+            bolus.put("feature", feature);
+
+            DBObject bson = ( DBObject ) JSON.parse( bolus.toString() );
+
+            //Query the database for an existing feature entry
+            HashMap query = new HashMap();
+            query.put("feature", feature);
+            BSONObject result = connection.getOneAsBSON(query);
+            
+            ObjectId oid = null;
+            if(result!=null) {
+                oid = (ObjectId) result.get("_id");
+            } else {
+                oid = ObjectId.get();
+            }
+        
+        
+            //Install the OID object
+            bson.put("_id", oid);
+            
+            //Save it to the database and return the uuid
+            connection.save(new BasicDBObject(bson.toMap()));
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public HashMap<String, Integer> loadFeature(String feature) {
+        try {
+            System.out.println("Stephanie:  feature persistence needs to be separated from ObjBase persistence");
+
+            //Query the database for this feature entry
+            HashMap query = new HashMap();
+            query.put("feature", feature);
+            BSONObject result = connection.getOneAsBSON(query);
+
+
+            HashMap<String, Integer> out = new HashMap<String, Integer>();
+            if(result==null) {
+                return out;
+            }
+
+
+            //Transfer the data to a well-typed Map
+
+            //need to re-do the parsing out of the database entry
+            String array = result.get("data").toString();
+            JSONArray ary = new JSONArray(array);
+            
+            for(int i=0; i<ary.length(); i++) {
+                JSONObject item = ary.getJSONObject(i);
+                String command = item.getString("command");
+                int count = item.getInt("count");
+                out.put(command, count);
+            }
+
+            return out;
+        } catch(Exception err) {
+            err.printStackTrace();
+        }
+        return null;
+    }        
 }

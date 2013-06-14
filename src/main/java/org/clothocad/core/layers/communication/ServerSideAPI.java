@@ -23,19 +23,13 @@ ENHANCEMENTS, OR MODIFICATIONS.
  */
 package org.clothocad.core.layers.communication;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import javax.script.ScriptEngine;
 import javax.swing.JOptionPane;
-import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Authenticator;
 import org.clothocad.core.aspects.Collector;
@@ -51,9 +45,7 @@ import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
-import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.model.Person;
-import org.clothocad.model.Trail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +77,15 @@ public final class ServerSideAPI {
 
 // <editor-fold defaultstate="collapsed" desc="Human Interaction">      
     //JCA:  as of 6/6/2013 autcomplete works.  Wordlist is not persisted, but the completer does learn submitted phrases.
-    public final String autocomplete(String userText) {
+    public final String autocomplete(String rawMsg) {
+        String userText = null;
+        try {
+            JSONObject json = new JSONObject(rawMsg);
+            userText = json.getString("query");
+        } catch(Exception err) {
+            userText = rawMsg;
+        }
+        
         try {
             ArrayList<String> completions = completer.getCompletions(userText);
             JSONArray data = new JSONArray(); //The list of JSONObjects each for an autocomplete
@@ -121,25 +121,64 @@ public final class ServerSideAPI {
     }
     
     //JCA:  as 0f 6/6/2013 submit seems to work
-    public final void submit(String userText) {
-        say(userText, "muted", true);
-        if (!mind.runCommand(userText)) {
-//            disambiguate(userText);  //JCA:  temporarily disabled for testing, also not fully hooked up
+    public final void submit(String command) {
+        //Resolve the arguments to a command string
+        String message = null;
+        try {
+            JSONObject obj = new JSONObject(command);
+            
+            //Extract the messsage
+            if(obj.has("query")) {
+                message = obj.getString("query");
+            } else if(obj.has("message")) {
+                message = obj.getString("message");
+            } else if(obj.has("value")) {
+                message = obj.getString("value");
+             } else if(obj.has("msg")) {
+                message = obj.getString("msg");
+            }
+        } catch(Exception notAJSON) {
+            message = command;
+        }
+        
+        
+        say(message, "muted", null, true);
+        
+        if (!mind.runCommand(message)) {
+//            disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
             say("Clotho was unable to satisfy that request", "text-error");
         } else {
-            completer.put(userText);
+            completer.put(message);
         }
     }
+    
+    //clotho.learn("test1", "clotho.say('Hi there');");
     
     public final void learn(String nativeCmd, String jsCmd) {
         Interpreter.get().learnNative(nativeCmd, jsCmd);
     }
+    
+    public final void login(String personRef, String password) {
+        
+    }
+    
+    public final void logout() {
+        
+    }
+    
+    public final boolean changePassword(String newPassword) {
+        return true;
+    }
 // </editor-fold> 
 
+    public final void clear() {
+        mind.clear();
+        say("The mind has been cleared", "text-success");
+    }
 // <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
     //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message) {
-        say(message, "text");
+        say(message, "text", null, false);
     }
     
     /**
@@ -151,11 +190,58 @@ public final class ServerSideAPI {
     //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message, String severity) {
 //        System.out.println("say has : " + message);
-        say(message, severity, false);
+        say(message, severity, null, false);
 
     }
     
-    private final void say(String message, String severity, boolean isUser) {
+    public final void say(String message, String severity, String recipients) {
+//        System.out.println("say has : " + message);
+        say(message, severity, recipients, false);
+
+    }
+    
+    private final void say(String rawMsg, String severity, String recipients, boolean isUser) {
+        String message = null;
+        //If rawMsg is an object, parse out the arguments
+        try {
+            JSONObject obj = new JSONObject(rawMsg);
+            
+            //Extract the messsage
+            if(obj.has("message")) {
+                message = obj.getString("message");
+            } else if(obj.has("value")) {
+                message = obj.getString("value");
+            } else if(obj.has("msg")) {
+                message = obj.getString("msg");
+            }
+            
+            //If the message is still null, println the whole object
+            if(message==null) {
+                message = obj.toString();
+                
+            //Otherwise it extracted out a message, so keep parsing
+            } else {
+
+                //Extract the severity
+                if(obj.has("severity")) {
+                    severity = obj.getString("severity");
+                }
+
+                if(obj.has("recipients")) {
+                    recipients = obj.getString("recipients");
+                }
+            }
+        } catch(Exception notAJSON) {
+            message = rawMsg;
+        }
+        
+        //Resolve the recipients
+        List<Sharable> listUsers = null;
+        if(recipients !=null) {
+            listUsers = resolveToExistentSharablesList(recipients);
+        }
+        
+        //Assign the say as server or client speaking (not user defined, is logic-based);
         try {
             String source = "server";
             if(isUser) {
@@ -222,28 +308,39 @@ public final class ServerSideAPI {
     //clotho.get("51b29e7450765ced18af0d33");
     //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
     //JCA:  result is also injected into the Mind's scriptengine as a proper object
-    public final JSONObject get(String uuid) {
-
+    public final String get(String sharableRef) {
+        
         try {
-            //Pull the object from the db
-            ObjBase datum = Collector.get().getObjBase(uuid.trim());
-            Sharable obj = (Sharable) datum;
-            JSONObject result = obj.toJSON();
-            say("I found " + obj.getName(), "text-success");
-            say("It has the value" + result.toString(), "text-success");
+            //Resolve the arguments and retrieve
+            Sharable existing = resolveToExistentSharable(sharableRef);
+            if(existing==null) {
+                say("Error resolving the arguments for getting " + sharableRef, "text-error");
+                return null;
+            }
+            
+            //Check that the user has permission
+            if(!Authenticator.get().hasReadAccess(getPerson(), existing)) {
+                say("The current user does not have read access for " + sharableRef, "text-error");
+                System.out.println("JCA:  this error msg should be the same as the previous.  The object should appear to not exist if denied");
+                return null;
+            }
+            
+            //Notify the user that they retrieved the data
+            System.out.println("JCA:  this should be moved specifically to search bar responses");
+            JSONObject result = existing.toJSON();
+            say("I retrieved the Sharable " + result.toString(), "text-success");
             
             //If the requestor is a client (not implemented) push the data to the client
             if(true) {
-                JSONObject msg = makeCollect(obj);
+                JSONObject msg = makeCollect(existing);
                 Router.get().sendMessage(mind.getClientConnection(), msg);
             }
             
-            return result;
+            return result.toString();
         } catch (Exception e) {
-            say("Error retrieving " + uuid, "text-error");
+            say("Error getting " + sharableRef, "text-error");
+            return null;
         }
-        
-        return new JSONObject();
     }
 
     public final String set(String value) {
@@ -369,12 +466,19 @@ public final class ServerSideAPI {
     public final void destroy(String sharableId) {
         try {
             //Pull the object from the db and delete
-            ObjBase datum = Collector.get().getObjBase(sharableId.trim());
-            Sharable obj = (Sharable) datum;
-            String name = obj.getName();
-            String id = obj.getUUID().toString();
-            Persistor.get().delete(obj);
-            say("Sharable " + name + " with UUID " + id +  " has been destroyed", "text-success");
+            List<Sharable> existent = this.resolveToExistentSharablesList(sharableId);
+            for(Sharable obj : existent) {
+                //Check that the current user has write access
+                if(!Authenticator.get().hasWriteAccess(getPerson(), obj)) {
+                    say("The current user does not have write access for " + obj.getUUID().toString());
+                    continue;
+                }
+
+                String name = obj.getName();
+                String id = obj.getUUID().toString();
+                Persistor.get().delete(obj);
+                say("Sharable " + name + " with UUID " + id +  " has been destroyed", "text-success");
+            }
         } catch (Exception e) {
             say("Error destroying " + sharableId, "text-error");
         }
@@ -403,11 +507,12 @@ public final class ServerSideAPI {
             for(ObjBase obj : objs) {
                 try {
                     Sharable shar = (Sharable) obj;
-                    //TODO: if current user has access to shar, otherwise ignore it
+
                     if(!Authenticator.get().hasReadAccess(getPerson(), shar)) {
                         continue;
                     }
-                    JSONObject json2 = new JSONObject(shar.toString());
+                    
+                    JSONObject json2 = shar.toJSON();
                     if(json2==null) {
                         continue;
                     }
@@ -449,40 +554,6 @@ public final class ServerSideAPI {
 // </editor-fold> 
     
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
-
-    /**
-     * Invoke the hard-coded editor appropriate for this particular object
-     * *For an Instance, invoke the view set as the default view for this
-     * type of data.  That's one option.  The other is to build up an editor
-     * programmatically from the components.  Not sure.  Actually, I like this
-     * second option best.  Maybe.  I don't know.  Second option is more secure.
-     * 
-     * Both options need to be available, I think.
-     * 
-     * @param sharableRef 
-     */
-    public final void edit(String sharableRef) {
-    	/**
-        try {
-            Sharable sharable = (Sharable) resolveToObjBase(sharableRef);
-
-            switch (sharable.type()) {
-                case SCHEMA:
-                    Schema schema = (Schema) sharable;
-                    //Pop up the page, push in data
-                    return;
-                case INSTANCE:
-                    return;
-                default:
-                    return;
-            }
-            //Pop up a new window of 
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-        **/
-    }
-
     public final void run(String asstRef, String jsonArgs) {
     	/***
         Logger.log(Logger.Level.INFO, "received: " + asstRef + "   " + jsonArgs);
@@ -506,7 +577,8 @@ public final class ServerSideAPI {
      * @param sharables
      * @param sloppy_args 
      */
-    public final void show(String viewId, String sharables, String position) {
+    public final void show(String viewId, String sharables, String position, String recipients) {
+        System.out.println("Show is called " + position);
     	/***
         try {
 
@@ -571,6 +643,47 @@ public final class ServerSideAPI {
         ***/
     }
     
+    /**
+     * Invoke the hard-coded editor appropriate for this particular object
+     * *For an Instance, invoke the view set as the default view for this
+     * type of data.  That's one option.  The other is to build up an editor
+     * programmatically from the components.  Not sure.  Actually, I like this
+     * second option best.  Maybe.  I don't know.  Second option is more secure.
+     * 
+     * Both options need to be available, I think.
+     * 
+     * @param sharableRef 
+     */
+    public final void edit(String sharableRef) {
+    	/**
+        try {
+            Sharable sharable = (Sharable) resolveToObjBase(sharableRef);
+
+            switch (sharable.type()) {
+                case SCHEMA:
+                    Schema schema = (Schema) sharable;
+                    //Pop up the page, push in data
+                    return;
+                case INSTANCE:
+                    return;
+                default:
+                    return;
+            }
+            //Pop up a new window of 
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+        **/
+    }
+    
+    public final void listen(String args) {
+        say("not yet implemented", "text-error");
+    }
+
+    public final void unlisten(String data) {
+        say("not yet implemented", "text-error");
+    }
+
 // </editor-fold> 
 
     // <editor-fold defaultstate="collapsed" desc="Setup"> 
@@ -731,23 +844,24 @@ public final class ServerSideAPI {
      * @throws Exception 
      */
     public JSONObject makeShowWidget(Widget widget, String position) throws Exception {
-        JSONObject out = new JSONObject();
-        JSONObject positioninfo = resolveToJSONObject(position);
-        View view = widget.getView();
-
-        //Load the html and js scripts into a JSONObject, insert the uuid for the widget
-        String widgetId = widget.getId();
-        System.out.println("graphics script: "+view.getGraphicsScript());
-        String html = replaceWidgetId(view.getGraphicsScript(), widgetId);
-        String onshow = replaceWidgetId(view.getOnShowScript(), widgetId);
-
-        out.put("widget_id", widgetId);
-        out.put("content", html);
-        out.put("on_show", onshow);
-        out.put("parent_widget_id", "widget_space_root");
-        out.put("command", "showWidget");
-
-        return out;
+//        JSONObject out = new JSONObject();
+//        JSONObject positioninfo = resolveToJSONObject(position);
+//        View view = widget.getView();
+//
+//        //Load the html and js scripts into a JSONObject, insert the uuid for the widget
+//        String widgetId = widget.getId();
+//        System.out.println("graphics script: "+view.getGraphicsScript());
+//        String html = replaceWidgetId(view.getGraphicsScript(), widgetId);
+//        String onshow = replaceWidgetId(view.getOnShowScript(), widgetId);
+//
+//        out.put("widget_id", widgetId);
+//        out.put("content", html);
+//        out.put("on_show", onshow);
+//        out.put("parent_widget_id", "widget_space_root");
+//        out.put("command", "showWidget");
+//
+//        return out;
+        return null;
     }
 
     /**
@@ -782,199 +896,158 @@ public final class ServerSideAPI {
 
         return callBackCmd;
     }
+// </editor-fold> 
+    
+    // <editor-fold defaultstate="collapsed" desc="Utility Methods"> 
 
-
-
-    /***                                ***\
-     ********  Utility methods  ********
-    \*                                  */
-    //XXX: needs updating
-    private JSONObject resolveToExecutionArguments(Function asst, JSONObject input) throws JSONException {
-        //Do type validation of the arguments, not call candooit
-        //List<ClothoField> inputTypes = asst.;
-        //return argumentsRelay(inputTypes, input);
-        throw new UnsupportedOperationException();
-    }
-
-    private static JSONObject argumentsRelay(List<ClothoField> inputTypes,
-            JSONObject input) throws JSONException {
-        //For each token of this schema, see if the input object has the token
-        /* TODO: is this right? */
-        for (ClothoField field : inputTypes) {
-            String token = field.getName();
-            if (!input.has(token)) {
-                break;
-            }
-            return input;
-        }
-
-        //If it got this far, there is something wrong with the input arguments (not wrapped properly)
-
-        //See if it is just a single-token thing with a single-object argument needs to be wrapped up
+    private List<Sharable> resolveToExistentSharablesList(String sharableList) {
+        ArrayList<String> uuidList = new ArrayList<String>();
+        
+        //If it's a JSON Array of stuff
         try {
-            JSONObject out = new JSONObject();
-            for (ClothoField field : inputTypes) {
-                String token = field.getName();
-                out.put(token, input);
+            JSONArray ary = new JSONArray(sharableList);
+            for(int i=0; i<ary.length(); i++) {
+                String str = ary.getString(i);
+                Sharable shar = resolveToExistentSharable(str);
+                uuidList.add(shar.getUUID().toString());
             }
-            return out;
-        } catch (Exception err2) {
-        }
-        return null;
-    }
-
-    /**
-     * Inputs a sloppy input of a datum reference and finds the 'correct' server-side
-     * object they are talking about
-     * @param schemaRef
-     * @return 
-     */
-    private ObjBase resolveToObjBase(Object datumRef) {
-        ObjBase out = null;
-        Logger.log(Logger.Level.INFO, "resolveToObjBase has " + datumRef);
-
-        //If it's a ObjBase object
-        try {
-            ObjBase aschmema = (ObjBase) datumRef;
-            ObjectId uuid = aschmema.getUUID();
-
-            //Fetch the real version of the ObjBase
-            out = Collector.get().getObjBase(uuid.toString());
-            if (out != null) {
-                return out;
+        } catch(Exception notJsonArray) {
+            //If it's a single object
+            try {
+                JSONObject obj = new JSONObject(sharableList);
+                String uuid = relayResolveJSONObjectToUUID(obj);
+                uuidList.add(uuid);
+            } catch(Exception notJsonObject) {
+                try {
+                    this.relayResolveStringToUUID(sharableList);
+                } catch(Exception notStringRef) {
+                    return null;
+                }
             }
-        } catch (Exception e) {
-            Logger.log(Logger.Level.INFO, "It wasn't a ObjBase object");
-        }
-
-        //If it's a String
-        try {
-            String str = (String) datumRef;
-
-            //See if it's a uuid String
-            out = Collector.get().getObjBase(str);
-            if (out != null) {
-                return out;
-            }
-
-            //See if it's a json string representation of a ObjBase
-            JSONTokener tokener = new JSONTokener(str);
-            JSONObject jsonobj = new JSONObject(tokener);
-
-            String uuid = jsonobj.getString("uuid");
-            out = Collector.get().getObjBase(uuid);
-            if (out != null) {
-                return out;
-            }
-
-            //See if it's the proper value of a NameField of some ObjBase
-            //THIS INVOLVES COLLATOR FUNCTIONALITY
-
-        } catch (Exception e) {
-            Logger.log(Logger.Level.INFO, "It wasn't a string of json");
-        }
-
-        return out;
-    }
-
-    /**
-     * Inputs a sloppy argument of some JSON -- like whether the user
-     * put in a String of it, Java object representation, or whatever
-     * @param jsonArgs
-     * @return 
-     */
-    public final JSONObject resolveToJSONObject(Object jsonArgs) {
-        System.out.println(jsonArgs.getClass().toString());
-        //If it's a JSONObject
-        try {
-            JSONObject out = (JSONObject) jsonArgs;
-            return out;
-        } catch (Exception e) {
-//            Logger.log(Logger.Level.INFO, "It wasn't a jsonobject");
         }
         
-        //If it's a String representation of json
-        try {
-            String str = (String) jsonArgs;
-            JSONTokener tokener = new JSONTokener(str);
-            JSONObject out = new JSONObject(tokener);
-            return out;
-        } catch (Exception err) {
-//            Logger.log(Logger.Level.INFO, "It wasn't a string of json");
-        }
-
-        //If it's a String uuid
-        try {
-            String uuid = (String) jsonArgs;
-            ObjBase d = Collector.get().getObjBase(uuid);
-            Sharable share = (Sharable) d;
-            return share.toJSON();
-        } catch (Exception err) {
-//            Logger.log(Logger.Level.INFO, "It wasn't a string of uuid");
-        }
-
-        
-        //If it's some other kind of object
-        Logger.log(Logger.Level.WARN, String.valueOf(jsonArgs));
-        return null;
-        
-    }
-
-    /**
-     * Resolves a sloppy list of sharables from a String into a List of
-     * occupied uuids.  Null or non-existent uuids return null
-     * 
-     * @param sharables
-     * @return
-     * @throws Exception 
-     */
-    public static final List<Sharable> resolveToSharables(String sharables) throws Exception {
         ArrayList<Sharable> out = new ArrayList<Sharable>();
-        JSONArray array = resolveToJSONArray(sharables);
-        for (int i = 0; i < array.length(); i++) {
-            String uuid = array.getString(i);
-            Sharable sharable = (Sharable) Collector.get().getObjBase(uuid);
-            out.add(sharable);
+        for(String uuid : uuidList) {
+            ObjBase obj = Collector.get().getObjBase(uuid);
+            Sharable shar = (Sharable) obj;
+            out.add(shar);
         }
         return out;
     }
-
-    /**
-     * Inputs a sloppy argument of some JSON -- like whether the user
-     * put in a String of it, Java object representation, or whatever
-     * @param jsonArgs
-     * @return 
-     */
-    public static final JSONArray resolveToJSONArray(Object jsonArgs) {
-        //If it's a JSONArray
+    
+    private Sharable resolveToExistentSharable(String sharableRef) {
+        //Extract UUIDs based on how they were expressed
+        String uuid = null;
+        
         try {
-            JSONArray out = (JSONArray) jsonArgs;
-            return out;
-        } catch (Exception err) {
+            JSONObject obj = new JSONObject(sharableRef);
+            uuid = relayResolveJSONObjectToUUID(obj);
+        } catch(Exception notJsonObject) {
+            try {
+                JSONArray ary = new JSONArray(sharableRef);
+                uuid = relayResolveJSONArrayToFirstUUID(ary);
+            } catch(Exception notJSONArray) {
+                try {
+                    uuid = relayResolveStringToUUID(sharableRef);
+                } catch(Exception notStringArgs) {
+                    return null;
+                }
+            }
         }
-
-        //If it's a String representation of a JSONArray
-        try {
-            String str = (String) jsonArgs;
-            JSONTokener tokener = new JSONTokener(str);
-            JSONArray out = new JSONArray(tokener);
-            return out;
-        } catch (Exception err) {
-        }
-
-        //If it's a single String like one uuid
-        try {
-            String str = (String) jsonArgs;
-            JSONArray out = new JSONArray();
-            out.put(str);
-            return out;
-        } catch (Exception err) {
-        }
-
-        //If it's some other kind of object
-        Logger.log(Logger.Level.WARN, "The jsonArgs could not be resolved");
-        return null;
+        
+        //Pull the Sharables by ID, put in a List, and return them
+        ObjBase obj = Collector.get().getObjBase(uuid);
+        Sharable sharable = (Sharable) obj;
+        return sharable;
     }
+        
+        private String relayResolveJSONArrayToFirstUUID(JSONArray ary) throws Exception {
+            try {
+                JSONObject json = ary.getJSONObject(0);
+                return relayResolveJSONObjectToUUID(json);
+            } catch(Exception notJSON) {}
+            
+            //Try to parse as a UUID in a list, if fails will throw exception
+            String data = ary.getString(0);
+            ObjectId oid = new ObjectId(data);
+            return data;
+        }
+    
+        private String relayResolveJSONObjectToUUID(JSONObject obj) throws Exception {
+            //Scenario:  the object is a single JSON with an id
+            if(obj.has("id")) {
+                try {
+                    String uuid = obj.getString("id");
+                    return uuid;
+                } catch(Exception err) {}
+            }
+            
+            //Scenario:  they passed an object or array wrapped as 'data', 'value', 'args', 'obj', or 'object'
+            try {
+                return relayResolveToObjectWithToken(obj, "data");
+            } catch(Exception err) {};
+            try {
+                return relayResolveToObjectWithToken(obj, "value");
+            } catch(Exception err) {};
+            try {
+                return relayResolveToObjectWithToken(obj, "args");
+            } catch(Exception err) {};
+            try {
+                return relayResolveToObjectWithToken(obj, "obj");
+            } catch(Exception err) {};
+            try {
+                return relayResolveToObjectWithToken(obj, "object");
+            } catch(Exception err) {};
+
+            throw new Exception();
+        }
+        
+            private String relayResolveToObjectWithToken(JSONObject obj, String token) throws Exception {
+                if(obj.has(token)) {
+                    try {
+                        String data = obj.getString(token);
+                        ObjectId oid = new ObjectId(data);
+                        return data;
+                    } catch(Exception err) {}
+                    try {
+                        JSONObject data = obj.getJSONObject(token);
+                        String uuid = data.getString("id");
+                        return uuid;
+                    } catch(Exception err) {}
+                    try {
+                        JSONArray ary = obj.getJSONArray(token);
+                        JSONObject data = ary.getJSONObject(0);
+                        String uuid = data.getString("id");
+                        return uuid;
+                    } catch(Exception err) {}
+                }
+                throw new Exception();
+            }
+        
+        //Scenario:  the argument did not parse into a JSONObject, it is either
+        //the name of a Sharable, a namespaced token, or a direct UUID
+        private String relayResolveStringToUUID(String str) throws Exception {
+            //Try parsing as uuid
+            try {
+                ObjectId id = new ObjectId(str);
+                return id.toString();
+            } catch(Exception err) {}
+            
+            //Check if it's in the Person's namespace
+            String uuid = mind.pullUUIDFromNamespace(str);
+            if(uuid!=null) {
+                return uuid;
+            }
+            
+            //Try a query by name and allow to fail
+            HashMap map = new HashMap();
+            map.put("name", str);
+            List<ObjBase> result = Persistor.get().get(map);
+            ObjBase first = result.get(0);
+            return first.getUUID().toString();
+        }
+        
+        
 
     /**
      * Replace the _widget_id phrases with the actual uuid
@@ -1032,4 +1105,5 @@ public final class ServerSideAPI {
     private String socket_id;
     private ClothoWebSocket socket;
     private Mind mind;
+
 }

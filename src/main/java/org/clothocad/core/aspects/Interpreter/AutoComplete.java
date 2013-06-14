@@ -21,13 +21,22 @@
 package org.clothocad.core.aspects.Interpreter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
+import org.clothocad.core.util.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AutoComplete {
     Persistor persistor;
@@ -37,10 +46,7 @@ public class AutoComplete {
         trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
         
         //Load up the words from the word bank into the Trie
-        for (String word : getWordBank()) {
-            //JCA:  the Trie holds mappings of phrases to displayed results, so the wordBank really should be a mapping of these things
-            //ehhh, no, there are two separate things going on.  This is just autocomplete, and it's holding all phrases verbatim, so it's
-            //not necessarily the same as the disambiguation bit.  These are just exact phrases people have put in before
+        for(String word : getWordBank()) {
             trie.put(word, word);
         }
     }
@@ -64,29 +70,35 @@ public class AutoComplete {
      * Adds new options into the trie
      */
     public void put(String word) {
-        System.out.println("Trie is going to store: " + word);
-        trie.put(word, word);
-        if(!wordBank.contains(word)) {
+        try {
+            System.out.println("Trie is going to store: " + word);
+            trie.put(word, word);
             wordBank.add(word);
             //FIXME: persistor.save(wordBank); (make a wordbank class)
+            System.out.println("Stephanie, change persistance to db instead of flatfile");
+            FileUtils.writeFile(wordBank.toString(), "wordbank.txt");
+        } catch(Exception err) {
+            err.printStackTrace();
         }
     }
     
-    private List<String> getWordBank() {
-        if(wordBank==null) {
-            //FIXME: persistor.get(...) 
-            //wordBank = Persistor.get().loadWordBank();
+    private Set<String> getWordBank() {
+        try {
             if(wordBank==null) {
-                wordBank = new ArrayList<String>();
-                wordBank.add("walk the dog");
-                wordBank.add("walk the cat");
-                wordBank.add("walk the caterpillar");
-                
+                String sfile = FileUtils.readFile("wordbank.txt");
+                JSONArray listy = new JSONArray(sfile);
+                wordBank = new HashSet<String>();
+                for(int i=0; i<listy.length(); i++) {
+                    String str = listy.getString(i);
+                    wordBank.add(str);
+                }
+                return wordBank;
             }
-        }
+        } catch (Exception ex) {}
+        
         return wordBank;
     }
 
     private Trie<String, String> trie;
-    transient private List<String> wordBank;
+    transient private Set<String> wordBank;
 }

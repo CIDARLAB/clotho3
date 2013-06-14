@@ -9,7 +9,26 @@
 Test sequence for testing CRUD operations:
 
 //Create an object like Stephanie's test institution object
-clotho.create( {"lastModified":{"$date":"2013-06-13T02:47:51.288Z"},"name":"Test institution","state":"Massachusetts","className":"org.clothocad.model.Institution","isDeleted":false,"country":"United States of America","city":"Townsville"} );
+var newobj = clotho.create( {"lastModified":{"$date":"2013-06-13T02:47:51.288Z"},"name":"UCB","state":"C","className":"org.clothocad.model.Institution","isDeleted":false,"country":"United States of America","city":"Townsville"} );
+
+//Get the newobj by a get call (with different sloppiness)
+clotho.get(newobj.id);
+
+clotho.get(newobj);
+
+var wrapper = {};
+wrapper.data = newobj;
+clotho.get(wrapper);
+
+wrapper = {};
+wrapper.data = newobj.id;
+clotho.get(wrapper);
+
+wrapper = [];
+wrapper[0] = newobj;
+clotho.get(wrapper);
+
+clotho.get('UCB');
 
 //Query for objects matching args, then grab the first one
 var listy = clotho.query({"city" : "Townsville"});
@@ -40,37 +59,103 @@ existing.state = "Maine";
 result = clotho.create(existing);
 clotho.say('result is now: ' + JSON.stringify(result));
 
+
+Test of say operations
+clotho.say('hi there');
+
+var obj = {};
+obj.value = 'value is an acceptable token';
+clotho.say(obj);
+
+var obj = {};
+obj.msg = 'msg, value, message are all acceptable tokens';
+clotho.say(obj);
+
+var obj = {};
+obj.message = 'msg, value, message, args are all acceptable tokens';
+clotho.say(obj);
+
+obj.message = 'can stuff severity in the object';
+obj.severity = 'text-error';
+clotho.say(obj);
+
+var cats = {};
+cats.name = 'Fluffy';
+clotho.say(cats);
+
+clotho.say('this one doesnt pick up the second argument right now', 'text-error');
+
+//Testing out clear, last say should fail
+var cats = 'cats';
+clotho.say(cats);
+clotho.clear();
+clotho.say(cats);
+
+
+//Create a bunch of institutions with state Iowa then delete them
+var i=0;
+while(i<5) {
+   clotho.create( {"lastModified":{"$date":"2013-06-13T02:47:51.288Z"},"name":"Temporary College","state":"Iowa","className":"org.clothocad.model.Institution","isDeleted":false,"country":"United States of America","city":"Townsville"} );
+   i++;
+}
+
+var results = clotho.query({"state":"Iowa"});
+
+clotho.destroy(results);
+
+clotho.query({"state":"Iowa"});
+
 */
 var clotho = {};
 
+function resolveToString(input) {
+    if(typeof input == "string" ) {
+        return input;
+    } else {
+        return JSON.stringify(input);
+    }
+}
+
+
 //var complete = clotho.autocomplete("walk the");
 //clotho.say(JSON.stringify(complete));
-clotho.autocomplete = function(args, callback) {
+clotho.autocomplete = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     var sresult = clothoJava.autocomplete(args);
     var result = JSON.parse(sresult);
     if(callback) callback(result );
     else return result;
 };
 
-clotho.autocompleteDetail = function(args, callback) {
+clotho.autocompleteDetail = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     var sresult = clothoJava.autocompleteDetail(args);
     var result = JSON.parse(sresult);
     if(callback) callback(result );
     else return result;
 };
 
-clotho.submit = function(args, callback) {
+clotho.submit = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     clothoJava.submit(args);
     if(callback) callback( );
 };
 
-clotho.learn = function(nativeCmd, jsCmd, callback) {
-    clothoJava.learn(nativeCmd, jsCmd);
+clotho.clear = function(callback) {
+    clothoJava.clear();
+    if(callback) callback( );
+}
+
+clotho.learn = function(nativeCmd, formalCmd, callback) {
+    var args0 = resolveToString(nativeCmd);
+    var args1 = resolveToString(formalCmd);
+    clothoJava.learn(nativeCmd, formalCmd);
     if(callback) callback( );
 };
 
 //clotho.say("Says come up in the activity log");
-clotho.say = function(args, callback) {
+clotho.say = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     clothoJava.say(args);
     if(callback) callback();
 };
@@ -80,24 +165,28 @@ clotho.say = function(args, callback) {
 //    if(callback) callback();
 //}
 
-clotho.alert = function(args, callback) {
+clotho.alert = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     clothoJava.alert(args);
     if(callback) callback();
 };
 
-clotho.log = function(args, callback) {
+clotho.log = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     clothoJava.log(args);
     if(callback) callback();
 };
 
-clotho.note = function(args, callback) {
+clotho.note = function(inputPhrase, callback) {
+    var args = resolveToString(inputPhrase);
     clothoJava.note(args);
     if(callback) callback();
 };
 
 //var paris = clotho.get('51b8b90050765ba45b5a8217');
 //clotho.say(paris.state);
-clotho.get = function(args, callback) {
+clotho.get = function(sharableRef, callback) {
+    var args = resolveToString(sharableRef);
     var sresult = clothoJava.get(args);
 
     var result = JSON.parse(sresult);
@@ -106,9 +195,9 @@ clotho.get = function(args, callback) {
     else return result;
 };
 
-clotho.set = function(value, callback) {
-    var jsonstr = JSON.stringify(value);
-    var sresult = clothoJava.set(jsonstr);
+clotho.set = function(sharableData, callback) {
+    var args = resolveToString(sharableData);
+    var sresult = clothoJava.set(args);
 
     var result = JSON.parse(sresult);
 
@@ -117,22 +206,23 @@ clotho.set = function(value, callback) {
 };
 
 //var inst = {"city":"Paris","className":"org.clothocad.model.Institution","country":"United States of America","isDeleted":false,"lastModified":{"$date":"2013-06-08T02:48:10.254Z"},"name":"Test institution","state":"Massachusetts"};clotho.say(inst.city);   var result = clotho.create(inst);
-clotho.create = function(args, callback) {
-    var jsonstr = JSON.stringify(args);
-    var sresult = clothoJava.create(jsonstr);
+clotho.create = function(sharableData, callback) {
+    var args = resolveToString(sharableData);
+    var sresult = clothoJava.create(args);
     var result = JSON.parse(sresult);
     if(callback) callback(result );
     else return result;
 };
 
-clotho.destroy = function(sharableId, callback) {
-    clothoJava.destroy(sharableId);
+clotho.destroy = function(sharableRef, callback) {
+    var args = resolveToString(sharableRef);
+    clothoJava.destroy(args);
     if(callback) callback( );
 };
 
 //clotho.query('city', 'Townsville');
 clotho.query = function(query, callback) {
-    var jsonstr = JSON.stringify(query);
+    var jsonstr = resolveToString(query);
     var slisty = clothoJava.query(jsonstr);
     //println('query has slisty as ' + slisty);
     var listy = JSON.parse(slisty);
@@ -140,20 +230,25 @@ clotho.query = function(query, callback) {
     else return listy;
 };
 
-clotho.edit = function(sharableId, callback) {
-    clothoJava.edit(sharableId);
+clotho.edit = function(sharableRef, callback) {
+    var args = resolveToString(sharableRef);
+    clothoJava.edit(args);
     if(callback) callback();
 };
 
-clotho.run = function(funcRef, jsonArgs) {
-    clothoJava.run(funcRef, jsonArgs);
+clotho.run = function(funcRef, sharableData, callback) {
+    var args0 = resolveToString(funcRef);
+    var args1 = resolveToString(sharableData);
+    clothoJava.run(args0, args1);
     if(callback) callback();
 };
 
-clotho.show = function(viewRef, sharables, position) {
-    var sharToString = JSON.stringify(sharables);
-    var posToString = JSON.stringify(position);
-    clothoJava.show(viewRef, sharToString, posToString);
+clotho.show = function(viewRef, sharableData, position, recipients) {
+    var args0 = resolveToString(viewRef);
+    var args1 = resolveToString(sharableData);
+    var args2 = resolveToString(position);
+    var args3 = resolveToString(recipients);
+    clothoJava.show(args0, args1, args2, args3);
     if(callback) callback();
 };
 

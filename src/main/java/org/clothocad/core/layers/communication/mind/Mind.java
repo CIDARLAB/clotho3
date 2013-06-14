@@ -96,8 +96,7 @@ public final class Mind
      */
     public final void clear() {
         engine = null;
-        /* TODO: is this necessary? */
-        /* getEngine(); */
+        getEngine();
     }
 
     /* Similar to runCommand but does not "defuzzify".
@@ -125,6 +124,7 @@ public final class Mind
             getEngine().eval(cmd);
         } catch (ScriptException e) {
             try {
+                return false;
 //                runCommandWithNamespace(cmd);
             } catch (Exception e2) {
                 return false;
@@ -363,9 +363,15 @@ public void SUPERILLEGAL_SETUUID(String string) {
        return this.connection;
    }
 
+    public String pullUUIDFromNamespace(String str) {
+        System.out.println("JCA:  Need to implement mapping names/namespace tokens to UUIDs of Sharables");
+        return null;
+    }
+    
     private static  String initializationScript;
     static {
         System.out.println("Someone:  Probably should pull this from elsewhere");
         initializationScript = FileUtils.readFile("js_engine_initiation.js");
     }
+
 }
