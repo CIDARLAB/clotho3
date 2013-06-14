@@ -20,11 +20,12 @@ public class ClothoWebserver {
 		Server server = new Server(8080);
  
         /** for WEB resources (HTML, CSS, JavaScript etc.) **/
+        System.out.println("Ernst, this needs to be changed to fetch things from the database instead of flatfiles.  The organization should use the UUID of the View to namespace things and avoid naming collisions  between projects.");
         ResourceHandler resHandler = new ResourceHandler();
         resHandler.setDirectoriesListed(true);
         resHandler.setWelcomeFiles(new String[]{ "index.html" }); 
         resHandler.setResourceBase("./clotho3-web/");
-
+        
         /** Clotho3.0 Java Websocket **/
         WebSocketHandler wsHandler = new WebSocketHandler() {
         	@Override
@@ -38,7 +39,7 @@ public class ClothoWebserver {
         
         /** Session Handling ***/
         SessionHandler sessionHandler = new SessionHandler();
-        
+       
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[] { 
         		sessionHandler, 
@@ -48,6 +49,8 @@ public class ClothoWebserver {
  
         server.start();
         server.join();
+        
+        System.out.println("Ernst, Please silence the verbose logging of Jetty");        
         
         System.out.println("The Clotho Webserver is running...");
     }
