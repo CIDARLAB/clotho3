@@ -11,6 +11,12 @@ public class ClothoStarter {
 		
 		//LogManager.getLogManager().reset();
 		
+            System.out.println("Ernst, ClothoBroker crashes on my machine, but if I silence this line I can run everything else fine");
+           /**
+            Exception in thread "main" javax.jms.JMSException: Could not connect: Virtual host stopped
+            at org.fusesource.stomp.jms.StompJmsExceptionSupport.create(StompJmsExceptionSupport.java:59)
+            */
+                    
 		// start the message broker
 		new ClothoBroker();
 		

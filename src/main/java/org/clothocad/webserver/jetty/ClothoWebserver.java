@@ -26,6 +26,7 @@ public class ClothoWebserver {
         resHandler.setResourceBase("./clotho3-web/");
 
         /** Clotho3.0 Java Websocket **/
+        System.out.println("Ernst (not for sb6.0 demo, but eventually), this should be pulling from DB namespaced by the View's uuid to avoid collisions in naming.  Not in flatfiles");
         WebSocketHandler wsHandler = new WebSocketHandler() {
         	@Override
         	public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
@@ -48,6 +49,8 @@ public class ClothoWebserver {
  
         server.start();
         server.join();
+        
+        System.out.println("Ernst, please silence these println statements");
         
         System.out.println("The Clotho Webserver is running...");
     }
