@@ -12,16 +12,16 @@ public class ClothoStarter {
 		//LogManager.getLogManager().reset();
 		
 		// start the message broker
-//		new ClothoBroker();
+		new ClothoBroker();
 		
 		// wait a bit until the broker is running
-//		Thread.sleep(4000);
+		Thread.sleep(4000);
 		
 		// now, start the core (i.e. the server)
-//		new ClothoCore().start();
+		new ClothoCore().start();
 		
 		// wait a bit until the broker is running
-//		Thread.sleep(4000);
+		Thread.sleep(4000);
 		
 		// start the Jetty webserver
 		new ClothoWebserver();
