@@ -82,8 +82,22 @@ public class Router {
                     doo.message = json;
                     ServerSideAPI api = mind.getAPI();
                     
-                    Channel chanEnum = Channel.valueOf(channel);
-                    String data = json.getString("data");
+                    
+                    Channel chanEnum = null;
+                    String data = null;
+                    try {
+                        chanEnum = Channel.valueOf(channel);
+                        data = json.getString("data");
+                    } catch(Exception err) {
+                        try {
+                            JSONObject obj = json.getJSONObject("data");
+                            data = obj.getString("data");
+                            String schann = obj.getString("channel");
+                            chanEnum = Channel.valueOf(schann);
+                        } catch(Exception err2) {
+                            throw err2;
+                        }
+                    }
                     
                     switch(chanEnum) {
                         case autocomplete:
