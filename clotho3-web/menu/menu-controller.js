@@ -1,7 +1,23 @@
 'use strict';
 
 Application.Primary.controller('MenuCtrl', ['$scope', '$location', 'Collector', 'Clotho', 'PubSub', function($scope, $location, Collector, Clotho, PubSub) {
-    $scope.modes = Clotho.get('menu_items');
+    Clotho.get('menu_items').then(function(result) {
+        $scope.modes = result;
+    });
+
+    $scope.$watch(function () {
+        return $location.path();
+    }, function (newValue, oldValue) {
+        angular.forEach($scope.modes.items, function(mode, num) {
+            var regexp = new RegExp('^' + mode.path + '.*$', ['i']);
+            if (regexp.test(newValue)) {
+                mode.class = "active";
+            } else {
+                //remove class
+                mode.class = ""
+            }
+        });
+    });
 
     //do hrefs or this make more sense?
     $scope.goToPage = function(mode) {
@@ -24,6 +40,15 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', 'Collector', 
             "text" : "Successfully Loaded!",
             "class" : "progress-success"
         }
+    });
+    $scope.$on("$routeChangeError", function (current, previous, rejection) {
+        $scope.status = {
+            "text" : "Fail to Load!",
+            "class" : "progress-error"
+        };
+        alert("There was an error: " + rejection);
+        //verify this works..
+        $location.path(previous);
     });
 
 }]);

@@ -1,0 +1,21 @@
+<div ng-controller="TrailQuizCtrl">
+
+    <h3>{{quiz.title}}</h3>
+    <p>{{quiz.question}}</p>
+
+    <ul class="thumbnails">
+        <li ng-repeat="choice in quiz.options" class="span3">
+            <a class="thumbnail" ng-click="quiz.answer = choice.value">
+                <img ng-src="{{choice.img_url}}" alt="{{choice.value}}" onerror="this.src='{{base64icon}}'">
+                <p class="caption">{{choice.value}}</p>
+            </a>
+        </li>
+    </ul>
+
+    <p>Your answer: {{quiz.answer}}</p>
+
+    <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer">Submit Answer</button>
+
+    <h3 ng-if="quiz.response" ng-class="{'text-success' : quiz.response.result, 'text-error' : !quiz.response.result}">{{quiz.response.result}}</h3>
+
+</div>

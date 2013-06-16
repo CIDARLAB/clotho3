@@ -26,24 +26,13 @@ package org.clothocad.core.aspects.Proctor;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.clothocad.core.datums.Sharable;
-import org.clothocad.model.Person;
 import org.json.JSONObject;
 
 
 /**
  * @author John Christopher Anderson
  */
-public abstract class Paver 
-		extends Sharable {
-
-	public Paver(Person author) {
-		super("", author);
-	}
-	
-    public abstract JSONObject makeCommandList() throws Exception;
-    public abstract JSONObject makeTocJSON() throws Exception;
-    
+public abstract class Paver  {
     
     /**
      * For the Yay's, Nay's, and usage of this Paver, calculate
@@ -78,15 +67,17 @@ public abstract class Paver
         return (int) daverage;
     }
 
+    public abstract JSONObject getContent();
+    
     //Metadata
-    protected String title;
-    protected String description;
-    protected String smallIconURL;
-    protected String largeIconURL;
+    protected String paver_title;
+    protected PaverType type;
+    
     
     private int numYays = 0;
     private int numNays = 0;
     private int timesAccessed = 0;
     private List<SessionRecord> sessionRecords = new ArrayList<SessionRecord>();
     
+    public static enum PaverType {template, quiz}
 }

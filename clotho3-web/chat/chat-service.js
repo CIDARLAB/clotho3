@@ -10,7 +10,7 @@ Application.Chat.service('ChatSocket', ['Clotho', function(Clotho) {
     messages = {"data" : []};
     var usr_resolved;
 
-    Clotho.emit("chat:start");
+    Clotho.emit("chat_start");
 
     Clotho.listen('chat:init', function(data) {
         console.log("CHATSOCKET\tChat Initialized");
@@ -69,7 +69,7 @@ Application.Chat.service('ChatSocket', ['Clotho', function(Clotho) {
     var chat_send = function(msg) {
         //future - do escaping / error checking etc.
         var data = '{"msg" : "' + msg + '", "username" : "' + usr_resolved + '"}';
-        Clotho.emit('chat:send', JSON.parse(data) );
+        Clotho.emit('chat_send', JSON.parse(data) );
     };
 
     return {

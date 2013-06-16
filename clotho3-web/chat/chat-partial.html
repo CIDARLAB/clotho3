@@ -42,22 +42,45 @@
 
 
         <div class="span7">
-            <h3>Requesting Models</h3>
+            <h3>Dialog testing ground</h3>
 
-            <input type="text" class="input-large" ng-model="uuid" />
-            <button class="btn btn-info" ng-click="request_getModel(uuid)">Request Model</button>
-            <button class="btn btn-info" disabled ng-click="request_getModelURL(uuid)">Request Model URL</button>
+            <button class="btn" ng-click="modal.open()">Modal Test</button>
+            <div modal="modal.shouldBeOpen" close="modal.close()" options="modal.opts">
+                <div class="modal-header">
+                    <h3>I'm a modal!</h3>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li ng-repeat="item in modal.items">{{item}}</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning cancel" ng-click="modal.close()">Cancel</button>
+                </div>
+            </div>
 
             <hr />
 
-            <input type="text" class="input-large" ng-model="requested.$clotho.uuid" placeholder="Requested uuid"/>
-            <textarea class="span4" placeholder="Requested data">{{requested | json}}</textarea>
+            <div class="row-fluid">
+                <div class="span6">
+                    <label class="checkbox"><input type=checkbox ng-model="dialog.opts.backdrop">Show backdrop</label>
+                    <label class="checkbox"><input type=checkbox ng-model="dialog.opts.dialogFade">Fade modal dialog </label>
+                    <label class="checkbox"><input type=checkbox ng-disabled="!dialog.opts.backdrop" ng-model="dialog.opts.backdropFade">Fade Backdrop</label>
+                    <hr>
+                    <label class="checkbox"><input type=checkbox ng-model="dialog.opts.keyboard">Close on Escape</label>
+                    <label class="checkbox"><input type=checkbox ng-disabled="!dialog.opts.backdrop" ng-model="dialog.opts.backdropClick">Close on backdrop click</label>
+                </div>
+                <div class="span6">
+                    <p>Change options at will and press the open dialog button below!</p>
+                    <p><button class="btn btn-primary" ng-click="openDialog()">Open Dialog</button></p>
 
-
-
-            <form sharable-editor name="sharableEditor" uuid="uuid" sharable="requested" class="span6 form-horizontal well" ng-show="schema" style="padding: 15px; border: 1px solid #ddd; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;" novalidate></form>
+                    <p>Alternatively open a simple message box:</p>
+                    <p><button class="btn btn-primary" ng-click="openMessageBox()">Open Message Box</button></p>
+                </div>
+            </div>
 
         </div>
+
 
 
     </div>

@@ -4,7 +4,7 @@
 //decide if want to make sharable bindable also / instead of uuid (so can bind to models outside of directive)
 // would need watch statement on sharable
 
-Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(Clotho, $compile) {
+Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', function(Clotho, $compile, $parse) {
 
     return {
         restrict: 'A',
@@ -26,8 +26,12 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
             uuid: '='
         },
         controller: function($scope, $element, $attrs) {
-            //note -- need to access form constructor like: $scope[$scope.formName].$setPristine()
-            $scope.formName = $attrs.name;
+            //if we're not linking, just pull it from the attrs
+            if (typeof $scope.uuid == 'undefined') {
+                console.log("uuid not in controller, pulling");
+                $scope.uuid = $attrs.uuid;
+            }
+
             $scope.schema = {};
             $scope.sharable = $scope.sharable || {};
 
@@ -51,55 +55,18 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
                 
             }, $scope.$id);
 
-
             /*
-            //testing - passing in $$v
-            Clotho.listen('model_change', function SharableEditor_onModelChange(uuid) {
-                if (uuid == $scope.uuid) {
-                    $scope.$apply(function() {
-                        $scope.uuid = uuid;
-                        console.log("SHAR_ED\tbefore set:");
-                        console.log($scope.sharable);
-
-
-                        //how it will probably get called often
-                        $scope.sharable = Clotho.get(uuid).then(
-                            console.log($scope.sharable)
-                        );
-                        console.log($scope.sharable);
-
-
-                        /*
-                        //ideally, people would do it this way
-                        Clotho.get($scope.uuid).then(function(result) {
-                            $scope.sharable = result;
-                            console.log("SHAR_ED\tafter set:");
-                            console.log($scope.sharable);
-                        });
-                        *//*
-
-                    });
-                }
-            }, $scope.$id);
-            */
-
-
-            /*
-            //testing - see also watch2 below
-            Clotho.watch($scope.uuid, function SharableEditor_onModelChangeUUID(data) {
-                //console.log("running model_change watch for " + $scope.uuid);
-                //console.log(data);
+            //note - alternate version - see also watch2 below
+            Clotho.watch($scope.uuid, function (data) {
                 $scope.sharable = data;
             }, $scope.$id);
              */
 
-            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope.id);
+            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope.$id);
 
             $scope.$on('$destroy', function onDestroy() {
                 Clotho.silence($scope.$id);
             });
-
-
 
             //future - use return {} syntax? i.e. for inheritable directive controllers
         },
@@ -108,7 +75,8 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
             return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
 
-                    //todo - check out ngView and see how it compiles / links async content.. slash if we can interface with ngForm
+                    //todo - check out ngView and see how it compiles / links async content.
+                    //todo - interface with ngForm
                     scope.generate_fields = function() {
                         var insert = iElement.find('insert-fields').html('');
                         var fulltext = "";
@@ -154,7 +122,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
 
 
                     //get the sharable (which says which schema it needs)
-                    //note variables not compiled yet in 'pre' (e.g. if use scope: {var : '@'} )
+                    //note variables not compiled yet in 'pre' (e.g. if use scope: {var : '@'} and should go through $parse)
                     Clotho.get(scope.uuid).then(function(result) {
                         scope.sharable = result;
                         scope.schemaName = result.$clotho.schema;
@@ -166,28 +134,11 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
                             scope.generate_fields();
                         });
                     });
-
-
-                    /*
-                    //we want to block till these are loaded
-                    console.log(scope.uuid);
-                    var sharable = Clotho.get(scope.uuid, true);
-                    console.log(sharable);
-                    scope.sharable = sharable;
-                    scope.schemaName = sharable.$clotho.schema;
-
-                    var fullschema = Clotho.get(scope.schemaName, true);
-                    console.log(fullschema);
-                    schemas[scope.schemaName] = fullschema;
-                    scope.schema = fullschema.schema;
-                    scope.schema_custom = fullschema.custom;
-
-                    scope.generate_fields();
-                    */
-
-
                 },
                 post: function postLink(scope, iElement, iAttrs, controller) {
+
+                    //e.g. scope.formConst.$setPristine()
+                    scope.formConst = $parse(iAttrs.name)(scope);
 
                     //todo - move to native angular code to handle this
                     //fixme - using directive to generate fields currently prevents ngForm from working
@@ -201,7 +152,6 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
                         } else {}
                     });
 
-
                     /*
                      functions
                      note - not in directive controller because reinstantiated each change
@@ -214,8 +164,10 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', function(C
 
                     //discard edits
                     scope.reset = function() {
-                        scope.sharable = Clotho.get(scope.uuid);
-                        scope[scope.formName].$setPristine();
+                        scope.formConst.$setPristine();
+                        Clotho.get(scope.uuid).then(function(result) {
+                            scope.sharable = result;
+                        });
                     };
 
                     //save edits, switch to 'view'

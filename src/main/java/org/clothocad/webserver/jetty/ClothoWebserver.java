@@ -22,8 +22,15 @@ public class ClothoWebserver {
         /** for WEB resources (HTML, CSS, JavaScript etc.) **/
         ResourceHandler resHandler = new ResourceHandler();
         resHandler.setDirectoriesListed(true);
+        
+        //Regardless of repository, the URI to access is http://localhost:8080/#/
+        //Set directory to clotho3-web (this repository)
         resHandler.setWelcomeFiles(new String[]{ "index.html" }); 
         resHandler.setResourceBase("./clotho3-web/");
+        
+        //Set directory to Max's Github repository
+//        resHandler.setWelcomeFiles(new String[]{ "index.html" }); 
+//        resHandler.setResourceBase("./../clotho_multiMode/app/");
 
         /** Clotho3.0 Java Websocket **/
         System.out.println("Ernst (not for sb6.0 demo, but eventually), this should be pulling from DB namespaced by the View's uuid to avoid collisions in naming.  Not in flatfiles");

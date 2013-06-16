@@ -2,12 +2,18 @@
 
 //note : localStorage only supports strings, so we need to manually serialize and deserialize
 
+//note : Collector returns **references**. It publishes copies to PubSub. ClothoAPI should copy objects it passes from the collector.
 
 Application.Foundation.service('Collector', ['$window', 'PubSub',function($window, PubSub) {
 
     return (window.$clotho.$collector) ? window.$clotho.$collector : window.$clotho.$collector = generateCollector();
 
     function generateCollector() {
+
+        function broadcastModelUpdate(uuid, obj) {
+            PubSub.trigger("model_change", uuid);
+            PubSub.trigger("model_change:" + uuid, angular.copy(obj));
+        }
 
         /************
          LOCAL STORAGE INTERFACE
@@ -75,7 +81,8 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
 
             // return a boolean whether a given object exists
             var hasItem = function( key ){
-                return( refStorage.getItem( prefix+key ) != null );
+                var temp = refStorage.getItem( prefix+key );
+                return( temp != null  && typeof temp != 'undefined');
             };
 
             //remove a given item from storage
@@ -89,6 +96,7 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             var setItem = function( key, value ){
                 //prevent adding of empty objects
                 if (!value && value!==0 && value!=="") return false;
+
                 refStorage.setItem(prefix+key, serializer.stringify( value ) );
                 return( this );
             };
@@ -108,11 +116,12 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
                 //console.log("change made to local storage");
                 if (!e) { e = window.event; }
 
-                //TODO - better checking for e.key
+                //TODO - better checking for e.key across browsers
                 var uuid = e.key.replace(prefix, '') || '';
-                console.log("handle_storage_event");
-                PubSub.trigger("model_change", uuid);
-                PubSub.trigger("model_change:"+uuid, getItem(uuid));
+                var obj = getItem(uuid);
+                console.log("handle_storage_event for " + uuid);
+                broadcastModelUpdate(uuid, obj)
+
             };
 
             if (window.addEventListener) {
@@ -158,13 +167,31 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             //testing
             //console.log("COLLECTOR\tstoring uuid " + uuid);
             //console.log(obj);
-            silentAddModel(uuid, obj);
-            PubSub.trigger("model_change", uuid);
-            PubSub.trigger("model_change:" + uuid, obj);
+
+            if (!angular.equals(collector[uuid], obj)) {
+                console.log("COLLECTOR\t" + uuid + " is being saved");
+
+                //notify server if api running
+                if (window.$clotho.api) {
+                    //testing
+                    //console.log("COLLECTOR\tNOTIFY for uuid: " + uuid);
+                    window.$clotho.api.set(uuid, obj);
+                }
+
+                silentAddModel(uuid, obj);
+                broadcastModelUpdate(uuid, obj)
+            }
+            else {
+                console.log("COLLECTOR\t" + uuid + "model is same as collector");
+            }
         };
 
         //check if we have a model. Return it if present. Otherwise, return false. Returns the collector if no UUID is passed.
         var retrieveModel = function(uuid) {
+            return angular.copy(retrieveRef(uuid));
+        };
+
+        var retrieveRef = function(uuid) {
             if (typeof uuid == 'undefined') {
                 return collector;
             }
@@ -185,43 +212,6 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             PubSub.trigger("collector_reset", null);
         };
 
-        /*
-         future - may want to implement something like this once websocket is set up
-         e.g. sync with server... this is constant, may need to throttle if too much communication
-
-         fail-safe in case PubSub doens't pick something up
-         note - watching collector, so localStorage changes not picked up here (will be in angularLS)
-
-         $rootScope.$watch('collector', function() {
-
-         });
-         */
-
-        // ---- PUB / SUB ----
-
-        //todo - need to rewrite (not correct right now), move to clotho API
-        /**
-         * @name Collector.watch
-         *
-         * @param toWatch {string | object} event to watch.
-         *  - If pass `all`, then all model changes will be passed to toUpdate
-         *  - Otherwise, defaults to the UUID you pass in
-         * @param callback {function} function to be run. Passed new model.
-         *
-         * @description
-         * Function to be inherited by controllers / services, which will run a given callback upon the changing of the given uuid.
-         */
-        var watch = function(toWatch, callback) {
-            //handle watching all model changes
-            if (toWatch == "all") {toWatch = "model_change"}
-            else {toWatch = "model_change:" + toWatch}
-
-            PubSub.on(toWatch, function(uuid) {
-                console.log("COLLECTOR.update\tuuid: " + toWatch);
-                callback(retrieveModel(uuid));
-            });
-
-        };
 
         // ------- FACADE -----------
 
@@ -230,8 +220,8 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             silentAddModel : silentAddModel,
             storeModel : storeModel,
             retrieveModel : retrieveModel,
-            clearStorage : clearStorage,
-            watch : watch
+            retrieveRef : retrieveRef,
+            clearStorage : clearStorage
         }
     }
 }]);

@@ -11,7 +11,7 @@
                 <li class="nav-header">{{module.module_title}}</li>
                 <li ng-repeat="paver in module.pavers" ng-class="{active: ('{{$parent.$index + '-' + $index}}' == current)}">
                     <a ng-click="activate('{{$parent.$index + '-' + $index}}')">
-                        <i class="icon-pencil" ng-show="paver.type == 'quiz'"></i>
+                        <i class="icon-pencil" ng-if="paver.type == 'quiz'"></i>
                         {{paver.paver_title}}
                     </a>
                 </li>

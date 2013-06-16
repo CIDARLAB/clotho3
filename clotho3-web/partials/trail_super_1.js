@@ -6,7 +6,11 @@ var tempModule = {
 };
 
 //add it, get div id
-var divId = $clotho.api.bootstrap(tempModule);
+var selectors = $clotho.api.bootstrap(tempModule)
+    .then(function(selectors) {
+        //jquery to move it to the right spot
+        $(selectors[1]).appendTo("[myWidget]");
+    });
 
-//jquery to move it to the right spot
-$("[clotho-widget-uuid=" + divId + "]").appendTo("[myWidget]");
+
+
