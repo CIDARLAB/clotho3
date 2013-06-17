@@ -30,7 +30,9 @@ import org.junit.Test;
  */
 public class T4 {
     
-    public T4() {
+    private Persistor persistor;
+    public T4() throws UnknownHostException {
+    	this.persistor = new Persistor(new MongoDBConnection());
     }
     
     //For testing: flush API between tests
@@ -43,7 +45,6 @@ public class T4 {
     private static Person cindy = new Person();
     
     
-    Persistor persistor = new Persistor(new MongoDBConnection());
     
     @BeforeClass
     public static void setUpClass() {

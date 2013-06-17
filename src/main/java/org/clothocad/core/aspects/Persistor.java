@@ -78,7 +78,7 @@ public class Persistor implements Aspect {
             MongoDBConnection conn = new MongoDBConnection();
             conn.connect();
             singleton = new Persistor(conn);
-        } catch (UnknownHostException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(0);
         }

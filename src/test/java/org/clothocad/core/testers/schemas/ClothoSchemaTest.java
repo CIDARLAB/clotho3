@@ -72,11 +72,12 @@ public class ClothoSchemaTest {
     
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
-        p.connect();
+    	p = new Persistor(new MongoDBConnection());
+    	p.connect();
         featureSchema = createFeatureSchema();
     }
     
-    static Persistor p = new Persistor(new MongoDBConnection());
+    static Persistor p;
     static DBClassLoader cl = new DBClassLoader(p);
     static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     static Schema featureSchema;

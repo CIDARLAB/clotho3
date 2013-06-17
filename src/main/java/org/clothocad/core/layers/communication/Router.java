@@ -65,7 +65,7 @@ public class Router {
 	
 	// receive message
 	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
-//		System.out.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
+		System.err.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
             
 		try {
                     RouterDoo doo = new RouterDoo();
@@ -83,9 +83,9 @@ public class Router {
                     ServerSideAPI api = mind.getAPI();
 
 			if(Channel.autocomplete.toString().equalsIgnoreCase(channel)) {
-                            api.autocomplete(json.getJSONObject("data").getString("query"));
+				api.autocomplete(json.getJSONObject("data").getString("query"));
 			} else if(Channel.submit.toString().equalsIgnoreCase(channel)) {								
-                            api.submit(json.getJSONObject("data").getString("query"));
+				api.submit(json.getJSONObject("data").getString("query"));
 			} else if(Channel.login.toString().equalsIgnoreCase(channel)) {
 
 			} else if(Channel.autocompleteDetail.toString().equalsIgnoreCase(channel)) {
@@ -96,9 +96,19 @@ public class Router {
 			} else if(Channel.changePassword.toString().equalsIgnoreCase(channel)) {								
 
 			} else if(Channel.say.toString().equalsIgnoreCase(channel)) {
-                            api.say(json.getJSONObject("query").getString("text"));
+				System.out.println("say -> "+json);               
+				api.say(json.getJSONObject("data").getString("text"));
 			} else if(Channel.log.toString().equalsIgnoreCase(channel)) {
 
+			} else if(Channel.get.toString().equalsIgnoreCase(channel)) {
+				System.out.println("[Router.receiveMessage] get "+json);
+				api.get(json);
+			} else if(Channel.set.toString().equalsIgnoreCase(channel)) {
+				//System.out.println("[Router.receiveMessage] set "+json);
+				api.set(json.getJSONObject("data"));
+			} else if(Channel.create.toString().equalsIgnoreCase(channel)) {
+				api.create(json);
+				//System.out.println("[Router.create] -> "+api.create(json));
 			}
                         //Etcetera for remaining ssAPI methods
 		} catch(Exception e) {

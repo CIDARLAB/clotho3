@@ -18,6 +18,7 @@ import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.DefaultMapper;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.github.jmkgreen.morphia.mapping.MapperOptions;
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -52,12 +53,15 @@ public class MongoDBConnection
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
 
-    static {
-        
-            MapperOptions opts = new MapperOptions();
-            opts.objectFactory = new PolymorphicObjectFactory();
-            morphia = new Morphia(new DefaultMapper(opts));
+    public MongoDBConnection() 
+    		throws UnknownHostException {
+    	MapperOptions opts = new MapperOptions();
+    	opts.objectFactory = new PolymorphicObjectFactory();
+    	morphia = new Morphia(new DefaultMapper(opts));
+    	
+    	this.connect();
     }
+    
     private MongoClient connection;
     private DB db;
     private DBCollection data;
@@ -101,6 +105,7 @@ public class MongoDBConnection
     
     //actual meat of cascade save in here
     private boolean save(ObjBase obj, Set<ObjBase> exclude){
+    	
         boolean newId = obj.getUUID() == null;
         if(newId) obj.setUUID(ObjectId.get());
         exclude.add(obj);        
@@ -206,12 +211,7 @@ public class MongoDBConnection
     public BSONObject getAsBSON(ObjectId uuid) {
         return data.findOne(new BasicDBObject("_id", uuid));
     }
-
-    public String save(JSONObject json) {
-    	System.out.println("[MongoDBConnection.save] -> "+json);
-    	
-    	return UUID.randomUUID().toString();
-    }
+    
     /*Query construction forthcoming
      * @Override
      public ObjBase getOne(BasicDBObject query) {
@@ -241,9 +241,7 @@ public class MongoDBConnection
             cursor.close();
         }
         return results;
-    }
-
-    
+    }    
 
     public List<BSONObject> getAsBSON(BSONObject query) {
         return getAsBSON(query.toMap());
@@ -381,5 +379,12 @@ public class MongoDBConnection
     public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, String name) {
         return getOneAsBSON(new BasicDBObject("name", name));
     }
+
+	@Override
+	// should we actually offer this method?
+	public String save(JSONObject json) {
+		// TODO
+		return null;
+	}
 
 }

@@ -49,6 +49,7 @@ import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
+import org.clothocad.dm.clotho2.NucSeq;
 import org.clothocad.model.Person;
 import org.clothocad.model.Trail;
 import org.json.JSONArray;
@@ -70,6 +71,18 @@ import org.json.JSONTokener;
  * @author John Christopher Anderson
  */
 public final class ServerSideAPI {
+
+	private Persistor persistor;
+	
+	public ServerSideAPI() {
+		try {
+			this.persistor = new Persistor(new MongoDBConnection());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		// here, we could also create a pool of persistors
+	}
 
 // <editor-fold defaultstate="collapsed" desc="Human Interaction">      
     //JCA:  as of 6/6/2013 autcomplete works.  Wordlist is not persisted, but the completer does learn submitted phrases.
@@ -221,6 +234,22 @@ public final class ServerSideAPI {
         return new JSONObject();
     }
 
+    /*
+     * @param data 
+     * the data JSONObject encapsulates the query on the database
+     * e.g. uuid
+     */
+    public final JSONObject get(JSONObject data) {
+
+    	// here, we need to inspect the JSONObject
+    	try {
+        	return this.get(data.getString("uuid"));
+    	} catch(Exception e) {
+    		// in case of an error, we return an empty JSON object
+    		return new JSONObject();
+    	}
+    }
+    
     public final void set(String sharableId, String newvalue) {
         try {
             //Pull the object from the db
@@ -232,18 +261,45 @@ public final class ServerSideAPI {
         }
     }
 
+    
+    public final void set(JSONObject data) {
+    	
+    }
+    
     public final String create(JSONObject json) {
     
-    	System.out.println("[ServerSideAPI.create] " + json);
+    	//System.out.println("[ServerSideAPI.create] " + json);
     	
     	try {
     		
     		String uuid = json.getString("uuid");
+
     		JSONObject model = json.getJSONObject("model");
-    	
+    		
+
+    		/*** dynamic class loading ***/ 
+    		// this needs to be improved somehow...
+    		String sClass = json.getString("className");
+    		Class<?> c = Class.forName(sClass);
+    		
+    		// how can I figure out which class this is?
+    		NucSeq nucseq = (NucSeq)c.newInstance();
+
+    		// now, we need to set the sequence of this nucseq object
+    		nucseq.initiateNucSeq(model.getString("sequence"));
+    		    		    		    		    	
+    		// can/should we create an ObjBase object here from 
+    		// the provided JSON information??
+    				
     		// here we need to forward the model to the Persistor
-    		Persistor persistor = new Persistor(new MongoDBConnection());
-    		return persistor.save(model);
+    		if(null != this.persistor) {
+    			persistor.save(nucseq);
+        		return nucseq.getUUID().toString();
+    		} else {
+    			System.err.println("CRAP!");
+    		}
+    		return new String();
+    		
     		
     	} catch(Exception e) {
     		e.printStackTrace();
@@ -448,9 +504,22 @@ public final class ServerSideAPI {
     public ServerSideAPI(ClothoWebSocket socket) {
     	this.socket = socket;
     	this.mind = null;
+
+    	try {
+			this.persistor = new Persistor(new MongoDBConnection());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
+    
     public ServerSideAPI(Mind mind) {
         this.mind = mind;
+        
+        try {
+			this.persistor = new Persistor(new MongoDBConnection());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     public void setSocket(ClothoWebSocket socket) {

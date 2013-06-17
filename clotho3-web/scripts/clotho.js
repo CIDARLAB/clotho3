@@ -14,12 +14,11 @@
 					console.log('SOCKET OPENED');
 				},
 		
-				_send : function(channel, action, data) {
+				_send : function(channel, data) {
 					
 					if (this._ws) {				        
 						var message = { 
 							'channel': channel, 
-							'action': action, 
 							'correlation': '1234567890', 
 							'authentication': 'XXXXXX', 
 							'data': data 
@@ -32,10 +31,10 @@
 					}
 				},
 		
-				send : function(channel, action, message) {
-					server._send(channel, action, message);
-				},
-		
+				send : function(channel, message) {
+					server._send(channel, message);
+				}, 
+
 				_onmessage : function(m) {
 					if (m.data) {
 						alert(m.data);

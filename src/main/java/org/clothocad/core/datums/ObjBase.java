@@ -49,15 +49,11 @@ public abstract class ObjBase {
     private Date lastModified, lastAccessed;
 	
 	public void onUpdate() {
-		
-            
-            
 		// here we need to call the client-side API
 		// which forwards the update message 
 		// to ``subscribed'' clients
             
             //so, do all setters need to check to see if the value changed and then call onUpdate?
-		
 	}
         
     public List<ObjBase> getChildren(){
@@ -101,14 +97,20 @@ public abstract class ObjBase {
         return output;
     }
     
-    //TODO:
-    public JSONObject toJSON(){
+    public JSONObject toJSON() {
         
-        //JCA's hack of re-pulling from db to serialize.  Please change.
+        //JCA's hack of re-pulling from db to serialize. Please change.
+    	
+    	// here, we should actually iterate over all data fields of the object
+    	// (using java introspection for example)
+
+    	System.out.println("[ObjBase.toJSON] -> "+this.UUID.toString());
         try {
             BSONObject bson = Persistor.get().getAsBSON(UUID);
-            JSONObject out = new JSONObject(bson.toString());
-            return out;
+            if(null != bson) {
+            	return new JSONObject(bson.toString());
+            }
+            return new JSONObject();
         } catch (JSONException ex) {
             ex.printStackTrace();
             return null;
