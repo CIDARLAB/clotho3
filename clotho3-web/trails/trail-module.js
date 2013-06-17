@@ -3,48 +3,90 @@
 Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
 
     /**
-     * @description Creates a youtube player within an iFrame
+     * @description Creates a youtube player within an iFrame. Use before createAPIPlayer.
      * @param {object} params as defined:
      * {
+     *     videoId:
      *     divId
      *     height:
      *     width:
-     *     videoId:
-     *     events:
-
-     *     //todo
+     *     autoplay:
+     *     events: {
+     *
+     *     }
      *     start:
      *     end:
-     *     autoplay:
+     *     autoadvance:
     }
     */
-    var createPlayer = function(params) {
+    var createFrame = function(params) {
         //if just one parameter, assume its the video id
         if (typeof params == 'string')
             params.videoId = params;
 
-        var cleanId = extract_youtube(params.videoId);
-        if (cleanId) {
-            //todo make sure the div exists, what happens if doesn't? new video if does, not new player
-            //see http://stackoverflow.com/questions/7988476/listening-for-youtube-event-in-javascript-or-jquery/7988536#7988536
+        if (params.cleanId = extract_youtube(params.videoId)) {
 
-            new YT.Player(params.divId || 'ytplayer', {
-                autohide: 1,
-                autoplay: 1,
-                height: params.height || 525,
-                width: params.width || 700,
-                videoId: cleanId,
-                events: {
-                    //'onReady': onPlayerReady,
-                    //'onStateChange': onPlayerStateChange
-                }
-            });
+            //todo - scale dimensions to max-width:700
 
-            return true;
+            var frame = '<iframe id="'+(params.divId || 'ytplayer')+'" frameborder="0" allowfullscreen="1" ' +
+                'width="' + (params.width || 700) + '" ' +
+                'height="' + (params.height || 395) + '" ' +
+                'src="http://www.youtube.com/embed/'+params.cleanId+'?' +
+                'enablejsapi=1&' +
+                'modestbranding=1&' +
+                'rel=0&' +
+                'playerapiid=trailPlayer&' +
+                'autoplay=' + (params.autoplay || 1) + '&' +
+                'autohide=' + (params.autohide || 1) + '&' +
+                (params.start ? 'start=' + params.start : '') + '&' +
+                (params.end ? 'end=' + params.end : '') +
+                '"></iframe>';
+
+            return frame;
         } else {
             return false;
         }
     };
+
+    var createAPIPlayer = function (params) {
+        params = params || {};
+        params.events = params.events || {};
+
+        //note: can overwrite certain events if we want to... e.g. params.events.onReady = ...
+
+        /* old code
+        var player = new YT.Player(params.divId || 'ytplayer', {
+            videoId: cleanId,
+            height: params.height || 525,
+            width: params.width || 700,
+            playervars : {
+                enablejsapi: 1,
+                modestbranding: 1,
+                autohide: params.autohide || 1,
+                autoplay: params.autoplay || 1
+            },
+            events: {
+                'onReady': onPlayerReady
+                //'onStateChange': onPlayerStateChange
+            }
+        });
+        */
+
+        var player = new YT.Player(document.getElementById(params.divId || 'ytplayer'), {
+            events: params.events
+        });
+
+        //note: or add custom events...
+        /*
+        player.addEventListener('onReady', function() {
+            console.log("video ready");
+        });
+        */
+
+        return player;
+    };
+
+
 
     /**
      * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work. Adapted from:
@@ -60,26 +102,30 @@ Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
     };
 
 
-    var compile_trail = function (trail) {
+    var compile = function (trail) {
 
-        var transcludes = trail.dependencies || null;
+        //need to copy, or compiling will alter the file in the collector (because pass reference)
+        trail = angular.copy(trail);
+
+        var transcludes = trail.dependencies || null,
+            deferred = $q.defer();
 
         //if no dependencies listed, don't need to compile
         if (!transcludes) {
-            return trail;
+            deferred.resolve(trail);
         }
 
         var final_contents = [],
             promises = [];
 
-        //get the transcluded trails
+        //get the transcluded trails... will be fast if in collector already
         angular.forEach(transcludes, function(uuid) {
             promises.push(Clotho.get(uuid));
         });
 
         //after download all, pluck out the modules we need
         $q.all(promises).then(function (downloads) {
-            
+
             //reorganize transcludes so can reference by uuid
             transcludes = {};
             angular.forEach(downloads, function(transclude) {
@@ -88,6 +134,10 @@ Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
 
             //iterate through trail, pushing in modules
             angular.forEach(trail.contents, function (mod, ind) {
+
+                //testing
+                //console.log(trail.contents[ind]);
+
                 if (typeof mod.transclude == 'undefined') {
                     final_contents.push(mod);
                 } else {
@@ -116,15 +166,27 @@ Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
             });
 
             trail.contents = final_contents;
+            deferred.resolve(trail);
         });
 
-        return trail;
+        return deferred.promise;
+    };
+
+    var share = function(uuid) {
+        console.log("share trail with uuid: " + uuid);
+    };
+
+    var favorite = function(uuid) {
+        console.log("favorite trail with uuid: " + uuid);
     };
 
     return {
-        createPlayer : createPlayer,
+        createFrame : createFrame,
+        createAPIPlayer : createAPIPlayer,
         extract_youtube : extract_youtube,
-        compile_trail : compile_trail
+        compile : compile,
+        share : share,
+        favorite : favorite
     }
 }]);
 
@@ -135,62 +197,75 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', function($scope, $route, Clotho, Trails, $http) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile) {
 
-    //todo - move logic into resolve
-    Clotho.get($route.current.params.uuid).then(function(result) {
-        $scope.trail = Trails.compile_trail(result);
-        $scope.content = $scope.trail.description;
-    });
+    //inherited from $routeProvider.resolve clause in application.js
+    $scope.uuid = $route.current.params.uuid;
+    $scope.trail = $route.current.locals.trail;
+    $scope.content = $scope.trail.description;
 
     $scope.loadVideo = function (url) {
-        //todo - check for start time option
 
-        /*var params = {
+        var params = {
             "divId" : "ytplayer",
             "height" : 525,
             "width" : 700,
-            "videoId" : url
+            "videoId" : url,
+            "autoadvance" : true
         };
 
-        Trails.createPlayer(params);*/
+        $scope.content = Trails.createFrame(params);
 
+        //timeout so content is updated, run after digest()
+        $timeout(function() {
+            var player = Trails.createAPIPlayer();
 
-        //OLD WAY
-        var html = '<iframe id="ytplayer" type="text/html" width="700" height="525" src="'+url+'?autoplay=1&rel=0&autohide=1&enablejsapi=1&version=3&playerapiid=ytplayer" frameborder="0" allowfullscreen></iframe>';
-        $scope.content = html;
-
+            if (params.autoadvance) {
+                player.addEventListener('onStateChange', function (event) {
+                    if (event.data == 0) {
+                        //video is ended, want to advance somehow
+                        $scope.next();
+                    }
+                })
+            }
+        });
     };
 
     $scope.loadTemplate = function (url) {
         //future - once clotho API can return templates, use Clotho.get
-        $http.get(url).success(function (data) {
-            $scope.content = data;
+        $http.get(url, {cache:$templateCache}).success(function (data) {
+            $scope.content = $compile(data)($scope);
         });
     };
 
-    $scope.loadQuiz = function (url) {
-        $scope.content = '<h4>this would be a quiz once this works</h4>'
+    $scope.loadQuiz = function (content) {
+
+        $scope.quiz = content;
+
+        $http.get('partials/trails/' + content.type + '-partial.html', {cache: $templateCache}).
+            success(function (data) {
+                $scope.content = $compile(data)($scope);
+            });
     };
 
     $scope.loadPaver = function (paver) {
-        var html = '';
+        var html = '<h4>Something didn&quot;t work - that type of paver wasn&quot;t recognized</h4>';
         $scope.content = html;
     };
 
 
     $scope.activate = function(indices) {
-        //todo - clear video area / update with new video
 
-        //easier to compare
         $scope.current = indices;
+        $scope.content = "";
         //module, paver
         var pos = indices.split("-");
         var paver = $scope.trail.contents[pos[0]]['pavers'][pos[1]];
 
-        //todo - better handling to ensure script load
+        //todo - better handling to ensure script load before next step
         if (paver.script) {
-            $script(paver.script);
+            var paver_name = "paver_" + $scope.uuid + "_" + indices;
+            $.getScript(paver.script);
         }
 
         switch (paver.type) {
@@ -203,7 +278,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                 break;
             }
             case 'quiz' : {
-                $scope.loadQuiz(paver.quiz);
+                $scope.loadQuiz(paver.content);
                 break;
             }
             default : {
@@ -215,27 +290,27 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
     $scope.home = function() {
         $scope.content = $scope.trail.description;
-        $scope.current = null;
+        $scope.current = undefined;
     };
 
     $scope.favorite = function() {
-        console.log("favorite this trail");
+        Trails.favorite($scope.uuid);
     };
 
     $scope.share = function() {
-        console.log("share this trail");
+        Trails.share($scope.uuid)
     };
 
     $scope.next = function() {
         var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, -1],
             newpos;
 
-        if ($scope.trail.contents[oldpos[0]]['pavers'][+oldpos[1] + 1])
+        if (typeof $scope.trail.contents[oldpos[0]]['pavers'][+oldpos[1] + 1] != 'undefined')
             newpos = oldpos[0] + '-' + (+oldpos[1] + 1);
-        else if ($scope.trail.contents[+oldpos[0] + 1]['pavers'])
+        else if (typeof $scope.trail.contents[+oldpos[0] + 1]['pavers'] != 'undefined')
             newpos = (+oldpos[0] + 1) + '-' + 0;
         else {
-            $scope.current = null;
+            $scope.current = undefined;
             return;
         }
 
@@ -243,15 +318,18 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.prev = function() {
-        var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, -1],
+        console.log($scope.current);
+        if ($scope.current == '0-0') return;
+
+        var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, 1],
             newpos;
 
-        if ($scope.trail.contents[oldpos[0]]['pavers'][+oldpos[1] - 1])
+        if (typeof $scope.trail.contents[oldpos[0]]['pavers'][+oldpos[1] - 1] != 'undefined')
             newpos = oldpos[0] + '-' + (+oldpos[1] - 1);
-        else if ($scope.trail.contents[+oldpos[0] - 1]['pavers'])
+        else if (typeof $scope.trail.contents[+oldpos[0] - 1]['pavers'])
             newpos = (+oldpos[0] - 1) + '-' + ($scope.trail.contents[+oldpos[0] - 1]['pavers'].length - 1);
         else {
-            $scope.current = null;
+            $scope.current = undefined;
             return;
         }
 
@@ -259,6 +337,24 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.base64icon = base64icon;
+}]);
+
+Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
+
+    //todo - pass in starting value, default to false
+    $scope.createEmptyAnswer = function(quiz) {
+        $scope.quiz.answer = new Array(quiz.options.length);
+    };
+
+    $scope.answerUndefined = function(quiz) {
+        return (typeof quiz.answer == 'undefined' || quiz.answer === '');
+    };
+
+    $scope.submitQuestion = function(quiz) {
+        Clotho.gradeQuiz(quiz).then(function (data) {
+            $scope.quiz.response = data;
+        });
+    }
 }]);
 
 var base64icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACtElEQVR4Xu2Y3UtqURDFlyYVqQhBQon5koqYiUIElSD951qa+AkGUWDUgxC9KEhqfnfXgOLl3gKP2Xlw5kXO0T2zZ+2Z+eG2NBqNCdbYLCqAVoC2gM6ANZ6B0CGoFFAKKAWUAkqBNVZAMagYVAwqBhWDawwB/TOkGFQMKgYVg4pBxeAaK7A0Bh8fH/H6+orJZIL9/X0Eg0FYLJaZpH8og/v7e+zs7CAWi/313Ve6r8LnV7GWEuDh4QH1eh02m038D4dD+Hw++P1+eaYoqVRK3m9ubuLy8hJWq/XbeluFz+8CGhZgNBohnU7LiSYSCQwGA7y8vMDpdMLj8UjMWq0m72jb29u4uLhAu91GtVrFxsYG4vE43t/fwaS3trYQiURwc3OzsM/5ilu0mw0L0O/3ZbPj8ViS/vj4kBYIBAKyh263i0wmg8PDQ7RaLXQ6HRGKmy2VSmg2m9jd3ZV1/I5Vw/VGfS6a+PT3hgVgb5fLZfHDFmCZ05hEOByWJJl4MplEPp9Hr9ebCTAvHte4XC6cnp5iGZ+/LgBPOJvNSumen5/LKeZyOen1k5MTFItF2O12eL1ePD09SaUcHR3JM+35+Vne087OzqSKlvVpRATDFcAT5wxgb1OA6TMFCIVCqFQq/+yHA/Dq6gqcH9fX17Oq2dvbQzQanfkw4tNI8lxjWABOeFYAT+3g4EA+2ddutxvHx8dgmdOYdKFQkOR40kzu7u4Ob29vcDgcUjmsDg5ArjXq89cFYEAOsNvbWzlRGtuBvcwk542tQQFIAc4FCjKlB4Ug9zlHpjRZ1KcpFJhPkCij8UR/ylbh8397M9wCP5Wo2X5UAL0R0hshvRHSGyGzJ7GZ8ZUCSgGlgFJAKWDmFDY7tlJAKaAUUAooBcyexGbGVwooBZQCSgGlgJlT2OzYSoF1p8AnDSiNnx2jBucAAAAASUVORK5CYII=";

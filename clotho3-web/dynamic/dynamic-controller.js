@@ -2,7 +2,7 @@
 
 //note works in 1.1.4, can't pass function in 1.0.6
 
-var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clotho', '$route', '$rootScope',  function($scope, Clotho, $route, $rootScope) {
+var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clotho', '$route', '$rootScope', '$position', function($scope, Clotho, $route, $rootScope, $position) {
 
     /*
      Purpose
@@ -35,19 +35,46 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
         $scope.dynTemplate = 'partials/' + uuid + '.html';
     };
 
+    // testing show / display
+    //files must use Application.Widgets.__ syntax
+    $scope.showSimple = function(event) {
+
+        var pos = $position.position(angular.element(event.target));
+
+        Clotho.show_simple({
+            "template" : 'extensions/simple-template.html',
+            "controller" : 'extensions/simple-controller.js',
+            "dependencies" : [
+                'extensions/simple-service.js'
+            ],
+            "styles" : {
+                "background" : "#FF0000",
+                "position" : "absolute",
+                "top" : pos.top,
+                "left" : pos.left
+            }
+        });
+    };
+    $scope.showEditor = function() {
+        Clotho.show_simple({
+            "template" : 'extensions/editor-template.html',
+            "target" : ".editorCatcher"
+        });
+    };
+
     //bootstrapping new apps
 
     $scope.bootstrapWidgetOne = function() {
         var tempModule = {
             "moduleName" : "widgetApp",
-            "moduleUrl" : "widget/widgets/widget-module.js"
+            "moduleUrl" : "widgets/widget-module.js"
         };
         console.log(Clotho.bootstrap(tempModule));
     };
     $scope.bootstrapWidgetTwo = function() {
         var tempModule = {
             "moduleName" : "widgetApp2",
-            "moduleUrl" : "widget/widgets/widget2-module.js"
+            "moduleUrl" : "widgets/widget2-module.js"
         };
         console.log(Clotho.bootstrap(tempModule));
     };
@@ -65,38 +92,36 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
     //note - working
     $scope.addDirective = function() {
         $('newDirective').html('<simple-text></simple-text>');
-        Application.Widgets.mixin('widget/dependencies/simpleText-directive.js', 'newDirective');
+        Application.mixin('extensions/simpleText-directive.js', 'newDirective');
     };
     //note-working
     $scope.addController = function() {
+
         $('newController').html('<div ng-controller="SimpleCtrl">{{test}}<br />{{serviceText}}</div>');
 
         //note this controller requires a service to show we can do that too (dependency injection)
 
         //add service first, don't recompile (don't pass in element), just add dependency
-        //Application.Widgets.mixin('widget/dependencies/simple-service.js');
+        //Application.Widgets.mixin('extensions/simple-service.js');
         // then pass in the controller
-        //Application.Widgets.mixin('widget/dependencies/simple-controller.js', 'newController');
+        //Application.Widgets.mixin('extensions/simple-controller.js', 'newController');
 
         //or just pass it in all together
-        Application.Widgets.mixin(['widget/dependencies/simple-controller.js', 'widget/dependencies/simple-service.js'], 'newController');
+        Application.mixin(['extensions/simple-controller.js', 'extensions/simple-service.js'], 'newController');
 
     };
     //note - not working
     $scope.addFilter = function() {
         $('newFilter').html("{{'tester' | capitalize}}");
-        console.log("1");
-        Application.Widgets.mixin('widget/dependencies/capitalize-filter.js', 'newFilter');
-        console.log("2");
+        Application.mixin('extensions/capitalize-filter.js', 'newFilter');
     };
 
 }]);
-/*dynamicCtrl.template = function(Clotho) {
+
+dynamicCtrl.template = function(Clotho) {
     //return Clotho.get_url('show_template.html');
     return 'dynamic/dynamic-partial.html';
-};*/
-
-dynamicCtrl.template = 'dynamic/dynamic-partial.html';
+};
 
 dynamicCtrl.resolve = function(Clotho, $q, $timeout) {
     var resolved = {};

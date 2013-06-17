@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.clothocad.core.datums.Sharable;
+import org.json.JSONObject;
 
 /**
  *
@@ -56,5 +57,10 @@ public class Institution extends Sharable {
 
     public static Institution retrieveByName( String name ) {
         throw new UnsupportedOperationException("not implemented yet.");
+    }
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        return true;
     }
 }

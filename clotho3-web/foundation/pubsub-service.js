@@ -4,41 +4,16 @@ Application.Foundation.service('PubSub', function() {
      // Purpose
          - singleton pub/sub message queue for broadcasting messages between controllers & interacting with server
          - reduce reliance on $rootScope.$broadcast b/c bubbles and slows over large projects
-     // PubSub Requirements
-         - multiple channels
-         - pass in and our arguments (as object?)
-         - custom callbacks
-
-     // future - if have a compelling reason to, add listenTo(), stopListening(), listenToOnce() ------- http://backbonejs.org/docs/backbone.html
-
-     //FUTURE - once server communication set up, set up inter-app communication:
-     - Notes:
-         - some events don't need to be published to the server?
-         - Storage events will be handled automatically via localStorage
-         - route events should not be published across apps
-         - e.g. error saving something wouldn't be meaningful in another page
-         - events which should be published:
-         - ??
-     - Path
-         - publish sends messages to server, not to listeners within an app
-         - server sends message back to client (so received all pages)
-         - relayed into PubSub, all listeners triggered
-     - Implement
-         - in theory, publish becomes: publish_to_server -> server -> publish_to_client
 
      // Notes
         - using pub/sub requires calling unsubscribe on $destroy -- need to register watchers to do this
-
-     // Examples
-        // More robust - http://www.gridlinked.info/angularJS/modules/MessagingServices.js (jQuery reliance)
      */
 
     /**
-     * future -- decide this later
+     * future -- decide API later
      * note - combine model_add and model_change
      *
      * API -- STANDARD MESSAGES
-     * [messages to be part of a standard API]
      *
      * model_add (uuid, model) -- model added to collector
      * model_destroy (uuid, model) -- model removed from collector
@@ -55,11 +30,21 @@ Application.Foundation.service('PubSub', function() {
      *
      */
 
-    //TODO
-    // - better implementation of once()? Just have this to get it working. Use jQuery.events???
-    //        -e.g. see http://closure-library.googlecode.com/svn/docs/closure_goog_pubsub_pubsub.js.source.html
-    // - optimize handling splitting of space-separated events and downstream handling
-    // - better handling of model_change AND model_change:[uuid] -- handle splitting or something?
+    /*TODO - rewrite into PubSub2 with goals:
+
+     - Track Multiple callbacks for each event
+     - Track reference for each callback
+     - On() Pass multiple events, space-separated
+     - Once() via Flag for Boolean 'once'
+     - deregistration returned as function to invoke later
+        - e.g. return removeFromArray(array, val)
+     - Each() (unexposed) to handle multiple/single items the same way
+     - Off() by handle (event, specific callback)
+     - Destroy() by reference
+     - Clear() by event
+
+     */
+
 
 
 
@@ -74,7 +59,7 @@ Application.Foundation.service('PubSub', function() {
         // where flag is true or false... true to delete after run
         var listeners = {};
 
-        //record handles for each reference (i.e. in Angular, $scope.$id // for once, 'once')
+        //record handles for each reference (i.e. in Angular, $scope.$id)
         var references = {};
 
         //split events passed in by a space
@@ -133,6 +118,7 @@ Application.Foundation.service('PubSub', function() {
         /***** FUNCTIONS ******/
 
         /**
+         @name PubSub.trigger
          @description
          Publish some data on a topic
          @param topic {string} channel to publish on, can be multiple space-separated
@@ -144,7 +130,8 @@ Application.Foundation.service('PubSub', function() {
         var trigger = function(topic, args) {
             var topics = topic.split(eventSplitter);
             angular.forEach(topics, function(curTopic) {
-                console.log("PUBSUB\tpublish on " + curTopic + " " + args);
+                // testing
+                // console.log("PUBSUB\tpublish on " + curTopic + " " + args);
                 listeners[curTopic] && angular.forEach(listeners[curTopic], function(array, idx) {
                     array[0](args);
                     if (array[1]) {
@@ -159,13 +146,14 @@ Application.Foundation.service('PubSub', function() {
         };
 
         /**
+         @name PubSub.on
          @description
          Register a callback to a topic
 
          @param topic {string} channel to subscribe to. Can pass in multiple, space-separated.
          @param callback {function} handler event. Will be called on publish event to given topic, passed args from publish
          @param ref {string} $scope.$id (or other name), which when destroyed should delete its associated listeners. Avoid passing in objects.
-         @private one {boolean} Flag to run the callback only once
+         @param one {boolean} Flag to run the callback only once
          @return handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
          */
         // future - rewrite, handle return multiple events better (no if, smarter return)
@@ -189,6 +177,7 @@ Application.Foundation.service('PubSub', function() {
         };
 
         /**
+         * @name PubSub.once
          * @description
          * Register a callback to a topic only a single time
          * @param topic {string}
@@ -201,6 +190,7 @@ Application.Foundation.service('PubSub', function() {
         };
 
         /**
+         @name PubSub.off
          @description
          Disconnect subscribed function from topic
          @param handle {array} return value from a subscribe() call
@@ -225,15 +215,14 @@ Application.Foundation.service('PubSub', function() {
         /**
          * @name PubSub.destroy
          *
-         * @param ref {object} $scope (or other object) which when destroyed should remove its associated listeners
+         * @param ref {string|object} $scope.$id (or other string) which when destroyed should remove its associated listeners. Can pass object, but slower so should be avoided.
          *
          * @description
-         * Removes all listeners for an associated refernce (i.e. in Angular, $scope)
-         * E.g. $scope.$on('$destroy', PubSub.destroy(this));
+         * Removes all listeners for an associated reference (i.e. in Angular, $scope.$id)
+         * E.g. $scope.$on('$destroy', Clotho.silence($scope.$id));
          */
         var destroy = function(ref) {
 
-            //console.log("PUBSUB2\tremoving reference");
             //console.log(references);
             //console.log(ref);
 
@@ -270,32 +259,8 @@ Application.Foundation.service('PubSub', function() {
                 listeners[curTopic] = [];
             });
 
-            //todo - clean up references array also
+            //todo - clean up references array also --- this is tricky
 
-        };
-
-
-        /**********
-         Testing
-         **********/
-
-        var showtest = function() {
-            var storage = {};
-
-            var set = function(uuid, data) {
-                storage[uuid] = data;
-            };
-
-            var get = function(uuid) {
-                return storage[uuid];
-
-            };
-
-            return {
-                storage : storage,
-                set : set,
-                get : get
-            }
         };
 
 

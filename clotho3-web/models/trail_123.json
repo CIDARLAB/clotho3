@@ -16,22 +16,165 @@
             ]
         },
         {
-            "module_title" : "Biosafety Levels",
+            "module_title" : "Demo Quizzes",
             "pavers" : [
-                {"paver_title" : "Introduction"},
-                {"paver_title" : "Biosafety Level 1-2"},
-                {"paver_title" : "Biosafety Level 3-4"}
-            ]
-        },
-        {
-            "module_title" : "Assessment",
-            "pavers" : [
-                {"paver_title" : "Review"}
-            ],
-            "assessment" : [
                 {
+                    "paver_title" : "MC Question",
                     "type" : "quiz",
-                    "title" :"Final Quiz"
+                    "content" : {
+                        "uuid" : "123456",
+                        "title" : "Question 1",
+                        "type" : "mc",
+                        "question" : "What is a plasmid?",
+                        "options" : [
+                            "A bacterial genome",
+                            "A viral genome",
+                            "Like an organelle",
+                            "None of the above"
+                        ]
+                    }
+                },
+                {
+                    "paver_title" : "MultiPic Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "67890",
+                        "title" : "Choose the right image",
+                        "type" : "multipic",
+                        "question" : "What does Z-form DNA look like?",
+                        "options" : [
+                            {
+                                "img_url" : "http://www.albany.edu/chemistry/cbb/abc_helix.jpg",
+                                "value" : "Like this"
+                            },
+                            {
+                                "img_url" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGSGiPIX0EdI25CuzD1rt384QeNLVHZ4KLMtbYdTZMq0fC6Al89w",
+                                "value" : "or this"
+                            },
+                            {
+                                "img_url" : "http://web.chem.ucsb.edu/~molvisual/Img/142A/B_DNA_side.png",
+                                "value" : "maybe this"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "paver_title" : "Fill-in Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "klasdhf",
+                        "title" : "Another Question",
+                        "type" : "fillin",
+                        "question" : "What is the reverse complement of <code>ACTGCT?</code>"
+                    }
+                },
+                {
+                    "paver_title" : "Essay Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "asdkgjasdg",
+                        "title" : "A much longer question",
+                        "type" : "essay",
+                        "question" : "Describe reverse complementation in great detail."
+                    }
+                },
+                {
+                    "paver_title" : "Drag-Drop Categories",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "dragdrop12345",
+                        "title" : "Drag Answers to the right section",
+                        "type" : "dragdrop",
+                        "question" : "What is each type of molecule?",
+                        "options" : [
+                            {
+                                "type" : "text",
+                                "img_url" : "http://www.albany.edu/chemistry/cbb/abc_helix.jpg",
+                                "value" : "DNA"
+                            },
+                            {
+                                "type" : "img",
+                                "img_url" : "http://web.chem.ucsb.edu/~molvisual/Img/142A/B_DNA_side.png",
+                                "value" : "DNA #2"
+                            },
+                            {
+                                "type" : "text",
+                                "value" : "glucose"
+                            },
+                            {
+                                "type" : "text",
+                                "value" : "cellulose"
+                            }
+                        ],
+                        "categories" : [
+                            "monomer",
+                            "oligomer",
+                            "polymer"
+                        ]
+                    }
+                },
+                {
+                    "paver_title" : "Multicheck Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "sfgsufigdjl",
+                        "title" : "Select all the correct answers",
+                        "type" : "multicheck",
+                        "question" : "Which of the following are true of DNA?",
+                        "options" : [
+                            "It contains Uracil",
+                            "High GC content increases melting temperature",
+                            "It is more stable at high temperatures",
+                            "A-form is the most common"
+                        ]
+                    }
+                },
+                {
+                    "paver_title" : "Ranking Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "s08ergsho",
+                        "title" : "Place the options in the correct order",
+                        "type" : "ranking",
+                        "question" : "Rank the following by molecular weight",
+                        "options" : [
+                            "Uracil",
+                            "Ribose",
+                            "Sucrose",
+                            "Adenosine",
+                            "Thymine"
+                        ]
+                    }
+                },
+                {
+                    "paver_title" : "True/False Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "sfgsufigdjl",
+                        "title" : "Is it true or false?",
+                        "type" : "truefalse",
+                        "question" : "GC content increases melting temperature"
+                    }
+                },
+                {
+                    "paver_title" : "Matching Question",
+                    "type" : "quiz",
+                    "content" : {
+                        "uuid" : "sasdfas9d",
+                        "title" : "Match each",
+                        "type" : "match",
+                        "question" : "Match each option with its correct match",
+                        "options" : [
+                            "Uracil",
+                            "DNA",
+                            "sucrose"
+                        ],
+                        "matches" : [
+                            "monomer",
+                            "polymer",
+                            "oligomer"
+                        ]
+                    }
                 }
             ]
         }

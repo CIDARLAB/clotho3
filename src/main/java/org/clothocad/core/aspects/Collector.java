@@ -87,5 +87,12 @@ public class Collector implements Aspect {
 
     //How many objBases to hold in RAM before dropping things
     private static final Integer MAXCACHESIZE = 20000;
+
+    public ObjBase temporaryRefetchMethod(String uuid) {
+        System.out.println("Stephanie should change the implemention here such that prexisting objects update their values by Reflection");
+        ObjBase obj = Persistor.get().get(ObjBase.class, new ObjectId(uuid));
+        objBaseBag.put(obj.getUUID(), obj);
+        return obj;
+    }
     
 }

@@ -6,6 +6,7 @@ public enum Channel {
     autocomplete, //Return potential commands that start with this substring
     autocompleteDetail, //Return the metadata for a Sharable
     submit, //Run this sloppy or concrete command
+    clear, //Replace the scriptengine behind mind with a fresh version
     login, //Log me into Clotho on this client with this login/password
     logout, //Log me out of Clotho
     changePassword, //Change my password to this new value

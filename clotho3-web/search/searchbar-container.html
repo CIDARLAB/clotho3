@@ -5,28 +5,33 @@
 
             <div class="input-append">
                 <input id="searchBar" name="searchBar" type="text" placeholder="Enter Command or Search Term" class="span4" autocomplete="off" ng-model="query" ng-required>
-                <button class="btn" id="searchBarSubmit" ng-click="submit()">Submit</button>
+                <button class="btn" id="searchBarSubmit" ng-click="submit(query)">Submit</button>
             </div>
 
-            <button logbutton class="btn" ng-click="toggleLog($event);"><i class="icon-tasks"></i></button>
-
-
-            <div class="alert inline-block alert-{{log.entries[0].class}}" ng-show="display.logSnippet">
-                <small>{{log.entries[0].text}}</small>
+            <div click-outside="display.hide('log')" class="inline-block" style="position:relative;">
+                <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log')">
+                    <i class="icon-tasks"></i>
+                </button>
+                <div clotho-searchbar-log style="position: absolute;" ng-style="display.logpos"></div>
             </div>
 
+        </div>
+
+        <div class="pull-left inline alert {{log.entries[0].class}}" ng-show="display.logSnippet" style="padding: 3px 12px 4px; margin: 5px 5px 0; max-width: 308px; overflow: hidden; text-overflow: ellipsis">
+            <small>{{log.entries[0].text}}</small>
         </div>
 
         <div class="pull-right inline btn-group">
             <button class="btn" ng-click="newPage()" alt="New Page"><i class="icon-file"></i></button>
             <button class="btn" ng-click="newWorkspace()" alt="New Workspace"><i class="icon-plus"></i></button>
-            <button class="btn" ng-click="toggle('help')"><i class="icon-question-sign"></i></button>
+            <div click-outside="display.hide('help')" class="inline-block">
+                <button class="btn" ng-click="display.toggle('help')"><i class="icon-question-sign"></i></button>
+
+            </div>
         </div>
     </div>
 
     <div clotho-searchbar-autocomplete></div>
-
-    <div clotho-searchbar-log style="position: absolute;" ng-style="display.logpos()"></div>
 
     <div clotho-searchbar-helppane></div>
 
@@ -37,4 +42,6 @@
             <li><a ng-click="toggleTooltips()" tabindex="-1"><i class="icon-tag"></i> Toggle Tooltips</a></li>
         </ul>
     </div>
+
+
 </div>

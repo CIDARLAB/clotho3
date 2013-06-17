@@ -1,16 +1,16 @@
 <div id="clothoSearchbarAutocompleteDetailCommand" class="well well-small bottom">
     <div class="pull-right">
-        <span class="badge badge-success"><i class="icon-thumbs-up icon-white"></i> {{detailModel.usage.positive}}</span>
-        <span class="badge badge-important"><i class="icon-thumbs-down icon-white"></i> {{detailModel.usage.negative}}</span>
+        <span class="badge badge-success"><i class="icon-thumbs-up icon-white"></i> {{autocomplete.detailModel.usage.positive}}</span>
+        <span class="badge badge-important"><i class="icon-thumbs-down icon-white"></i> {{autocomplete.detailModel.usage.negative}}</span>
     </div>
-    <h5 class="top">{{detailModel.text}}</h5>
+    <h5 class="top">{{autocomplete.detailModel.text}}</h5>
     <dl class="dl-horizontal">
         <dt>Executed</dt>
-        <dd>{{detailModel.usage.executed}}</dd>
+        <dd>{{autocomplete.detailModel.usage.executed}}</dd>
         <dt>Successful</dt>
-        <dd>{{detailModel.usage.successful}}
-            ({{detailModel.usage.successful / detailModel.usage.executed * 100 | number:1}}%)
+        <dd>{{autocomplete.detailModel.usage.successful}}
+            ({{autocomplete.detailModel.usage.successful / autocomplete.detailModel.usage.executed * 100 | number:1}}%)
         </dd>
     </dl>
-    <p>{{detailModel.description}}</p>
+    <p>{{autocomplete.detailModel.description}}</p>
 </div>

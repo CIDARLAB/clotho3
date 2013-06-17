@@ -21,7 +21,6 @@ Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$locatio
             },
             "displayName" : "New Person"
         };
-                                             alert('editor-controller.js -> '+tempObj);
         Clotho.set('inst_first', tempObj);
     };
 

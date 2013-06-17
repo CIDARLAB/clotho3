@@ -26,6 +26,7 @@ package org.clothocad.core.datums.objbases;
 
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.model.Person;
+import org.json.JSONObject;
 
 
 /**
@@ -125,6 +126,11 @@ public class Badge
     public final boolean hasBadge(String personId) {
 return true;
         //        return haveBadge.contains(personId);
+    }
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        return true;
     }
 //    
     /**

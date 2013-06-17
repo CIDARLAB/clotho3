@@ -13,6 +13,7 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
+import org.json.JSONObject;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -169,5 +170,11 @@ public class ClothoSchema extends Schema {
             logger.trace("{}.visit({},{})", visitor, name, value);
             visitor.visit(name, value);
         }
+    }
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        System.out.println("ClothoSchema.java:  Stephanie needs to implement me!!!");
+        return true;
     }
 }

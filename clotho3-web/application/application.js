@@ -11,14 +11,18 @@
 
 var Application = Application || {};
 
-Application.Chat = angular.module('clotho.chat', []);
-Application.Dynamic = angular.module('clotho.dynamic', []);
-Application.Editor = angular.module('clotho.editor', []);
-Application.Search = angular.module('clotho.search', []);
-Application.Trails = angular.module('clotho.trails', []);
-Application.Primary = angular.module('clotho.primary', []);
+Application.Chat = angular.module('clotho.chat', ['clotho.core']);
+Application.Dynamic = angular.module('clotho.dynamic', ['clotho.core']);
+Application.Editor = angular.module('clotho.editor', ['clotho.core']);
+Application.Search = angular.module('clotho.search', ['clotho.core']);
+Application.Trails = angular.module('clotho.trails', ['clotho.core']);
+Application.Primary = angular.module('clotho.primary', ['clotho.core']);
+Application.Interface = angular.module('clotho.interface', ['clotho.core']);
 
-Application.Widgets = angular.module('clotho.widgets', []); // lazy-loading module dependencies
+// lazy-loading dependencies
+Application.Extensions = angular.module('clotho.extensions', ['clotho.core']);
+// adding widgets
+Application.Widgets = angular.module('clotho.widgets', ['clotho.core']);
 
 Application.Foundation = angular.module('clotho.core', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
@@ -30,14 +34,15 @@ Application.Foundation = angular.module('clotho.core', [])
 
         /**
          @name $rootScope.$safeApply
-         @description Particularly for 3rd party apps, when need to force digest or apply safely. Each app needs to insert this into its own run() clause
+         @note Each app needs to insert this into its own run() clause
+         @description Particularly for 3rd party apps, when need to force digest or apply safely.
 
          You can run it like so:
          $scope.$safeApply(function() {
 //this function is run once the apply process is running or has just finished
 });
 
-         An alternative is to use $timeout(function() {}), which will run after the previous $digest is complete. May be better to do it using timeout?
+         An alternative is to use $timeout(function() {}), which will run after the previous $digest is complete. However, this may cause UI flicker, as it will not run until the previous digest cycle is complete.
          */
         $rootScope.$safeApply = function(fn) {
             fn = fn || function() {};
@@ -50,10 +55,19 @@ Application.Foundation = angular.module('clotho.core', [])
                 //if it is outside of it's own behaviour...
                 $rootScope.$apply(fn);
             }
-        }
+        };
+
+        //todo - ineherit by children, silence listeners
+        var oldDestroy = $rootScope.__proto__.$destroy;
+        $rootScope.$on('$destroy', function() {
+            console.log("destroyed: " + this.$id);
+            Clotho.silence(this.$id);
+        });
     }]);
 
-angular.module('clothoRoot', ['clotho.core', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails', 'clotho.widgets', 'clotho.primary']).
+angular.module('clothoPackage', ['clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails']);
+
+angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/', {
@@ -63,7 +77,19 @@ angular.module('clothoRoot', ['clotho.core', 'clotho.chat', 'clotho.dynamic', 'c
                 templateUrl:'trails/trail_browser-partial.html'
             }).
             when('/trails/:uuid', {
-                templateUrl:'trails/trail-partial.html'
+                templateUrl:'trails/trail-partial.html',
+                resolve : {
+                    trail : function (Clotho, $q, $route, Trails) {
+                        var deferred = $q.defer();
+                        //todo - add timeout
+                        Clotho.get($route.current.params.uuid).then(function(result) {
+                            Trails.compile(result).then(function (compiled) {
+                                deferred.resolve(compiled);
+                            });
+                        });
+                        return deferred.promise;
+                    }
+                }
             }).
             when('/editor', {
                 redirectTo:'/editor/inst_first'
@@ -107,7 +133,8 @@ angular.module('clothoRoot', ['clotho.core', 'clotho.chat', 'clotho.dynamic', 'c
      **************/
 
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
-        console.log("Route Change Error: " + rejection);
+        console.log("Route Change Error:");
+        console.log(rejection);
     });
 
     /**************

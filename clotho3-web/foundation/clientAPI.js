@@ -9,10 +9,8 @@
  * Notes:
  *  - not really sure at this point which functions should `return` and which should have a `callback` ... so some of the functions have a parameter callback, particularly those which are asynchronous, in the event we want to pass data back, or allow for more custom operations to be made using the data passed to / from the command.
  *
- *  FUTURE - once the Command Bar has been integrated with Angular, API commands to interact with it
- *
  */
-Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCache', '$http', '$rootScope', function(PubSub, Collector, $templateCache, $http, $rootScope) {
+Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$templateCache', '$http', '$rootScope', '$location', '$compile', '$dialog', function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
 
     /**
      * @name clientAPI.mapCommand
@@ -28,23 +26,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
         //todo - should have more logic than simply calling ClientAPI[command](data)
         console.log("CLIENTAPI\tmapCommand called on channel " + command);
 
-    };
-
-
-    /**
-     * todo : think this belongs in ServerAPI
-     * @name clientAPI.clone
-     *
-     * @param {string} uuid
-     *
-     * @description
-     * copy a sharable, which won't be updated later
-     *
-     * @return
-     * returns a full JSON representation of a sharable
-     */
-
-    var clone = function clientAPIClone(uuid) {
 
     };
 
@@ -57,8 +38,8 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
      *  {
      *      "uuid" : {string} UUID
      *      "type" : {string} json | html | css | javascript
-     *      "data" : {JSON} for json, object to store
-     *      "url" : {string} for non-json, resource to collect
+     *      "model" : {JSON | string} for json, object to store. for url, url as string
+     *      "isURL" : if URL, true if URL, false if template
      *  }
      *
      * @description
@@ -83,12 +64,9 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
 
         switch (type) {
             case "json" :
-                console.log("CLIENTAPI\tcollect\tsend to collector: " + uuid);
                 Collector.storeModel(uuid, model_or_url);
                 break;
             case "html" :
-                console.log("send to template cache: " + uuid + ' @ ' + model_or_url);
-
                 if (isURL) {
 
                     //todo - remove and reset if exists
@@ -123,10 +101,15 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
                 $script(model_or_url, uuid);
                 break;
             default :
-                console.log("just download: " + uuid);
+                console.log("CLIENTAPI\tcollect\ttype not sent just download: " + uuid);
                 $rootScope.$safeApply($http.get(model_or_url));
                 break;
         }
+    };
+
+    //note - temporary - need to integrate modal
+    var edit = function(uuid) {
+        $location.path('/editor/' + uuid)
     };
 
     /**
@@ -144,24 +127,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
     var notify = function clientAPINotify(uuid, obj, callback) {
 
     };
-
-    /**
-     * @name clientAPI.revert
-     *
-     * @param {string} uuid UUID of resource with unwanted changes
-     * @param {string} timestamp Date of desired version
-     * @param {function} callback
-     *
-     * @description
-     * Revert a model to an earlier version
-     *
-     * @returns {object} version at timestamp of resource with passed UUID
-     *
-     */
-    var revert = function clientAPIRevert(uuid, timestamp, callback) {
-
-    };
-
 
     /**
      * @name clientAPI.broadcast
@@ -203,6 +168,53 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
         var model = args.model;
         var template = args.template;
 
+    };
+
+    /**
+     * @param {object} data
+     * format:
+        {
+            "template" : <url>,         // required
+            "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
+            "controller" : <url>,       // optional
+            "dependencies" : [
+                <urls>                  // required if in controller
+            ],
+            styles : {
+                <styles>
+                //e.g.
+                "background-color" : "#FF0000"
+            }
+        }
+
+     note CAVEATS:
+     - currently, controllers etc. must be tied to Application.Extensions.___
+     */
+    var display_simple = function clientAPIDisplaySimple(data) {
+
+        //console.log(data);
+
+        var template = data.template,
+            controller = data.controller || "",
+            dependencies = data.dependencies || [],
+            styles = data.styles || {},
+            target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $clotho.appRoot;
+
+        $rootScope.$safeApply($http.get(template, {cache: $templateCache})
+            .success(function(precompiled) {
+
+                Application.mixin([dependencies, controller], $(precompiled).appendTo(target))
+                    .then(function(div) {
+                        //testing
+                        //console.log($position.position(div));
+                        //console.log($position.position(target));
+                        div.css(styles);
+                    });
+            })
+            .error(function (result) {
+                console.log("error getting template");
+            })
+        );
     };
 
     /**
@@ -256,7 +268,14 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
      *
      */
     var alert = function clientAPIAlert(msg) {
-        alert(msg);
+
+        PubSub.trigger('serverAlert', {});
+        $rootScope.$safeApply($dialog.serverAlert(msg)
+            .open()
+            .then(function(result){
+                console.log('dialog closed with result: ' + result);
+            })
+        );
     };
 
     /**
@@ -275,14 +294,13 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
      * @name clientAPI.revisions
      *
      * @param {string} uuid
+     * @param {object} data
      *
      * @description
-     * Get a list of versions for a given resource
-     *
-     * @returns {array} Array containing all (?) timestamps as a list of strings
+     * Publish list of versions for a given resource on "revisions:<uuid>"
      */
-    var revisions = function clientAPIRevisions(uuid) {
-
+    var revisions = function clientAPIRevisions(uuid, data) {
+        PubSub.trigger('revisions:'+uuid, data);
     };
 
     // ---- COMMAND BAR ----
@@ -299,26 +317,26 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$templateCa
         PubSub.trigger('autocomplete', list);
     };
 
-    var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
+    /*var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
         Collector.storeModel("detail_" + obj.uuid, obj);
-    };
+    };*/
 
 
     return {
         mapCommand : mapCommand,
-        clone : clone,
         collect : collect,
+        edit : edit,
         notify : notify,
-        revert : revert,
         broadcast : broadcast,
         log : log,
         say : say,
         alert : alert,
         display : display,
+        display_simple : display_simple,
         hide : hide,
         help : help,
         revisions : revisions,
-        autocomplete : autocomplete,
-        autocompleteDetail: autocompleteDetail
+        autocomplete : autocomplete
+        //autocompleteDetail: autocompleteDetail
     }
 }]);

@@ -27,28 +27,6 @@
                     "paver_title" : "Selection Methods",
                     "type" : "video",
                     "video" : "http://www.youtube.com/embed/08MUBVp2RQ4"
-                },
-                {
-                    "paver_title" : "Quiz",
-                    "type" : "quiz",
-                    "quiz" : [
-                        {
-                            "title" : "Question 1",
-                            "type" : "multiple",
-                            "question" : "What is a plasmid?",
-                            "options" : [
-                                "A bacterial genome",
-                                "A viral genome",
-                                "Like an organelle",
-                                "None of the above"
-                            ]
-                        },
-                        {
-                            "title" : "Question 1",
-                            "type" : "fillin",
-                            "question" : "Describe an operon"
-                        }
-                    ]
                 }
             ]
         }

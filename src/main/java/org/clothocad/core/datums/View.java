@@ -5,6 +5,7 @@ import java.util.List;
 import org.clothocad.core.datums.util.ClothoField;
 
 import org.clothocad.model.Person;
+import org.json.JSONObject;
 
 
 /**
@@ -14,8 +15,7 @@ import org.clothocad.model.Person;
  * 
  * @author John Christopher Anderson
  */
-public class View 
-		extends Sharable {
+public class View extends Sharable {
 
     private View(Person author, 
             String name, 
@@ -130,4 +130,9 @@ public class View
     private String largeIconURL;
     
     private int instanceCount = 0;
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        return true;
+    }
 }

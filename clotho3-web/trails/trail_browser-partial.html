@@ -10,10 +10,17 @@
     <div class="row">
         <div class="span8" id="trail_preview">
             <div class="well">
-                <h3 class="muted">Splash Video</h3>
-                <iframe width="580" height="330" src="http://www.youtube.com/embed/9bZkp7q19f0?rel=0" frameborder="0" allowfullscreen></iframe>
+                <h3 class="muted">Splash Page!</h3>
+                <p>this is a browser page... Transclude trails is working. The combinatorial videos is also.... We could make it more interesting how content is displayed...</p>
+            </div>
+            <div style="margin: 0 auto;">
+                <div class="row-fluid">
+                    <img ng-repeat="i in [1,2,3,4,5,6]" class="media-object img-circle span2" ng-src="{{base64icon}}" />
+                </div>
                 <hr />
-                <p>Click on the first one (biosafety) to go to an interesting next page</p>
+                <div class="row-fluid">
+                    <img ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]" class="media-object img-rounded span1" ng-src="{{base64icon}}" />
+                </div>
             </div>
         </div>
         <div class="span4" id="trail_list">

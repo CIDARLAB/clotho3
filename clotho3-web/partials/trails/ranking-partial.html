@@ -1,0 +1,16 @@
+<div ng-controller="TrailQuizCtrl" ng-init="quiz.answer = quiz.options">
+
+    <h3>{{quiz.title}}</h3>
+    <p>{{quiz.question}}</p>
+
+    <ol>
+        <li ng-repeat="choice in quiz.options">
+            <p><button class="btn">{{choice}}</button>
+        </li>
+    </ol>
+
+    <button class="btn btn-warning" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer">Submit Answer</button>
+
+    <h3 ng-if="quiz.response" ng-class="{'text-success' : quiz.response.result, 'text-error' : !quiz.response.result}">{{quiz.response.result}}</h3>
+
+</div>
