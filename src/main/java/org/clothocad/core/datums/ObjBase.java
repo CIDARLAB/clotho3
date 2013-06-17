@@ -23,6 +23,7 @@ import lombok.Getter;
 import org.bson.BSONObject;
 import org.clothocad.core.aspects.Persistor;
 import org.json.JSONException;
+import org.clothocad.core.layers.persistence.DBOnly;
 import org.json.JSONObject;
 
 /**
@@ -39,13 +40,15 @@ public abstract class ObjBase {
     }
     
     @Id
-    private ObjectId UUID = new ObjectId();
+    private ObjectId UUID;
     
-    private String name;    
+    private String name;
+    @DBOnly
     private boolean isDeleted;    
     
     @Setter(AccessLevel.NONE)
     private Date dateCreated;
+    @DBOnly
     private Date lastModified, lastAccessed;
 	
 	public void onUpdate() {
@@ -61,7 +64,7 @@ public abstract class ObjBase {
 	}
         
     public List<ObjBase> getChildren(){
-        ArrayList<ObjBase> children = new ArrayList<ObjBase>();
+        ArrayList<ObjBase> children = new ArrayList<>();
         
         for (Field f : getAllReferences(this.getClass())){
             boolean accessible = f.isAccessible();

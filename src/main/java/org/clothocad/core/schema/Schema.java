@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.schema;
 
+import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Map;
 import java.util.Set;
 import lombok.Data;
@@ -14,6 +15,8 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.layers.persistence.Add;
+import org.clothocad.core.layers.persistence.DBOnly;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
 
@@ -23,6 +26,7 @@ import org.json.JSONObject;
  */
 @Data
 @NoArgsConstructor
+@Add(name="language", provider="getLanguage")
 public abstract class Schema extends Sharable {
     
     public Schema(String name, String description, Person author){
@@ -31,7 +35,9 @@ public abstract class Schema extends Sharable {
     }
     
     protected static final String BASE_PACKAGE_BINARY = "org.clothocad.loadedschemas.";
+    public static  ClassLoader cl = null;
     
+    @DBOnly
     protected byte[] classData;
     protected Map<String, ObjectId> dependencies;
     protected String description;
@@ -43,6 +49,8 @@ public abstract class Schema extends Sharable {
     
     protected Set<ClothoField> fields;
     protected Set<Function> methods;
+    
+    @Reference
     protected Schema superClass;
 
     public abstract Language getLanguage();
@@ -69,5 +77,9 @@ public abstract class Schema extends Sharable {
     public static String extractIdFromClassName(String className){
         String[] a =  className.split("\\.");
         return a[a.length-1].substring(1);
+    }
+    
+    public static boolean isSchemaClassName(String className){
+        return ObjectId.isValid(extractIdFromClassName(className));
     }
 }

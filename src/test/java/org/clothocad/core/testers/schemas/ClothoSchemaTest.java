@@ -31,6 +31,8 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -41,7 +43,9 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.ClothoField;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.persistence.DBClassLoader;
+import org.clothocad.core.layers.persistence.mongodb.ClothoMapper;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.ClothoSchema;
@@ -53,47 +57,48 @@ import static org.objectweb.asm.Opcodes.*;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 
-/**
- * Create a schema to represent a DNA sequence, and then
- * create a GFPuv instance of that SimpleFeature schema.
- * 
- * @author John Christopher Anderson
- */
+
 public class ClothoSchemaTest {
-    
     //TODO: 
     // validation
     // reference to other class
     
-    
     static {
-        MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
+    //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
     }
     
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
         p.connect();
+        p.deleteAll();
         featureSchema = createFeatureSchema();
     }
-    
-    static Persistor p = new Persistor(new MongoDBConnection());
-    static DBClassLoader cl = new DBClassLoader(p);
+    static Persistor p;
+    static DBClassLoader cl;
+
+    static {
+        ClothoMapper mapper = new ClothoMapper();
+        p = new Persistor(new MongoDBConnection(mapper), mapper);
+        cl = new DBClassLoader(p);
+        mapper.setCl(cl);
+        Schema.cl = cl;
+    }
     static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     static Schema featureSchema;
     
     public static Schema createFeatureSchema() {
-        
-            ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, Access.PUBLIC);
-            field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
-            Set<ClothoField> fields = Sets.newHashSet(field);
-        
-            ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
 
-            ObjectId id = new ObjectId();
-            featureSchema.setUUID(id);
-            p.save(featureSchema);
-                
-            return p.get(ClothoSchema.class, id);
+        ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, Access.PUBLIC);
+        field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
+        Set<ClothoField> fields = Sets.newHashSet(field);
+
+        ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
+
+        ObjectId id = new ObjectId();
+        featureSchema.setUUID(id);
+        p.save(featureSchema);
+
+        return p.get(ClothoSchema.class, id);
     }
     
     private ObjBase instantiateSchema(BSONObject data, Schema schema) throws ClassNotFoundException{
@@ -149,7 +154,7 @@ public class ClothoSchemaTest {
     
     @Test
     public void testClothoSchemaCompile() throws ClassNotFoundException, NoSuchFieldException {
-        Schema featureSchema = createFeatureSchema();
+
         Class featureClass = cl.loadClass(featureSchema.getBinaryName());
         
         assertEquals(ObjBase.class, featureClass.getSuperclass());
@@ -157,36 +162,46 @@ public class ClothoSchemaTest {
         assertEquals(2, featureClass.getDeclaredFields().length);
         //SCHEMA_NAME and sequence are the declared fields
         assertNotNull(featureClass.getDeclaredField("sequence"));
-        
+
     }
-    
-    @Test 
-    public void testToBSON(){
-        Schema featureSchema = createFeatureSchema();
-        Mapper mapper = new DefaultMapper();
-        System.out.println(mapper.toDBObject(featureSchema));
-        /*
-         * { "className" : "org.clothocad.core.schema.ClothoSchema" , 
-         * "classData" : <Binary Data> , 
-         * "description" : "A simple and sloppy representation of a Feature or other DNA sequence" , 
-         * "fields" : [ {   "name" : "sequence" , 
-         *                  "type" : "java.lang.String" , 
-         *                  "example" : "ATACCGGA" , 
-         *                  "access" : "PUBLIC" , 
-         *                  "reference" : false , 
-         *                  "constraints" : [ { "values" : { "flags" : [ "CASE_INSENSITIVE"] , "regexp" : "[ATUCGRYKMSWBDHVN]*"}}],
-         *                  "description" : "the sequence of the feature"}] ,
-         * "_id" : { "$oid" : "51917d4c986cc1a16577933e"} , 
-         * "name" : "SimpleFeature" , 
-         * "isDeleted" : false , 
-         * "lastModified" : { "$date" : "2013-05-13T23:54:52.476Z"}}
-         */
+
+    @Test
+    public void testSchemaJSON() {
+        Map output = p.toJSON(featureSchema);
+
+        assertFalse(output.containsKey("isDeleted"));
+        assertFalse(output.containsKey("lastUpdated") || output.containsKey("lastAccessed"));
+        assertEquals(Language.JSONSCHEMA.name(), output.get("language"));
+        //assertEquals("", output.get("constraints"));
+        List fields = ((List) output.get("fields"));
+        assertEquals(1, fields.size());
+        Map field = (Map) fields.get(0);
+        assertEquals("sequence", field.get("name"));
+        assertNotNull(((Map) field.get("constraints")).get("pattern"));
+
+        p.delete(featureSchema.getUUID());
+
+        p.save(output);
+        Schema secondSchema = p.get(ClothoSchema.class, featureSchema.getUUID());
         
-        //Clotho Json vs Morphia BSON
-        // className -> schema language
-        // isDeleted -> 
-        // lastModified -> 
-        // constraint -> better constraint format
+        assertEquals(output, p.toJSON(secondSchema));
+    }
+
+    @Test
+    public void testInstanceToJSON() throws ClassNotFoundException {
+        BSONObject data = new BasicDBObject();
+
+        String sequence = "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA";
+
+        data.put("name", "GFPuv");
+        data.put("sequence", sequence); //"ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA" );
+
+        ObjBase featureInstance = instantiateSchema(data, featureSchema);        
+        Map output = p.toJSON(featureInstance);
+        
+        assertNotNull(output);
+        assertEquals(sequence, output.get("sequence"));
+        assertEquals(data.get("name"), output.get("name"));
     }
     
 }
