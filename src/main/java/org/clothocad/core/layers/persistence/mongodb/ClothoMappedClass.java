@@ -35,6 +35,7 @@ class ClothoMappedClass extends MappedClass {
         
         List<MappedField> fields = this.getFieldsAnnotatedWith(Replace.class);
         if (fields != null) for (MappedField f : fields){
+            this.getMappedFields().remove(f);
             this.getMappedFields().add(new ClothoMappedField(f.getAnnotation(Replace.class), f, this.getClazz()));
         }
     }

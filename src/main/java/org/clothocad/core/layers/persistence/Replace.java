@@ -20,12 +20,13 @@ import java.lang.annotation.Target;
 public @interface Replace {
     public String value() default "";
     
-    public String provider() default "";
+    public String encoder() default "";
+    public String decoder() default "";
     
     public Class concreteClass() default Object.class;
     
     public Class<? extends Annotation> type() default Embedded.class; 
     
-    //doesn't do anything until change tracking is implemented
+    //doesn't do anything until per-field change tracking is implemented
     public String[] dependsOn() default {};
 }

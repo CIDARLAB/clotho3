@@ -45,7 +45,7 @@ public class ClothoMappedField extends MappedField{
     protected Method provider = null;
     protected String fieldName;
 
-    public static final String VIRTUAL_FIELD_PREFIX = "__";
+    public static final String VIRTUAL_PREFIX = "__";
     
      /**
      * The constructor.
@@ -58,19 +58,18 @@ public class ClothoMappedField extends MappedField{
     }
     
     ClothoMappedField(Add annotation, Class<?> clazz){
-        this(annotation.provider(), annotation.value(), annotation.concreteClass(), clazz);
+        this(annotation.provider(), annotation.value(), annotation.name(), annotation.concreteClass(), clazz);
         if (annotation.isReference()) this.foundAnnotations.put(Reference.class, new FakeReference());
-        this.fieldName = annotation.name();
     }
     
     ClothoMappedField(Replace annotation, MappedField f, Class<?> clazz){
-        this(annotation.provider(), annotation.value(), annotation.concreteClass(), clazz);
+        this(annotation.encoder(), annotation.value(), f.getJavaFieldName(), annotation.concreteClass(), clazz);
         this.foundAnnotations = f.getAnnotations();
-        this.fieldName = f.getJavaFieldName();
     }
     
     
-    ClothoMappedField(String provider, String value, Class concreteClass, Class<?> clazz) {
+    ClothoMappedField(String provider, String value, String fieldName, Class concreteClass, Class<?> clazz) {
+        this.fieldName = fieldName;
         persistedClass = clazz;
         realType = discoverVirtualFieldType(provider, value);
         ctor = discoverCTor(concreteClass);
@@ -297,13 +296,13 @@ public class ClothoMappedField extends MappedField{
             mappedName = this.getJavaFieldName();
         }
         
-        if (provider != null || value != null) return VIRTUAL_FIELD_PREFIX + mappedName;
+        if (this.hasAnnotation(Add.class)) return VIRTUAL_PREFIX + mappedName;
         return mappedName;
     }
 
     @Override
     public String getFullName() {
-        return getDeclaringClass().getName() + getJavaFieldName();
+        return getDeclaringClass().getName() +"."+ getJavaFieldName();
     }
 
     @Override

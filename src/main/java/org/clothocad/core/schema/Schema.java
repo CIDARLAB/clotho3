@@ -34,6 +34,7 @@ public abstract class Schema extends Sharable {
     }
     
     protected static final String BASE_PACKAGE_BINARY = "org.clothocad.loadedschemas.";
+    public static  ClassLoader cl = null;
     
     @DBOnly
     protected byte[] classData;
@@ -76,5 +77,9 @@ public abstract class Schema extends Sharable {
     public static String extractIdFromClassName(String className){
         String[] a =  className.split("\\.");
         return a[a.length-1].substring(1);
+    }
+    
+    public static boolean isSchemaClassName(String className){
+        return ObjectId.isValid(extractIdFromClassName(className));
     }
 }

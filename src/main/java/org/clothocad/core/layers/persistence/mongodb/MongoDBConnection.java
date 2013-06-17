@@ -51,6 +51,8 @@ public class MongoDBConnection
         morphia = new Morphia(mapper);
     }
     
+    //TODO: maintain a schema set on each 
+    
     
     private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
@@ -124,7 +126,9 @@ public class MongoDBConnection
             singleSave(obj);
         }
         catch (Exception e){
+            //throw e;
             //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
+            logger.error("Error while saving", e);
             if (newId) obj.setUUID(null);
             return false;
         }
