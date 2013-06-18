@@ -4,14 +4,14 @@
  */
 package org.clothocad.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
-import org.clothocad.core.aspects.Proctor.Paver;
 import org.clothocad.core.datums.Sharable;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,23 +20,14 @@ import org.json.JSONObject;
  * @author jcanderson
  */
 @NoArgsConstructor
-@AllArgsConstructor
 public class Trail extends Sharable {
-
-    /**
-     * Constructor from raw data
-     * @param data
-     */
-    /** JSON of a Trail looks like:
-    "uuid" : "trail_123",
-    "author" : "UC Berkeley",       
     
-    "title" : "Biosafety Module",
-    "description" : "desc",
-    "contents" : []
+    public Trail(String nameOrTitle, String description, JSONArray contents) {
+        super(nameOrTitle, null);
+        this.description = description;
+        this.title = nameOrTitle;
+        this.contents = contents.toString();
     }
-     */
-    
 
     @Setter
     @Getter
@@ -44,25 +35,23 @@ public class Trail extends Sharable {
     @Setter
     @Getter
     private String description;
-    @Setter
-    @Getter
-    private List<Content> contents = new ArrayList<Content>();
+
+    private String contents;
     
-    @AllArgsConstructor
-    public static class Content {
-        @Setter
-        @Getter
-        private String module_title;
-        @Setter
-        @Getter
-        private List<Paver> pavers = new ArrayList<Paver>();
+    public JSONArray getContents() {
+        try {
+            return new JSONArray(contents);
+        } catch (JSONException ex) {
+            return null;
+        }
     }
-
-
+    
+    public void setContents(JSONArray data) {
+        contents = data.toString();
+    }
+    
     @Override
     public boolean validate(JSONObject obj) {
         return true;    
     }
-    
-
 }
