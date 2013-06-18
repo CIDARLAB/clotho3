@@ -47,7 +47,6 @@ import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
 import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
-import org.clothocad.dm.clotho2.NucSeq;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
 import org.json.JSONArray;
@@ -468,6 +467,7 @@ public final class ServerSideAPI {
     	
     }
     
+    /**
     public final String create(JSONObject json) {
     
     	//System.out.println("[ServerSideAPI.create] " + json);
@@ -479,7 +479,7 @@ public final class ServerSideAPI {
     		JSONObject model = json.getJSONObject("model");
     		
 
-    		/*** dynamic class loading ***/ 
+    		/*** dynamic class loading  
     		// this needs to be improved somehow...
     		String sClass = json.getString("className");
     		Class<?> c = Class.forName(sClass);
@@ -500,6 +500,7 @@ public final class ServerSideAPI {
     		} else {
     			System.err.println("CRAP!");
     		}
+    		
     		return new String();
     		
     		
@@ -508,6 +509,7 @@ public final class ServerSideAPI {
     		return e.getMessage();
     	}
     }
+    **/
     
     public final String create(String json) {
 
