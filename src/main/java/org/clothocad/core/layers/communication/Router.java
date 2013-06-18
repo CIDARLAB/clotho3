@@ -3,18 +3,20 @@ package org.clothocad.core.layers.communication;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Interpreter.AutoComplete;
-import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.datums.ObjBase;
+import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
+import static org.clothocad.core.layers.communication.Channel.create;
+import static org.clothocad.core.layers.communication.Channel.destroy;
+import static org.clothocad.core.layers.communication.Channel.log;
+import static org.clothocad.core.layers.communication.Channel.submit;
 
 import org.clothocad.core.layers.communication.activemq.ClothoMessageProducer;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.clothocad.core.layers.communication.protocol.ActionType;
-import org.clothocad.model.Institution;
-import org.json.JSONException;
+import org.clothocad.core.util.FileUtils;
 import org.json.JSONObject;
 
 public class Router {
@@ -65,7 +67,6 @@ public class Router {
 	
 	// receive message
 	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
-		System.err.println("[Router.receiveMessage] -> "+connection+", "+channel+", "+json.toString());
             
 		try {
                     RouterDoo doo = new RouterDoo();
@@ -81,36 +82,99 @@ public class Router {
                     doo.mindId = mind.getUUID();
                     doo.message = json;
                     ServerSideAPI api = mind.getAPI();
+                    
+                    
+                    Channel chanEnum = null;
+                    String data = null;
+                    try {
+                        chanEnum = Channel.valueOf(channel);
+                        data = json.getString("data");
+                    } catch(Exception err) {
+                        try {
+                            JSONObject obj = json.getJSONObject("data");
+                            data = obj.getString("data");
+                            String schann = obj.getString("channel");
+                            chanEnum = Channel.valueOf(schann);
+                        } catch(Exception err2) {
+                            throw err2;
+                        }
+                    }
+                    
+                    switch(chanEnum) {
+                        case autocomplete:
+                            api.autocomplete(data);
+                            break;
+                        case autocompleteDetail:
+                            api.autocompleteDetail(data);
+                            break;
+                        case submit:
+                            api.submit(data);
+                            break;
+                        case clear:
+                            api.clear();
+                            break;
+                        case login:
+                            api.login(data, null);
+                            break;
+                        case logout:
+                            api.logout();
+                            break;
+                        case changePassword:
+                            api.changePassword(data);
+                            break;
+                        case learn:
+                            api.learn(data, null);
+                            break;
 
-			if(Channel.autocomplete.toString().equalsIgnoreCase(channel)) {
-				api.autocomplete(json.getJSONObject("data").getString("query"));
-			} else if(Channel.submit.toString().equalsIgnoreCase(channel)) {								
-				api.submit(json.getJSONObject("data").getString("query"));
-			} else if(Channel.login.toString().equalsIgnoreCase(channel)) {
+                        case log:
+                            api.log(data);
+                            break;
+                        case say:
+                            api.say(data);
+                            break;
+                        case note:
+                            api.note(data);
+                            break;
+                        case alert:
+                            api.alert(data);
+                            break;
 
-			} else if(Channel.autocompleteDetail.toString().equalsIgnoreCase(channel)) {
-                            String uuid = json.getString("data");
-                            api.autocompleteDetail(uuid);
-			} else if(Channel.logout.toString().equalsIgnoreCase(channel)) {
+                        case get:
+                            break;
+                        case set:
+                            api.set(data);
+                            break;
+                        case create:
+                            api.create(data);
+                            break;
+                        case destroy:
+                            api.destroy(data);
+                            break;
+                        case query:
+                            api.query(data);
+                            break;
 
-			} else if(Channel.changePassword.toString().equalsIgnoreCase(channel)) {								
-
-			} else if(Channel.say.toString().equalsIgnoreCase(channel)) {
-				System.out.println("say -> "+json);               
-				api.say(json.getJSONObject("data").getString("text"));
-			} else if(Channel.log.toString().equalsIgnoreCase(channel)) {
-
-			} else if(Channel.get.toString().equalsIgnoreCase(channel)) {
-				System.out.println("[Router.receiveMessage] get "+json);
-				api.get(json);
-			} else if(Channel.set.toString().equalsIgnoreCase(channel)) {
-				//System.out.println("[Router.receiveMessage] set "+json);
-				api.set(json.getJSONObject("data"));
-			} else if(Channel.create.toString().equalsIgnoreCase(channel)) {
-				api.create(json);
-				//System.out.println("[Router.create] -> "+api.create(json));
-			}
-                        //Etcetera for remaining ssAPI methods
+                        case run:
+                            api.run(data, null);
+                            break;
+                        case show:
+                            api.show(data, null, null, null);
+                            break;
+                        case startTrail:
+                            api.startTrail(data);
+                            break;
+                        case edit:
+                            api.edit(data);
+                            break;
+                        case listen:
+                            api.listen(data);
+                            break;
+                        case unlisten:
+                            api.unlisten(data);
+                            break;
+                        default:
+                            break;
+                    }
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeMap;
 import org.clothocad.core.aspects.Persistor;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ class Learner{
      * @param features
      * @param action 
      */
-    public static void learn(String cmd, String action) {
+    public static void learn(String cmd, JSONObject action) {
         String[] features = Handler.convertToFeatures(Utilities.tokenize(cmd));
         for(String feature : features) {
             if (feature != null) {
@@ -32,7 +33,7 @@ class Learner{
                         currvalue = indexEntry.get(action);
                     }
                     currvalue++;
-                    indexEntry.put(action, currvalue);
+                    indexEntry.put(action.toString(), currvalue);
                     if(currvalue > 100) {
                         autocollapse(indexEntry);
                     }
@@ -40,6 +41,7 @@ class Learner{
             }
         }
     }
+    
 
     /**
      * Provided the list of n-gram features and the action that they map to,

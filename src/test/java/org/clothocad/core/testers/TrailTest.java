@@ -2,71 +2,53 @@ package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
-import org.clothocad.core.datums.Function;
-import org.clothocad.core.datums.View;
-import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.layers.communication.Communicator;
-import org.clothocad.core.schema.Access;
-import org.clothocad.model.Person;
+import org.clothocad.core.aspects.Proctor.Module;
+import org.clothocad.core.aspects.Proctor.Paver;
+import org.clothocad.core.aspects.Proctor.TemplatePaver;
+import org.junit.Before;
+import org.junit.Test;
+import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.model.Trail;
+import org.json.JSONArray;
 import org.json.JSONObject;
-import static org.objectweb.asm.Opcodes.*;
+import org.junit.After;
 
-/**
- * Starts web server on http://localhost:1025
- * 
- * var args = []; args[0] = 'static-admin-instance-is-uuid'; clotho.show('CT-sample-view', args, '{}'); 
- *
- * @author Kelvin Li
- */
 public class TrailTest {
-    public static void main(String[] args) {
-        makeContentElement();
-        makeTrailElement();
-        
-        Communicator.get();
+    Mind mind = new Mind();
+    
+    @Before
+    public void setUp() {
+        System.out.println("setup");
+    }
+    
+    @After
+    public void tearDown() {
+        System.out.println("tear");
     }
 
-    private static void makeTrailElement() {
+    @Test
+    public void testCreateTrail() throws Exception{
+        //construct the contents
+        List<Module> contents = new ArrayList<Module>();
+        List<Paver> pavers = new ArrayList<Paver>();
+        TemplatePaver tp1 = new TemplatePaver("Introduction", "/app/partials/trail_123_1.html");
+        pavers.add(tp1);
+        Module module = new Module("The Basics", pavers);
+        contents.add(module);
         
-    }
-
-    private static void makeContentElement() {
-        try {
-            //Construct a youtube view
-            Function canUpdate = new Function();
-                //new Function("", String[]{}, null, null, 
-                //    new Script("outputs.put('is_valid', true);", Language.JAVASCRIPT));
-          
-            String html = " <p>\r\n    <label>Email Address\r\n        <input type=\"text\" name=\"email\" id=\"_widget_id_email\" />\r\n      </label>\r\n    </p>\r\n    <p>\r\n      <label>Display Name\r\n        <input type=\"text\" name=\"displayname\" id=\"_widget_id_displayname\" />\r\n      </label>\r\n    </p>\r\n    <p>\r\n      <label>First Name\r\n        <input type=\"text\" name=\"givenname\" id=\"_widget_id_givenname\" />\r\n      </label>\r\n    </p>\r\n    <p>\r\n      <label>Last Name\r\n        <input type=\"text\" name=\"surname\" id=\"_widget_id_surname\" />\r\n      </label>\r\n    </p>\r\n    <p>\r\n      <label>NickName\r\n        <input type=\"text\" name=\"nickname\" id=\"_widget_id_nickname\" />\r\n      </label>\r\n    </p>";
-            String onShow = "";
-            String onUpdate = "alert(JSON.stringify(person));";
-            
-            List<ClothoField> inputArgs = new ArrayList<ClothoField>();
-            inputArgs.add(new ClothoField("person", Person.class, null, null, null, true, Access.PUBLIC));
-            
-            View view = View.create(
-                         null,
-                         "Sample View",
-                         "A hard-coded view created by CommunicatorTest",
-                         inputArgs,
-                         canUpdate, 
-                         html,
-                         onShow,
-                         onUpdate);
-
-            //Change the Id
-            JSONObject obj = view.toJSON();
-            obj.put("id", "CT-sample-view");
-            //view = View.deserialize(obj.toString());
-            //XXX: view.save();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        //Make the trail and confirm it is populated
+        Trail trail = new Trail("First Biosafety Module", "This is a trail test", contents);
+        assert(trail.getContents().get(0).getPavers().get(0).getType().equals("template"));
+        
+        
+        //Save then re-retrieve the trail
+        Persistor.get().save(trail);
+        ObjectId uuid = trail.getUUID();
+        Trail result = Persistor.get().get(Trail.class, uuid);
+        assert(result.getTitle().equals("First Biosafety Module"));
+        
+        
     }
 }
-
-
-

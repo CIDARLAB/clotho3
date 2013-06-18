@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -41,6 +42,8 @@ import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,7 +133,7 @@ public final class Mind
                 return false;
             }
         }
-        learnCommand(cmd);
+        
         return true;
     }
 
@@ -324,8 +327,28 @@ public final class Mind
         connection = conn;
     }
     
+    public List<JSONObject> getLastCommands() {
+        return this.lastCommands;
+    }
+    
+    public void addLastCommand(String str) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("text", str);
+            obj.put("type", "phrase");
+            lastCommands.add(obj);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void addLastCommand(JSONObject json) {
+        lastCommands.add(json);
+    }
+    
     private Person person;
     private String personId;
+    private transient List<JSONObject> lastCommands = new ArrayList<JSONObject>();
     private transient ScriptEngine engine;
     private transient ServerSideAPI ssAPI;
     private transient ClientConnection connection;

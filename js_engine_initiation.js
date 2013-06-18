@@ -4,6 +4,7 @@
  * It deals with String conversions during communication with the ssAPI and adds some sloppiness and responsiveness.
  * 
  * Only commands that enter the ssAPI via 'submit' ever go through these functions.
+<<<<<<< HEAD
  */
 /*
 Test sequence for testing CRUD operations:
@@ -106,6 +107,10 @@ clotho.destroy(results);
 clotho.query({"state":"Iowa"});
 
 */
+=======
+ ***/
+
+>>>>>>> f3b08d8fff3a3286cafa81e37305bac44897688f
 var clotho = {};
 
 function resolveToString(input) {
