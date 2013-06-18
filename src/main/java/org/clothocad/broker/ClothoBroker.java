@@ -101,6 +101,7 @@ public class ClothoBroker {
         return broker;
     }
 
+    /**
 	public static void main(String[] args) 
 			 throws Exception {
 
@@ -109,7 +110,7 @@ public class ClothoBroker {
 		Object lock = new Object();
         synchronized (lock) {
             lock.wait();
-        }
-        
+        }        
 	}
+	 **/
 }

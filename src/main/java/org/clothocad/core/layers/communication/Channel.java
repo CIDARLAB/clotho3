@@ -35,5 +35,6 @@ public enum Channel {
     listen, //Listen for events, and in response do this execution statement
     unlisten, //Remove a listener for an event
     
-
+// RESPONSE
+    response // for the response message to the client
 }

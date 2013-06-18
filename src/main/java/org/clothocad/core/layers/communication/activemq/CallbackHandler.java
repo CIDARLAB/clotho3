@@ -5,6 +5,7 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
+import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.protocol.ActionType;
 import org.fusesource.stomp.jms.StompJmsDestination;
 import org.json.JSONObject;
@@ -35,7 +36,7 @@ public class CallbackHandler {
 		try {
 			Message response = session.createMessage();
 			response.setJMSCorrelationID(request.getJMSCorrelationID());
-			response.setStringProperty(ActionType.RESPONSE.toString(), json.toString());
+			response.setStringProperty(Channel.response.toString(), json.toString());
 
 			this.replyProducer.send(response);
 		} catch(javax.jms.InvalidDestinationException e) {

@@ -9,6 +9,12 @@ public class ClothoStarter {
 	public static void main(String[] args) 
 			throws Exception {
 		
+		if(args.length != 1) {
+			System.err.println("Usage: java -jar clotho.jar <port>");
+			System.exit(1);
+		}
+		int nPort = Integer.parseInt(args[0]);
+		
 		//LogManager.getLogManager().reset();
 		
             System.out.println("Ernst, ClothoBroker crashes on my machine, but if I silence this line I can run everything else fine");
@@ -30,7 +36,7 @@ public class ClothoStarter {
 		Thread.sleep(4000);
 		
 		// start the Jetty webserver
-		new ClothoWebserver();
+		new ClothoWebserver(nPort);
 		//System.out.println("The Clotho Webserver is running...");
 		
 		//Object lock = new Object();

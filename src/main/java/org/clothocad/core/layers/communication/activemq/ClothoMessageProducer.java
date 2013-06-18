@@ -17,6 +17,7 @@ public class ClothoMessageProducer
 		CallbackHandler cbh = CallbackHandlerTable.get(
 				connection.getCorrelationId());
 		if(null != cbh) {
+			System.err.println("[ClothoMessageProducer.onSuccess] -> "+json);
 			cbh.respond(json);			
 		}
 	}
