@@ -167,7 +167,6 @@ public class Persistor implements Aspect {
 
             return out;
         } catch(Exception err) {
-            err.printStackTrace();
         }
         return null;
     }        

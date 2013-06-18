@@ -144,6 +144,7 @@ public class MongoDBConnection
     @Override
     //Cascade save
     public void save(ObjBase obj){
+        System.out.println("Stephanie:  save in connection should either return false or throw exception when fails.  change required in interface.");
         save(obj, new HashSet<ObjBase>());
     }
     

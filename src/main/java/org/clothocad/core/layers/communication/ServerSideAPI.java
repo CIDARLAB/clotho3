@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Authenticator;
@@ -45,6 +46,7 @@ import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
+import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,7 +94,6 @@ public final class ServerSideAPI {
             for(String str : completions) {
                 JSONObject obj = new JSONObject();
                 obj.put("text", str);
-                obj.put("uuid", "irrelevent_uuid");
                 obj.put("type", "phrase");
                 data.put(obj);
             }
@@ -145,18 +146,47 @@ public final class ServerSideAPI {
         say(message, "muted", null, true);
         
         if (!mind.runCommand(message)) {
-//            disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
-            say("Clotho was unable to satisfy that request", "text-error");
-        } else {
-            
+            disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
+            return;
         }
+        
+        //If the command successfully executed, it gets retained
+        mind.addLastCommand(message);
     }
     
     //clotho.learn("test1", "clotho.say('Hi there');");
     
     public final void learn(String nativeCmd, String jsCmd) {
-        Interpreter.get().learnNative(nativeCmd, jsCmd);
-        completer.put(nativeCmd);
+        JSONObject json = null;
+        
+        //See if the jsCmd is actually an execution statement
+        try {
+            json = new JSONObject(jsCmd);
+        } catch(Exception err) {
+            
+            //See if it's empty, meaning use the last command they issued
+            if(jsCmd==null) {
+                json = mind.getLastCommands().get(0);
+                if(json==null) {
+                    System.out.println("This is something that will happen if you haven't issued a previous command, it has nothing to learn");
+                    return;
+                }
+                
+            //Otherwise it is a js stqatement
+            } else {
+                try {
+                    json = new JSONObject();
+                    json.put("text", jsCmd);
+                    json.put("type", "phrase");
+                } catch (JSONException ex) {
+                    System.out.println("This should never happen");
+                    ex.printStackTrace();
+                    return;
+                }
+            }
+        }
+        
+        Interpreter.get().learnNative(nativeCmd, json);
     }
     
     public final void login(String personRef, String password) {
@@ -310,15 +340,13 @@ public final class ServerSideAPI {
     //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
     //JCA:  result is also injected into the Mind's scriptengine as a proper object
     public final String get(String sharableRef) {
-        
+        String out = null;
         try {
             //Resolve the arguments and retrieve
             Sharable existing = resolveToExistentSharable(sharableRef);
             if(existing==null) {
-                say("Error resolving the arguments for getting " + sharableRef, "text-error");
-                return null;
+                throw new Exception();
             }
-            
             //Check that the user has permission
             if(!Authenticator.get().hasReadAccess(getPerson(), existing)) {
                 say("The current user does not have read access for " + sharableRef, "text-error");
@@ -326,22 +354,29 @@ public final class ServerSideAPI {
                 return null;
             }
             
-            //Notify the user that they retrieved the data
-            System.out.println("JCA:  this should be moved specifically to search bar responses");
-            JSONObject result = existing.toJSON();
-            say("I retrieved the Sharable " + result.toString(), "text-success");
-            
             //If the requestor is a client (not implemented) push the data to the client
             if(true) {
                 JSONObject msg = makeCollect(existing);
                 Router.get().sendMessage(mind.getClientConnection(), msg);
             }
             
-            return result.toString();
+            //Notify the user that they retrieved the data
+            System.out.println("JCA:  this should be moved specifically to search bar responses");
+            
+            out = existing.toString();
+            say("I retrieved the Sharable " + out, "text-success");
+
         } catch (Exception e) {
-            say("Error getting " + sharableRef, "text-error");
-            return null;
+            try {
+                String uuid = this.relayResolveStringToUUID(sharableRef);
+                System.out.println("JCA hack to deal with statically-typed resources.  Should move to db.");
+                out = FileUtils.readFile("clotho3-web/models/" + uuid);
+            } catch(Exception err) {
+                say("Error getting " + sharableRef, "text-error");
+            }
         }
+        
+        return out;
     }
 
     public final String set(String value) {
@@ -447,9 +482,17 @@ public final class ServerSideAPI {
             //Try to create the object and clobber the uuid
             JSONObject obj = new JSONObject(json);
             String uuidRes = Persistor.get().save(obj);
+            if(uuidRes==null) {
+                say("The object could not be persisted during create ", "text-error");
+                return null;
+            }
             
             //Add the object to the Collector and return its json
             ObjBase object = Collector.get().getObjBase(uuidRes);
+            if(object==null) {
+                say("The object was created, but could not be retrieved ", "text-error");
+                return null;
+            }
 
             //Relay the data change to listening clients
             System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
@@ -1030,7 +1073,7 @@ public final class ServerSideAPI {
         private String relayResolveStringToUUID(String str) throws Exception {
             //Try parsing as uuid
             try {
-                ObjectId id = new ObjectId(str);
+                ObjectId id = new ObjectId(str.trim());
                 return id.toString();
             } catch(Exception err) {}
             
@@ -1041,11 +1084,15 @@ public final class ServerSideAPI {
             }
             
             //Try a query by name and allow to fail
-            HashMap map = new HashMap();
-            map.put("name", str);
-            List<ObjBase> result = Persistor.get().get(map);
-            ObjBase first = result.get(0);
-            return first.getUUID().toString();
+            try {
+                HashMap map = new HashMap();
+                map.put("name", str);
+                List<ObjBase> result = Persistor.get().get(map);
+                ObjBase first = result.get(0);
+                return first.getUUID().toString();
+            } catch(Exception err) {}
+            
+            return str;
         }
         
         
@@ -1065,36 +1112,34 @@ public final class ServerSideAPI {
         return null;
     }
 
-        private void disambiguate(String nativeCmd) {
+    private void disambiguate(String nativeCmd) {
+        try {
+            say("Entering disambiguation");
             Set<String> cmdResults = Interpreter.get().receiveNative(nativeCmd);
 
             if(cmdResults.isEmpty()) {
-                /* TODO */
-                //Communicator.get().say("(no search results available)");
-                Logger.log(Logger.Level.WARN, "I got no search results");
-            } else {
-                //Send the search results
-
-//TODO: TEMP ALERT THE USER
-                Object[] possibilities = cmdResults.toArray();
-                String assoc_cmd = (String)JOptionPane.showInputDialog(
-                        null,
-                        "Which to run?",
-                        "Customized Dialog",
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        possibilities,
-                        "ham");
-
-                if (mind.runCommand(assoc_cmd)) {
-                    // learn to associate nativeCmd with assoc_cmd
-                } else {
-                    // tell the user that native cmd failed, so the overall action requested was aborted.
-                    //Commicator.get().say("sorry man...no dice");
-                }
-                //IT SHOULD RETURN THE SEARCH RESULTS TO THE CLIENT, THEN LET THEM EXECUTE, BUT SINCE WE DON'T HAVE THAT NOW, IT WILL JUST RUN IT
-                //I SEE A POTENTIAL ISSUE HERE OF NOT HAVING ACCESS TO THE MIND IN QUESTION
+                say("No suggestions are available.", "text-warning");
+                return;
             }
+            
+            JSONArray data = new JSONArray();
+            for(String cmdResult : cmdResults) {
+                try {
+                    JSONObject oneSuggestion = new JSONObject(cmdResult);
+                    data.put(oneSuggestion);
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+                say(cmdResult);
+            }
+            JSONObject msg = new JSONObject();
+            msg.put("channel", "autocomplete");
+            msg.put("data", data);
+            Router.get().sendMessage(mind.getClientConnection(), msg);
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+
         }
     
     // </editor-fold> 

@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.datums.ObjBase;
 import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.layers.communication.Channel.create;
 import static org.clothocad.core.layers.communication.Channel.destroy;
@@ -15,6 +16,7 @@ import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.util.FileUtils;
 import org.json.JSONObject;
 
 public class Router {
@@ -140,7 +142,6 @@ public class Router {
                             break;
 
                         case get:
-                            api.get(data);
                             break;
                         case set:
                             api.set(data);
