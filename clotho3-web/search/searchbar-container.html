@@ -8,7 +8,8 @@
                 <button class="btn" id="searchBarSubmit" ng-click="submit(query)">Submit</button>
             </div>
 
-            <div click-outside="display.hide('log')" class="inline-block" style="position:relative;">
+            <!--click-outside="display.hide('log')"-->
+            <div class="inline-block" style="position:relative;" ng-init="display.genLogPos()">
                 <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log')">
                     <i class="icon-tasks"></i>
                 </button>

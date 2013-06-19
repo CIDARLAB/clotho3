@@ -156,7 +156,8 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
                 };
                 socket.send(JSON.stringify(packaged));
 
-                callback(packaged);
+                if (typeof callback == 'function')
+                    callback(packaged);
             },
             //send properly formatted string on channel message
             send: function(data) {

@@ -12,6 +12,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
             $scope.log = Searchbar.log;
             $scope.autocomplete = Searchbar.autocomplete;
             $scope.display = Searchbar.display;
+            $scope.query = Searchbar.query;
 
             $scope.submit = Searchbar.submit;
             $scope.execute = Searchbar.execute;
@@ -24,14 +25,16 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
                 }
             });
 
+            $scope.setQuery = Searchbar.setQuery;
+
             /*** help icons ***/
 
             $scope.newPage = function() {
-                window.open("http://localhost:8000/app/index.html", "_blank");
+                window.open(window.location.origin, "_blank");
             };
 
             $scope.newWorkspace = function() {
-                window.open("http://localhost:8000/app/index.html#/trails", "_blank");
+                window.open(window.location.origin, "_blank");
             };
 
             $scope.showMeHow = function() {

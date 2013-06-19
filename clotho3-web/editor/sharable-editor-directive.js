@@ -53,20 +53,16 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                 // testing - sync Clotho.get()
                 //console.log(Clotho.get($scope.uuid, true));
                 
-            }, $scope.$id);
+            }, $scope);
 
             /*
             //note - alternate version - see also watch2 below
             Clotho.watch($scope.uuid, function (data) {
                 $scope.sharable = data;
-            }, $scope.$id);
+            }, $scope);
              */
 
-            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope.$id);
-
-            $scope.$on('$destroy', function onDestroy() {
-                Clotho.silence($scope.$id);
-            });
+            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope);
 
             //future - use return {} syntax? i.e. for inheritable directive controllers
         },

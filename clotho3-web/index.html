@@ -94,38 +94,41 @@
      $script("https://www.youtube.com/iframe_api", "youtubeAPI");
 
     //note - dependencies prevent full asynchrony
-    $script("lib/angular-1.1.5/angular.js", "angular", function() {
-        //need to load application first so modules map properly, or could move that into this
-        $script("application/application.js", "angular-app", function() {
-            //load all angular dependencies asynchronously
-            $script([
-                //foundation
-                "foundation/clientAPI.js",
-                "foundation/clothoAPI.js",
-                "foundation/pubsub-service.js",
-                "foundation/socket-service.js",
-                "foundation/collector-service.js",
-                "application/mixin.js",
+     //todo - better jquery handling... just need to be ready before DOM content ready
+     $script.ready("jquery", function() {
+         $script("lib/angular-1.1.5/angular.js", "angular", function() {
+             //need to load application first so modules map properly, or could move that into this
+             $script("application/application.js", "angular-app", function() {
+                 //load all angular dependencies asynchronously
+                 $script([
+                     //foundation
+                     "foundation/clientAPI.js",
+                     "foundation/clothoAPI.js",
+                     "foundation/pubsub-service.js",
+                     "foundation/socket-service.js",
+                     "foundation/collector-service.js",
+                     "application/mixin.js",
 
-                //specifics
-                "home/home-controller.js",
-                "menu/menu-controller.js",
-                "editor/editor-controller.js",
-                "editor/sharable-editor-directive.js",
-                "trails/trail-module.js",
-                "chat/chat-controller.js",
-                "chat/chat-service.js",
-                "dynamic/dynamic-controller.js",
-                "dynamic/dynamic-service.js",
-                "search/search-service.js",
-                "search/search-directives.js",
-                "interface/ui-directives.js",
-                "interface/ui-filters.js",
-                "interface/ui-services.js"
+                     //specifics
+                     "home/home-controller.js",
+                     "menu/menu-controller.js",
+                     "editor/editor-controller.js",
+                     "editor/sharable-editor-directive.js",
+                     "trails/trail-module.js",
+                     "chat/chat-controller.js",
+                     "chat/chat-service.js",
+                     "dynamic/dynamic-controller.js",
+                     "dynamic/dynamic-service.js",
+                     "search/search-service.js",
+                     "search/search-directives.js",
+                     "interface/ui-directives.js",
+                     "interface/ui-filters.js",
+                     "interface/ui-services.js"
 
-            ], "angular-stack");
-        });
-    });
+                 ], "angular-stack");
+             });
+         });
+     });
 
     $script.ready(["jquery", "angular-stack"], function() {
         var $clotho = window.$clotho = {};

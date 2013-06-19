@@ -8,6 +8,9 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', 'Collector', 
     $scope.$watch(function () {
         return $location.path();
     }, function (newValue, oldValue) {
+
+        if (!$scope.modes) return;
+
         angular.forEach($scope.modes.items, function(mode, num) {
             var regexp = new RegExp('^' + mode.path + '.*$', ['i']);
             if (regexp.test(newValue)) {

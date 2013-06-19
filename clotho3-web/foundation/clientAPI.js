@@ -107,9 +107,19 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         }
     };
 
-    //note - temporary - need to integrate modal
     var edit = function(uuid) {
-        $location.path('/editor/' + uuid)
+        var dialog_opts = {
+            backdrop: true,
+            keyboard: true,
+            backdropClick: true,
+            template:  '<form sharable-editor name="sharableEditor" uuid="'+uuid+'" class="span6 form-horizontal well" novalidate></form>'
+        };
+        var d = $dialog.dialog(dialog_opts);
+        d.open();
+    };
+
+    var changeUrl = function(newUrl) {
+        $location.path(newUrl);
     };
 
     /**
@@ -317,15 +327,16 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         PubSub.trigger('autocomplete', list);
     };
 
-    /*var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
+    var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
         Collector.storeModel("detail_" + obj.uuid, obj);
-    };*/
+    };
 
 
     return {
         mapCommand : mapCommand,
         collect : collect,
         edit : edit,
+        changeUrl : changeUrl,
         notify : notify,
         broadcast : broadcast,
         log : log,
@@ -336,7 +347,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         hide : hide,
         help : help,
         revisions : revisions,
-        autocomplete : autocomplete
-        //autocompleteDetail: autocompleteDetail
+        autocomplete : autocomplete,
+        autocompleteDetail: autocompleteDetail
     }
 }]);

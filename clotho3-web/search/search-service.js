@@ -8,6 +8,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     options.timeFilter = 'timestamp';
 
     /******* data *******/
+    var query = '';
     var log = {};
 
     var autocomplete = {};
@@ -55,26 +56,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     display.log = false; // activity log
     display.logSnippet = false; // snippet right of log button
 
-    //note - have to wait for app to compile so button is present, so use $timeout
-    $timeout(function() {
+    display.genLogPos = function() {
         var target = document.getElementById('searchbar_logbutton');
-
-        function generateLogpos () {
-            return {
-                left : (target.offsetLeft + (target.scrollWidth / 2) - 180) + "px",
-                top : (target.offsetTop + target.scrollHeight)  + "px"
-            };
-        }
-
-        //todo - make this a loop
-        if (typeof target == 'undefined') {
-            $timeout(function() {
-                display.logpos = generateLogpos();
-            }, 50);
-        } else {
-            display.logpos = generateLogpos();
-        }
-    });
+        display.logpos = {
+            left : (target.offsetLeft + (target.scrollWidth / 2) - 180) + "px",
+            top : (target.offsetTop + target.scrollHeight)  + "px"
+        };
+    };
 
     display.show = function (field) {
         if (!display[field])
@@ -143,8 +131,8 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         log.entries.unshift(data);
     }
 
-    var execute = function (uuid) {
-        console.log("this would be run: " + uuid);
+    var execute = function (command) {
+        console.log("this would be run: " + command);
         display.hide('autocomplete');
         display.undetail();
     };
@@ -172,6 +160,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         options : options,
         display : display,
         log : log,
+        setQuery : function(newQuery) {query = newQuery;},
         autocomplete : autocomplete,
         submit : submit,
         execute : execute
