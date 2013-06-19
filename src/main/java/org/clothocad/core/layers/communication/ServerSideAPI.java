@@ -415,7 +415,7 @@ public final class ServerSideAPI {
                 try {
                     if(sharableRef.equals("org.clothocad.model.Institution")) {
                         System.out.println("Stephanie, I need for the Collector.getObjBase request to return the Schema, and then retrieve the JSONObject representation");
-                        JSONObject jsonSchema = new JSONObject("{\"schema\":[{\"name\":\"name\",\"readable\":\"Display Name\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"city\",\"readable\":\"City\",\"type\":\"text\",\"placeholder\":\"Your City\",\"required\":true},{\"name\":\"state\",\"readable\":\"State\",\"type\":\"text\",\"placeholder\":\"Your State\",\"required\":true},{\"name\":\"country\",\"readable\":\"Country\",\"type\":\"text\",\"placeholder\":\"Your Country\",\"required\":true},],\"custom\":{}}");
+                        JSONObject jsonSchema = new JSONObject("{\"schema\":[{\"name\":\"name\",\"readable\":\"Display Name\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"id\",\"readable\":\"Id\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"city\",\"readable\":\"City\",\"type\":\"text\",\"placeholder\":\"Your City\",\"required\":true},{\"name\":\"state\",\"readable\":\"State\",\"type\":\"text\",\"placeholder\":\"Your State\",\"required\":true},{\"name\":\"country\",\"readable\":\"Country\",\"type\":\"text\",\"placeholder\":\"Your Country\",\"required\":true},],\"custom\":{}}");
                         JSONObject msg = new JSONObject();
                             JSONObject data = new JSONObject();
                             data.put("uuid", "org.clothocad.model.Institution");
@@ -831,25 +831,35 @@ public final class ServerSideAPI {
      * @param sharableRef 
      */
     public final void edit(String sharableRef) {
-    	/**
-        try {
-            Sharable sharable = (Sharable) resolveToObjBase(sharableRef);
-
-            switch (sharable.type()) {
-                case SCHEMA:
-                    Schema schema = (Schema) sharable;
-                    //Pop up the page, push in data
-                    return;
-                case INSTANCE:
-                    return;
-                default:
-                    return;
+            //Resolve the arguments and retrieve, this will also push refreshed data to client and register pubsub
+            String existing = get(sharableRef);
+            if(existing==null) {
+                 say("Clotho was unable to resolve the arguments for edit", "text-error");
+                 return;
             }
-            //Pop up a new window of 
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-        **/
+                
+            try {
+                JSONObject json = new JSONObject(existing);
+                String uuid = json.getString("id");
+                
+
+                
+                
+                JSONObject msg = new JSONObject();
+                    JSONObject data = new JSONObject("{\"template\":\"widget/dependencies/simple-template.html\",\"target\":\"body\",\"controller\":\"widget/dependencies/simple-controller.js\",\"dependencies\":[\"widget/dependencies/simple-service.js\"],\"styles\":{\"background-color\":\"#FF0000\"}}");
+                    data.put("args", uuid);
+
+                msg.put("data", data);
+                msg.put("channel", "display_simple");
+                
+                
+                Router.get().sendMessage(mind.getClientConnection(), msg);
+            } catch (JSONException ex) {
+                 say("Clotho was unable to invoke edit", "text-error");
+                 return;
+            }
+            
+
     }
     
     public final void listen(String args) {
