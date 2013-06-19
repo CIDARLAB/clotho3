@@ -846,8 +846,11 @@ public final class ServerSideAPI {
                 
                 
                 JSONObject msg = new JSONObject();
-                    JSONObject data = new JSONObject("{\"template\":\"extensions/simple-template.html\",\"target\":\"body\",\"controller\":\"extensions/simple-controller.js\",\"dependencies\":[\"extensions/simple-service.js\"],\"styles\":{\"background-color\":\"#FF0000\"}}");
-                    data.put("args", uuid);
+                    JSONObject data = new JSONObject("{\"template\":\"extensions/editor-template.html\",\"target\":\"body\",\"styles\":{\"opacity\":\"0.7\"}}");
+                        JSONObject args = new JSONObject();
+                        args.put("uuid", uuid);
+                        args.put("id", uuid);
+                    data.put("args", args);
 
                 msg.put("data", data);
                 msg.put("channel", "display_simple");
