@@ -6,7 +6,7 @@ package org.clothocad.core.datums;
 
 import java.util.Iterator;
 import lombok.Getter;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
 

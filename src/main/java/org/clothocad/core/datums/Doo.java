@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.settings.Settings;
 import org.json.JSONObject;
 

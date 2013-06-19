@@ -27,7 +27,7 @@ package org.clothocad.core.aspects.Ambassador;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.aspects.Ambassador.Sister.TrustLevel;
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.objbases.Badge;

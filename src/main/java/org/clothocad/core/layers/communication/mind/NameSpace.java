@@ -3,7 +3,7 @@ package org.clothocad.core.layers.communication.mind;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -15,8 +15,8 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.layers.persistence.Add;
-import org.clothocad.core.layers.persistence.DBOnly;
+import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
 

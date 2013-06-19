@@ -27,7 +27,7 @@ package org.clothocad.core.datums;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 
 /**
  * User's are used to authenticate individuals (by the Authenticator)

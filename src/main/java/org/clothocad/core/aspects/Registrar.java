@@ -24,6 +24,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects;
 
+import org.clothocad.core.persistence.Persistor;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.objbases.Badge;

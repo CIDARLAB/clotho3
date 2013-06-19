@@ -25,7 +25,7 @@ package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;

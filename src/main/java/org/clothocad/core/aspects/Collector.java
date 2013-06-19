@@ -23,6 +23,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects;
 
+import org.clothocad.core.persistence.Persistor;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;

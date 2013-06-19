@@ -2,11 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.layers.persistence;
+package org.clothocad.core.persistence;
 
 import javax.inject.Inject;
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

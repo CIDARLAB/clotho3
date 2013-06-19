@@ -21,7 +21,7 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
 
-package org.clothocad.core.layers.persistence;
+package org.clothocad.core.persistence;
 
 import java.net.UnknownHostException;
 import java.util.Collection;

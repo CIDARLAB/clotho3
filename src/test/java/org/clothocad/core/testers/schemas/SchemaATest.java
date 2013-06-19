@@ -28,12 +28,12 @@ import com.mongodb.BasicDBObject;
 import java.util.Set;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.ObjBase;
 
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.layers.persistence.DBClassLoader;
-import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.persistence.DBClassLoader;
+import org.clothocad.core.persistence.mongodb.MongoDBConnection;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.JavaSchema;

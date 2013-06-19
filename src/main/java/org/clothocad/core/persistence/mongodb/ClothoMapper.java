@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.layers.persistence.mongodb;
+package org.clothocad.core.persistence.mongodb;
 
 import com.github.jmkgreen.morphia.mapping.DefaultMapper;
 import com.github.jmkgreen.morphia.mapping.MappedClass;
@@ -16,9 +16,9 @@ import java.util.logging.Level;
 import lombok.Getter;
 import lombok.Setter;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.layers.persistence.Add;
-import org.clothocad.core.layers.persistence.DBOnly;
-import org.clothocad.core.layers.persistence.Replace;
+import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.DBOnly;
+import org.clothocad.core.persistence.Replace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**

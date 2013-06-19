@@ -21,9 +21,9 @@ import java.util.Date;
 import java.util.Map;
 import lombok.Getter;
 import org.bson.BSONObject;
-import org.clothocad.core.aspects.Persistor;
+import org.clothocad.core.persistence.Persistor;
 import org.json.JSONException;
-import org.clothocad.core.layers.persistence.DBOnly;
+import org.clothocad.core.persistence.DBOnly;
 import org.json.JSONObject;
 
 /**

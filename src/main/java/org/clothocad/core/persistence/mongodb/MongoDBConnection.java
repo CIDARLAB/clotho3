@@ -1,4 +1,4 @@
-package org.clothocad.core.layers.persistence.mongodb;
+package org.clothocad.core.persistence.mongodb;
 
 import java.lang.reflect.Array;
 import java.net.UnknownHostException;
@@ -10,7 +10,7 @@ import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.ClothoDate;
-import org.clothocad.core.layers.persistence.ClothoConnection;
+import org.clothocad.core.persistence.ClothoConnection;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.DatastoreImpl;
@@ -60,6 +60,14 @@ public class MongoDBConnection
         morphia = new Morphia(mapper);
     }
     
+    
+    public MongoDBConnection(int port, String host, String dbName, Mapper mapper){
+        this.host = host;
+        this.port = port;
+        this.dbName = dbName;
+        morphia = new Morphia(mapper);
+    }
+    
     //TODO: maintain a schema set on each 
     
     
@@ -68,6 +76,8 @@ public class MongoDBConnection
     private String host = "localhost";
     private int port = 27017;
     private String dbName = "clotho";
+    
+    
     //the demo will break if you change this without changing the Entity annotation on ObjBase
     private String dataCollName = "data";
     //initialization should be revisited when we integrate parts

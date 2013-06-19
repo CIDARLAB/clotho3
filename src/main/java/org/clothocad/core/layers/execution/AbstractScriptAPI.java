@@ -8,7 +8,7 @@ import javax.script.ScriptEngine;
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
 import org.clothocad.core.datums.Function;
-import org.clothocad.core.layers.persistence.ClothoConnection;
+import org.clothocad.core.persistence.ClothoConnection;
 
 
 abstract public class AbstractScriptAPI implements ScriptAPI {

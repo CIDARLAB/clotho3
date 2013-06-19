@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.layers.persistence.mongodb;
+package org.clothocad.core.persistence.mongodb;
 
 import com.github.jmkgreen.morphia.mapping.MappedClass;
 import com.github.jmkgreen.morphia.mapping.MappedField;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import org.clothocad.core.layers.persistence.Add;
-import org.clothocad.core.layers.persistence.DBOnly;
-import org.clothocad.core.layers.persistence.Replace;
+import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.DBOnly;
+import org.clothocad.core.persistence.Replace;
 
 /**
  *

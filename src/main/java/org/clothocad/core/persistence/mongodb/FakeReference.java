@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.layers.persistence.mongodb;
+package org.clothocad.core.persistence.mongodb;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
 import com.github.jmkgreen.morphia.mapping.Mapper;

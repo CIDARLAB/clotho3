@@ -21,7 +21,7 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-package org.clothocad.core.aspects;
+package org.clothocad.core.persistence;
 
 import com.google.common.cache.Cache;
 import com.mongodb.BasicDBObject;
@@ -36,8 +36,10 @@ import javax.inject.Inject;
 import lombok.Delegate;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
-import org.clothocad.core.layers.persistence.ClothoConnection;
-import org.clothocad.core.layers.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.aspects.Aspect;
+import org.clothocad.core.aspects.JSONSerializer;
+import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.persistence.mongodb.MongoDBConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
