@@ -1,19 +1,23 @@
-package org.clothocad.core.testers.schemas
 
+
+import javax.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-/**
- * A simple and sloppy representation of a Feature or other DNA sequence
- */
-public class SimpleFeature {
+import org.clothocad.core.datums.ObjBase;
 
+/**
+ *
+ * @author spaige
+ */
+public class SequenceSchema extends ObjBase {
+    
+    public SequenceSchema(String name, String sequence){
+        super(name);
+        this.sequence = sequence;
+    }
     @Getter
     @Setter
-    /**
-     * The sequence of the feature
-     */
-    @Example("ATACCGGA")
-    private String sequence;
-
+    @Pattern(regexp="[ATUCGRYKMSWBDHVN]*", flags={Pattern.Flag.CASE_INSENSITIVE})
+    String sequence;
 }
 

@@ -61,17 +61,26 @@ import org.json.JSONObject;
  *   
  */
 
-//TODO: thread saftey
+//TODO: thread safety
+//TODO: check out date created/modified/accessed bugs
 public class Persistor implements Aspect {
     
     @Delegate
     private ClothoConnection connection;
     
+    @Delegate
+    private JSONSerializer serializer;
+    
     private Cache cache;
     
-    @Inject
     public Persistor(ClothoConnection connection){
+        this(connection, null);
+    }
+    
+    @Inject
+    public Persistor(ClothoConnection connection, JSONSerializer serializer){
         this.connection = connection;
+        this.serializer = serializer;
         //cache = new  CacheBuilder<ObjectId, ObjBase>().
     }
 

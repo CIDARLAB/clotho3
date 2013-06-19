@@ -27,7 +27,7 @@ import lombok.Setter;
 public class Constraint {
     public Constraint(String constraint, Object... args){
         values = new HashMap<>();
-        setConstraint(constraint);
+        this.constraint = constraint;
         if (args.length % 2 != 0){
             throw new IllegalArgumentException("Needs value for each value name");
         }
@@ -38,6 +38,15 @@ public class Constraint {
             values.put((String) args[i], args[i+1]);
         }
     }
+    
+    public Constraint(String constraint, Map<String, Object> values){
+        this.constraint = constraint;
+        this.values = values;
+    }
+    
+    @Getter
+    @Setter
+    protected String constraint;
     
     private static final Map<String, Class> annotations;
     static {
@@ -53,18 +62,9 @@ public class Constraint {
     
     protected Map<String, Object> values;
     
-    public String getConstraint(){
-        return (String) values.get("constraint");
-    }
-    
-    public void setConstraint(String constraint){
-        values.put("constraint", constraint);
-    }
-    
     
     public Set<String> getValues(){
        Set<String> set  =  values.keySet();
-       set.remove("constraint");
        return set;
     }
     
@@ -73,6 +73,6 @@ public class Constraint {
     }
     
     public Class getAnnotation(){
-        return annotations.get((String) values.get("constraint"));
+        return annotations.get(constraint);
     }
 }

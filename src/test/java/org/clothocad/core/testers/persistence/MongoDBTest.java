@@ -234,4 +234,9 @@ public class MongoDBTest {
 		}
 		return sb.toString();
     } 
+    
+    @Test
+    public void testCreateFromJSON() {
+        
+    }
 }

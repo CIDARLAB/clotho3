@@ -5,12 +5,14 @@
 package org.clothocad.core.aspects.Proctor;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  *
  * @author jcanderson
  */
+@NoArgsConstructor
 public class TemplatePaver extends Paver {
 
     public TemplatePaver(String paver_title, String template) {

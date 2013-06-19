@@ -38,7 +38,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import org.bson.BasicBSONObject;
 import org.json.JSONException;
-
+import javax.inject.Inject;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +50,20 @@ import org.slf4j.LoggerFactory;
 public class MongoDBConnection
         implements ClothoConnection {
     
+    public MongoDBConnection() {
+
+        morphia = new Morphia(new ClothoMapper());
+    }
+    
+    @Inject 
+    public MongoDBConnection(Mapper mapper) {
+        morphia = new Morphia(mapper);
+    }
+    
+    //TODO: maintain a schema set on each 
+    
+    
+    private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
     private String host = "localhost";
     private int port = 27017;
@@ -59,15 +73,7 @@ public class MongoDBConnection
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
 
-    public MongoDBConnection() 
-    		throws UnknownHostException {
-    	MapperOptions opts = new MapperOptions();
-    	opts.objectFactory = new PolymorphicObjectFactory();
-    	morphia = new Morphia(new DefaultMapper(opts));
-    	
-    	this.connect();
-    }
-    
+
     private MongoClient connection;
     private DB db;
     private DBCollection data;
@@ -176,7 +182,9 @@ public class MongoDBConnection
             singleSave(obj);
         }
         catch (Exception e){
+            //throw e;
             //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
+            logger.error("Error while saving", e);
             if (newId) obj.setUUID(null);
             return false;
         }
@@ -204,7 +212,7 @@ public class MongoDBConnection
                 save(o);
                 i++;
             } catch (Exception e) {
-                //logger.error("Error while saving collection", e);
+                logger.error("Error while saving collection", e);
                 //aggregate errors and pass back to user - not sure on details yet
             }
         }
@@ -239,7 +247,7 @@ public class MongoDBConnection
                 i++;
             }
             catch (Exception e) {
-                //logger.error("Error while deleting object in collection", e);
+                logger.error("Error while deleting object in collection", e);
                 //aggregate errors and pass back to user - not sure on details yet 
             }
         }
