@@ -13,7 +13,7 @@ import org.clothocad.core.datums.Sharable;
 import org.json.JSONObject;
 
 /**
- *
+ *org.clothocad.model.Institution
  * @author jcanderson
  */
 @NoArgsConstructor

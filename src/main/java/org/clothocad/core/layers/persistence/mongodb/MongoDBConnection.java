@@ -125,9 +125,11 @@ public class MongoDBConnection
             json.put("id", "");
             json.put("uuid", "");
             json.put("_id", "");
+            json.put("$clotho", "");
             json.remove("id");
             json.remove("uuid");
             json.remove("_id");
+            json.remove("$clotho");
             
             //Convert it to a BSON
             String jsonstr = json.toString();

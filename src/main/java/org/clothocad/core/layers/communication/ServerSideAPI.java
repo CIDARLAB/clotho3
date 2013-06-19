@@ -380,13 +380,62 @@ public final class ServerSideAPI {
             say("I retrieved the Sharable " + out, "text-success");
 
         } catch (Exception e) {
+            //Start of fudgy retieval from filesystem
             try {
                 String uuid = this.relayResolveStringToUUID(sharableRef);
-                System.out.println("JCA hack to deal with statically-typed resources.  Should move to db.");
-                out = FileUtils.readFile("clotho3-web/models/" + uuid);
+                System.out.println("Stephanie:  JCA hack to deal with filesystem-persisted models.  Should move to db.");
+                out = FileUtils.readFile("clotho3-web/models/" + uuid + ".json");
+                JSONObject obj = new JSONObject(out);
+                
+                JSONObject msg = new JSONObject();
+                    JSONObject data = new JSONObject();
+                    data.put("uuid", sharableRef);
+                    data.put("type", "json");
+                    data.put("model", obj);
+                    data.put("isURL", "false");
+
+                msg.put("data", data);
+                msg.put("channel", "collect");
+                Router.get().sendMessage(mind.getClientConnection(), msg);
+                return out;
+                
             } catch(Exception err) {
-                say("Error getting " + sharableRef, "text-error");
+                say("Error getting from filesystem " + sharableRef, "text-error");
             }
+            //End of fudgy retieval from filesystem
+                            
+                
+                
+            //Start of super-fudgy short-circuit
+            
+                try {
+                    if(sharableRef.equals("org.clothocad.model.Institution")) {
+                        System.out.println("Stephanie, I need for the Collector.getObjBase request to return the Schema, and then retrieve the JSONObject representation");
+                        JSONObject jsonSchema = new JSONObject("{\"schema\":[{\"name\":\"name\",\"readable\":\"Display Name\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"city\",\"readable\":\"City\",\"type\":\"text\",\"placeholder\":\"Your City\",\"required\":true},{\"name\":\"state\",\"readable\":\"State\",\"type\":\"text\",\"placeholder\":\"Your State\",\"required\":true},{\"name\":\"country\",\"readable\":\"Country\",\"type\":\"text\",\"placeholder\":\"Your Country\",\"required\":true},],\"custom\":{}}");
+                        JSONObject msg = new JSONObject();
+                            JSONObject data = new JSONObject();
+                            data.put("uuid", "org.clothocad.model.Institution");
+                            data.put("type", "json");
+                            data.put("model", jsonSchema);
+                            data.put("isURL", "false");
+
+                        msg.put("data", data);
+                        msg.put("channel", "collect");
+                        Router.get().sendMessage(mind.getClientConnection(), msg);
+                        return jsonSchema.toString();
+                    }
+                } catch (JSONException ex) {
+                    java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+            //End of super-fudgy short-circuit
+
+            
+            
+            
+            
+            
+
         }
         
         return out;

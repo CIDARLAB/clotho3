@@ -140,6 +140,7 @@ public class Router {
                             break;
 
                         case get:
+                            api.get(data);
                             break;
                         case set:
                             api.set(data);
