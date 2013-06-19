@@ -451,9 +451,20 @@ public final class ServerSideAPI {
             try {
                 uuid = newval.getString("id");
             } catch(Exception err) {
+
+            }
+            
+            //To deal with nested data (ideally this wouldn't be here, but it is)
+            if(uuid==null) {
+                try {
+                    newval = newval.getJSONObject("data");
+                    uuid = newval.getString("id");
+                } catch(Exception err) {
                 say("The arguments lack an 'id' field. Clotho does not know what object to alter");
                 return null;
+                }
             }
+            //End: deal with nested data
             
             //Grab the object to be altered
             Sharable obj = null;
@@ -479,6 +490,13 @@ public final class ServerSideAPI {
                 String key = (String) iterator.next();
                 Object val = newval.get(key);
                 existing.put(key, val);
+            }
+            
+            //Confirm that the new data is different than the old data
+            JSONObject original = obj.toJSON();
+            if(original.toString().equals(existing.toString())) {
+                say("The data was unmodified." , "text-warning");
+                return original.toString();
             }
             
             //Validate the data
