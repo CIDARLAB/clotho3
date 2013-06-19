@@ -1,4 +1,6 @@
 package org.clothocad.core.aspects.Interpreter;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +19,7 @@ public class Trainer {
     /**
      * Allows user to input and save all the command/action relationships.
      */
-    public static void inputTrainingData(){
+    public static void inputTrainingData() throws JSONException{
         while (true) {
             System.out.println("Type in relationship 'command/action': ");
             String input = inputReader.readString();
@@ -45,8 +47,13 @@ public class Trainer {
                 String[] inArr = input.split(":");
                 multiTrain(Integer.parseInt(inArr[1].trim()));
             } else if (input.contains("/")) {
-                String[] cmdAct = input.split("/");
-                Interpreter.get().learnNative(cmdAct[0], cmdAct[1]);
+                try {
+                    String[] cmdAct = input.split("/");
+                    JSONObject json = new JSONObject(cmdAct[1]);
+                    Interpreter.get().learnNative(cmdAct[0], json);
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
             } 
         }
     }
@@ -54,14 +61,15 @@ public class Trainer {
     /**
      * Temporary hacky way to test the NGrams algorithm
      */
-    private static void multiTrain (int rep) {
+    private static void multiTrain (int rep) throws JSONException {
         int reps = rep;
         System.out.println("MultiTrain~ Type in relationship 'command/action': ");
         String input = inputReader.readString();
         if (input.contains("/")) {
             while (reps > 0) {
                 String[] cmdAct = input.split("/");
-                Interpreter.get().learnNative(cmdAct[0], cmdAct[1]);
+                JSONObject json = new JSONObject(cmdAct[1]);
+                Interpreter.get().learnNative(cmdAct[0], json);
                 reps -= 1;
             }
         } else {

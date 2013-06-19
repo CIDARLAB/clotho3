@@ -18,6 +18,7 @@ import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.DefaultMapper;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.github.jmkgreen.morphia.mapping.MapperOptions;
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -71,6 +72,7 @@ public class MongoDBConnection
     private String dataCollName = "data";
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
+
 
     private MongoClient connection;
     private DB db;
@@ -129,9 +131,11 @@ public class MongoDBConnection
             json.put("id", "");
             json.put("uuid", "");
             json.put("_id", "");
+            json.put("$clotho", "");
             json.remove("id");
             json.remove("uuid");
             json.remove("_id");
+            json.remove("$clotho");
             
             //Convert it to a BSON
             String jsonstr = json.toString();
@@ -152,11 +156,13 @@ public class MongoDBConnection
     @Override
     //Cascade save
     public void save(ObjBase obj){
+        System.out.println("Stephanie:  save in connection should either return false or throw exception when fails.  change required in interface.");
         save(obj, new HashSet<ObjBase>());
     }
     
     //actual meat of cascade save in here
     private boolean save(ObjBase obj, Set<ObjBase> exclude){
+    	
         boolean newId = obj.getUUID() == null;
         if(newId) obj.setUUID(ObjectId.get());
         exclude.add(obj);        
@@ -264,6 +270,7 @@ public class MongoDBConnection
     public BSONObject getAsBSON(ObjectId uuid) {
         return data.findOne(new BasicDBObject("_id", uuid));
     }
+
     /*Query construction forthcoming
      * @Override
      public ObjBase getOne(BasicDBObject query) {
@@ -293,9 +300,7 @@ public class MongoDBConnection
             cursor.close();
         }
         return results;
-    }
-
-    
+    }    
 
     public List<BSONObject> getAsBSON(BSONObject query) {
         return getAsBSON(query.toMap());

@@ -14,10 +14,10 @@ import org.eclipse.jetty.server.session.SessionHandler;
 
 public class ClothoWebserver {
 
-	public ClothoWebserver() 
+	public ClothoWebserver(int nPort) 
 			throws Exception {
 		
-		Server server = new Server(8080);
+		Server server = new Server(nPort);
  
         /** for WEB resources (HTML, CSS, JavaScript etc.) **/
         ResourceHandler resHandler = new ResourceHandler();
@@ -57,11 +57,12 @@ public class ClothoWebserver {
         server.start();
         server.join();
         
-        System.out.println("Ernst, please silence these println statements");
+        //System.out.println("Ernst, please silence these println statements");
         
-        System.out.println("The Clotho Webserver is running...");
+        //System.out.println("The Clotho Webserver is running...");
     }
 	
+/**
 	public static void main(String[] args) {
 		try {
 			new ClothoWebserver();
@@ -69,4 +70,5 @@ public class ClothoWebserver {
 			e.printStackTrace();
 		}
 	}
+ **/
 }

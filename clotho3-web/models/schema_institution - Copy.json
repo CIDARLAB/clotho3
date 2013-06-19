@@ -1,0 +1,9 @@
+{
+    "schema" : [
+        {"name" : "name", "readable" : "Display Name", "type" : "text", "placeholder" : "Your Name", "required": true},
+        {"name" : "city", "readable" : "City", "type" : "text", "placeholder" : "Your City", "required": true},
+        {"name" : "state", "readable" : "State", "type" : "text", "placeholder" : "Your State", "required": true},
+        {"name" : "country", "readable" : "Country", "type" : "text", "placeholder" : "Your Country", "required": true},
+    ],
+    "custom" : {}
+}

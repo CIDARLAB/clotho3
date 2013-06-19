@@ -1,4 +1,5 @@
 //Quick housekeeping before tests
+println('About to run MindTest');
 var totoss = clotho.query({"city" : "Baltizam"});
 if(totoss.length>0) {
     clotho.destroy(totoss);

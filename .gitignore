@@ -5,4 +5,4 @@ bin
 /database/
 .settings
 data/
-nb-configuration.xml
+/nbactions.xml
