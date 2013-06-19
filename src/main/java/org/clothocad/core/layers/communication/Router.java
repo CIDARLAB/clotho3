@@ -200,7 +200,9 @@ public class Router {
                     if(conn==null) {
                         continue;
                     }
-                    this.sendMessage(conn, msg);
+                    try {
+                        sendMessage(conn, msg);
+                    } catch(Exception err) { }
                 }
                         
                 
