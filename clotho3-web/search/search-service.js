@@ -8,7 +8,6 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     options.timeFilter = 'timestamp';
 
     /******* data *******/
-    var query = '';
     var log = {};
 
     var autocomplete = {};
@@ -49,6 +48,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
 
     /****** display ******/
     var display = {};
+    display.query = '';
     display.autocomplete = false; // autocomplete list
     display.autocompleteDetail = false; //pane to left of autocomplete
     display.autocompleteDetailInfo = false; // e.g. command or author
@@ -138,6 +138,8 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     };
 
     var submit = function (query) {
+        if (typeof query == 'undefined')
+            query = display.query;
         if (!!query) {
             Clotho.submit(query);
             display.autocomplete = false;
@@ -160,7 +162,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         options : options,
         display : display,
         log : log,
-        setQuery : function(newQuery) {query = newQuery;},
+        setQuery : function(item, $event) {
+            $event.preventDefault();
+            if (item.type != 'command') {
+                display.undetail();
+            }
+            display.query = item.value;
+        },
         autocomplete : autocomplete,
         submit : submit,
         execute : execute

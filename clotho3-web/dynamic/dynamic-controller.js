@@ -59,14 +59,14 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
         Clotho.show_simple({
             "template" : 'extensions/editor-template.html',
             "args" : {
-                "uuid" : "inst_first"
+                "id" : "inst_first"
             },
             "target" : ".editorCatcher"
         });
     };
     $scope.showEditorModal = function() {
 
-        var editor_template = '<form sharable-editor name="sharableEditor" uuid="inst_first" class="span6 form-horizontal well" novalidate></form>';
+        var editor_template = '<form sharable-editor name="sharableEditor" id="inst_first" class="span6 form-horizontal well" novalidate></form>';
 
         $scope.dialog_opts = {
             backdrop: true,

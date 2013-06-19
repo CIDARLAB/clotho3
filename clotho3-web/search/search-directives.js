@@ -12,20 +12,19 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
             $scope.log = Searchbar.log;
             $scope.autocomplete = Searchbar.autocomplete;
             $scope.display = Searchbar.display;
-            $scope.query = Searchbar.query;
 
+            $scope.setQuery = Searchbar.setQuery;
             $scope.submit = Searchbar.submit;
             $scope.execute = Searchbar.execute;
 
             //functions
-            $scope.$watch('query', function(newValue, oldValue) {
+            $scope.$watch('display.query', function(newValue, oldValue) {
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
-                    Clotho.autocomplete($scope.query);
+                    Clotho.autocomplete($scope.display.query);
                 }
             });
 
-            $scope.setQuery = Searchbar.setQuery;
 
             /*** help icons ***/
 

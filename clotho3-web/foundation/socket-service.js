@@ -100,8 +100,6 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
         socket.onmessage = function (obj) {
 
-            console.log(obj);
-
             obj = JSON.parse(obj.data);
             var channel = obj.channel;
             var data = obj.data;

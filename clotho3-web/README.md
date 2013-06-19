@@ -57,7 +57,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - markdown directive (lower priority) --- highlight textarea (jsFiddle like)
 
-- search bar --- execute sends command object
+- search bar --- execute sends command object, click sets query
 
 - keypress service -- unbind events manually / via $scope.$destroy
     - need for trail functionality

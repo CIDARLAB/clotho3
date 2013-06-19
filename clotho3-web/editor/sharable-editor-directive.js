@@ -1,7 +1,7 @@
 'use strict';
 
 //todo - sharable bindable??
-//decide if want to make sharable bindable also / instead of uuid (so can bind to models outside of directive)
+//decide if want to make sharable bindable also / instead of id (so can bind to models outside of directive)
 // would need watch statement on sharable
 
 Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', function(Clotho, $compile, $parse) {
@@ -23,13 +23,13 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
             '</div>',
         scope: {
             //sharable: '=',
-            uuid: '='
+            id: '='
         },
         controller: function($scope, $element, $attrs) {
             //if we're not linking, just pull it from the attrs
-            if (typeof $scope.uuid == 'undefined') {
-                console.log("uuid not in controller, pulling");
-                $scope.uuid = $attrs.uuid;
+            if (typeof $scope.id == 'undefined') {
+                console.log("id not in controller, pulling");
+                $scope.id = $attrs.id;
             }
 
             $scope.schema = {};
@@ -43,26 +43,26 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
             Clotho.listen('collector_reset', function SharableEditor_onCollectorReset() {
 
                 //note - this uses promises in the default way, angular knows how to deal with it
-                //$scope.sharable = Clotho.get($scope.uuid, true);
+                //$scope.sharable = Clotho.get($scope.id, true);
 
                 //this is how people would ideally access things (normal promise pattern)
-                Clotho.get($scope.uuid).then(function(result) {
+                Clotho.get($scope.id).then(function(result) {
                     $scope.sharable = result;
                 });
 
                 // testing - sync Clotho.get()
-                //console.log(Clotho.get($scope.uuid, true));
+                //console.log(Clotho.get($scope.id, true));
                 
             }, $scope);
 
             /*
             //note - alternate version - see also watch2 below
-            Clotho.watch($scope.uuid, function (data) {
+            Clotho.watch($scope.id, function (data) {
                 $scope.sharable = data;
             }, $scope);
              */
 
-            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope);
+            Clotho.watch2($scope.id, $scope, 'sharable', $scope);
 
             //future - use return {} syntax? i.e. for inheritable directive controllers
         },
@@ -120,7 +120,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
 
                     //get the sharable (which says which schema it needs)
                     //note variables not compiled yet in 'pre' (e.g. if use scope: {var : '@'} and should go through $parse)
-                    Clotho.get(scope.uuid).then(function(result) {
+                    Clotho.get(scope.id).then(function(result) {
                         scope.sharable = result;
                         scope.schemaName = result.schema_id;
 
@@ -162,14 +162,14 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                     //discard edits
                     scope.reset = function() {
                         scope.formConst.$setPristine();
-                        Clotho.get(scope.uuid).then(function(result) {
+                        Clotho.get(scope.id).then(function(result) {
                             scope.sharable = result;
                         });
                     };
 
                     //save edits, switch to 'view'
                     scope.save = function() {
-                        Clotho.set(scope.uuid, scope.sharable);
+                        Clotho.set(scope.id, scope.sharable);
                         scope.editMode = false;
                     };
 

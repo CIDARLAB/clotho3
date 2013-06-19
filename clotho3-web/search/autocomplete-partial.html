@@ -3,7 +3,7 @@
         <a class="close" ng-click="display.hide('autocomplete'); display.undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
 
         <li ng-repeat="item in (filtered = (autocomplete.autocompletions | filter:{text:query})) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
-            <a ng-click="setQuery(item.value)" ng-mouseenter="display.detail({{item.uuid}})">{{item.text}}</a>
+            <a ng-click="setQuery(item, $event)" ng-mouseenter="display.detail({{item.uuid}})">{{item.text}}</a>
         </li>
 
         <li ng-show="!filtered.length"><a class="text-error"><i class="icon-exclamation-sign"></i> No results...</a></li>

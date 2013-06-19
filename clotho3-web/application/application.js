@@ -94,7 +94,7 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/editor', {
                 redirectTo:'/editor/inst_first'
             }).
-            when('/editor/:uuid', {
+            when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
                 //todo - get this working, instead of doing it in the link of directive
                 //resolve: []

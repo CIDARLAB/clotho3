@@ -2,29 +2,13 @@
 
 Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$location', 'Clotho', function($scope, $routeParams, $location, Clotho) {
 
-    $scope.setUUID = function (uuid) {
-        $scope.uuid = uuid;
-        $scope.sharable = Clotho.get($scope.uuid);
-        $location.path('/editor/' + $scope.uuid);
+    $scope.setID = function (id) {
+        $scope.id = id;
+        $scope.sharable = Clotho.get($scope.id);
+        $location.path('/editor/' + $scope.id);
     };
 
     //init()
-    $scope.setUUID($routeParams.uuid);
-
-
-    //testing
-    $scope.setNewFirst = function() {
-        var tempObj = {
-            "$clotho" : {
-                "schema" : "schema_institution",
-                "uuid" : "inst_first"
-            },
-            "displayName" : "New Person"
-        };
-        Clotho.set('inst_first', tempObj);
-    };
-
-
-
+    $scope.setID($routeParams.id);
 
 }]);

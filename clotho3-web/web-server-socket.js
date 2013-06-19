@@ -667,17 +667,24 @@ io.sockets.on('connection', function (socket) {
             {
                 "uuid" : "qwertyuiop",
                 "text" : "This is a phrase",
+                "value" : "This is a phrase",
                 "type" : "phrase"
             },
             {
                 "uuid" : "817924532",
                 "text" : "Reverse Complement pca1502",
-                "command" : "clotho.run('sdfsadg', '23tg3e2q');",
+                "value" : "clotho.run('sdfsadg', '23tg3e2q');",
+                "command" : {
+                    "channel" : "run",
+                    "functionId" : "sdfsadg",
+                    "args" : "'23tg3e2q'"
+                },
                 "type" : "command"
             },
             {
                 "uuid" : "xxxxxxxxxxxx",
                 "text" : "Reverse complement this",
+                "value" : "Reverse complement this",
                 "type" : "phrase"
             }
         ];

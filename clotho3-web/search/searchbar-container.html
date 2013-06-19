@@ -4,7 +4,7 @@
         <div id="searchBarForm" class="navbar-form pull-left">
 
             <div class="input-append">
-                <input id="searchBar" name="searchBar" type="text" placeholder="Enter Command or Search Term" class="span4" autocomplete="off" ng-model="query" ng-required>
+                <input id="searchBar" name="searchBar" type="text" placeholder="Enter Command or Search Term" class="span4" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit()'}">
                 <button class="btn" id="searchBarSubmit" ng-click="submit(query)">Submit</button>
             </div>
 

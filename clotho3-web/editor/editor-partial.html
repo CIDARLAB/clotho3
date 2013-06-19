@@ -1,14 +1,14 @@
 <div class="container" ng-controller="EditorCtrl">
     <div class="row">
 
-        <form sharable-editor name="sharableEditor" uuid="uuid" class="span6 form-horizontal well" novalidate></form>
+        <form sharable-editor name="sharableEditor" id="id" class="span6 form-horizontal well" novalidate></form>
 
-        <div class="span3 well">
+        <div class="span2 well">
+            <h4>Demo</h4>
             <h6>Change Institution:</h6>
             <div class="btn-group">
-                <button class="btn" type="button" ng-click="setUUID('inst_first')">First</button>
-                <button class="btn" type="button" ng-click="setUUID('inst_second')">Second</button>
-                <button class="btn btn-info" type="button" ng-click="setNewFirst()">New 1st</button>
+                <button class="btn" type="button" ng-click="setID('inst_first')">First</button>
+                <button class="btn" type="button" ng-click="setID('inst_second')">Second</button>
             </div>
         </div>
 
