@@ -172,7 +172,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * Show a view on the client
      *
      */
-    var display = function clientAPIDisplay(uuid, args) {
+    var display_old = function clientAPIDisplay(uuid, args) {
 
         //as a simple demo, let's assume this is all that is sent
         var model = args.model;
@@ -181,11 +181,14 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     };
 
     /**
+     * @name clientAPI.display
+     *
      * @param {object} data
      * format:
         {
             "template" : <url>,         // required
             "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
+            "args" : {<object>}         // data to copy onto $scope
             "controller" : <url>,       // optional
             "dependencies" : [
                 <urls>                  // required if in controller
@@ -200,12 +203,13 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      note CAVEATS:
      - currently, controllers etc. must be tied to Application.Extensions.___
      */
-    var display_simple = function clientAPIDisplaySimple(data) {
+    var display = function clientAPIDisplaySimple(data) {
 
         //console.log(data);
 
         var template = data.template,
             controller = data.controller || "",
+            args = data.args || {},
             dependencies = data.dependencies || [],
             styles = data.styles || {},
             target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $clotho.appRoot;
@@ -213,7 +217,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         $rootScope.$safeApply($http.get(template, {cache: $templateCache})
             .success(function(precompiled) {
 
-                Application.mixin([dependencies, controller], $(precompiled).appendTo(target))
+                Application.mixin([dependencies, controller], $(precompiled).appendTo(target), args)
                     .then(function(div) {
                         //testing
                         //console.log($position.position(div));
@@ -343,7 +347,8 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         say : say,
         alert : alert,
         display : display,
-        display_simple : display_simple,
+        display_simple : display,
+        display_old : display_old,
         hide : hide,
         help : help,
         revisions : revisions,

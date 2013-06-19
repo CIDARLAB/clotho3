@@ -103,6 +103,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                                     inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'">' + optionsText + '</select>';
                                     break;
                                 }
+                                    //todo - add filedrop support
                                 default: {
                                     inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'" >';
                                     break;
@@ -121,7 +122,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                     //note variables not compiled yet in 'pre' (e.g. if use scope: {var : '@'} and should go through $parse)
                     Clotho.get(scope.uuid).then(function(result) {
                         scope.sharable = result;
-                        scope.schemaName = result.$clotho.schema;
+                        scope.schemaName = result.schema_id;
 
                         //get the schema
                         Clotho.get(scope.schemaName).then(function(result) {

@@ -38,21 +38,25 @@ Application.Extensions.config(['$controllerProvider', '$compileProvider', '$filt
             Application.Extensions.registeredQueue = Application.Extensions.getQueue().length;
         };
 
-        Application.Extensions.recompile = function(element) {
+        Application.Extensions.recompile = function(element, args) {
             if (typeof element == 'undefined') {return;}
+            args = args || {};
             $($clotho.appRoot).injector().invoke(function($compile, $rootScope) {
-                $compile($(element))($rootScope);
+                var scope = $rootScope.$new();
+                angular.extend(scope, args);
+                console.log(scope);
+                $compile($(element))(scope);
                 $rootScope.$apply();
             });
         };
 
-        Application.mixin = function(urls, element) {
+        Application.mixin = function(urls, element, args) {
 
             var deferred = $q.defer();
 
             $script(urls, function() {
                 Application.Extensions.processQueue();
-                Application.Extensions.recompile(element);
+                Application.Extensions.recompile(element, args);
                 $rootScope.$safeApply(deferred.resolve(element));
             });
 

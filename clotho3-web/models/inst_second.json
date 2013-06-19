@@ -1,8 +1,6 @@
 {
-    "$clotho" : {
-        "schema" : "schema_person",
-        "uuid" : "inst_second"
-    },
+    "id" : "inst_second",
+    "schema_id" : "schema_person",
     "displayName" : "Second Person",
     "city" : "Another Place",
     "state" : "Guadalajara",

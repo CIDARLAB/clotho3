@@ -58,6 +58,9 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
     $scope.showEditor = function() {
         Clotho.show_simple({
             "template" : 'extensions/editor-template.html',
+            "args" : {
+                "uuid" : "inst_first"
+            },
             "target" : ".editorCatcher"
         });
     };
