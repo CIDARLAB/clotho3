@@ -1,10 +1,17 @@
 package org.clothocad.core.layers.communication;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.layers.communication.Channel.create;
 import static org.clothocad.core.layers.communication.Channel.destroy;
@@ -180,7 +187,47 @@ public class Router {
 			e.printStackTrace();
 		}
 	}	
+
+    //Start JCA's hack of a pubsub, to be replaced by Ernst
+    void publish(Sharable object) {
+            try {
+                System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
+                String uuid = object.getUUID().toString();
+                JSONObject msg = ServerSideAPI.makeCollect(object);
+                HashSet<WeakReference<ClientConnection>> targets = pubsub.get(uuid);
+                for(WeakReference<ClientConnection> wr : targets) {
+                    ClientConnection conn = wr.get();
+                    if(conn==null) {
+                        continue;
+                    }
+                    try {
+                        sendMessage(conn, msg);
+                    } catch(Exception err) { }
+                }
+                        
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         
+    }
+    
+    private HashMap<String, HashSet<WeakReference<ClientConnection>>> pubsub = new  HashMap<String, HashSet<WeakReference<ClientConnection>>>();
+
+    void register(ClientConnection connection, Sharable object) {
+        String uuid = object.getUUID().toString();
+        HashSet<WeakReference<ClientConnection>> existing = pubsub.get(uuid);
+        if(existing==null) {
+            existing = new HashSet<WeakReference<ClientConnection>>();
+        }
+        
+        existing.add(new WeakReference<ClientConnection>(connection));
+        pubsub.put(uuid, existing);
+    }
+    
+    //End JCA's hack of a pubsub, to be replaced by Ernst
+    
+    
     /**
      * The Doo's that manage any Client-derived message.  Doo's handle even key
      * commands to avoid synchronization issues.

@@ -371,6 +371,10 @@ public final class ServerSideAPI {
             if(true) {
                 JSONObject msg = makeCollect(existing);
                 Router.get().sendMessage(mind.getClientConnection(), msg);
+                
+                //Associate the client with this sharable in pubsub
+                System.out.println("Ernst:  this is the registering of pubsub");
+                Router.get().register(mind.getClientConnection(), existing);
             }
             
             //Notify the user that they retrieved the data
@@ -520,7 +524,7 @@ public final class ServerSideAPI {
             say("You successfully modified: " + object.getName() + " with UUID: " + object.getUUID().toString(), "text-success");
 
             //Relay the data change to listening clients
-            System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
+            Router.get().publish((Sharable) object);
 
             //Return the modified data to the calling script
             return object.toString();
