@@ -9,11 +9,10 @@ public class ClothoStarter {
 	public static void main(String[] args) 
 			throws Exception {
 		
-		if(args.length != 1) {
-			System.err.println("Usage: java -jar clotho.jar <port>");
-			System.exit(1);
+		int nPort = 8080;
+		if(args.length == 1) {
+			nPort = Integer.parseInt(args[0]);
 		}
-		int nPort = Integer.parseInt(args[0]);
 		
 		//LogManager.getLogManager().reset();
 		
