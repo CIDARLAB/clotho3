@@ -846,7 +846,7 @@ public final class ServerSideAPI {
                 
                 
                 JSONObject msg = new JSONObject();
-                    JSONObject data = new JSONObject("{\"template\":\"widget/dependencies/simple-template.html\",\"target\":\"body\",\"controller\":\"widget/dependencies/simple-controller.js\",\"dependencies\":[\"widget/dependencies/simple-service.js\"],\"styles\":{\"background-color\":\"#FF0000\"}}");
+                    JSONObject data = new JSONObject("{\"template\":\"extensions/simple-template.html\",\"target\":\"body\",\"controller\":\"extensions/simple-controller.js\",\"dependencies\":[\"extensions/simple-service.js\"],\"styles\":{\"background-color\":\"#FF0000\"}}");
                     data.put("args", uuid);
 
                 msg.put("data", data);
