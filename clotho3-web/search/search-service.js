@@ -22,19 +22,19 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         {
             "text" : "Sending message failed",
             "from" : "client",
-            "class" : "text-error",
+            "class" : "error",
             "timestamp" : 1288399999999
         },
         {
             "text" : "This is a warning",
             "from" : "server",
-            "class" : "text-warning",
+            "class" : "warning",
             "timestamp" : 1288999999999
         },
         {
             "text" : "Yay first message worked",
             "from" : "server",
-            "class" : "text-success",
+            "class" : "success",
             "timestamp" : 1188323623006
         },
         {
@@ -123,12 +123,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     /***** functions *****/
 
     function receiveMessage (data) {
+        log.entries.unshift(data);
         display.show('logSnippet');
         //todo - cancel if new request comes in
         $timeout( function() {
             display.hide('logSnippet');
         }, 5000);
-        log.entries.unshift(data);
+
     }
 
     var execute = function (command) {

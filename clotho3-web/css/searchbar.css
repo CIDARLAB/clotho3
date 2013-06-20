@@ -83,6 +83,12 @@ CUSTOM
 
 /* Bootstrap add-ons */
 
+.alert-muted {
+    color: #555555;
+    background-color: #eeeeee;
+    border-color: #cfcfcf;
+}
+
 div.inline {
     display: inline;
 }

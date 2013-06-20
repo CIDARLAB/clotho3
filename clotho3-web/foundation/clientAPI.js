@@ -317,6 +317,18 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         PubSub.trigger('revisions:'+uuid, data);
     };
 
+    /**
+     * @name Clotho.startTrail
+     *
+     * @param {string} uuid
+     *
+     * @description
+     * start a trail with a given uuid
+     */
+    var startTrail = function clothoAPI_startTrail(uuid) {
+        $location.path("/trails/" + uuid);
+    };
+
     // ---- COMMAND BAR ----
 
     /**
@@ -352,6 +364,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         hide : hide,
         help : help,
         revisions : revisions,
+        startTrail : startTrail,
         autocomplete : autocomplete,
         autocompleteDetail: autocompleteDetail
     }
