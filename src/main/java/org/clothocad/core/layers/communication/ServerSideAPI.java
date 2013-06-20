@@ -803,20 +803,27 @@ public final class ServerSideAPI {
     }
 
     public final void startTrail(String trailRef) {
-    	/***
-        try {
-            //Grab a Doo if something is awaiting one
-            Doo parentDoo = Hopper.get().extract(null);
-            Trail trail = (Trail) resolveToObjBase(trailRef);
-            Person student = this.getPerson();
-
-            Proctor.get().initiateTrail(student, trail, parentDoo);
-
-        } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "", e);
-            e.printStackTrace();
-        }
-        ***/
+            relayShowStaticTemplates(trailRef, "trails/");
+    }
+    
+    private final void relayShowStaticTemplates(String sharRef, String target) {
+            String existing = get(sharRef);
+            if(existing==null) {
+                 say("Clotho was unable to resolve the arguments for edit", "text-error");
+                 return;
+            }
+                
+            try {
+                JSONObject json = new JSONObject(existing);
+                String uuid = json.getString("id");
+                JSONObject msg = new JSONObject();
+                msg.put("data", target + uuid);
+                msg.put("channel", "changeUrl");
+                Router.get().sendMessage(mind.getClientConnection(), msg);
+            } catch (JSONException ex) {
+                 say("Clotho was unable to invoke edit", "text-error");
+                 return;
+            }
     }
     
     /**
@@ -831,37 +838,38 @@ public final class ServerSideAPI {
      * @param sharableRef 
      */
     public final void edit(String sharableRef) {
-            //Resolve the arguments and retrieve, this will also push refreshed data to client and register pubsub
-            String existing = get(sharableRef);
-            if(existing==null) {
-                 say("Clotho was unable to resolve the arguments for edit", "text-error");
-                 return;
-            }
-                
-            try {
-                JSONObject json = new JSONObject(existing);
-                String uuid = json.getString("id");
-                
-
-                
-                
-                JSONObject msg = new JSONObject();
-                    JSONObject data = new JSONObject("{\"template\":\"extensions/editor-template.html\",\"target\":\"body\",\"styles\":{\"opacity\":\"0.7\"}}");
-                        JSONObject args = new JSONObject();
-                        args.put("uuid", uuid);
-                        args.put("id", uuid);
-                    data.put("args", args);
-
-                msg.put("data", data);
-                msg.put("channel", "display_simple");
-                
-                
-                Router.get().sendMessage(mind.getClientConnection(), msg);
-            } catch (JSONException ex) {
-                 say("Clotho was unable to invoke edit", "text-error");
-                 return;
-            }
-            
+        relayShowStaticTemplates(sharableRef, "editor/");
+//            //Resolve the arguments and retrieve, this will also push refreshed data to client and register pubsub
+//            String existing = get(sharableRef);
+//            if(existing==null) {
+//                 say("Clotho was unable to resolve the arguments for edit", "text-error");
+//                 return;
+//            }
+//                
+//            try {
+//                JSONObject json = new JSONObject(existing);
+//                String uuid = json.getString("id");
+//                
+//
+//                
+//                
+//                JSONObject msg = new JSONObject();
+//                    JSONObject data = new JSONObject("{\"template\":\"extensions/editor-template.html\",\"target\":\"body\",\"styles\":{\"opacity\":\"0.7\"}}");
+//                        JSONObject args = new JSONObject();
+//                        args.put("uuid", uuid);
+//                        args.put("id", uuid);
+//                    data.put("args", args);
+//
+//                msg.put("data", data);
+//                msg.put("channel", "display");
+//                
+//                
+//                Router.get().sendMessage(mind.getClientConnection(), msg);
+//            } catch (JSONException ex) {
+//                 say("Clotho was unable to invoke edit", "text-error");
+//                 return;
+//            }
+//            
 
     }
     

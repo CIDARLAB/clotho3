@@ -49,6 +49,8 @@ public class TrailTest {
         Trail result = Persistor.get().get(Trail.class, uuid);
         assert(result.getTitle().equals("First Biosafety Module"));
         
+        //var trails = clotho.query({"className":"org.clothocad.model.Trail"});
+        
         
     }
 }
