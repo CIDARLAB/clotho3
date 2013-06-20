@@ -53,11 +53,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- search bar alerts - max-width and no overflow
+
 - package to just download necessary angular components
 
 - markdown directive (lower priority) --- highlight textarea (jsFiddle like)
-
-- search bar --- execute sends command object, click sets query
 
 - keypress service -- unbind events manually / via $scope.$destroy
     - need for trail functionality

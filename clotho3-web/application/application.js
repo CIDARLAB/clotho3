@@ -46,23 +46,9 @@ Application.Foundation = angular.module('clotho.core', [])
          */
         $rootScope.$safeApply = function(fn) {
             fn = fn || function() {};
-            if($rootScope.$$phase) {
-                //don't worry, the value gets set and AngularJS picks up on it...
-                fn();
-            }
-            else {
-                //this will fire to tell angularjs to notice that a change has happened
-                //if it is outside of it's own behaviour...
-                $rootScope.$apply(fn);
-            }
+            if($rootScope.$$phase) { fn(); }
+            else { $rootScope.$apply(fn); }
         };
-
-        //todo - ineherit by children, silence listeners
-        var oldDestroy = $rootScope.__proto__.$destroy;
-        $rootScope.$on('$destroy', function() {
-            console.log("destroyed: " + this.$id);
-            Clotho.silence(this.$id);
-        });
     }]);
 
 angular.module('clothoPackage', ['clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails']);

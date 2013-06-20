@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', '$position', function(Clotho, $timeout, $q, $rootScope, $position) {
+Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', function(Clotho, $timeout, $q, $rootScope) {
 
     /******* config ******/
     var options = {};
