@@ -2,15 +2,22 @@ package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Persistor;
 import org.clothocad.core.aspects.Proctor.Module;
 import org.clothocad.core.aspects.Proctor.Paver;
 import org.clothocad.core.aspects.Proctor.TemplatePaver;
+import org.clothocad.core.datums.ObjBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.model.Instance;
 import org.clothocad.model.Trail;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 
 public class TrailTest {
@@ -51,5 +58,37 @@ public class TrailTest {
         //var trail = clotho.get('51c20034507659b64be65a3b');
         //clotho.startTrail('51c20034507659b64be65a3b');
         
+//        System.out.println("The end result is:");
+//        System.out.println(result.toString());
+        
+    }
+    
+    @Test
+    public void testInstance() throws Exception {
+//            JSONObject json = new JSONObject();
+//            
+//        //Start of funky jsonobject test
+//            json.put("donut", "crispy");
+////                JSONArray listy = new JSONArray();
+////                listy.put("cindy");
+////                listy.put("bob");
+////                listy.put("mary");
+////                listy.put("tom");
+////                    JSONObject inner = new JSONObject();
+////                    inner.put("age", "5");
+////                listy.put(inner);
+////            json.put("listy", listy);
+//        //end of funky jsonobject test
+//                    
+//            System.out.println("The json is : " + json.toString());
+//                    
+//            Instance instance = new Instance(json);
+//            //Save then re-retrieve the trail
+//            Persistor.get().save(instance);
+//            String uuid = instance.getUUID().toString();
+//            Instance ires = (Instance) Persistor.get().get(Instance.class, uuid);
+//
+//            System.out.println("The isnstance result is:");
+//            System.out.println(ires.toString());
     }
 }
