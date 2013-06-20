@@ -15,7 +15,7 @@
         </li>
     </ul>
 
-    <button class="btn btn-warning" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer">Submit Answer</button>
+    <button class="btn btn-warning" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
 
     <h3 ng-if="quiz.response" ng-class="{'text-success' : quiz.response.result, 'text-error' : !quiz.response.result}">{{quiz.response.result}}</h3>
 

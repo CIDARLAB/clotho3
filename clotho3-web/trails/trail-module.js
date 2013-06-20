@@ -341,9 +341,12 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
 Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
 
-    //todo - pass in starting value, default to false
-    $scope.createEmptyAnswer = function(quiz) {
+    $scope.createEmptyAnswer = function(quiz, value) {
+        value = (typeof value != 'undefined') ? value : false;
         $scope.quiz.answer = new Array(quiz.options.length);
+        for (var i = 0; i < $scope.quiz.answer.length; i++) {
+            $scope.quiz.answer[i] = value;
+        }
     };
 
     $scope.answerUndefined = function(quiz) {
@@ -352,6 +355,7 @@ Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($sc
 
     $scope.submitQuestion = function(quiz) {
         Clotho.gradeQuiz(quiz).then(function (data) {
+            $scope.quiz.submitted = true;
             $scope.quiz.response = data;
         });
     }

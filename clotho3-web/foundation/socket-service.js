@@ -1,19 +1,16 @@
 'use strict';
 
-/* NOTE - see communication dependencies in notes file
-    - do socket.on('message') so WebSocket compatible
-    - interpret here, send to clothoAPI
-*/
+/* NOTE - see communication dependencies in notes file */
 
 Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub, ClientAPI) {
+
 
     return (window.$clotho.$socket) ? window.$clotho.$socket : window.$clotho.$socket = generateSocketObject();
 
     function generateSocketObject() {
-
         //created in index.html
         var socket = window['$clotho']['socket'];
-		
+
         //internal use (Clotho API) on channel $clotho
         var internal = {};
 
@@ -25,8 +22,9 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
          - Avoid creation of Socket.on() listeners etc. by using custom channels
          *********/
 
+        /*
         //INTERNAL USE
-        //todo - test these --- may be better to avoid internal registers? just go through PubSub?
+        //note - test these --- may be better to avoid internal registers? just go through PubSub?
         var register = function (eventName, callback) {
             if(!internal[eventName]) {
                 internal[eventName] = [];
@@ -59,6 +57,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             });
         };
         // END INTERNAL USE
+        */
 
         //external use
         var on = function (eventName, callback) {
@@ -100,9 +99,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
         ************/
 
         socket.onmessage = function (obj) {
-            
-            console.log(obj);
-            
+
             obj = JSON.parse(obj.data);
             var channel = obj.channel;
             var data = obj.data;
@@ -110,7 +107,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             //note - channel reserved for serverAPI
             if (channel == "$clotho") {
                 console.log("SOCKET\tchannel $clotho");
-                internal_trigger(data.channel, data.data);
+                //internal_trigger(data.channel, data.data);
                 return;
             }
 
@@ -130,15 +127,16 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
                 PubSub.trigger(channel, data);
             }
         };
-		   	
-		
+
         return {
 
+            /*
             //only for use by Clotho API
-            //todo - decide if will be used
+            //note - decide if will be used
             register : register,
             reg_once : reg_once,
             unregister : unregister,
+            */
 
 
             //For adding custom channels - for use in other apps etc.
@@ -147,8 +145,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             off : off,
 
             //send a JSON on a 'custom channel' [ repackaged using send() ]
-            //future - add callback?
-            emit: function (eventName, data) {
+            emit: function (eventName, data, callback) {
                 console.log("SOCKET\tdata emitted on channel: " + eventName);
 
                 var packaged = {
@@ -156,12 +153,15 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
                     "data" : data
                 };
                 socket.send(packaged);
+
+                if (typeof callback == 'function')
+                    callback(packaged);
             },
-            
+
             //send properly formatted string on channel message
-            send: function (data) {
-            	socket.send(data);
-        	}
+            send: function(data) {
+                socket.send(data);
+            }
         }
     }
 }]);

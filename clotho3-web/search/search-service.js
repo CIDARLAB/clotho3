@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', '$position', function(Clotho, $timeout, $q, $rootScope, $position) {
+Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', function(Clotho, $timeout, $q, $rootScope) {
 
     /******* config ******/
     var options = {};
@@ -22,19 +22,19 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         {
             "text" : "Sending message failed",
             "from" : "client",
-            "class" : "text-error",
+            "class" : "error",
             "timestamp" : 1288399999999
         },
         {
             "text" : "This is a warning",
             "from" : "server",
-            "class" : "text-warning",
+            "class" : "warning",
             "timestamp" : 1288999999999
         },
         {
             "text" : "Yay first message worked",
             "from" : "server",
-            "class" : "text-success",
+            "class" : "success",
             "timestamp" : 1188323623006
         },
         {
@@ -48,6 +48,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
 
     /****** display ******/
     var display = {};
+    display.query = '';
     display.autocomplete = false; // autocomplete list
     display.autocompleteDetail = false; //pane to left of autocomplete
     display.autocompleteDetailInfo = false; // e.g. command or author
@@ -55,26 +56,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     display.log = false; // activity log
     display.logSnippet = false; // snippet right of log button
 
-    //note - have to wait for app to compile so button is present, so use $timeout
-    $timeout(function() {
+    display.genLogPos = function() {
         var target = document.getElementById('searchbar_logbutton');
-
-        function generateLogpos () {
-            return {
-                left : (target.offsetLeft + (target.scrollWidth / 2) - 180) + "px",
-                top : (target.offsetTop + target.scrollHeight)  + "px"
-            };
-        }
-
-        //todo - make this a loop
-        if (typeof target == 'undefined') {
-            $timeout(function() {
-                display.logpos = generateLogpos();
-            }, 50);
-        } else {
-            display.logpos = generateLogpos();
-        }
-    });
+        display.logpos = {
+            left : (target.offsetLeft + (target.scrollWidth / 2) - 180) + "px",
+            top : (target.offsetTop + target.scrollHeight)  + "px"
+        };
+    };
 
     display.show = function (field) {
         if (!display[field])
@@ -135,21 +123,24 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     /***** functions *****/
 
     function receiveMessage (data) {
+        log.entries.unshift(data);
         display.show('logSnippet');
         //todo - cancel if new request comes in
         $timeout( function() {
             display.hide('logSnippet');
         }, 5000);
-        log.entries.unshift(data);
+
     }
 
-    var execute = function (uuid) {
-        console.log("this would be run: " + uuid);
+    var execute = function (command) {
+        console.log("this would be run: " + command);
         display.hide('autocomplete');
         display.undetail();
     };
 
     var submit = function (query) {
+        if (typeof query == 'undefined')
+            query = display.query;
         if (!!query) {
             Clotho.submit(query);
             display.autocomplete = false;
@@ -172,6 +163,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         options : options,
         display : display,
         log : log,
+        setQuery : function(item, $event) {
+            $event.preventDefault();
+            if (item.type != 'command') {
+                display.undetail();
+            }
+            display.query = item.value;
+        },
         autocomplete : autocomplete,
         submit : submit,
         execute : execute

@@ -172,7 +172,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
             PubSub.once('model_change:'+uuid, function(data) {
                 console.log("got template url for uuid " + uuid);
-                $rootScope.$apply(deferred.resolve(data));
+                $rootScope.$safeApply(deferred.resolve(data));
             });
 
             return deferred.promise;
@@ -232,6 +232,16 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
     };
 
+    //if pass in scope, handle removing listeners
+    function silenceRefIfScope(reference) {
+        if (reference.$evalAsync && reference.$watch) {
+            reference.$on('$destroy', function() {
+                //console.log("silencing " + reference.$id);
+                silence(reference);
+            })
+        }
+    }
+
     /**
      * @name Clotho.watch
      *
@@ -249,6 +259,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         PubSub.on('model_change:'+uuid, function(model) {
             $rootScope.$safeApply(callback(model));
         }, reference);
+
+        silenceRefIfScope(reference);
     };
 
 
@@ -270,7 +282,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         reference = typeof reference != 'undefined' ? reference : null;
         PubSub.on('model_change:'+uuid, function clothoAPI_watch2_callback(model) {
             $rootScope.$safeApply(scope[field] = model);
-        }, reference)
+        }, reference);
+
+        silenceRefIfScope(reference);
     };
 
     /**
@@ -278,16 +292,19 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      * @param {string} channel PubSub Channel to listen to
      * @param {function} callback Function to be executed on change
-     * @param {string=} reference Reference (e.g. $scope.$id) for element to unlink listener on destroy
+     * @param {string=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published events on a given channel, and runs a callback on the event
      */
     var listen = function clothoAPI_listen(channel, callback, reference) {
         reference = typeof reference != 'undefined' ? reference : null;
+
         PubSub.on(channel, function clothoAPI_listen_callback(data) {
             $rootScope.$safeApply(callback(data));
-        }, reference)
+        }, reference);
+
+        silenceRefIfScope(reference);
     };
 
     /**
@@ -619,7 +636,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.searchbar.emit('autocompleteDetail', packaged);
 
         PubSub.once('autocompleteDetail_'+uuid, function(data) {
-            $rootScope.$apply(deferred.resolve(data));
+            $rootScope.$safeApply(deferred.resolve(data));
         }, '$clotho');
 
         return deferred.promise;
@@ -701,7 +718,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var deferred = $q.defer();
 
         PubSub.once('quizResult:' + quiz.uuid, function(data) {
-            $rootScope.$apply(deferred.resolve(data));
+            $rootScope.$safeApply(deferred.resolve(data));
         }, 'clothoAPI');
 
         return deferred.promise;
@@ -715,7 +732,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         get_template : get_template, //testing
         get_script : get_script, //testing
         set : set,
-        clone : clone,
+        //clone : clone,
         query : query,
         create : create,
         edit : edit,

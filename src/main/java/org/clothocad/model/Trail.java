@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- *
+ *org.clothocad.model.Trail
  * @author jcanderson
  */
 @NoArgsConstructor

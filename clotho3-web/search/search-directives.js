@@ -13,25 +13,27 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
             $scope.autocomplete = Searchbar.autocomplete;
             $scope.display = Searchbar.display;
 
+            $scope.setQuery = Searchbar.setQuery;
             $scope.submit = Searchbar.submit;
             $scope.execute = Searchbar.execute;
 
             //functions
-            $scope.$watch('query', function(newValue, oldValue) {
+            $scope.$watch('display.query', function(newValue, oldValue) {
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
-                    Clotho.autocomplete($scope.query);
+                    Clotho.autocomplete($scope.display.query);
                 }
             });
+
 
             /*** help icons ***/
 
             $scope.newPage = function() {
-                window.open("http://localhost:8000/app/index.html", "_blank");
+                window.open(window.location.origin, "_blank");
             };
 
             $scope.newWorkspace = function() {
-                window.open("http://localhost:8000/app/index.html#/trails", "_blank");
+                window.open(window.location.origin, "_blank");
             };
 
             $scope.showMeHow = function() {

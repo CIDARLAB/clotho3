@@ -123,9 +123,10 @@ public final class ServerSideAPI {
     }
     
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
-    public final String autocompleteDetail(String uuid) {
+    public final String autocompleteDetail(String commandObject) {
         try {
-            JSONObject msg = new JSONObject("{\"channel\":\"autocompleteDetail\",\"data\":{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"command\":\"clotho.run('230sdv-232', '18919e-18')\",\"versions\":[{\"uuid\":\"uuid123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"uuid\":\"uuid_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"uuid\":\"uuid456\",\"text\":\"pBca 1256\",\"author\":{\"uuid\":\"uuid_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
+            JSONObject msg = new JSONObject("{\"channel\":\"autocompleteDetail\",\"data\":{\"text\":\"This is a command\",\"command_native\":\"clotho.run('function_id123', 'plasmid_id1256');\",\"command_object\":{\"channel\":\"run\",\"function_id\":\"function_id123\",\"args\":\"['plasmid_id1256']\"},\"sharables\":[{\"id\":\"function_id123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"id\":\"id_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"id\":\"plasmid_id1256\",\"text\":\"pBca 1256\",\"author\":{\"id\":\"id_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
+            Router.get().sendMessage(mind.getClientConnection(), msg);
             return msg.getJSONObject("data").toString();
         } catch (JSONException ex) {
             ex.printStackTrace();
@@ -217,7 +218,7 @@ public final class ServerSideAPI {
 
     public final void clear() {
         mind.clear();
-        say("The mind has been cleared", "text-success");
+        say("The mind has been cleared", "success");
     }
 // <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
     //JCA:  as 0f 6/9/2013 say seems to work
@@ -228,7 +229,7 @@ public final class ServerSideAPI {
     /**
      * 
      * @param message
-     * @param severity  "text-error", "text", "text-warning", "text-success"
+     * @param severity  "error", "text", "warning", "success"
      *  see search-directives.js for 'from', is client or server
      */
     //JCA:  as 0f 6/9/2013 say seems to work
@@ -362,7 +363,7 @@ public final class ServerSideAPI {
             }
             //Check that the user has permission
             if(!Authenticator.get().hasReadAccess(getPerson(), existing)) {
-                say("The current user does not have read access for " + sharableRef, "text-error");
+                say("The current user does not have read access for " + sharableRef, "error");
                 System.out.println("JCA:  this error msg should be the same as the previous.  The object should appear to not exist if denied");
                 return null;
             }
@@ -381,7 +382,7 @@ public final class ServerSideAPI {
             System.out.println("JCA:  this should be moved specifically to search bar responses");
             
             out = existing.toString();
-            say("I retrieved the Sharable " + out, "text-success");
+            say("I retrieved the Sharable " + out, "success");
 
         } catch (Exception e) {
             //Start of fudgy retieval from filesystem
@@ -404,7 +405,7 @@ public final class ServerSideAPI {
                 return out;
                 
             } catch(Exception err) {
-                say("Error getting from filesystem " + sharableRef, "text-error");
+                say("Error getting from filesystem " + sharableRef, "error");
             }
             //End of fudgy retieval from filesystem
                             
@@ -415,7 +416,7 @@ public final class ServerSideAPI {
                 try {
                     if(sharableRef.equals("org.clothocad.model.Institution")) {
                         System.out.println("Stephanie, I need for the Collector.getObjBase request to return the Schema, and then retrieve the JSONObject representation");
-                        JSONObject jsonSchema = new JSONObject("{\"schema\":[{\"name\":\"name\",\"readable\":\"Display Name\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"city\",\"readable\":\"City\",\"type\":\"text\",\"placeholder\":\"Your City\",\"required\":true},{\"name\":\"state\",\"readable\":\"State\",\"type\":\"text\",\"placeholder\":\"Your State\",\"required\":true},{\"name\":\"country\",\"readable\":\"Country\",\"type\":\"text\",\"placeholder\":\"Your Country\",\"required\":true},],\"custom\":{}}");
+                        JSONObject jsonSchema = new JSONObject("{\"schema\":[{\"name\":\"name\",\"readable\":\"Display Name\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"id\",\"readable\":\"Id\",\"type\":\"text\",\"placeholder\":\"Your Name\",\"required\":true},{\"name\":\"city\",\"readable\":\"City\",\"type\":\"text\",\"placeholder\":\"Your City\",\"required\":true},{\"name\":\"state\",\"readable\":\"State\",\"type\":\"text\",\"placeholder\":\"Your State\",\"required\":true},{\"name\":\"country\",\"readable\":\"Country\",\"type\":\"text\",\"placeholder\":\"Your Country\",\"required\":true},],\"custom\":{}}");
                         JSONObject msg = new JSONObject();
                             JSONObject data = new JSONObject();
                             data.put("uuid", "org.clothocad.model.Institution");
@@ -499,14 +500,14 @@ public final class ServerSideAPI {
             //Confirm that the new data is different than the old data
             JSONObject original = obj.toJSON();
             if(original.toString().equals(existing.toString())) {
-                say("The data was unmodified." , "text-warning");
+                say("The data was unmodified." , "warning");
                 return original.toString();
             }
             
             //Validate the data
             System.out.println("Stephanie needs to add set and create validation");
             if(false) {
-                say("The data you wish to create did not pass validation.  No object was created" , "text-error");
+                say("The data you wish to create did not pass validation.  No object was created" , "error");
                 return null;
             }
 
@@ -521,7 +522,7 @@ public final class ServerSideAPI {
             ObjBase object = Collector.get().temporaryRefetchMethod(uuid);
 
             //Contact the user to notify them that they modified an object
-            say("You successfully modified: " + object.getName() + " with UUID: " + object.getUUID().toString(), "text-success");
+            say("You successfully modified: " + object.getName() + " with UUID: " + object.getUUID().toString(), "success");
 
             //Relay the data change to listening clients
             Router.get().publish((Sharable) object);
@@ -529,7 +530,7 @@ public final class ServerSideAPI {
             //Return the modified data to the calling script
             return object.toString();
         } catch (Exception e) {
-            say("Error setting " + value.toString(), "text-error");
+            say("Error setting " + value.toString(), "error");
             return null;
         }
     }
@@ -599,7 +600,7 @@ public final class ServerSideAPI {
                 String uuid = newval.getString("id");
                 ObjBase datum = Collector.get().getObjBase(uuid);
                 if(datum!=null) {
-                    say("An object with the uuid " + uuid + " already exists.  No object was created." , "text-error");
+                    say("An object with the uuid " + uuid + " already exists.  No object was created." , "error");
                     return null;
                 }
             }
@@ -607,7 +608,7 @@ public final class ServerSideAPI {
             //Validate the data
             System.out.println("Stephanie needs to add set and create validation");
             if(false) {
-                say("The data you wish to create did not pass validation.  No object was created" , "text-error");
+                say("The data you wish to create did not pass validation.  No object was created" , "error");
                 return null;
             }
             
@@ -615,14 +616,14 @@ public final class ServerSideAPI {
             JSONObject obj = new JSONObject(json);
             String uuidRes = Persistor.get().save(obj);
             if(uuidRes==null) {
-                say("The object could not be persisted during create ", "text-error");
+                say("The object could not be persisted during create ", "error");
                 return null;
             }
             
             //Add the object to the Collector and return its json
             ObjBase object = Collector.get().getObjBase(uuidRes);
             if(object==null) {
-                say("The object was created, but could not be retrieved ", "text-error");
+                say("The object was created, but could not be retrieved ", "error");
                 return null;
             }
 
@@ -630,7 +631,7 @@ public final class ServerSideAPI {
             System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
 
             //Return the JSON of the new object as a String
-            say("You successfully created: " + object.getName() + " with UUID: " + object.getUUID().toString(), "text-success");
+            say("You successfully created: " + object.getName() + " with UUID: " + object.getUUID().toString(), "success");
             return object.toString();
     	} catch(Exception e) {
             e.printStackTrace();
@@ -653,10 +654,10 @@ public final class ServerSideAPI {
                 String name = obj.getName();
                 String id = obj.getUUID().toString();
                 Persistor.get().delete(obj);
-                say("Sharable " + name + " with UUID " + id +  " has been destroyed", "text-success");
+                say("Sharable " + name + " with UUID " + id +  " has been destroyed", "success");
             }
         } catch (Exception e) {
-            say("Error destroying " + sharableId, "text-error");
+            say("Error destroying " + sharableId, "error");
         }
     }
     
@@ -720,10 +721,10 @@ public final class ServerSideAPI {
                 sb.append("\n");
                 sb.append(obj.getUUID().toString());
             }
-            say("Clotho found " + out.length()+ " Sharables that satisfy your query: " + sb.toString(),  "text-success");
+            say("Clotho found " + out.length()+ " Sharables that satisfy your query: " + sb.toString(),  "success");
             return out.toString();
         } catch (Exception e) {
-            say("Error querying ",  "text-error");
+            say("Error querying ",  "error");
             return "[]";
         }
     }
@@ -803,20 +804,27 @@ public final class ServerSideAPI {
     }
 
     public final void startTrail(String trailRef) {
-    	/***
-        try {
-            //Grab a Doo if something is awaiting one
-            Doo parentDoo = Hopper.get().extract(null);
-            Trail trail = (Trail) resolveToObjBase(trailRef);
-            Person student = this.getPerson();
-
-            Proctor.get().initiateTrail(student, trail, parentDoo);
-
-        } catch (Exception e) {
-            Logger.log(Logger.Level.WARN, "", e);
-            e.printStackTrace();
-        }
-        ***/
+            relayShowStaticTemplates(trailRef, "trails/");
+    }
+    
+    private final void relayShowStaticTemplates(String sharRef, String target) {
+            String existing = get(sharRef);
+            if(existing==null) {
+                 say("Clotho was unable to resolve the arguments for edit", "error");
+                 return;
+            }
+                
+            try {
+                JSONObject json = new JSONObject(existing);
+                String uuid = json.getString("id");
+                JSONObject msg = new JSONObject();
+                msg.put("data", target + uuid);
+                msg.put("channel", "changeUrl");
+                Router.get().sendMessage(mind.getClientConnection(), msg);
+            } catch (JSONException ex) {
+                 say("Clotho was unable to invoke edit", "error");
+                 return;
+            }
     }
     
     /**
@@ -831,33 +839,47 @@ public final class ServerSideAPI {
      * @param sharableRef 
      */
     public final void edit(String sharableRef) {
-    	/**
-        try {
-            Sharable sharable = (Sharable) resolveToObjBase(sharableRef);
+        relayShowStaticTemplates(sharableRef, "editor/");
+//            //Resolve the arguments and retrieve, this will also push refreshed data to client and register pubsub
+//            String existing = get(sharableRef);
+//            if(existing==null) {
+//                 say("Clotho was unable to resolve the arguments for edit", "error");
+//                 return;
+//            }
+//                
+//            try {
+//                JSONObject json = new JSONObject(existing);
+//                String uuid = json.getString("id");
+//                
+//
+//                
+//                
+//                JSONObject msg = new JSONObject();
+//                    JSONObject data = new JSONObject("{\"template\":\"extensions/editor-template.html\",\"target\":\"body\",\"styles\":{\"opacity\":\"0.7\"}}");
+//                        JSONObject args = new JSONObject();
+//                        args.put("uuid", uuid);
+//                        args.put("id", uuid);
+//                    data.put("args", args);
+//
+//                msg.put("data", data);
+//                msg.put("channel", "display");
+//                
+//                
+//                Router.get().sendMessage(mind.getClientConnection(), msg);
+//            } catch (JSONException ex) {
+//                 say("Clotho was unable to invoke edit", "error");
+//                 return;
+//            }
+//            
 
-            switch (sharable.type()) {
-                case SCHEMA:
-                    Schema schema = (Schema) sharable;
-                    //Pop up the page, push in data
-                    return;
-                case INSTANCE:
-                    return;
-                default:
-                    return;
-            }
-            //Pop up a new window of 
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-        **/
     }
     
     public final void listen(String args) {
-        say("not yet implemented", "text-error");
+        say("not yet implemented", "error");
     }
 
     public final void unlisten(String data) {
-        say("not yet implemented", "text-error");
+        say("not yet implemented", "error");
     }
 
 // </editor-fold> 
@@ -1263,7 +1285,7 @@ public final class ServerSideAPI {
             Set<String> cmdResults = Interpreter.get().receiveNative(nativeCmd);
 
             if(cmdResults.isEmpty()) {
-                say("No suggestions are available.", "text-warning");
+                say("No suggestions are available.", "warning");
                 return;
             }
             

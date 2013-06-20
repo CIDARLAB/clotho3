@@ -11,8 +11,6 @@ Application.Chat.controller('ChatCtrl', ['$scope', 'Clotho', 'ChatSocket', '$dia
         ChatSocket.chat_send(msg);
     };
 
-    $scope.$on('$destroy', Clotho.silence($scope.$id));
-
     /***** modal ******/
 
     $scope.modal = {};
@@ -65,9 +63,7 @@ Application.Chat.controller('ChatCtrl', ['$scope', 'Clotho', 'ChatSocket', '$dia
         var d = $dialog.dialog($scope.dialog.opts);
         d.open().then(function(result){
             if(result)
-            {
                 console.log('dialog closed with result: ' + result);
-            }
         });
     };
 
@@ -79,13 +75,15 @@ Application.Chat.controller('ChatCtrl', ['$scope', 'Clotho', 'ChatSocket', '$dia
         $dialog.messageBox(title, msg, btns)
             .open()
             .then(function(result){
-                console.log('dialog closed with result: ' + result);
+                if(result)
+                    console.log('dialog closed with result: ' + result);
             });
     };
 
-    $keypress.on('keypress', {'enter' : 'foo()'}, $scope);
 
+    //testing
+    $keypress.on('keypress', {'shift-enter' : 'foo()'}, $scope);
     $scope.foo = function() {
-        console.log("blah");
+        $dialog.serverAlert("blah").open();
     }
 }]);
