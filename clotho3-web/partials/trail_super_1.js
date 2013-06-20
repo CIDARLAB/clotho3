@@ -2,7 +2,7 @@
 
 var tempModule = {
     "moduleName" : "widgetApp3",
-    "moduleUrl" : "widget/widgets/widget3-module.js"
+    "moduleUrl" : "widgets/widget3-module.js"
 };
 
 //add it, get div id

@@ -94,14 +94,16 @@ Application.Interface.factory('$position', ['$document', '$window', function ($d
  * var x = $keypress.on('keypress', {'enter' : 'foo()'}, $scope);
  * ...
  * $keypress.off(x);
+ * @note
+ * you can't do keypress with alt, control, option, up, down, left, right -- use keydown or keyup
  */
 Application.Interface.service('$keypress', ['keypressHelper', '$document', function(keypressHelper, $document){
     return {
         on : function(mode, actions, scope) {
             keypressHelper(mode, scope, $document, actions);
         },
-        //todo -- see document.unbind() for format, use passed in scope
-        //note - format: [elm, mode, handler, combinations];
+        //note - should be handled automatically on $scope.$destroy (so use controllers), this is for manual use
+        //format: [elm, mode, handler, combinations];
         off:function(handle) {
             handle[0].unbind(handle[1], handle[2]);
         }
@@ -199,6 +201,10 @@ Application.Interface.factory('keypressHelper', ['$parse', '$document', function
         };
 
         elm.bind(mode, handler);
+
+        scope.$on('$destroy', function() {
+            elm.unbind(mode, handler);
+        });
 
         return [elm, mode, handler, combinations];
     };

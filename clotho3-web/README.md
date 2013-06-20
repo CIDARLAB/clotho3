@@ -53,20 +53,24 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- search bar alerts - max-width and no overflow
-
-- package to just download necessary angular components
+- rebind $keypress click handlers -- only active when necessary
 
 - markdown directive (lower priority) --- highlight textarea (jsFiddle like)
 
-- keypress service -- unbind events manually / via $scope.$destroy
-    - need for trail functionality
+- share modal (do like flipboard / pocket)
+
+- draggable elements (within angular -- sortable)
+
+- clarify $dialog -- in controllers when dialog and when $dialog --- make fixes
 
 - trails functionality
     - youtube events - pass as param to function
     - keybindings for advancing etc.
     - templates
         - types
+            - sequence
+            - assertion / reason
+            - hot spot (choose the wrong thing) /// paragraph with multi TFs
             - multipic - add active class
             - drag-drop - make draggable
             - ranking - tie to model
@@ -74,9 +78,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - draggable
             - see UI-sortable
             - drag-to for drag-drop
-
-    - deep linking for trails based on paver
-
+    - answering quiz colors + disables side-nav
 
 
 - Search Bar
@@ -84,7 +86,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - down -> autocompletes
         - enter -> submit
     - reset autocomplete detail when changing
-    - animate showing + hiding
+    - animate showing + hiding -- use $animate
     - autocomplete
         - use cache for results?
         - $timeout sending to 50ms?
@@ -93,10 +95,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - see: http://plnkr.co/edit/QSgRu4Sr8TSqR86eAfvq?p=preview
     - future: rewrite
         - easy to transclude, with customizable / default options
-
-
-- UI filters etc.
-    - shuffle (see underscore)
 
 
 

@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
+Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho, $q, $dialog) {
 
     /**
      * @description Creates a youtube player within an iFrame. Use before createAPIPlayer.
@@ -173,7 +173,19 @@ Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
     };
 
     var share = function(uuid) {
-        console.log("share trail with uuid: " + uuid);
+        var dialog_opts = {
+            backdrop: true,
+            backdropFade: true,
+            keyboard: true,
+            backdropClick: true,
+            templateUrl:  'interface/dialogShare.html',
+            controller: 'DialogShareCtrl',
+            dependencies : [
+                "interface/DialogShareCtrl.js"
+            ]
+        };
+
+        $dialog.dialog(dialog_opts).open();
     };
 
     var favorite = function(uuid) {
@@ -197,7 +209,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.uuid = $route.current.params.uuid;
@@ -232,14 +244,12 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.loadTemplate = function (url) {
-        //future - once clotho API can return templates, use Clotho.get
         $http.get(url, {cache:$templateCache}).success(function (data) {
             $scope.content = $compile(data)($scope);
         });
     };
 
     $scope.loadQuiz = function (content) {
-
         $scope.quiz = content;
 
         $http.get('partials/trails/' + content.type + '-partial.html', {cache: $templateCache}).
@@ -294,6 +304,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.favorite = function() {
+        //todo - better checking, do initial check
+        $scope.favorited = !$scope.favorited;
         Trails.favorite($scope.uuid);
     };
 
@@ -335,6 +347,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         $scope.activate(newpos);
     };
+
+    $keypress.on('keydown', {'right' : 'next()', 'left' : 'prev()'}, $scope);
 
     $scope.base64icon = base64icon;
 }]);

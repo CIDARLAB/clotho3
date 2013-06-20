@@ -54,7 +54,7 @@ Application.Chat.controller('ChatCtrl', ['$scope', 'Clotho', 'ChatSocket', '$dia
         template:  dialog_template, // OR: templateUrl: 'path/to/view.html',
         controller: 'TestDialogController',
         dependencies : [
-            "partials/DialogTestCtrl.js",
+            "interface/DialogTestCtrl.js",
             "extensions/capitalize-filter.js"
         ]
     };

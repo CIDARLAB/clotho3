@@ -20,8 +20,8 @@
             <div class="btn-toolbar pagination-centered">
 
                 <div class="btn-group">
-                    <button ng-click="home()" class="btn"><i class="icon-home"></i></button>
-                    <button ng-click="favorite()" class="btn"><i class="icon-star"></i></button>
+                    <button ng-click="home()" class="btn" ng-disabled="content == trail.description"><i class="icon-info-sign"></i></button>
+                    <button ng-click="favorite()" class="btn" ng-class="{'btn-warning' : favorited}"><i class="icon-star"></i></button>
                     <button ng-click="share()" class="btn" alt="share"><i class="icon-share-alt"></i></button>
                 </div>
 

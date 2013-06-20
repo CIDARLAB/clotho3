@@ -12,8 +12,8 @@
                 {
                     "paver_title" : "Super Trail Part 1",
                     "type" : "template",
-                    "template" : "/app/partials/trail_super_1.html",
-                    "script" : "/app/partials/trail_super_1.js"
+                    "template" : "/partials/trail_super_1.html",
+                    "script" : "/partials/trail_super_1.js"
                 }
             ]
         },
