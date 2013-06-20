@@ -88,7 +88,7 @@ public interface ClothoConnection {
      * @param objs
      * @return the number of objects successfully saved
      */
-    int save(Collection<ObjBase> objs);
+    void saveAll(Iterable<ObjBase> objs);
     int saveBSON(Collection<Map> objs);
 
     

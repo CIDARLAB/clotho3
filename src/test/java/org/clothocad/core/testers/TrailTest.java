@@ -17,6 +17,7 @@ import org.junit.After;
 
 public class TrailTest {
     Mind mind = new Mind();
+    Persistor persistor = new Persistor();
     
     @Before
     public void setUp() {

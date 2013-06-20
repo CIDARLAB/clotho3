@@ -71,7 +71,7 @@ public class UpdateIndex {
             return;
         }
         
-        JSONObject data = sharable.toJSON();
+        JSONObject data = new JSONObject(persistor.toJSON(sharable));
         
         for(Widget widg : widgets) {
             try {

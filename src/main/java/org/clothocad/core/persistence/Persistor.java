@@ -24,24 +24,28 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.persistence;
 
 import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import lombok.Delegate;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.aspects.JSONSerializer;
-import org.clothocad.core.persistence.ClothoConnection;
-import org.clothocad.core.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.datums.ObjBase;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -65,46 +69,115 @@ import org.json.JSONObject;
 
 //TODO: thread safety
 //TODO: check out date created/modified/accessed bugs
-public class Persistor implements Aspect {
+//TODO: move backend-agnostic logic into persistor
+@Singleton
+public class Persistor{
     
-    @Delegate
     private ClothoConnection connection;
     
     @Delegate
     private JSONSerializer serializer;
     
-    private Cache cache;
+    private Validator validator;
     
-    public Persistor(ClothoConnection connection){
-        this(connection, null);
-    }
     
     @Inject
-    public Persistor(ClothoConnection connection, JSONSerializer serializer){
+    public Persistor(final ClothoConnection connection, JSONSerializer serializer, Validator validator){
         this.connection = connection;
         this.serializer = serializer;
-        //cache = new  CacheBuilder<ObjectId, ObjBase>().
-    }
-
-    public static Persistor get() {
-        return singleton;
+        this.validator = validator;
     }
     
-    /**
-     * JCA:  Yes, I know this is ugly.  You can change to some dependency injection thing later.
-     */
-    private static  Persistor singleton;
-    static {
-        try {
-            MongoDBConnection conn = new MongoDBConnection();
-            conn.connect();
-            singleton = new Persistor(conn);
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-            System.exit(0);
+    private void validate(ObjBase obj){
+        Set<ConstraintViolation<?>> violations = new HashSet<>();
+        for (ObjBase o : getObjBaseSet(obj)){
+            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the current classes
+            for (ConstraintViolation violation : cvs){
+                violations.add(violation);
+            }
+        }
+        
+        if (violations.size() > 0){
+            throw new ConstraintViolationException(violations);
         }
     }
+    
+    
+    public <T extends ObjBase> T get(Class<T> type, ObjectId id){
+        T obj = connection.get(type, id);
+        validate(obj);
+        return obj;
+    }
+    
+    public void save(ObjBase obj, boolean overwrite) throws ConstraintViolationException, OverwriteConfirmationException{
+        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
+        validate(obj);
+        
+        if (!overwrite){
+            Set<ObjBase> modifiedObjects = new HashSet<>();
+            for (ObjBase o : relevantObjects){
+                if (modified(o)) modifiedObjects.add(o);
+            }
+            if (modifiedObjects.size() > 0) throw new OverwriteConfirmationException(modifiedObjects);
+        }
 
+        connection.saveAll(relevantObjects);
+    }
+    
+    public void save(Map<String, Object> data) {
+        throw new UnsupportedOperationException();
+    }
+    
+    public void delete(ObjectId id){
+        throw new UnsupportedOperationException();
+    }
+    
+    public BSONObject getAsBSON(ObjectId uuid){
+        
+    }
+    
+    
+    private Set<ObjBase> getObjBaseSet(ObjBase obj){
+        return getObjBaseSet(obj, new HashSet<ObjBase>());
+    }
+        
+    private Set<ObjBase> getObjBaseSet(ObjBase obj, Set<ObjBase> exclude){
+        boolean newId = obj.getUUID() == null;
+        if(newId) obj.setUUID(ObjectId.get());
+        exclude.add(obj);        
+        
+        //recurse on object's children
+        for (ObjBase child: obj.getChildren()) {
+            if (!exclude.contains(child) && child != null){
+                getObjBaseSet(child, exclude);
+            }
+        }
+        
+        return exclude;
+    }
+    
+    public boolean has(ObjectId id){
+        return connection.exists(id);
+    }
+    
+    
+    private void validateBSON(Map<String, Object> obj) throws ConstraintViolationException {
+        //TODO: 
+        //get schema set
+        //validate for all enforcing schemas
+    }
+    
+    
+    private boolean changed(ObjBase obj){
+        //TODO
+        return true;
+    }
+    
+    private boolean modified(ObjBase obj){
+        //TODO
+        return false;
+    }
+    
     public void persistFeature(HashMap<String, Integer> StoreGrams, String feature) {
         System.out.println("Stephanie:  features should be stored in a separate spot than ObjBases.  They aren't UUID-based.  They are are feature-word based");
         try {
@@ -181,4 +254,12 @@ public class Persistor implements Aspect {
         }
         return null;
     }        
+
+    public Iterable<ObjBase> find(Map<String, Object> query) {
+        return find(query, 100);
+    }
+    
+    public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
+        throw new UnsupportedOperationException();
+    }
 }

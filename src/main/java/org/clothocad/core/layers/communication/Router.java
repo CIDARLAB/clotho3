@@ -3,14 +3,11 @@ package org.clothocad.core.layers.communication;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.layers.communication.Channel.create;
@@ -23,8 +20,6 @@ import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.clothocad.core.util.FileUtils;
-import org.json.JSONObject;
 
 public class Router {
 
@@ -53,11 +48,8 @@ public class Router {
     }
     
     // send message    
-	public void sendMessage(
-			ClientConnection connection, JSONObject message) {
-
+	public void sendMessage(ClientConnection connection, Map<String, Object> message) {
 		try {
-
 			if(connection instanceof ClothoWebSocket) {
 				ClothoWebSocket websocket = (ClothoWebSocket)connection;
 				if(null != websocket) {				

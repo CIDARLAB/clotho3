@@ -18,13 +18,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Date;
-import java.util.Map;
-import lombok.Getter;
-import org.bson.BSONObject;
-import org.clothocad.core.persistence.Persistor;
-import org.json.JSONException;
 import org.clothocad.core.persistence.DBOnly;
-import org.json.JSONObject;
 
 /**
  *
@@ -34,6 +28,10 @@ import org.json.JSONObject;
 @Data
 @NoArgsConstructor
 public abstract class ObjBase {
+    
+    //add schema
+    //remove schema
+    //can only manipulate schema set if you have write privs
 
     public ObjBase(String name) {
         this.name = name;
@@ -92,7 +90,7 @@ public abstract class ObjBase {
     }
     
     private static List<Field> getAllReferences(Class c){
-        ArrayList<Field> output = new ArrayList<Field>();
+        ArrayList<Field> output = new ArrayList<>();
         while (c != null && c != Object.class){
             for (Field f : c.getDeclaredFields()){
                 if (f.getAnnotation(Reference.class) != null){
@@ -105,13 +103,13 @@ public abstract class ObjBase {
     }
     
     //TODO:
-    public JSONObject toJSON(){
+    /*private JSONObject toJSON(){
         
         //JCA's hack of re-pulling from db to serialize.  Please change.
         try {
             //Pull the object from db, convert to JSONObject
             ObjectId uuid = this.getUUID();
-            BSONObject bson = Persistor.get().getAsBSON(uuid);
+            BSONObject bson = persistor.getAsBSON(uuid);
             JSONObject out = new JSONObject(bson.toString());
             
             out.put("_id", "toberemoved");
@@ -127,23 +125,24 @@ public abstract class ObjBase {
         "uuid" : "inst_second"
     },
 */
-                JSONObject dollarclotho = new JSONObject();  
-                dollarclotho.put("schema", out.getString("className"));
-                dollarclotho.put("uuid", uuidstr);
-                out.put("$clotho", dollarclotho);
+               // JSONObject dollarclotho = new JSONObject();  
+               // dollarclotho.put("schema", out.getString("className"));
+                //dollarclotho.put("uuid", uuidstr);
+                //out.put("$clotho", dollarclotho);
                 
 /*  this is for how it should be:
    {
     "schema_id" : "org.clothod.models.Institution",
    }
-*/
+*/ 
+                /*
                 out.put("schema_id", out.getString("className"));
             }
             return out;
         } catch (Exception ex) {
             System.out.println("There appears to be some damaged data in your database, I'll ignore it");
             return null;
-        }
-    }
+        } 
+    }*/
     
 }

@@ -13,6 +13,7 @@ import com.github.jmkgreen.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.mongodb.DBObject;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import org.clothocad.core.datums.ObjBase;
@@ -25,8 +26,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author spaige
  */
-//TODO: perferentially remove schema classes from cache
+//TODO: preferentially remove schema classes from cache
 import org.clothocad.core.aspects.JSONSerializer;
+import org.clothocad.core.persistence.DBClassLoader;
 
 public class ClothoMapper extends DefaultMapper implements JSONSerializer {
 
@@ -39,6 +41,12 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
     public ClothoMapper() {
         super(defaultOptions);
     }
+    
+    @Inject
+    public ClothoMapper(DBClassLoader cl){
+       this.cl = cl; 
+    }
+    
     static final Logger logger = LoggerFactory.getLogger(ClothoMapper.class);
     static final MapperOptions defaultOptions = new MapperOptions();
 

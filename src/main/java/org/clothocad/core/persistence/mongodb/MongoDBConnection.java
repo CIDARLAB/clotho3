@@ -1,6 +1,5 @@
 package org.clothocad.core.persistence.mongodb;
 
-import java.lang.reflect.Array;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,35 +8,22 @@ import java.util.List;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.util.ClothoDate;
 import org.clothocad.core.persistence.ClothoConnection;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.DatastoreImpl;
 import com.github.jmkgreen.morphia.Morphia;
-import com.github.jmkgreen.morphia.mapping.DefaultMapper;
 import com.github.jmkgreen.morphia.mapping.Mapper;
-import com.github.jmkgreen.morphia.mapping.MapperOptions;
-import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
-import org.bson.BasicBSONObject;
-import org.json.JSONException;
 import javax.inject.Inject;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -163,49 +149,10 @@ public class MongoDBConnection
         }
     }
     
+    
     @Override
-    //Cascade save
-    public void save(ObjBase obj){
-        System.out.println("Stephanie:  save in connection should either return false or throw exception when fails.  change required in interface.");
-        save(obj, new HashSet<ObjBase>());
-    }
-    
-    //actual meat of cascade save in here
-    private boolean save(ObjBase obj, Set<ObjBase> exclude){
-    	
-        boolean newId = obj.getUUID() == null;
-        if(newId) obj.setUUID(ObjectId.get());
-        exclude.add(obj);        
-        
-        //recurse on object's children
-        for (ObjBase child: obj.getChildren()) {
-            //TODO: needs to detect and skip proxies if lazy loading is used
-            if (!exclude.contains(child) && child != null){
-                if (!save(child, exclude)){
-                    return false;
-                }
-            }
-        }
-        
-        //write obj to DB
-        try {
-            singleSave(obj);
-        }
-        catch (Exception e){
-            //throw e;
-            //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
-            logger.error("Error while saving", e);
-            if (newId) obj.setUUID(null);
-            return false;
-        }
-        return true;
-    }
-    
-    public void singleSave(ObjBase obj) {
-        //needs to update lastUpdated field only if save succeeds
+    public void save(ObjBase obj) {
         //needs to check if thing actually needs saving
-        //needs to validate object
-        obj.setLastModified(new Date());
         if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
@@ -214,19 +161,10 @@ public class MongoDBConnection
 
     }
 
-    @Override
-    public int save(Collection<ObjBase> objs) {
-        int i = 0;
+    public void saveAll(Iterable<ObjBase> objs) {
         for (ObjBase o : objs) {
-            try{
-                save(o);
-                i++;
-            } catch (Exception e) {
-                logger.error("Error while saving collection", e);
-                //aggregate errors and pass back to user - not sure on details yet
-            }
+            save(o);
         }
-        return i;
     }
     
 

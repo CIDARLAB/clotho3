@@ -4,11 +4,8 @@
  */
 package org.clothocad.core.datums;
 
-import java.util.Iterator;
 import lombok.Getter;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 
 /**
  *
@@ -26,16 +23,4 @@ public abstract class Sharable extends ObjBase {
         this.author = author;
     }
     
-    @Override
-    public String toString() {
-        JSONObject obj = this.toJSON();
-        return obj.toString();
-    }
-    
-/**
-     * Stephanie, I need you to implement this in various spots
-     * @param obj
-     * @return 
-     */
-    public abstract boolean validate(JSONObject obj);
 }
