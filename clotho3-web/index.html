@@ -133,7 +133,7 @@
         $clotho.appRoot = 'ng-app-clothoRoot';
         $clotho.appWidgets = 'ng-app-clothoWidgets';
 
-        $clotho.socket = new WebSocket("ws://localhost:8080/websocket");
+        $clotho.socket = new WebSocket("ws://" + window.location.host + window.location.pathname + "websocket");
         $clotho.socket.onopen = function () {
             angular.bootstrap(
                     angular.element(document).find($clotho.appRoot),
