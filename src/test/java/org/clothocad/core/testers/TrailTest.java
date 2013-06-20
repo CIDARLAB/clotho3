@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.model.Trail;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.After;
 
 public class TrailTest {
@@ -50,7 +48,8 @@ public class TrailTest {
         assert(result.getTitle().equals("First Biosafety Module"));
         
         //var trails = clotho.query({"className":"org.clothocad.model.Trail"});
-        
+        //var trail = clotho.get('51c20034507659b64be65a3b');
+        //clotho.startTrail('51c20034507659b64be65a3b');
         
     }
 }
