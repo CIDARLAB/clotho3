@@ -32,6 +32,7 @@ public class ClothoStarter implements Daemon {
                 }
 
 		// start the Jetty webserver
+                logger.debug("Starting server on port {}", nPort);
 		new ClothoWebserver(nPort);
 
 	}
