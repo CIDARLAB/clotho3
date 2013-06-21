@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 //Start then navigate to:  http://localhost:8080/#/
 public class ClothoStarter implements Daemon {
     private static final Logger logger = LoggerFactory.getLogger(ClothoStarter.class);
+    private static ClothoWebserver server;
+    private static ClothoBroker broker;
+    private static ClothoCore core;
     
 	public static void main(String[] args) 
 			throws Exception {
@@ -22,19 +25,20 @@ public class ClothoStarter implements Daemon {
 		}
 		
                 try{
-                    new ClothoBroker();
+                    broker = new ClothoBroker();
                     // wait a bit until the broker is running
                     Thread.sleep(4000);
 		
                     // now, start the core (i.e. the server)
-                    new ClothoCore().start();
+                    core = new ClothoCore();
+                    core.start();
                 } catch (Exception e){
                     logger.error("Exception while initializing JMS Broker and Listener", e);
                 }
 
 		// start the Jetty webserver
                 logger.debug("Starting server on port {}", nPort);
-		new ClothoWebserver(nPort);
+		server = new ClothoWebserver(nPort);
 
 	}
         
@@ -55,6 +59,15 @@ public class ClothoStarter implements Daemon {
     @Override
     public void stop() throws Exception {
         System.out.println("stopping ...");
+        if (core != null){
+            core.shutdown();
+        }
+        
+        if (broker != null){
+            broker.stop();
+        }
+        
+        server.getServer().stop();
     }
 
     @Override
