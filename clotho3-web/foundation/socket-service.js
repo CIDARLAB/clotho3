@@ -100,6 +100,9 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
         socket.onmessage = function (obj) {
 
+            // testing
+            // console.log('SOCKET\treceiving: ' + obj.data);
+
             obj = JSON.parse(obj.data);
             var channel = obj.channel;
             var data = obj.data;
@@ -113,7 +116,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
             // it's the ClientAPI method's responsibility to handle data appropriately.
             if (typeof ClientAPI[channel] == 'function') {
-                console.log("SOCKET\tmapping to ClientAPI - " + channel);
+                //console.log("SOCKET\tmapping to ClientAPI - " + channel);
                 ClientAPI[channel](data);
             }
             //for custom listeners attached
@@ -123,7 +126,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             }
             // don't know what to do, so publish to PubSub
             else {
-                console.log("SOCKET\tno listener found for channel: " + channel);
+                console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
                 PubSub.trigger(channel, data);
             }
         };
@@ -160,6 +163,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
             //send properly formatted string on channel message
             send: function(data) {
+                console.log("SOCKET\tsending data: " + data);
                 socket.send(data);
             }
         }

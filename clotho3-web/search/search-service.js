@@ -174,7 +174,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
             if (item.type != 'command') {
                 display.undetail();
             }
-            display.query = item.value;
+            display.query = !!item.value ? item.value : item.text;
         },
         autocomplete : autocomplete,
         submit : submit,

@@ -635,7 +635,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         };
         fn.searchbar.emit('autocompleteDetail', packaged);
 
-        PubSub.once('autocompleteDetail_'+uuid, function(data) {
+        //testing
+        PubSub.once('autocompleteDetail_function_id123', function(data) {
+        // PubSub.once('autocompleteDetail_'+uuid, function(data) {
             $rootScope.$safeApply(deferred.resolve(data));
         }, '$clotho');
 

@@ -4,7 +4,7 @@
 
 var util = require('util'),
     http = require('http'),
-    io = require('socket.io').listen(8080),
+    io = require('socket.io').listen(8090),
     fs = require('fs'),
     url = require('url'),
     events = require('events'),
@@ -332,7 +332,7 @@ function equals(o1, o2) {
  * but instead you need to serve it like so:
  * <script src="http://nodeJS_server:port/socket.io/socket.io.js"></script>
  * where nodeJS_server is probably localhost
- * and port is the port used for socket.io (8080), not node itself (8000)
+ * and port is the port used for socket.io (8090), not node itself (8000)
  * -- numbers given may change, but are defined (currently) in this file
 *
  * NOTE - sending over data
@@ -667,7 +667,6 @@ io.sockets.on('connection', function (socket) {
             {
                 "uuid" : "qwertyuiop",
                 "text" : "This is a phrase",
-                "value" : "This is a phrase",
                 "type" : "phrase"
             },
             {
@@ -703,7 +702,7 @@ io.sockets.on('connection', function (socket) {
             if (err) { console.log('Error: ' + err); return; }
             data = JSON.parse(data);
 
-            socket.send(api.pack.api_wrap('autocompleteDetail_' + uuid,
+            socket.send(api.pack.api_wrap('autocompleteDetail',
                 api.pack.nopack(data)
             ));
         });

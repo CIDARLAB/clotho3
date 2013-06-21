@@ -344,7 +344,12 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     };
 
     var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
-        Collector.storeModel("detail_" + obj.uuid, obj);
+        console.log(obj);
+
+        var id = obj.command_object.function_id;
+
+        Collector.storeModel("detail_" + id, obj);
+        PubSub.trigger('autocompleteDetail_'+id, obj);
     };
 
 

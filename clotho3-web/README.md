@@ -53,11 +53,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- search bar - autocomplete behavior etc.
+
 - rebind $keypress click handlers -- only active when necessary
 
 - markdown directive (lower priority) --- highlight textarea (jsFiddle like)
-
-- share modal (do like flipboard / pocket)
 
 - draggable elements (within angular -- sortable)
 
@@ -84,7 +84,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - Search Bar
     - keystrokes
         - down -> autocompletes
-        - enter -> submit
     - reset autocomplete detail when changing
     - animate showing + hiding -- use $animate
     - autocomplete
@@ -111,6 +110,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 UI STUFF
+- sharable modal --- make it actually share
 - services to write / borrow
     - tooltip + ability to lazy-define
     - dropdown (bootstrap)
@@ -122,7 +122,8 @@ UI STUFF
         - especially for using in searchbar so jQuery not necessary dependency
     - consider: asynchronous jqlite extension??? i.e. jQuery functions needed not included in angular jqLite
         - like $position
-
+- animation
+    - see https://github.com/daneden/animate.css
 
 
 - Clotho.show()

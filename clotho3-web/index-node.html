@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Clotho</title>
+    <title>Clotho NODE</title>
 
     <!--foundation CSS-->
     <link rel="stylesheet" href="css/bootstrap.css">
@@ -93,7 +93,7 @@
 
          //socket
          //future CDN: <script src="http://cdn.socket.io/stable/socket.io.js">
-         $script("http://localhost:8080/socket.io/socket.io.js", "socket");
+         $script("http://localhost:8090/socket.io/socket.io.js", "socket");
 
         //future - use CDN for these
         $script("lib/underscore.js", "underscore");
@@ -141,7 +141,7 @@
 
         $script.ready(["socket", "jquery", "angular-stack"], function() {
             var $clotho = window.$clotho = {};
-            $clotho.socket = io.connect('http://localhost:8080');
+            $clotho.socket = io.connect('http://localhost:8090');
 
             $clotho.appRoot = 'ng-app-clothoRoot';
             $clotho.appWidgets = 'ng-app-clothoWidgets';
