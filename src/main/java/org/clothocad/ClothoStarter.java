@@ -1,15 +1,18 @@
 package org.clothocad;
 
+import org.apache.commons.daemon.Daemon;
+import org.apache.commons.daemon.DaemonContext;
 import org.clothocad.broker.ClothoBroker;
 import org.clothocad.core.ClothoCore;
 import org.clothocad.webserver.jetty.ClothoWebserver;
 
 //Start then navigate to:  http://localhost:8080/#/
-public class ClothoStarter {
+public class ClothoStarter implements Daemon {
+    
 	public static void main(String[] args) 
 			throws Exception {
 		
-		int nPort = 8080;
+
 		if(args.length == 1) {
 			nPort = Integer.parseInt(args[0]);
 		}
@@ -44,4 +47,28 @@ public class ClothoStarter {
         //}
 
 	}
+        
+        
+    private DaemonContext context;
+        
+    @Override
+    public void init(DaemonContext dc){
+        context = dc;
+    }
+
+    @Override
+    public void start() throws Exception{
+        System.out.println("starting ...");
+        main(context.getArguments());
+    }
+
+    @Override
+    public void stop() throws Exception {
+        System.out.println("stopping ...");
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println("done.");
+    }
 }
