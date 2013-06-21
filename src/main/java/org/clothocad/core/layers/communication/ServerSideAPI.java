@@ -239,7 +239,7 @@ public final class ServerSideAPI {
 // <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
     //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message) {
-        say(message, "text", null, false);
+        say(message, "info", null, false);
     }
     
     /**
