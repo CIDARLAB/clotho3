@@ -13,11 +13,17 @@ import org.eclipse.jetty.websocket.WebSocketHandler;
 import org.eclipse.jetty.server.session.SessionHandler;
 
 public class ClothoWebserver {
+    
+        public Server getServer(){
+            return server;
+        }
 
+        private final Server server;
+        
 	public ClothoWebserver(int nPort) 
 			throws Exception {
 		
-		Server server = new Server(nPort);
+		server = new Server(nPort);
  
         /** for WEB resources (HTML, CSS, JavaScript etc.) **/
         ResourceHandler resHandler = new ResourceHandler();
@@ -55,20 +61,5 @@ public class ClothoWebserver {
         server.setHandler(handlers);
  
         server.start();
-        server.join();
-        
-        //System.out.println("Ernst, please silence these println statements");
-        
-        //System.out.println("The Clotho Webserver is running...");
     }
-	
-/**
-	public static void main(String[] args) {
-		try {
-			new ClothoWebserver();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
- **/
 }
