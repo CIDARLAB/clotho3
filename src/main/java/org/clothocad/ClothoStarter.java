@@ -11,7 +11,7 @@ public class ClothoStarter implements Daemon {
     
 	public static void main(String[] args) 
 			throws Exception {
-		
+		int nPort = 8080;
 
 		if(args.length == 1) {
 			nPort = Integer.parseInt(args[0]);
