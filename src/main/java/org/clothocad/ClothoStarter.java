@@ -1,5 +1,6 @@
 package org.clothocad;
 
+import java.util.Arrays;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.clothocad.broker.ClothoBroker;
@@ -47,7 +48,7 @@ public class ClothoStarter implements Daemon {
 
     @Override
     public void start() throws Exception{
-        System.out.println("starting ...");
+        System.out.println("starting with arguments " + Arrays.toString(context.getArguments()));
         main(context.getArguments());
     }
 
