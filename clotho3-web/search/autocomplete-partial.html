@@ -2,7 +2,8 @@
     <ul class="dropdown-menu span4 inline-block" >
         <a class="close" ng-click="display.hide('autocomplete'); display.undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
 
-        <li ng-repeat="item in (filtered = (autocomplete.autocompletions | filter:{text:display.query})) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
+        <!--| filter:{text:display.query}-->
+        <li ng-repeat="item in (filtered = (autocomplete.autocompletions)) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
             <a ng-click="setQuery(item, $event)" ng-mouseenter="display.detail({{item.uuid}})">{{item.text}}</a>
         </li>
 
@@ -25,7 +26,7 @@
                         <th>Author</th>
                     </tr>
                 </thead>-->
-                <tr ng-repeat="item in autocomplete.autoDetail.versions | limitTo:3">
+                <tr ng-repeat="item in autocomplete.autoDetail.sharables | limitTo:3">
                     <td style="cursor: pointer" ng-class="{'info': item === autocomplete.detailModel}" ng-click="display.detailInfo('command', $index)">{{item.text}}</td>
                     <td style="cursor: pointer" ng-class="{'info': item.author === autocomplete.detailModel}" ng-click="display.detailInfo('author', $index)">{{item.author.name}}</td>
                 </tr>

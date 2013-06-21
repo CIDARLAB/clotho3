@@ -343,10 +343,14 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     var autocomplete = function clientAPIAutocomplete(list) {
         console.log('Hit autocomplete');
         console.log(JSON.stringify(list));
+
         PubSub.trigger('autocomplete', list);
     };
 
     var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
+
+        //todo - first check collector
+        
         console.log('Hit autocompletedetail');
         console.log(obj);
         

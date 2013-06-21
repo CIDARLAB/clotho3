@@ -119,9 +119,9 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
             default : {}
         }
         //choose model
-        autocomplete.detailModel = autocomplete.autoDetail.versions[index];
+        autocomplete.detailModel = autocomplete.autoDetail.sharables[index];
         if (type == "author")
-            autocomplete.detailModel = autocomplete.detailModel.author;
+            autocomplete.detailModel = autocomplete.detailModel.sharables;
 
         display.show('autocompleteDetailInfo');
     };
@@ -149,7 +149,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
             query = display.query;
         if (!!query) {
             Clotho.submit(query);
-            display.autocomplete = false;
+            //display.autocomplete = false;
             display.undetail();
         }
     };
