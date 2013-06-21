@@ -154,11 +154,27 @@ public final class ServerSideAPI {
             }
         } catch(Exception notAJSON) {
             message = command;
+
         }
         
         
         say(message, "muted", null, true);
-        
+                    
+            //Start JCA Temporary for testing
+            if(message.equals("auto")) {
+                try {
+                    JSONArray data = new JSONArray("[{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"value\":\"clotho.run('rlaksd', ['sadfjsklsdf']);\",\"command\":{\"channel\":\"run\",\"functionId\":\"rlaksd\",\"args\":\"['sadfjsklsdf']\"},\"type\":\"command\"},{\"uuid\":\"qwertyuiop\",\"text\":\"This is a phrase\",\"value\":\"This is a phrase\",\"type\":\"phrase\"},{\"uuid\":\"817924532\",\"text\":\"Reverse Complement pca1502\",\"value\":\"clotho.run('sdfsadg', '23tg3e2q');\",\"command\":{\"channel\":\"run\",\"functionId\":\"sdfsadg\",\"args\":\"'23tg3e2q'\"},\"type\":\"command\"},{\"uuid\":\"xxxxxxxxxxxx\",\"text\":\"Reverse complement this\",\"value\":\"Reverse complement this\",\"type\":\"phrase\"}]");
+                    JSONObject msg = new JSONObject();
+                    msg.put("channel", "autocomplete");
+                    msg.put("data", data);
+                    Router.get().sendMessage(mind.getClientConnection(), msg);
+                    return;
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            //////End JCA Temporary for testing
+            
         if (!mind.runCommand(message)) {
             disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
             return;

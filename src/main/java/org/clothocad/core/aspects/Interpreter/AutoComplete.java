@@ -49,6 +49,8 @@ public class AutoComplete {
         for(String word : getWordBank()) {
             trie.put(word, word);
         }
+        
+        
     }
 
     /**

@@ -269,6 +269,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      *
      */
     var say = function clientAPISay(data) {
+        console.log('Hit say');
         PubSub.trigger("activityLog", data);
     };
 
@@ -340,12 +341,15 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * Publishes autocompletions to PubSub for listeners to pick up
      */
     var autocomplete = function clientAPIAutocomplete(list) {
+        console.log('Hit autocomplete');
+        console.log(JSON.stringify(list));
         PubSub.trigger('autocomplete', list);
     };
 
     var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
+        console.log('Hit autocompletedetail');
         console.log(obj);
-
+        
         var id = obj.command_object.function_id;
 
         Collector.storeModel("detail_" + id, obj);
