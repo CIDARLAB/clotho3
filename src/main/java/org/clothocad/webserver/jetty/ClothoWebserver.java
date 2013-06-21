@@ -55,6 +55,5 @@ public class ClothoWebserver {
         server.setHandler(handlers);
  
         server.start();
-        server.join();
     }
 }
