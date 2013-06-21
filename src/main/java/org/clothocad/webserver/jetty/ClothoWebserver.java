@@ -56,19 +56,5 @@ public class ClothoWebserver {
  
         server.start();
         server.join();
-        
-        //System.out.println("Ernst, please silence these println statements");
-        
-        //System.out.println("The Clotho Webserver is running...");
     }
-	
-/**
-	public static void main(String[] args) {
-		try {
-			new ClothoWebserver();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
- **/
 }

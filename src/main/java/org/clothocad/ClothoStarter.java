@@ -5,9 +5,12 @@ import org.apache.commons.daemon.DaemonContext;
 import org.clothocad.broker.ClothoBroker;
 import org.clothocad.core.ClothoCore;
 import org.clothocad.webserver.jetty.ClothoWebserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //Start then navigate to:  http://localhost:8080/#/
 public class ClothoStarter implements Daemon {
+    private static final Logger logger = LoggerFactory.getLogger(ClothoStarter.class);
     
 	public static void main(String[] args) 
 			throws Exception {
@@ -17,34 +20,19 @@ public class ClothoStarter implements Daemon {
 			nPort = Integer.parseInt(args[0]);
 		}
 		
-		//LogManager.getLogManager().reset();
+                try{
+                    new ClothoBroker();
+                    // wait a bit until the broker is running
+                    Thread.sleep(4000);
 		
-            System.out.println("Ernst, ClothoBroker crashes on my machine, but if I silence this line I can run everything else fine");
-           /**
-            Exception in thread "main" javax.jms.JMSException: Could not connect: Virtual host stopped
-            at org.fusesource.stomp.jms.StompJmsExceptionSupport.create(StompJmsExceptionSupport.java:59)
-            */
-                    
-		// start the message broker
-		new ClothoBroker();
-		
-		// wait a bit until the broker is running
-		Thread.sleep(4000);
-		
-		// now, start the core (i.e. the server)
-		new ClothoCore().start();
-		
-		// wait a bit until the broker is running
-		Thread.sleep(4000);
-		
+                    // now, start the core (i.e. the server)
+                    new ClothoCore().start();
+                } catch (Exception e){
+                    logger.error("Exception while initializing JMS Broker and Listener", e);
+                }
+
 		// start the Jetty webserver
 		new ClothoWebserver(nPort);
-		//System.out.println("The Clotho Webserver is running...");
-		
-		//Object lock = new Object();
-        //synchronized (lock) {
-        //    lock.wait();
-        //}
 
 	}
         
