@@ -45,7 +45,7 @@ public class UpdateIndex {
 
     public void register(Sharable sharable, Widget widget, Mind mind) {
         //Register the sharable --> widget hash
-        String sharableId = sharable.getUUID().toString();
+        String sharableId = sharable.getId();
         Set<Widget> widgets = null;
         if(sharableToWidget.containsKey(sharableId)) {
             widgets = sharableToWidget.get(sharableId);
@@ -60,12 +60,12 @@ public class UpdateIndex {
     }
     
     public void update(String sharableId) {
-        Sharable sharable = persistor.get(Sharable.class, new ObjectId(sharableId));
-        update(sharable);
+//        Sharable sharable = persistor.get(Sharable.class, new ObjectId(sharableId));
+//        update(sharable);
     }
     
     public void update(Sharable sharable) {
-        Set<Widget> widgets = sharableToWidget.get(sharable.getUUID().toString());
+        Set<Widget> widgets = sharableToWidget.get(sharable.getId());
         if(widgets==null) {
             System.out.println("UpdateIndex.update(...) has null for widgets, so aborting.");
             return;

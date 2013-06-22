@@ -9,9 +9,11 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.clothocad.core.datums.JCAClothoSchema;
 
 import org.clothocad.core.datums.ObjBase;
 import org.hibernate.validator.constraints.URL;
+import org.json.JSONObject;
 
 
 /**
@@ -19,7 +21,7 @@ import org.hibernate.validator.constraints.URL;
  * @author jcanderson
  */
 @NoArgsConstructor
-public class Lab extends ObjBase {
+public class Lab extends ObjBase implements JCAClothoSchema {
 
     @Getter
     @Setter
@@ -41,7 +43,6 @@ public class Lab extends ObjBase {
 
     public Lab( Institution inst, Person PI, String name, String department, String address ) {
         super(name);
-        setName(name);
         this.department = department;
         this.address = address;
         institution = inst;
@@ -69,6 +70,11 @@ public class Lab extends ObjBase {
 
     public static Lab retrieveByName( String name ) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        return true;
     }
 
 }

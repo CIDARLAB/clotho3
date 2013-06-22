@@ -95,7 +95,7 @@ public class Hopper implements Aspect {
      * @param doo 
      */
     public void add(Doo doo) {
-        dooList.put(doo.getUUID().toString(), doo);
+        dooList.put(doo.getId(), doo);
     }
     
     //Singleton stuff

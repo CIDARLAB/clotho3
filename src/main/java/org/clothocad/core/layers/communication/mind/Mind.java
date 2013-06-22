@@ -82,7 +82,7 @@ public final class Mind
         /* TODO check if this Mind already exists */
         //Create the new Mind object
         Mind out = new Mind();
-        out.personId = person.getUUID().toString();
+        out.personId = person.getId();
         //out.save();
         return out;
     }

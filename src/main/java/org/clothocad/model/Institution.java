@@ -9,7 +9,8 @@ import org.clothocad.core.datums.ObjBase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.datums.JCAClothoSchema;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -17,7 +18,7 @@ import org.json.JSONObject;
  * @author jcanderson
  */
 @NoArgsConstructor
-public class Institution extends Sharable {
+public class Institution extends ObjBase implements JCAClothoSchema {
 
     /**
      * Constructor from raw data
@@ -33,7 +34,7 @@ public class Institution extends Sharable {
     
     //TODO:unique name constraint
     public Institution( String name, String city, String state, String country ) {
-        super(name, null);
+        super(name);
         this.city = city;
         this.state = state;
         this.country = country;
@@ -61,6 +62,24 @@ public class Institution extends Sharable {
 
     @Override
     public boolean validate(JSONObject obj) {
-        return true;
+        //Stephanie:  I believe this can all be expressed with @notNull type things, so this is redundant
+        //This validate method covers the per-object verification, of which there is none for Institution unless it confirms that the cities and states are existant entities
+        try {
+            if(obj.getString("name")==null || obj.getString("name").equals("")) {
+                return false;
+            }
+            if(obj.getString("city")==null || obj.getString("city").equals("")) {
+                return false;
+            }
+            if(obj.getString("state")==null || obj.getString("state").equals("")) {
+                return false;
+            }
+            if(obj.getString("country")==null || obj.getString("country").equals("")) {
+                return false;
+            }
+            return true;
+        } catch (JSONException ex) {
+            return false;
+        }
     }
 }

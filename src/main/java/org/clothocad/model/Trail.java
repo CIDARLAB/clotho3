@@ -5,16 +5,12 @@
 package org.clothocad.model;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.clothocad.core.aspects.Proctor.Module;
-import org.clothocad.core.datums.Sharable;
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.clothocad.core.datums.ObjBase;
 import org.json.JSONObject;
 
 /**
@@ -23,7 +19,7 @@ import org.json.JSONObject;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class Trail extends Sharable {
+public class Trail extends ObjBase {
 
 	/**
     public Trail(String nameOrTitle, String description, List<Module> contents) {
@@ -42,9 +38,4 @@ public class Trail extends Sharable {
     private String description;
     @Getter
     private List<Module> contents;
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        return true;    
-    }
 }

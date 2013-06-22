@@ -172,7 +172,7 @@ public final class ServerSideAPI {
             //////End JCA Temporary for testing
             
         if (!mind.runCommand(message)) {
-            disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
+//            disambiguate(message);  //JCA:  temporarily disabled for testing, also not fully hooked up
             return;
         }
         
@@ -393,7 +393,7 @@ public final class ServerSideAPI {
             //Notify the user that they retrieved the data
             System.out.println("JCA:  this should be moved specifically to search bar responses");
             
-            out = existing.toString();
+            out = existing.toJSON().toString();
             say("I retrieved the Sharable " + out, "success");
 
         } catch (Exception e) {
@@ -496,7 +496,7 @@ public final class ServerSideAPI {
                 
             //Check that the current user has write access
             if(!Authenticator.get().hasWriteAccess(getPerson(), obj)) {
-                say("The current user does not have write access for " + obj.getUUID().toString());
+                say("The current user does not have write access for " + obj.getId());
                 return null;
             }
             
@@ -524,7 +524,7 @@ public final class ServerSideAPI {
             }
 
             //Try to create the object and clobber the uuid
-            String resultId = Persistor.get().save(existing);
+            String resultId = Persistor.get().saveJSONObject(existing);
             if(!resultId.equals(uuid)) {
                 System.out.println("!resultId.equals(uuid) This should never happen");
                 throw new Exception();
@@ -534,23 +534,19 @@ public final class ServerSideAPI {
             ObjBase object = Collector.get().temporaryRefetchMethod(uuid);
 
             //Contact the user to notify them that they modified an object
-            say("You successfully modified: " + object.getName() + " with UUID: " + object.getUUID().toString(), "success");
+            say("You successfully modified: " + object.getName() + " with UUID: " + object.getId(), "success");
 
             //Relay the data change to listening clients
             Router.get().publish((Sharable) object);
 
             //Return the modified data to the calling script
-            return object.toString();
+            return object.toJSON().toString();
         } catch (Exception e) {
             say("Error setting " + value.toString(), "error");
             return null;
         }
     }
 
-    public final void set(JSONObject data) {
-    	
-    }
-    
     /**
     public final String create(JSONObject json) {
     
@@ -580,7 +576,7 @@ public final class ServerSideAPI {
     		// here we need to forward the model to the Persistor
     		if(null != this.persistor) {
     			persistor.save(nucseq);
-        		return nucseq.getUUID().toString();
+        		return nucseq.getId();
     		} else {
     			System.err.println("CRAP!");
     		}
@@ -624,9 +620,14 @@ public final class ServerSideAPI {
                 return null;
             }
             
+            //Set the author of the JSON to be the current user
+            newval.put("author_id", getPerson().getId());
+            
+            //Set the date created
+            newval.put("dateCreated", new Date().toString());
+            
             //Try to create the object and clobber the uuid
-            JSONObject obj = new JSONObject(json);
-            String uuidRes = Persistor.get().save(obj);
+            String uuidRes = Persistor.get().saveJSONObject(newval);
             if(uuidRes==null) {
                 say("The object could not be persisted during create ", "error");
                 return null;
@@ -643,8 +644,8 @@ public final class ServerSideAPI {
             System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
 
             //Return the JSON of the new object as a String
-            say("You successfully created: " + object.getName() + " with UUID: " + object.getUUID().toString(), "success");
-            return object.toString();
+            say("You successfully created: " + object.getName() + " with UUID: " + object.getId(), "success");
+            return object.toJSON().toString();
     	} catch(Exception e) {
             e.printStackTrace();
             return null;
@@ -659,13 +660,13 @@ public final class ServerSideAPI {
             for(Sharable obj : existent) {
                 //Check that the current user has write access
                 if(!Authenticator.get().hasWriteAccess(getPerson(), obj)) {
-                    say("The current user does not have write access for " + obj.getUUID().toString());
+                    say("The current user does not have write access for " + obj.getId());
                     continue;
                 }
 
                 String name = obj.getName();
-                String id = obj.getUUID().toString();
-                Persistor.get().delete(obj);
+                String id = obj.getId();
+                Persistor.get().deleteSharable(obj);
                 say("Sharable " + name + " with UUID " + id +  " has been destroyed", "success");
             }
         } catch (Exception e) {
@@ -731,7 +732,7 @@ public final class ServerSideAPI {
             StringBuilder sb = new StringBuilder();
             for(ObjBase obj : objs) {
                 sb.append("\n");
-                sb.append(obj.getUUID().toString());
+                sb.append(obj.getId());
             }
             say("Clotho found " + out.length()+ " Sharables that satisfy your query: " + sb.toString(),  "success");
             return out.toString();
@@ -957,13 +958,12 @@ public final class ServerSideAPI {
      * @return 
      */
     private Person getPerson() {
-    	return mind.getPerson();
-    	/**
-        if (person != null) {
+        Person person = mind.getPerson();
+        if(person!=null) {
             return person;
+        } else {
+            return Collector.get().getAdmin();
         }
-        return Person.getById(mind.getPersonId());
-        **/    	
     }
 
     public final void newPage() throws Exception {
@@ -1031,7 +1031,8 @@ public final class ServerSideAPI {
     public static JSONObject makeCollect(Sharable sharable) throws Exception {
         JSONObject msg = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("uuid", sharable.getUUID());
+            data.put("uuid", sharable.getId());
+            data.put("id", sharable.getId());
             data.put("type", "json");
             data.put("model", sharable.toJSON());
             data.put("isURL", "false");
@@ -1087,38 +1088,6 @@ public final class ServerSideAPI {
         return null;
     }
 
-    /**
-     * Update instructs the client to call update on a widget
-     * The data that goes into the widget, however, is sent in a Collect command
-     * 
-     * @param view
-     * @return
-     * @throws Exception 
-     */
-    public static JSONObject makeUpdate(Widget widget, List<Sharable> sharables, String socket_id) throws Exception {
-        JSONObject updateCmd = new JSONObject();
-        //Createhte token:uuid map that associates the piece of data with its token used by the widget
-        List<ClothoField> fields = widget.getView().getInputArguments();
-        JSONObject inputs = new JSONObject();
-        for (int i = 0; i < fields.size(); i++) {
-            ClothoField field = fields.get(i);
-            inputs.put(field.getName(), sharables.get(i).getUUID());
-        }
-        updateCmd.put("inputArgs", inputs);
-        updateCmd.put("script", replaceWidgetId(widget.getView().getOnUpdateScript(), "")); //how do i get widgetID's again?
-        updateCmd.put("command", "update");
-//            
-        return updateCmd;
-    }
-
-    public static JSONObject makeCallback(String dooId, String socket_id) throws Exception {
-        JSONObject callBackCmd = new JSONObject();
-        callBackCmd.put("socketID", socket_id);
-        callBackCmd.put("dooID", dooId);
-        callBackCmd.put("command", "callback");
-
-        return callBackCmd;
-    }
 // </editor-fold> 
     
     // <editor-fold defaultstate="collapsed" desc="Utility Methods"> 
@@ -1132,7 +1101,7 @@ public final class ServerSideAPI {
             for(int i=0; i<ary.length(); i++) {
                 String str = ary.getString(i);
                 Sharable shar = resolveToExistentSharable(str);
-                uuidList.add(shar.getUUID().toString());
+                uuidList.add(shar.getId());
             }
         } catch(Exception notJsonArray) {
             //If it's a single object
@@ -1268,7 +1237,7 @@ public final class ServerSideAPI {
                 map.put("name", str);
                 List<ObjBase> result = Persistor.get().get(map);
                 ObjBase first = result.get(0);
-                return first.getUUID().toString();
+                return first.getId();
             } catch(Exception err) {}
             
             return str;

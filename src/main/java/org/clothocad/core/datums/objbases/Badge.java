@@ -24,6 +24,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.objbases;
 
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.model.Person;
 import org.json.JSONObject;
@@ -51,11 +52,10 @@ import org.json.JSONObject;
  */
 
 
-public class Badge 
-		extends Sharable {
+public class Badge  extends ObjBase {
 
-	public Badge(Person author) {
-		super("", author);
+	public Badge(String name) {
+		super(name);
 	}
 
 	//
@@ -126,11 +126,6 @@ public class Badge
     public final boolean hasBadge(String personId) {
 return true;
         //        return haveBadge.contains(personId);
-    }
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        return true;
     }
 //    
     /**

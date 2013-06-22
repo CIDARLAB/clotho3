@@ -29,19 +29,16 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import lombok.Delegate;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.aspects.JSONSerializer;
-import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.persistence.mongodb.MongoDBConnection;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -103,6 +100,50 @@ public class Persistor implements Aspect {
             ex.printStackTrace();
             System.exit(0);
         }
+    }
+    
+    /**
+     * JCA to Stephanie: I'm having troubles with Netbeans recognizing the dependency injection stuff.  Also, I'd like to prevent leakage of lower save methods.  The high level wrapper of Persistor would ideally be these methods I am putting in here
+     * @param obj
+     * @return 
+     */
+    public String saveJSONObject(JSONObject obj) {
+        return connection.save(obj);
+    }
+    
+    public String saveSharable(Sharable shar) {
+        //If it's an ObjBase (a Java-based Sharable)
+        try {
+            ObjBase obj = (ObjBase) shar;
+            connection.save(obj);
+            System.out.println("The shar was saved as ObjBase");
+            return obj.getId();
+            
+        //Otherwise treat it as a JSONObject to save
+        } catch(Exception err) {
+            try {
+                System.out.println("The shar is being saved as JSON directly");
+                JSONObject obj = shar.toJSON();
+                return saveJSONObject(obj);
+            } catch(Exception err2) {
+                return null;
+            }
+        }
+    }
+    
+    public boolean deleteSharable(Sharable shar) {
+        try {
+            connection.delete(new ObjectId(shar.getId()));
+            return true;
+        } catch(Exception err) {
+            System.out.println("deleteSharable failed to delete");
+            return false;
+        }
+    }
+    
+    
+    public Sharable getSharable(String itemId) {
+        return get(ObjBase.class, new ObjectId(itemId));
     }
 
     public void persistFeature(HashMap<String, Integer> StoreGrams, String feature) {
@@ -181,4 +222,5 @@ public class Persistor implements Aspect {
         }
         return null;
     }        
+
 }

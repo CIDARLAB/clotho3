@@ -32,7 +32,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.JCAClothoSchema;
 import org.clothocad.core.datums.ObjBase;
+import org.json.JSONObject;
 
 /**
  *
@@ -49,7 +51,7 @@ import org.clothocad.core.datums.ObjBase;
 //took out notes for demo
 
 @NoArgsConstructor
-public class Feature extends ObjBase {
+public class Feature extends ObjBase implements JCAClothoSchema {
     /**
      * Relayed constructor of a new Feature
      * @param name
@@ -458,5 +460,10 @@ public class Feature extends ObjBase {
        
     @Getter
     private boolean isCDS;
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        return true;
+    }
 
 }

@@ -54,8 +54,8 @@ public class Proctor implements Aspect {
     public void initiateTrail(Person student, Trail trail, Doo parentDoo) throws Exception {
         //Create a QuizDoo to manage the task
         ProctorDoo doo = new ProctorDoo(parentDoo);
-        doo.trailId = trail.getUUID().toString();
-        doo.studentId = student.getUUID().toString();
+        doo.trailId = trail.getId();
+        doo.studentId = student.getId();
         
         //The Trail data contains in the TOC, construct the widget code
         
@@ -78,8 +78,8 @@ public class Proctor implements Aspect {
 //     */
 //    public boolean gradeQuiz(JSONObject submittedAnswer, Person person, Quiz quiz, Doo doo) {
 //        ProctorDoo qdoo = new ProctorDoo(doo);
-//        qdoo.quizId = quiz.getUUID().toString();
-//        qdoo.studentId = person.getUUID().toString();
+//        qdoo.quizId = quiz.getId();
+//        qdoo.studentId = person.getId();
 //        
 //        /** TODO:
 //        Function rubric = quiz.getRubric();

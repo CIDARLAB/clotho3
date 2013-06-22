@@ -31,7 +31,6 @@ import lombok.Data;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.util.compiler.DynamicFileManager;
 import org.clothocad.core.util.compiler.JavaSourceFromString;
-import org.clothocad.model.Person;
 import org.json.JSONObject;
 import org.objectweb.asm.ClassReader;
 
@@ -41,12 +40,11 @@ public class JavaSchema
 
     public JavaSchema() {super();}
 	
-    public JavaSchema(Person author,
-            String name, 
+    public JavaSchema(String name, 
             String description,
             String source) {
     	
-    	super(name, description, author);
+    	super(name, description);
         
         this.description = description;
         setSource(source);
@@ -98,11 +96,5 @@ public class JavaSchema
         return Language.JAVA;
     }
 
-    @Override
-    public boolean validate(JSONObject obj) {
-        System.out.println("JavaSchema:  Stephanie needs to implement me!!!");
-        return true;
-    }
-    
 }
 

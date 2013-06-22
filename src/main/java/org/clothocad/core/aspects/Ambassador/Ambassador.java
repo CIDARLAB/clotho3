@@ -365,7 +365,7 @@ public class Ambassador implements Aspect {
             //
             //Go fetch the sharable, wrap it into the response, then send it back
             //
-            Sharable sharable = persistor.get(Sharable.class, new ObjectId(doo.itemId));
+            Sharable sharable = persistor.get().getSharable(doo.itemId);
             doo.sharableJSON = sharable.toJSON();
             doo.response = new JSONObject();
             doo.response.put("sharable_item", doo.sharableJSON);

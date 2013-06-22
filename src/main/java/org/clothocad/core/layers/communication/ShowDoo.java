@@ -28,7 +28,7 @@ public class ShowDoo extends Doo {
     void collectSharables(List<Sharable> shareList) {
         for(Sharable sharable : shareList) {
             if(sharable!=null) {
-                sharableIds.add(sharable.getUUID().toString());
+                sharableIds.add(sharable.getId());
             }
         }
     }

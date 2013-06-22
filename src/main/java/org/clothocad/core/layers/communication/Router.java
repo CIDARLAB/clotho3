@@ -3,14 +3,10 @@ package org.clothocad.core.layers.communication;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.layers.communication.Channel.create;
@@ -23,7 +19,6 @@ import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.clothocad.core.util.FileUtils;
 import org.json.JSONObject;
 
 public class Router {
@@ -192,7 +187,7 @@ public class Router {
     void publish(Sharable object) {
             try {
                 System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
-                String uuid = object.getUUID().toString();
+                String uuid = object.getId();
                 JSONObject msg = ServerSideAPI.makeCollect(object);
                 HashSet<WeakReference<ClientConnection>> targets = pubsub.get(uuid);
                 for(WeakReference<ClientConnection> wr : targets) {
@@ -215,7 +210,7 @@ public class Router {
     private HashMap<String, HashSet<WeakReference<ClientConnection>>> pubsub = new  HashMap<String, HashSet<WeakReference<ClientConnection>>>();
 
     void register(ClientConnection connection, Sharable object) {
-        String uuid = object.getUUID().toString();
+        String uuid = object.getId();
         HashSet<WeakReference<ClientConnection>> existing = pubsub.get(uuid);
         if(existing==null) {
             existing = new HashSet<WeakReference<ClientConnection>>();

@@ -80,7 +80,7 @@ public class SchemaATest {
         Set<ClothoField> thefields = newHashSet(new ClothoField("name", String.class, "GFPmut3", "the feature name", null, false, Access.PUBLIC),
                                                 new ClothoField("sequence", String.class, "atgcatgagatcatgcagccaactatttattaa", "the feature sequence", null, false, Access.PUBLIC));
 
-        Schema schema = new ClothoSchema("Feature", "Act ontology standard representation ofa genetic feature", null, null, thefields);
+        Schema schema = new ClothoSchema("Feature", "Act ontology standard representation ofa genetic feature", null, thefields);
         System.out.println(schema.toJSON().toString());
         return schema;
     }

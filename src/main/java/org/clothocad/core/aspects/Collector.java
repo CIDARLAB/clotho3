@@ -26,10 +26,16 @@ package org.clothocad.core.aspects;
 import org.clothocad.core.persistence.Persistor;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.model.Person;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author jcanderson
@@ -95,5 +101,33 @@ public class Collector implements Aspect {
         objBaseBag.put(obj.getUUID(), obj);
         return obj;
     }
+    
+    public static Person getAdmin() {
+            //If it is already puilled, return it
+            if(admin!=null) {
+                return admin;
+            }
+            
+            //Try getting it from the db
+            try {
+                Map query = new HashMap();
+                query.put("className", "org.clothocad.model.Person");
+                query.put("name", "admin");
+                List<ObjBase> listy = Persistor.get().get(query);
+                admin = (Person) listy.get(0);
+                if(admin!=null) {
+                    return admin;
+                }
+            } catch (Exception ex) {
+            }
+        
+            //Create a new person
+            admin = new Person("admin", null, "");
+            Persistor.get().save(admin);
+            return admin;
+    }
+    
+    
+    private static transient Person admin; 
     
 }

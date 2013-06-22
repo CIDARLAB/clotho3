@@ -28,13 +28,16 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.clothocad.core.datums.JCAClothoSchema;
+import org.json.JSONObject;
 
 /**
  *
  * @author J. Christopher Anderson
  */
 @NoArgsConstructor
-public class Person extends ObjBase {
+public class Person extends ObjBase implements JCAClothoSchema {
+
     @Getter
     @Setter
     @Reference
@@ -282,4 +285,13 @@ public class Person extends ObjBase {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public boolean validate(JSONObject obj) {
+        //TO DO: check for uniqueness of name?
+        
+        return true;
+    }
+    
+
 }

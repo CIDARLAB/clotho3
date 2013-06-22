@@ -1,13 +1,12 @@
 package org.clothocad.core.layers.communication.mind;
 
-import org.clothocad.core.datums.View;
 
 public class Widget {
-    public Widget (Page page, View view) {
-        this.widget_id = java.util.UUID.randomUUID().toString();
-        this.position.page = page;
-        this.view = view;
-    }
+//    public Widget (Page page, View view) {
+//        this.widget_id = java.util.UUID.randomUUID().toString();
+//        this.position.page = page;
+//        this.view = view;
+//    }
 
     public String getId () {
         return this.widget_id;
@@ -25,10 +24,10 @@ public class Widget {
         this.size.height = h;
         this.size.height_type = ht;
     }
-
-    public View getView() {
-        return view;
-    }
+//
+//    public View getView() {
+//        return view;
+//    }
 
     public Page getPage() {
         return position.page;
@@ -71,8 +70,8 @@ public class Widget {
     }
     
 
-    private final View view;
-    private final String widget_id;
+//    private final View view;
+    private String widget_id;
     private Position position = new Position();  //Include Page ref
     private Size size = new Size();
 

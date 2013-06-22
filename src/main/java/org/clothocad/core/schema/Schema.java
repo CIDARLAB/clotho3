@@ -12,13 +12,10 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.DBOnly;
-import org.clothocad.model.Person;
-import org.json.JSONObject;
 
 /**
  *
@@ -27,10 +24,10 @@ import org.json.JSONObject;
 @Data
 @NoArgsConstructor
 @Add(name="language", provider="getLanguage")
-public abstract class Schema extends Sharable {
+public abstract class Schema extends ObjBase {
     
-    public Schema(String name, String description, Person author){
-        super(name, author);
+    public Schema(String name, String description){
+        super(name);
         this.description = description;
     }
     
