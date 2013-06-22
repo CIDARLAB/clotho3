@@ -11,18 +11,17 @@
 
 var Application = Application || {};
 
+Application.Primary = angular.module('clotho.primary', ['clotho.core']);
+Application.Interface = angular.module('clotho.interface', ['clotho.core']);
+Application.Extensions = angular.module('clotho.extensions', ['clotho.core']);
+Application.Widgets = angular.module('clotho.widgets', ['clotho.core']);
+
+Application.Browser = angular.module('clotho.browser', ['clotho.core']);
 Application.Chat = angular.module('clotho.chat', ['clotho.core']);
 Application.Dynamic = angular.module('clotho.dynamic', ['clotho.core']);
 Application.Editor = angular.module('clotho.editor', ['clotho.core']);
 Application.Search = angular.module('clotho.search', ['clotho.core']);
 Application.Trails = angular.module('clotho.trails', ['clotho.core']);
-Application.Primary = angular.module('clotho.primary', ['clotho.core']);
-Application.Interface = angular.module('clotho.interface', ['clotho.core']);
-
-// lazy-loading dependencies
-Application.Extensions = angular.module('clotho.extensions', ['clotho.core']);
-// adding widgets
-Application.Widgets = angular.module('clotho.widgets', ['clotho.core']);
 
 Application.Foundation = angular.module('clotho.core', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
@@ -51,7 +50,7 @@ Application.Foundation = angular.module('clotho.core', [])
         };
     }]);
 
-angular.module('clothoPackage', ['clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails']);
+angular.module('clothoPackage', ['clotho.browser', 'clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails']);
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
@@ -85,11 +84,13 @@ angular.module('clothoRoot', ['clothoPackage']).
                 //todo - get this working, instead of doing it in the link of directive
                 //resolve: []
             }).
+            when('/browser', {
+                templateUrl:'browser/browser-partial.html'
+            }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'
             }).
             when('/dynamic', {
-                // note: can be function in 1.1.x, not 1.0.x (currently) - see: https://github.com/angular/angular.js/pull/1849/files
                 //templateUrl:'dynamic/dynamic-partial.html',
                 templateUrl: dynamicCtrl.template,
                 resolve: {

@@ -557,6 +557,36 @@ io.sockets.on('connection', function (socket) {
         console.log("notification!");
         console.log(data);
     };
+    api.api.recent = function() {
+
+        var message = [
+            {
+                "name":"pbca1256",
+                "id":"sajgklasd9f",
+                "icon":"data:image/png;base64,5jlasdkfuq92iou4kl245JKHKJFDFKJDkDFJHKDKfdjhkDFJHKHJKjhkhjkDhjkdfdushfsdifSDlkfjkl124jrtoiuj=",
+                "schema_name":"Institution",
+                "schema_id":"kl2j34l4kj24"
+            },
+            {
+                "name":"pbca123554",
+                "id":"asfdveeg",
+                "icon":"data:image/png;base64,adagga5jklKLjLKJSLKJDFKDKdjslfksjdflksdfLKDJFDSLKFJSDFjSDKFJDSFKLJDFLKDSJFLSDJFLDkdfdjlFslkdfsdfsdf124jrtoiuj=",
+                "schema_name":"Institution",
+                "schema_id":"adsf233f"
+            },
+            {
+                "name":"asdfsadf",
+                "id":"sdfasgdsd",
+                "icon":"data:image/png;base64,adagga5jklKLjLKJSLKJDFKDKdjslfksjdflksdfLKDJFDSLKFJSDFjSDKFJDSFKLJDFLKDSJFLSDJFLDkdfdjlFslkdfsdfsdf124jrtoiuj=",
+                "schema_name":"sdgsdgdsd",
+                "schema_id":"asdsdfdsdgsgd"
+            }
+        ];
+
+        socket.send(api.pack.api_wrap('collect',
+            api.pack.collect('recent', 'json', message)
+        ));
+    };
     api.api.say = function(data) {
         var user = data.userID,
         //todo - separation for sending messages from "server" vs. "client"
@@ -790,82 +820,6 @@ io.sockets.on('connection', function (socket) {
         else {
             console.log("!!!\tNo match... channel: " + channel);
         }
-
-        /*switch (channel) {
-
-            //clotho core channels
-
-            case 'get' : {
-                api.api.get(data);
-                break;
-            }
-            case 'set' : {
-                api.api.set(data);
-                break;
-            }
-            case 'log' : {
-                api.api.log(data);
-                break;
-            }
-            case 'alert' : {
-                api.api.alert(data);
-                break;
-            }
-            case 'say' : {
-                api.api.say(data);
-                break;
-            }
-            case 'broadcast' : {
-                api.api.broadcast(data);
-                break;
-            }
-            case 'autocomplete' : {
-                api.api.autocomplete(data);
-                break;
-            }
-            case 'autocompleteDetail' : {
-                api.api.autocompleteDetail(data);
-                break;
-            }
-            case 'submit' : {
-                api.api.submit(data);
-                break;
-            }
-            case 'gradeQuiz' : {
-                api.api.gradeQuiz(data);
-                break;
-            }
-
-            //testing
-
-            case 'get:url' : {
-                api.api.get_url(data);
-                break;
-            }
-            case 'get:template' : {
-                api.api.get_template(data);
-                break;
-            }
-            case 'get:script' : {
-                api.api.get_script(data);
-                break;
-            }
-
-            //custom
-            //fixme
-
-            case 'chat:start' : {
-                api.chat.start();
-                break;
-            }
-            case 'chat:send' : {
-                api.chat.receive(data.msg, data.username);
-                break;
-            }
-            default: {
-                console.log("!!!\tNo match... channel: " + channel);
-            }
-        }*/
     });
 
 });

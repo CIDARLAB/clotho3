@@ -26,7 +26,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             });
 
             $scope.fullPageLog = function() {
-                $location.path("terminal");
+                $location.path("/terminal");
                 $scope.display.hide('log')
             };
 

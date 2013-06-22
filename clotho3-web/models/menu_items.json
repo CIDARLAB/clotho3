@@ -1,6 +1,7 @@
 {"items": [
     {"name" : "Editor", "path" : "/editor"},
     {"name" : "Trails", "path" : "/trails"},
+    {"name" : "Browser", "path" : "/browser"},
     {"name" : "Chat", "path" : "/chat"},
     {"name" : "Dynamic", "path" : "/dynamic"}
 ]}

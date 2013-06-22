@@ -699,6 +699,24 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     };
 
     /**
+     @name Clotho.recent
+     *
+     * @description
+     * Request your most recently / commonly used sharables
+     */
+    var recent = function() {
+        fn.api.emit('recent', {});
+
+        var deferred = $q.defer();
+
+        PubSub.once('model_change:recent', function(data) {
+            $rootScope.$safeApply(deferred.resolve(data));
+        }, 'clothoAPI');
+
+        return deferred.promise;
+    };
+
+    /**
      * @name Clotho.startTrail
      *
      * @param {string} uuid
@@ -753,6 +771,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         run : run,
         notify : notify,
         gradeQuiz : gradeQuiz,
+        recent : recent,
 
         //toolkit
         bootstrap: bootstrap,

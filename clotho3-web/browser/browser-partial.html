@@ -1,0 +1,22 @@
+<div class="container" ng-controller="BrowserCtrl" ng-init="setCurrent('user')">
+    <div class="row">
+        <div class="span12">
+            <div class="page-header" style="position:relative">
+                <ul class="nav nav-tabs pull-right" style="position: absolute; bottom: 0;right: 20px;margin-bottom:0; border-bottom: 0;">
+                    <li ng-repeat="mode in nav" ng-class="{'active' : mode.value == current}">
+                        <a ng-click="setCurrent(mode.value)">{{mode.text}}</a>
+                    </li>
+                </ul>
+                <h1>
+                    {{nav[current].text}}
+                    <small>{{nav[current].subtext}}</small>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <sharable ng-repeat="item in demo" content="item" template="{{item.schema_name}}"></sharable>
+    </div>
+
+</div>

@@ -65,9 +65,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - browser page
+    - clothoAPI.recent()
     - my stuff page
         - parts, features, oligos, plasmids (vector + part), samples
-        - channel recent() or something
     - our stuff
     - general browser
     --- domain as field
@@ -84,9 +84,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - clarify $dialog -- in controllers when dialog and when $dialog --- make fixes
 
-- favorite() API method - and unfavorite() and dislike()
-
-
+- move away from "model_change" etc.
 
 - trails functionality
     - youtube events - pass as param to function
@@ -119,6 +117,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - see: http://plnkr.co/edit/QSgRu4Sr8TSqR86eAfvq?p=preview
     - future: rewrite
         - easy to transclude, with customizable / default options
+
+
+
+- favorite() API method - and unfavorite() and dislike()
 
 
 
