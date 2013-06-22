@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import javax.swing.JOptionPane;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Authenticator;
 import org.clothocad.core.aspects.Collector;
@@ -38,10 +37,8 @@ import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Logger;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
-import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
@@ -52,7 +49,6 @@ import org.clothocad.model.Person;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client on

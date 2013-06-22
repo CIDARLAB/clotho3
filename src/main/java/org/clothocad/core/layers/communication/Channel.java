@@ -11,6 +11,8 @@ public enum Channel {
     logout, //Log me out of Clotho
     changePassword, //Change my password to this new value
     learn, //associate this String with this execution statement
+    like,
+    dislike,
     
 
 //LOGGING AND MESSAGING
