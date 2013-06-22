@@ -629,6 +629,11 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.searchbar.emit('autocomplete', packaged);
     };
     var autocompleteDetail = function(uuid) {
+        //check the collector first
+        if (Collector.hasItem('detail_'+uuid)) {
+            return Collector.retrieveModel('detail_'+uuid);
+        }
+
         var deferred = $q.defer();
         var packaged = {
             "uuid" : uuid

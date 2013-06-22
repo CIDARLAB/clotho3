@@ -1,10 +1,10 @@
 <div id="clothoSearchbarAutocomplete" class="dropdown pull-left" ng-show="display.autocomplete" click-outside="display.hide('autocomplete'); display.undetail();">
-    <ul class="dropdown-menu span4 inline-block" >
+    <ul id="clothoSearchbarAutocompleteList" class="dropdown-menu span5 inline-block">
         <a class="close" ng-click="display.hide('autocomplete'); display.undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
 
         <!--| filter:{text:display.query}-->
         <li ng-repeat="item in (filtered = (autocomplete.autocompletions)) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
-            <a ng-click="setQuery(item, $event)" ng-mouseenter="display.detail({{item.uuid}})">{{item.text}}</a>
+            <a class="clothoSearchbarAutocompleteListItem" ng-click="setQuery(item, $event)" ng-mouseenter="display.detail({{item.uuid}})" >{{item.text}}</a>
         </li>
 
         <li ng-show="!filtered.length"><a class="text-error"><i class="icon-exclamation-sign"></i> No results...</a></li>

@@ -5,20 +5,51 @@ HACKS
 #clothoSearchbarAutocomplete {
     margin: -10px 0 0 20px;
     display:block;
+    z-index: 1001;
+}
+
+#clothoSearchbarAutocompleteList {
+    width: 350px;
+}
+
+.clothoSearchbarAutocompleteListItem {
+    padding-left:28px;
+    padding-right: 20px;
 }
 
 #clothoSearchbarAutocompleteDetail {
     max-width: 400px;
     width: 400px;
     float: left;
-    z-index: 1000; /*bootstrap dropdown-menu is 1000*/
+    z-index: 1001; /*bootstrap dropdown-menu is 1000*/
     position: absolute;
-    left: 300px;
+    left: 350px;
 }
 
-#searchBar {
+#searchBarInput {
     background: #FFFFFF url('../images/iconSlice.png') no-repeat 5px 6px;
     padding-left: 28px;
+    width: 316px;
+}
+
+/* todo - viewport to hide scrollbar */
+#clothoSearchbarLog {
+    z-index:999;
+    max-width: 320px;
+    width: 320px;
+}
+
+#clothoSearchbarLogSnippet {
+    padding: 3px 12px 4px;
+    margin: 5px 5px 0;
+    max-width: 278px;
+    max-height: 21px;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+#clothoSearchbarLog .logEntry {
+    max-width: 300px;
 }
 
 
@@ -32,19 +63,6 @@ CUSTOM
     overflow-x: hidden;
     max-height: 700px; /*just in case... need to define with inline style*/
 }
-
-/* todo - create two divs, so hide scroll-bar (or make custom)*/
-
-#clothoSearchbarLog {
-    max-width: 360px;
-    width: 360px;
-}
-
-#clothoSearchbarLog .logEntry {
-    max-width: 300px;
-}
-
-
 
 
 
@@ -107,67 +125,4 @@ div.inline-block {
 /*todo - check for this to be fixed later by bootstrap */
 .navbar-form .input-prepend, .navbar-form .input-append {
     margin-bottom: 0;
-}
-
-
-
-
-
-
-
-
-
-/***************
-ORIGINAL
-*************/
-
-/* communications panes */
-#communications {
-    float: right;
-    margin: 0 -5px 0 0;
-    padding: 0;
-}
-#communications > li {
-    float: left;
-    list-style: none none outside;
-    margin-left: 5px;
-    height: 32px;
-    width: 32px;
-}
-#communications > li > a {
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* the top level li for the drop down */
-#info {
-    position: relative;
-    background: transparent url('../images/iconSlice.png')  right -142px  no-repeat;
-}
-#info > a {
-    display: block;
-    height: 32px;
-    width: 32px;
-}
-#info:hover > a {
-    position: relative;
-    background: #dadadc url('../images/iconSlice.png')  right -218px  no-repeat;
-    height: 31px;
-    z-index: 9;
-    border: 1px solid #969a9d;
-    border-bottom: none;
-}
-
-/* the other top level list items */
-#newPage {
-    background: transparent url('../images/iconSlice.png')  0 -93px  no-repeat;
-}
-#newPage:hover {
-    background: transparent url('../images/iconSlice.png')  0 -169px  no-repeat;
-}
-#newWorkSpace {
-    background: transparent url('../images/iconSlice.png')  5px -117px  no-repeat;
-}
-#newWorkSpace:hover {
-    background: transparent url('../images/iconSlice.png')  5px -193px  no-repeat;
 }

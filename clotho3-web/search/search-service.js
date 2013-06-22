@@ -47,7 +47,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
             "text" : "Welcome to Clotho!",
             "from" : "server",
             "class" : "success",
-            "timestamp" : 1289999908979
+            "timestamp" : Date.now()
         }
     ];
 
@@ -65,7 +65,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     display.genLogPos = function() {
         var target = document.getElementById('searchbar_logbutton');
         display.logpos = {
-            left : (target.offsetLeft + (target.scrollWidth / 2) - 180) + "px",
+            left : (target.offsetLeft + (target.scrollWidth / 2) - 160) + "px",
             top : (target.offsetTop + target.scrollHeight)  + "px"
         };
     };
@@ -121,7 +121,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         //choose model
         autocomplete.detailModel = autocomplete.autoDetail.sharables[index];
         if (type == "author")
-            autocomplete.detailModel = autocomplete.detailModel.sharables;
+            autocomplete.detailModel = autocomplete.detailModel.author;
 
         display.show('autocompleteDetailInfo');
     };

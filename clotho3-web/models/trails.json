@@ -1,4 +1,5 @@
 {"items" : [
+    {"uuid" : "automation_tools", "title" : "Automation Tools", "author" : "Chris Anderson"},
     {"uuid" : "trail_super", "title" : "Transclude Trails", "author" : "Max Bates"},
     {"uuid" : "trail_140l", "title" : "140L Combinatorial Videos", "author" : "Chris Anderson"},
     {"uuid" : "trail_123", "title" : "Biosafety Module", "author" : "UC Berkeley"},

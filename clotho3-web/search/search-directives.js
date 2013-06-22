@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function(Clotho, Searchbar) {
+Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$location', '$window', function(Clotho, Searchbar, $location, $window) {
 
     return {
         restrict: 'A',
@@ -25,15 +25,25 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
                 }
             });
 
+            $scope.fullPageLog = function() {
+                $location.path("terminal");
+                $scope.display.hide('log')
+            };
+
+            $scope.pathIsTerminal = function() {
+                var regexp = /^\/terminal.*$/;
+                return regexp.test($location.path());
+            };
+
 
             /*** help icons ***/
 
             $scope.newPage = function() {
-                window.open(window.location.origin, "_blank");
+                $window.open($window.location.origin, "_blank");
             };
 
             $scope.newWorkspace = function() {
-                window.open(window.location.origin, "_blank");
+                $window.open($window.location.origin, "_blank");
             };
 
             $scope.showMeHow = function() {
@@ -111,4 +121,8 @@ Application.Search.directive('clothoSearchbarLog', ['Clotho', 'Searchbar', '$tim
     }
 }]);
 
+Application.Search.controller('TerminalCtrl', ['$scope', 'Clotho', 'Searchbar', '$location', function($scope, Clotho, Searchbar, $location) {
+    $scope.log = Searchbar.log;
 
+
+}]);

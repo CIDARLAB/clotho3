@@ -100,6 +100,12 @@ angular.module('clothoRoot', ['clothoPackage']).
                     model : "inst_second"
                 }
             }).
+            when('/terminal', {
+                templateUrl:'search/terminal-partial.html',
+                resolve : {
+                    //ctrl_dl: Application.mixin('search/terminal-controller.js')
+                }
+            }).
             otherwise({
                 redirectTo:'/'
             });

@@ -349,8 +349,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
 
     var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
 
-        //todo - first check collector
-        
         console.log('Hit autocompletedetail');
         console.log(obj);
         

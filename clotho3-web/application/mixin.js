@@ -34,17 +34,20 @@ Application.Extensions.config(['$controllerProvider', '$compileProvider', '$filt
                 }
             }
 
-            //verify make sure this is passed by reference i.e. not only changed locally
+            //verify this is passed by reference i.e. not only changed locally
             Application.Extensions.registeredQueue = Application.Extensions.getQueue().length;
         };
 
         Application.Extensions.recompile = function(element, args) {
+            //can't compile already-compiled elements or cause problems
             if (typeof element == 'undefined') {return;}
             args = args || {};
+
+            //todo - check for class ng-scope in what compile -- don't wanna recompile
+
             $($clotho.appRoot).injector().invoke(function($compile, $rootScope) {
                 var scope = $rootScope.$new();
                 angular.extend(scope, args);
-                console.log(scope);
                 $compile($(element))(scope);
                 $rootScope.$apply();
             });

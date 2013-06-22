@@ -213,6 +213,7 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
 
         return {
             collector : collector,
+            hasItem : angularLS.hasItem,
             silentAddModel : silentAddModel,
             storeModel : storeModel,
             retrieveModel : retrieveModel,

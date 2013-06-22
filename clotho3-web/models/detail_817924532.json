@@ -6,7 +6,7 @@
         "function_id":"function_id123",
         "args":"['plasmid_id1256']"
     },
-    "versions" : [
+    "sharables" : [
         {
             "uuid" : "uuid923",
             "text" : "Some Fancy Tool",

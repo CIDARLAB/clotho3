@@ -558,14 +558,13 @@ io.sockets.on('connection', function (socket) {
         console.log(data);
     };
     api.api.say = function(data) {
-        //todo - logic to route to a specific user
         var user = data.userID,
         //todo - separation for sending messages from "server" vs. "client"
         sender = data.sender || "client",
         msg = data.msg,
         timestamp = data.timestamp || Date.now();
-        //todo - add classes: text-error, text-warning, text-success, muted, text-info
-        var css = "";
+        //todo - add classes: error, warning, success, muted, info
+        var css = data.css || "info";
 
         var message = {
             "text" : msg,

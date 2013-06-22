@@ -53,15 +53,40 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- search bar - autocomplete behavior etc.
+- search bar
+    - keypress down -> results
+
+
+- notify panel
+    - add counter for missed messages
+
+
+- allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
+
+
+- browser page
+    - my stuff page
+        - parts, features, oligos, plasmids (vector + part), samples
+        - channel recent() or something
+    - our stuff
+    - general browser
+    --- domain as field
+    - similar to autocompleteDetail
+    - sorted by class
+
+
 
 - rebind $keypress click handlers -- only active when necessary
 
-- markdown directive (lower priority) --- highlight textarea (jsFiddle like)
+- markdown directive --- highlight textarea (jsFiddle like)
 
 - draggable elements (within angular -- sortable)
 
 - clarify $dialog -- in controllers when dialog and when $dialog --- make fixes
+
+- favorite() API method - and unfavorite() and dislike()
+
+
 
 - trails functionality
     - youtube events - pass as param to function
@@ -102,6 +127,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - watch : https://github.com/mhevery/angular.js/blob/dte/src/auto/injector.js
         - controllers : https://github.com/matys84pl/angularjs-requirejs-lazy-controllers
     - load and apply css (via jquery? - whatever use for getting scripts)
+        - test downloading css and see if applies
     - simple Clotho.show()
         - get one master object for controller
         - template tied to that controller
