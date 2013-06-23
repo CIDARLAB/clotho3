@@ -53,25 +53,26 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- restructure autocompleteDetail + browser based on new json
+
+
 - search bar
     - keypress down -> results
 
 
-- notify panel
-    - add counter for missed messages
+- Collector - force collect
 
 
 - allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
 
 
 - browser page
-    - clothoAPI.recent()
+    - order by date / type
     - my stuff page
         - parts, features, oligos, plasmids (vector + part), samples
     - our stuff
     - general browser
     --- domain as field
-    - similar to autocompleteDetail
     - sorted by class
 
 
@@ -150,7 +151,7 @@ UI STUFF
         - especially for using in searchbar so jQuery not necessary dependency
     - consider: asynchronous jqlite extension??? i.e. jQuery functions needed not included in angular jqLite
         - like $position
-- animation
+- ANIMATION
     - see https://github.com/daneden/animate.css
 
 
@@ -170,6 +171,9 @@ UI STUFF
             - http://angular-ui.github.io/bootstrap/
 
 
+- TESTING
+    - write unit tests, etc.
+
 
 
 
@@ -181,6 +185,7 @@ UI STUFF
         - also add a notify() sort of thing -- a pre-resolve of sorts:
             - http://www.bennadel.com/blog/2431-Resolving-An-AngularJS-Deferred-Object-Twice-With-DeferredWithUpdate-js.htm
     - combine watch and watch2 - check for function vs. obj and field
+        - try using angular.extend()
 
 
 

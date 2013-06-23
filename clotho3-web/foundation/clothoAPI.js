@@ -399,8 +399,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
 
 
-    var query = function(str) {
-        fn.searchbar.emit("query", str);
+    var query = function(obj) {
+        fn.searchbar.emit("query", obj);
     };
 
     /**
@@ -679,6 +679,24 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.api.emit('run', packaged);
     };
 
+    /**
+     @name Clotho.recent
+     *
+     * @description
+     * Request your most recently / commonly used sharables
+     */
+    var recent = function() {
+        fn.api.emit('requestRecent', {});
+
+        var deferred = $q.defer();
+
+        PubSub.once('displayRecent', function(data) {
+            $rootScope.$safeApply(deferred.resolve(data));
+        }, 'clothoAPI');
+
+        return deferred.promise;
+    };
+
     // ---- TO BE IMPLEMENTED LATER ----
 
     /**
@@ -696,24 +714,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
             "association" : assoc
         };
         fn.api.emit('learn', packaged);
-    };
-
-    /**
-     @name Clotho.recent
-     *
-     * @description
-     * Request your most recently / commonly used sharables
-     */
-    var recent = function() {
-        fn.api.emit('recent', {});
-
-        var deferred = $q.defer();
-
-        PubSub.once('model_change:recent', function(data) {
-            $rootScope.$safeApply(deferred.resolve(data));
-        }, 'clothoAPI');
-
-        return deferred.promise;
     };
 
     /**
@@ -769,9 +769,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         log : log,
         alert : alert,
         run : run,
+        recent: recent,
         notify : notify,
         gradeQuiz : gradeQuiz,
-        recent : recent,
 
         //toolkit
         bootstrap: bootstrap,

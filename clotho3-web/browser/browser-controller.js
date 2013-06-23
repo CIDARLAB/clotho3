@@ -24,8 +24,8 @@ Application.Browser.controller('BrowserCtrl', ['$scope', 'Clotho', function($sco
         $scope.current = value;
     };
 
-     Clotho.recent().then(function(result) {
-         $scope.demo = result;
+    Clotho.recent().then(function(result) {
+         $scope.recent_items = result;
     });
 
     $scope.base64icon = base64icon;
@@ -33,6 +33,7 @@ Application.Browser.controller('BrowserCtrl', ['$scope', 'Clotho', function($sco
 
 Application.Browser.directive('sharable', ['$compile', '$http', '$templateCache', function($compile, $http, $templateCache) {
     var linker = function(scope, element, attrs) {
+        //testing
         scope.base64icon = base64icon;
     };
 
@@ -42,7 +43,15 @@ Application.Browser.directive('sharable', ['$compile', '$http', '$templateCache'
         compile: function compile(element, attrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, controller) {
-                    var template = typeof scope.template != 'undefined' ? angular.lowercase(scope.template) : "default";
+
+                    var template;
+                    if (typeof scope.template != 'undefined')
+                        template = angular.lowercase(scope.template);
+                    else {
+                        template = (scope.content.type != 'Instance') ?
+                            angular.lowercase(scope.content.type) :
+                            angular.lowercase(scope.content.schema.name);
+                    }
 
                     $http.get('interface/sharables/'+template+'.html', {cache: $templateCache})
                         .error(function(data, status, headers, config) {
@@ -64,7 +73,6 @@ Application.Browser.directive('sharable', ['$compile', '$http', '$templateCache'
             }
         },
         scope: {
-            type: '@',
             content:'='
         }
     };

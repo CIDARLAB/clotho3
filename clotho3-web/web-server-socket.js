@@ -557,35 +557,19 @@ io.sockets.on('connection', function (socket) {
         console.log("notification!");
         console.log(data);
     };
-    api.api.recent = function() {
+    api.api.requestRecent = function() {
 
-        var message = [
-            {
-                "name":"pbca1256",
-                "id":"sajgklasd9f",
-                "icon":"data:image/png;base64,5jlasdkfuq92iou4kl245JKHKJFDFKJDkDFJHKDKfdjhkDFJHKHJKjhkhjkDhjkdfdushfsdifSDlkfjkl124jrtoiuj=",
-                "schema_name":"Institution",
-                "schema_id":"kl2j34l4kj24"
-            },
-            {
-                "name":"pbca123554",
-                "id":"asfdveeg",
-                "icon":"data:image/png;base64,adagga5jklKLjLKJSLKJDFKDKdjslfksjdflksdfLKDJFDSLKFJSDFjSDKFJDSFKLJDFLKDSJFLSDJFLDkdfdjlFslkdfsdfsdf124jrtoiuj=",
-                "schema_name":"Institution",
-                "schema_id":"adsf233f"
-            },
-            {
-                "name":"asdfsadf",
-                "id":"sdfasgdsd",
-                "icon":"data:image/png;base64,adagga5jklKLjLKJSLKJDFKDKdjslfksjdflksdfLKDJFDSLKFJSDFjSDKFJDSFKLJDFLKDSJFLSDJFLDkdfdjlFslkdfsdfsdf124jrtoiuj=",
-                "schema_name":"sdgsdgdsd",
-                "schema_id":"asdsdfdsdgsgd"
-            }
-        ];
+        var path = require('path').resolve(model_folder, 'recent.json');
 
-        socket.send(api.pack.api_wrap('collect',
-            api.pack.collect('recent', 'json', message)
-        ));
+        fs.readFile(path, 'utf8', function (err, data) {
+            if (err) { console.log('Error: ' + err); return; }
+            data = JSON.parse(data);
+
+            socket.send(api.pack.api_wrap('displayRecent',
+                api.pack.nopack(data)
+            ));
+        });
+
     };
     api.api.say = function(data) {
         var user = data.userID,
