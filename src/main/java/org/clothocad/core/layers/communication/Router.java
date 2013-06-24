@@ -109,6 +109,9 @@ public class Router {
                         case autocompleteDetail:
                             api.autocompleteDetail(data);
                             break;
+                        case requestRecent:
+                            api.requestRecent();
+                            break;
                         case submit:
                             api.submit(data);
                             break;
