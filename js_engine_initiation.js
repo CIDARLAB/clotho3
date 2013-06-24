@@ -35,6 +35,13 @@ clotho.autocompleteDetail = function(inputPhrase, callback) {
     else return result;
 };
 
+clotho.requestRecent = function(callback) {
+    println("requestRecent invoked");
+    var result = clothoJava.requestRecent();
+    if(callback) callback(result);
+    else return result;
+}
+
 clotho.submit = function(inputPhrase, callback) {
     var args = resolveToString(inputPhrase);
     clothoJava.submit(args);

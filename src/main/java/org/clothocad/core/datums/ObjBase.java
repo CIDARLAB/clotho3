@@ -128,24 +128,12 @@ public abstract class ObjBase implements Sharable {
             out.put("uuid", uuidstr); //this is a temporary hack to support Max's code.  It should just be id and a string.
             if(out.has("className")) {
                 
-            //fill in additional metadata
-//            out.put("icon", this.getIcon());
-                
-/*  this is to deal with Max's funky:
-    "$clotho" : {
-        "schema" : "schema_person",
-        "uuid" : "inst_second"
-    },
-*/
-                JSONObject dollarclotho = new JSONObject();  
-                dollarclotho.put("schema", out.getString("className"));
-                dollarclotho.put("uuid", uuidstr);
-                out.put("$clotho", dollarclotho);
-                
 /*  this is for how it should be:
    {
-    "schema_id" : "org.clothod.models.Institution",
+    "schema_id" : "asdgasdgt2q345",
    }
+   * 
+   * temporarily it has the className instead, but that's not correct
 */
                 out.put("schema_id", out.getString("className"));
             }

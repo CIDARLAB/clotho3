@@ -131,6 +131,41 @@ public final class ServerSideAPI {
         
     }
     
+    public final String requestRecent() {
+            List<String> ids = mind.getRecentSharables();
+            JSONArray json = new JSONArray();
+            for(String id : ids) {
+                Sharable shar = Collector.get().getObjBase(id);
+                if(shar==null) {
+                    say("Error retrieving id: " + id, "warning");
+                    continue;
+                }
+                try {
+                    JSONObject objjson = shar.toJSON();
+                    JSONObject metadata = Collector.get().getMetadata(shar.getId());
+                    objjson.put("metadata", metadata);
+                    json.put(objjson);
+                } catch (JSONException ex) {
+                    say("Error retrieving json of id: " + id, "warning");
+                    continue;
+                }
+            }
+            try {
+                JSONObject msg = new JSONObject();
+                msg.put("channel", "displayRecent");
+                msg.put("data", json);
+                Router.get().sendMessage(mind.getClientConnection(), msg);
+                System.out.println(msg);
+            } catch (JSONException ex) {
+                say("Error getting recent", "warning");
+                return null;
+            }
+            
+            return json.toString();
+    }
+    
+    
+    
     //JCA:  as 0f 6/6/2013 submit seems to work
     public final void submit(String command) {
         //Resolve the arguments to a command string
@@ -223,15 +258,19 @@ public final class ServerSideAPI {
         
     }
     
+    /**
+     * Clear the mind.  (reset the history and scriptengine)
+     */
+    public final void clear() {
+        mind.clear();
+        say("The mind has been cleared", "success");
+    }
+    
     public final boolean changePassword(String newPassword) {
         return true;
     }
 // </editor-fold> 
 
-    public final void clear() {
-        mind.clear();
-        say("The mind has been cleared", "success");
-    }
 // <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
     //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message) {
@@ -395,7 +434,8 @@ public final class ServerSideAPI {
             
             out = existing.toJSON().toString();
             say("I retrieved the Sharable " + out, "success");
-
+            mind.addLastSharable(existing.getId());
+            return out;
         } catch (Exception e) {
             //Start of fudgy retieval from filesystem
             try {
@@ -414,10 +454,10 @@ public final class ServerSideAPI {
                 msg.put("data", data);
                 msg.put("channel", "collect");
                 Router.get().sendMessage(mind.getClientConnection(), msg);
+                mind.addLastSharable(data.getString("id"));
                 return out;
                 
             } catch(Exception err) {
-                say("Error getting from filesystem " + sharableRef, "error");
             }
             //End of fudgy retieval from filesystem
                             
@@ -432,6 +472,7 @@ public final class ServerSideAPI {
                         JSONObject msg = new JSONObject();
                             JSONObject data = new JSONObject();
                             data.put("uuid", "org.clothocad.model.Institution");
+                            data.put("id", "org.clothocad.model.Institution");
                             data.put("type", "json");
                             data.put("model", jsonSchema);
                             data.put("isURL", "false");
@@ -439,10 +480,10 @@ public final class ServerSideAPI {
                         msg.put("data", data);
                         msg.put("channel", "collect");
                         Router.get().sendMessage(mind.getClientConnection(), msg);
+                        mind.addLastSharable(data.getString("id"));
                         return jsonSchema.toString();
                     }
                 } catch (JSONException ex) {
-                    java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             
             //End of super-fudgy short-circuit
@@ -451,11 +492,9 @@ public final class ServerSideAPI {
             
             
             
-            
-
+            say("Error getting " + sharableRef, "error");
+            return null;
         }
-        
-        return out;
     }
 
     public final String set(String value) {

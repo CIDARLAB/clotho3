@@ -89,7 +89,6 @@ public final class Mind
 
     //THIS SHOULD BE CHANGED TO PRIVATE, BUT TESTERS NEED IT FOR NOW
     public Mind() {
-        nameSpace = new NameSpace();
         config = new ClientConfiguration();
         engine = getEngine();
     }
@@ -126,55 +125,10 @@ public final class Mind
         try {
             getEngine().eval(cmd);
         } catch (ScriptException e) {
-            try {
-                return false;
-//                runCommandWithNamespace(cmd);
-            } catch (Exception e2) {
-                return false;
-            }
+            return false;
         }
         
         return true;
-    }
-
-    private void learnCommand(String cmd) {
-        //See if they issued any new 'var token' sorts of statements
-        String[] splitted = cmd.split("\\s+");
-        for(int i=0; i<splitted.length-1; i++) {
-            String token = splitted[i];
-            if(token.equals("var")) {
-                String word = splitted[i+1];
-                logger.info(word);
-                nameSpace.learn(word, cmd, this);
-            }
-        }
-    }
-
-    private void runCommandWithNamespace(String cmd) throws Exception {
-        String[] splitted = cmd.split("\\W+");
-        for(int i = 0; i < splitted.length; i++) {
-            String token = splitted[i];
-            
-            //If any of these tokens have been namespaced recently, try that
-            if(nameSpace.containsKey(token)) {
-                String helperCMD = nameSpace.get(token);
-                try {
-                    Object existing = engine.get(token);
-                    if(existing==null) {
-                        //Otherwise, inject that object into the scriptengine
-                        engine.eval(helperCMD);
-                    } else {
-                        logger.info(
-                                   "token already in scriptengine: {}");
-                    }
-                } catch (ScriptException e) { 
-                    /*TODO this is a hack */
-                    logger.warn("", e);
-                }
-            }
-        }
-        //Try executing the thing again
-        engine.eval(cmd);
     }
 
     /* client has new tab--update config */
@@ -267,11 +221,6 @@ public final class Mind
     }
 
     /* TODO: this shouldn't be exposed */
-    NameSpace getNameSpace() {
-        return nameSpace;
-    }
-
-    /* TODO: this shouldn't be exposed */
     ScriptEngine getMyEngine() {
         return engine;
     }
@@ -349,16 +298,14 @@ public final class Mind
     private Person person;
     private String personId;
     private transient List<JSONObject> lastCommands = new ArrayList<JSONObject>();
+    private transient List<String> lastSharables = new ArrayList<String>();
     private transient ScriptEngine engine;
     private transient ServerSideAPI ssAPI;
     private transient ClientConnection connection;
     
     private Map<Date, String> commandHistory;
-
-    /* <token, command to populate token>
-     * ex: <"bobdole", "var bobdole = clotho.get('bobdole');">
-     */
-    private NameSpace nameSpace;
+    
+    private static final int MAX_SIZE_LAST_SHARABLES = 50;
 
     /* How the client is currently set up */
     private ClientConfiguration config;
@@ -395,6 +342,20 @@ public void SUPERILLEGAL_SETUUID(String string) {
     static {
         System.out.println("Someone:  Probably should pull this from elsewhere");
         initializationScript = FileUtils.readFile("js_engine_initiation.js");
+    }
+
+    public List<String> getRecentSharables() {
+        return this.lastSharables;
+    }
+
+    public void addLastSharable(String lastid) {
+        if(this.lastSharables.contains(lastid)) {
+            lastSharables.remove(lastid);
+        }
+        lastSharables.add(lastid);
+        if(lastSharables.size() > MAX_SIZE_LAST_SHARABLES) {
+            lastSharables.remove(MAX_SIZE_LAST_SHARABLES);
+        }
     }
 
 }

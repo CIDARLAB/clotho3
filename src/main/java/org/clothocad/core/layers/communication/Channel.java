@@ -5,6 +5,7 @@ public enum Channel {
 //HUMAN INTERACTION
     autocomplete, //Return potential commands that start with this substring
     autocompleteDetail, //Return the metadata for a Sharable
+    requestRecent, //Return the latest-used Sharables from the Mind
     submit, //Run this sloppy or concrete command
     clear, //Replace the scriptengine behind mind with a fresh version
     login, //Log me into Clotho on this client with this login/password
@@ -13,6 +14,7 @@ public enum Channel {
     learn, //associate this String with this execution statement
     like,
     dislike,
+
     
 
 //LOGGING AND MESSAGING

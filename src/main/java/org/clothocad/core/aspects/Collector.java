@@ -102,6 +102,18 @@ public class Collector implements Aspect {
         return obj;
     }
     
+    public JSONObject getMetadata(String uuid) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("executed",23);
+            json.put("successful",223);
+            json.put("positive",723);
+            json.put("negative",3);
+            return json;
+        } catch (JSONException ex) {
+            return null;
+        }
+    }
     public static Person getAdmin() {
             //If it is already puilled, return it
             if(admin!=null) {

@@ -3,7 +3,6 @@ package org.clothocad.core.layers.communication.mind;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
-import org.clothocad.core.persistence.Persistor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,14 +76,6 @@ class NameSpace {
             logger.warn( "won't learn command: {}");
             return;
         }
-    }
-    
-    /**
-     * Should be called by Communicator to determine whether a user is invoking one
-     * of their namespaced words during the issuing of a command.
-     * */
-    boolean isNameToken(String word, Mind mind) {
-        return mind.getNameSpace().containsKey(word);
     }
 
     private void renumber() {
