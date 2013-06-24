@@ -141,9 +141,36 @@ public final class ServerSideAPI {
                     continue;
                 }
                 try {
-                    JSONObject objjson = shar.toJSON();
+                    JSONObject objjson = new JSONObject();
+                    objjson.put("id", shar.getId());
+                    objjson.put("name", shar.getName());
+                    objjson.put("icon", shar.getIcon());
+                    objjson.put("type", "Instance");
+                    
+                    //Put in Author
+                    JSONObject author = new JSONObject();
+                    author.put("id", shar.getAuthor().getId());
+                    author.put("name", shar.getAuthor().getName());
+                    author.put("description", shar.getDescription());
+                    objjson.put("author", author);
+                    
+                    //If it's an ObjBase, put in schema
+                    //JCA:  THIS ISN'T RIGHT, IT NEEDS TO PULL A SCHEMA WRAPPER VIA A SCHEMA_ID REFERENCE
+                    try {
+                        ObjBase obj = (ObjBase) shar;
+                        JSONObject schema = new JSONObject();
+                        schema.put("id", obj.getClass().toString());
+                        schema.put("name", obj.getClass().toString());
+                        objjson.put("schema", schema);
+                    } catch(Exception err) {}
+                    
+                    //Put in the metadata
                     JSONObject metadata = Collector.get().getMetadata(shar.getId());
                     objjson.put("metadata", metadata);
+                    
+                    
+                    
+                    
                     json.put(objjson);
                 } catch (JSONException ex) {
                     say("Error retrieving json of id: " + id, "warning");

@@ -21,5 +21,5 @@ public interface Sharable  {
     Person getAuthor();
     public String getIcon();
     public String getName();
-    public String getDescfription();
+    public String getDescription();
 }
