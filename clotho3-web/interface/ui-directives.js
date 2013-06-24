@@ -39,6 +39,8 @@ Application.Interface.directive('uiEvent', ['$parse',
 // future - to make more universal, see:
     // https://raw.github.com/cowboy/jquery-outside-events/v1.1/jquery.ba-outside-events.js
     // angular way of creating ng-directives
+// note - Requires manual activiation to avoid too many $digests()
+//      - activate with $scope.$broadcast('$event:$active')
 Application.Interface.directive('clickOutside', ['$document', '$parse', function($document, $parse) {
     return function(scope, element, attr, ctrl) {
         var handler = function(event) {
@@ -49,10 +51,24 @@ Application.Interface.directive('clickOutside', ['$document', '$parse', function
                 );
         };
 
-        $document.bind('click', handler);
-        //todo - make sure this works
+        //kill on scope desctruction
         scope.$on('$destroy', function() {
             $document.unbind('click', handler);
+        });
+
+        //custom events
+        scope.$on("$event:$active", function(event, id) {
+            if (scope.$id == id) {
+                event.preventDefault();
+                $document.bind('click', handler);
+            }
+        });
+
+        scope.$on("$event:$inactive", function(event, id) {
+            if (scope.$id == id) {
+                event.preventDefault();
+                $document.unbind('click', handler);
+            }
         });
     }
 }]);

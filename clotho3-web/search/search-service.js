@@ -126,6 +126,7 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         display.show('autocompleteDetailInfo');
     };
 
+
     /***** functions *****/
 
     function receiveMessage (data) {

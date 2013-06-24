@@ -348,7 +348,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $scope.activate(newpos);
     };
 
-    $keypress.on('keydown', {'right' : 'next()', 'left' : 'prev()'}, $scope);
+    var x = $keypress.on('keydown', {'right' : 'next()', 'left' : 'prev()'}, $scope);
+    console.log(x);
 
     $scope.base64icon = base64icon;
 }]);

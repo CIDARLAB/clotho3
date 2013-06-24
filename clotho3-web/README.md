@@ -56,11 +56,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - restructure autocompleteDetail + browser based on new json
 
 
-
-- rebind $keypress click handlers -- only active when necessary
-
-
-
 - search bar
     - keypress down -> results
 
@@ -72,6 +67,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - browser page
+    - (low priority) store rendered HTML in object -- make sure bindings still maintained
 
 
 
@@ -119,6 +115,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - favorite() API method - and unfavorite() and dislike()
 
+
+- clickOutside handlers - better logic esp. for ID
 
 
 - Dynamic Adds

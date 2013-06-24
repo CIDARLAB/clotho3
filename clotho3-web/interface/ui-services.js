@@ -100,7 +100,7 @@ Application.Interface.factory('$position', ['$document', '$window', function ($d
 Application.Interface.service('$keypress', ['keypressHelper', '$document', function(keypressHelper, $document){
     return {
         on : function(mode, actions, scope) {
-            keypressHelper(mode, scope, $document, actions);
+            return keypressHelper(mode, scope, $document, actions);
         },
         //note - should be handled automatically on $scope.$destroy (so use controllers), this is for manual use
         //format: [elm, mode, handler, combinations];
@@ -163,6 +163,7 @@ Application.Interface.factory('keypressHelper', ['$parse', '$document', function
 
         // Check only matching of pressed keys one of the conditions
         var handler = function (event) {
+
             // No need to do that inside the cycle
             var metaPressed = !!(event.metaKey && !event.ctrlKey);
             var altPressed = !!event.altKey;
@@ -202,7 +203,20 @@ Application.Interface.factory('keypressHelper', ['$parse', '$document', function
 
         elm.bind(mode, handler);
 
+        //kill on scope desctruction
         scope.$on('$destroy', function() {
+            elm.unbind(mode, handler);
+        });
+
+        //custom events
+        scope.$on("$keypress:$active", function() {
+            //todo - check for existence - check if jQuery does
+            console.log('binding (?)');
+            elm.bind(mode, handler);
+        });
+
+        scope.$on("$keypress:$inactive", function() {
+            console.log('unbinding');
             elm.unbind(mode, handler);
         });
 

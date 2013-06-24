@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$location', '$window', function(Clotho, Searchbar, $location, $window) {
+Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$location', '$window', '$timeout', function(Clotho, Searchbar, $location, $window, $timeout) {
 
     return {
         restrict: 'A',
@@ -22,6 +22,18 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
                     Clotho.autocomplete($scope.display.query);
+                }
+            });
+
+            /**** click-outside watcher ***/
+
+            $scope.$watch('display.autocomplete', function(newValue, oldValue) {
+                if (!!newValue) {
+                    //console.log('inactivating autocomplete clickOutside');
+                    $scope.$broadcast('$event:$active', $scope.$id)
+                } else {
+                    //console.log('inactivating autocomplete clickOutside');
+                    $scope.$broadcast('$event:$inactive', $scope.$id);
                 }
             });
 

@@ -70,7 +70,8 @@ Application.Browser.directive('sharable', ['$compile', '$http', '$templateCache'
                     else {
                         template = (scope.content.type != 'Instance') ?
                             angular.lowercase(scope.content.type) :
-                            angular.lowercase(scope.content.schema.name);
+                            //testing - temporary hack
+                            angular.lowercase((/.*\.(.*)$/gi).exec(scope.content.schema.name)[1])
                     }
 
                     $http.get('interface/sharables/'+template+'.html', {cache: $templateCache})
