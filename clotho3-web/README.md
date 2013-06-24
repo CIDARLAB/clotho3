@@ -56,6 +56,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - restructure autocompleteDetail + browser based on new json
 
 
+
+- rebind $keypress click handlers -- only active when necessary
+
+
+
 - search bar
     - keypress down -> results
 
@@ -67,17 +72,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - browser page
-    - order by date / type
-    - my stuff page
-        - parts, features, oligos, plasmids (vector + part), samples
-    - our stuff
-    - general browser
-    --- domain as field
-    - sorted by class
 
 
-
-- rebind $keypress click handlers -- only active when necessary
 
 - markdown directive --- highlight textarea (jsFiddle like)
 
