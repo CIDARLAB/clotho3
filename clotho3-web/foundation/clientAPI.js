@@ -262,7 +262,12 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * @name clientAPI.say
      *
      * @param {object} data
-     * {"msg" : <msg>}
+     * {
+            "text" : msg,
+            "from" : sender,
+            "class" : css,
+            "timestamp" : timestamp
+       }
      *
      * @description
      * Adds a message to the Command Bar's Activity Log

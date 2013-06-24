@@ -574,7 +574,7 @@ io.sockets.on('connection', function (socket) {
     api.api.say = function(data) {
         var user = data.userID,
         //todo - separation for sending messages from "server" vs. "client"
-        sender = data.sender || "client",
+        sender = data.sender || "server",
         msg = data.msg,
         timestamp = data.timestamp || Date.now();
         //todo - add classes: error, warning, success, muted, info
@@ -648,18 +648,33 @@ io.sockets.on('connection', function (socket) {
     api.searchbar = {};
 
     api.searchbar.submit = function (data) {
-        console.log("submit received: " + data.query);
+
 
         var message = {
             "text" : data.query,
             "from" : "client",
-            "class" : "text-info",
+            "class" : "muted",
             "timestamp" : Date.now()
         };
 
         socket.send(api.pack.api_wrap('say',
             api.pack.nopack(message)
         ));
+
+        // more serverside logic would happen here
+        console.log("submit received: " + data.query);
+
+        var response = {
+            "text" : 'Demo Server response',
+            "from" : "server",
+            "class" : "info",
+            "timestamp" : Date.now()
+        };
+
+        socket.send(api.pack.api_wrap('say',
+            api.pack.nopack(response)
+        ));
+
     };
 
     api.searchbar.autocomplete = function(data) {

@@ -2,21 +2,46 @@
     <div class="row">
         <div class="span12">
             <div class="page-header" style="position:relative">
-                <ul class="nav nav-tabs pull-right" style="position: absolute; bottom: 0;right: 20px;margin-bottom:0; border-bottom: 0;">
-                    <li ng-repeat="mode in nav" ng-class="{'active' : mode.value == current}">
-                        <a ng-click="setCurrent(mode.value)">{{mode.text}}</a>
-                    </li>
-                </ul>
+                <div class="clearfix" style="position: absolute; bottom: 0; right: 20px; display: block;">
+                    <ul class="nav nav-tabs pull-right" style=" margin-bottom:0; border-bottom: 0;">
+
+                        <li ng-repeat="mode in nav" ng-class="{'active' : mode.value == current}">
+                            <a ng-click="setCurrent(mode.value)">{{mode.text}}</a>
+                        </li>
+                    </ul>
+                    <div class="btn-group pull-left" style="padding: 0 15px 0 0; margin: 0;">
+                        <button class="btn" ng-click="sort(false)" ng-class="{'btn-info' : !catSort}" ng-disabled="!catSort"><i class="icon-time"></i> Date</button>
+                        <button class="btn" ng-click="sort(true)" ng-class="{'btn-info' : !!catSort}" ng-disabled="!!catSort"><i class="icon-comment"></i> Type</button>
+                    </div>
+                </div>
+
+
                 <h1>
                     {{nav[current].text}}
                     <small>{{nav[current].subtext}}</small>
                 </h1>
+
+
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <sharable ng-repeat="item in recent_items" content="item"></sharable>
+    <div class="row" ng-repeat="(type, fields) in recent">
+        <div ng-if="type != 'entries'" class="span12">
+            <h3>{{type}}</h3>
+        </div>
+        <div ng-switch="type">
+            <div ng-switch-when="Instance">
+                <div ng-repeat="(instType, instFields) in fields">
+                    <div class="span12"><h4>{{instType}}</h4></div>
+                    <sharable ng-repeat="item in instFields" content="item"></sharable>
+                </div>
+            </div>
+            <div ng-switch-default>
+                <sharable ng-repeat="item in fields" content="item"></sharable>
+            </div>
+        </div>
+
     </div>
 
 </div>
