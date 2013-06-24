@@ -3,7 +3,8 @@
 Application.Browser.controller('BrowserCtrl', ['$scope', 'Clotho', '$filter', function($scope, Clotho, $filter) {
 
     Clotho.recent().then(function(result) {
-        $scope.recent_array = result.data;
+        console.log(result);
+        $scope.recent_array = result;
         $scope.sort(false);
     });
 
@@ -36,8 +37,6 @@ Application.Browser.controller('BrowserCtrl', ['$scope', 'Clotho', '$filter', fu
             $scope.catSort = true;
             $scope.recent = $filter('categorize')($scope.recent_array, 'type');
             $scope.recent['Instance'] = $filter('categorize')($scope.recent['Instance'], 'schema.name');
-            console.log($scope.recent);
-
         } else {
             if (!$scope.catSort && angular.isDefined($scope.catSort)) {return;}
 
@@ -76,10 +75,13 @@ Application.Browser.directive('sharable', ['$compile', '$http', '$templateCache'
 
                     $http.get('interface/sharables/'+template+'.html', {cache: $templateCache})
                         .error(function(data, status, headers, config) {
-                            //todo - better handling - faster
+                            //todo - better handling?
                             if (status == '404') {
                                 $http.get('interface/sharables/default.html', {cache: $templateCache})
                                     .success(function(data, status, headers, config) {
+                                    //force storage for template that didn't exist
+                                    $templateCache.put('interface/sharables/'+template+'.html', data);
+
                                     element.html(data);
                                     $compile(element.contents())(scope);
                                 });

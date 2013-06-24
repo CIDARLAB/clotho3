@@ -53,21 +53,13 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- restructure autocompleteDetail + browser based on new json
-
+- restructure autocompleteDetail based on new json
 
 - search bar
     - keypress down -> results
 
 
-- Collector - force collect
-
-
 - allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
-
-
-- browser page
-    - (low priority) store rendered HTML in object -- make sure bindings still maintained
 
 
 

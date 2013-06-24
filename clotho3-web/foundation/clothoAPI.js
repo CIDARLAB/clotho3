@@ -691,6 +691,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var deferred = $q.defer();
 
         PubSub.once('displayRecent', function(data) {
+            console.log('runAPI');
+            console.log(data);
             $rootScope.$safeApply(deferred.resolve(data));
         }, 'clothoAPI');
 

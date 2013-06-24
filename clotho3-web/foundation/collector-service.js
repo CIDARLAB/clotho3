@@ -70,12 +70,10 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
             // returns an item, or optional defaultValue if not found
             var getItem = function( key, defaultValue ){
                 var value = refStorage.getItem( prefix+key );
-                if (value == null){
-                    // check to see if default is falsy
+                if (typeof value == 'undefined' || value === false){
                     return((typeof( defaultValue ) != "undefined") ? defaultValue : null );
                 } else {
                     return(serializer.parse( value ) );
-
                 }
             };
 
@@ -158,22 +156,11 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
         };
 
         //passes update message - usual way of adding model to collector
-        var storeModel = function(uuid, obj) {
-            //testing
-            //console.log("COLLECTOR\tstoring uuid " + uuid);
-            //console.log(obj);
-
-            if (!angular.equals(collector[uuid], obj)) {
+        //pass true for 'force' to force collect and broadcast of update
+        var storeModel = function(uuid, obj, force) {
+            if (force || !angular.equals(collector[uuid], obj)) {
                 console.log("COLLECTOR\t" + uuid + " is being saved");
-
-                //todo - should notify server only when changes made from client
-                //notify server if api running
-                if ($window.$clotho.api) {
-                    //testing
-                    //console.log("COLLECTOR\tNOTIFY for uuid: " + uuid);
-                    //$window.$clotho.api.set(uuid, obj);
-                }
-
+                //console.log(obj);
                 silentAddModel(uuid, obj);
                 broadcastModelUpdate(uuid, obj)
             }
