@@ -131,6 +131,10 @@ public final class ServerSideAPI {
         
     }
     
+    /**
+     * 
+     * @return 
+     */
     public final String requestRecent() {
             List<String> ids = mind.getRecentSharables();
             JSONArray json = new JSONArray();
@@ -162,21 +166,23 @@ public final class ServerSideAPI {
                         schema.put("id", obj.getClass().toString());
                         schema.put("name", obj.getClass().toString());
                         objjson.put("schema", schema);
-                    } catch(Exception err) {}
+                    } catch(Exception err) {
+                        say("Error retrieving schema data for id: " + id, "warning");
+                        continue;
+                    }
                     
                     //Put in the metadata
                     JSONObject metadata = Collector.get().getMetadata(shar.getId());
                     objjson.put("metadata", metadata);
-                    
-                    
-                    
-                    
+
                     json.put(objjson);
                 } catch (JSONException ex) {
                     say("Error retrieving json of id: " + id, "warning");
                     continue;
                 }
             }
+            
+            //Wrap it in a message object and send
             try {
                 JSONObject msg = new JSONObject();
                 msg.put("channel", "displayRecent");
@@ -184,7 +190,7 @@ public final class ServerSideAPI {
                 Router.get().sendMessage(mind.getClientConnection(), msg);
                 System.out.println(msg);
             } catch (JSONException ex) {
-                say("Error getting recent", "warning");
+                say("Error getting recent Sharables", "error");
                 return null;
             }
             

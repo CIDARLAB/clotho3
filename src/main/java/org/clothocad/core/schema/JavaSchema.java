@@ -44,9 +44,8 @@ public class JavaSchema
             String description,
             String source) {
     	
-    	super(name, description);
-        
-        this.description = description;
+    	super(name);
+
         setSource(source);
     } 
     

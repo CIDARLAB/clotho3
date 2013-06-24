@@ -29,8 +29,8 @@ public class ClothoSchema extends Schema {
     public ClothoSchema() {}
 
     
-    public ClothoSchema(String name, String description, Schema superClass, Set<ClothoField> fields){
-        super(name, description);
+    public ClothoSchema(String name, Schema superClass, Set<ClothoField> fields){
+        super(name);
         this.fields = fields;
         this.superClass = superClass;
     }

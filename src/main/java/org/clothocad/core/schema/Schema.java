@@ -18,7 +18,6 @@ import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.DBOnly;
 
 /**
- *
  * @author spaige
  */
 @Data
@@ -26,20 +25,21 @@ import org.clothocad.core.persistence.DBOnly;
 @Add(name="language", provider="getLanguage")
 public abstract class Schema extends ObjBase {
     
-    public Schema(String name, String description){
+    public Schema(String name){
         super(name);
-        this.description = description;
     }
     
     protected static final String BASE_PACKAGE_BINARY = "org.clothocad.loadedschemas.";
     public static  ClassLoader cl = null;
     
     @DBOnly
-    protected byte[] classData;
+    protected byte[] classData; //JCA:  this probably is no longer necessary
+    
     protected Map<String, ObjectId> dependencies;
-    protected String description;
-    protected String largeIconURL;
-    protected String smallIconURL;
+//    protected String description;  //JCA:  description is already in Objbase
+//    protected String largeIconURL;  ////JCA:  description is already in Objbase
+//    protected String smallIconURL;  ////JCA:  description is already in Objbase
+    
     protected String source;
     
     //These are settable only in ClothoSchema - they are derived from source in other languages

@@ -92,7 +92,8 @@ public class ClothoSchemaTest {
         field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
         Set<ClothoField> fields = Sets.newHashSet(field);
 
-        ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, fields);
+        ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", null, fields);
+        featureSchema.setDescription("A simple and sloppy representation of a Feature or other DNA sequence");
 
         ObjectId id = new ObjectId();
         featureSchema.setUUID(id);
