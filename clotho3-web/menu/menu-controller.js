@@ -56,9 +56,6 @@ Application.Primary.controller('MenuCtrl', ['$scope', 'Clotho', '$location', '$t
             "text" : "Fail to Load!",
             "class" : "progress-error"
         };
-        alert("There was an error: " + rejection);
-        //verify this works..
-        $location.path(previous);
     });
 
 }]);

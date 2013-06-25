@@ -3,5 +3,6 @@
     {"name" : "Trails", "path" : "/trails"},
     {"name" : "Browser", "path" : "/browser"},
     {"name" : "Chat", "path" : "/chat"},
-    {"name" : "Dynamic", "path" : "/dynamic"}
+    {"name" : "Dynamic", "path" : "/dynamic"},
+    {"name" : "Plasmid", "path" : "/plasmid"}
 ]}

@@ -20,6 +20,7 @@ Application.Browser = angular.module('clotho.browser', ['clotho.core']);
 Application.Chat = angular.module('clotho.chat', ['clotho.core']);
 Application.Dynamic = angular.module('clotho.dynamic', ['clotho.core']);
 Application.Editor = angular.module('clotho.editor', ['clotho.core']);
+Application.Plasmid = angular.module('clotho.plasmid', ['clotho.core']);
 Application.Search = angular.module('clotho.search', ['clotho.core']);
 Application.Trails = angular.module('clotho.trails', ['clotho.core']);
 
@@ -50,7 +51,7 @@ Application.Foundation = angular.module('clotho.core', [])
         };
     }]);
 
-angular.module('clothoPackage', ['clotho.browser', 'clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails']);
+angular.module('clothoPackage', ['clotho.browser', 'clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
@@ -86,6 +87,9 @@ angular.module('clothoRoot', ['clothoPackage']).
             }).
             when('/browser', {
                 templateUrl:'browser/browser-partial.html'
+            }).
+            when('/plasmid', {
+                templateUrl:'plasmid/plasmid-partial.html'
             }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'
@@ -127,6 +131,9 @@ angular.module('clothoRoot', ['clothoPackage']).
 
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
         console.log("Route Change Error:");
+        console.log(event);
+        console.log(current);
+        console.log(previous);
         console.log(rejection);
     });
 
