@@ -55,7 +55,8 @@ public abstract class ObjBase implements Sharable {
 	
 	public void onUpdate() {
 		
-            
+            System.out.println("[ObjBase.onUpdate] ERNST's Task!! -> Push object via pubsub.");
+
             
 		// here we need to call the client-side API
 		// which forwards the update message 
@@ -114,7 +115,33 @@ public abstract class ObjBase implements Sharable {
     //TODO:
     @Override
     public JSONObject toJSON(){
-        
+        /*
+         * Ernst's version of ObjBase.toJSON
+         */
+/** let's keep this for the moment ...
+
+        JSONObject json = new JSONObject();
+        try {
+            // do we need the following three fields? 
+            json.put("_id", "toberemoved");
+            json.remove("_id");
+            json.put("id", this.getId());
+            json.put("uuid", this.getId());
+            json.put("schema_id", this.getClass().toString());  
+            
+            List<Field> lstFields = getAllReferences(this.getClass());
+            if(null != lstFields && !lstFields.isEmpty()) {
+                for(Field f:lstFields) {
+                    json.put(f.getName(), f.get(f.getName()).toString());
+                }
+            }
+        } catch(Exception exc) {
+            exc.printStackTrace();
+            return new JSONObject();
+        }
+        return json;
+ ***/ 
+
         //JCA's hack of re-pulling from db to serialize.  Please change.
         try {
             //Pull the object from db, convert to JSONObject
@@ -128,14 +155,15 @@ public abstract class ObjBase implements Sharable {
             out.put("id", uuidstr);
             out.put("uuid", uuidstr); //this is a temporary hack to support Max's code.  It should just be id and a string.
             if(out.has("className")) {
-                
-/*  this is for how it should be:
+   
+/**                
+///  this is for how it should be:
    {
     "schema_id" : "asdgasdgt2q345",
    }
-   * 
-   * temporarily it has the className instead, but that's not correct
-*/
+    temporarily it has the className instead, but that's not correct
+///
+**/
                 out.put("schema_id", out.getString("className"));
             }
             return out;

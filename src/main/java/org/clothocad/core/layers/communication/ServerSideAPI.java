@@ -283,8 +283,26 @@ public final class ServerSideAPI {
         Interpreter.get().learnNative(nativeCmd, json);
     }
     
-    public final void login(String personRef, String password) {
-        
+    public final JSONObject login(JSONObject data) 
+            throws Exception {
+        /* retrieve username and password from the JSON object */
+        if(null != data) {
+            String sUsername = null;
+            String sPassword = null;
+            try {
+                sUsername = data.getString("username");
+                sPassword = data.getString("password");
+            } catch(Exception e) {
+                throw new Exception(e.getMessage());
+            }
+            
+            // TODO: check if the user exists in the database
+            
+            JSONObject responseJSON = new JSONObject();
+            responseJSON.put("login", true);
+            return responseJSON;
+        }
+        throw new Exception("Invalid login data!");
     }
     
     public final void logout() {
@@ -665,6 +683,8 @@ public final class ServerSideAPI {
     
     public final String create(String json) {
 
+        System.out.println("[ServerSideAPI.create] -> "+json);
+        
     	try {
             //Determine whether the currently logged in person has permission to create
             if(!Authenticator.get().hasCreateAccess(getPerson())) {
@@ -713,8 +733,8 @@ public final class ServerSideAPI {
             }
 
             //Relay the data change to listening clients
-            System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
-
+            object.onUpdate();
+            
             //Return the JSON of the new object as a String
             say("You successfully created: " + object.getName() + " with UUID: " + object.getId(), "success");
             return object.toJSON().toString();

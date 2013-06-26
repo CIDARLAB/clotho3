@@ -1,6 +1,6 @@
 package org.clothocad.core.testers.publisher;
 
-import org.clothocad.core.layers.communication.activemq.ClothoPublisher;
+import org.clothocad.core.layers.communication.apollo.ClothoPublisher;
 import org.json.JSONException;
 import org.json.JSONObject;
 

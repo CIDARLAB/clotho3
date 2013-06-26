@@ -36,7 +36,8 @@ import lombok.NoArgsConstructor;
  */
 
 @NoArgsConstructor
-public class Annotation extends ObjBase {
+public class Annotation 
+    extends ObjBase {
 
     /**
      * Constructor for an Annotation that is not a Feature, just a region of colored sequence
@@ -144,9 +145,9 @@ public class Annotation extends ObjBase {
 
     @Getter
     private boolean isForwardStrand;
-    @Getter
-    @Reference
-    private Person author;
+    //@Getter
+    //@Reference
+    //private Person author;
     @Getter
     @Reference
     private Feature feature;

@@ -113,7 +113,8 @@ public class ClothoSchemaTest {
     
     
     @Test
-    public void testClothoSchemaInstantiate() throws ClassNotFoundException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public void testClothoSchemaInstantiate() 
+            throws ClassNotFoundException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         
             BSONObject data = new BasicDBObject();
             

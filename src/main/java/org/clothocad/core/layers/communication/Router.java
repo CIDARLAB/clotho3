@@ -14,11 +14,12 @@ import static org.clothocad.core.layers.communication.Channel.destroy;
 import static org.clothocad.core.layers.communication.Channel.log;
 import static org.clothocad.core.layers.communication.Channel.submit;
 
-import org.clothocad.core.layers.communication.activemq.ClothoMessageProducer;
+import org.clothocad.core.layers.communication.apollo.ClothoMessageProducer;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Router {
@@ -58,8 +59,13 @@ public class Router {
 				if(null != websocket) {				
 					websocket.sendMessage(message.toString());
 				}
-			} else if(connection instanceof ApolloConnection) {				
+			} else if(connection instanceof ApolloConnection) {	
+                            if(null == message) {
+				new ClothoMessageProducer((ApolloConnection)connection).onFailure(
+                                        new Throwable("SOMETHING WENT WRONG!"));
+                            } else {
 				new ClothoMessageProducer((ApolloConnection)connection).onSuccess(message);
+                            }
 			}
 			
 		} catch(Exception e) {
@@ -69,7 +75,8 @@ public class Router {
 	
 	// receive message
 	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
-            
+                System.out.println("[Router.receiveMessage] -> "+channel+" -> "+json);
+
 		try {
                     RouterDoo doo = new RouterDoo();
                     
@@ -77,6 +84,11 @@ public class Router {
                     try {
                          auth_key = json.getString("auth_key");
                     } catch(Exception error) {
+                        error.printStackTrace();
+                        JSONObject responseJSON = new JSONObject();
+                        responseJSON.put("CLOTHO-ERROR", error.getMessage());
+                        this.sendMessage(connection, responseJSON);
+                        return;
                     }
                     
                     Mind mind = Communicator.get().getMind(auth_key);
@@ -85,7 +97,12 @@ public class Router {
                     doo.message = json;
                     ServerSideAPI api = mind.getAPI();
                     
-                    
+                    /* there are multiple conversions between JSONObject and Strings */
+                    /* WE NEED TO CHANGE THAT! 
+                     * -> either JSONObject or String
+                     * EO would prefer using JSONObject
+                     */
+                   
                     Channel chanEnum = null;
                     String data = null;
                     try {
@@ -119,7 +136,8 @@ public class Router {
                             api.clear();
                             break;
                         case login:
-                            api.login(data, null);
+                            this.sendMessage(connection, 
+                                    api.login(new JSONObject(data)));
                             break;
                         case logout:
                             api.logout();
@@ -183,6 +201,13 @@ public class Router {
                     }
 		} catch(Exception e) {
 			e.printStackTrace();
+                        
+                        JSONObject errorJSON = new JSONObject();
+                        try {
+                            errorJSON.put("CLOTHO-ERROR", e.getMessage());
+                            this.sendMessage(connection, 
+                                errorJSON);
+                        } catch(Exception exc) {}
 		}
 	}	
 

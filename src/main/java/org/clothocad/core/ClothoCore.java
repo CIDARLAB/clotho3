@@ -7,8 +7,9 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import org.clothocad.core.layers.communication.ClothoConstants;
 
-import org.clothocad.core.layers.communication.activemq.ClothoMessageConsumer;
+import org.clothocad.core.layers.communication.apollo.ClothoMessageConsumer;
 import org.fusesource.stomp.jms.StompJmsConnectionFactory;
 import org.fusesource.stomp.jms.StompJmsDestination;
 
@@ -22,7 +23,7 @@ public class ClothoCore
 			throws Exception {
 		StompJmsConnectionFactory factory = 
 				new StompJmsConnectionFactory();
-		factory.setBrokerURI("tcp://localhost:61613");
+		factory.setBrokerURI(ClothoConstants.SERVER_URL);
 		
 		this.connection = factory.createConnection("admin", "password");
 		this.connection.start();
@@ -37,11 +38,8 @@ public class ClothoCore
 
         // fourth, we create a consumer which reads incoming messages
         MessageConsumer consumer = session.createConsumer(
-        		new StompJmsDestination("/queue/CLOTHO"));
+        		new StompJmsDestination(ClothoConstants.CLOTHO_QUEUE));
         
-        MessageProducer producer = session.createProducer(
-        		new StompJmsDestination("/queue/CLOTHORESPONSE"));
-
         // finally, we listen for incoming messages
         consumer.setMessageListener(this);  
         		// for every incoming message, 

@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //Start then navigate to:  http://localhost:8080/#/
-public class ClothoStarter implements Daemon {
+public class ClothoStarter
+        implements Daemon {
+    
     private static final Logger logger = LoggerFactory.getLogger(ClothoStarter.class);
     private static ClothoWebserver server;
     private static ClothoBroker broker;
@@ -18,7 +20,7 @@ public class ClothoStarter implements Daemon {
     
 	public static void main(String[] args) 
 			throws Exception {
-		int nPort = 8080;
+		int nPort = 9090;
 
 		if(args.length == 1) {
 			nPort = Integer.parseInt(args[0]);
@@ -41,7 +43,6 @@ public class ClothoStarter implements Daemon {
 		server = new ClothoWebserver(nPort);
 
 	}
-        
         
     private DaemonContext context;
         
@@ -75,3 +76,4 @@ public class ClothoStarter implements Daemon {
         System.out.println("done.");
     }
 }
+

@@ -64,11 +64,17 @@ import org.clothocad.core.persistence.Persistor;
 
 
 public class User 
-		extends ObjBase {
+	extends ObjBase {
 	
+    private String authKey;
+    
     public User() {
         //YEAH, I DON'T KNOW WHAT THIS AUTHENTICATION KEY IS ABOUT, BUT NOT SURE ITS NEEDED
-        //authenticationKey = UUID.randomUUID().toString();
+        this.authKey = UUID.randomUUID().toString();
+    }
+    
+    public String getAuthKey() {
+        return this.authKey;
     }
     
     /**
