@@ -44,7 +44,6 @@
         background: 0;
         outline: none;
         resize: none;
-        spellcheck: false;
         min-width: 100%;
         min-height: 100%;
         overflow: hidden;
@@ -53,6 +52,10 @@
         box-sizing: border-box;         /* Opera/IE 8+ */
         /* IE doesn't support rgba texarea, so use vendor specific alpha filter */
         filter: alpha(opacity = 20);
+    }
+
+    .feature {
+        background-color: #FF0000;
     }
 
 </style>
@@ -69,9 +72,11 @@
 
     </div>
     <div class="span4">
-        <h3>Features</h3>
+        <h3>Features
+        </h3>
         <form novalidate class="well" ng-init="new = emptyFeat()">
             <div class="row-fluid">
+                <input type="text" class="span12" placeholder="Feature Name" ng-model="new.label">
                 <div class="input-prepend input-append span12">
                     <input type="text" class="span5" placeholder="Sequence" ng-model="new.match" ng-pattern="reg_match" ng-trim="false"/>
                     <span class="add-on">OR</span>
@@ -87,8 +92,8 @@
         </form>
         <div class="row-fluid">
             <div ng-repeat="feat in featureList">
-                <div ng-if="feat.match" ng-style="{{feat.css}}">{{feat.match}}</div>
-                <div ng-if="feat.pos" ng-style="{{feat.css}}">{{feat.pos.start}} ... {{feat.pos.end}}</div>
+                <button btn-checkbox class="btn" ng-model="feat.active">Active</button>
+                <span ng-style="{{feat.css}}">{{feat.match}} --- {{feat.pos.start}} ... {{feat.pos.end}}</span>
             </div>
         </div>
     </div>
