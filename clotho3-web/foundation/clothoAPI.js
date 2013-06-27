@@ -11,27 +11,10 @@
  *  - These methods are meant to communicate with the socket
  *  - They will be exposed outside of Angular
  *
- *  Most functions are written so that resulting behavior is not captured in a return, but rather by behavior within the ClientAPI. For some cases, returns are necessary for the function to make sense (e.g. Clotho.get()). Most
+ *  Most functions are written so that resulting behavior is not captured in a return, but rather by behavior within the ClientAPI. For some cases, returns are necessary for the function to make sense (e.g. Clotho.get() ).
  *
  *  At present, the goal is write them such that all resulting behavior will be captured by the messages returned over the socket from the server -- i.e. behaviour within clientAPI, PubSub, etc. This may not be possible, but regardless, the channel '$clotho' is reserved for the serverAPI (and falls through on clientAPI).
  * The main problem is get()... which by its nature should return the object to the callback. However, it may make sense to encapsulate this functionality in the collector. See note below
- *
- * Note - Dependencies & the Socket
- * This service is kept inside of Angular to take advantage of Angular core services. It should have no dependencies on services etc. written by us, in order to avoid circular dependencies.
- * While some of the functionality encapsulated by the Socket service would certaintly be useful here, and more importantly the socket.on() listener must be duplicated, that is of less concern than the serverAPI being exposed to other services (esp. Collector) and the functionality gained by keeping it within Angular.
- *
- * Note - Collector usage
- * In the app, retrieval of models should be handled by the Collector. The function can return a promise and fulfill it, but dependent on two different services. It could be handled as two steps ( in retrieveModel() ):
- *      (1) Clotho.get(uuid) to get the object, then
- *      (2) PubSub.sub_once(model_change, uuid) to set the object
- *
- * Note - Alternative Setups
- * (1) ServerAPI dependent on Socket. All other services interact only with non-Angular version.
- *      - If hacking this to avoid Angular DI, that's probably not a good idea.
- *      - by adding dependency, no other service can list this one as a dependency
- *      - Doesn't functionally accomplish much, except cleaner code
- *      + serverAPI could also interface with PubSub
- *      + only one instance of socket.on() listener
  *
  * Future todos
  *  - return angular.noop for empty callbacks, or deal with better
@@ -89,11 +72,11 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.get
      *
-     * @param {string} uuid UUID of Sharable
+     * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      * @param {boolean=} synchronous   Default false for async, true to return value synchronously
      *
      * @description
-     * Request a Sharable from the server
+     * Request a Sharable from the server. Returns the object description for the selected objects. If a selector is ambiguous, clotho will return the first one returned by MongoDB - which is basically arbitrary. Clotho will send an error message on the 'say' channel if an object could not be retrieved.
      *
      * @returns {Promise | object} Promise to be fulfilled with JSON representation of Sharable, or the object for synchronous (blocking).
      * NB: when a promise is returned, it is resolved on $$v if you don't use .then()....
@@ -196,7 +179,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @param {object} data  JSON representation of new data, may be partial (just a few fields)
      *
      * @description
-     * Updates a sharable with passed object. The passed object may only contain a few fields of the Sharable, but must pass validation on the server.
+     * Updates a sharable with passed object. Sets the fields present in the spec to the values in the spec. Fields missing from the spec are unchanged. If a field is missing from the specified object, it will be created. Clotho will send an error message on the 'say' channel if an update could not be applied.
      *
      * Server will emit a collect(uuid) call, upon object being updated
      */
@@ -397,8 +380,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     };
 
 
-
-
+    /**
+     * @name Clotho.query
+     *
+     * @param obj
+     *
+     * @description
+     * Returns all objects that match the fields provided in the spec.
+     */
     var query = function(obj) {
         fn.searchbar.emit("query", obj);
     };
@@ -406,34 +395,27 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.create
      *
-     * @param {string | object} schema
-     * - string: UUID of Schema to use for validation
-     * - object: JSON representation of Schema to be used
-     *
-     * @param {object} data Model for the resource to be created
-     * @param {function()=} callback
+     * @param {object} object A json object or list of json objects that describe(s) an instance or instances of a clotho schema.
      *
      * @description
-     * Create a Sharable on the server
+     * Creates the described objects. Returns a list of uuids of the created objects, in the same order as they were sent in. If an object was not created, that object's entry in the list of uuids will be null. Reasons for failing to create the failed objects will be provided in the 'say' channel.
      *
      * @returns {object} The object if created successfully, null otherwise
      */
-    var create = function clothoAPI_create(schema, data, callback) {
-        var packaged = {
-            "schema" : schema,
-            "data" : data
-        };
-        fn.api.emit('create', packaged);
+    var create = function clothoAPI_create(object) {
+
+        fn.api.emit('create', object);
+
         //todo - return
     };
 
     /**
      * @name Clotho.destroy
      *
-     * @param {string} uuid
+     * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      *
      * @description
-     * Delete a sharable, provided you have the given permissions
+     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Clotho will send an error message on the 'say' channel if destroy fails for an object.
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
@@ -659,22 +641,17 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.run
      *
-     * @param {string} assistant    Function to be run on the server
-     * @param {object} data JSON passed to the function
-     * @param {boolean=} async   True if the return is asynchronous or false for synchronous (default)
-     * @param {function()=} callback   Function to run upon promise resolving/failing
+     * @param {string} func Object UUID or name indicating the function to be run (follows get semantics for ambiguous selectors)
+     * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
      *
      * @description
-     * Runs a function on the server with the passed data
-     *
-     * @return {object} result of running the function on the server. Returns a promise if `async` is true, otherwise waits till completion to return.
+     * Runs a function on the server on supplied arguments.
+     * Clotho will send an error message on the 'say' channel if there is an error during function execution, there is no function matching the specifier, or there are ambiguously specified arguments.
      */
-    var run = function clothoAPI_run(assistant, data, async, callback) {
-        async = async || true;
+    var run = function clothoAPI_run(func, args) {
         var packaged = {
-            "assistant" : assistant || "",
-            "data" : msg,
-            "async" : async
+            "function" : func || "",
+            "arguments" : args,
         };
         fn.api.emit('run', packaged);
     };
