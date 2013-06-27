@@ -8,22 +8,23 @@ public class CallbackHandlerTable {
 	// value ... the callback-handler object 
 	private static Hashtable<String, CallbackHandler> htCallbackHandlers;
 	
-	public static void put(String sCorrelationID, CallbackHandler cbh) {
-		if(null == htCallbackHandlers) {
-			htCallbackHandlers = new Hashtable<String, CallbackHandler>();
-		}
+	public static void put(String sConnectionID, CallbackHandler cbh) {
+            if(null == htCallbackHandlers) {
+                htCallbackHandlers = new Hashtable<String, CallbackHandler>();
+            }
 		
-		if(!htCallbackHandlers.containsKey(sCorrelationID)) {
-			htCallbackHandlers.put(sCorrelationID, cbh);
-		}
+            if(!htCallbackHandlers.containsKey(sConnectionID)) {
+		htCallbackHandlers.put(sConnectionID, cbh);
+            } else {
+            }        
 	}
 	
-	public static CallbackHandler get(String sCorrelationID) {
-		if(null != htCallbackHandlers) {
-			CallbackHandler cbh = htCallbackHandlers.get(sCorrelationID);
-			htCallbackHandlers.remove(sCorrelationID);
-			return cbh;
-		}
-		return (CallbackHandler)null;
+	public static CallbackHandler get(String sConnectionID) {
+            if(null != htCallbackHandlers) {
+                CallbackHandler cbh = htCallbackHandlers.get(sConnectionID);
+                htCallbackHandlers.remove(sConnectionID);
+                return cbh;
+            }
+            return (CallbackHandler)null;
 	}
 }

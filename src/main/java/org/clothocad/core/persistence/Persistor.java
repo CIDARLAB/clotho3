@@ -116,7 +116,7 @@ public class Persistor implements Aspect {
         try {
             ObjBase obj = (ObjBase) shar;
             connection.save(obj);
-            System.out.println("The shar was saved as ObjBase");
+            System.out.println("The shar was shaved as ObjBase");
             return obj.getId();
             
         //Otherwise treat it as a JSONObject to save

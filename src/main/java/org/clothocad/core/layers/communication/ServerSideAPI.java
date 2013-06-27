@@ -305,8 +305,19 @@ public final class ServerSideAPI {
         throw new Exception("Invalid login data!");
     }
     
-    public final void logout() {
-        
+    public final JSONObject logout() {
+        // we need to remove the Mind of the given user
+        JSONObject responseJSON = new JSONObject();
+        try {
+            responseJSON.put("logout", true);
+        } catch(Exception e) {
+            try {
+                responseJSON.put("CLOTHO-ERROR", e.getMessage());
+            } catch(Exception exc) {
+                // something weird is going on...
+            }
+        }
+        return responseJSON;
     }
     
     /**
@@ -683,8 +694,6 @@ public final class ServerSideAPI {
     
     public final String create(String json) {
 
-        System.out.println("[ServerSideAPI.create] -> "+json);
-        
     	try {
             //Determine whether the currently logged in person has permission to create
             if(!Authenticator.get().hasCreateAccess(getPerson())) {

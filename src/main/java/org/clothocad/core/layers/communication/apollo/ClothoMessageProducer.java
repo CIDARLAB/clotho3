@@ -14,10 +14,10 @@ public class ClothoMessageProducer
 
 	@Override
 	public void onSuccess(JSONObject json) {
-            CallbackHandler cbh = CallbackHandlerTable.get(
-                    connection.getCorrelationId());
+            CallbackHandler cbh = 
+                    CallbackHandlerTable.get(connection.getId());
             if(null != cbh) {
-                System.err.println("[ClothoMessageProducer.onSuccess] -> "+json+" -> "+connection.getCorrelationId());
+                System.err.println("[ClothoMessageProducer.onSuccess] -> "+json+" -> "+connection.getId());
                 cbh.respond(json);			
             }
 	}
@@ -25,13 +25,13 @@ public class ClothoMessageProducer
 	@Override
 	public void onFailure(Throwable err) {
             CallbackHandler cbh = CallbackHandlerTable.get(
-                            connection.getCorrelationId());
+                            connection.getId());
             if(null != cbh) {
                 JSONObject jsonResponse = new JSONObject();
                 try {
                     jsonResponse.put("CLOTHO-ERROR", err.getLocalizedMessage());
                 } catch(Exception e) {}
-                System.err.println("[ClothoMessageProducer.onFailure] -> "+jsonResponse+" -> "+connection.getCorrelationId());
+                System.err.println("[ClothoMessageProducer.onFailure] -> "+jsonResponse+" -> "+connection.getId());
                 cbh.respond(jsonResponse);			
             }
 	}

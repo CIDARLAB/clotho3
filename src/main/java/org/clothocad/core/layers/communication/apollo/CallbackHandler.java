@@ -22,11 +22,11 @@ public class CallbackHandler {
 		this.request = request;
 		
 		try {
-			// Setup a message producer to respond to messages from clients, we will get the destination
+		// Setup a message producer to respond to messages from clients, we will get the destination
 	        // to send to from the JMSReplyTo header field from a Message
 	        this.replyProducer = this.session.createProducer(
 	        		new StompJmsDestination(ClothoConstants.CLOTHO_RESPONSE_QUEUE));
-	        this.replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+	        this.replyProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -35,8 +35,8 @@ public class CallbackHandler {
 	
 	public void respond(JSONObject json) {
 		try {
-			Message response = session.createMessage();
-			response.setJMSCorrelationID(request.getJMSCorrelationID());
+			Message response = this.session.createMessage();
+			response.setJMSCorrelationID(this.request.getJMSCorrelationID());
 			response.setStringProperty(Channel.response.toString(), json.toString());
 
                         System.out.println("[CallbackHandler.response] -> "+request.getJMSCorrelationID()

@@ -49,35 +49,32 @@ public class Router {
     }
     
     // send message    
-	public void sendMessage(
-			ClientConnection connection, JSONObject message) {
+    public void sendMessage(
+		ClientConnection connection, JSONObject message) {
 
-		try {
-
-			if(connection instanceof ClothoWebSocket) {
-				ClothoWebSocket websocket = (ClothoWebSocket)connection;
-				if(null != websocket) {				
-					websocket.sendMessage(message.toString());
-				}
-			} else if(connection instanceof ApolloConnection) {	
-                            if(null == message) {
-				new ClothoMessageProducer((ApolloConnection)connection).onFailure(
-                                        new Throwable("SOMETHING WENT WRONG!"));
-                            } else {
-				new ClothoMessageProducer((ApolloConnection)connection).onSuccess(message);
-                            }
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	try {
+            if(connection instanceof ClothoWebSocket) {
+                    ClothoWebSocket websocket = (ClothoWebSocket)connection;
+                    if(null != websocket) {				
+                            websocket.sendMessage(message.toString());
+                    }
+            } else if(connection instanceof ApolloConnection) {	
+                if(null == message) {
+                    new ClothoMessageProducer((ApolloConnection)connection).onFailure(
+                            new Throwable("SOMETHING WENT WRONG!"));
+                } else {
+                    new ClothoMessageProducer((ApolloConnection)connection).onSuccess(message);
+                }
+            }
+	} catch(Exception e) {
+		e.printStackTrace();
 	}
+    }
 	
 	// receive message
 	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
-                System.out.println("[Router.receiveMessage] -> "+channel+" -> "+json);
 
-		try {
+            try {
                     RouterDoo doo = new RouterDoo();
                     
                     String auth_key = null;
@@ -97,7 +94,7 @@ public class Router {
                     doo.message = json;
                     ServerSideAPI api = mind.getAPI();
                     
-                    /* there are multiple conversions between JSONObject and Strings */
+                    /* currently we are converting JSONObject and Strings multiple times... */
                     /* WE NEED TO CHANGE THAT! 
                      * -> either JSONObject or String
                      * EO would prefer using JSONObject
@@ -136,11 +133,20 @@ public class Router {
                             api.clear();
                             break;
                         case login:
+                            // LOGIN is a synchronous call
                             this.sendMessage(connection, 
                                     api.login(new JSONObject(data)));
                             break;
                         case logout:
-                            api.logout();
+                            // LOGOUT is a synchronous call
+                            
+                            // here we need to do something like this
+                            /*
+                             * Mind.get().remove(auth_key);
+                             */
+                            
+                            this.sendMessage(connection, 
+                                    api.logout());
                             break;
                         case changePassword:
                             api.changePassword(data);

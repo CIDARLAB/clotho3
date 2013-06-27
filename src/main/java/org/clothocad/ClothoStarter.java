@@ -15,8 +15,8 @@ public class ClothoStarter
     
     private static final Logger logger = LoggerFactory.getLogger(ClothoStarter.class);
     private static ClothoWebserver server;
-    private static ClothoBroker broker;
-    private static ClothoCore core;
+    //private static ClothoBroker broker;
+    //private static ClothoCore core;
     
 	public static void main(String[] args) 
 			throws Exception {
@@ -25,7 +25,8 @@ public class ClothoStarter
 		if(args.length == 1) {
 			nPort = Integer.parseInt(args[0]);
 		}
-		
+                
+		/***
                 try{
                     broker = new ClothoBroker();
                     // wait a bit until the broker is running
@@ -37,7 +38,8 @@ public class ClothoStarter
                 } catch (Exception e){
                     logger.error("Exception while initializing JMS Broker and Listener", e);
                 }
-
+                **/
+                
 		// start the Jetty webserver
                 logger.debug("Starting server on port {}", nPort);
 		server = new ClothoWebserver(nPort);
@@ -59,6 +61,7 @@ public class ClothoStarter
 
     @Override
     public void stop() throws Exception {
+        /***
         System.out.println("stopping ...");
         if (core != null){
             core.shutdown();
@@ -67,6 +70,7 @@ public class ClothoStarter
         if (broker != null){
             broker.stop();
         }
+        **/
         
         server.getServer().stop();
     }

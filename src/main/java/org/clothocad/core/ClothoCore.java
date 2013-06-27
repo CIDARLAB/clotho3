@@ -29,17 +29,16 @@ public class ClothoCore
 		this.connection.start();
 	}
 	
-	public void start() 
-			throws Exception {
+    public void start() 
+	throws Exception {
 		
-		// third, we create a session for the connection
+	// third, we create a session for the connection
         this.session = connection.createSession(
         		false, Session.CLIENT_ACKNOWLEDGE);
 
         // fourth, we create a consumer which reads incoming messages
         MessageConsumer consumer = session.createConsumer(
         		new StompJmsDestination(ClothoConstants.CLOTHO_QUEUE));
-        
         // finally, we listen for incoming messages
         consumer.setMessageListener(this);  
         		// for every incoming message, 
@@ -51,15 +50,15 @@ public class ClothoCore
     // the onMessage method gets executed if a message arrives on the given channel...
 	@Override
 	public void onMessage(Message message) {
-		try {
-			new Thread(
-					new ClothoMessageConsumer(
-							this.session, 
-							message)).start();
-		} catch (Exception e) {
-			// currently, we ignore invalid messages
-			e.printStackTrace();
-		}
+            try {
+                new Thread(
+                    new ClothoMessageConsumer(
+                            this.session, message))
+                    .start();
+            } catch (Exception e) {
+                // currently, we ignore invalid messages
+                e.printStackTrace();
+            }
 	}
 	
 	

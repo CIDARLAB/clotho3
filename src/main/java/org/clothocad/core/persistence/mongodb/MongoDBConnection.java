@@ -128,6 +128,7 @@ public class MongoDBConnection
             }
             
             //Destroy any other UUID references
+            // ???
             json.put("id", "");
             json.put("uuid", "");
             json.put("_id", "");

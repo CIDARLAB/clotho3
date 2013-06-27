@@ -10,7 +10,7 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 public class ClothoWebSocketClient {
 
-	private final String CLOTHO_WEBSOCKET_LOCATION = "ws://localhost:8080/websocket";
+	private final String CLOTHO_WEBSOCKET_LOCATION = "ws://localhost:9090/websocket";
 	
 	public ClothoWebSocketClient(String jsonFile) 
 			throws Exception {
@@ -21,21 +21,20 @@ public class ClothoWebSocketClient {
 		WebSocketClient client = factory.newWebSocketClient();
 		
 		WebSocket.Connection connection = client.open(
-				new URI(CLOTHO_WEBSOCKET_LOCATION), 
-				new WebSocket.OnTextMessage() {
-					
-					public void onOpen(Connection connection) {
-						// open notification
-					}
-					
-					public void onClose(int closeCode, String message) {
-						// close notification
-					}
-					
-					public void onMessage(String data) {
-						System.out.println("[ClothoWebSocketClient.onMessage] RECEIVED MESSAGE "+data);
-					}
-				}
+			new URI(CLOTHO_WEBSOCKET_LOCATION), 
+			new WebSocket.OnTextMessage() {					
+                                public void onOpen(Connection connection) {
+                                        // open notification
+                                }
+
+                                public void onClose(int closeCode, String message) {
+                                        // close notification
+                                }
+
+                                public void onMessage(String data) {
+                                        System.out.println("[ClothoWebSocketClient.onMessage] RECEIVED MESSAGE "+data);
+                                }
+			}
 		).get(5, TimeUnit.SECONDS);
 				
 		String json = FileUtils.readFile(jsonFile);
