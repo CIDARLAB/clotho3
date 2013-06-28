@@ -88,8 +88,13 @@ public class Router {
                         return;
                     }
                     
-                    Mind mind = Communicator.get().getMind(auth_key);
-                    mind.setClientConnection(connection);
+                    /** TODO: check the auth_key **/
+                    
+                    // changed by EO for the demo...
+                    Mind mind = Mind.create(connection);                    
+                    
+                    //Mind mind = Communicator.get().getMind(auth_key);
+                    //mind.setClientConnection(connection);
                     doo.mindId = mind.getUUID();
                     doo.message = json;
                     ServerSideAPI api = mind.getAPI();
@@ -134,8 +139,7 @@ public class Router {
                             break;
                         case login:
                             // LOGIN is a synchronous call
-                            this.sendMessage(connection, 
-                                    api.login(new JSONObject(data)));
+                            api.login(new JSONObject(data));
                             break;
                         case logout:
                             // LOGOUT is a synchronous call
@@ -145,8 +149,7 @@ public class Router {
                              * Mind.get().remove(auth_key);
                              */
                             
-                            this.sendMessage(connection, 
-                                    api.logout());
+                            api.logout();
                             break;
                         case changePassword:
                             api.changePassword(data);

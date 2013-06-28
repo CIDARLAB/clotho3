@@ -72,6 +72,13 @@ public final class Mind
 	
     static final Logger logger = LoggerFactory.getLogger(Mind.class);
     
+    public static Mind create(ClientConnection connection) {
+        Mind mind = new Mind();
+        mind.connection = connection;        
+        mind.ssAPI = new ServerSideAPI();
+        mind.ssAPI.setMind(mind);
+        return mind;
+    }
     /**
      * This is not a serverside API method
      * @param client
