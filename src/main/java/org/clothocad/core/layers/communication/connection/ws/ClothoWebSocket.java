@@ -12,26 +12,31 @@ public class ClothoWebSocket
 	extends ClientConnection 
 	implements WebSocket.OnTextMessage {
 
-	private Connection connection;
+	private WebSocket.Connection connection;
 	
 	public ClothoWebSocket(String id) {
-		super(id);
+            super(id);
 	}
 	
 	@Override
 	public void onClose(int closeCode, String message) {
 	}
 
-	public void sendMessage(String data) throws IOException {
-//		System.out.println("[ClothoWebSocket.sendMessage] -> "+data);		
-		connection.sendMessage(data);
+	public void sendMessage(String data) 
+                throws IOException {
+            System.out.println("[ClothoWebSocket.sendMessage] -> "+this.getId());
+            System.out.println("[ClothoWebSocket.sendMessage] -> "+data);
+            if(connection.isOpen()) {
+                System.out.println("Connection is still open!");
+                connection.sendMessage(data);
+            }
 	}
 
 	@Override
 	public void onMessage(String message) {
 		// here, we need to forward the message dependent on its content
-		
-		System.out.println("[ClothoWebSocket.onMessage] -> "+message);
+            System.out.println("[ClothoWebSocket.onMessage] -> "+this.getId());
+            System.out.println("[ClothoWebSocket.onMessage] -> "+message);
 
 		/**
 		obj = JSON.parse(obj);
@@ -92,7 +97,7 @@ public class ClothoWebSocket
 	public void onOpen(Connection connection) {
 		this.connection = connection;
                 //Close out after 1 hour idle time
-                connection.setMaxIdleTime(3600000); 
+                //connection.setMaxIdleTime(3600000); 
 
 		//WebSocketTable.put(this.getId(), this);
 		

@@ -283,29 +283,30 @@ public final class ServerSideAPI {
         Interpreter.get().learnNative(nativeCmd, json);
     }
     
-    public final JSONObject login(JSONObject data) 
+    public final void login(JSONObject data) 
             throws Exception {
+        JSONObject responseJSON = new JSONObject();
         /* retrieve username and password from the JSON object */
         if(null != data) {
             String sUsername = null;
             String sPassword = null;
             try {
                 sUsername = data.getString("username");
-                sPassword = data.getString("password");
+                sPassword = data.getString("password");            
+                responseJSON.put("login", true);
             } catch(Exception e) {
-                throw new Exception(e.getMessage());
+               responseJSON.put("login", false);
             }
             
             // TODO: check if the user exists in the database
-            
-            JSONObject responseJSON = new JSONObject();
-            responseJSON.put("login", true);
-            return responseJSON;
+        } else {
+           responseJSON.put("login", false);
         }
-        throw new Exception("Invalid login data!");
+    
+        Router.get().sendMessage(this.mind.getClientConnection(), responseJSON);
     }
     
-    public final JSONObject logout() {
+    public final void logout() {
         // we need to remove the Mind of the given user
         JSONObject responseJSON = new JSONObject();
         try {
@@ -317,7 +318,9 @@ public final class ServerSideAPI {
                 // something weird is going on...
             }
         }
-        return responseJSON;
+        
+        Router.get().sendMessage(this.mind.getClientConnection(), responseJSON);
+        
     }
     
     /**
