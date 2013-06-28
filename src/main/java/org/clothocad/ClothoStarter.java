@@ -20,7 +20,7 @@ public class ClothoStarter
     
 	public static void main(String[] args) 
 			throws Exception {
-		int nPort = 9090;
+		int nPort = 8080;
 
 		if(args.length == 1) {
 			nPort = Integer.parseInt(args[0]);
