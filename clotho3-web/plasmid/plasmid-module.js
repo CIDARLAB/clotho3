@@ -1,7 +1,38 @@
 'use strict';
 
+/*
+
+ todo
+ - restrict input to one of two sets
+ - ACGT
+ - plus others (e.g. N, Y, R)
+ - check both directions
+ - add feature directive -- tooltip?
+
+ how will funciton
+ - use uniquely named tags with feature directive attr (function as tooltip)
+ - features - rollover to only show certain feature (easy - just strip all other tags)
+
+ algorithm
+ INITIAL
+ - create locations hash mapping pos -> tag
+ - start from back, add in tags
+ - future - check reverse direction too
+
+ CHANGES
+ - add feature by highlight
+ - just add to HTML
+ - add sequence
+ - just add to sequence
+ - add regexp / feature indirectly
+ - requires recompile
+ - pull out tags and locations from HTML (start at front)
+ - search for regexp in text, add locations
+ */
+
+
 Application.Plasmid.controller('PlasmidCtrl', ['$scope', function($scope) {
-    $scope.sequence = "GATCTgttgacggctaGCTCAGTCCTAGGTACAGTGCTAGCTCTCTGGAGATTAACGAGGAGAAATACTAGATGGTTCATGATCATAAgcttgaattagccaaacttattcgcaactatgagacgaatagaaaagaatgtctaaattccagatataatgaaacacttttacgaagtgattatcttgatccattttttgaacttcttggctgggatattaaaaataaagctggaaaaccgactaatgaaagagaggttgtcttggaagaggcacttaaagcaagtgcatctgaacattctaaaaaaccagattatacattcagacttttttctgaaagaaagtttttcttggaagctaaaaaaccatcagttcatattgaatcggataatgaaactgctaaacaagtgcgaagatatggctttaccgccaaactaaaaatttcagttttatcaaattttgaatatttagttatttatgatacctctgtaaaggttgatggtgatgatacctttaataaggcacgtataaaaaaataccattacacagagtatgaaactcactttgatgaaatttgtgacttattaggaagagagtccgtttactctgggaattttgataaagaatggttgagtatcgaaaataaaattaatcacttttctgtagataccttatttttaaaacagattaatacatggcgtctattgcttggtgaagaaatctataagtatcaacctacgatacaagagaatgagcttaatgacattgtacagagctatctgaatagaattAGATCTatttttttgagagtctgtgaagatagaaatttagagacttatcagacattactgaattttgcttcaagtaatgatttctccgctcttattgataagtttaagcaggcagatcgttgctataattcaggcctatttgatcaattgcttacagagcaaattattgaggatattagttctgtattttgggtaatcattaagcaattatattatccagaaagtccttattcatttagtgtgttctcttcggatattttaggtaatatttacgaaatatttttatctgagaaattagtaattaatcaaagcagagttgagttagtcaagaaaccagagaatttagatagagacattgtcacaacaccaacctttattattaatgacatcttgagaaatacggttctaccgaagtgctatggaaaaacagatatagaaattctacagctaaaatttgctgatattgcttgtggttcgggagcatttttactggagttgttccaattacttaatgatactctagttgactattatttaagtagtgatacttctcaattaattccaacaggtatcggtacttataagctgtcttatgaaatcaagagaaaggttctattaagttgtatttttggcatagataaggacttaaatgctgtagaggctgcaaagttcggattgttgctaaaattattagagggtgaagacgtacaatctatagctaatattagaccagttctcccagatttattagataacatactttttggtaacagtttattagaaccagaaaaagtcgagcttgatcatcaggtagaagtaaatccgttagatttttcGGATCTGaaAtttgatgtaattgttggcaaccctccatatatgaaatcagaggatatgaagaatattactcctttggagttacctttatataagaaaaactatgtttctgcttataagcaatttgataaatatttcttgttcttagagcggggtttagctctattaaaagaagagggaatacttggatatattgttccaagtaaatttactaaagtgggtgcagggaaaaagttacgggaattactaacagataagggttatcttgactctattgtttcttttggtgctaatcaaatatttcaggataaaacaacttatacttgtttacttattttaagaaaaactccAcatactgattttaaatatgcagaggttcgtaatttaattgactggaaagtgcgtaaagctgatgctatggaattttcctctcaacaactgagtacattgcaaagtgatgcgtggattttaattccatctgaattaatctcagtttatcatcagatattagcacaaagccaaaagctagaggatattgtcggtattgataatatatttaatgggattcaaaccagtgctaatgatgtctatatttttgtgccaactcatgaggatactgaaaactattattttataaagaaaggacaagagtacaaaattgaaaaggaaattacgaagccttattttaaaacaacgagtggtgaggataacttatatacttaccgtactttcaagcctaatgcccgagtcatttatccgtatactcaaactgagagtagtgtagaactaattcctttagatgaaatacgagaaatttttcctttagcatacaaatatttaatgtcgcttaagttcgttttaagtagccccaaacgagatataaaacctagacctaaaacaacaaatgaatggcataggtatggacggcatcaaagtctcgataattgtgggttgagtcagaaaattattgtaggtgtgctttcagttggtgataagtacgctatagatacttatggaacgttgatttcatcaggcggtacggctggatactgtgtggttgctcttccagatgattgtaaatattcaatttattatttacaggcaattttaaactcaaaatatttagagtggtttagtgccttacatggagaagttttccgaggtggttatattgctaggggaactaaggtgcttaagaacttgcctattaggaaaattgattttgataatcttgaagaagcaaatctacatgatctaattgcgaccaagcaaaaagagcttatagagatttatgacaaaatagatgttaatgtaaataataaaagagttctgaccccattgcaacgtatgtttaaacgagagaaagaggttttagaccaattgttgagtcgactgtataacttaggtgtagatgattccttgatcccttatattaaggatttgtatgaagctcattaaGGATCCtaaCTCGAcgtgcaggcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatCAATTCGACCCAGCTTTCTTGTACAAAGTTGGCATTATAAAAAATAATTGCTCATCAATTTGTTGCAACGAACAGGTCACTATCAGTCAAAATAAAATCATTATTTGCCATCCAGCTGATATCCCCTATAGTGAGTCGTATTACATGGTCATAGCTGTTTCCTGGCAGCTCTGGCCCGTGTCTCAAAATCTCTGATGTTACATTGCACAAGATAAAAATATATCATCATGCCTCCTCTAGACCAGCCAGGACAGAAATGCCTCGACTTCGCTGCTGCCCAAGGTTGCCGGGTGACGCACACCGTGGAAACGGATGAAGGCACGAACCCAGTGGACATAAGCCTGTTCGGTTCGTAAGCTGTAATGCAAGTAGCGTATGCGCTCACGCAACTGGTCCAGAACCTTGACCGAACGCAGCGGTGGTAACGGCGCAGTGGCGGTTTTCATGGCTTGTTATGACTGTTTTTTTGGGGTACAGTCTATGCCTCGGGCATCCAAGCAGCAAGCGCGTTACGCCGTGGGTCGATGTTTGATGTTATGGAGCAGCAACGATGTTACGCAGCAGGGCAGTCGCCCTAAAACAAAGTTAAACATCATGAGGGAAGCGGTGATCGCCGAAGTATCGACTCAACTATCAGAGGTAGTTGGCGTCATCGAGCGCCATCTCGAACCGACGTTGCTGGCCGTACATTTGTACGGCTCCGCAGTGGATGGCGGCCTGAAGCCACACAGTGATATTGATTTGCTGGTTACGGTGACCGTAAGGCTTGATGAAACAACGCGGCGAGCTTTGATCAACGACCTTTTGGAAACTTCGGCTTCCCCTGGAGAGAGCGAGATTCTCCGCGCTGTAGAAGTCACCATTGTTGTGCACGACGACATCATTCCGTGGCGTTATCCAGCTAAGCGCGAACTGCAATTTGGAGAATGGCAGCGCAATGACATTCTTGCAGGTATCTTCGAGCCAGCCACGATCGACATTGATCTGGCTATCTTGCTGACAAAAGCAAGAGAACATAGCGTTGCCTTGGTAGGTCCAGCGGCGGAGGAACTCTTTGATCCGGTTCCTGAACAGGATCTATTTGAGGCGCTAAATGAAACCTTAACGCTATGGAACTCGCCGCCCGACTGGGCTGGCGATGAGCGAAATGTAGTGCTTACGTTGTCCCGCATTTGGTACAGCGCAGTAACCGGCAAAATCGCGCCGAAGGATGTCGCTGCCGACTGGGCAATGGAGCGCCTGCCGGCCCAGTATCAGCCCGTCATACTTGAAGCTAGACAGGCTTATCTTGGACAAGAAGAAGATCGCTTGGCCTCGCGCGCAGATCAGTTGGAAGAATTTGTCCACTACGTGAAAGGCGAGATCACCAAGGTAGTCGGCAAATAACCCTCGAGCCACCcatgaccaaaatcccttaacgGCATGCgcaccgccggacatcagcgctagcggagtgtatactggcttactatgttggcactgatgagggtgtcagtgaagtgcttcatgtggcaggagaaaaaaggctgcaccggtgcgtcagcagaatatgtgatacaggatatattccgcttcctcgctcactgactcgctacgctcggtcgttcgactgcggcgagcggaaatggcttacgaacggggcggagatttcctggaagatgccaggaagatacttaacagggaagtgagagggccgcggcaaagccgtttttccataggctccgcccccctgacaagcatcacgaaatctgacgctcaaatcagtggtggcgaaacccgacaggactataaagataccaggcgtttccccctggcggctccctcgtgcgctctcctgttcctgcctttcggtttaccggtgtcattccgctgttatggccgcgtttgtctcattccacgcctgacactcagttccgggtaggcagttcgctccaagctggactgtatgcacgaaccccccgttcagtccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggaaagacatgcaaaagcaccactggcagcagccactggtaattgatttagaggagttagtcttgaagtcatgcgccggttaaggctaaactgaaaggacaagttttggtgactgcgctcctccaagccagttacctcggttcaaagagttggtagctcagagaaccttcgaaaaaccgccctgcaaggcggttttttcgttttcagagcaagagattacgcgcagaccaaaacgatctcaagaagatcatcttattaatcagataaaatatttctagAGGCCTcccctgattctgtggataaccGTcctaggTGTAAAACGACGGCCAGTCTTAAGCTCGGGCCCCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTCCGAATTGgtatcacgaggcagaatttcagataaaaaaaatccttagctttcgctaaggatgatttctggaattcatgAtacgaa";
+    $scope.sequence = "GATCTgttgacggctaGCTCAGTCCTAGGTagctACAGTGCTAGCTCTCTGGAGATTAACGAGGAGAAATACTAGATGGTTCATGATCATAAgcttgaattagccaaacttattcgcaactatgagacgaatagaaaagaatgtctaaattccagatataatgaaacacttttacgaagtgattatcttgatccattttttgaacttcttggctgggatattaaaaataaagctggaaaaccgactaatgaaagagaggttgtcttggaagaggcacttaaagcaagtgcatctgaacattctaaaaaaccagattatacattcagacttttttctgaaagaaagtttttcttggaagctaaaaaaccatcagttcatattgaatcggataatgaaactgctaaacaagtgcgaagatatggctttaccgccaaactaaaaatttcagttttatcaaattttgaatatttagttatttatgatacctctgtaaaggttgatggtgatgatacctttaataaggcacgtataaaaaaataccattacacagagtatgaaactcactttgatgaaatttgtgacttattaggaagagagtccgtttactctgggaattttgataaagaatggttgagtatcgaaaataaaattaatcacttttctgtagataccttatttttaaaacagattaatacatggcgtctattgcttggtgaagaaatctataagtatcaacctacgatacaagagaatgagcttaatgacattgtacagagctatctgaatagaattAGATCTatttttttgagagtctgtgaagatagaaatttagagacttatcagacattactgaattttgcttcaagtaatgatttctccgctcttattgataagtttaagcaggcagatcgttgctataattcaggcctatttgatcaattgcttacagagcaaattattgaggatattagttctgtattttgggtaatcattaagcaattatattatccagaaagtccttattcatttagtgtgttctcttcggatattttaggtaatatttacgaaatatttttatctgagaaattagtaattaatcaaagcagagttgagttagtcaagaaaccagagaatttagatagagacattgtcacaacaccaacctttattattaatgacatcttgagaaatacggttctaccgaagtgctatggaaaaacagatatagaaattctacagctaaaatttgctgatattgcttgtggttcgggagcatttttactggagttgttccaattacttaatgatactctagttgactattatttaagtagtgatacttctcaattaattccaacaggtatcggtacttataagctgtcttatgaaatcaagagaaaggttctattaagttgtatttttggcatagataaggacttaaatgctgtagaggctgcaaagttcggattgttgctaaaattattagagggtgaagacgtacaatctatagctaatattagaccagttctcccagatttattagataacatactttttggtaacagtttattagaaccagaaaaagtcgagcttgatcatcaggtagaagtaaatccgttagatttttcGGATCTGaaAtttgatgtaattgttggcaaccctccatatatgaaatcagaggatatgaagaatattactcctttggagttacctttatataagaaaaactatgtttctgcttataagcaatttgataaatatttcttgttcttagagcggggtttagctctattaaaagaagagggaatacttggatatattgttccaagtaaatttactaaagtgggtgcagggaaaaagttacgggaattactaacagataagggttatcttgactctattgtttcttttggtgctaatcaaatatttcaggataaaacaacttatacttgtttacttattttaagaaaaactccAcatactgattttaaatatgcagaggttcgtaatttaattgactggaaagtgcgtaaagctgatgctatggaattttcctctcaacaactgagtacattgcaaagtgatgcgtggattttaattccatctgaattaatctcagtttatcatcagatattagcacaaagccaaaagctagaggatattgtcggtattgataatatatttaatgggattcaaaccagtgctaatgatgtctatatttttgtgccaactcatgaggatactgaaaactattattttataaagaaaggacaagagtacaaaattgaaaaggaaattacgaagccttattttaaaacaacgagtggtgaggataacttatatacttaccgtactttcaagcctaatgcccgagtcatttatccgtatactcaaactgagagtagtgtagaactaattcctttagatgaaatacgagaaatttttcctttagcatacaaatatttaatgtcgcttaagttcgttttaagtagccccaaacgagatataaaacctagacctaaaacaacaaatgaatggcataggtatggacggcatcaaagtctcgataattgtgggttgagtcagaaaattattgtaggtgtgctttcagttggtgataagtacgctatagatacttatggaacgttgatttcatcaggcggtacggctggatactgtgtggttgctcttccagatgattgtaaatattcaatttattatttacaggcaattttaaactcaaaatatttagagtggtttagtgccttacatggagaagttttccgaggtggttatattgctaggggaactaaggtgcttaagaacttgcctattaggaaaattgattttgataatcttgaagaagcaaatctacatgatctaattgcgaccaagcaaaaagagcttatagagatttatgacaaaatagatgttaatgtaaataataaaagagttctgaccccattgcaacgtatgtttaaacgagagaaagaggttttagaccaattgttgagtcgactgtataacttaggtgtagatgattccttgatcccttatattaaggatttgtatgaagctcattaaGGATCCtaaCTCGAcgtgcaggcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatCAATTCGACCCAGCTTTCTTGTACAAAGTTGGCATTATAAAAAATAATTGCTCATCAATTTGTTGCAACGAACAGGTCACTATCAGTCAAAATAAAATCATTATTTGCCATCCAGCTGATATCCCCTATAGTGAGTCGTATTACATGGTCATAGCTGTTTCCTGGCAGCTCTGGCCCGTGTCTCAAAATCTCTGATGTTACATTGCACAAGATAAAAATATATCATCATGCCTCCTCTAGACCAGCCAGGACAGAAATGCCTCGACTTCGCTGCTGCCCAAGGTTGCCGGGTGACGCACACCGTGGAAACGGATGAAGGCACGAACCCAGTGGACATAAGCCTGTTCGGTTCGTAAGCTGTAATGCAAGTAGCGTATGCGCTCACGCAACTGGTCCAGAACCTTGACCGAACGCAGCGGTGGTAACGGCGCAGTGGCGGTTTTCATGGCTTGTTATGACTGTTTTTTTGGGGTACAGTCTATGCCTCGGGCATCCAAGCAGCAAGCGCGTTACGCCGTGGGTCGATGTTTGATGTTATGGAGCAGCAACGATGTTACGCAGCAGGGCAGTCGCCCTAAAACAAAGTTAAACATCATGAGGGAAGCGGTGATCGCCGAAGTATCGACTCAACTATCAGAGGTAGTTGGCGTCATCGAGCGCCATCTCGAACCGACGTTGCTGGCCGTACATTTGTACGGCTCCGCAGTGGATGGCGGCCTGAAGCCACACAGTGATATTGATTTGCTGGTTACGGTGACCGTAAGGCTTGATGAAACAACGCGGCGAGCTTTGATCAACGACCTTTTGGAAACTTCGGCTTCCCCTGGAGAGAGCGAGATTCTCCGCGCTGTAGAAGTCACCATTGTTGTGCACGACGACATCATTCCGTGGCGTTATCCAGCTAAGCGCGAACTGCAATTTGGAGAATGGCAGCGCAATGACATTCTTGCAGGTATCTTCGAGCCAGCCACGATCGACATTGATCTGGCTATCTTGCTGACAAAAGCAAGAGAACATAGCGTTGCCTTGGTAGGTCCAGCGGCGGAGGAACTCTTTGATCCGGTTCCTGAACAGGATCTATTTGAGGCGCTAAATGAAACCTTAACGCTATGGAACTCGCCGCCCGACTGGGCTGGCGATGAGCGAAATGTAGTGCTTACGTTGTCCCGCATTTGGTACAGCGCAGTAACCGGCAAAATCGCGCCGAAGGATGTCGCTGCCGACTGGGCAATGGAGCGCCTGCCGGCCCAGTATCAGCCCGTCATACTTGAAGCTAGACAGGCTTATCTTGGACAAGAAGAAGATCGCTTGGCCTCGCGCGCAGATCAGTTGGAAGAATTTGTCCACTACGTGAAAGGCGAGATCACCAAGGTAGTCGGCAAATAACCCTCGAGCCACCcatgaccaaaatcccttaacgGCATGCgcaccgccggacatcagcgctagcggagtgtatactggcttactatgttggcactgatgagggtgtcagtgaagtgcttcatgtggcaggagaaaaaaggctgcaccggtgcgtcagcagaatatgtgatacaggatatattccgcttcctcgctcactgactcgctacgctcggtcgttcgactgcggcgagcggaaatggcttacgaacggggcggagatttcctggaagatgccaggaagatacttaacagggaagtgagagggccgcggcaaagccgtttttccataggctccgcccccctgacaagcatcacgaaatctgacgctcaaatcagtggtggcgaaacccgacaggactataaagataccaggcgtttccccctggcggctccctcgtgcgctctcctgttcctgcctttcggtttaccggtgtcattccgctgttatggccgcgtttgtctcattccacgcctgacactcagttccgggtaggcagttcgctccaagctggactgtatgcacgaaccccccgttcagtccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggaaagacatgcaaaagcaccactggcagcagccactggtaattgatttagaggagttagtcttgaagtcatgcgccggttaaggctaaactgaaaggacaagttttggtgactgcgctcctccaagccagttacctcggttcaaagagttggtagctcagagaaccttcgaaaaaccgccctgcaaggcggttttttcgttttcagagcaagagattacgcgcagaccaaaacgatctcaagaagatcatcttattaatcagataaaatatttctagAGGCCTcccctgattctgtggataaccGTcctaggTGTAAAACGACGGCCAGTCTTAAGCTCGGGCCCCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTCCGAATTGgtatcacgaggcagaatttcagataaaaaaaatccttagctttcgctaaggatgatttctggaattcatgAtacgaa";
 
     $scope.featureList = [
         {
@@ -13,6 +44,28 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', function($scope) {
             "css" : {
                 "color" : "",
                 "background" : "#99EEEE"
+            }
+        },
+        {
+            "label" : "Another Promoter",
+            "pos" : {
+                "start" : 90,
+                end : 106
+            },
+            "css" : {
+                "color" : "",
+                "background" : "#EE99EE"
+            }
+        },
+        {
+            "label" : "Binding Site Promoter",
+            "pos" : {
+                "start" : 120,
+                end : 146
+            },
+            "css" : {
+                "color" : "",
+                "background" : "#EEEE99"
             }
         },
         {
@@ -137,7 +190,7 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', function($scope) {
     }
 }]);
 
-Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', function($parse, $timeout, $filter, $compile) {
+Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', function($parse, $timeout, $filter, $compile, $document) {
 
     return {
         restrict: "A",
@@ -145,19 +198,37 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
         //rep1ace: true,
         link: function(scope, element, attrs, ngModel) {
             attrs.$set('spellcheck', false);
+            attrs.$set('contenteditable', true);
 
             scope.features = $parse(attrs.features)(scope) || [];
 
+            /*
+
             //generate the mirror
+
             var parent = element.parent(),
                 output = angular.element('<pre>'),
                 label = angular.element('<label>');
 
             parent.append(output);
-            parent.append(label);
-            element[0].parentNode.replaceChild(parent, element);
-            label.append(element);
             parent[0].className = 'ldt ' + element[0].className;
+
+
+            //OLD VERSION
+            //parent.append(label);
+            //element[0].parentNode.replaceChild(parent, element);
+            //label.append(element);
+
+
+            element.bind('mouseover', function(e) {
+                element.css('pointer-events', 'none');
+            });
+            output.bind('click', function(e) {
+                e.preventDefault();
+                element.css('pointer-events', 'auto')
+            });
+
+            */
 
             /* key functions  */
 
@@ -166,17 +237,18 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                 return $filter('features')(text, scope.features);
             }
 
-
             /* updating view */
 
             function setOutput (html) {
-                output[0].innerHTML = html;
+                //var x = $compile(html)(scope);
+                //console.log(x);
+                element[0].innerHTML = html;
+                $compile(element.contents())(scope);
             }
 
             function setViewValue(html) {
                 ngModel.$setViewValue(html);
             }
-
 
             /* watchers */
             scope.$watchCollection('features', function(newVal, oldVal) {
@@ -217,38 +289,10 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
         }
     }
 }]);
-/*
 
- todo
- - restrict input to one of two sets
-    - ACGT
-    - plus others (e.g. N, Y, R)
- - check both directions
- - add feature directive -- tooltip?
-
- how will funciton
-    - use uniquely named tags with feature directive attr (function as tooltip)
-    - features - rollover to only show certain feature (easy - just strip all other tags)
-
- algorithm
- INITIAL
-    - create locations hash mapping pos -> tag
-    - start from back, add in tags
-    - future - check reverse direction too
-
- CHANGES
-    - add feature by highlight
-     - just add to HTML
-    - add sequence
-    - just add to sequence
-    - add regexp / feature indirectly
-    - requires recompile
-    - pull out tags and locations from HTML (start at front)
-    - search for regexp in text, add locations
- */
 Application.Plasmid.filter('features', [function() {
     return function (text, features) {
-        if (features && angular.isArray(features)) {
+        if (features && angular.isArray(features) && angular.isString(text)) {
             var html = text;
             text = html.replace(/(<([^>]+)>)/ig, html);
             
@@ -257,6 +301,9 @@ Application.Plasmid.filter('features', [function() {
 
 
             //future - pull tags out of HTML and save locations
+
+            //var str=html.replace(/ /ig,'<span>$3</span>');
+            //console.log(str + '\n\n\n\n\n\n\n\n\n\n\n\n');
 
 
             //create location map
@@ -314,6 +361,8 @@ Application.Plasmid.filter('features', [function() {
                         return;
                     }
 
+                    //todo - check last tag, see if closing
+
                     angular.forEach(value, function(feat) {
                         var featName = angular.lowercase(feat.label).replace(/[ _]/gi, '');
 
@@ -322,8 +371,8 @@ Application.Plasmid.filter('features', [function() {
 
                         if (key == 'start') {
                             newText = newText.slice(0, index) +
-                                '<span' + featName + ' ' +
-                                'name="' + feat.label + '" ' +
+                                '<feat' + featName + ' ' +
+                                'feature="' + feat.label + '" ' +
                                 'style="' +
                                 (feat.css.color ? "color: " + feat.css.color + ";" : "") +
                                 (feat.css.background ? "background-color: " + feat.css.background : "") +
@@ -331,7 +380,7 @@ Application.Plasmid.filter('features', [function() {
                                 newText.slice(index);
                         } else {
                             newText = newText.slice(0, index) +
-                                '</span' + featName + '>' +
+                                '</feat' + featName + '>' +
                                 newText.slice(index);
                         }
                     });
@@ -341,6 +390,57 @@ Application.Plasmid.filter('features', [function() {
 
             console.log(newText);
 
+
+            /**** REGEXPS *****/
+            var findAllTags = /<\/?(feat[A-Z0-9]*)\b[^>]*>/gi;
+
+            var findFeatsInclusive = /<(feat[A-Z0-9]*)\b[^>]*>.*?<\/\1>/gi;
+
+            var findSingleOverlaps = /<feat([A-Z0-9]*)\b[^>]*>.*?<feat([A-Z0-9]*)\b[^>]*>[^\/]*?(?!(\/feat\2))\/feat\1>/gi;
+
+            //note - find features with tag inside (overlapping)
+            //todo - fix
+            var findOverlaps = /<(feat[A-Z0-9]*)\b[^>]*>.*?<(feat[A-Z0-9]*)\b[^>]*>.*?(?!\2).*?<\/\1>/gi;
+
+            //todo - fix
+            var findSingleNested = /<(feat[A-Z0-9]*)\b[^>]*>.*?<(feat[A-Z0-9]*)\b[^>]*>.*?<\/\2>.*?<\/\1>/gi;
+
+
+
+            var feature_reg = /<feat([A-Z0-9]*) feature="(.*?)" ([^>]*)>(.*?)<feat([A-Z0-9]*) feature="(.*?)" ([^>]*)>([^\/]*?)<(?!(\/feat\3))\/feat\1>/gi;
+            var feature_replacer = function(match, f1, n1, c1, s1, f2, n2, c2, s2, ignore, index){
+                /*console.log(arguments);
+                console.log(index);
+                console.log(match);*/
+
+                var string = '<feat' + f1 + ' feature="' + n1 + '" ' + c1 + '>' + s1 +
+                    '</feat' + f1 + '>' +
+                    '<feat' + f1 + '-' +  f2 + ' feature="' + n1 + ', ' + n2 + '" ' + c1 + '>' + s2 +
+                    '</feat' + f1 + '-' +  f2 + '>' +
+                    '<feat' + f2 + ' feature="' + n2 + '" ' + c2 + '>';
+
+                return string;
+
+            };
+
+            var overlap;
+            while (overlap = findSingleOverlaps.exec(newText)) {
+                //var inner = reg.exec(overlap[0]);
+                //console.log(inner);
+
+                var corrected = overlap[0].replace(feature_reg, feature_replacer);
+
+                newText = newText.replace(overlap[0], corrected);
+            }
+
+            console.log(newText);
+
+
+
+
+
+
+
             return newText;
         } else {
             return text;
@@ -348,12 +448,18 @@ Application.Plasmid.filter('features', [function() {
     };
 }]);
 
+//todo - interaction with Plasmid Service? or just tooltip?
 Application.Plasmid.directive('feature', [function() {
     return {
-        restrict : 'E',
+        restrict : 'A',
         link: function(scope, element, attrs, controller) {
             //borrow from angularUI tooltip?
-            element.className = element.className + ' feature';
+            //attrs.$set('style', "background-color: #FF0000");
+
+            element.on('mouseenter', function() {
+                console.log(attrs.feature);
+            })
+
         }
     }
 }]);
