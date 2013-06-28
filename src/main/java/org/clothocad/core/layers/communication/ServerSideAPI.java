@@ -250,7 +250,7 @@ public final class ServerSideAPI {
         router.sendMessage(mind.getClientConnection(), message);
     }
     
-    public final void get(Object o){
+    public final void get(Object o, String requestId){
         List<Map<String, Object>> returnData = new ArrayList<>();
         //list of selectors?
         if (o instanceof List){
@@ -258,7 +258,7 @@ public final class ServerSideAPI {
                 returnData.add(get(resolveSelector(obj.toString(), false)));
             }
         } else returnData.add(get(resolveSelector(o.toString(), false)));
-        Message message = new Message(Channel.get, returnData);
+        Message message = new Message(Channel.get, returnData, requestId);
         send(message);
         
     }
@@ -298,7 +298,7 @@ public final class ServerSideAPI {
         router.publish(obj);
     }
 
-    public final void set(Map<String, Object> values) {
+    public final void set(Map<String, Object> values, String id) {
         try {
 
             if (values.get("id") == null) {
@@ -340,6 +340,18 @@ public final class ServerSideAPI {
         }
     }
 
+    public final void create(Object o, String requestId){
+        List<ObjectId> returnData = new ArrayList<>();
+        //list of selectors?
+        if (o instanceof List){
+            for (Object obj : (List) o){
+                returnData.add(create(JSON.mappify(obj)));
+            }
+        } else returnData.add(create(JSON.mappify(o)));
+        Message message = new Message(Channel.get, returnData, requestId);
+        send(message);
+    }
+    
     public final ObjectId create(Map<String, Object> obj) {
 
         try {
@@ -381,7 +393,7 @@ public final class ServerSideAPI {
 
     
     
-    public final void destroy(Object o){
+    public final void destroy(Object o, String requestId){
         //list of selectors?
         if (o instanceof List){
             for (Object obj : (List) o){
@@ -404,14 +416,14 @@ public final class ServerSideAPI {
         }
     }
 
-    public final void query(Map<String, Object> spec) {
+    public final void query(Map<String, Object> spec, String requestId) {
         List<Map<String, Object>> objs;
 
         try {
             //Relay the query to Persistor and return the hits
             objs = persistor.findAsBSON(spec);
             say("Found " + objs.size() + " objects that satisfy your query", Severity.SUCCESS);
-        Message msg = new Message(Channel.query, objs);
+        Message msg = new Message(Channel.query, objs, requestId);
         router.sendMessage(mind.getClientConnection(), msg);
         } catch (Exception e) {
             logAndSayError(String.format("Error querying %s: %s", spec.toString(), e.getMessage()), e);
@@ -422,7 +434,7 @@ public final class ServerSideAPI {
 
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
     
-    public final void run(Object o) throws ScriptException{
+    public final void run(Object o, String id) throws ScriptException{
         Map<String, Object> data = JSON.mappify(o);
         
         Function function = persistor.get(Function.class, resolveSelector(data.get("function").toString(), Function.class, false));
@@ -432,7 +444,7 @@ public final class ServerSideAPI {
         Object result = run(function, arguments);
         if (!result.equals(Function.NoResult.class)){
             //TODO: Map<String, Object> reply - we need to have a way to designate which request we are responding to
-            Message message = new Message(Channel.run, result);
+            Message message = new Message(Channel.run, result, id);
             send(message);
         } 
         

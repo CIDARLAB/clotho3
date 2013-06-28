@@ -14,12 +14,18 @@ import java.util.Map;
 public class Message {
     
     public Message(Channel channel, Object data){
+        this(channel, data, null);
+    }
+    
+    public Message(Channel channel, Object data, String id){
         this.channel = channel;
         this.data = data;
+        this.requestId = id;
     }
     
     public final Channel channel;
     public final Object data;
+    public final String requestId;
 
     
     //assumes String describes JSONObject with keys "channel" and "data"

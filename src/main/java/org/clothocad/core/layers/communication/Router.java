@@ -75,6 +75,7 @@ public class Router {
 
         Channel chanEnum = request.channel;
         Object data = request.data;
+        String id = request.requestId;
         try {
             switch (chanEnum) {
                 case autocomplete:
@@ -117,23 +118,23 @@ public class Router {
                     break;
 
                 case get:
-                    api.get(data);
+                    api.get(data, id);
                     break;
                 case set:
-                    api.set(JSON.mappify(data));
+                    api.set(JSON.mappify(data), id);
                     break;
                 case create:
-                    api.create(JSON.mappify(data));
+                    api.create(data, id);
                     break;
                 case destroy:
-                    api.destroy(data);
+                    api.destroy(data, id);
                     break;
                 case query:
-                    api.query(JSON.mappify(data));
+                    api.query(JSON.mappify(data), id);
                     break;
 
                 case run:
-                    api.run(data);
+                    api.run(data, id);
                     break;
                 case show:
                     api.show(data.toString(), null, null, null);
@@ -155,7 +156,7 @@ public class Router {
             }
         } catch (Exception e) {
             //TODO: message client with failure
-            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE);
+            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, id);
             log.error(e.getMessage(), e);
         }
     }
