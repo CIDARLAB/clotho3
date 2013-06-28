@@ -31,7 +31,6 @@ import java.util.Map;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.json.JSONObject;
 
 
 /**
@@ -81,7 +80,6 @@ public interface ClothoConnection {
      */
     void save(ObjBase obj);
     void save(Map obj);
-    String save(JSONObject json);
     
     /**
      * Saves the given collection of objects to the database.
@@ -160,5 +158,7 @@ public interface ClothoConnection {
     
     //Deletes everything
     void deleteAll();
+
+    public boolean exists(ObjectId id);
  
 }

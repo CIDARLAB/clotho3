@@ -1,5 +1,7 @@
 package org.clothocad.core.layers.communication.connection;
 
+import org.clothocad.core.layers.communication.Message;
+
 public abstract class ClientConnection {
 
 	private String id;
@@ -9,4 +11,6 @@ public abstract class ClientConnection {
 	public String getId() {
 		return this.id;
 	}
+        
+        public abstract void send(Message msg);
 }

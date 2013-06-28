@@ -30,8 +30,6 @@ import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**

@@ -27,13 +27,13 @@ package org.clothocad.core.layers.communication;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
-import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson
@@ -71,7 +71,7 @@ public class UpdateIndex {
             return;
         }
         
-        JSONObject data = new JSONObject(persistor.toJSON(sharable));
+        Map<String, Object> data = persistor.toJSON(sharable);
         
         for(Widget widg : widgets) {
             try {

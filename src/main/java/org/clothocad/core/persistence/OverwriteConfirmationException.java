@@ -11,7 +11,7 @@ import org.clothocad.core.datums.ObjBase;
  *
  * @author spaige
  */
-class OverwriteConfirmationException extends Exception {
+class OverwriteConfirmationException extends RuntimeException {
     public final Set<ObjBase> modifiedObjects;
 
     public OverwriteConfirmationException(Set<ObjBase> modifiedObjects) {

@@ -1,16 +1,16 @@
 package org.clothocad.core.layers.execution;
 
+import java.util.Map;
 import org.clothocad.core.layers.communication.Communicator;
-import org.json.JSONObject;
 
 public class ExecutorThread 
 	implements Runnable {
 
 	private String socket_id;
 	private String channel;
-	private JSONObject json;
+	private Map<String, Object> json;
 	
-	public ExecutorThread(String socket_id, String channel, JSONObject json) {
+	public ExecutorThread(String socket_id, String channel, Map<String, Object> json) {
 		this.socket_id = socket_id;
 		this.channel = channel;
 		this.json = json;

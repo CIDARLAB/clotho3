@@ -38,7 +38,6 @@ import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
-import org.json.JSONObject;
 import static org.objectweb.asm.Opcodes.*;
 
 /**
@@ -61,7 +60,7 @@ public class SchemaATest {
         BSONObject serial = createFeature();
         persistor.save(serial.toMap());
         ObjBase feature = persistor.get(schema.getEnclosedClass(cl), new ObjectId((String) serial.get("_id")));
-        System.out.println(feature.toJSON().toString());
+        System.out.println(feature.toString());
         System.out.println("Id is: " + feature.getUUID());
         testObjBase(feature);
     }
@@ -81,18 +80,18 @@ public class SchemaATest {
                                                 new ClothoField("sequence", String.class, "atgcatgagatcatgcagccaactatttattaa", "the feature sequence", null, false, Access.PUBLIC));
 
         Schema schema = new ClothoSchema("Feature", "Act ontology standard representation ofa genetic feature", null, null, thefields);
-        System.out.println(schema.toJSON().toString());
+        System.out.println(schema.toString());
         return schema;
     }
     
     private static boolean testSchema(Schema schema) {
         try {
             //Convert to JSON
-            JSONObject json = schema.toJSON();
+//            JSONObject json = schema.toJSON();
             //Convert back to Schema
             JavaSchema converted = null; //TODO: JavaSchema.deserialize(json.toString());
 
-            System.out.println(converted.toJSON()); 
+//            System.out.println(converted.toJSON()); 
             
             
             if(!converted.getUUID().equals(schema.getUUID())) {
@@ -111,7 +110,7 @@ public class SchemaATest {
     private static boolean testObjBase(ObjBase obj) {
         try {
             //Convert to JSON
-            JSONObject json = obj.toJSON();
+//            JSONObject json = obj.toJSON();
             //Convert back to Schema
             ObjBase converted = null; //TODO: deserialize here 
             

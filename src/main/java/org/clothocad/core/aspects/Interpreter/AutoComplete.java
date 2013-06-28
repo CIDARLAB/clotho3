@@ -22,21 +22,16 @@ package org.clothocad.core.aspects.Interpreter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
 import org.clothocad.core.util.FileUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.clothocad.core.util.JSON;
 
 public class AutoComplete {
     Persistor persistor;
@@ -57,9 +52,9 @@ public class AutoComplete {
      * 
      * Extracting options from the Trie
      */
-    public ArrayList<String> getCompletions(String subString) {
+    public List<String> getCompletions(String subString) {
         SortedMap<String, String> subTrie = trie.prefixMap(subString);
-        ArrayList<String> options = new ArrayList<String>();
+        List<String> options = new ArrayList<>();
         for (Map.Entry<String, String> entry : subTrie.entrySet()) {
             options.add(entry.getValue());
         }
@@ -86,10 +81,10 @@ public class AutoComplete {
         try {
             if(wordBank==null) {
                 String sfile = FileUtils.readFile("wordbank.txt");
-                JSONArray listy = new JSONArray(sfile);
+                List listy = JSON.deserializeList(sfile);
                 wordBank = new HashSet<String>();
-                for(int i=0; i<listy.length(); i++) {
-                    String str = listy.getString(i);
+                for(int i=0; i<listy.size(); i++) {
+                    String str = listy.get(i).toString();
                     wordBank.add(str);
                 }
                 return wordBank;

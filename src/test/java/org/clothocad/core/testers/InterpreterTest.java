@@ -1,10 +1,10 @@
 package org.clothocad.core.testers;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import java.util.Set;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.aspects.Interpreter.Trainer;
 import org.clothocad.core.aspects.Interpreter.StdIn;
-import org.json.JSONException;
 
 class InterpreterTest {
     /**
@@ -12,7 +12,7 @@ class InterpreterTest {
      * Set a threshold of when to execute directly and when to ask.
      * @param args
      */
-    public static void main(String[] args) throws JSONException {
+    public static void main(String[] args) throws JsonParseException{
         StdIn inputReader = new StdIn();
         while (true) {
             System.out.println("Type your command: ");

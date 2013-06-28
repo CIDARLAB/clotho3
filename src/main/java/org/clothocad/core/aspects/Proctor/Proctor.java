@@ -24,17 +24,15 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects.Proctor;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.datums.Function;
 import org.clothocad.core.layers.communication.mind.PageMode;
 import org.clothocad.model.Person;
 import org.clothocad.model.Trail;
-import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson
@@ -76,7 +74,7 @@ public class Proctor implements Aspect {
 //     * @param doo
 //     * @return 
 //     */
-//    public boolean gradeQuiz(JSONObject submittedAnswer, Person person, Quiz quiz, Doo doo) {
+//    public boolean gradeQuiz(Map<String, Object> submittedAnswer, Person person, Quiz quiz, Doo doo) {
 //        ProctorDoo qdoo = new ProctorDoo(doo);
 //        qdoo.quizId = quiz.getUUID().toString();
 //        qdoo.studentId = person.getUUID().toString();
@@ -85,7 +83,7 @@ public class Proctor implements Aspect {
 //        Function rubric = quiz.getRubric();
 //        try {
 //            String resultStr = (String) rubric.execute(submittedAnswer);
-//            JSONObject result = new JSONObject(resultStr);
+//            Map<String, Object> result = new Map<String, Object>(resultStr);
 //            
 //            //NEED TO SEE WHAT THIS LOOKS LIKE.  WE'RE PROBABLY AT THE POINT WHERE WE NEED TO FIX THIS
 //            //YEAH, NEED TO WORK OUT THE SERVERSCRIPT EXECUTION ISSUE
@@ -119,8 +117,8 @@ public class Proctor implements Aspect {
      * @return
      * @throws Exception 
      */
-    public JSONObject makeNewPage(PageMode mode) throws Exception {
-        JSONObject out = new JSONObject();
+    public Map<String, Object> makeNewPage(PageMode mode) throws Exception {
+        Map<String, Object> out = new HashMap<>();
         out.put("mode", mode.toString());
         out.put("ephemeral_link_page_id", UUID.randomUUID().toString());
         out.put("command", "addPage");
@@ -196,11 +194,11 @@ public class Proctor implements Aspect {
      * @return
      * @throws Exception 
      */
-//    private JSONObject makeShowWidget(Widget widget, JSONObject position) throws Exception {
-//        JSONObject out = new JSONObject();
+//    private Map<String, Object> makeShowWidget(Widget widget, Map<String, Object> position) throws Exception {
+//        Map<String, Object> out = new Map<String, Object>();
 //            View view = widget.getView();
 //
-//            //Load the html and js scripts into a JSONObject, insert the uuid for the widget
+//            //Load the html and js scripts into a Map<String, Object>, insert the uuid for the widget
 //            String widgetId = widget.getId();
 //            
 //            String html = view.getGraphicsScript(); //this is the correct call that needs to be made in makeShowWidget(...) to get the raw html

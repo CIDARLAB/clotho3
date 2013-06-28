@@ -1,13 +1,18 @@
 package org.clothocad.core.layers.communication.connection.ws;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 import org.clothocad.core.layers.communication.ClothoConstants;
+import org.clothocad.core.layers.communication.Message;
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
+import org.clothocad.core.util.JSON;
 import org.eclipse.jetty.websocket.WebSocket;
-import org.json.JSONObject;
 
+@Slf4j
 public class ClothoWebSocket 
 	extends ClientConnection 
 	implements WebSocket.OnTextMessage {
@@ -27,61 +32,29 @@ public class ClothoWebSocket
 		connection.sendMessage(data);
 	}
 
-	@Override
-	public void onMessage(String message) {
-		// here, we need to forward the message dependent on its content
-		
-//		System.out.println("[ClothoWebSocket.onMessage] -> "+message);
+    @Override
+    public void send(Message msg) {
+            try {
+                connection.sendMessage(msg.toString());
+            } catch (IOException ex) {
+                log.error("Cannot send message", ex);
+            }
+    }
+        
+        
 
-		/**
-		obj = JSON.parse(obj);
-		var channel = obj.channel;
-		var data = obj.data;
-		
-		//note - channel reserved for serverAPI
-		if (channel == "$clotho") {
-		    console.log("SOCKET\tchannel $clotho");
-		    internal_trigger(data.channel, data.data);
-		    return;
-		}
-		
-		// it's the ClientAPI method's responsibility to handle data appropriately.
-		if (typeof ClientAPI[channel] == 'function') {
-		    console.log("SOCKET\tmapping to ClientAPI - " + channel);
-		    ClientAPI[channel](data);
-		}
-		//for custom listeners attached
-		else if (typeof customChannels[channel] == 'function') {
-		    console.log("SOCKET\tmapping to custom listeners - " + channel);
-		    trigger(channel, data);
-		}
-		// don't know what to do, so publish to PubSub
-		else {
-		    console.log("SOCKET\tno listener found for channel: " + channel);
-		    PubSub.publish(channel, data);
-		}
-		 **/
-		
-		JSONObject json = null;
-		try {
-			json = new JSONObject(message);
-		} catch(Exception e) {
-			// invalid json object -> do some error handling
-			e.printStackTrace();
-		}					
-		
-		// do the unmarshaling
-		if(null != json) {
-			try {					
-				// do some routing
-				Router.get().receiveMessage(
-						this, 
-						json.getString(ClothoConstants.CHANNEL), 
-						json);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
+	@Override
+	public void onMessage(String messageString) {
+            log.trace("Websocket #{} recieved message {}", this.getId(), messageString);
+                try {
+                    Message message = JSON.mapper.readValue(messageString, Message.class);
+                    Router.get().receiveMessage(this, message);
+                }  catch (JsonParseException ex) {
+                    log.error("Websocket #{} recived malformed message: {}", this.getId(), messageString);
+                } catch (JsonMappingException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                }
 	}
 
 	public boolean isOpen() {

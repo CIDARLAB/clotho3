@@ -29,7 +29,6 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.View;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
-import org.json.JSONObject;
 
 /**
  * Tests the NameSpace functionality of the Mind

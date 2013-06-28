@@ -27,12 +27,10 @@ import static java.util.Arrays.asList;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.ToolProvider;
-import lombok.Data;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.util.compiler.DynamicFileManager;
 import org.clothocad.core.util.compiler.JavaSourceFromString;
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 import org.objectweb.asm.ClassReader;
 
 
@@ -96,12 +94,6 @@ public class JavaSchema
     @Override
     public Language getLanguage() {
         return Language.JAVA;
-    }
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        System.out.println("JavaSchema:  Stephanie needs to implement me!!!");
-        return true;
     }
     
 }

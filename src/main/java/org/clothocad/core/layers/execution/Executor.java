@@ -23,11 +23,11 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.layers.execution;
 
+import java.util.Map;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.layers.communication.Callback;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,14 +66,14 @@ public final class Executor implements Aspect {
      * @param inputData  the value data, usually objbases but can be wrapped primitives and xrefs too
      * @param callback  What to do after the thing has finished (an async callback)
      */
-    public synchronized final void run(Doo parent, final Function assistant, JSONObject jsonInputs, Callback callback) {
+    public synchronized final void run(Doo parent, final Function assistant, Map<String, Object> jsonInputs, Callback callback) {
         ExecutorDoo doo = new ExecutorDoo(parent, assistant, jsonInputs, callback);
         doo.setMessage("Executor Starting to run doo");
         if(runCanDooIt(doo)) {
             doo.setMessage("Executor says it can runCanDooIt");
 
-            JSONObject result = runDooit(doo);
-            System.out.println("[Executor.run] got JSONObject -> "+result);
+            Map<String, Object> result = runDooit(doo);
+            System.out.println("[Executor.run] got Map<String, Object> -> "+result);
             
             if(result==null) {
                 doo.setMessage("Executor results of runDooIt were null");
@@ -116,11 +116,11 @@ public final class Executor implements Aspect {
     }
     
     //7/1 correct
-    private synchronized JSONObject runDooit(ExecutorDoo doo) {
+    private synchronized Map<String, Object> runDooit(ExecutorDoo doo) {
         try {
             //Get the language and script
             logger.info( "rundooit about to call run");
-            JSONObject result = (JSONObject) doo.assistant.execute(); //XXX: unpack doo input, fix returntype
+            Map<String, Object> result = (Map<String, Object>) doo.assistant.execute(); //XXX: unpack doo input, fix returntype
             return result;
         } catch (Exception e) {
             doo.setMessage("Executor.runDooIt threw an exception for some reason");
@@ -128,7 +128,7 @@ public final class Executor implements Aspect {
                        "This needs to relay a developer message as the rundooit method failed to run properly",
                        e);
             doo.terminate();
-            return (JSONObject)null;
+            return (Map<String, Object>)null;
         }
     }
 
@@ -139,10 +139,10 @@ public final class Executor implements Aspect {
      */
     public class ExecutorDoo extends Doo {
         final Function assistant;
-        final JSONObject inputs;
+        final Map<String, Object> inputs;
         final Callback callback;
 
-        public ExecutorDoo(Doo doo, Function assistant, JSONObject inputs, Callback callback) {
+        public ExecutorDoo(Doo doo, Function assistant, Map<String, Object> inputs, Callback callback) {
             super(doo, false);
             this.assistant = assistant;
             this.inputs = inputs;

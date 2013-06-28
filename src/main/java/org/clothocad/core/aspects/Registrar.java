@@ -24,12 +24,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects;
 
+import java.util.Map;
 import org.clothocad.core.persistence.Persistor;
-import org.bson.types.ObjectId;
-import org.clothocad.core.datums.Sharable;
-import org.clothocad.core.datums.objbases.Badge;
-import org.json.JSONObject;
-
 /**
  * The Registrar (which maybe should be renamed) is the Clotho-to-Clotho API
  * 
@@ -74,7 +70,7 @@ public class Registrar {
      * @param sharableId
      * @return 
      */
-    public JSONObject get(String personId, String sharableId) {
+    public Map<String, Object> get(String personId, String sharableId) {
         try {
         	/*** TODO!
             Sharable out = persistor.get(Sharable.class, new ObjectId(sharableId));
@@ -86,6 +82,6 @@ public class Registrar {
             //return null;
         } catch(Exception err) {
         }
-        return (JSONObject)null;
+        return null;
     }
 }

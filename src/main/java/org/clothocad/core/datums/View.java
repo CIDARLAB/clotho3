@@ -1,11 +1,12 @@
 package org.clothocad.core.datums;
 
 import java.util.List;
+import java.util.Map;
+import javax.validation.constraints.AssertTrue;
 
 import org.clothocad.core.datums.util.ClothoField;
 
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 
 
 /**
@@ -58,12 +59,12 @@ public class View extends Sharable {
     
     /***
     @Override
-    public JSONObject toJSON() {
+    public Map<String, Object> toJSON() {
         try {
             JSONSerializer serializer = new JSONSerializer().exclude("*.class");
             serializer.prettyPrint(true);
             String serial = serializer.deepSerialize( this );
-            return new JSONObject(serial);
+            return new Map<String, Object>(serial);
         } catch (JSONException ex) {
             return null;
         }
@@ -131,8 +132,8 @@ public class View extends Sharable {
     
     private int instanceCount = 0;
 
-    @Override
-    public boolean validate(JSONObject obj) {
+    @AssertTrue
+    public boolean validate(Map<String, Object> obj) {
         return true;
     }
 }

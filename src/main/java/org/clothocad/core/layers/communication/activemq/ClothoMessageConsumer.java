@@ -1,16 +1,17 @@
 package org.clothocad.core.layers.communication.activemq;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.Session;
+import org.clothocad.core.layers.communication.Channel;
 
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
+import org.clothocad.core.util.JSON;
 import org.fusesource.stomp.jms.message.StompJmsMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ClothoMessageConsumer 
 	implements Runnable {
@@ -18,7 +19,7 @@ public class ClothoMessageConsumer
 	private Session session;
 	private StompJmsMessage message;
 	
-	public ClothoMessageConsumer(Session session, Message message) 
+	public ClothoMessageConsumer(Session session, javax.jms.Message message) 
 			throws Exception {
 		this.session = session;
 		
@@ -34,8 +35,7 @@ public class ClothoMessageConsumer
 		try {
 			if(this.message.propertyExists("request")) {
 				
-				JSONObject json = new JSONObject(
-						message.getStringProperty("request"));
+				Map<String, Object> json = JSON.deserializeObject(message.getStringProperty("request"));
 				
 				// get the message's correlation id
 				String sCorrelationID = this.message.getJMSCorrelationID();
@@ -54,13 +54,11 @@ public class ClothoMessageConsumer
 				
 				// route the message
 				Router.get().receiveMessage(
-						connection,
-						json.getString("channel"), 
-						json);
+						connection, new org.clothocad.core.layers.communication.Message(Channel.valueOf(json.get("channel").toString()),json));
 			}
 		} catch (JMSException e) {
 			e.printStackTrace();
-		} catch (JSONException e) {
+		} catch (JsonParseException e) {
 			e.printStackTrace();
 		}
 	} 

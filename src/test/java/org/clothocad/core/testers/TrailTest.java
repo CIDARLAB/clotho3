@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.model.Trail;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.After;
 
 public class TrailTest {
@@ -32,8 +30,8 @@ public class TrailTest {
     @Test
     public void testCreateTrail() throws Exception{
         //construct the contents
-        List<Module> contents = new ArrayList<Module>();
-        List<Paver> pavers = new ArrayList<Paver>();
+        List<Module> contents = new ArrayList<>();
+        List<Paver> pavers = new ArrayList<>();
         TemplatePaver tp1 = new TemplatePaver("Introduction", "/app/partials/trail_123_1.html");
         pavers.add(tp1);
         Module module = new Module("The Basics", pavers);
@@ -45,9 +43,9 @@ public class TrailTest {
         
         
         //Save then re-retrieve the trail
-        Persistor.get().save(trail);
+        persistor.save(trail);
         ObjectId uuid = trail.getUUID();
-        Trail result = Persistor.get().get(Trail.class, uuid);
+        Trail result = persistor.get(Trail.class, uuid);
         assert(result.getTitle().equals("First Biosafety Module"));
         
         

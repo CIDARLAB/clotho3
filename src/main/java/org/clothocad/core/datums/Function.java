@@ -19,6 +19,7 @@ import org.clothocad.model.Person;
 //java object for first-class functions?
 //declaration of requrirements?
 public class Function extends ObjBase {
+    public enum NoResult {}
     
     public Function(){};
     
@@ -71,6 +72,7 @@ public class Function extends ObjBase {
         return true;
     }
     
+    //TODO: convert to dict-style
     public Object execute(Object... args) throws ScriptException{
         if (canDooIt(args)){
             return action.run(args);

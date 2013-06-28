@@ -24,9 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.objbases;
 
+import java.util.Map;
+import javax.validation.constraints.AssertTrue;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 
 
 /**
@@ -98,9 +99,9 @@ public class Badge
 //    }
 //
 //    @Override
-//    public final JSONObject getJSON() {
+//    public final Map<String, Object> getJSON() {
 //        try {
-//            JSONObject out = new JSONObject();
+//            Map<String, Object> out = new Map<String, Object>();
 //            out.put("type", "BADGE");
 //            out.put("name", this.name);
 //            out.put("description", description);
@@ -114,7 +115,7 @@ public class Badge
 //    }
 //
 //    @Override
-//    public void set(JSONObject permissions, String userId) {
+//    public void set(Map<String, Object> permissions, String userId) {
 //        
 //    }
 //
@@ -128,8 +129,8 @@ return true;
         //        return haveBadge.contains(personId);
     }
 
-    @Override
-    public boolean validate(JSONObject obj) {
+    @AssertTrue
+    public boolean validate(Map<String, Object> obj) {
         return true;
     }
 //    

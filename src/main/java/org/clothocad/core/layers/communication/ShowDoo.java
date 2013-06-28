@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable;
-import org.json.JSONArray;
 
 /**
  *
@@ -21,7 +20,7 @@ public class ShowDoo extends Doo {
     }
     
     public String widgetId;
-    public JSONArray commandMessageArray;
+    public List commandMessageArray;
     public String viewId;
     public List<String> sharableIds = new ArrayList<String>();
 

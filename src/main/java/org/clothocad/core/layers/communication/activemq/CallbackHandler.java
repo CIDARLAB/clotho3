@@ -1,5 +1,6 @@
 package org.clothocad.core.layers.communication.activemq;
 
+import java.util.Map;
 import javax.jms.DeliveryMode;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
@@ -8,7 +9,6 @@ import javax.jms.Session;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.protocol.ActionType;
 import org.fusesource.stomp.jms.StompJmsDestination;
-import org.json.JSONObject;
 
 public class CallbackHandler {
 
@@ -32,7 +32,8 @@ public class CallbackHandler {
 		}
     }
 	
-	public void respond(JSONObject json) {
+        //XXX: this probably needs to be revisited, use JSON.serialize, etc
+	public void respond(Object json) {
 		try {
 			Message response = session.createMessage();
 			response.setJMSCorrelationID(request.getJMSCorrelationID());

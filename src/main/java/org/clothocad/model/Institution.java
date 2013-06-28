@@ -4,13 +4,14 @@
  */
 package org.clothocad.model;
 
+import java.util.Map;
+import javax.validation.constraints.AssertTrue;
 import org.clothocad.core.datums.ObjBase;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.clothocad.core.datums.Sharable;
-import org.json.JSONObject;
 
 /**
  *org.clothocad.model.Institution
@@ -59,8 +60,8 @@ public class Institution extends Sharable {
         throw new UnsupportedOperationException("not implemented yet.");
     }
 
-    @Override
-    public boolean validate(JSONObject obj) {
+    @AssertTrue
+    public boolean validate(Map<String, Object> obj) {
         return true;
     }
 }

@@ -31,25 +31,21 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.objbases.Badge;
-import org.json.JSONObject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.bson.types.ObjectId;
+import org.clothocad.core.util.JSON;
 
 /**
  * The Connector and Communicator have somewhat similar functions but not identical.
@@ -239,11 +235,11 @@ public class Ambassador implements Aspect {
             //
             //Read the message and pull any waiting Doos
             //
-            JSONObject jsonObj = new JSONObject(message);
+            Map<String, Object> jsonObj = JSON.deserializeObject(message);
             String callerId = null;
             Doo waitingDoo = null;
-            if(jsonObj.has("calling_doo_id")) {
-                callerId = jsonObj.getString("calling_doo_id");
+            if(jsonObj.containsKey("calling_doo_id")) {
+                callerId = (String) jsonObj.get("calling_doo_id");
                 waitingDoo = Hopper.get().extract(callerId);
             }
             
@@ -258,8 +254,8 @@ public class Ambassador implements Aspect {
             //
             //Do some bookeeping about the Sister
             //
-            doo.sisterId = doo.jsonObj.getString("sister_id");
-            doo.port = doo.jsonObj.getInt("port");
+            doo.sisterId = doo.jsonObj.get("sister_id").toString();
+            doo.port = Integer.parseInt(doo.jsonObj.get("port").toString());
             Sister sister = persistor.get(Sister.class, new ObjectId(doo.sisterId));
             if(sister==null) {
                 //Create a new Sister to represent this newcomer
@@ -277,14 +273,15 @@ public class Ambassador implements Aspect {
                 sister.setUrl(doo.url);
             }
             
-            persistor.save(sister);
+            //TODO: sister needs to be an ObjBase
+            //persistor.save(sister);
             
             //
             //Extract any security codes, and the cmd token
             //
-            doo.cmd = doo.jsonObj.getString("cmd");
-            if(doo.jsonObj.has("security_code")) {
-                doo.securityCode = doo.jsonObj.getString("security_code");
+            doo.cmd = doo.jsonObj.get("cmd").toString();
+            if(doo.jsonObj.containsKey("security_code")) {
+                doo.securityCode = doo.jsonObj.get("security_code").toString();
             }
             
             //
@@ -366,8 +363,8 @@ public class Ambassador implements Aspect {
             //Go fetch the sharable, wrap it into the response, then send it back
             //
             Sharable sharable = persistor.get(Sharable.class, new ObjectId(doo.itemId));
-            doo.sharableJSON = sharable.toJSON();
-            doo.response = new JSONObject();
+            doo.sharableJSON = persistor.toJSON(sharable);
+            doo.response = new HashMap<>();
             doo.response.put("sharable_item", doo.sharableJSON);
             
               //NEED TO ALSO put in a doo routing number, maybe some secutity in here
@@ -389,7 +386,7 @@ public class Ambassador implements Aspect {
      Doo in format:
         int port: 7777
         String rawMsg:      N/A but present
-        JSONObject jsonObj; N/A but present
+        Map<String, Object> jsonObj; N/A but present
         String cmd;         has_badge
         String url;         http://andersonlab.qb3.berkeley.edu/clotho
         String item_id:     static_badge_isuuid
@@ -410,7 +407,7 @@ public class Ambassador implements Aspect {
             //
             //Wrap it up and return it
             //
-            doo.response = new JSONObject();
+            doo.response = new HashMap<>();
             doo.response.put("has_badge", out);
             this.sendClothoMessage(doo.url, doo.response.toString());
             doo.terminate();
@@ -430,8 +427,8 @@ public class Ambassador implements Aspect {
         
         int port;               //the port it came in on, not sure this is important
         String rawMsg;          //the original String sent in
-        JSONObject jsonObj;     //the parsing of the message
-        JSONObject response;    //this doo's response message
+        Map<String, Object> jsonObj;     //the parsing of the message
+        Map<String, Object> response;    //this doo's response message
         String cmd;             //the command, like "get" "set" "check_badge", etc.
         String url;             //Th url that called me, I should have it always update that in a registry
         String sisterId;        //The clotho-wide UUID of the calling ClothoCore
@@ -439,7 +436,7 @@ public class Ambassador implements Aspect {
         String callingDooId;    //The uuid of the Doo making the call
         String itemId;          //for gets and sets, etc, the uuid of the Sharable in question, or a badge Id
         String callerDooId;        //for gets and sets, etc, the uuid of the Person making the request
-        JSONObject sharableJSON;//the json of the sharable that was sent as that id
+        Map<String, Object> sharableJSON;//the json of the sharable that was sent as that id
         Runnable command; //the actions that should be taken when the Doo is revived from the Hopper
         
     }

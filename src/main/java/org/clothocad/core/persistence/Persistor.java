@@ -39,14 +39,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import lombok.Delegate;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.JSONSerializer;
 import org.clothocad.core.datums.ObjBase;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.clothocad.core.datums.Sharable;
 
 /**
  * @author jcanderson
@@ -72,20 +72,20 @@ import org.json.JSONObject;
 //TODO: move backend-agnostic logic into persistor
 @Singleton
 public class Persistor{
+    private static final int SEARCH_MAX = 5000;
     
     private ClothoConnection connection;
     
     @Delegate
     private JSONSerializer serializer;
     
-    private Validator validator;
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     
     @Inject
-    public Persistor(final ClothoConnection connection, JSONSerializer serializer, Validator validator){
+    public Persistor(final ClothoConnection connection, JSONSerializer serializer){
         this.connection = connection;
         this.serializer = serializer;
-        this.validator = validator;
     }
     
     private void validate(ObjBase obj){
@@ -109,7 +109,13 @@ public class Persistor{
         return obj;
     }
     
-    public void save(ObjBase obj, boolean overwrite) throws ConstraintViolationException, OverwriteConfirmationException{
+    //throws ConstraintViolationException, OverwriteConfirmationException
+    
+    public void save(ObjBase obj) {
+        save(obj, false);
+    }
+    
+    public void save(ObjBase obj, boolean overwrite) {
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
         validate(obj);
         
@@ -124,7 +130,7 @@ public class Persistor{
         connection.saveAll(relevantObjects);
     }
     
-    public void save(Map<String, Object> data) {
+    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
         throw new UnsupportedOperationException();
     }
     
@@ -133,7 +139,7 @@ public class Persistor{
     }
     
     public BSONObject getAsBSON(ObjectId uuid){
-        
+        return connection.getAsBSON(uuid);
     }
     
     
@@ -179,7 +185,7 @@ public class Persistor{
     }
     
     public void persistFeature(HashMap<String, Integer> StoreGrams, String feature) {
-        System.out.println("Stephanie:  features should be stored in a separate spot than ObjBases.  They aren't UUID-based.  They are are feature-word based");
+   /*     System.out.println("Stephanie:  features should be stored in a separate spot than ObjBases.  They aren't UUID-based.  They are are feature-word based");
         try {
             //Convert the StoreGrams to a JSONArray in a JSONObject
             JSONObject bolus = new JSONObject();
@@ -217,11 +223,11 @@ public class Persistor{
             
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public HashMap<String, Integer> loadFeature(String feature) {
-        try {
+      /*  try {
             System.out.println("Stephanie:  feature persistence needs to be separated from ObjBase persistence");
 
             //Query the database for this feature entry
@@ -251,7 +257,7 @@ public class Persistor{
 
             return out;
         } catch(Exception err) {
-        }
+        }*/
         return null;
     }        
 
@@ -261,5 +267,25 @@ public class Persistor{
     
     public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
         throw new UnsupportedOperationException();
+    }
+
+    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec){
+        return findAsBSON(spec, 1000);
+    }
+    
+    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Map<String, Object> toJSON(Sharable sharable) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void connect() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void deleteAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

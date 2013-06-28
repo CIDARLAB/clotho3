@@ -5,15 +5,10 @@
 package org.clothocad.core.schema;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.util.Set;
-import lombok.NoArgsConstructor;
-import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -21,7 +16,6 @@ import org.objectweb.asm.MethodVisitor;
 import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.util.CheckClassAdapter;
-import org.objectweb.asm.util.TraceClassVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,11 +164,5 @@ public class ClothoSchema extends Schema {
             logger.trace("{}.visit({},{})", visitor, name, value);
             visitor.visit(name, value);
         }
-    }
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        System.out.println("ClothoSchema.java:  Stephanie needs to implement me!!!");
-        return true;
     }
 }

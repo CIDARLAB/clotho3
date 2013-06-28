@@ -38,12 +38,12 @@ import javax.script.ScriptException;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.layers.communication.Channel;
+import org.clothocad.core.layers.communication.Message;
 import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -313,10 +313,11 @@ public final class Mind
     }
 
     public ServerSideAPI getAPI() {
-        if (ssAPI == null) {
-            ssAPI = new ServerSideAPI(this);
-        }
         return ssAPI;
+    }
+    
+    public void setAPI(ServerSideAPI api) {
+        ssAPI = api;
     }
     
     public Person getPerson() {
@@ -327,28 +328,21 @@ public final class Mind
         connection = conn;
     }
     
-    public List<JSONObject> getLastCommands() {
+    public List<Message> getLastCommands() {
         return this.lastCommands;
     }
-    
-    public void addLastCommand(String str) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("text", str);
-            obj.put("type", "phrase");
-            lastCommands.add(obj);
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        }
+
+    public void addLastCommand(Message command){
+        lastCommands.add(command);
     }
     
-    public void addLastCommand(JSONObject json) {
-        lastCommands.add(json);
+    public void addLastCommand(Channel channel, Object data){
+        lastCommands.add(new Message(channel, data));
     }
     
     private Person person;
     private String personId;
-    private transient List<JSONObject> lastCommands = new ArrayList<JSONObject>();
+    private transient List<Message> lastCommands = new ArrayList<>();
     private transient ScriptEngine engine;
     private transient ServerSideAPI ssAPI;
     private transient ClientConnection connection;

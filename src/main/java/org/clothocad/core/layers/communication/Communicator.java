@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.HashMap;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**
@@ -55,15 +53,12 @@ public final class Communicator
     public void sendClientMessage(String connection_id,
                                   String channel,
                                   String message) {
-    	JSONObject json = new JSONObject();
-    	try {
+    	Map<String, Object> json = new HashMap<>();
 			json.put("message", message);
 			
 			// TODO:
 	        //Router.get().sendMessage(connection_id, channel, json);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+
     }
     
     public Mind getMind(String auth_key) {
