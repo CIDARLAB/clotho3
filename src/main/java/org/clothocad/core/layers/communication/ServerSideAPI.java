@@ -310,6 +310,9 @@ public final class ServerSideAPI {
         // we need to remove the Mind of the given user
         JSONObject responseJSON = new JSONObject();
         try {
+            
+            // TODO: the logic of a logout-command
+            
             responseJSON.put("logout", true);
         } catch(Exception e) {
             try {

@@ -24,10 +24,7 @@ public class ClothoWebSocket
 
 	public void sendMessage(String data) 
                 throws IOException {
-            System.out.println("[ClothoWebSocket.sendMessage] -> "+this.getId());
-            System.out.println("[ClothoWebSocket.sendMessage] -> "+data);
             if(connection.isOpen()) {
-                System.out.println("Connection is still open!");
                 connection.sendMessage(data);
             }
 	}
@@ -35,58 +32,27 @@ public class ClothoWebSocket
 	@Override
 	public void onMessage(String message) {
 		// here, we need to forward the message dependent on its content
-            System.out.println("[ClothoWebSocket.onMessage] -> "+this.getId());
-            System.out.println("[ClothoWebSocket.onMessage] -> "+message);
 
-		/**
-		obj = JSON.parse(obj);
-		var channel = obj.channel;
-		var data = obj.data;
+            JSONObject json = null;
+            try {
+                json = new JSONObject(message);
+            } catch(Exception e) {
+                // invalid json object -> do some error handling
+                e.printStackTrace();
+            }					
 		
-		//note - channel reserved for serverAPI
-		if (channel == "$clotho") {
-		    console.log("SOCKET\tchannel $clotho");
-		    internal_trigger(data.channel, data.data);
-		    return;
-		}
-		
-		// it's the ClientAPI method's responsibility to handle data appropriately.
-		if (typeof ClientAPI[channel] == 'function') {
-		    console.log("SOCKET\tmapping to ClientAPI - " + channel);
-		    ClientAPI[channel](data);
-		}
-		//for custom listeners attached
-		else if (typeof customChannels[channel] == 'function') {
-		    console.log("SOCKET\tmapping to custom listeners - " + channel);
-		    trigger(channel, data);
-		}
-		// don't know what to do, so publish to PubSub
-		else {
-		    console.log("SOCKET\tno listener found for channel: " + channel);
-		    PubSub.publish(channel, data);
-		}
-		 **/
-		
-		JSONObject json = null;
-		try {
-			json = new JSONObject(message);
-		} catch(Exception e) {
-			// invalid json object -> do some error handling
-			e.printStackTrace();
-		}					
-		
-		// do the unmarshaling
-		if(null != json) {
-			try {					
-				// do some routing
-				Router.get().receiveMessage(
-						this, 
-						json.getString(ClothoConstants.CHANNEL), 
-						json);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
+            // do the unmarshaling
+            if(null != json) {
+                try {					
+                    // do some routing
+                    Router.get().receiveMessage(
+                        this, 
+                        json.getString(ClothoConstants.CHANNEL), 
+                        json);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
 	}
 
 	public boolean isOpen() {
