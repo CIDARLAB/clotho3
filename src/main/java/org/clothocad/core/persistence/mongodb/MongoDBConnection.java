@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author spaige
  */
+@Singleton
 public class MongoDBConnection
         implements ClothoConnection {
     
@@ -38,14 +41,13 @@ public class MongoDBConnection
 
         morphia = new Morphia(new ClothoMapper());
     }
-    
-    @Inject 
+
     public MongoDBConnection(Mapper mapper) {
         morphia = new Morphia(mapper);
     }
     
-    
-    public MongoDBConnection(int port, String host, String dbName, Mapper mapper){
+    @Inject
+    public MongoDBConnection(@Named("dbport") int port, @Named("dbhost")String host, @Named("dbname") String dbName, Mapper mapper){
         this.host = host;
         this.port = port;
         this.dbName = dbName;

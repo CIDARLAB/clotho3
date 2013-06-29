@@ -10,12 +10,13 @@ import org.clothocad.core.aspects.Proctor.TemplatePaver;
 import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.utils.TestUtils;
 import org.clothocad.model.Trail;
 import org.junit.After;
 
 public class TrailTest {
     Mind mind = new Mind();
-    Persistor persistor = new Persistor();
+    Persistor persistor = TestUtils.getA(Persistor.class);
     
     @Before
     public void setUp() {

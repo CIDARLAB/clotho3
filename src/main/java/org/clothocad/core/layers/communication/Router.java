@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
@@ -46,17 +47,14 @@ public class Router {
         return result;
     }
     private ExecutorService pool;
+    
+    @Inject
     private Persistor persistor;
-
+   
     public Router() {
 
         // create the thread-pool of ssAPI objects
         this.pool = Executors.newFixedThreadPool(100);
-
-        //let's initialize the application objects here 
-        //it's the first point of union between the websocket and the jms paths
-        Injector injector = Guice.createInjector(new MongoDBModule());
-        persistor = injector.getInstance(Persistor.class);
     }
 
     // send message    

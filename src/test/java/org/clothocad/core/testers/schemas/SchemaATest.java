@@ -38,6 +38,7 @@ import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.utils.TestUtils;
 import static org.objectweb.asm.Opcodes.*;
 
 /**
@@ -47,7 +48,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class SchemaATest {
     public static void main(String[] args) throws Exception {
-        Persistor persistor = new Persistor(new MongoDBConnection());
+        Persistor persistor = TestUtils.getA(Persistor.class);
         DBClassLoader cl = new DBClassLoader(persistor);
         
         //Create a schema and test

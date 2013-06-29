@@ -19,7 +19,7 @@ import org.clothocad.model.Person;
 //java object for first-class functions?
 //declaration of requrirements?
 public class Function extends ObjBase {
-    public enum NoResult {}
+    public static final class NoResult{};
     
     public Function(){};
     

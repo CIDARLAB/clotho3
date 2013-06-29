@@ -1,5 +1,6 @@
 package org.clothocad.webserver.jetty;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
@@ -14,7 +15,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 
 public class ClothoWebserver {
 
-	public ClothoWebserver(int nPort) 
+	public ClothoWebserver(@Named("port") int nPort) 
 			throws Exception {
 		
 		Server server = new Server(nPort);

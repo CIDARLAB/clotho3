@@ -5,6 +5,7 @@
 package org.clothocad.core.persistence;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import org.bson.types.ObjectId;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
@@ -27,12 +28,25 @@ public class DBClassLoader extends ClassLoader {
     final static Logger logger = LoggerFactory.getLogger(DBClassLoader.class);
     
     @Inject
+    public DBClassLoader(Provider<Persistor> provider){
+        this.provider = provider;
+    }
+    
     public DBClassLoader(Persistor p){
         super();
         persistor = p; 
     }
     
     Persistor persistor;
+    Provider<Persistor> provider;
+    
+    private Persistor getPersistor(){
+        if (persistor != null) return persistor;
+        else{
+            persistor = provider.get();
+            return persistor;
+        }
+    }
     
     /*@Override 
     public Class<?> loadClass(String uuid) throws ClassNotFoundException{
@@ -56,7 +70,7 @@ public class DBClassLoader extends ClassLoader {
     @Override
     public Class<?> findClass(String id) throws ClassNotFoundException{
         ObjectId dbId = new ObjectId(Schema.extractIdFromClassName(id));
-        Schema s = persistor.get(Schema.class, dbId);
+        Schema s = getPersistor().get(Schema.class, dbId);
         if (s == null){
             logger.error("Could not find schema with id {} in database.", id);
             throw new ClassNotFoundException();

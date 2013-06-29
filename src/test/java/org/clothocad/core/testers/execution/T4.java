@@ -16,6 +16,7 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.execution.CompiledEngineScript;
 import org.clothocad.core.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.utils.TestUtils;
 import org.clothocad.model.Person;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,7 +33,7 @@ public class T4 {
     
     private Persistor persistor;
     public T4() throws UnknownHostException {
-    	this.persistor = new Persistor(new MongoDBConnection());
+    	this.persistor = TestUtils.getA(Persistor.class);
     }
     
     //For testing: flush API between tests

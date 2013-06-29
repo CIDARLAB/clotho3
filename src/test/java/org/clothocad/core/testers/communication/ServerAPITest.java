@@ -4,13 +4,20 @@
  */
 package org.clothocad.core.testers.communication;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.clothocad.core.layers.communication.ServerSideAPI;
+import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.testers.ClothoTestModule;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -20,13 +27,16 @@ public class ServerAPITest {
     
     private static ServerSideAPI api;
     private static ServerSideAPI unprivilegedUser;
-    
-    public ServerAPITest() {
-        
-    }
+    private static Persistor persistor; 
+   
+    public ServerAPITest() {}
     
     @BeforeClass
-    public static void setUpClass() {   
+    public static void setUpClass() {
+        Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        persistor = injector.getInstance(Persistor.class);
+        Mind mind = new Mind();
+        api = new ServerSideAPI(mind,persistor);
     }
     
     @AfterClass
@@ -35,6 +45,8 @@ public class ServerAPITest {
     
     @Before
     public void setUp() {
+                persistor.deleteAll();
+        //set up test data database
     }
     
     @After
@@ -42,69 +54,100 @@ public class ServerAPITest {
     }
 
     @Test
-    public static void get(){
-        
-    }
-    
-    
-    @Test
-    public static void getNonExistent(){
+    public void get(){
         
     }
     
     @Test
-    public static void getPrivate(){
+    public void getNonExistent(){
+        
+    }
+    
+    @Test
+    @Ignore("authz not ready")
+    public void getPrivate(){
         
     }
     
     @Test 
-    public static void set(){
+    public void set(){
         
     }
     
     @Test
-    public static void setNonExistent(){
+    public void setNonExistent(){
         
     }
     
     @Test
-    public static void setInvalid(){
+    public void setInvalid(){
         
     }
     
     @Test
-    public static void setPrivate(){
+    @Ignore("authz not ready")
+    public void setPrivate(){
         
     }
     
     @Test 
-    public static void create(){
+    public void create(){
         
     }
     
     @Test
-    public static void createExisting(){
+    public void createExisting(){
         
     }
     
     @Test 
-    public static void createWithoutPrivs(){
+    @Ignore("authz not ready")
+    public  void createWithoutPrivs(){
         
     }
     
     @Test
-    public static void destroy(){
+    public void destroy(){
         
     }
     
     
     @Test
-    public static void destroyWithoutPrivs(){
+    @Ignore("authz not ready")
+    public void destroyWithoutPrivs(){
         
     }
     
     @Test
-    public static void query(){
+    public void query(){
         //filter out unseen results
     }
+    
+    @Test
+    public void run(){
+        
+    }
+    
+    
+    @Test
+    public void runNonExistent(){
+        
+    }
+    
+    @Test
+    public void runWrongArguments(){
+        
+    }
+    
+    @Test
+    public void runExecutionError(){
+        
+    }
+    
+    @Test
+    @Ignore("authz not ready")
+    public void runWithoutPrivs(){
+        
+    }
+    
 }

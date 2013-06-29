@@ -7,6 +7,7 @@ package org.clothocad.core;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import java.util.Properties;
+import org.clothocad.core.layers.communication.Router;
 
 /**
  *
@@ -14,21 +15,27 @@ import java.util.Properties;
  */
 public class ClothoModule extends AbstractModule {
     public ClothoModule(Properties properties){
-        this.properties = new Properties(defaults);
-        this.properties.putAll(properties);
-    }
-    
-    private static final Properties defaults = new Properties();
-    static {
         defaults.put("port", "8080");
         defaults.put("dbname", "clotho");
+        defaults.put("dbhost", "localhost");
+        defaults.put("dbport", "27017");
+        this.properties = new Properties(defaults);
+        if (properties != null) this.properties.putAll(properties);
     }
     
-    private Properties properties;
+    public ClothoModule(){
+        this(null);
+    }
+    
+    protected final Properties defaults = new Properties();
+    
+    private final Properties properties;
     
 
     @Override
     protected void configure() {
+        //TODO: make router completely DI
+        requestInjection(Router.get());
         Names.bindProperties(binder(), properties);
     }
     
