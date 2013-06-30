@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 //TODO: preferentially remove schema classes from cache
 import org.clothocad.core.aspects.JSONSerializer;
+import org.clothocad.core.persistence.Adds;
 import org.clothocad.core.persistence.DBClassLoader;
 
 public class ClothoMapper extends DefaultMapper implements JSONSerializer {
@@ -57,6 +58,7 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
     static {
         //add our annotations to the interesting annotations lists
         MappedClass.interestingAnnotations.add(Add.class);
+        MappedClass.interestingAnnotations.add(Adds.class);
         MappedField.interestingAnnotations.add(DBOnly.class);
         MappedField.interestingAnnotations.add(Replace.class);
     }

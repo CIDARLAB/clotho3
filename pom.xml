@@ -283,6 +283,11 @@
             <version>2.1.3</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+        </dependency>
     </dependencies>
 	
     <properties>

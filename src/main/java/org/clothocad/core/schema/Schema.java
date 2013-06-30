@@ -16,6 +16,7 @@ import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.Adds;
 import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.model.Person;
 
@@ -25,7 +26,10 @@ import org.clothocad.model.Person;
  */
 @Data
 @NoArgsConstructor
-@Add(name="language", provider="getLanguage")
+
+
+@Adds({@Add(name="language", provider="getLanguage"),
+@Add(name="binaryName", provider="getBinaryName")})
 public abstract class Schema extends Sharable {
     
     public Schema(String name, String description, Person author){

@@ -26,10 +26,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
@@ -39,6 +36,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.clothocad.core.persistence.Replace;
 
 /**
  *
@@ -46,6 +45,7 @@ import lombok.ToString;
  */
 @ToString(callSuper=true, includeFieldNames=true)
 @NoArgsConstructor
+@Slf4j
 public class Part extends ObjBase {
     
     //inject connection
@@ -58,6 +58,7 @@ public class Part extends ObjBase {
     
     @Getter
     @NotNull
+    @Replace(encoder = "getFormatName", decoder="setFormatFromName")
     private Format format;
 
     @Getter
@@ -160,7 +161,7 @@ public class Part extends ObjBase {
     
     
     //additional requirements are defined by particular format
-    public static Part generateComposite(ArrayList<Part> composition, Object additionalRequirements, Format f, Person author, String name, String shortdescription) {
+    public static Part generateComposite(List<Part> composition, Object additionalRequirements, Format f, Person author, String name, String shortdescription) {
         if (!f.checkComposite(composition, additionalRequirements)) {
             System.out.println("generateComposite: Doesn't obey format, return null");
             return null;
@@ -186,7 +187,19 @@ public class Part extends ObjBase {
             return format.checkComposite(this.composition, null);
         }
     }
+    
+    public String getFormatName(){
+        return format.getClass().getSimpleName();
+    }
 
+    public void setFormatFromName(String name){
+        try {
+            format = (Format) Class.forName("org.clothocad.model." + name).newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            log.error("Couldn't find format {}", "org.clothocad.model." + name);
+        } 
+    }
+    
     /* SETTERS
      * */
 

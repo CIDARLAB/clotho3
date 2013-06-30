@@ -61,6 +61,7 @@ public class JavaSchema
     
     //TODO: handle files that result in multiple source files;
     //TODO: supply uuid's of referenced classes to resolve name conflicts
+    @Override
     public void setSource(String source){
         this.source = source;
         

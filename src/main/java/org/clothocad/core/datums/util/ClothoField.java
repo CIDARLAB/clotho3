@@ -24,6 +24,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
+import com.github.jmkgreen.morphia.annotations.Reference;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,6 +52,18 @@ import org.slf4j.LoggerFactory;
 public class ClothoField {
     
     private ClothoField() {}
+    
+    public ClothoField(Field field){
+        name = field.getName();
+        type = field.getType();
+        reference = field.getAnnotation(Reference.class) != null;
+        
+        //TODO: access, validate
+        
+        //TODO: metadata
+        //example
+        //description
+    }
     
     private static final Logger logger = LoggerFactory.getLogger(ClothoField.class);
     

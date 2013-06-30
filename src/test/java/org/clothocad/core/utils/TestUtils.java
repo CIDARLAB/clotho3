@@ -6,8 +6,21 @@ package org.clothocad.core.utils;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.bson.types.ObjectId;
+import org.clothocad.core.ClothoModule;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.testers.ClothoTestModule;
+import org.clothocad.core.testers.MongoDBTestModule;
+import org.clothocad.core.testers.persistence.FreeForm;
+import org.clothocad.model.Format;
+import org.clothocad.model.Institution;
+import org.clothocad.model.Lab;
+import org.clothocad.model.Part;
+import org.clothocad.model.Person;
 
 /**
  *
@@ -19,11 +32,28 @@ public class TestUtils {
     private static Injector injector;
 
     static {
-        Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        injector = Guice.createInjector(new ClothoModule(), new MongoDBTestModule());
 
     }
 
     public static <T> T getA(Class<T> type) {
         return injector.getInstance(type);
+    }
+    
+    public static List<ObjectId> setupTestData(Persistor persistor){
+        Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
+        Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
+        Person person = new Person("Test Person", lab, null);
+        lab.setPI(person);
+        
+        Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);
+        Part part2 = Part.generateBasic("Test Part 2", "the second test part", "TTTTTTTTTTTTTTTTTT", new FreeForm(), person);
+        Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new Object(), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
+                
+        persistor.save(part1);
+        persistor.save(part2);
+        persistor.save(part3);
+        
+        return Arrays.asList(part1.getUUID(), part2.getUUID(), part3.getUUID());
     }
 }

@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +60,9 @@ public class MongoDBConnection
     
     private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
-    private String host = "localhost";
-    private int port = 27017;
-    private String dbName = "clotho";
+    private String host;
+    private int port;
+    private String dbName;
     
     
     //the demo will break if you change this without changing the Entity annotation on ObjBase
@@ -174,7 +175,11 @@ public class MongoDBConnection
 
     @Override
     public BSONObject getAsBSON(ObjectId uuid) {
-        return data.findOne(new BasicDBObject("_id", uuid));
+        BSONObject out =  data.findOne(new BasicDBObject("_id", uuid));
+        if (out == null){
+            throw new EntityNotFoundException(String.format("No object with id #%s in database", uuid.toString()));
+        }
+        return out;
     }
 
     /*Query construction forthcoming
@@ -347,7 +352,12 @@ public class MongoDBConnection
 
     @Override
     public boolean exists(ObjectId id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            getAsBSON(id);
+            return true;
+        } catch (EntityNotFoundException e){
+            return false;
+        }
     }
 
 }

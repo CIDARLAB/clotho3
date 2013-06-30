@@ -117,13 +117,12 @@ public final class ServerSideAPI {
         mind.addLastCommand(Channel.submit, command);
     }
 
-    public final void learn(Object data){
+    public final void learn(Object data) {
         //might already be data?
-            Map<String, Object> json = JSON.mappify(data);
-            learn((String) json.get("userInput"), (Message) json.get("command"));
-        }
-        
-    
+        Map<String, Object> json = JSON.mappify(data);
+        learn((String) json.get("userInput"), (Message) json.get("command"));
+    }
+
     //clotho.learn("test1", "clotho.say('Hi there');")
     public final void learn(String userInput, Message command) {
 
@@ -155,24 +154,24 @@ public final class ServerSideAPI {
 // <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
     //JCA:  as 0f 6/9/2013 say seems to work
 
-    public final void say(Object obj){
+    public final void say(Object obj) {
         if (obj instanceof String) {
             say((String) obj);
             return;
         }
         Map<String, Object> json = JSON.mappify(obj);
-        Severity severity = json.containsKey("severity") ? 
-                Severity.valueOf(json.get("severity").toString()) : 
-                Severity.NORMAL;
-        String recipients = json.containsKey("recipients") ?
-                json.get("recipients").toString() :
-                null;
-        boolean isUser = json.containsKey("isUser") ?
-                Boolean.parseBoolean(json.get("isUser").toString()) :
-                false;
+        Severity severity = json.containsKey("severity")
+                ? Severity.valueOf(json.get("severity").toString())
+                : Severity.NORMAL;
+        String recipients = json.containsKey("recipients")
+                ? json.get("recipients").toString()
+                : null;
+        boolean isUser = json.containsKey("isUser")
+                ? Boolean.parseBoolean(json.get("isUser").toString())
+                : false;
         say(json.get("message").toString(), severity, recipients, isUser);
     }
-    
+
     public final void say(String message) {
         say(message, Severity.NORMAL, null, false);
     }
@@ -244,33 +243,32 @@ public final class ServerSideAPI {
 
 // </editor-fold> 
 // <editor-fold defaultstate="collapsed" desc="Data Manipulation"> 
-    
-    
-    private void send(Message message){
+    private void send(Message message) {
         router.sendMessage(mind.getClientConnection(), message);
     }
-    
-    public final void get(Object o, String requestId){
+
+    public final void get(Object o, String requestId) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         //list of selectors?
-        if (o instanceof List){
-            for (Object obj : (List) o){
+        if (o instanceof List) {
+            for (Object obj : (List) o) {
                 returnData.add(get(resolveSelector(obj.toString(), false)));
             }
-        } else returnData.add(get(resolveSelector(o.toString(), false)));
+        } else {
+            returnData.add(get(resolveSelector(o.toString(), false)));
+        }
         Message message = new Message(Channel.get, returnData, requestId);
         send(message);
-        
+
     }
-    
+
     //clotho.get("51b362f15076024ba019a642");  for a trail
     //clotho.get("51b29e7450765ced18af0d33");
     //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
     //JCA:  result is also injected into the Mind's scriptengine as a proper object
     public final Map<String, Object> get(ObjectId id) {
         try {
-
-            Map<String, Object> out = persistor.getAsBSON(id).toMap();
+            Map<String, Object> out = persistor.getAsJSON(id);
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
 
@@ -317,13 +315,13 @@ public final class ServerSideAPI {
             }
 
             //Grab the object to be altered
-            BSONObject original = persistor.getAsBSON(uuid);
+            Map<String, Object> original = persistor.getAsJSON(uuid);
 
             //TODO: run validation check on saved values
             persistor.save(values);
 
             //Confirm that the new data is different than the old data
-            BSONObject altered = persistor.getAsBSON(uuid);
+            Map<String, Object> altered = persistor.getAsJSON(uuid);
             if (original.toString().equals(altered.toString())) {
                 say(String.format("Object #%s named %s was unmodified.", uuid.toString(), altered.get("name")), Severity.WARNING);
             }
@@ -332,7 +330,7 @@ public final class ServerSideAPI {
             say(String.format("Successfully modified object #%s named %s", uuid.toString(), altered.get("name")), Severity.SUCCESS);
 
             //Relay the data change to listening clients
-            publish(altered.toMap()); //publish by uuid?
+            publish(altered); //publish by uuid?
         } catch (UnauthorizedException e) {
             say(e.getMessage(), Severity.FAILURE);
         } catch (Exception e) {
@@ -340,25 +338,32 @@ public final class ServerSideAPI {
         }
     }
 
-    public final void create(Object o, String requestId){
+    public final void create(Object o, String requestId) {
         List<ObjectId> returnData = new ArrayList<>();
         //list of selectors?
-        if (o instanceof List){
-            for (Object obj : (List) o){
+        if (o instanceof List) {
+            for (Object obj : (List) o) {
                 returnData.add(create(JSON.mappify(obj)));
             }
-        } else returnData.add(create(JSON.mappify(o)));
+        } else {
+            returnData.add(create(JSON.mappify(o)));
+        }
         Message message = new Message(Channel.get, returnData, requestId);
         send(message);
     }
-    
+
     public final ObjectId create(Map<String, Object> obj) {
 
         try {
             //Confirm that there is no pre-existing object with this uuid
-            if (obj.containsKey("id")) {
-
-                ObjectId uuid = resolveId(obj.get("id").toString());
+            String idKey = null;
+            if (obj.containsKey("id")) idKey = "id";
+            if (obj.containsKey("_id")) idKey = "_id";
+            
+            
+            if (idKey != null) {
+                
+                ObjectId uuid = resolveId(obj.get(idKey).toString());
                 if (uuid == null) {
                     return null;
                 }
@@ -366,6 +371,8 @@ public final class ServerSideAPI {
                     say("An object with the uuid " + uuid + " already exists.  No object was created.", Severity.FAILURE);
                     return null;
                 }
+                
+                obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
 
             ObjectId id = persistor.save(obj);
@@ -380,10 +387,12 @@ public final class ServerSideAPI {
         } catch (UnauthorizedException e) {
             say("The current user does not have write access for this domain", Severity.FAILURE);
             return null;
-        } catch (Exception e) {
-            logAndSayError(String.format("Error creating %s: %s", obj.toString(), e.getMessage()), e);
-            return null;
-        }
+        } 
+        
+        //catch (Exception e) {
+        //    logAndSayError(String.format("Error creating %s: %s", obj.toString(), e.getMessage()), e);
+        //    return null;
+        //}
     }
 
     private void logAndSayError(String message, Exception e) {
@@ -391,17 +400,17 @@ public final class ServerSideAPI {
         say(message, Severity.FAILURE);
     }
 
-    
-    
-    public final void destroy(Object o, String requestId){
+    public final void destroy(Object o, String requestId) {
         //list of selectors?
-        if (o instanceof List){
-            for (Object obj : (List) o){
+        if (o instanceof List) {
+            for (Object obj : (List) o) {
                 destroy(resolveSelector(obj.toString(), false));
             }
-        } else destroy(resolveSelector(o.toString(), false));
+        } else {
+            destroy(resolveSelector(o.toString(), false));
+        }
     }
-    
+
     //JCA:  as of 6/9/2013 works
     public final void destroy(ObjectId id) {
         try {
@@ -419,12 +428,29 @@ public final class ServerSideAPI {
     public final void query(Map<String, Object> spec, String requestId) {
         List<Map<String, Object>> objs;
 
+        //XXX: demo hack to resolve schema smartly
+        if (spec.containsKey("schema")) {
+            //figure out what the schema actually is
+            try {
+                Map<String, Object> schema = persistor.getAsJSON(resolveSelector(spec.get("schema").toString(), false));
+                String schemaName = schema.get("binaryName").toString();
+                spec.remove("schema");
+                spec.put("className", schemaName);
+            } catch (EntityNotFoundException e) {
+                logAndSayError(String.format("No schema found for selector %s", spec.get("schema").toString()), e);
+                objs = new ArrayList<>();
+                Message msg = new Message(Channel.query, objs, requestId);
+                router.sendMessage(mind.getClientConnection(), msg);
+                return;
+            }
+        }
+
         try {
             //Relay the query to Persistor and return the hits
             objs = persistor.findAsBSON(spec);
             say("Found " + objs.size() + " objects that satisfy your query", Severity.SUCCESS);
-        Message msg = new Message(Channel.query, objs, requestId);
-        router.sendMessage(mind.getClientConnection(), msg);
+            Message msg = new Message(Channel.query, objs, requestId);
+            router.sendMessage(mind.getClientConnection(), msg);
         } catch (Exception e) {
             logAndSayError(String.format("Error querying %s: %s", spec.toString(), e.getMessage()), e);
         }
@@ -433,23 +459,22 @@ public final class ServerSideAPI {
 // </editor-fold> 
 
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
-    
-    public final void run(Object o, String id) throws ScriptException{
+    public final void run(Object o, String id) throws ScriptException {
         Map<String, Object> data = JSON.mappify(o);
-        
+
         Function function = persistor.get(Function.class, resolveSelector(data.get("function").toString(), Function.class, false));
-        Map<String, Object> arguments = data.containsKey("arguments") ?
-                JSON.mappify(data.get("arguments")) :
-                null;
+        Map<String, Object> arguments = data.containsKey("arguments")
+                ? JSON.mappify(data.get("arguments"))
+                : null;
         Object result = run(function, arguments);
-        if (!result.equals(Function.NoResult.class)){
+        if (!result.equals(Function.NoResult.class)) {
             //TODO: Map<String, Object> reply - we need to have a way to designate which request we are responding to
             Message message = new Message(Channel.run, result, id);
             send(message);
-        } 
-        
+        }
+
     }
-    
+
     public final Object run(Function function, Map<String, Object> args) throws ScriptException {
         return function.execute(args);
     }
@@ -553,10 +578,6 @@ public final class ServerSideAPI {
     public ServerSideAPI(Mind mind, Persistor persistor) {
         this.mind = mind;
         this.persistor = persistor;
-    }
-
-    public void setSocket(ClothoWebSocket socket) {
-        this.socket = socket;
     }
 
     public void setMind(Mind mind) {
@@ -741,50 +762,53 @@ public final class ServerSideAPI {
         }
         return null;
     }
-    
-    
-    
-    
-    private ObjectId resolveSelector(String selector, boolean strict){
+
+    private ObjectId resolveSelector(String selector, boolean strict) {
         return resolveSelector(selector, null, strict);
     }
-    
-    private ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict){
+
+    private ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict) {
         //uuid?
         ObjectId id;
-        
-        try{
+
+        try {
             id = new ObjectId(selector);
             return id;
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
         }
-        
+
         Map<String, Object> spec = new HashMap<>();
         spec.put("name", selector);
-        if (type != null) spec.put ("schema", type);
-        
-        //name of something?
-        List<Map<String,Object>> results = persistor.findAsBSON(spec);
+        /* TODO: class & superclass discrimination
+         * if (type != null) {
+            spec.put("className", type);
+        }*/
 
-        id = new ObjectId(results.get(0).get("id").toString());
-        if (results.size() == 1 || !strict ) return id;
+        //name of something?
+        List<Map<String, Object>> results = persistor.findAsBSON(spec);
+
+        if (results.isEmpty()) throw new EntityNotFoundException();
+        
+        id = new ObjectId(results.get(0).get("_id").toString());
+        if (results.size() == 1 || !strict) {
+            return id;
+        }
 
         //bitch about ambiguity
         throw new NonUniqueResultException();
     }
-    
-    
     // </editor-fold> 
     /**
      * ****** VARIABLES *******
      */
     //private transient Person person;
     private static final AutoComplete completer = new AutoComplete();
-    private String socket_id;
-    private ClothoWebSocket socket;
     private Mind mind;
     private static Router router;
 
+    static {
+        router = Router.get();
+    }
 
     public enum Severity {
 

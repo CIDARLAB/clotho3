@@ -23,13 +23,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.persistence;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-import java.util.Date;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,11 +36,16 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import lombok.Delegate;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.JSONSerializer;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
+import org.reflections.Reflections;
+import static java.lang.reflect.Modifier.isAbstract;
+import java.util.ArrayList;
+import org.clothocad.core.schema.BuiltInSchema;
 
 /**
  * @author jcanderson
@@ -71,7 +70,10 @@ import org.clothocad.core.datums.Sharable;
 //TODO: check out date created/modified/accessed bugs
 //TODO: move backend-agnostic logic into persistor
 @Singleton
+@Slf4j
 public class Persistor{
+    //TODO: figure out if references to BSON are okay or should be eradicated in favor of Map
+    
     private static final int SEARCH_MAX = 5000;
     
     private ClothoConnection connection;
@@ -85,11 +87,15 @@ public class Persistor{
     @Inject
     public Persistor(final ClothoConnection connection, JSONSerializer serializer){
         this.connection = connection;
+        connect();
         this.serializer = serializer;
+        
+        initializeBuiltInSchemas();
     }
     
     private void validate(ObjBase obj){
         Set<ConstraintViolation<?>> violations = new HashSet<>();
+        
         for (ObjBase o : getObjBaseSet(obj)){
             Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the current classes
             for (ConstraintViolation violation : cvs){
@@ -131,15 +137,28 @@ public class Persistor{
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
-        throw new UnsupportedOperationException();
+        //XXX: convert id field
+        if (data.containsKey("id") && !data.containsKey("_id")){
+            Object id = data.get("id");
+            data.remove("id");
+            data.put("_id", id);
+        }
+        else if (!data.containsKey("_id")){
+            Object id = new ObjectId();
+            data.put("_id", id);
+        }
+        
+        connection.save(data);
+        
+        return new ObjectId(data.get("_id").toString());
     }
     
     public void delete(ObjectId id){
-        throw new UnsupportedOperationException();
+        connection.delete(id);
     }
     
-    public BSONObject getAsBSON(ObjectId uuid){
-        return connection.getAsBSON(uuid);
+    public Map<String, Object> getAsJSON(ObjectId uuid){
+        return serializer.toJSON(connection.getAsBSON(uuid).toMap());
     }
     
     
@@ -262,11 +281,11 @@ public class Persistor{
     }        
 
     public Iterable<ObjBase> find(Map<String, Object> query) {
-        return find(query, 100);
+        return find(query, SEARCH_MAX);
     }
     
     public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
-        throw new UnsupportedOperationException();
+        return connection.get(query);
     }
 
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec){
@@ -274,7 +293,12 @@ public class Persistor{
     }
     
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<BSONObject> results = connection.getAsBSON(spec);
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (BSONObject result : results){
+            out.add(result.toMap());
+        }
+        return out;
     }
 
     public Map<String, Object> toJSON(Sharable sharable) {
@@ -282,10 +306,29 @@ public class Persistor{
     }
 
     public void connect() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            connection.connect();
+        } catch (UnknownHostException ex) {
+            log.error("Could not connect to database", ex);
+        }
+        
     }
 
     public void deleteAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        connection.deleteAll();
+        initializeBuiltInSchemas();
+   }
+
+    private void initializeBuiltInSchemas() {
+        //XXX: just built-in models for now
+        Reflections models = new Reflections("org.clothocad.model");
+
+        for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
+            Map<String, Object> query = new HashMap<>();
+            query.put("_binaryName", c.getCanonicalName());
+            if (!isAbstract(c.getModifiers()) && connection.getAsBSON(query).isEmpty()) {
+                save(new BuiltInSchema(c));
+            } 
+        }
     }
 }

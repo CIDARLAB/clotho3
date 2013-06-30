@@ -19,6 +19,7 @@ import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Date;
 import org.clothocad.core.persistence.DBOnly;
+import org.clothocad.core.persistence.Rename;
 
 /**
  *
@@ -38,6 +39,7 @@ public abstract class ObjBase {
     }
     
     @Id
+    @Rename("id")
     private ObjectId UUID;
     
     private String name;

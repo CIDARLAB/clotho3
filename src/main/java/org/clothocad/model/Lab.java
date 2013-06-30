@@ -27,7 +27,6 @@ public class Lab extends ObjBase {
           
     @Getter
     @Setter
-    @NotNull
     private String website;
     @Getter
     @Setter
