@@ -296,7 +296,7 @@ public class Persistor{
         List<BSONObject> results = connection.getAsBSON(spec);
         List<Map<String, Object>> out = new ArrayList<>();
         for (BSONObject result : results){
-            out.add(result.toMap());
+            out.add(serializer.toJSON(result.toMap()));
         }
         return out;
     }

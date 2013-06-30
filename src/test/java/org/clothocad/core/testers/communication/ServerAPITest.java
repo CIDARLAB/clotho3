@@ -12,19 +12,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.EntityNotFoundException;
 import org.bson.types.ObjectId;
 import org.clothocad.core.ClothoModule;
 import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
-import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.testers.MongoDBTestModule;
-import org.clothocad.core.testers.persistence.FreeForm;
-import org.clothocad.core.util.JSON;
 import org.clothocad.core.utils.TestUtils;
-import org.clothocad.model.Part;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -108,6 +102,7 @@ public class ServerAPITest {
     public void create() {
         ObjectId id = new ObjectId();
 
+        //XXX: this is actually bad data
         Map<String, Object> newPart = new HashMap<>();
         newPart.put("name", "Test Part 4");
         newPart.put("description", "previously unsaved test part");

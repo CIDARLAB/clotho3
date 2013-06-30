@@ -55,11 +55,13 @@ public class Router {
 
         // create the thread-pool of ssAPI objects
         this.pool = Executors.newFixedThreadPool(100);
+        minds = new HashMap<>();
     }
 
     // send message    
     public void sendMessage(ClientConnection connection, Message message) {
-        connection.send(message);
+        
+        connection.send(message.unwrapData());
     }
 
     // receive message
@@ -67,7 +69,7 @@ public class Router {
         RouterDoo doo = new RouterDoo();
 
         //bind context to request
-        Mind mind = minds.get(connection.getId());
+        Mind mind = getMind(connection);
         ServerSideAPI api = mind.getAPI();
 
 
@@ -198,9 +200,10 @@ public class Router {
         existing.add(new WeakReference<>(connection));
         pubsub.put(uuid, existing);
     }
-
     //End JCA's hack of a pubsub, to be replaced by Ernst
-    private Mind getMind(String id) {
+    
+    private Mind getMind(ClientConnection connection) {
+        String id = connection.getId();
         if (minds.containsKey(id)) {
             return minds.get(id);
         }
@@ -209,6 +212,8 @@ public class Router {
 
         ServerSideAPI api = new ServerSideAPI(mind, persistor);
         mind.setAPI(api);
+        mind.setClientConnection(connection);
+        
         minds.put(id, mind);
         return mind;
     }

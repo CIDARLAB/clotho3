@@ -348,7 +348,7 @@ public final class ServerSideAPI {
         } else {
             returnData.add(create(JSON.mappify(o)));
         }
-        Message message = new Message(Channel.get, returnData, requestId);
+        Message message = new Message(Channel.create, returnData, requestId);
         send(message);
     }
 
@@ -789,7 +789,7 @@ public final class ServerSideAPI {
 
         if (results.isEmpty()) throw new EntityNotFoundException();
         
-        id = new ObjectId(results.get(0).get("_id").toString());
+        id = new ObjectId(results.get(0).get("id").toString());
         if (results.size() == 1 || !strict) {
             return id;
         }
