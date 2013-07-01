@@ -38,13 +38,10 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
     public ClothoMapper(MapperOptions opts) {
         super(opts);
     }
-
-    public ClothoMapper() {
-        super(defaultOptions);
-    }
     
     @Inject
     public ClothoMapper(DBClassLoader cl){
+       super(defaultOptions);
        this.cl = cl; 
     }
     

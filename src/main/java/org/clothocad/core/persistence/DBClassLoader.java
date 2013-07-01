@@ -6,6 +6,7 @@ package org.clothocad.core.persistence;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import org.bson.types.ObjectId;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
  * ...can I modify addClass to make it a no-op through asm?
  * 
  */
+
 public class DBClassLoader extends ClassLoader {
     final static Logger logger = LoggerFactory.getLogger(DBClassLoader.class);
     

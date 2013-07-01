@@ -19,6 +19,7 @@ public class ClothoModule extends AbstractModule {
         defaults.put("dbname", "clotho");
         defaults.put("dbhost", "localhost");
         defaults.put("dbport", "27017");
+        defaults.put("loglevel", "warn"); //TODO: doesn't affect anything yet
         this.properties = new Properties(defaults);
         if (properties != null) this.properties.putAll(properties);
     }
@@ -34,7 +35,7 @@ public class ClothoModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        //TODO: make router completely DI
+        //TODO: make router completely DI (?)
         requestInjection(Router.get());
         Names.bindProperties(binder(), properties);
     }

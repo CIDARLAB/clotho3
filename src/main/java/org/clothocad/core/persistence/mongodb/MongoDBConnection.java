@@ -38,11 +38,6 @@ import org.slf4j.LoggerFactory;
 public class MongoDBConnection
         implements ClothoConnection {
     
-    public MongoDBConnection() {
-
-        morphia = new Morphia(new ClothoMapper());
-    }
-
     public MongoDBConnection(Mapper mapper) {
         morphia = new Morphia(mapper);
     }

@@ -109,7 +109,7 @@ public class ClothoMappedField extends MappedField{
     @Override
     public void setFieldValue(Object classInst, Object value) throws IllegalArgumentException {
         if (field == null) return;
-        super.setFieldValue(classInst, value); //To change body of generated methods, choose Tools | Templates.
+        super.setFieldValue(classInst, value); 
     }
     
    

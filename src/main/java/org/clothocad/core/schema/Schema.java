@@ -8,7 +8,10 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Map;
 import java.util.Set;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
@@ -24,10 +27,9 @@ import org.clothocad.model.Person;
  *
  * @author spaige
  */
+
 @Data
 @NoArgsConstructor
-
-
 @Adds({@Add(name="language", provider="getLanguage"),
 @Add(name="binaryName", provider="getBinaryName")})
 public abstract class Schema extends Sharable {

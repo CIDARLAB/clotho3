@@ -6,17 +6,13 @@ package org.clothocad.core.utils;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bson.types.ObjectId;
 import org.clothocad.core.ClothoModule;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
-import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.testers.MongoDBTestModule;
-import org.clothocad.core.testers.persistence.FreeForm;
-import org.clothocad.model.Format;
+import org.clothocad.model.FreeForm;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
@@ -38,6 +34,10 @@ public class TestUtils {
 
     public static <T> T getA(Class<T> type) {
         return injector.getInstance(type);
+    }
+    
+    public static Injector getDefaultTestInjector(){
+        return Guice.createInjector(new ClothoModule(), new MongoDBTestModule());
     }
     
     public static List<ObjectId> setupTestData(Persistor persistor){

@@ -45,7 +45,9 @@ import org.clothocad.core.datums.Sharable;
 import org.reflections.Reflections;
 import static java.lang.reflect.Modifier.isAbstract;
 import java.util.ArrayList;
+import java.util.Collection;
 import org.clothocad.core.schema.BuiltInSchema;
+import org.clothocad.model.Part;
 
 /**
  * @author jcanderson
@@ -137,7 +139,7 @@ public class Persistor{
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
-        //XXX: convert id field
+        //XXX: convert id field so that mongoDB understands it (hackish)
         if (data.containsKey("id") && !data.containsKey("_id")){
             Object id = data.get("id");
             data.remove("id");
@@ -300,11 +302,7 @@ public class Persistor{
         }
         return out;
     }
-
-    public Map<String, Object> toJSON(Sharable sharable) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     public void connect() {
         try {
             connection.connect();
@@ -330,5 +328,9 @@ public class Persistor{
                 save(new BuiltInSchema(c));
             } 
         }
+    }
+
+    public <T extends ObjBase> Collection<T> getAll(Class<T> aClass) {
+        return connection.getAll(aClass);
     }
 }

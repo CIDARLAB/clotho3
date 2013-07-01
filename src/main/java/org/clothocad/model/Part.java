@@ -25,6 +25,7 @@ package org.clothocad.model;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
@@ -192,9 +193,13 @@ public class Part extends ObjBase {
         return format.getClass().getSimpleName();
     }
 
-    public void setFormatFromName(String name){
+    public void setFormatFromName(Map<String, Object> dbObject){
+        String name = (String) dbObject.get("format");
         try {
+            //XXX: stupid hack
+            //TODO: search schemas instead
             format = (Format) Class.forName("org.clothocad.model." + name).newInstance();
+            
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             log.error("Couldn't find format {}", "org.clothocad.model." + name);
         } 

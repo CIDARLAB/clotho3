@@ -439,7 +439,6 @@ public class Feature extends ObjBase {
     @Reference
     private NucSeq sequence;
     
-    @NotNull
     @Setter
     private Color forwardColor, reverseColor;
     @Setter

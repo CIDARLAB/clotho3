@@ -36,6 +36,8 @@ public class MongoDBModule extends AbstractModule {
     @Override
     protected void configure() {
         
+        //set up morphia slf4j logging
+        
         Names.bindProperties(binder(), properties);
         
         bind(ClothoConnection.class).to(MongoDBConnection.class);
@@ -43,5 +45,4 @@ public class MongoDBModule extends AbstractModule {
         bind(Mapper.class).to(ClothoMapper.class);
         bind(ClothoMapper.class).in(Singleton.class);
     }
-    
 }
