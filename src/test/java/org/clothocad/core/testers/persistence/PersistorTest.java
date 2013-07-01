@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.utils.TestUtils;
+import org.clothocad.model.BasicPart;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
@@ -133,7 +134,7 @@ public class PersistorTest {
     }
 
     @Test
-    public void testGetAllParts() {
+    public void testGetAllBasicParts() {
         int N = 100;
 
         // first, we create N parts
@@ -142,8 +143,13 @@ public class PersistorTest {
         }
 
         // then, retrieve all parts
-        Collection<Part> results = persistor.getAll(Part.class);
-        assertEquals(results.size(), N);
+        Collection<BasicPart> results = persistor.getAll(BasicPart.class);
+        assertEquals(N, results.size());
+    }
+    
+    //TODO:
+    public void testGetAllParts(){
+        
     }
 
     private String randomSequence(int length) {

@@ -47,9 +47,17 @@ import org.clothocad.core.persistence.Replace;
 @ToString(callSuper=true, includeFieldNames=true)
 @NoArgsConstructor
 @Slf4j
-public class Part extends ObjBase {
+public abstract class Part extends ObjBase {
+
+    public static Part generateBasic(String name, String description, String seq, Format format, Person author) {
+        return new BasicPart(name, description, seq, format, author);
+    }
     
     //inject connection
+
+    public static Part generateComposite(List<Part> composition, Object additionalRequirements, Format format, Person author, String name, String description) {
+        return new CompositePart(composition, additionalRequirements, format, author, name, description);
+    }
 
     
     @Setter
@@ -66,44 +74,15 @@ public class Part extends ObjBase {
     @Setter
     private String shortDescription;
     
-    @Valid
-    @Reference
-    private NucSeq sequence;
-    
-    @Getter
-    @NotNull
-    private PartType partType;
-    
-    @Getter
-    @Setter
-    @Reference
-    private List<Part> composition;
-    
     @Getter
     private short riskGroup;
     
-    private Part(String name, String desc, Format form, Person author, PartType type){
+    protected Part(String name, String desc, Format form, Person author){
         super(name); 
         this.shortDescription = desc;
-        this.partType = type;
         this.author = author;
         this.format = form;
 
-    }
-        
-     /**
-     * Create basic from scratch
-     *
-     * @param name  nickname of Part, like "roo40"
-     * @param shortdescription short description, such as "[TetR]"
-     * @param seq sequence of the Part like "cgaaggcaggacacacatg"
-     * @param form Part Format
-     * @param author author of the Part
-     * @param partType Basic or Composite
-     */
-    protected Part(String name, String shortDescription, String seq, Format form, Person author) {
-        this(name, shortDescription, form, author, PartType.BASIC);
-        this.sequence = new NucSeq(seq);
     }
 
     /**
@@ -116,11 +95,6 @@ public class Part extends ObjBase {
      * @param author author of the Part
      * @param partType Basic or Composite
      */
-    protected Part(String name, String shortdescription, Format form, Person author) {
-        //Use the transient constructor and add to Collector later if the Part passes checks
-        this(name, shortdescription, form, author, PartType.COMPOSITE);
-    }
-
     /**
      * Call this method to construct a new basic Part.  It will check that:
      *  1) A sequence in this Format isn't already in the database
@@ -138,56 +112,11 @@ public class Part extends ObjBase {
      * @param author author of the Part
      * @param partType Basic or Composite
      */
-    
-    
-    //TODO: fix validator classpath issues
-    /*{{
-      validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }}
-
-    private static Validator validator;
-    */
-    
-    //create part, validate, return null if bad
-    //default shortdesc for composites is concatenation of component parts' shortdesc
-    //copy composition array
-    public static Part generateBasic(String name, String shortdescription, String seq, Format form, Person author) {
-        Part part = new Part(name, shortdescription, seq, form, author);
-        /*Set<ConstraintViolation<Part>> violations = validator.validate(part);
-        
-        if (violations.isEmpty()) return part;
-        return null;*/
-        return part;
-    };
-    
-    
-    //additional requirements are defined by particular format
-    public static Part generateComposite(List<Part> composition, Object additionalRequirements, Format f, Person author, String name, String shortdescription) {
-        if (!f.checkComposite(composition, additionalRequirements)) {
-            System.out.println("generateComposite: Doesn't obey format, return null");
-            return null;
-        }
-        
-        Part part = new Part(name, shortdescription, f, author);
-        part.setComposition(composition);
-        /*Set<ConstraintViolation<Part>> violations = validator.validate(part);
-        
-        if (violations.isEmpty()) return part;
-        return null;*/
-        return part;
-     
-    }
-
-    
+   
     @AssertTrue
-    public boolean checkFormat() {
-        if (partType == PartType.BASIC){
-            return format.checkPart(this);
-        }
-        else {
-            return format.checkComposite(this.composition, null);
-        }
-    }
+    public abstract boolean checkFormat();
+    
+    public abstract PartType getPartType();
     
     public String getFormatName(){
         return format.getClass().getSimpleName();
@@ -208,33 +137,7 @@ public class Part extends ObjBase {
     /* SETTERS
      * */
 
-    /**
-     * This is a convenience method, the real change to the sequence
-     * happens in the linked NucSeq
-     * @param newseq
-     */
-    public void setSequence(final String newseq) {
-        if (newseq.equals("") || newseq == null) {
-            return;
-        }
 
-        if (partType.equals(PartType.COMPOSITE)) {
-            return;
-        }
-
-        final String oldseq = sequence.toString();
-
-        sequence.APIchangeSeq(newseq);
-
-        boolean isok = format.checkPart(this);
-        if (!isok) {
-            sequence.APIchangeSeq(oldseq);
-            return;
-        }
-
-        //Change the risk group
-        //riskGroup = sequence.performBiosafetyCheck();
-    }
 
     /**
      * Change the Format of the Part
@@ -266,14 +169,7 @@ public class Part extends ObjBase {
     }*/
 
 
-    public NucSeq getSequence() {
-        if (partType.equals(PartType.BASIC)) {
-            return sequence;
-        } else {
-            //cache seq?
-            return format.generateCompositeSequence(composition, null);
-        }
-    }
+    public abstract NucSeq getSequence();
 
     /*public final void changeRiskGroup(Short newrg) {
         if (newrg > _partDatum._riskGroup) {
