@@ -1,0 +1,9 @@
+<div class="modal-header" ng-controller="DialogShareCtrl">
+    <!--<button type="button" class="close" ng-click="close()">&times;</button>-->
+    <h3>Share this</h3>
+</div>
+<div class="modal-body">
+    <div style="margin: 0 auto; width: {{ (social.length*64) + ((social.length - 1) * 5 ) }}px">
+        <img ng-repeat="site in social" ng-init="site.img_name = site.name" ng-src="interface/socialmedia/{{site.img_name}}.png" ng-href="site.url" ng-mouseenter="site.img_name = site.name + '_active'" ng-mouseleave="site.img_name = site.name" ng-click="share(site)" ng-style="$last ? '' : {'padding-right': '5px'}"/>
+    </div>
+</div>
