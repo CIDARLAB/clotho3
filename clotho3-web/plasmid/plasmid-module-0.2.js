@@ -3,16 +3,9 @@
 /*
 
  todo
- - restrict input to one of multiple sets
+ - restrict input to one of two sets
  - ACGT
- - plus others (degenerates - e.g. N, Y, R)
- - RNA
- - revcomp method
- - other parameters
- - circular
- - linear
- - GC content / emlting point (from server)
- - start / stop codons
+ - plus others (e.g. N, Y, R)
  - check both directions
  - add feature directive -- tooltip?
 
@@ -38,11 +31,8 @@
  */
 
 
-Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document', function($scope, $window, $document) {
+Application.Plasmid.controller('PlasmidCtrl', ['$scope', function($scope) {
     $scope.sequence = "GATCTgttgacggctaGCTCAGTCCTAGGTagctACAGTGCTAGCTCTCTGGAGATTAACGAGGAGAAATACTAGATGGTTCATGATCATAAgcttgaattagccaaacttattcgcaactatgagacgaatagaaaagaatgtctaaattccagatataatgaaacacttttacgaagtgattatcttgatccattttttgaacttcttggctgggatattaaaaataaagctggaaaaccgactaatgaaagagaggttgtcttggaagaggcacttaaagcaagtgcatctgaacattctaaaaaaccagattatacattcagacttttttctgaaagaaagtttttcttggaagctaaaaaaccatcagttcatattgaatcggataatgaaactgctaaacaagtgcgaagatatggctttaccgccaaactaaaaatttcagttttatcaaattttgaatatttagttatttatgatacctctgtaaaggttgatggtgatgatacctttaataaggcacgtataaaaaaataccattacacagagtatgaaactcactttgatgaaatttgtgacttattaggaagagagtccgtttactctgggaattttgataaagaatggttgagtatcgaaaataaaattaatcacttttctgtagataccttatttttaaaacagattaatacatggcgtctattgcttggtgaagaaatctataagtatcaacctacgatacaagagaatgagcttaatgacattgtacagagctatctgaatagaattAGATCTatttttttgagagtctgtgaagatagaaatttagagacttatcagacattactgaattttgcttcaagtaatgatttctccgctcttattgataagtttaagcaggcagatcgttgctataattcaggcctatttgatcaattgcttacagagcaaattattgaggatattagttctgtattttgggtaatcattaagcaattatattatccagaaagtccttattcatttagtgtgttctcttcggatattttaggtaatatttacgaaatatttttatctgagaaattagtaattaatcaaagcagagttgagttagtcaagaaaccagagaatttagatagagacattgtcacaacaccaacctttattattaatgacatcttgagaaatacggttctaccgaagtgctatggaaaaacagatatagaaattctacagctaaaatttgctgatattgcttgtggttcgggagcatttttactggagttgttccaattacttaatgatactctagttgactattatttaagtagtgatacttctcaattaattccaacaggtatcggtacttataagctgtcttatgaaatcaagagaaaggttctattaagttgtatttttggcatagataaggacttaaatgctgtagaggctgcaaagttcggattgttgctaaaattattagagggtgaagacgtacaatctatagctaatattagaccagttctcccagatttattagataacatactttttggtaacagtttattagaaccagaaaaagtcgagcttgatcatcaggtagaagtaaatccgttagatttttcGGATCTGaaAtttgatgtaattgttggcaaccctccatatatgaaatcagaggatatgaagaatattactcctttggagttacctttatataagaaaaactatgtttctgcttataagcaatttgataaatatttcttgttcttagagcggggtttagctctattaaaagaagagggaatacttggatatattgttccaagtaaatttactaaagtgggtgcagggaaaaagttacgggaattactaacagataagggttatcttgactctattgtttcttttggtgctaatcaaatatttcaggataaaacaacttatacttgtttacttattttaagaaaaactccAcatactgattttaaatatgcagaggttcgtaatttaattgactggaaagtgcgtaaagctgatgctatggaattttcctctcaacaactgagtacattgcaaagtgatgcgtggattttaattccatctgaattaatctcagtttatcatcagatattagcacaaagccaaaagctagaggatattgtcggtattgataatatatttaatgggattcaaaccagtgctaatgatgtctatatttttgtgccaactcatgaggatactgaaaactattattttataaagaaaggacaagagtacaaaattgaaaaggaaattacgaagccttattttaaaacaacgagtggtgaggataacttatatacttaccgtactttcaagcctaatgcccgagtcatttatccgtatactcaaactgagagtagtgtagaactaattcctttagatgaaatacgagaaatttttcctttagcatacaaatatttaatgtcgcttaagttcgttttaagtagccccaaacgagatataaaacctagacctaaaacaacaaatgaatggcataggtatggacggcatcaaagtctcgataattgtgggttgagtcagaaaattattgtaggtgtgctttcagttggtgataagtacgctatagatacttatggaacgttgatttcatcaggcggtacggctggatactgtgtggttgctcttccagatgattgtaaatattcaatttattatttacaggcaattttaaactcaaaatatttagagtggtttagtgccttacatggagaagttttccgaggtggttatattgctaggggaactaaggtgcttaagaacttgcctattaggaaaattgattttgataatcttgaagaagcaaatctacatgatctaattgcgaccaagcaaaaagagcttatagagatttatgacaaaatagatgttaatgtaaataataaaagagttctgaccccattgcaacgtatgtttaaacgagagaaagaggttttagaccaattgttgagtcgactgtataacttaggtgtagatgattccttgatcccttatattaaggatttgtatgaagctcattaaGGATCCtaaCTCGAcgtgcaggcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatCAATTCGACCCAGCTTTCTTGTACAAAGTTGGCATTATAAAAAATAATTGCTCATCAATTTGTTGCAACGAACAGGTCACTATCAGTCAAAATAAAATCATTATTTGCCATCCAGCTGATATCCCCTATAGTGAGTCGTATTACATGGTCATAGCTGTTTCCTGGCAGCTCTGGCCCGTGTCTCAAAATCTCTGATGTTACATTGCACAAGATAAAAATATATCATCATGCCTCCTCTAGACCAGCCAGGACAGAAATGCCTCGACTTCGCTGCTGCCCAAGGTTGCCGGGTGACGCACACCGTGGAAACGGATGAAGGCACGAACCCAGTGGACATAAGCCTGTTCGGTTCGTAAGCTGTAATGCAAGTAGCGTATGCGCTCACGCAACTGGTCCAGAACCTTGACCGAACGCAGCGGTGGTAACGGCGCAGTGGCGGTTTTCATGGCTTGTTATGACTGTTTTTTTGGGGTACAGTCTATGCCTCGGGCATCCAAGCAGCAAGCGCGTTACGCCGTGGGTCGATGTTTGATGTTATGGAGCAGCAACGATGTTACGCAGCAGGGCAGTCGCCCTAAAACAAAGTTAAACATCATGAGGGAAGCGGTGATCGCCGAAGTATCGACTCAACTATCAGAGGTAGTTGGCGTCATCGAGCGCCATCTCGAACCGACGTTGCTGGCCGTACATTTGTACGGCTCCGCAGTGGATGGCGGCCTGAAGCCACACAGTGATATTGATTTGCTGGTTACGGTGACCGTAAGGCTTGATGAAACAACGCGGCGAGCTTTGATCAACGACCTTTTGGAAACTTCGGCTTCCCCTGGAGAGAGCGAGATTCTCCGCGCTGTAGAAGTCACCATTGTTGTGCACGACGACATCATTCCGTGGCGTTATCCAGCTAAGCGCGAACTGCAATTTGGAGAATGGCAGCGCAATGACATTCTTGCAGGTATCTTCGAGCCAGCCACGATCGACATTGATCTGGCTATCTTGCTGACAAAAGCAAGAGAACATAGCGTTGCCTTGGTAGGTCCAGCGGCGGAGGAACTCTTTGATCCGGTTCCTGAACAGGATCTATTTGAGGCGCTAAATGAAACCTTAACGCTATGGAACTCGCCGCCCGACTGGGCTGGCGATGAGCGAAATGTAGTGCTTACGTTGTCCCGCATTTGGTACAGCGCAGTAACCGGCAAAATCGCGCCGAAGGATGTCGCTGCCGACTGGGCAATGGAGCGCCTGCCGGCCCAGTATCAGCCCGTCATACTTGAAGCTAGACAGGCTTATCTTGGACAAGAAGAAGATCGCTTGGCCTCGCGCGCAGATCAGTTGGAAGAATTTGTCCACTACGTGAAAGGCGAGATCACCAAGGTAGTCGGCAAATAACCCTCGAGCCACCcatgaccaaaatcccttaacgGCATGCgcaccgccggacatcagcgctagcggagtgtatactggcttactatgttggcactgatgagggtgtcagtgaagtgcttcatgtggcaggagaaaaaaggctgcaccggtgcgtcagcagaatatgtgatacaggatatattccgcttcctcgctcactgactcgctacgctcggtcgttcgactgcggcgagcggaaatggcttacgaacggggcggagatttcctggaagatgccaggaagatacttaacagggaagtgagagggccgcggcaaagccgtttttccataggctccgcccccctgacaagcatcacgaaatctgacgctcaaatcagtggtggcgaaacccgacaggactataaagataccaggcgtttccccctggcggctccctcgtgcgctctcctgttcctgcctttcggtttaccggtgtcattccgctgttatggccgcgtttgtctcattccacgcctgacactcagttccgggtaggcagttcgctccaagctggactgtatgcacgaaccccccgttcagtccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggaaagacatgcaaaagcaccactggcagcagccactggtaattgatttagaggagttagtcttgaagtcatgcgccggttaaggctaaactgaaaggacaagttttggtgactgcgctcctccaagccagttacctcggttcaaagagttggtagctcagagaaccttcgaaaaaccgccctgcaaggcggttttttcgttttcagagcaagagattacgcgcagaccaaaacgatctcaagaagatcatcttattaatcagataaaatatttctagAGGCCTcccctgattctgtggataaccGTcctaggTGTAAAACGACGGCCAGTCTTAAGCTCGGGCCCCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTCCGAATTGgtatcacgaggcagaatttcagataaaaaaaatccttagctttcgctaaggatgatttctggaattcatgAtacgaa";
-
-    $scope.editable = true;
-    $scope.textSelected = false;
 
     $scope.featureList = [
         {
@@ -150,9 +140,8 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
                 "background" : "#EECC99"
             }
         }
+
     ];
-
-
 
     //todo - expose, make editable
     $scope.reg_match = /^[acgtACGT]+$/;
@@ -191,10 +180,6 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
                 feat.pos.start = positions[1];
                 feat.pos.end = positions[2];
             }
-
-            if (feat.css.color == '' && feat.css.background == '')
-                feat.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
-
             console.log(feat);
 
             $scope.featureList.push(feat);
@@ -202,40 +187,7 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
         } else {
             console.log("invalid");
         }
-    };
-
-
-    //todo - checks:
-    // select opp direction
-    // pos is for whole string (across text nodes)
-    $scope.addFeatureSelection = function () {
-
-        var feature = $scope.emptyFeat();
-        if ($window.getSelection) {
-            var sel = $window.getSelection();
-            if (typeof sel != 'undefined' && sel.rangeCount) {
-                var container = angular.element("<div>");
-                for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                    container.append(sel.getRangeAt(i).cloneContents());
-                }
-                console.log(sel.getRangeAt(0).cloneRange());
-                //feature = container[0].innerHTML;
-
-                console.log(sel);
-                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
-
-
-                feature.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
-
-            }
-        }
-        else if (typeof $document.selection != "undefined") { //IE -- todo doesn't really work
-            if ($document.selection.type == "Text") {
-                feature = $document.selection.createRange().htmlText;
-            }
-        }
-        console.log(feature);
-    };
+    }
 }]);
 
 Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', function($parse, $timeout, $filter, $compile, $document) {
@@ -243,68 +195,60 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
     return {
         restrict: "A",
         require:'ngModel',
-        scope : {
-            features: '=',
-            editable: '@',
-            sequence: '=ngModel'
-        },
+        //rep1ace: true,
         link: function(scope, element, attrs, ngModel) {
             attrs.$set('spellcheck', false);
-            attrs.$set('contenteditable', true); //todo - check controller
+            attrs.$set('contenteditable', true);
 
-            //scope.features = $parse(attrs.features)(scope) || [];
-            //scope.textSelected = $parse(attrs.textSelected)(scope);
+            scope.features = $parse(attrs.features)(scope) || [];
+
+            /*
+
+             //generate the mirror
+
+             var parent = element.parent(),
+             output = angular.element('<pre>'),
+             label = angular.element('<label>');
+
+             parent.append(output);
+             parent[0].className = 'ldt ' + element[0].className;
+
+
+             //OLD VERSION
+             //parent.append(label);
+             //element[0].parentNode.replaceChild(parent, element);
+             //label.append(element);
+
+
+             element.bind('mouseover', function(e) {
+             element.css('pointer-events', 'none');
+             });
+             output.bind('click', function(e) {
+             e.preventDefault();
+             element.css('pointer-events', 'auto')
+             });
+
+             */
 
             /* key functions  */
 
             function genFiltered (text) {
-                text = typeof text != 'undefined' ? text : ngModel.$viewValue;
+                text = typeof text != 'undefined' ? text : ngModel.$modelValue;
                 return $filter('features')(text, scope.features);
             }
 
             /* updating view */
 
             function setOutput (html) {
-                element.html(html);
+                //var x = $compile(html)(scope);
+                //console.log(x);
+                element[0].innerHTML = html;
                 $compile(element.contents())(scope);
             }
 
-            scope.highlight = function() {
-                setOutput(genFiltered());
-            };
-
-
-            //model -> view
-
-            /*scope.$watch(function () {
-             return ngModel.$modelValue;
-             }, function (modelValue) {
-             console.log('model change');
-             //setOutput(genFiltered())
-             });*/
-
-
-            //fixme - why isn't render being called with updates??
-            ngModel.$render = function() {
-                //console.log(ngModel.$viewValue);
-                console.log('render');
-                element.html(genFiltered(ngModel.$viewValue));
-            };
-
-            scope.$watch(function() {
-                return ngModel.$viewValue;
-            }, function(viewVal) {
-                console.log('view watch');
-                //element.html(genFiltered(viewVal));
-            });
-
-            scope.$watch(function() {
-                return ngModel.$modelValue;
-            }, function(modelVal) {
-                console.log('model watch');
-                //element.html(genFiltered(viewVal));
-            });
-
+            function setViewValue(html) {
+                ngModel.$setViewValue(html);
+            }
 
             /* watchers */
             scope.$watchCollection('features', function(newVal, oldVal) {
@@ -313,20 +257,35 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                 }
             });
 
-            element.bind( "keyup change" , function() {
-                console.log('change to view model');
-                scope.$apply(
-                    ngModel.$setViewValue(element.html())
-                );
+            //model -> view
+            scope.$watch(function () {
+                return ngModel.$modelValue;
+            }, function (modelValue) {
+                setOutput(genFiltered())
             });
 
-            $document.bind('mouseup', function() {
-                if (typeof window.getSelection != "undefined") {
-                    scope.$apply(scope.textSelected = !!window.getSelection().toString());
-                } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-                    scope.$apply(scope.textSelected = !!document.selection.createRange().text);
-                }
-            });
+            //view -> model
+            // detect all changes to the textarea,
+            // including keyboard input, cut/copy/paste, drag & drop, etc
+            if( element.addEventListener ){
+                // standards browsers: oninput event
+                element.bind( "input", function() {
+                    scope.$apply(function () {
+                        setViewValue(genFiltered());
+                    });
+                }, false );
+            } else {
+                // MSIE: detect changes to the 'value' property
+                element.bind( "onpropertychange",
+                    function(e){
+                        if( e.propertyName.toLowerCase() === 'value' ){
+                            scope.$apply(function () {
+                                setViewValue(genFiltered());
+                            });
+                        }
+                    }
+                );
+            }
         }
     }
 }]);
@@ -334,14 +293,11 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
 Application.Plasmid.filter('features', [function() {
     return function (text, features) {
         if (features && angular.isArray(features) && angular.isString(text)) {
-
-            //console.log(features);
-
             var html = text;
-            text = html.replace(/(<([^>]+)>)/ig, "");
+            text = html.replace(/(<([^>]+)>)/ig, html);
 
-            //console.log(html);
-            //console.log(text);
+            console.log(html);
+            console.log(text);
 
 
             //future - pull tags out of HTML and save locations
@@ -352,7 +308,7 @@ Application.Plasmid.filter('features', [function() {
 
             //create location map
             var locations = {};
-            angular.forEach(features, function(feat, featIndex) {
+            angular.forEach(features, function(feat, ing) {
                 if (feat.match) {
                     for (var index, offset = 0, search = angular.lowercase(text);
                          (index = search.indexOf(angular.lowercase(feat.match), offset)) > -1;
@@ -361,24 +317,24 @@ Application.Plasmid.filter('features', [function() {
                         //start
                         var start = index;
                         locations[start] ?
-                            locations[start]['start'].push(featIndex) :
-                            locations[start] = {"start" : [featIndex], "end" : []};
+                            locations[start]['start'].push(feat) :
+                            locations[start] = {"start" : [feat], "end" : []};
                         //end
                         var end = start + feat.match.length;
                         locations[end] ?
-                            locations[end]['end'].push(featIndex) :
-                            locations[end] = {"start" : [], "end" : [featIndex]};
+                            locations[end]['end'].push(feat) :
+                            locations[end] = {"start" : [], "end" : [feat]};
 
                     }
                 } else {
                     //start
                     locations[feat.pos.start] ?
-                        locations[feat.pos.start]['start'].push(featIndex) :
-                        locations[feat.pos.start] = {"start" : [featIndex], "end" : []};
+                        locations[feat.pos.start]['start'].push(feat) :
+                        locations[feat.pos.start] = {"start" : [feat], "end" : []};
                     //end
                     locations[feat.pos.end] ?
-                        locations[feat.pos.end]['end'].push(featIndex) :
-                        locations[feat.pos.end] = {"start" : [], "end" : [featIndex]};
+                        locations[feat.pos.end]['end'].push(feat) :
+                        locations[feat.pos.end] = {"start" : [], "end" : [feat]};
                 }
             });
             //console.log(locations);
@@ -389,15 +345,15 @@ Application.Plasmid.filter('features', [function() {
 
 
 
-            //loop from end, saving tag locations
+            //loop from end, inserting tags
             var reversed = [];
             angular.forEach(locations, function(key, val) {
                 reversed.unshift(val);
             });
+            //console.log(reversed);
 
-            var newText = text,
-                backlog = [];
 
+            var newText = text;
             angular.forEach(reversed, function(index) {
                 angular.forEach(locations[index], function(value, key) {
                     if (text.length < index) {
@@ -405,57 +361,85 @@ Application.Plasmid.filter('features', [function() {
                         return;
                     }
 
-                    /* todo need to deal with scenarios like this:
-                     //note - angular will add class="ng-scope" to tag, but stripped it out
-                     <1> xx    <2> xx         <3> xx     </2> xx          </3> xx      </1>      ->
-                     <1> xx</1><1-2> xx </1-2><1-2-3> xx </1-2-3><1-3> xx </1-3><1> xx </1>
-                     */
+                    //todo - check last tag, see if closing
 
-                    if (!value.length) {
-                        return;
-                    }
-                    //console.log(index, locations[index], value);
+                    angular.forEach(value, function(feat) {
+                        var featName = angular.lowercase(feat.label).replace(/[ _]/gi, '');
 
-                    angular.forEach(value, function(featIndex) {
-
-                        //console.log(index, key, value, backlog);
+                        //console.log(feat);
+                        //console.log(key + " " + feat.label);
 
                         if (key == 'start') {
-
-                            var indices = (backlog.length > 1) ? backlog.join("-") : featIndex;
-                            //console.log(indices);
-
                             newText = newText.slice(0, index) +
-                                ((backlog.length > 1) ? '</annotation>' : '') +
-                                '<annotation index="'+ indices + '">' +
+                                '<feat' + featName + ' ' +
+                                'feature="' + feat.label + '" ' +
+                                'style="' +
+                                (feat.css.color ? "color: " + feat.css.color + ";" : "") +
+                                (feat.css.background ? "background-color: " + feat.css.background : "") +
+                                '">' +
                                 newText.slice(index);
-
-
-                            //splice out featIndex
-                            var ind = backlog.indexOf(featIndex);
-                            backlog.splice(ind, 1);
-
                         } else {
-                            backlog.push(featIndex);
-
-                            //check if last tag was closing
-                            if (backlog.length > 1) {
-                                newText = newText.slice(0, index) +
-                                    '</annotation>' +
-                                    '<annotation index="' + backlog.slice(0,-1).join("-") + '">' +
-                                    newText.slice(index);
-                            } else {
-                                newText = newText.slice(0, index) +
-                                    '</annotation>' +
-                                    newText.slice(index);
-                            }
+                            newText = newText.slice(0, index) +
+                                '</feat' + featName + '>' +
+                                newText.slice(index);
                         }
-                        //console.log(newText);
                     });
 
                 })
             });
-            //console.log(newText);
+
+            console.log(newText);
+
+
+            /**** REGEXPS *****/
+            var findAllTags = /<\/?(feat[A-Z0-9]*)\b[^>]*>/gi;
+
+            var findFeatsInclusive = /<(feat[A-Z0-9]*)\b[^>]*>.*?<\/\1>/gi;
+
+            var findSingleOverlaps = /<feat([A-Z0-9]*)\b[^>]*>.*?<feat([A-Z0-9]*)\b[^>]*>[^\/]*?(?!(\/feat\2))\/feat\1>/gi;
+
+            //note - find features with tag inside (overlapping)
+            //todo - fix
+            var findOverlaps = /<(feat[A-Z0-9]*)\b[^>]*>.*?<(feat[A-Z0-9]*)\b[^>]*>.*?(?!\2).*?<\/\1>/gi;
+
+            //todo - fix
+            var findSingleNested = /<(feat[A-Z0-9]*)\b[^>]*>.*?<(feat[A-Z0-9]*)\b[^>]*>.*?<\/\2>.*?<\/\1>/gi;
+
+
+
+            var feature_reg = /<feat([A-Z0-9]*) feature="(.*?)" ([^>]*)>(.*?)<feat([A-Z0-9]*) feature="(.*?)" ([^>]*)>([^\/]*?)<(?!(\/feat\3))\/feat\1>/gi;
+            var feature_replacer = function(match, f1, n1, c1, s1, f2, n2, c2, s2, ignore, index){
+                /*console.log(arguments);
+                 console.log(index);
+                 console.log(match);*/
+
+                var string = '<feat' + f1 + ' feature="' + n1 + '" ' + c1 + '>' + s1 +
+                    '</feat' + f1 + '>' +
+                    '<feat' + f1 + '-' +  f2 + ' feature="' + n1 + ', ' + n2 + '" ' + c1 + '>' + s2 +
+                    '</feat' + f1 + '-' +  f2 + '>' +
+                    '<feat' + f2 + ' feature="' + n2 + '" ' + c2 + '>';
+
+                return string;
+
+            };
+
+            var overlap;
+            while (overlap = findSingleOverlaps.exec(newText)) {
+                //var inner = reg.exec(overlap[0]);
+                //console.log(inner);
+
+                var corrected = overlap[0].replace(feature_reg, feature_replacer);
+
+                newText = newText.replace(overlap[0], corrected);
+            }
+
+            console.log(newText);
+
+
+
+
+
+
 
             return newText;
         } else {
@@ -465,46 +449,17 @@ Application.Plasmid.filter('features', [function() {
 }]);
 
 //todo - interaction with Plasmid Service? or just tooltip?
-Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
-
+Application.Plasmid.directive('feature', [function() {
     return {
-        restrict : 'EA',
-        replace: false,
-        scope: {
-            index: '@'
-        },
-        transclude:true,
-        template: '<span tooltip="{{ feature.label }}" tooltip-placement="top" tooltip-append-to-body="true" ng-transclude></span>',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs, controller) {
-                    scope.features = scope.$parent.features;
-                    var matches = scope.index.split('-');
-                    scope.feature = angular.copy(scope.features[matches.pop()]);
+        restrict : 'A',
+        link: function(scope, element, attrs, controller) {
+            //borrow from angularUI tooltip?
+            //attrs.$set('style', "background-color: #FF0000");
 
-                    for (var ind = 0; ind < matches.length; ind++) {
-                        scope.feature.label += ", " + scope.features[matches[ind]].label;
-                    }
-                },
-                post: function(scope, element, attrs, ctrl) {
-                    //borrow from angularUI tooltip?
-                    //attrs.$set('style', "background-color: #FF0000");
+            element.on('mouseenter', function() {
+                console.log(attrs.feature);
+            })
 
-                    element.css(scope.feature.css);
-
-                    //todo - simple notification - ask if want to split or what
-                    /*
-                     scope.$watch(function() {
-                     return element.text();
-                     }, function( newval, oldval) {
-                     if (!!newval && !!oldval && newval != oldval) {
-                     alert('changing a feature!')
-                     }
-                     });
-                     */
-
-                }
-            }
         }
     }
 }]);

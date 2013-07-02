@@ -12,6 +12,13 @@
 
 Application.Interface.factory('$position', ['$document', '$window', function ($document, $window) {
 
+    var mouseX, mouseY;
+
+    $document.bind('mousemove', function mouseMoved(event) {
+        mouseX = event.pageX;
+        mouseY = event.pageY;
+    });
+
     function getStyle(el, cssprop) {
         if (el.currentStyle) { //IE
             return el.currentStyle[cssprop];
@@ -78,6 +85,13 @@ Application.Interface.factory('$position', ['$document', '$window', function ($d
                 top: boundingClientRect.top + ($window.pageYOffset || $document[0].body.scrollTop),
                 left: boundingClientRect.left + ($window.pageXOffset || $document[0].body.scrollLeft)
             };
+        },
+
+        /**
+         * Provides the coordinates of the mouse
+         */
+        mouse: function () {
+            return {x: mouseX, y: mouseY};
         }
     };
 }]);
@@ -506,7 +520,7 @@ Application.Interface.provider("$dialog", function(){
                 // * `cssClass`: additional css class(es) to apply to the button for styling
                 messageBox: function(title, message, buttons){
                     return new Dialog({
-                        templateUrl: 'interface/dialogMessagebox.html',
+                        templateUrl: 'interface/templates/dialogMessagebox.html',
                         controller: 'MessageBoxController',
                         resolve:
                         {model: function() {
@@ -525,7 +539,7 @@ Application.Interface.provider("$dialog", function(){
                         backdropFade: true,
                         keyboard: true,
                         backdropClick: true,
-                        templateUrl: 'interface/dialogMessagebox.html',
+                        templateUrl: 'interface/templates/dialogMessagebox.html',
                         controller: 'ServerAlertController',
                         resolve:
                         {model: function() {

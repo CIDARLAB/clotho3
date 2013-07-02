@@ -4,14 +4,14 @@
 
  todo
  - restrict input to one of multiple sets
- - ACGT
- - plus others (degenerates - e.g. N, Y, R)
- - RNA
+    - ACGT
+    - plus others (degenerates - e.g. N, Y, R)
+    - RNA
  - revcomp method
  - other parameters
- - circular
- - linear
- - GC content / emlting point (from server)
+    - circular
+    - linear
+    - GC content / emlting point (from server)
  - start / stop codons
  - check both directions
  - add feature directive -- tooltip?
@@ -163,12 +163,12 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
     $scope.emptyFeat = function() {
         return {label: "", pos: '', match: '', css : {color: '', background: '' }};
     };
-
+    
     $scope.logFeatures = function() {console.log($scope.featureList)};
 
     $scope.featureValid = function(feat) {
         return (
-            (feat.match != '' && angular.isDefined(feat.match)) ?
+                (feat.match != '' && angular.isDefined(feat.match)) ?
                 $scope.reg_match.test(feat.match) :
                 (angular.isDefined(feat.pos) && $scope.reg_pos.test(feat.pos))
             ) &&
@@ -222,7 +222,7 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
                 //feature = container[0].innerHTML;
 
                 console.log(sel);
-                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
+                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset}
 
 
                 feature.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
@@ -236,6 +236,7 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
         }
         console.log(feature);
     };
+
 }]);
 
 Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', function($parse, $timeout, $filter, $compile, $document) {
@@ -243,9 +244,11 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
     return {
         restrict: "A",
         require:'ngModel',
+        //rep1ace: true,
         scope : {
             features: '=',
             editable: '@',
+            textSelected: '=', // todo - move into this directive
             sequence: '=ngModel'
         },
         link: function(scope, element, attrs, ngModel) {
@@ -254,6 +257,8 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
 
             //scope.features = $parse(attrs.features)(scope) || [];
             //scope.textSelected = $parse(attrs.textSelected)(scope);
+
+            console.log(ngModel);
 
             /* key functions  */
 
@@ -265,23 +270,21 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
             /* updating view */
 
             function setOutput (html) {
-                element.html(html);
+                //var x = $compile(html)(scope);
+                //console.log(x);
+                element[0].innerHTML = html;
                 $compile(element.contents())(scope);
             }
-
-            scope.highlight = function() {
-                setOutput(genFiltered());
-            };
 
 
             //model -> view
 
             /*scope.$watch(function () {
-             return ngModel.$modelValue;
-             }, function (modelValue) {
-             console.log('model change');
-             //setOutput(genFiltered())
-             });*/
+                return ngModel.$modelValue;
+            }, function (modelValue) {
+                console.log('model change');
+                //setOutput(genFiltered())
+            });*/
 
 
             //fixme - why isn't render being called with updates??
@@ -313,18 +316,18 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                 }
             });
 
-            element.bind( "keyup change" , function() {
+            element.bind( "keyup blur change" , function() {
                 console.log('change to view model');
                 scope.$apply(
                     ngModel.$setViewValue(element.html())
                 );
             });
 
-            $document.bind('mouseup', function() {
+            element.bind('mouseup', function() {
                 if (typeof window.getSelection != "undefined") {
-                    scope.$apply(scope.textSelected = !!window.getSelection().toString());
+                    scope.textSelected = !!window.getSelection().toString();
                 } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-                    scope.$apply(scope.textSelected = !!document.selection.createRange().text);
+                    scope.textSelected = !!document.selection.createRange().text;
                 }
             });
         }
@@ -335,11 +338,11 @@ Application.Plasmid.filter('features', [function() {
     return function (text, features) {
         if (features && angular.isArray(features) && angular.isString(text)) {
 
-            //console.log(features);
+            console.log(features);
 
             var html = text;
             text = html.replace(/(<([^>]+)>)/ig, "");
-
+            
             //console.log(html);
             //console.log(text);
 
@@ -395,8 +398,17 @@ Application.Plasmid.filter('features', [function() {
                 reversed.unshift(val);
             });
 
+
+
             var newText = text,
                 backlog = [];
+
+            /* todo need to deal with scenarios like this:
+            //note - angular will add class="ng-scope" to tag
+             <1> xx    <2> xx         <3> xx     </2> xx          </3> xx      </1>      ->
+             <1> xx</1><1-2> xx </1-2><1-2-3> xx </1-2-3><1-3> xx </1-3><1> xx </1>
+             */
+
 
             angular.forEach(reversed, function(index) {
                 angular.forEach(locations[index], function(value, key) {
@@ -405,57 +417,95 @@ Application.Plasmid.filter('features', [function() {
                         return;
                     }
 
-                    /* todo need to deal with scenarios like this:
-                     //note - angular will add class="ng-scope" to tag, but stripped it out
-                     <1> xx    <2> xx         <3> xx     </2> xx          </3> xx      </1>      ->
-                     <1> xx</1><1-2> xx </1-2><1-2-3> xx </1-2-3><1-3> xx </1-3><1> xx </1>
-                     */
-
-                    if (!value.length) {
-                        return;
-                    }
-                    //console.log(index, locations[index], value);
-
                     angular.forEach(value, function(featIndex) {
+                        var feat = features[featIndex];
+                        var featName = angular.lowercase(feat.label).replace(/[ _]/gi, '');
 
-                        //console.log(index, key, value, backlog);
+                        //console.log(feat);
+                        //console.log(key + " " + feat.label);
 
                         if (key == 'start') {
-
-                            var indices = (backlog.length > 1) ? backlog.join("-") : featIndex;
-                            //console.log(indices);
-
                             newText = newText.slice(0, index) +
-                                ((backlog.length > 1) ? '</annotation>' : '') +
-                                '<annotation index="'+ indices + '">' +
+                                '<feat' + featName + ' ' +
+                                'feature="' + feat.label + '" ' +
+                                'style="' +
+                                (feat.css.color ? "color: " + feat.css.color + ";" : "") +
+                                (feat.css.background ? "background-color: " + feat.css.background : "") +
+                                '">' +
                                 newText.slice(index);
-
-
-                            //splice out featIndex
-                            var ind = backlog.indexOf(featIndex);
-                            backlog.splice(ind, 1);
-
                         } else {
-                            backlog.push(featIndex);
-
-                            //check if last tag was closing
-                            if (backlog.length > 1) {
-                                newText = newText.slice(0, index) +
-                                    '</annotation>' +
-                                    '<annotation index="' + backlog.slice(0,-1).join("-") + '">' +
-                                    newText.slice(index);
-                            } else {
-                                newText = newText.slice(0, index) +
-                                    '</annotation>' +
-                                    newText.slice(index);
-                            }
+                            newText = newText.slice(0, index) +
+                                '</feat' + featName + '>' +
+                                newText.slice(index);
                         }
-                        //console.log(newText);
                     });
 
                 })
             });
+            //note - text is filled with features at appropriate locations. tags might overlap.
             //console.log(newText);
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /**** REGEXPS *****/
+            var findAllTags = /<\/?(feat[A-Z0-9]*)\b[^>]*>/gi;
+
+            var findFeatsInclusive = /<(feat[A-Z0-9]*)\b[^>]*>.*?<\/\1>/gi;
+
+            var findSingleOverlaps = /<feat([A-Z0-9]*)\b[^>]*>.*?<feat([A-Z0-9]*)\b[^>]*>[^\/]*?(?!(\/feat\2))\/feat\1>/gi;
+
+            //note - find features with tag inside (overlapping)
+            //todo - fix
+            var findOverlaps = /<(feat[A-Z0-9]*)\b[^>]*>.*?<(feat[A-Z0-9]*)\b[^>]*>.*?(?!\2).*?<\/\1>/gi;
+
+            //todo - fix
+            var findSingleNested = /<(feat[A-Z0-9]*)\b[^>]*>.*?<(feat[A-Z0-9]*)\b[^>]*>.*?<\/\2>.*?<\/\1>/gi;
+
+
+
+            var feature_reg = /<feat([A-Z0-9]*) feature="(.*?)" ([^>]*)>(.*?)<feat([A-Z0-9]*) feature="(.*?)" ([^>]*)>([^\/]*?)<(?!(\/feat\3))\/feat\1>/gi;
+            var feature_replacer = function(match, f1, n1, c1, s1, f2, n2, c2, s2, ignore, index){
+                /*console.log(arguments);
+                console.log(index);
+                console.log(match);*/
+
+                var string = '<feat' + f1 + ' feature="' + n1 + '" ' + c1 + '>' + s1 +
+                    '</feat' + f1 + '>' +
+                    '<feat' + f1 + '-' +  f2 + ' feature="' + n1 + ', ' + n2 + '" ' + c1 + '>' + s2 +
+                    '</feat' + f1 + '-' +  f2 + '>' +
+                    '<feat' + f2 + ' feature="' + n2 + '" ' + c2 + '>';
+
+                return string;
+
+            };
+
+            var overlap;
+            while (overlap = findSingleOverlaps.exec(newText)) {
+                //var inner = reg.exec(overlap[0]);
+                //console.log(inner);
+
+                var corrected = overlap[0].replace(feature_reg, feature_replacer);
+
+                newText = newText.replace(overlap[0], corrected);
+            }
+
+            //console.log(newText);
+
+
+
+
+
+
 
             return newText;
         } else {
@@ -465,46 +515,37 @@ Application.Plasmid.filter('features', [function() {
 }]);
 
 //todo - interaction with Plasmid Service? or just tooltip?
-Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
+Application.Plasmid.directive('feature', ['$tooltip', function($tooltip) {
 
     return {
-        restrict : 'EA',
-        replace: false,
+        restrict : 'A',
+        replace: true,
         scope: {
-            index: '@'
+            feature: '@'
         },
         transclude:true,
-        template: '<span tooltip="{{ feature.label }}" tooltip-placement="top" tooltip-append-to-body="true" ng-transclude></span>',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs, controller) {
-                    scope.features = scope.$parent.features;
-                    var matches = scope.index.split('-');
-                    scope.feature = angular.copy(scope.features[matches.pop()]);
+        template: '<feature><span tooltip="{{ feature }}" append-to-body ng-transclude></span></feature>', //todo - get append-to-body working so font works
+        link: function(scope, element, attrs, ctrl) {
+            //borrow from angularUI tooltip?
+            //attrs.$set('style', "background-color: #FF0000");
+            
+//          console.log(scope);
 
-                    for (var ind = 0; ind < matches.length; ind++) {
-                        scope.feature.label += ", " + scope.features[matches[ind]].label;
-                    }
-                },
-                post: function(scope, element, attrs, ctrl) {
-                    //borrow from angularUI tooltip?
-                    //attrs.$set('style', "background-color: #FF0000");
+            element.bind('mouseenter', function() {
+                console.log(scope.feature);
+            });
 
-                    element.css(scope.feature.css);
-
-                    //todo - simple notification - ask if want to split or what
-                    /*
-                     scope.$watch(function() {
-                     return element.text();
-                     }, function( newval, oldval) {
-                     if (!!newval && !!oldval && newval != oldval) {
-                     alert('changing a feature!')
-                     }
-                     });
-                     */
-
+            //todo - simple notification - ask if want to split or what
+           /*
+           scope.$watch(function() {
+                return element.text();
+            }, function( newval, oldval) {
+                if (!!newval && !!oldval && newval != oldval) {
+                    alert('changing a feature!')
                 }
-            }
+            });
+            */
+
         }
     }
 }]);

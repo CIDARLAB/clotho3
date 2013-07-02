@@ -66,9 +66,15 @@
 <div ng-controller="PlasmidCtrl" class="container">
     <div class="row">
     <div class="span8">
-        <h3>Sequence</h3>
+        <h3>
+            Sequence
+            <div class="btn-group pull-right">
+                <button class="btn btn-small" ng-click="highlight()">Highlight</button>
+                <button class="btn btn-small" ng-click="addFeatureSelection()" ng-disabled="!textSelected">Annotate Selection</button>
+            </div>
+        </h3>
         <div class="ldt">
-            <pre plasmid-editor ng-model='sequence' features="featureList"></pre>
+            <pre plasmid-editor ng-model='sequence' features="featureList" editable="{{editable}}" style="position:relative;"></pre>
         </div>
 
     </div>
@@ -79,9 +85,9 @@
             <div class="row-fluid">
                 <input type="text" class="span12" placeholder="Feature Name" ng-model="new.label">
                 <div class="input-prepend input-append span12">
-                    <input type="text" class="span5" placeholder="Sequence" ng-model="new.match" ng-pattern="reg_match" ng-trim="false"/>
+                    <input type="text" class="span5" placeholder="Sequence" ng-model="new.match" ng-pattern="reg_match" ng-trim="false" ng-disabled="new.pos.length"/>
                     <span class="add-on">OR</span>
-                    <input type="text" class="span5" placeholder="Position" ng-model="new.pos" ng-pattern="reg_pos" ng-trim="false"/>
+                    <input type="text" class="span5" placeholder="Position" ng-model="new.pos" ng-pattern="reg_pos" ng-trim="false" ng-disabled="new.match.length"/>
                 </div>
                 <div class="input-prepend input-append span6">
                     <input type="color" class="span3" placeholder="Text" ng-model="new.css.color" ng-pattern="reg_color" ng-trim="false" />
@@ -94,7 +100,7 @@
         <div class="row-fluid">
             <div ng-repeat="feat in featureList">
                 <button btn-checkbox class="btn" ng-model="feat.active">Active</button>
-                <span ng-style="{{feat.css}}">{{feat.match}} --- {{feat.pos.start}} ... {{feat.pos.end}}</span>
+                <span ng-style="{{feat.css}}">{{feat.match}} --- {{feat.pos.start}} ... {{feat.pos.end}} ---- {{ feat.label }}</span>
             </div>
         </div>
     </div>
