@@ -20,6 +20,8 @@
  *  - return angular.noop for empty callbacks, or deal with better
  */
 
+//todo - incorporate requestId field
+
 Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout) {
 
     /**********
@@ -175,28 +177,21 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.set
      *
-     * @param {string} uuid UUID of Sharable to alter
-     * @param {object} data  JSON representation of new data, may be partial (just a few fields)
+     * @param {object} sharable  JSON representation of Sharable containing new data - may be partial (just a few fields), but must contain an ID or UUID
      *
      * @description
      * Updates a sharable with passed object. Sets the fields present in the spec to the values in the spec. Fields missing from the spec are unchanged. If a field is missing from the specified object, it will be created. Clotho will send an error message on the 'say' channel if an update could not be applied.
      *
      * Server will emit a collect(uuid) call, upon object being updated
      */
-    var set = function clothoAPI_set(uuid, data) {
+    var set = function clothoAPI_set(sharable) {
         //strip $$v in case use promise to set multiple times
-        while (data.$$v) {
-            data = data.$$v;
+        while (sharable.$$v) {
+            sharable = sharable.$$v;
         }
 
-        var packaged = {
-            "uuid" : uuid,
-            "data" : data
-        };
-        fn.api.emit('set', packaged);
+        fn.api.emit('set', sharable);
     };
-
-
 
 
     /**
@@ -380,6 +375,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     };
 
 
+
     /**
      * @name Clotho.query
      *
@@ -390,8 +386,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      */
     var query = function(obj) {
         fn.searchbar.emit("query", obj);
-    };
+        var deferred = $q.defer();
 
+        PubSub.on('query', function(data) {
+            $rootScope.$safeApply(deferred.resolve(data));
+        }, '$clotho');
+
+        return deferred.promise;
+    };
     /**
      * @name Clotho.create
      *
@@ -406,7 +408,13 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
         fn.api.emit('create', object);
 
-        //todo - return
+        var deferred = $q.defer();
+
+        PubSub.on('create', function(data) {
+            $rootScope.$safeApply(deferred.resolve(data));
+        }, '$clotho');
+
+        return deferred.promise;
     };
 
     /**
@@ -651,7 +659,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     var run = function clothoAPI_run(func, args) {
         var packaged = {
             "function" : func || "",
-            "arguments" : args,
+            "arguments" : args
         };
         fn.api.emit('run', packaged);
     };

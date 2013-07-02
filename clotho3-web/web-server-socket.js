@@ -592,7 +592,7 @@ io.sockets.on('connection', function (socket) {
         ));
     };
     api.api.set = function(data) {
-        var uuid = data.uuid;
+        var uuid = data.id || data.uuid;
         data = data.data;
 
         //only save and send data to client if different from what the server has

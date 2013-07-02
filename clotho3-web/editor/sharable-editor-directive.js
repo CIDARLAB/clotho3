@@ -169,7 +169,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
 
                     //save edits, switch to 'view'
                     scope.save = function() {
-                        Clotho.set(scope.id, scope.sharable);
+                        Clotho.set(scope.sharable);
                         scope.editMode = false;
                     };
 
