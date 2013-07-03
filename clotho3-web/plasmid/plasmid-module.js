@@ -1,5 +1,7 @@
 'use strict';
 
+//TODO - PLASMID PROVIDER -- validation, store features, add features, etc.
+
 /*
 
  todo
@@ -36,6 +38,11 @@
  - pull out tags and locations from HTML (start at front)
  - search for regexp in text, add locations
  */
+
+//future - make provider, not singleton service
+Application.Plasmid.service('Plasmid', ['$window', function($window) {
+
+}]);
 
 
 Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document', function($scope, $window, $document) {
@@ -204,41 +211,9 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
         }
     };
 
-
-    //todo - checks:
-    // select opp direction
-    // pos is for whole string (across text nodes)
-    $scope.addFeatureSelection = function () {
-
-        var feature = $scope.emptyFeat();
-        if ($window.getSelection) {
-            var sel = $window.getSelection();
-            if (typeof sel != 'undefined' && sel.rangeCount) {
-                var container = angular.element("<div>");
-                for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                    container.append(sel.getRangeAt(i).cloneContents());
-                }
-                console.log(sel.getRangeAt(0).cloneRange());
-                //feature = container[0].innerHTML;
-
-                console.log(sel);
-                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
-
-
-                feature.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
-
-            }
-        }
-        else if (typeof $document.selection != "undefined") { //IE -- todo doesn't really work
-            if ($document.selection.type == "Text") {
-                feature = $document.selection.createRange().htmlText;
-            }
-        }
-        console.log(feature);
-    };
 }]);
 
-Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', function($parse, $timeout, $filter, $compile, $document) {
+Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', '$window', function($parse, $timeout, $filter, $compile, $document, $window) {
 
     return {
         restrict: "A",
@@ -248,85 +223,132 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
             editable: '@',
             sequence: '=ngModel'
         },
-        link: function(scope, element, attrs, ngModel) {
-            attrs.$set('spellcheck', false);
-            attrs.$set('contenteditable', true); //todo - check controller
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs, controller) {
+                    attrs.$set('spellcheck', false);
+                    attrs.$set('contenteditable', true); //todo - check controller
 
-            //scope.features = $parse(attrs.features)(scope) || [];
-            //scope.textSelected = $parse(attrs.textSelected)(scope);
+                    element.css({
+                        'font-size': '16px',
+                        'font-family': 'monospace',
+                        'color': 'black',
+                        'outline': 'none',
+                        'resize': 'none',
+                        'min-width': '100%',
+                        'overflow': 'hidden',
+                        'box-sizing': 'border-box',
+                        '-moz-padding-start': '1px',
+                        'min-height': '22px',
+                        'position': 'relative'
+                    });
 
-            /* key functions  */
+                    element.parent().prepend($compile(angular.element('<div class="btn-group pull-right"><button class="btn btn-small" ng-click="highlight()" ng-disabled="ngModel.$pristine">Process</button><button class="btn btn-small" ng-click="addFeatureSelection()" ng-disabled="!textSelected">Annotate Selection</button></div>'))(scope));
+                },
+                post: function(scope, element, attrs, ngModel) {
+                    /* key functions  */
 
-            function genFiltered (text) {
-                text = typeof text != 'undefined' ? text : ngModel.$viewValue;
-                return $filter('features')(text, scope.features);
-            }
+                    scope.ngModel = ngModel;
+                    console.log(scope);
 
-            /* updating view */
+                    function genFiltered (text) {
+                        text = typeof text != 'undefined' ? text : ngModel.$viewValue;
+                        return $filter('features')(text, scope.features);
+                    }
 
-            function setOutput (html) {
-                element.html(html);
-                $compile(element.contents())(scope);
-            }
+                    /* updating view */
 
-            scope.highlight = function() {
-                setOutput(genFiltered());
-            };
+                    function setOutput (html) {
+                        element.html(html);
+                        $compile(element.contents())(scope);
+                        ngModel.$setPristine();
+                    }
 
+                    scope.highlight = function() {
+                        setOutput(genFiltered());
+                    };
 
-            //model -> view
+                    //todo - checks:
+                    // select opp direction
+                    // pos is for whole string (across text nodes)
+                    scope.addFeatureSelection = function () {
 
-            /*scope.$watch(function () {
-             return ngModel.$modelValue;
-             }, function (modelValue) {
-             console.log('model change');
-             //setOutput(genFiltered())
-             });*/
+                        var feature = scope.emptyFeat();
+                        if ($window.getSelection) {
+                            var sel = $window.getSelection();
+                            if (typeof sel != 'undefined' && sel.rangeCount) {
+                                var container = angular.element("<div>");
+                                for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                                    container.append(sel.getRangeAt(i).cloneContents());
+                                }
+                                console.log(sel.getRangeAt(0).cloneRange());
+                                //feature = container[0].innerHTML;
 
-
-            //fixme - why isn't render being called with updates??
-            ngModel.$render = function() {
-                //console.log(ngModel.$viewValue);
-                console.log('render');
-                element.html(genFiltered(ngModel.$viewValue));
-            };
-
-            scope.$watch(function() {
-                return ngModel.$viewValue;
-            }, function(viewVal) {
-                console.log('view watch');
-                //element.html(genFiltered(viewVal));
-            });
-
-            scope.$watch(function() {
-                return ngModel.$modelValue;
-            }, function(modelVal) {
-                console.log('model watch');
-                //element.html(genFiltered(viewVal));
-            });
+                                console.log(sel);
+                                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
 
 
-            /* watchers */
-            scope.$watchCollection('features', function(newVal, oldVal) {
-                if (!!newVal && !!oldVal) {
-                    setOutput(genFiltered());
+                                feature.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
+
+                            }
+                        }
+                        else if (typeof $document.selection != "undefined") { //IE -- todo doesn't really work
+                            if ($document.selection.type == "Text") {
+                                feature = $document.selection.createRange().htmlText;
+                            }
+                        }
+                        console.log(feature);
+                    };
+
+
+                    //model -> view
+
+                    //fixme - why isn't render being called with updates??
+                    ngModel.$render = function() {
+                        //console.log(ngModel.$viewValue);
+                        console.log('render');
+                        element.html(genFiltered(ngModel.$viewValue));
+                    };
+
+                    scope.$watch(function() {
+                        return ngModel.$viewValue;
+                    }, function(viewVal) {
+                        console.log('view watch');
+                        //element.html(genFiltered(viewVal));
+                    });
+
+                    scope.$watch(function() {
+                        return ngModel.$modelValue;
+                    }, function(modelVal) {
+                        console.log('model watch');
+                        //element.html(genFiltered(viewVal));
+                    });
+
+
+                    /* watchers */
+                    scope.$watchCollection('features', function(newVal, oldVal) {
+                        if (!!newVal && !!oldVal) {
+                            setOutput(genFiltered());
+                        }
+                    });
+
+                    element.bind( "keyup change" , function() {
+                        console.log('change to view model');
+                        scope.$apply(
+                            ngModel.$setViewValue(element.html())
+                        );
+                    });
+
+                    scope.textSelected = false;
+                    $document.bind('mouseup', function() {
+                        if (typeof $window.getSelection != "undefined") {
+                            scope.$apply(scope.textSelected = !!$window.getSelection().toString());
+                        } else if (typeof $document.selection != "undefined" && $document.selection.type == "Text") {
+                            scope.$apply(scope.textSelected = !!$document.selection.createRange().text);
+                        }
+                    });
                 }
-            });
-
-            element.bind( "keyup change" , function() {
-                console.log('change to view model');
-                scope.$apply(
-                    ngModel.$setViewValue(element.html())
-                );
-            });
-
-            $document.bind('mouseup', function() {
-                if (typeof window.getSelection != "undefined") {
-                    scope.$apply(scope.textSelected = !!window.getSelection().toString());
-                } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-                    scope.$apply(scope.textSelected = !!document.selection.createRange().text);
-                }
-            });
+            }
         }
     }
 }]);
@@ -335,8 +357,6 @@ Application.Plasmid.filter('features', [function() {
     return function (text, features) {
         if (features && angular.isArray(features) && angular.isString(text)) {
 
-            //console.log(features);
-
             var html = text;
             text = html.replace(/(<([^>]+)>)/ig, "");
 
@@ -344,10 +364,8 @@ Application.Plasmid.filter('features', [function() {
             //console.log(text);
 
 
-            //future - pull tags out of HTML and save locations
+            //todo - pull tags out of HTML and save locations
 
-            //var str=html.replace(/ /ig,'<span>$3</span>');
-            //console.log(str + '\n\n\n\n\n\n\n\n\n\n\n\n');
 
 
             //create location map
@@ -385,7 +403,7 @@ Application.Plasmid.filter('features', [function() {
 
 
 
-            //future - check reverse direction too
+            //todo - check reverse direction too
 
 
 
@@ -404,12 +422,6 @@ Application.Plasmid.filter('features', [function() {
                         console.log("string too short");
                         return;
                     }
-
-                    /* todo need to deal with scenarios like this:
-                     //note - angular will add class="ng-scope" to tag, but stripped it out
-                     <1> xx    <2> xx         <3> xx     </2> xx          </3> xx      </1>      ->
-                     <1> xx</1><1-2> xx </1-2><1-2-3> xx </1-2-3><1-3> xx </1-3><1> xx </1>
-                     */
 
                     if (!value.length) {
                         return;
@@ -464,7 +476,6 @@ Application.Plasmid.filter('features', [function() {
     };
 }]);
 
-//todo - interaction with Plasmid Service? or just tooltip?
 Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
 
     return {
@@ -474,7 +485,7 @@ Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
             index: '@'
         },
         transclude:true,
-        template: '<span tooltip="{{ feature.label }}" tooltip-placement="top" tooltip-append-to-body="true" ng-transclude></span>',
+        template: '<span tooltip="{{ feature.label }}" tooltip-placement="mouse" tooltip-append-to-body="true" ng-transclude></span>',
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, controller) {

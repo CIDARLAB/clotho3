@@ -28,7 +28,7 @@
 
     <div class="row" ng-repeat="(type, fields) in recent">
         <div ng-if="type != 'entries'" class="span12">
-            <h3>{{type}}</h3>
+            <h3 class="text-info">{{type}}</h3>
         </div>
         <div ng-switch="type">
             <div ng-switch-when="Instance">

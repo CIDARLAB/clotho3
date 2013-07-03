@@ -41,7 +41,7 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
 
         var pos = $position.position(angular.element(event.target));
 
-        Clotho.show_simple({
+        Clotho.show({
             "template" : 'extensions/simple-template.html',
             "controller" : 'extensions/simple-controller.js',
             "dependencies" : [
@@ -56,25 +56,25 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
         });
     };
     $scope.showEditor = function() {
-        Clotho.show_simple({
+        Clotho.show({
             "template" : 'extensions/editor-template.html',
             "args" : {
                 "id" : "inst_first"
-            },
-            "target" : ".editorCatcher"
+            }
+            //"target" : ".editorCatcher"
         });
     };
     $scope.showEditorModal = function() {
 
-        var editor_template = '<form sharable-editor name="sharableEditor" id="inst_first" class="span6 form-horizontal well" novalidate></form>';
+        var editor_template = '<form sharable-editor name="sharableEditor" id="inst_first" class=" form-horizontal well" novalidate></form>';
 
-        $scope.dialog_opts = {
+        var dialog_opts = {
             backdrop: true,
             keyboard: true,
             backdropClick: true,
             template:  editor_template
         };
-        var d = $dialog.dialog($scope.dialog_opts);
+        var d = $dialog.dialog(dialog_opts);
         d.open();
     };
 

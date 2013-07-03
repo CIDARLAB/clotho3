@@ -607,7 +607,7 @@ io.sockets.on('connection', function (socket) {
             ));
         }
     };
-    api.api.show = function(data) {
+    api.api.show_old = function(data) {
         var uuid = data.uuid;
         data = data.data;
 
@@ -621,24 +621,8 @@ io.sockets.on('connection', function (socket) {
             api.pack.display(uuid, data)
         ));
     };
-    api.api.show_simple = function(data) {
-
-        /*
-        //demo
-        var message = {
-            "template" : "extensions/simple-template.html",
-            "target" : "body"
-            "controller" : "extensions/simple-controller.js",
-            "dependencies" : [
-                "extensions/simple-service.js"
-            ],
-            styles : {
-                "background-color" : "#FF0000"
-            }
-        };
-        */
-
-        socket.send(api.pack.api_wrap('display_simple',
+    api.api.show = function(data) {
+        socket.send(api.pack.api_wrap('display',
             api.pack.nopack(data)
         ));
     };

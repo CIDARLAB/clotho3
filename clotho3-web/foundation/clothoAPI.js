@@ -388,7 +388,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.searchbar.emit("query", obj);
         var deferred = $q.defer();
 
-        PubSub.on('query', function(data) {
+        PubSub.once('query', function(data) {
             $rootScope.$safeApply(deferred.resolve(data));
         }, '$clotho');
 
@@ -410,7 +410,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
         var deferred = $q.defer();
 
-        PubSub.on('create', function(data) {
+        PubSub.once('create', function(data) {
             $rootScope.$safeApply(deferred.resolve(data));
         }, '$clotho');
 
@@ -463,7 +463,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     };
 
     /**
-     * @name Clotho.show
+     * @name Clotho.show_old
      *
      * @param {string} uuid
      * @param {object=} args
@@ -479,18 +479,42 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * viewID should be kept on the server, not passed explicitly to function
      *
      */
-    var show = function clothoAPI_show(uuid, args) {
+    var show_old = function clothoAPI_show(uuid, args) {
         var packaged = {
             "uuid" : uuid,
             "args" : args
         };
-        fn.api.emit('show', packaged);
+        fn.api.emit('show_old', packaged);
     };
 
 
-    //testing
-    var show_simple = function(obj) {
-        fn.api.emit('show_simple', obj);
+    /**
+     * @name Clotho.show
+     *
+     * @param {object} parameters Example given below
+     *
+     format:
+     {
+         "template" : <url>,         // required
+         "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
+         "args" : {<object>}         // data to copy onto $scope
+         "controller" : <url>,       // optional
+         "dependencies" : [
+             <urls>                  // required if in controller
+         ],
+         styles : {
+             <styles>
+             //e.g.
+             "background-color" : "#FF0000"
+         }
+     }
+
+     note CAVEATS:
+     - currently, controllers etc. must be tied to Application.Extensions.___
+
+     */
+    var show = function(parameters) {
+        fn.api.emit('show', parameters);
     };
 
     /**
@@ -631,8 +655,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.searchbar.emit('autocompleteDetail', packaged);
 
         //testing
-        PubSub.once('autocompleteDetail_function_id123', function(data) {
-        // PubSub.once('autocompleteDetail_'+uuid, function(data) {
+        PubSub.once('autocompleteDetail_'+uuid, function(data) {
             $rootScope.$safeApply(deferred.resolve(data));
         }, '$clotho');
 
@@ -751,7 +774,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         revert : revert,
         destroy : destroy,
         show : show,
-        show_simple : show_simple, //testing
+        show_old : show_old,
         say : say,
         log : log,
         alert : alert,

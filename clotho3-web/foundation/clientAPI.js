@@ -157,7 +157,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     };
 
     /**
-     * @name clientAPI.display
+     * @name clientAPI.display_old
      *
      * @param {string} uuid
      * @param {object} args
@@ -205,14 +205,14 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      */
     var display = function clientAPIDisplaySimple(data) {
 
-        //console.log(data);
+        console.log(data);
 
         var template = data.template,
             controller = data.controller || "",
             args = data.args || {},
             dependencies = data.dependencies || [],
             styles = data.styles || {},
-            target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $clotho.appRoot;
+            target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $($clotho.appRoot).find('[ng-view]');
 
         $rootScope.$safeApply($http.get(template, {cache: $templateCache})
             .success(function(precompiled) {
