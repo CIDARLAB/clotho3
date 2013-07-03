@@ -5,6 +5,8 @@
 package org.clothocad.model;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
+import java.util.HashMap;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,30 +15,28 @@ import lombok.NoArgsConstructor;
  *
  * @author spaige
  */
-    @NoArgsConstructor
-public class BasicPart extends Part{
-        
-    @Valid
-    @Reference
-    @Getter
+@NoArgsConstructor
+public class BasicPart extends Part {
 
+    @Valid
+    @Getter
     private NucSeq sequence;
-    
-    private static final PartType partType= PartType.BASIC;
-    
+    private static final PartType partType = PartType.BASIC;
+
     public BasicPart(String name, String shortdescription, String seq, Format form, Person author) {
         super(name, shortdescription, form, author);
         this.sequence = new NucSeq(seq);
-    };
+    }
 
     @Override
     public boolean checkFormat() {
-            return getFormat().checkPart(this);
+        return getFormat().checkPart(this);
     }
-    
-        /**
-     * This is a convenience method, the real change to the sequence
-     * happens in the linked NucSeq
+
+    /**
+     * This is a convenience method, the real change to the sequence happens in
+     * the linked NucSeq
+     *
      * @param newseq
      */
     public void setSequence(final String newseq) {

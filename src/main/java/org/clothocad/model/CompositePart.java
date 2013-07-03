@@ -9,12 +9,14 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.clothocad.core.persistence.Add;
 
 /**
  *
  * @author spaige
  */
 @NoArgsConstructor
+@Add(name="sequence", provider="getSequence")
 public class CompositePart extends Part {
 
     @Getter
@@ -30,6 +32,7 @@ public class CompositePart extends Part {
             System.out.println("generateComposite: Doesn't obey format, return null");
         }
         setComposition(composition);
+        setType(PartFunction.COMPOSITE);
     }
 
     @Override

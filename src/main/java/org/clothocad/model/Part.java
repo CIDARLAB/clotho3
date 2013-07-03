@@ -23,11 +23,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.model;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
@@ -73,6 +70,10 @@ public abstract class Part extends ObjBase {
     @Getter
     @Setter
     private String shortDescription;
+    
+    @Getter
+    @Setter
+    private PartFunction type;
     
     @Getter
     private short riskGroup;
@@ -290,4 +291,9 @@ public abstract class Part extends ObjBase {
     public static enum PartType {
         BASIC, COMPOSITE
     };
+    
+    public static enum PartFunction {
+        //XXX: composite is not a function
+        CDS, RBS, PROMOTER, TERMINATOR, COMPOSITE
+    }
 }
