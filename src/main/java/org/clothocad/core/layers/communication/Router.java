@@ -81,11 +81,11 @@ public class Router {
                     try {
                          auth_key = json.getString("auth_key");
                     } catch(Exception error) {
-                        error.printStackTrace();
-                        JSONObject responseJSON = new JSONObject();
-                        responseJSON.put("CLOTHO-ERROR", error.getMessage());
-                        this.sendMessage(connection, responseJSON);
-                        return;
+                        //error.printStackTrace();
+                        //JSONObject responseJSON = new JSONObject();
+                        //responseJSON.put("CLOTHO-ERROR", error.getMessage());
+                        //this.sendMessage(connection, responseJSON);
+                        //return;
                     }
                     
                     /** TODO: check the auth_key **/
@@ -99,7 +99,7 @@ public class Router {
                     doo.message = json;
                     ServerSideAPI api = mind.getAPI();
                     
-                    /* currently we are converting JSONObject and Strings multiple times... */
+                    /* currently we are converting between JSONObjects and Strings multiple times... */
                     /* WE NEED TO CHANGE THAT! 
                      * -> either JSONObject or String
                      * EO would prefer using JSONObject
