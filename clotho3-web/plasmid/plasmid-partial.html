@@ -31,7 +31,7 @@
         <div class="row-fluid">
             <div ng-repeat="feat in featureList">
                 <button btn-checkbox class="btn" ng-model="feat.active">Active</button>
-                <span ng-style="{{feat.css}}">{{feat.match}} --- {{feat.pos.start}} ... {{feat.pos.end}} ---- {{ feat.label }}</span>
+                <span ng-style="{{feat.css}}">{{ feat.label }} @ {{ feat.pos.start }} - {{ feat.pos.end }}</span>
             </div>
         </div>
     </div>

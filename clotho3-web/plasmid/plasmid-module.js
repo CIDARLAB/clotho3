@@ -243,13 +243,15 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                         'position': 'relative'
                     });
 
-                    element.parent().prepend($compile(angular.element('<div class="btn-group pull-right"><button class="btn btn-small" ng-click="highlight()" ng-disabled="ngModel.$pristine">Process</button><button class="btn btn-small" ng-click="addFeatureSelection()" ng-disabled="!textSelected">Annotate Selection</button></div>'))(scope));
+                    element.parent().prepend($compile(angular.element('<div class="btn-group"><button class="btn btn-small" ng-click="highlight()" ng-class="{\'btn-info\' : ngModel.$dirty}" ng-disabled="ngModel.$pristine">Process</button><button class="btn btn-small" ng-click="addFeatureSelection()" ng-disabled="!textSelected">Annotate Selection</button></div>'))(scope));
                 },
                 post: function(scope, element, attrs, ngModel) {
                     /* key functions  */
 
+                    //for $pristine etc. access in template
                     scope.ngModel = ngModel;
-                    console.log(scope);
+
+                    //console.log(scope);
 
                     function genFiltered (text) {
                         text = typeof text != 'undefined' ? text : ngModel.$viewValue;
@@ -266,6 +268,11 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
 
                     scope.highlight = function() {
                         setOutput(genFiltered());
+                    };
+
+                    scope.logModel = function() {
+                        console.log(ngModel.$viewValue);
+                        console.log(ngModel.$modelValue);
                     };
 
                     //todo - checks:
@@ -357,14 +364,62 @@ Application.Plasmid.filter('features', [function() {
     return function (text, features) {
         if (features && angular.isArray(features) && angular.isString(text)) {
 
-            var html = text;
-            text = html.replace(/(<([^>]+)>)/ig, "");
+            //note - at this point, we have well-formed HTML (or text on first pass)
+            var raw = text;
+            text = raw.replace(/(<([^>]+)>)/ig, "");
 
-            //console.log(html);
-            //console.log(text);
+            //console.log(raw);
 
 
+            /*
             //todo - pull tags out of HTML and save locations
+            //future - don't use jquery (for speed)
+            var startStops = $(raw);
+            startStops.find(':not(end, start)').children().unwrap();
+            console.log(startStops);
+
+            var test = startStops.not('start, end').each(function() {
+                console.log(this);
+                var content = $(this).text();
+                $(this).replaceWith(content);
+            });
+            //startStops.find('span').contents().unwrap();
+
+            console.log(startStops);
+            console.log(test.html());
+
+            console.log(angular.element(raw).find('start'));
+            */
+
+            //note - still contain ng-scope in attrs
+            var startEnds = raw.replace(/\s*<(\/?)(\w+)([^>]*?)>\s*/ig,  function(j,b,a,c){
+                return   ({start:1, end:1}[a]) ?   ("<"+b+a+c+">")  : "";
+            });
+
+            console.log(startEnds);
+
+
+            var overlap, newLocations = {};
+            var findStartEnd = /<(\w+) feat="(\d+)"[^>]*><\/\1>/ig;
+            while ((overlap = findStartEnd.exec(startEnds)) != null) {
+                //console.log(overlap);
+
+                var ind = overlap.index,
+                    type = overlap[1],
+                    featIndex = overlap[2];
+
+                var feature = features[featIndex];
+                if (feature.pos) {
+                    feature.pos[type] = ind;
+                }
+
+                startEnds = startEnds.replace(overlap[0], '');
+                findStartEnd.lastIndex = 0;
+            }
+            console.log(startEnds);
+
+
+
 
 
 
@@ -372,6 +427,9 @@ Application.Plasmid.filter('features', [function() {
             var locations = {};
             angular.forEach(features, function(feat, featIndex) {
                 if (feat.match) {
+
+                    //todo - check reverse direction too
+
                     for (var index, offset = 0, search = angular.lowercase(text);
                          (index = search.indexOf(angular.lowercase(feat.match), offset)) > -1;
                          offset = index + feat.match.length
@@ -400,11 +458,6 @@ Application.Plasmid.filter('features', [function() {
                 }
             });
             //console.log(locations);
-
-
-
-            //todo - check reverse direction too
-
 
 
             //loop from end, saving tag locations
@@ -439,6 +492,7 @@ Application.Plasmid.filter('features', [function() {
 
                             newText = newText.slice(0, index) +
                                 ((backlog.length > 1) ? '</annotation>' : '') +
+                                '<start feat="' + featIndex + '"></start>' +
                                 '<annotation index="'+ indices + '">' +
                                 newText.slice(index);
 
@@ -450,17 +504,11 @@ Application.Plasmid.filter('features', [function() {
                         } else {
                             backlog.push(featIndex);
 
-                            //check if last tag was closing
-                            if (backlog.length > 1) {
-                                newText = newText.slice(0, index) +
-                                    '</annotation>' +
-                                    '<annotation index="' + backlog.slice(0,-1).join("-") + '">' +
-                                    newText.slice(index);
-                            } else {
-                                newText = newText.slice(0, index) +
-                                    '</annotation>' +
-                                    newText.slice(index);
-                            }
+                            newText = newText.slice(0, index) +
+                                '</annotation>' +
+                                '<end feat="' + featIndex + '"></end>' +
+                                ((backlog.length > 1) ? '<annotation index="' + backlog.slice(0,-1).join("-") + '">' : '') +
+                                newText.slice(index);
                         }
                         //console.log(newText);
                     });
@@ -493,12 +541,16 @@ Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
                     var matches = scope.index.split('-');
                     scope.feature = angular.copy(scope.features[matches.pop()]);
 
-                    for (var ind = 0; ind < matches.length; ind++) {
-                        scope.feature.label += ", " + scope.features[matches[ind]].label;
+                    if (matches.length) {
+                        angular.extend(scope.feature.css, {'border-bottom' : '2px dotted red'});
+                        for (var ind = 0; ind < matches.length; ind++) {
+                            angular.extend(scope.feature.css, scope.features[matches[ind]].css);
+                            scope.feature.label += ", " + scope.features[matches[ind]].label;
+                        }
                     }
+
                 },
                 post: function(scope, element, attrs, ctrl) {
-                    //borrow from angularUI tooltip?
                     //attrs.$set('style', "background-color: #FF0000");
 
                     element.css(scope.feature.css);

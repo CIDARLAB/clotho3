@@ -1,9 +1,12 @@
 'use strict';
 
 Application.Primary.controller('MenuCtrl', ['$scope', 'Clotho', '$location', '$timeout', 'Collector', 'PubSub', function($scope, Clotho, $location, $timeout, Collector, PubSub ) {
-    Clotho.get('menu_items').then(function(result) {
-        $scope.modes = result;
-    });
+    $scope.modes = {"items": [
+        {"name" : "Editor", "path" : "/editor"},
+        {"name" : "Trails", "path" : "/trails"},
+        {"name" : "Browser", "path" : "/browser"},
+        {"name" : "Plasmid", "path" : "/plasmid"}
+    ]};
 
     $scope.$watch(function () {
         return $location.path();
