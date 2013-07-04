@@ -42,16 +42,7 @@
 //future - make provider, not singleton service
 Application.Plasmid.service('Plasmid', ['$window', function($window) {
 
-}]);
-
-
-Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document', function($scope, $window, $document) {
-    $scope.sequence = "GATCTgttgacggctaGCTCAGTCCTAGGTagctACAGTGCTAGCTCTCTGGAGATTAACGAGGAGAAATACTAGATGGTTCATGATCATAAgcttgaattagccaaacttattcgcaactatgagacgaatagaaaagaatgtctaaattccagatataatgaaacacttttacgaagtgattatcttgatccattttttgaacttcttggctgggatattaaaaataaagctggaaaaccgactaatgaaagagaggttgtcttggaagaggcacttaaagcaagtgcatctgaacattctaaaaaaccagattatacattcagacttttttctgaaagaaagtttttcttggaagctaaaaaaccatcagttcatattgaatcggataatgaaactgctaaacaagtgcgaagatatggctttaccgccaaactaaaaatttcagttttatcaaattttgaatatttagttatttatgatacctctgtaaaggttgatggtgatgatacctttaataaggcacgtataaaaaaataccattacacagagtatgaaactcactttgatgaaatttgtgacttattaggaagagagtccgtttactctgggaattttgataaagaatggttgagtatcgaaaataaaattaatcacttttctgtagataccttatttttaaaacagattaatacatggcgtctattgcttggtgaagaaatctataagtatcaacctacgatacaagagaatgagcttaatgacattgtacagagctatctgaatagaattAGATCTatttttttgagagtctgtgaagatagaaatttagagacttatcagacattactgaattttgcttcaagtaatgatttctccgctcttattgataagtttaagcaggcagatcgttgctataattcaggcctatttgatcaattgcttacagagcaaattattgaggatattagttctgtattttgggtaatcattaagcaattatattatccagaaagtccttattcatttagtgtgttctcttcggatattttaggtaatatttacgaaatatttttatctgagaaattagtaattaatcaaagcagagttgagttagtcaagaaaccagagaatttagatagagacattgtcacaacaccaacctttattattaatgacatcttgagaaatacggttctaccgaagtgctatggaaaaacagatatagaaattctacagctaaaatttgctgatattgcttgtggttcgggagcatttttactggagttgttccaattacttaatgatactctagttgactattatttaagtagtgatacttctcaattaattccaacaggtatcggtacttataagctgtcttatgaaatcaagagaaaggttctattaagttgtatttttggcatagataaggacttaaatgctgtagaggctgcaaagttcggattgttgctaaaattattagagggtgaagacgtacaatctatagctaatattagaccagttctcccagatttattagataacatactttttggtaacagtttattagaaccagaaaaagtcgagcttgatcatcaggtagaagtaaatccgttagatttttcGGATCTGaaAtttgatgtaattgttggcaaccctccatatatgaaatcagaggatatgaagaatattactcctttggagttacctttatataagaaaaactatgtttctgcttataagcaatttgataaatatttcttgttcttagagcggggtttagctctattaaaagaagagggaatacttggatatattgttccaagtaaatttactaaagtgggtgcagggaaaaagttacgggaattactaacagataagggttatcttgactctattgtttcttttggtgctaatcaaatatttcaggataaaacaacttatacttgtttacttattttaagaaaaactccAcatactgattttaaatatgcagaggttcgtaatttaattgactggaaagtgcgtaaagctgatgctatggaattttcctctcaacaactgagtacattgcaaagtgatgcgtggattttaattccatctgaattaatctcagtttatcatcagatattagcacaaagccaaaagctagaggatattgtcggtattgataatatatttaatgggattcaaaccagtgctaatgatgtctatatttttgtgccaactcatgaggatactgaaaactattattttataaagaaaggacaagagtacaaaattgaaaaggaaattacgaagccttattttaaaacaacgagtggtgaggataacttatatacttaccgtactttcaagcctaatgcccgagtcatttatccgtatactcaaactgagagtagtgtagaactaattcctttagatgaaatacgagaaatttttcctttagcatacaaatatttaatgtcgcttaagttcgttttaagtagccccaaacgagatataaaacctagacctaaaacaacaaatgaatggcataggtatggacggcatcaaagtctcgataattgtgggttgagtcagaaaattattgtaggtgtgctttcagttggtgataagtacgctatagatacttatggaacgttgatttcatcaggcggtacggctggatactgtgtggttgctcttccagatgattgtaaatattcaatttattatttacaggcaattttaaactcaaaatatttagagtggtttagtgccttacatggagaagttttccgaggtggttatattgctaggggaactaaggtgcttaagaacttgcctattaggaaaattgattttgataatcttgaagaagcaaatctacatgatctaattgcgaccaagcaaaaagagcttatagagatttatgacaaaatagatgttaatgtaaataataaaagagttctgaccccattgcaacgtatgtttaaacgagagaaagaggttttagaccaattgttgagtcgactgtataacttaggtgtagatgattccttgatcccttatattaaggatttgtatgaagctcattaaGGATCCtaaCTCGAcgtgcaggcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatCAATTCGACCCAGCTTTCTTGTACAAAGTTGGCATTATAAAAAATAATTGCTCATCAATTTGTTGCAACGAACAGGTCACTATCAGTCAAAATAAAATCATTATTTGCCATCCAGCTGATATCCCCTATAGTGAGTCGTATTACATGGTCATAGCTGTTTCCTGGCAGCTCTGGCCCGTGTCTCAAAATCTCTGATGTTACATTGCACAAGATAAAAATATATCATCATGCCTCCTCTAGACCAGCCAGGACAGAAATGCCTCGACTTCGCTGCTGCCCAAGGTTGCCGGGTGACGCACACCGTGGAAACGGATGAAGGCACGAACCCAGTGGACATAAGCCTGTTCGGTTCGTAAGCTGTAATGCAAGTAGCGTATGCGCTCACGCAACTGGTCCAGAACCTTGACCGAACGCAGCGGTGGTAACGGCGCAGTGGCGGTTTTCATGGCTTGTTATGACTGTTTTTTTGGGGTACAGTCTATGCCTCGGGCATCCAAGCAGCAAGCGCGTTACGCCGTGGGTCGATGTTTGATGTTATGGAGCAGCAACGATGTTACGCAGCAGGGCAGTCGCCCTAAAACAAAGTTAAACATCATGAGGGAAGCGGTGATCGCCGAAGTATCGACTCAACTATCAGAGGTAGTTGGCGTCATCGAGCGCCATCTCGAACCGACGTTGCTGGCCGTACATTTGTACGGCTCCGCAGTGGATGGCGGCCTGAAGCCACACAGTGATATTGATTTGCTGGTTACGGTGACCGTAAGGCTTGATGAAACAACGCGGCGAGCTTTGATCAACGACCTTTTGGAAACTTCGGCTTCCCCTGGAGAGAGCGAGATTCTCCGCGCTGTAGAAGTCACCATTGTTGTGCACGACGACATCATTCCGTGGCGTTATCCAGCTAAGCGCGAACTGCAATTTGGAGAATGGCAGCGCAATGACATTCTTGCAGGTATCTTCGAGCCAGCCACGATCGACATTGATCTGGCTATCTTGCTGACAAAAGCAAGAGAACATAGCGTTGCCTTGGTAGGTCCAGCGGCGGAGGAACTCTTTGATCCGGTTCCTGAACAGGATCTATTTGAGGCGCTAAATGAAACCTTAACGCTATGGAACTCGCCGCCCGACTGGGCTGGCGATGAGCGAAATGTAGTGCTTACGTTGTCCCGCATTTGGTACAGCGCAGTAACCGGCAAAATCGCGCCGAAGGATGTCGCTGCCGACTGGGCAATGGAGCGCCTGCCGGCCCAGTATCAGCCCGTCATACTTGAAGCTAGACAGGCTTATCTTGGACAAGAAGAAGATCGCTTGGCCTCGCGCGCAGATCAGTTGGAAGAATTTGTCCACTACGTGAAAGGCGAGATCACCAAGGTAGTCGGCAAATAACCCTCGAGCCACCcatgaccaaaatcccttaacgGCATGCgcaccgccggacatcagcgctagcggagtgtatactggcttactatgttggcactgatgagggtgtcagtgaagtgcttcatgtggcaggagaaaaaaggctgcaccggtgcgtcagcagaatatgtgatacaggatatattccgcttcctcgctcactgactcgctacgctcggtcgttcgactgcggcgagcggaaatggcttacgaacggggcggagatttcctggaagatgccaggaagatacttaacagggaagtgagagggccgcggcaaagccgtttttccataggctccgcccccctgacaagcatcacgaaatctgacgctcaaatcagtggtggcgaaacccgacaggactataaagataccaggcgtttccccctggcggctccctcgtgcgctctcctgttcctgcctttcggtttaccggtgtcattccgctgttatggccgcgtttgtctcattccacgcctgacactcagttccgggtaggcagttcgctccaagctggactgtatgcacgaaccccccgttcagtccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggaaagacatgcaaaagcaccactggcagcagccactggtaattgatttagaggagttagtcttgaagtcatgcgccggttaaggctaaactgaaaggacaagttttggtgactgcgctcctccaagccagttacctcggttcaaagagttggtagctcagagaaccttcgaaaaaccgccctgcaaggcggttttttcgttttcagagcaagagattacgcgcagaccaaaacgatctcaagaagatcatcttattaatcagataaaatatttctagAGGCCTcccctgattctgtggataaccGTcctaggTGTAAAACGACGGCCAGTCTTAAGCTCGGGCCCCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTCCGAATTGgtatcacgaggcagaatttcagataaaaaaaatccttagctttcgctaaggatgatttctggaattcatgAtacgaa";
-
-    $scope.editable = true;
-    $scope.textSelected = false;
-
-    $scope.featureList = [
+    var features = [
         {
             "label" : "pCon Promoter",
             "pos" : {
@@ -159,33 +150,33 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
         }
     ];
 
-
-
-    //todo - expose, make editable
-    $scope.reg_match = /^[acgtACGT]+$/;
-    $scope.reg_color = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-    $scope.reg_pos = /^[0-9]+\-[0-9]+$/;
-
-
-    $scope.emptyFeat = function() {
-        return {label: "", pos: '', match: '', css : {color: '', background: '' }};
+    var regexps = {
+        reg_match : /^[acgtACGT]+$/,
+        reg_color : /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+        reg_pos : /^[0-9]+\-[0-9]+$/
     };
 
-    $scope.logFeatures = function() {console.log($scope.featureList)};
+    var emptyFeature = function() {
+        return {label: "", pos: '', match: '', css : {color: '', background: '' }, active: true};
+    };
 
-    $scope.featureValid = function(feat) {
+    var randomColor = function() {
+        return '#'+Math.floor(Math.random()*16777215).toString(16);
+    };
+
+    var featureValid = function(feat) {
         return (
             (feat.match != '' && angular.isDefined(feat.match)) ?
-                $scope.reg_match.test(feat.match) :
-                (angular.isDefined(feat.pos) && $scope.reg_pos.test(feat.pos))
+                regexps.reg_match.test(feat.match) :
+                (angular.isDefined(feat.pos) && regexps.reg_pos.test(feat.pos))
             ) &&
             ( (angular.isDefined(feat.css.color) && feat.css.color != '') ?
-                ($scope.reg_color.test(feat.css.color)) :
-                (angular.isDefined(feat.css.background) && ($scope.reg_color.test(feat.css.background))))
+                (regexps.reg_color.test(feat.css.color)) :
+                (angular.isDefined(feat.css.background) && (regexps.reg_color.test(feat.css.background))))
     };
 
-    $scope.addFeature = function(feat) {
-        if ($scope.featureValid(feat)) {
+    var addFeature = function(feat) {
+        if (featureValid(feat)) {
 
             if (!feat.label) {
                 feat.label = "New Feature" + Date.now();
@@ -200,20 +191,73 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
             }
 
             if (feat.css.color == '' && feat.css.background == '')
-                feat.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
+                feat.css.background = randomColor();
 
             console.log(feat);
 
-            $scope.featureList.push(feat);
-            $scope.new = $scope.emptyFeat();
+            features.push(feat);
         } else {
             console.log("invalid");
         }
     };
 
+    return {
+        features : features,
+        regexps : regexps,
+        emptyFeature : emptyFeature,
+        randomColor : randomColor,
+        featureValid : featureValid,
+        addFeature : addFeature
+    }
 }]);
 
-Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', '$window', function($parse, $timeout, $filter, $compile, $document, $window) {
+
+Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document', 'Plasmid', function($scope, $window, $document, Plasmid) {
+    $scope.sequence = "GATCTgttgacggctaGCTCAGTCCTAGGTagctACAGTGCTAGCTCTCTGGAGATTAACGAGGAGAAATACTAGATGGTTCATGATCATAAgcttgaattagccaaacttattcgcaactatgagacgaatagaaaagaatgtctaaattccagatataatgaaacacttttacgaagtgattatcttgatccattttttgaacttcttggctgggatattaaaaataaagctggaaaaccgactaatgaaagagaggttgtcttggaagaggcacttaaagcaagtgcatctgaacattctaaaaaaccagattatacattcagacttttttctgaaagaaagtttttcttggaagctaaaaaaccatcagttcatattgaatcggataatgaaactgctaaacaagtgcgaagatatggctttaccgccaaactaaaaatttcagttttatcaaattttgaatatttagttatttatgatacctctgtaaaggttgatggtgatgatacctttaataaggcacgtataaaaaaataccattacacagagtatgaaactcactttgatgaaatttgtgacttattaggaagagagtccgtttactctgggaattttgataaagaatggttgagtatcgaaaataaaattaatcacttttctgtagataccttatttttaaaacagattaatacatggcgtctattgcttggtgaagaaatctataagtatcaacctacgatacaagagaatgagcttaatgacattgtacagagctatctgaatagaattAGATCTatttttttgagagtctgtgaagatagaaatttagagacttatcagacattactgaattttgcttcaagtaatgatttctccgctcttattgataagtttaagcaggcagatcgttgctataattcaggcctatttgatcaattgcttacagagcaaattattgaggatattagttctgtattttgggtaatcattaagcaattatattatccagaaagtccttattcatttagtgtgttctcttcggatattttaggtaatatttacgaaatatttttatctgagaaattagtaattaatcaaagcagagttgagttagtcaagaaaccagagaatttagatagagacattgtcacaacaccaacctttattattaatgacatcttgagaaatacggttctaccgaagtgctatggaaaaacagatatagaaattctacagctaaaatttgctgatattgcttgtggttcgggagcatttttactggagttgttccaattacttaatgatactctagttgactattatttaagtagtgatacttctcaattaattccaacaggtatcggtacttataagctgtcttatgaaatcaagagaaaggttctattaagttgtatttttggcatagataaggacttaaatgctgtagaggctgcaaagttcggattgttgctaaaattattagagggtgaagacgtacaatctatagctaatattagaccagttctcccagatttattagataacatactttttggtaacagtttattagaaccagaaaaagtcgagcttgatcatcaggtagaagtaaatccgttagatttttcGGATCTGaaAtttgatgtaattgttggcaaccctccatatatgaaatcagaggatatgaagaatattactcctttggagttacctttatataagaaaaactatgtttctgcttataagcaatttgataaatatttcttgttcttagagcggggtttagctctattaaaagaagagggaatacttggatatattgttccaagtaaatttactaaagtgggtgcagggaaaaagttacgggaattactaacagataagggttatcttgactctattgtttcttttggtgctaatcaaatatttcaggataaaacaacttatacttgtttacttattttaagaaaaactccAcatactgattttaaatatgcagaggttcgtaatttaattgactggaaagtgcgtaaagctgatgctatggaattttcctctcaacaactgagtacattgcaaagtgatgcgtggattttaattccatctgaattaatctcagtttatcatcagatattagcacaaagccaaaagctagaggatattgtcggtattgataatatatttaatgggattcaaaccagtgctaatgatgtctatatttttgtgccaactcatgaggatactgaaaactattattttataaagaaaggacaagagtacaaaattgaaaaggaaattacgaagccttattttaaaacaacgagtggtgaggataacttatatacttaccgtactttcaagcctaatgcccgagtcatttatccgtatactcaaactgagagtagtgtagaactaattcctttagatgaaatacgagaaatttttcctttagcatacaaatatttaatgtcgcttaagttcgttttaagtagccccaaacgagatataaaacctagacctaaaacaacaaatgaatggcataggtatggacggcatcaaagtctcgataattgtgggttgagtcagaaaattattgtaggtgtgctttcagttggtgataagtacgctatagatacttatggaacgttgatttcatcaggcggtacggctggatactgtgtggttgctcttccagatgattgtaaatattcaatttattatttacaggcaattttaaactcaaaatatttagagtggtttagtgccttacatggagaagttttccgaggtggttatattgctaggggaactaaggtgcttaagaacttgcctattaggaaaattgattttgataatcttgaagaagcaaatctacatgatctaattgcgaccaagcaaaaagagcttatagagatttatgacaaaatagatgttaatgtaaataataaaagagttctgaccccattgcaacgtatgtttaaacgagagaaagaggttttagaccaattgttgagtcgactgtataacttaggtgtagatgattccttgatcccttatattaaggatttgtatgaagctcattaaGGATCCtaaCTCGAcgtgcaggcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatCAATTCGACCCAGCTTTCTTGTACAAAGTTGGCATTATAAAAAATAATTGCTCATCAATTTGTTGCAACGAACAGGTCACTATCAGTCAAAATAAAATCATTATTTGCCATCCAGCTGATATCCCCTATAGTGAGTCGTATTACATGGTCATAGCTGTTTCCTGGCAGCTCTGGCCCGTGTCTCAAAATCTCTGATGTTACATTGCACAAGATAAAAATATATCATCATGCCTCCTCTAGACCAGCCAGGACAGAAATGCCTCGACTTCGCTGCTGCCCAAGGTTGCCGGGTGACGCACACCGTGGAAACGGATGAAGGCACGAACCCAGTGGACATAAGCCTGTTCGGTTCGTAAGCTGTAATGCAAGTAGCGTATGCGCTCACGCAACTGGTCCAGAACCTTGACCGAACGCAGCGGTGGTAACGGCGCAGTGGCGGTTTTCATGGCTTGTTATGACTGTTTTTTTGGGGTACAGTCTATGCCTCGGGCATCCAAGCAGCAAGCGCGTTACGCCGTGGGTCGATGTTTGATGTTATGGAGCAGCAACGATGTTACGCAGCAGGGCAGTCGCCCTAAAACAAAGTTAAACATCATGAGGGAAGCGGTGATCGCCGAAGTATCGACTCAACTATCAGAGGTAGTTGGCGTCATCGAGCGCCATCTCGAACCGACGTTGCTGGCCGTACATTTGTACGGCTCCGCAGTGGATGGCGGCCTGAAGCCACACAGTGATATTGATTTGCTGGTTACGGTGACCGTAAGGCTTGATGAAACAACGCGGCGAGCTTTGATCAACGACCTTTTGGAAACTTCGGCTTCCCCTGGAGAGAGCGAGATTCTCCGCGCTGTAGAAGTCACCATTGTTGTGCACGACGACATCATTCCGTGGCGTTATCCAGCTAAGCGCGAACTGCAATTTGGAGAATGGCAGCGCAATGACATTCTTGCAGGTATCTTCGAGCCAGCCACGATCGACATTGATCTGGCTATCTTGCTGACAAAAGCAAGAGAACATAGCGTTGCCTTGGTAGGTCCAGCGGCGGAGGAACTCTTTGATCCGGTTCCTGAACAGGATCTATTTGAGGCGCTAAATGAAACCTTAACGCTATGGAACTCGCCGCCCGACTGGGCTGGCGATGAGCGAAATGTAGTGCTTACGTTGTCCCGCATTTGGTACAGCGCAGTAACCGGCAAAATCGCGCCGAAGGATGTCGCTGCCGACTGGGCAATGGAGCGCCTGCCGGCCCAGTATCAGCCCGTCATACTTGAAGCTAGACAGGCTTATCTTGGACAAGAAGAAGATCGCTTGGCCTCGCGCGCAGATCAGTTGGAAGAATTTGTCCACTACGTGAAAGGCGAGATCACCAAGGTAGTCGGCAAATAACCCTCGAGCCACCcatgaccaaaatcccttaacgGCATGCgcaccgccggacatcagcgctagcggagtgtatactggcttactatgttggcactgatgagggtgtcagtgaagtgcttcatgtggcaggagaaaaaaggctgcaccggtgcgtcagcagaatatgtgatacaggatatattccgcttcctcgctcactgactcgctacgctcggtcgttcgactgcggcgagcggaaatggcttacgaacggggcggagatttcctggaagatgccaggaagatacttaacagggaagtgagagggccgcggcaaagccgtttttccataggctccgcccccctgacaagcatcacgaaatctgacgctcaaatcagtggtggcgaaacccgacaggactataaagataccaggcgtttccccctggcggctccctcgtgcgctctcctgttcctgcctttcggtttaccggtgtcattccgctgttatggccgcgtttgtctcattccacgcctgacactcagttccgggtaggcagttcgctccaagctggactgtatgcacgaaccccccgttcagtccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggaaagacatgcaaaagcaccactggcagcagccactggtaattgatttagaggagttagtcttgaagtcatgcgccggttaaggctaaactgaaaggacaagttttggtgactgcgctcctccaagccagttacctcggttcaaagagttggtagctcagagaaccttcgaaaaaccgccctgcaaggcggttttttcgttttcagagcaagagattacgcgcagaccaaaacgatctcaagaagatcatcttattaatcagataaaatatttctagAGGCCTcccctgattctgtggataaccGTcctaggTGTAAAACGACGGCCAGTCTTAAGCTCGGGCCCCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGGCTCCGAATTGgtatcacgaggcagaatttcagataaaaaaaatccttagctttcgctaaggatgatttctggaattcatgAtacgaa";
+
+    $scope.editable = true;
+    $scope.textSelected = false;
+
+    $scope.features = Plasmid.features;
+
+    angular.forEach($scope.features, function(feat) {
+        feat.active = !!feat.active || true;
+    });
+
+    //todo - expose, make editable
+    $scope.reg_match = Plasmid.regexps.reg_match;
+    $scope.reg_color = Plasmid.regexps.reg_color;
+    $scope.reg_pos = Plasmid.regexps.reg_pos;
+
+
+    $scope.emptyFeat = Plasmid.emptyFeature;
+
+    $scope.logFeatures = function() {console.log($scope.features)};
+
+    $scope.featureValid = Plasmid.featureValid;
+
+    $scope.toggleActive = function(feat, val) {
+
+        if (angular.isArray(feat)) {
+            angular.forEach(feat, function(cur) {
+                cur.active = val || !cur.active;
+            });
+        } else {
+            feat.active = val || !feat.active;
+        }
+        $scope.$broadcast('Plasmid:Process');
+    };
+
+    $scope.randomColor = Plasmid.randomColor;
+
+    $scope.addFeature = function(feat) {
+        Plasmid.addFeature(feat);
+        $scope.new = Plasmid.emptyFeature();
+    };
+
+}]);
+
+Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter', '$compile', '$document', '$window', 'Plasmid', function($parse, $timeout, $filter, $compile, $document, $window, Plasmid) {
 
     return {
         restrict: "A",
@@ -279,21 +323,36 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                     // select opp direction
                     // pos is for whole string (across text nodes)
                     scope.addFeatureSelection = function () {
+                        var feature = Plasmid.emptyFeature();
 
-                        var feature = scope.emptyFeat();
                         if ($window.getSelection) {
                             var sel = $window.getSelection();
                             if (typeof sel != 'undefined' && sel.rangeCount) {
+
                                 var container = angular.element("<div>");
                                 for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                                     container.append(sel.getRangeAt(i).cloneContents());
                                 }
-                                console.log(sel.getRangeAt(0).cloneRange());
+                                console.log(container);
+
+                                //todo - see http://stackoverflow.com/questions/3597116/insert-html-after-a-selection
+
+/*
+
+                                var newEl = document.createElement("feat");
+                                newEl.setAttribute('index', scope.features.length.toString());
+                                sel.getRangeAt(0).surroundContents(newEl);
+*/
                                 //feature = container[0].innerHTML;
 
                                 console.log(sel);
-                                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
 
+
+
+
+
+
+                                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
 
                                 feature.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
 
@@ -305,12 +364,12 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                             }
                         }
                         console.log(feature);
+                        scope.features.push(feature);
                     };
 
 
                     //model -> view
 
-                    //fixme - why isn't render being called with updates??
                     ngModel.$render = function() {
                         //console.log(ngModel.$viewValue);
                         console.log('render');
@@ -331,8 +390,13 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                         //element.html(genFiltered(viewVal));
                     });
 
+                    scope.$on('Plasmid:Process', function() {
+                        setOutput(genFiltered());
+                    });
+
 
                     /* watchers */
+                    //shallow watch - only with count
                     scope.$watchCollection('features', function(newVal, oldVal) {
                         if (!!newVal && !!oldVal) {
                             setOutput(genFiltered());
@@ -391,15 +455,17 @@ Application.Plasmid.filter('features', [function() {
             console.log(angular.element(raw).find('start'));
             */
 
+            //todo - rewrite so can use form <feat index="">
+
             //note - still contain ng-scope in attrs
             var startEnds = raw.replace(/\s*<(\/?)(\w+)([^>]*?)>\s*/ig,  function(j,b,a,c){
                 return   ({start:1, end:1}[a]) ?   ("<"+b+a+c+">")  : "";
             });
 
-            console.log(startEnds);
+            //console.log(startEnds);
 
 
-            var overlap, newLocations = {};
+            var overlap;
             var findStartEnd = /<(\w+) feat="(\d+)"[^>]*><\/\1>/ig;
             while ((overlap = findStartEnd.exec(startEnds)) != null) {
                 //console.log(overlap);
@@ -416,7 +482,7 @@ Application.Plasmid.filter('features', [function() {
                 startEnds = startEnds.replace(overlap[0], '');
                 findStartEnd.lastIndex = 0;
             }
-            console.log(startEnds);
+            //console.log(startEnds);
 
 
 
@@ -426,35 +492,38 @@ Application.Plasmid.filter('features', [function() {
             //create location map
             var locations = {};
             angular.forEach(features, function(feat, featIndex) {
-                if (feat.match) {
-
-                    //todo - check reverse direction too
-
-                    for (var index, offset = 0, search = angular.lowercase(text);
-                         (index = search.indexOf(angular.lowercase(feat.match), offset)) > -1;
-                         offset = index + feat.match.length
-                        ) {
-                        //start
-                        var start = index;
-                        locations[start] ?
-                            locations[start]['start'].push(featIndex) :
-                            locations[start] = {"start" : [featIndex], "end" : []};
-                        //end
-                        var end = start + feat.match.length;
-                        locations[end] ?
-                            locations[end]['end'].push(featIndex) :
-                            locations[end] = {"start" : [], "end" : [featIndex]};
-
-                    }
+                if (feat.active === false) { //skip
                 } else {
-                    //start
-                    locations[feat.pos.start] ?
-                        locations[feat.pos.start]['start'].push(featIndex) :
-                        locations[feat.pos.start] = {"start" : [featIndex], "end" : []};
-                    //end
-                    locations[feat.pos.end] ?
-                        locations[feat.pos.end]['end'].push(featIndex) :
-                        locations[feat.pos.end] = {"start" : [], "end" : [featIndex]};
+                    if (feat.match) {
+
+                        //todo - check reverse direction too - note rev. direction
+
+                        for (var index, offset = 0, search = angular.lowercase(text);
+                             (index = search.indexOf(angular.lowercase(feat.match), offset)) > -1;
+                             offset = index + feat.match.length
+                            ) {
+                            //start
+                            var start = index;
+                            locations[start] ?
+                                locations[start]['start'].push(featIndex) :
+                                locations[start] = {"start" : [featIndex], "end" : []};
+                            //end
+                            var end = start + feat.match.length;
+                            locations[end] ?
+                                locations[end]['end'].push(featIndex) :
+                                locations[end] = {"start" : [], "end" : [featIndex]};
+
+                        }
+                    } else {
+                        //start
+                        locations[feat.pos.start] ?
+                            locations[feat.pos.start]['start'].push(featIndex) :
+                            locations[feat.pos.start] = {"start" : [featIndex], "end" : []};
+                        //end
+                        locations[feat.pos.end] ?
+                            locations[feat.pos.end]['end'].push(featIndex) :
+                            locations[feat.pos.end] = {"start" : [], "end" : [featIndex]};
+                    }
                 }
             });
             //console.log(locations);
