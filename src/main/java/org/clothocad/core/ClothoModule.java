@@ -8,6 +8,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import java.util.Properties;
 import org.clothocad.core.layers.communication.Router;
+import org.clothocad.core.schema.Schema;
 
 /**
  *
@@ -37,6 +38,7 @@ public class ClothoModule extends AbstractModule {
     protected void configure() {
         //TODO: make router completely DI (?)
         requestInjection(Router.get());
+        requestStaticInjection(Schema.class);
         Names.bindProperties(binder(), properties);
     }
     

@@ -7,7 +7,9 @@ package org.clothocad.core.utils;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.bson.types.ObjectId;
 import org.clothocad.core.ClothoModule;
 import org.clothocad.core.persistence.Persistor;
@@ -50,10 +52,18 @@ public class TestUtils {
         Part part2 = Part.generateBasic("Test Part 2", "the second test part", "TTTTTTTTTTTTTTTTTT", new FreeForm(), person);
         Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new Object(), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
                 
+        Map<String,Object> eugenePart = new HashMap();
+        eugenePart.put("name", "B0015");
+        eugenePart.put("schema", "eugene.dom.components.Part");
+        eugenePart.put("partType", "Terminator");
+        eugenePart.put("sequence", "CCAGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCTACTAGAGTCACACTGGCTCACCTTCGGGTGGGCCTTTCTGCGTTTATA");
+        eugenePart.put("Pigeon", "t B0015");
+        
         persistor.save(part1);
         persistor.save(part2);
         persistor.save(part3);
+        ObjectId eugeneID = persistor.save(eugenePart);
         
-        return Arrays.asList(part1.getUUID(), part2.getUUID(), part3.getUUID());
+        return Arrays.asList(part1.getUUID(), part2.getUUID(), part3.getUUID(), eugeneID);
     }
 }

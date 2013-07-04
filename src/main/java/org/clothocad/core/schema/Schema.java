@@ -7,11 +7,11 @@ package org.clothocad.core.schema;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
@@ -20,6 +20,7 @@ import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.Adds;
+import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.model.Person;
 
@@ -28,8 +29,10 @@ import org.clothocad.model.Person;
  * @author spaige
  */
 
+@EqualsAndHashCode(exclude={"fields", "methods"})
 @Data
 @NoArgsConstructor
+@Slf4j
 @Adds({@Add(name="language", provider="getLanguage"),
 @Add(name="binaryName", provider="getBinaryName")})
 public abstract class Schema extends Sharable {
@@ -40,7 +43,9 @@ public abstract class Schema extends Sharable {
     }
     
     protected static final String BASE_PACKAGE_BINARY = "org.clothocad.loadedschemas.";
-    public static  ClassLoader cl = null;
+   
+    @Inject
+    public static  DBClassLoader cl = null;
     
     @DBOnly
     protected byte[] classData;
@@ -75,8 +80,8 @@ public abstract class Schema extends Sharable {
     }
     
     //the classloader can only find saved schemas, so if this throws an exception, try saving the schema
-    public <T extends ObjBase> Class<T> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
-        return (Class<T>) cl.loadClass(getBinaryName());
+    public Class<? extends ObjBase> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
+        return (Class<? extends ObjBase>) cl.loadClass(getBinaryName());
     }
     
     public static String extractIdFromClassName(String className){
@@ -86,5 +91,5 @@ public abstract class Schema extends Sharable {
     
     public static boolean isSchemaClassName(String className){
         return ObjectId.isValid(extractIdFromClassName(className));
-    }
+    }  
 }

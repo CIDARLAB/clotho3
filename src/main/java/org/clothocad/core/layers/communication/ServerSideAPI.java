@@ -252,10 +252,10 @@ public final class ServerSideAPI {
         //list of selectors?
         if (o instanceof List) {
             for (Object obj : (List) o) {
-                returnData.add(get(resolveSelector(obj.toString(), false)));
+                returnData.add(get(persistor.resolveSelector(obj.toString(), false)));
             }
         } else {
-            returnData.add(get(resolveSelector(o.toString(), false)));
+            returnData.add(get(persistor.resolveSelector(o.toString(), false)));
         }
         Message message = new Message(Channel.get, returnData, requestId);
         send(message);
@@ -404,10 +404,10 @@ public final class ServerSideAPI {
         //list of selectors?
         if (o instanceof List) {
             for (Object obj : (List) o) {
-                destroy(resolveSelector(obj.toString(), false));
+                destroy(persistor.resolveSelector(obj.toString(), false));
             }
         } else {
-            destroy(resolveSelector(o.toString(), false));
+            destroy(persistor.resolveSelector(o.toString(), false));
         }
     }
 
@@ -432,8 +432,8 @@ public final class ServerSideAPI {
         if (spec.containsKey("schema")) {
             //figure out what the schema actually is
             try {
-                Map<String, Object> schema = persistor.getAsJSON(resolveSelector(spec.get("schema").toString(), false));
-                String schemaName = schema.get("binaryName").toString();
+                Map<String, Object> schema = persistor.getAsJSON(persistor.resolveSelector(spec.get("schema").toString(), false));
+                String schemaName = schema.get("binaryName").toString(); //try and fallback to name name?
                 spec.remove("schema");
                 spec.put("className", schemaName);
             } catch (EntityNotFoundException e) {
@@ -462,7 +462,7 @@ public final class ServerSideAPI {
     public final void run(Object o, String id) throws ScriptException {
         Map<String, Object> data = JSON.mappify(o);
 
-        Function function = persistor.get(Function.class, resolveSelector(data.get("function").toString(), Function.class, false));
+        Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
         Map<String, Object> arguments = data.containsKey("arguments")
                 ? JSON.mappify(data.get("arguments"))
                 : null;
@@ -763,40 +763,6 @@ public final class ServerSideAPI {
         return null;
     }
 
-    private ObjectId resolveSelector(String selector, boolean strict) {
-        return resolveSelector(selector, null, strict);
-    }
-
-    private ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict) {
-        //uuid?
-        ObjectId id;
-
-        try {
-            id = new ObjectId(selector);
-            return id;
-        } catch (IllegalArgumentException e) {
-        }
-
-        Map<String, Object> spec = new HashMap<>();
-        spec.put("name", selector);
-        /* TODO: class & superclass discrimination
-         * if (type != null) {
-            spec.put("className", type);
-        }*/
-
-        //name of something?
-        List<Map<String, Object>> results = persistor.findAsBSON(spec);
-
-        if (results.isEmpty()) throw new EntityNotFoundException();
-        
-        id = new ObjectId(results.get(0).get("id").toString());
-        if (results.size() == 1 || !strict) {
-            return id;
-        }
-
-        //bitch about ambiguity
-        throw new NonUniqueResultException();
-    }
     // </editor-fold> 
     /**
      * ****** VARIABLES *******

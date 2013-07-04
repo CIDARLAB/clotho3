@@ -25,6 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.datums.util;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,6 +92,7 @@ public class ClothoField {
     private Set<Constraint>  constraints;
     
     public Map prettyPrintConstraints(){
+        if (constraints == null) return null;
         Map<String, Map<String,Object>> output = new HashMap<>();
         for (Constraint constraint : constraints){
             Map<String, Object> constraintMap = new HashMap<>();
@@ -139,7 +141,7 @@ public class ClothoField {
     
     public void decodeFieldType(Map object){
         String s = (String) object.get("javaType");
-        if (s == null) object.get(ClothoMappedField.VIRTUAL_PREFIX + "javaType");
+        if (s == null) s= (String) object.get(ClothoMappedField.VIRTUAL_PREFIX + "javaType");
         try {
             type = Class.forName(s, true, Schema.cl);
         } catch (ClassNotFoundException ex) {
@@ -148,14 +150,38 @@ public class ClothoField {
     }
     
     public void decodeConstraints(Map object){
-        Set<Constraint> realConstraints = new HashSet<>();
         Map<String, Map<String, Object>> constraints = (Map<String, Map<String, Object>>) object.get("constraints");
+        if (constraints == null) return;
+        
+        Set<Constraint> realConstraints = new HashSet<>();
         for (String constraint : constraints.keySet()){
             realConstraints.add(new Constraint(constraint, constraints.get(constraint)));
         }
         this.constraints = realConstraints;
     }
     
+    public Class<?> getType(){
+        return wrap(type);
+    }
+  
+    //Morphia can't decode primitive classes
+    //http://stackoverflow.com/questions/1704634/simple-way-to-get-wrapper-class-type-in-java
+    // safe because both Long.class and long.class are of type Class<Long>
+    @SuppressWarnings("unchecked")
+    private static <T> Class<T> wrap(Class<T> c) {
+        return c.isPrimitive() ? (Class<T>) PRIMITIVES_TO_WRAPPERS.get(c) : c;
+    }
+    private static final Map<Class<?>, Class<?>> PRIMITIVES_TO_WRAPPERS = new ImmutableMap.Builder<Class<?>, Class<?>>()
+            .put(boolean.class, Boolean.class)
+            .put(byte.class, Byte.class)
+            .put(char.class, Character.class)
+            .put(double.class, Double.class)
+            .put(float.class, Float.class)
+            .put(int.class, Integer.class)
+            .put(long.class, Long.class)
+            .put(short.class, Short.class)
+            .put(void.class, Void.class)
+            .build();
     //Constraints
     
     //#

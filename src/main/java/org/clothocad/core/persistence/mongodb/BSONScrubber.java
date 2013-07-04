@@ -72,7 +72,9 @@ public class BSONScrubber {
                 //transform references to just uuid
             } else if (extractReferenceId(input.get(key)) != null) {
                 output.put(keyString, extractReferenceId(input.get(key)));
-            } else {
+            } 
+            //schema field
+            else {
                 output.put(keyString, scrub(input.get(key), getClassHints(keyString, classSet)));
             }
         }

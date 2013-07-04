@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.model.Person;
 
@@ -21,15 +22,18 @@ import org.clothocad.model.Person;
 @Slf4j
 public class BuiltInSchema extends JavaSchema {
 
-    public BuiltInSchema(Class c) {
+    public BuiltInSchema(Class<? extends ObjBase> c) {
         super();
         fields = extractFields(c);
         //TODO: functions
         
         binaryName = c.getCanonicalName();
         setName(c.getSimpleName());
+        this.c = c;
     }
 
+    Class<? extends ObjBase> c;
+    
     @Override
     public void setSource(String source) {
         throw new UnsupportedOperationException("You cannot set the source of a built-in schema.");
@@ -40,6 +44,11 @@ public class BuiltInSchema extends JavaSchema {
     @Override
     public String getBinaryName() {
         return binaryName;
+    }
+    
+    @Override
+    public Class<? extends ObjBase> getEnclosedClass(ClassLoader cl){
+        return c;
     }
 
     private Set<ClothoField> extractFields(Class c) {

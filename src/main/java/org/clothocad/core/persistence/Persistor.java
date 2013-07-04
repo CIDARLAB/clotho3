@@ -21,8 +21,11 @@ CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS.
  */
 
+//TODO: move the translation from clothoisms to mongodb into mongodbconnection
+
 package org.clothocad.core.persistence;
 
+import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +49,12 @@ import org.reflections.Reflections;
 import static java.lang.reflect.Modifier.isAbstract;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.NonUniqueResultException;
 import org.clothocad.core.schema.BuiltInSchema;
+import org.clothocad.core.schema.Converter;
+import org.clothocad.core.schema.Schema;
+import org.clothocad.model.BasicPartConverter;
 import org.clothocad.model.Part;
 
 /**
@@ -85,6 +93,8 @@ public class Persistor{
     
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
+    private Converters converters;
+    
     
     @Inject
     public Persistor(final ClothoConnection connection, JSONSerializer serializer){
@@ -93,6 +103,10 @@ public class Persistor{
         this.serializer = serializer;
         
         initializeBuiltInSchemas();
+        
+        //XXX: demo hack
+        converters = new Converters();
+        converters.addConverter(new BasicPartConverter(this));
     }
     
     private void validate(ObjBase obj){
@@ -149,6 +163,13 @@ public class Persistor{
             Object id = new ObjectId();
             data.put("_id", id);
         }
+        
+        if (data.containsKey("schema")){
+            Object schema = data.get("schema");
+            data.remove("schema");
+            data.put("className", schema);
+        }
+        
         
         connection.save(data);
         
@@ -287,20 +308,92 @@ public class Persistor{
     }
     
     public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
-        return connection.get(query);
+
+        modifyQueryForSchemaSearch(query);
+        List<ObjBase> result = connection.get(query);
+        //TODO: also add converted instances
+        return result;
     }
 
+    private List<Map<String,Object>> getConvertedData(Schema originalSchema){
+        List<Map<String, Object>> results = new ArrayList<>();
+
+        for (Schema schema : converters.getConverterSchemas(originalSchema)){
+            Map<String, Object> query = new HashMap<>();
+            query.put("className", schema.getName());
+            List<BSONObject> convertibles = connection.getAsBSON(query);
+            Converter converter = converters.getConverter(originalSchema, schema);
+            for (BSONObject bson : convertibles){
+                Map<String,Object> convertedData = convertAsBSON(bson.toMap(), schema, converter);
+                
+                results.add(convertedData);
+            }
+        }
+        
+        return results;
+    }
+    
+    private void modifyQueryForSchemaSearch(Map<String,Object> query){
+        //if searching for schema
+        if (query.containsKey("className")){
+            Object originalSchema = query.get("className");
+            Map<String, Object> schemaQuery = new HashMap();
+            
+            //these results don't need to be converted
+            schemaQuery.put("$in", getRelatedSchemas(originalSchema));
+        }
+    }
+    
+    
+    //Class set
+// an instance's set is any class it has ever been saved as and any classes it was initialized with
+//  -> maintaining this set is the connector's responsibility
+//if a class T is in an instances set
+// all of T's interfaces and T's supertype are in that instance's set
+//  -> persistor's responsibility
+// (ie, isassignablefrom)
+
+//furthermore, if a converter that accepts T and produces S is available, S is in any set that includes T
+
+//enforcing set is a subset of classes that an instance has been saved as
+//forces validation on save IN ADDITION TO the current class the instance is
+// -> hm, this could make it impossible to save an instance if the current class and an enforcing class conflict
+// -> a good client should have some kind of saveAsNew
+//requires write privilege to change (different from instance schema set in that regard)
+//defaults to the first class an instance was saved as (?)
+    
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec){
         return findAsBSON(spec, 1000);
     }
     
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
+        modifyQueryForSchemaSearch(spec);
+        //TODO: limit results
         List<BSONObject> results = connection.getAsBSON(spec);
         List<Map<String, Object>> out = new ArrayList<>();
         for (BSONObject result : results){
             out.add(serializer.toJSON(result.toMap()));
         }
+        
+        //also converted stuff
+        if (spec.containsKey("className")){
+            
+            //try finding a schema by binary name
+            Map schemaQuery = new HashMap();
+            schemaQuery.put("binaryName", spec.get("className").toString());
+            Schema originalSchema = connection.getOne(Schema.class, schemaQuery);
+            //try finding a schema by name name
+            if (originalSchema == null) originalSchema = get(Schema.class, resolveSelector(spec.get("className").toString(), false));
+            List<Map<String,Object>> convertedData = getConvertedData(originalSchema);
+            out.addAll(filterDataByQuery(convertedData, spec));
+        }
+        
         return out;
+    }
+    
+    private List<Map<String,Object>> filterDataByQuery(List<Map<String,Object>> convertedData,Map<String, Object> spec){
+        //TODO
+        return convertedData;
     }
     
     public void connect() {
@@ -332,5 +425,67 @@ public class Persistor{
 
     public <T extends ObjBase> Collection<T> getAll(Class<T> aClass) {
         return connection.getAll(aClass);
+    }
+
+
+    private List<Object> getRelatedSchemas(Object originalSchema) {
+        //TODO
+        List<Object> out = new ArrayList();
+        out.add(originalSchema);
+        return out;
+    }
+
+    
+    public Map<String,Object> convertAsBSON(Map<String,Object> data, Schema type, Converter converter){
+        ObjBase converted = (ObjBase) converter.convert(data, type);
+        Map<String,Object> convertedData = serializer.toJSON(converted);
+        return unifyObjectDescriptions(data, convertedData);
+    }
+    
+    public static Map<String,Object> unifyObjectDescriptions(Map<String,Object> sourceJSON, Map<String,Object> newJSON) {
+        Set<String> exclude = new HashSet();
+        exclude.add("schema");
+        for (String field : sourceJSON.keySet()){
+            if (exclude.contains(field)) continue;
+            if (newJSON.containsKey(field)) continue;
+            
+            newJSON.put(field, sourceJSON.get(field));
+        }
+        return newJSON;
+    }
+    
+    public ObjectId resolveSelector(String selector, boolean strict) {
+        return resolveSelector(selector, null, strict);
+    }
+
+    public ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict) {
+        //uuid?
+        ObjectId id;
+
+        try {
+            id = new ObjectId(selector);
+            return id;
+        } catch (IllegalArgumentException e) {
+        }
+
+        Map<String, Object> spec = new HashMap<>();
+        spec.put("name", selector);
+        /* TODO: class & superclass discrimination
+         * if (type != null) {
+            spec.put("className", type);
+        }*/
+
+        //name of something?
+        List<Map<String, Object>> results = findAsBSON(spec);
+
+        if (results.isEmpty()) throw new EntityNotFoundException();
+        
+        id = new ObjectId(results.get(0).get("id").toString());
+        if (results.size() == 1 || !strict) {
+            return id;
+        }
+
+        //bitch about ambiguity
+        throw new NonUniqueResultException();
     }
 }

@@ -27,7 +27,12 @@ public class FreeForm implements Format {
 
 	@Override
     public NucSeq generateCompositeSequence(List<Part> composition, Object additionalRequirements) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //XXX: dummy implementation
+        StringBuilder builder = new StringBuilder();
+        for (Part part : composition){
+            builder.append(part.getSequence().getSeq());
+        }
+        return new NucSeq(builder.toString());
     }
     
 }
