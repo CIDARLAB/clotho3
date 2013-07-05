@@ -165,12 +165,12 @@ public class ServerAPITest {
 
         //filter out unseen results
         Map<String, Object> query = new HashMap<>();
-        query.put("schema", "BasicPart");
+        query.put("schema", "Part");
         api.query(query, null);
 
         List<Map<String, Object>> results = (List) connection.messages.get(1).data;
-        //assertEquals(4, results.size());
-        assertEquals(3, results.size());
+        assertEquals(4, results.size());
+        //assertEquals(3, results.size());
         Set<String> names = new HashSet();
 
         for (Map<String, Object> result : results) {
@@ -179,7 +179,7 @@ public class ServerAPITest {
 
         assertTrue(names.contains("Test Part 1"));
         assertTrue(names.contains("Test Part 2"));
-        //assertTrue(names.contains("Test Part 3"));
+        assertTrue(names.contains("Test Part 3"));
         assertTrue(names.contains("B0015"));
         
         //assert that sequence is either in the database or embedded

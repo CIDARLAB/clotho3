@@ -8,6 +8,7 @@ import com.github.jmkgreen.morphia.utils.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.datums.ObjBase;
@@ -20,6 +21,7 @@ import org.clothocad.model.Person;
  */
 @NoArgsConstructor
 @Slf4j
+@EqualsAndHashCode(callSuper = false, of = {"binaryName", "c"})
 public class BuiltInSchema extends JavaSchema {
 
     public BuiltInSchema(Class<? extends ObjBase> c) {

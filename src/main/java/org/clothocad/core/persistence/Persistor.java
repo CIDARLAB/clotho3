@@ -309,7 +309,7 @@ public class Persistor{
     
     public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
 
-        modifyQueryForSchemaSearch(query);
+        query = modifyQueryForSchemaSearch(query);
         List<ObjBase> result = connection.get(query);
         //TODO: also add converted instances
         return result;
@@ -322,7 +322,7 @@ public class Persistor{
             Map<String, Object> query = new HashMap<>();
             query.put("className", schema.getName());
             List<BSONObject> convertibles = connection.getAsBSON(query);
-            Converter converter = converters.getConverter(originalSchema, schema);
+            Converter converter = converters.getConverter(schema, originalSchema);
             for (BSONObject bson : convertibles){
                 Map<String,Object> convertedData = convertAsBSON(bson.toMap(), schema, converter);
                 
@@ -333,18 +333,22 @@ public class Persistor{
         return results;
     }
     
-    private void modifyQueryForSchemaSearch(Map<String,Object> query){
+    private Map<String, Object> modifyQueryForSchemaSearch(Map<String, Object> query) {
         //if searching for schema
-        if (query.containsKey("className")){
-            Object originalSchema = query.get("className");
+        if (query.containsKey("className")) {
+            String originalSchema = query.get("className").toString();
             Map<String, Object> schemaQuery = new HashMap();
-            
-            //these results don't need to be converted
-            schemaQuery.put("$in", getRelatedSchemas(originalSchema));
+            List<String> relatedSchemas = getRelatedSchemas(originalSchema);
+
+            if (relatedSchemas.size() > 1) {
+                schemaQuery.put("$in", relatedSchemas);
+                query.put("className", schemaQuery);
+            }
         }
+        return query;
     }
-    
-    
+
+
     //Class set
 // an instance's set is any class it has ever been saved as and any classes it was initialized with
 //  -> maintaining this set is the connector's responsibility
@@ -367,7 +371,7 @@ public class Persistor{
     }
     
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
-        modifyQueryForSchemaSearch(spec);
+        spec = modifyQueryForSchemaSearch(spec);
         //TODO: limit results
         List<BSONObject> results = connection.getAsBSON(spec);
         List<Map<String, Object>> out = new ArrayList<>();
@@ -377,15 +381,27 @@ public class Persistor{
         
         //also converted stuff
         if (spec.containsKey("className")){
-            
-            //try finding a schema by binary name
-            Map schemaQuery = new HashMap();
-            schemaQuery.put("binaryName", spec.get("className").toString());
-            Schema originalSchema = connection.getOne(Schema.class, schemaQuery);
-            //try finding a schema by name name
-            if (originalSchema == null) originalSchema = get(Schema.class, resolveSelector(spec.get("className").toString(), false));
-            List<Map<String,Object>> convertedData = getConvertedData(originalSchema);
-            out.addAll(filterDataByQuery(convertedData, spec));
+            List<String> schemaNames = new ArrayList<>();
+            Object className = spec.get("className");
+            if (className instanceof String) schemaNames.add((String) className);
+            else if (className instanceof Map && ((Map) className).containsKey("$in")){
+                for (String name : (List<String>) ((Map) className).get("$in")){
+                    schemaNames.add(name);
+                }
+            }
+            for (String schemaName : schemaNames) {
+                //try finding a schema by binary name
+                Map schemaQuery = new HashMap();
+                schemaQuery.put("binaryName", schemaName);
+                Schema originalSchema = connection.getOne(Schema.class, schemaQuery);
+                //try finding a schema by name name
+                if (originalSchema == null) {
+                    originalSchema = get(Schema.class, resolveSelector(schemaName, false));
+                }
+                List<Map<String, Object>> convertedData = getConvertedData(originalSchema);
+                out.addAll(filterDataByQuery(convertedData, spec));
+                //TODO: filtering so things are unique
+            }
         }
         
         return out;
@@ -417,7 +433,7 @@ public class Persistor{
         for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
             Map<String, Object> query = new HashMap<>();
             query.put("_binaryName", c.getCanonicalName());
-            if (!isAbstract(c.getModifiers()) && connection.getAsBSON(query).isEmpty()) {
+            if (connection.getAsBSON(query).isEmpty()) {
                 save(new BuiltInSchema(c));
             } 
         }
@@ -428,9 +444,18 @@ public class Persistor{
     }
 
 
-    private List<Object> getRelatedSchemas(Object originalSchema) {
-        //TODO
-        List<Object> out = new ArrayList();
+    private List<String> getRelatedSchemas(String originalSchema) {
+        List<String> out = new ArrayList();
+        try {
+            //XXX demo hack
+            Class<?> type = Class.forName(originalSchema.toString());
+            Reflections r = new Reflections("org.clothocad.model"); //hacking again
+            for (Class c : r.getSubTypesOf(type)) {
+                out.add(c.getName());
+            }
+
+        } catch (ClassNotFoundException ex) {
+        }
         out.add(originalSchema);
         return out;
     }

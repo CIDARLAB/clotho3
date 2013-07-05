@@ -18,6 +18,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
 import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.core.persistence.Rename;
 
@@ -26,7 +27,8 @@ import org.clothocad.core.persistence.Rename;
  * @author spaige
  */
 @Entity("data")
-@Data
+@EqualsAndHashCode(exclude = {"dateCreated", "lastModified", "lastAccessed", "isDeleted"})
+@Data()
 @NoArgsConstructor
 public abstract class ObjBase {
     

@@ -60,16 +60,20 @@ public class ConvertersTest {
     public void testGetConverterSchemas() {
         Converters converters = prepareConverters();
         Schema basicPartSchema = persistor.get(Schema.class, persistor.resolveSelector("BasicPart", false));
+        Schema compositePartSchema = persistor.get(Schema.class, persistor.resolveSelector("CompositePart", false));
         Iterable<Schema> convertibleSchemas = converters.getConverterSchemas(basicPartSchema);
         assertEquals(new InferredSchema("eugene.dom.components.Part"), convertibleSchemas.iterator().next());
+        
+        convertibleSchemas = converters.getConverterSchemas(compositePartSchema);
+        assertFalse(convertibleSchemas.iterator().hasNext());
     }
 
     @Test
     public void testGetConverter() {
         Converters converters = prepareConverters();
         Schema basicPartSchema = persistor.get(Schema.class, persistor.resolveSelector("BasicPart", false));
-        Schema eugeneSchema = new InferredSchema("org.eugene.dom.Part");
-        Converter converter = converters.getConverter(basicPartSchema, eugeneSchema);
+        Schema eugeneSchema = new InferredSchema("eugene.dom.components.Part");
+        Converter converter = converters.getConverter(eugeneSchema, basicPartSchema);
         assertTrue(converter.canConvert(eugeneSchema));
         assertEquals(basicPartSchema, converter.convertsTo());
     }

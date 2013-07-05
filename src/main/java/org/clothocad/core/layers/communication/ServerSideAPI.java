@@ -437,6 +437,7 @@ public final class ServerSideAPI {
                 spec.remove("schema");
                 spec.put("className", schemaName);
             } catch (EntityNotFoundException e) {
+                //maybe already full name?
                 logAndSayError(String.format("No schema found for selector %s", spec.get("schema").toString()), e);
                 objs = new ArrayList<>();
                 Message msg = new Message(Channel.query, objs, requestId);

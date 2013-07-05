@@ -104,15 +104,23 @@ public class RouterTest {
     @Test
     public void query() {
         Map<String, Object> query = new HashMap<>();
-        query.put("schema", "BasicPart");
-        //XXX: switch back to Part after demo
+        query.put("schema", "Part");
         TestConnection connection = new TestConnection("queryTest");
         Message message = new Message(Channel.query, query, "3");
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
+        assertEquals(4, ((List) returnMessage.data).size());
         //assertEquals(3, ((List) returnMessage.data).size());
-        assertEquals(2, ((List) returnMessage.data).size());
+        
+        connection = new TestConnection("queryTest2");
+        query = new HashMap<>();
+        query.put("schema", "BasicPart");
+        message = new Message(Channel.query, query, "4");
+        sendMessage(message, connection);
+        returnMessage = connection.messages.get(1);
+        assertMatch(message, returnMessage);
+        assertEquals(3, ((List) returnMessage.data).size());
     }
 
     private void sendMessage(Message message, ClientConnection connection) {

@@ -29,7 +29,7 @@ import org.clothocad.model.Person;
  * @author spaige
  */
 
-@EqualsAndHashCode(exclude={"fields", "methods"})
+@EqualsAndHashCode(exclude={"fields", "methods"}, callSuper = true)
 @Data
 @NoArgsConstructor
 @Slf4j
