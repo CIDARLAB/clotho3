@@ -164,13 +164,15 @@ Application.Plasmid.service('Plasmid', ['$window', '$timeout', function($window,
         //truly random, but probably want light colors only
         //return '#'+Math.floor(Math.random()*16777215).toString(16);
 
-            var r = (Math.round(Math.random()* 127) + 127).toString(16);
-            var g = (Math.round(Math.random()* 127) + 127).toString(16);
-            var b = (Math.round(Math.random()* 127) + 127).toString(16);
-            return '#' + r + g + b;
+        var r = (Math.round(Math.random()* 127) + 127).toString(16);
+        var g = (Math.round(Math.random()* 127) + 127).toString(16);
+        var b = (Math.round(Math.random()* 127) + 127).toString(16);
+        return '#' + r + g + b;
     };
 
     var featureValid = function(feat) {
+
+        if (angular.isUndefined(feat)) return false;
 
         if (feat.match && feat.match != '' && angular.isDefined(feat.match)) {
             return regexps.reg_match.test(feat.match)
@@ -188,7 +190,7 @@ Application.Plasmid.service('Plasmid', ['$window', '$timeout', function($window,
                 return false;
             }
         }
-        console.log('adding');
+        //console.log('adding');
 
         if (!feat.label) {
             feat.label = "New Feature" + Date.now();
@@ -285,7 +287,7 @@ Application.Plasmid.service('Plasmid', ['$window', '$timeout', function($window,
 
         console.log(feature);
 
-        //fixme need to update ngModel first
+        //todo - this is hacky
         ngModel.$setViewValue($('[plasmid-editor]').html());
         feature.pos = {'start' : '', 'end' : ''};
 
@@ -342,8 +344,14 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
 
     $scope.randomColor = Plasmid.randomColor;
 
+    $scope.showAddForm =function() {
+        $scope.editForm = false;
+        $scope.addForm = true;
+    };
+
     $scope.editFeature = function(feat, index) {
         $scope.editForm = true;
+        $scope.addForm = false;
         $scope.editFeat = feat;
 
         //todo - hacky - make consistent
@@ -354,10 +362,12 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
     $scope.saveEditFeature = function(feat) {
 
         //todo - hacky - make consistent
-        var positions = feat.pos.match(/^([0-9]+)\-([0-9]+)$/);
-        feat.pos = {};
-        feat.pos.start = positions[1];
-        feat.pos.end = positions[2];
+        if (feat.pos) {
+            var positions = feat.pos.match(/^([0-9]+)\-([0-9]+)$/);
+            feat.pos = {};
+            feat.pos.start = positions[1];
+            feat.pos.end = positions[2];
+        }
 
         feat.edited = true;
 
@@ -419,7 +429,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                     //console.log(scope);
 
                     function genFiltered (text) {
-                        console.log(ngModel.$viewValue);
+                        //console.log(ngModel.$viewValue);
                         text = typeof text != 'undefined' ? text : ngModel.$viewValue;
                         return $filter('features')(text, scope.features);
                     }
@@ -512,7 +522,7 @@ Application.Plasmid.filter('features', [function() {
             var raw = text;
             text = raw.replace(/(<([^>]+)>)/ig, "");
 
-            console.log(raw);
+            //console.log(raw);
 
             //todo ?? - rewrite so can use form <feat index=""> -- tags can't overlap though
 
@@ -521,21 +531,25 @@ Application.Plasmid.filter('features', [function() {
                 return   ({start:1, end:1}[a]) ?   ("<"+b+a+c+">")  : "";
             });
 
-            console.log(startEnds);
+            //console.log(startEnds);
 
 
             var overlap;
             var findStartEnd = /<(\w+) feat="(\d+)"[^>]*?><\/\1>/ig;
             while ((overlap = findStartEnd.exec(startEnds)) != null) {
-                console.log(overlap);
+                //console.log(overlap);
 
                 var ind = overlap.index,
                     type = overlap[1],
                     featIndex = overlap[2];
 
                 var feature = features[featIndex];
-                if (feature.pos && !feature.edited) {
-                    feature.pos[type] = ind;
+                if (feature.pos) {
+                    if (feature.edited) {
+                        feature.edited = false;
+                    } else {
+                        feature.pos[type] = ind;
+                    }
                 }
 
                 startEnds = startEnds.replace(overlap[0], '');
@@ -543,7 +557,7 @@ Application.Plasmid.filter('features', [function() {
             }
             //console.log(startEnds);
 
-            console.log(features);
+            //console.log(features);
 
 
 
@@ -586,7 +600,7 @@ Application.Plasmid.filter('features', [function() {
                     }
                 }
             });
-            console.log(locations);
+            //console.log(locations);
 
 
             //loop from end, saving tag locations
@@ -644,7 +658,7 @@ Application.Plasmid.filter('features', [function() {
 
                 })
             });
-            console.log(newText);
+            //console.log(newText);
 
             return newText;
         } else {
