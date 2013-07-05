@@ -40,7 +40,7 @@
  */
 
 //future - make provider, not singleton service
-Application.Plasmid.service('Plasmid', ['$window', function($window) {
+Application.Plasmid.service('Plasmid', ['$window', '$timeout', function($window, $timeout) {
 
     var features = [
         {
@@ -161,44 +161,135 @@ Application.Plasmid.service('Plasmid', ['$window', function($window) {
     };
 
     var randomColor = function() {
-        return '#'+Math.floor(Math.random()*16777215).toString(16);
+        //truly random, but probably want light colors only
+        //return '#'+Math.floor(Math.random()*16777215).toString(16);
+
+            var r = (Math.round(Math.random()* 127) + 127).toString(16);
+            var g = (Math.round(Math.random()* 127) + 127).toString(16);
+            var b = (Math.round(Math.random()* 127) + 127).toString(16);
+            return '#' + r + g + b;
     };
 
     var featureValid = function(feat) {
-        return (
-            (feat.match != '' && angular.isDefined(feat.match)) ?
-                regexps.reg_match.test(feat.match) :
-                (angular.isDefined(feat.pos) && regexps.reg_pos.test(feat.pos))
-            ) &&
-            ( (angular.isDefined(feat.css.color) && feat.css.color != '') ?
-                (regexps.reg_color.test(feat.css.color)) :
-                (angular.isDefined(feat.css.background) && (regexps.reg_color.test(feat.css.background))))
+
+        if (feat.match && feat.match != '' && angular.isDefined(feat.match)) {
+            return regexps.reg_match.test(feat.match)
+        } else {
+            return angular.isDefined(feat.pos) && (regexps.reg_pos.test(feat.pos) || (angular.isNumber(feat.pos.start) && angular.isNumber(feat.pos.end)))
+        }
+
+        return false;
     };
 
-    var addFeature = function(feat) {
-        if (featureValid(feat)) {
-
-            if (!feat.label) {
-                feat.label = "New Feature" + Date.now();
+    var addFeature = function(feat, skipCheck) {
+        if (!skipCheck) {
+            if (!featureValid(feat)) {
+                console.log('invalid');
+                return false;
             }
+        }
+        console.log('adding');
 
-            if (feat.match)
-                delete feat['pos'];
-            else {
+        if (!feat.label) {
+            feat.label = "New Feature" + Date.now();
+        }
+
+        if (feat.match)
+            delete feat['pos'];
+        else {
+            if (/^([0-9]+)\-([0-9]+)$/.test(feat.pos)) {
                 var positions = feat.pos.match(/^([0-9]+)\-([0-9]+)$/);
+                feat.pos = {};
                 feat.pos.start = positions[1];
                 feat.pos.end = positions[2];
             }
 
-            if (feat.css.color == '' && feat.css.background == '')
-                feat.css.background = randomColor();
-
-            console.log(feat);
-
-            features.push(feat);
-        } else {
-            console.log("invalid");
         }
+
+        //if color defined, make sure valid
+        if (feat.css.color != '') {
+            if (!regexps.reg_color.test(feat.css.color)) feat.css.color = randomColor();
+        } else if (feat.css.background != '') {
+            if (!regexps.reg_color.test(feat.css.background)) feat.css.background = randomColor();
+        }
+
+        if (feat.css.color == '' && feat.css.background == '')
+            feat.css.background = randomColor();
+
+        features.push(feat);
+    };
+
+    var addSelection =  function (ngModel) {
+
+        var feature = emptyFeature();
+
+        var range, start, end, expandedSelRange;
+
+        if ($window.getSelection) {
+            var sel = $window.getSelection();
+            if (typeof sel != 'undefined' && sel.rangeCount) {
+
+                range = sel.getRangeAt(0);
+                start = range.cloneRange();
+                end = range.cloneRange();
+                start.collapse(true);
+                end.collapse(false);
+                expandedSelRange = range.cloneRange();
+
+
+                // Range.createContextualFragment() would be useful here but is
+                // non-standard and not supported in all browsers (IE9, for one)
+                // start
+                var elstart = document.createElement("div");
+                elstart.innerHTML = '<start feat="'+ features.length +'"></start>';
+                var fragstart = document.createDocumentFragment(), node, lastNode;
+                while ( (node = elstart.firstChild) ) {
+                    lastNode = fragstart.appendChild(node);
+                }
+                start.insertNode(fragstart);
+
+                //end
+                var elend = document.createElement("div");
+                elend.innerHTML = '<end feat="'+ features.length +'"></end>';
+                var fragend = document.createDocumentFragment(), node, lastNode;
+                while ( (node = elend.firstChild) ) {
+                    lastNode = fragend.appendChild(node);
+                }
+                end.insertNode(fragend);
+
+                // Preserve the selection
+                if (lastNode) {
+                    expandedSelRange.setEndAfter(lastNode);
+                    sel.removeAllRanges();
+                    sel.addRange(expandedSelRange);
+                }
+            }
+        }
+        //IE -- verify working?
+        else if (typeof document.selection != "undefined") {
+
+            range = document.selection.createRange();
+            start = range.duplicate();
+            end = range.duplicate();
+            expandedSelRange = range.duplicate();
+
+            start.collapse(true);
+            end.collapse(false);
+
+            start.pasteHTML('<start feat="'+features.length+'"></start>');
+            end.pasteHTML('<end feat="'+features.length+'"></end>');
+
+            expandedSelRange.setEndPoint("EndToEnd", range);
+            expandedSelRange.select();
+        }
+
+        console.log(feature);
+
+        //fixme need to update ngModel first
+        ngModel.$setViewValue($('[plasmid-editor]').html());
+        feature.pos = {'start' : '', 'end' : ''};
+
+        addFeature(feature, true);
     };
 
     return {
@@ -207,7 +298,8 @@ Application.Plasmid.service('Plasmid', ['$window', function($window) {
         emptyFeature : emptyFeature,
         randomColor : randomColor,
         featureValid : featureValid,
-        addFeature : addFeature
+        addFeature : addFeature,
+        addSelection : addSelection
     }
 }]);
 
@@ -250,9 +342,38 @@ Application.Plasmid.controller('PlasmidCtrl', ['$scope', '$window', '$document',
 
     $scope.randomColor = Plasmid.randomColor;
 
+    $scope.editFeature = function(feat, index) {
+        $scope.editForm = true;
+        $scope.editFeat = feat;
+
+        //todo - hacky - make consistent
+        $scope.editFeatInd = index;
+        $scope.editFeat.pos = $scope.editFeat.pos.start + "-" + $scope.editFeat.pos.end;
+    };
+
+    $scope.saveEditFeature = function(feat) {
+
+        //todo - hacky - make consistent
+        var positions = feat.pos.match(/^([0-9]+)\-([0-9]+)$/);
+        feat.pos = {};
+        feat.pos.start = positions[1];
+        feat.pos.end = positions[2];
+
+        feat.edited = true;
+
+        Plasmid.features[$scope.editFeatInd] = feat;
+
+        $scope.editForm = false;
+        $scope.editFeat = {};
+        $scope.editFeatInd = undefined;
+
+        $scope.$broadcast('Plasmid:Process');
+    };
+
     $scope.addFeature = function(feat) {
         Plasmid.addFeature(feat);
         $scope.new = Plasmid.emptyFeature();
+        $scope.addForm = false;
     };
 
 }]);
@@ -287,7 +408,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                         'position': 'relative'
                     });
 
-                    element.parent().prepend($compile(angular.element('<div class="btn-group"><button class="btn btn-small" ng-click="highlight()" ng-class="{\'btn-info\' : ngModel.$dirty}" ng-disabled="ngModel.$pristine">Process</button><button class="btn btn-small" ng-click="addFeatureSelection()" ng-disabled="!textSelected">Annotate Selection</button></div>'))(scope));
+                    element.parent().prepend($compile(angular.element('<div class="btn-group"><button class="btn btn-small" ng-click="highlight()" ng-class="{\'btn-info\' : ngModel.$dirty}" ng-disabled="ngModel.$pristine">Process</button><button class="btn btn-small" ng-click="addSelection()" ng-disabled="!textSelected">Annotate Selection</button>'))(scope));
                 },
                 post: function(scope, element, attrs, ngModel) {
                     /* key functions  */
@@ -298,6 +419,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                     //console.log(scope);
 
                     function genFiltered (text) {
+                        console.log(ngModel.$viewValue);
                         text = typeof text != 'undefined' ? text : ngModel.$viewValue;
                         return $filter('features')(text, scope.features);
                     }
@@ -307,6 +429,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                     function setOutput (html) {
                         element.html(html);
                         $compile(element.contents())(scope);
+                        ngModel.$setViewValue(element.html());
                         ngModel.$setPristine();
                     }
 
@@ -319,54 +442,11 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                         console.log(ngModel.$modelValue);
                     };
 
-                    //todo - checks:
-                    // select opp direction
-                    // pos is for whole string (across text nodes)
-                    scope.addFeatureSelection = function () {
-                        var feature = Plasmid.emptyFeature();
-
-                        if ($window.getSelection) {
-                            var sel = $window.getSelection();
-                            if (typeof sel != 'undefined' && sel.rangeCount) {
-
-                                var container = angular.element("<div>");
-                                for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-                                    container.append(sel.getRangeAt(i).cloneContents());
-                                }
-                                console.log(container);
-
-                                //todo - see http://stackoverflow.com/questions/3597116/insert-html-after-a-selection
-
-/*
-
-                                var newEl = document.createElement("feat");
-                                newEl.setAttribute('index', scope.features.length.toString());
-                                sel.getRangeAt(0).surroundContents(newEl);
-*/
-                                //feature = container[0].innerHTML;
-
-                                console.log(sel);
-
-
-
-
-
-
-                                feature.pos = {"start" : sel.baseOffset, "end" : sel.extentOffset};
-
-                                feature.css.background = '#'+Math.floor(Math.random()*16777215).toString(16);
-
-                            }
-                        }
-                        else if (typeof $document.selection != "undefined") { //IE -- todo doesn't really work
-                            if ($document.selection.type == "Text") {
-                                feature = $document.selection.createRange().htmlText;
-                            }
-                        }
-                        console.log(feature);
-                        scope.features.push(feature);
+                    scope.addSelection = function() {
+                        //scope.logModel();
+                        Plasmid.addSelection(ngModel);
+                        //scope.logModel();
                     };
-
 
                     //model -> view
 
@@ -432,50 +512,29 @@ Application.Plasmid.filter('features', [function() {
             var raw = text;
             text = raw.replace(/(<([^>]+)>)/ig, "");
 
-            //console.log(raw);
+            console.log(raw);
 
-
-            /*
-            //todo - pull tags out of HTML and save locations
-            //future - don't use jquery (for speed)
-            var startStops = $(raw);
-            startStops.find(':not(end, start)').children().unwrap();
-            console.log(startStops);
-
-            var test = startStops.not('start, end').each(function() {
-                console.log(this);
-                var content = $(this).text();
-                $(this).replaceWith(content);
-            });
-            //startStops.find('span').contents().unwrap();
-
-            console.log(startStops);
-            console.log(test.html());
-
-            console.log(angular.element(raw).find('start'));
-            */
-
-            //todo - rewrite so can use form <feat index="">
+            //todo ?? - rewrite so can use form <feat index=""> -- tags can't overlap though
 
             //note - still contain ng-scope in attrs
             var startEnds = raw.replace(/\s*<(\/?)(\w+)([^>]*?)>\s*/ig,  function(j,b,a,c){
                 return   ({start:1, end:1}[a]) ?   ("<"+b+a+c+">")  : "";
             });
 
-            //console.log(startEnds);
+            console.log(startEnds);
 
 
             var overlap;
-            var findStartEnd = /<(\w+) feat="(\d+)"[^>]*><\/\1>/ig;
+            var findStartEnd = /<(\w+) feat="(\d+)"[^>]*?><\/\1>/ig;
             while ((overlap = findStartEnd.exec(startEnds)) != null) {
-                //console.log(overlap);
+                console.log(overlap);
 
                 var ind = overlap.index,
                     type = overlap[1],
                     featIndex = overlap[2];
 
                 var feature = features[featIndex];
-                if (feature.pos) {
+                if (feature.pos && !feature.edited) {
                     feature.pos[type] = ind;
                 }
 
@@ -484,6 +543,7 @@ Application.Plasmid.filter('features', [function() {
             }
             //console.log(startEnds);
 
+            console.log(features);
 
 
 
@@ -492,7 +552,7 @@ Application.Plasmid.filter('features', [function() {
             //create location map
             var locations = {};
             angular.forEach(features, function(feat, featIndex) {
-                if (feat.active === false) { //skip
+                if (feat.hasOwnProperty("active") && feat.active === false) { //skip
                 } else {
                     if (feat.match) {
 
@@ -526,7 +586,7 @@ Application.Plasmid.filter('features', [function() {
                     }
                 }
             });
-            //console.log(locations);
+            console.log(locations);
 
 
             //loop from end, saving tag locations
@@ -584,7 +644,7 @@ Application.Plasmid.filter('features', [function() {
 
                 })
             });
-            //console.log(newText);
+            console.log(newText);
 
             return newText;
         } else {
