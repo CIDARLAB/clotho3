@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bson.types.ObjectId;
-import org.clothocad.core.ClothoModule;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.testers.MongoDBTestModule;
+import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.model.FreeForm;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
@@ -30,7 +30,7 @@ public class TestUtils {
     private static Injector injector;
 
     static {
-        injector = Guice.createInjector(new ClothoModule(), new MongoDBTestModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
 
     }
 
@@ -39,7 +39,7 @@ public class TestUtils {
     }
     
     public static Injector getDefaultTestInjector(){
-        return Guice.createInjector(new ClothoModule(), new MongoDBTestModule());
+        return Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
     }
     
     public static List<ObjectId> setupTestData(Persistor persistor){

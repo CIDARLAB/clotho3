@@ -14,7 +14,7 @@ import org.clothocad.core.ClothoModule;
 public class ClothoTestModule extends ClothoModule {
     public ClothoTestModule(Properties props){
         super(props);
-        defaults.put("dbName", "testClotho");
+        defaults.put("dbname", "testClotho");
     }
     
     public ClothoTestModule(){

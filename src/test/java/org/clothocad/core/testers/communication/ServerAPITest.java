@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bson.types.ObjectId;
-import org.clothocad.core.ClothoModule;
 import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.testers.MongoDBTestModule;
+import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.utils.TestUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,7 +44,7 @@ public class ServerAPITest {
 
     @BeforeClass
     public static void setUpClass() {
-        Injector injector = Guice.createInjector(new ClothoModule(), new MongoDBTestModule());
+        Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         persistor = injector.getInstance(Persistor.class);
         mind = new Mind();
         api = new ServerSideAPI(mind, persistor);

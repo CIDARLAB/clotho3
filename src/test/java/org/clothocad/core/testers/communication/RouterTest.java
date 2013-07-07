@@ -4,8 +4,6 @@
  */
 package org.clothocad.core.testers.communication;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.IOException;
@@ -13,13 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bson.types.ObjectId;
-import org.clothocad.core.ClothoModule;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.testers.MongoDBTestModule;
+import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.utils.TestUtils;
 import org.junit.After;
@@ -44,7 +42,7 @@ public class RouterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoModule(), new MongoDBTestModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         router = Router.get();
     }
 

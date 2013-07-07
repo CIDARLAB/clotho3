@@ -17,28 +17,11 @@ import org.clothocad.core.persistence.ClothoConnection;
  * @author spaige
  */
 public class MongoDBModule extends AbstractModule {
-    public MongoDBModule(Properties properties){
-        defaults.put("dbname", "clotho");
-        defaults.put("dbhost", "localhost");
-        defaults.put("dbport", "27017");
-        this.properties = new Properties(defaults);
-        if (properties != null) this.properties.putAll(properties);
-    }
-    
-    public MongoDBModule(){
-        this(null);
-    }
-        
-    protected final Properties defaults = new Properties();
-    
-    private final Properties properties;
     
     @Override
     protected void configure() {
         
         //set up morphia slf4j logging
-        
-        Names.bindProperties(binder(), properties);
         
         bind(ClothoConnection.class).to(MongoDBConnection.class);
         bind(JSONSerializer.class).to(ClothoMapper.class);
