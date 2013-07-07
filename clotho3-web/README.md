@@ -53,21 +53,32 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- restructure autocompleteDetail based on new json
+- editor side content
+
+- plasmid
+    - highlight in element only for annotation active
+    - check reverse direction for features
+    - (?) ui-mask for position
+
 
 - search bar
     - keypress down -> results
+
+- $keypress.suspend() e.g. in trail mode when using search bar
 
 
 - allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
 
 
 
-- markdown directive --- highlight textarea (jsFiddle like)
-
 - draggable elements (within angular -- sortable)
 
 - clarify $dialog -- in controllers when dialog and when $dialog --- make fixes
+
+
+
+
+
 
 - move away from "model_change" etc.
 
