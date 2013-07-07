@@ -53,10 +53,10 @@ public class TestUtils {
         Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new Object(), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
                 
         Map<String,Object> eugenePart = new HashMap();
-        eugenePart.put("name", "B0015");
+        eugenePart.put("Name", "B0015");
         eugenePart.put("schema", "eugene.dom.components.Part");
-        eugenePart.put("partType", "Terminator");
-        eugenePart.put("sequence", "CCAGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCTACTAGAGTCACACTGGCTCACCTTCGGGTGGGCCTTTCTGCGTTTATA");
+        eugenePart.put("PartType", "Terminator");
+        eugenePart.put("Sequence", "CCAGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCTACTAGAGTCACACTGGCTCACCTTCGGGTGGGCCTTTCTGCGTTTATA");
         eugenePart.put("Pigeon", "t B0015");
         
         persistor.save(part1);

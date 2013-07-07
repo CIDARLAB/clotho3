@@ -37,10 +37,10 @@ public class BasicPartConverter extends Converter<BasicPart> {
     }
 
     public static BasicPart convertEugenePartToBasicPart(Map<String, Object> eugenePart) {
-        BasicPart part = new BasicPart(eugenePart.get("name").toString(), null, eugenePart.get("sequence").toString(), new FreeForm(), null);
+        BasicPart part = new BasicPart(eugenePart.get("Name").toString(), null, eugenePart.get("Sequence").toString(), new FreeForm(), null);
 
         try {
-            Part.PartFunction function = Part.PartFunction.valueOf(eugenePart.get("partType").toString().toUpperCase());
+            Part.PartFunction function = Part.PartFunction.valueOf(eugenePart.get("PartType").toString().toUpperCase());
             part.setType(function);
         } catch (IllegalArgumentException e) {
         }

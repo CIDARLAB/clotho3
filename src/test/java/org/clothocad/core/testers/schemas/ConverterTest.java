@@ -47,16 +47,16 @@ public class ConverterTest {
         Converter<BasicPart> converter = new BasicPartConverter(p);
         Schema eugenePartSchema = new InferredSchema("eugene.dom.components.Part");
         Map<String, Object> eugeneJSON = JSON.deserializeObject("    {\n"
-                + "         \"name\":\"B0015\",\n"
+                + "         \"Name\":\"B0015\",\n"
                 + "         \"schema\":\"eugene.dom.components.Part\",\n"
-                + "         \"partType\":\"Terminator\",\n"
-                + "         \"sequence\":\"CCAGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCTACTAGAGTCACACTGGCTCACCTTCGGGTGGGCCTTTCTGCGTTTATA\",\n"
+                + "         \"PartType\":\"Terminator\",\n"
+                + "         \"Sequence\":\"CCAGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCTACTAGAGTCACACTGGCTCACCTTCGGGTGGGCCTTTCTGCGTTTATA\",\n"
                 + "         \"Pigeon\":\"t B0015\"\n"
                 + "      }");
 
         BasicPart convertedPart = converter.convert(eugeneJSON, eugenePartSchema);
         assertEquals(PartFunction.TERMINATOR, convertedPart.getType());
-        assertEquals(eugeneJSON.get("sequence").toString(), convertedPart.getSequence().getSeq());
-        assertEquals(eugeneJSON.get("name").toString(), convertedPart.getName());
+        assertEquals(eugeneJSON.get("Sequence").toString(), convertedPart.getSequence().getSeq());
+        assertEquals(eugeneJSON.get("Name").toString(), convertedPart.getName());
     }
 }
