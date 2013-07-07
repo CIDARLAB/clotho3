@@ -3,7 +3,6 @@
 Application.Browser.controller('BrowserCtrl', ['$scope', 'Clotho', '$filter', function($scope, Clotho, $filter) {
 
     Clotho.recent().then(function(result) {
-        console.log(result);
         $scope.recent_array = result;
         $scope.sort(false);
     });
