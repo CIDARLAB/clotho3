@@ -205,7 +205,13 @@ public class Router {
     private Mind getMind(ClientConnection connection) {
         String id = connection.getId();
         if (minds.containsKey(id)) {
-            return minds.get(id);
+            Mind mind = minds.get(id);
+            if (mind.getClientConnection() != connection){
+                //XXX: this is probably disasterous in some edge cases
+                //because jetty preserves the sesson id across websocket close/open, need to check to see if the connection object in the mind is stale
+                mind.setClientConnection(connection);
+            }
+            return mind;
         }
 
         Mind mind = new Mind();
