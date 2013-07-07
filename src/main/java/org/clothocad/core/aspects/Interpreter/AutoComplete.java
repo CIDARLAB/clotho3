@@ -82,6 +82,7 @@ public class AutoComplete {
             if(wordBank==null) {
                 String sfile = FileUtils.readFile("wordbank.txt");
                 List listy = JSON.deserializeList(sfile);
+                if (listy == null) return new HashSet<>(); //XXX
                 wordBank = new HashSet<String>();
                 for(int i=0; i<listy.size(); i++) {
                     String str = listy.get(i).toString();
