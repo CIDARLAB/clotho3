@@ -338,15 +338,17 @@ public final class ServerSideAPI {
         }
     }
 
+    
+    //TODO: some global solution for jsonifying ObjectIds
     public final void create(Object o, String requestId) {
-        List<ObjectId> returnData = new ArrayList<>();
+        List<String> returnData = new ArrayList<>();
         //list of selectors?
         if (o instanceof List) {
             for (Object obj : (List) o) {
-                returnData.add(create(JSON.mappify(obj)));
+                returnData.add(create(JSON.mappify(obj)).toString());
             }
         } else {
-            returnData.add(create(JSON.mappify(o)));
+            returnData.add(create(JSON.mappify(o)).toString());
         }
         Message message = new Message(Channel.create, returnData, requestId);
         send(message);

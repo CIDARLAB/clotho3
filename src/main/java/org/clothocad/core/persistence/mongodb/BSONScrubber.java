@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.core.persistence.Replace;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class BSONScrubber {
                 output.put(keyString, input.get(key));
                 //transform references to just uuid
             } else if (extractReferenceId(input.get(key)) != null) {
-                output.put(keyString, extractReferenceId(input.get(key)));
+                output.put(keyString, extractReferenceId(input.get(key)).toString());
             } 
             //schema field
             else {
@@ -99,6 +100,10 @@ public class BSONScrubber {
             return scrub((Map) input, classHints);
         } else if (input instanceof List) {
             return scrub((List) input, classHints);
+        } else if (input instanceof DBRef){
+            return ((DBRef) input).getId().toString();
+        } else if (input instanceof ObjectId){
+            return (input.toString());
         }
         logger.warn("Non-basic, non-Map, non-List object: {}", input);
         return input;
