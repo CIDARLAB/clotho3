@@ -1,6 +1,6 @@
 <div ng-controller="PlasmidCtrl" class="container">
     <div class="row">
-    <div class="span8">
+    <div class="span7">
         <h3>
             Sequence
         </h3>
@@ -9,15 +9,16 @@
         </div>
 
     </div>
-    <div class="span4">
+    <div class="span5">
         <h3>Features
-            <button class="btn btn-small" ng-click="showAddForm()" ng-hide="addForm">Add Feature</button>
+            <div class="btn-group">
+                <button class="btn btn-small" ng-click="showAddForm()" ng-disabled="addForm">Add Feature</button>
+                <button class="btn btn-small" ng-click="toggleActive(features, true)">Active</button>
+                <button class="btn btn-small" ng-click="toggleActive(features)">Toggle All</button>
+                <button class="btn btn-small" ng-click="toggleActive(features, false)">Inactive</button>
+            </div>
         </h3>
-        <div class="btn-group" style="padding: 5px 0 15px">
-            <button class="btn" ng-click="toggleActive(features, true)">Active</button>
-            <button class="btn" ng-click="toggleActive(features)">Toggle All</button>
-            <button class="btn" ng-click="toggleActive(features, false)">Inactive</button>
-        </div>
+
         <form novalidate class="well" ng-init="new = emptyFeat()" ng-show="addForm">
             <div class="row-fluid" style="">
                 <input type="text" class="span12" placeholder="Feature Name" ng-model="new.label">
@@ -35,7 +36,8 @@
                     <button class="add-on" ng-click="new.css.background = randomColor()" alt="Random" ng-disabled="new.css.color" style="height: inherit"><i class="icon-question-sign"></i></button>
                 </div>
 
-                    <button class="btn pull-right" ng-click="addFeature(new);" ng-disabled="!featureValid(new)">Add Feature</button>
+                <button class="btn btn-warning pull-left" ng-click="cancelAdd()">Cancel</button>
+                <button class="btn pull-right" ng-click="addFeature(new)" ng-disabled="!featureValid(new)">Add Feature</button>
             </div>
         </form>
         <form novalidate class="well" ng-show="editForm">
@@ -55,6 +57,7 @@
                     <button class="add-on" ng-click="editFeat.css.background = randomColor()" alt="Random" ng-disabled="editFeat.css.color" style="height: inherit"><i class="icon-question-sign"></i></button>
                 </div>
 
+                <button class="btn btn-warning pull-left" ng-click="cancelEdit(editFeat)">Cancel</button>
                 <button class="btn pull-right" ng-click="saveEditFeature(editFeat);" ng-disabled="!featureValid(editFeat)">Save Feature</button>
             </div>
         </form>

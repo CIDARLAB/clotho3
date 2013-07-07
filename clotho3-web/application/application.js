@@ -91,6 +91,9 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/plasmid', {
                 templateUrl:'plasmid/plasmid-partial.html'
             }).
+            when('/plasmid/:id', {
+                templateUrl:'plasmid/plasmid-partial.html'
+            }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'
             }).
