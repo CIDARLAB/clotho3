@@ -68,8 +68,8 @@ public class ServerAPITest {
 
     @Test
     public void get() {
-        Map<String, Object> result = api.get(ids.get(0));
-        //assertEquals(result, result);
+        Map<String, Object> result = api.get(ids.get(2));
+    new ObjectId(((List)result.get("composition")).get(0).toString());
 
     }
 

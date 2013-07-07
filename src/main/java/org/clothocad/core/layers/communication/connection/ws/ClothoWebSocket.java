@@ -25,11 +25,7 @@ public class ClothoWebSocket
 	
 	@Override
 	public void onClose(int closeCode, String message) {
-	}
-
-	public void sendMessage(String data) throws IOException {
-//		System.out.println("[ClothoWebSocket.sendMessage] -> "+data);		
-		connection.sendMessage(data);
+            
 	}
 
     @Override
