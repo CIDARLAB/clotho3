@@ -1,9 +1,9 @@
 {
     "text" : "A Second Command",
-    "command_native":"clotho.run('function_id123', 'plasmid_id1256');",
+    "command_native":"clotho.run('817924532', 'plasmid_id1256');",
     "command_object":{
         "channel":"run",
-        "function_id":"function_id123",
+        "function_id":"817924532",
         "args":"['plasmid_id1256']"
     },
     "sharables" : [

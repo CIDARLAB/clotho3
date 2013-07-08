@@ -56,6 +56,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
 
                     var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
                     Searchbar.setQuery(current.scope().item);
+                    $scope.display.detail(current.scope().item.uuid);
                     current.addClass('active');
                 }
             };
@@ -66,6 +67,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                         $scope.currentSelected -= 1;
                     var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
                     Searchbar.setQuery(current.scope().item);
+                    $scope.display.detail(current.scope().item.uuid);
                     current.addClass('active');
                 }
             };

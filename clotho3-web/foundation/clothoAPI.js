@@ -643,21 +643,23 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.searchbar.emit('autocomplete', packaged);
     };
     var autocompleteDetail = function(uuid) {
-        //check the collector first
-        if (Collector.hasItem('detail_'+uuid)) {
-            return Collector.retrieveModel('detail_'+uuid);
-        }
 
         var deferred = $q.defer();
-        var packaged = {
-            "uuid" : uuid
-        };
-        fn.searchbar.emit('autocompleteDetail', packaged);
+        //check the collector first
+        if (Collector.hasItem('detail_'+uuid)) {
+            deferred.resolve(Collector.retrieveModel('detail_'+uuid));
+        } else {
+            var packaged = {
+                "uuid" : uuid
+            };
+            fn.searchbar.emit('autocompleteDetail', packaged);
 
-        //testing
-        PubSub.once('autocompleteDetail_'+uuid, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data));
-        }, '$clotho');
+            //testing
+            //PubSub.once('autocompleteDetail_'+'function_id123', function(data) {
+            PubSub.once('autocompleteDetail_'+uuid, function(data) {
+                $rootScope.$safeApply(deferred.resolve(data));
+            }, '$clotho');
+        }
 
         return deferred.promise;
     };
