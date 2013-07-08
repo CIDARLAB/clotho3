@@ -594,9 +594,9 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                     $document.bind('mouseup', function() {
                         //todo - limit to element
                         if (typeof $window.getSelection != "undefined") {
-                            scope.$apply(scope.textSelected = !!$window.getSelection().toString());
+                            scope.$apply(scope.textSelected = !!$window.getSelection().toString() && element.has($window.getSelection().anchorNode).length);
                         } else if (typeof $document.selection != "undefined" && $document.selection.type == "Text") {
-                            scope.$apply(scope.textSelected = !!$document.selection.createRange().text);
+                            scope.$apply(scope.textSelected = !!$document.selection.createRange().text && element.has($window.getSelection().anchorNode).length);
                         }
                     });
                 }

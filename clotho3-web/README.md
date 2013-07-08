@@ -57,7 +57,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - plasmid
     - highlight in element only for annotation active
-    - check reverse direction for features
     - (?) ui-mask for position -- probably rewrite so smaller
 
 
