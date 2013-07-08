@@ -602,9 +602,10 @@ io.sockets.on('connection', function (socket) {
             // save to server collector
             collector[uuid] = data;
 
+            /*
             socket.send(api.pack.api_wrap('collect',
                 api.pack.collect(uuid, "json", data)
-            ));
+            ));*/
         }
     };
     api.api.show_old = function(data) {
