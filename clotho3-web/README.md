@@ -58,13 +58,14 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - plasmid
     - highlight in element only for annotation active
     - check reverse direction for features
-    - (?) ui-mask for position
+    - (?) ui-mask for position -- probably rewrite so smaller
 
 
 - search bar
     - keypress down -> results
 
-- $keypress.suspend() e.g. in trail mode when using search bar
+
+- $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
 
 
 - allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
@@ -138,16 +139,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 UI STUFF
 - sharable modal --- make it actually share
 - services to write / borrow
-    - tooltip + ability to lazy-define
     - dropdown (bootstrap)
         - use for searchbar help
     - progressBar (bootstrap)
     - scrollTo (probably easy to write) / scrollfix (see angular ui utils)
-- jQuery $.has() replacement ??
-    - used in: clickOutside directive, display_simple
-        - especially for using in searchbar so jQuery not necessary dependency
-    - consider: asynchronous jqlite extension??? i.e. jQuery functions needed not included in angular jqLite
-        - like $position
 - ANIMATION
     - see https://github.com/daneden/animate.css
 
@@ -168,6 +163,8 @@ UI STUFF
             - http://angular-ui.github.io/bootstrap/
 
 
+
+
 - TESTING
     - write unit tests, etc.
 
@@ -175,12 +172,7 @@ UI STUFF
 
 
 - Clotho API
-    - edit() -- pass in routeParam to automatically start in edit
-    - get synchronous Clotho.get() working (not already in collector)
-        - look into angular $resource -- works differently than promises
-            - http://www.bennadel.com/blog/2432-Applying-A-Cached-Response-To-An-AngularJS-Resource.htm
-        - also add a notify() sort of thing -- a pre-resolve of sorts:
-            - http://www.bennadel.com/blog/2431-Resolving-An-AngularJS-Deferred-Object-Twice-With-DeferredWithUpdate-js.htm
+    - once REST works, write synchronous Clotho.get()
     - combine watch and watch2 - check for function vs. obj and field
         - try using angular.extend()
 

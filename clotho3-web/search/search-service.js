@@ -171,7 +171,8 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         display : display,
         log : log,
         setQuery : function(item, $event) {
-            $event.preventDefault();
+            if (typeof $event != 'undefined')
+                $event.preventDefault();
             if (item.type != 'command') {
                 display.undetail();
             }

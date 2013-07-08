@@ -178,6 +178,8 @@ Application.Interface.factory('keypressHelper', ['$parse', '$document', function
         // Check only matching of pressed keys one of the conditions
         var handler = function (event) {
 
+            //console.log(event);
+
             // No need to do that inside the cycle
             var metaPressed = !!(event.metaKey && !event.ctrlKey);
             var altPressed = !!event.altKey;

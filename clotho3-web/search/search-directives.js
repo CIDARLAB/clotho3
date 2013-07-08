@@ -30,12 +30,45 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             $scope.$watch('display.autocomplete', function(newValue, oldValue) {
                 if (!!newValue) {
                     //console.log('inactivating autocomplete clickOutside');
-                    $scope.$broadcast('$event:$active', $scope.$id)
+                    $scope.$broadcast('clickOutside:$active', $scope.$id)
                 } else {
                     //console.log('inactivating autocomplete clickOutside');
-                    $scope.$broadcast('$event:$inactive', $scope.$id);
+                    $scope.$broadcast('clickOutside:$inactive', $scope.$id);
                 }
             });
+
+            //todo - fix ugly jQuery hacks
+            $scope.currentSelected = 1;
+            $scope.selectAutoNext = function() {
+                if (!$scope.display.autocomplete) {
+                    if ($scope.display.query) {
+                        $scope.display.show('autocomplete');
+                        $scope.currentSelected = 1;
+                    }
+                }
+
+
+                if ($scope.autocomplete.autocompletions.length) {
+                    $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
+
+                    if ($scope.currentSelected <= $scope.autocomplete.autocompletions.length)
+                        $scope.currentSelected += 1;
+
+                    var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
+                    Searchbar.setQuery(current.scope().item);
+                    current.addClass('active');
+                }
+            };
+            $scope.selectAutoPrev = function() {
+                if ($scope.display.autocomplete) {
+                    $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
+                    if ($scope.currentSelected > 1)
+                        $scope.currentSelected -= 1;
+                    var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
+                    Searchbar.setQuery(current.scope().item);
+                    current.addClass('active');
+                }
+            };
 
             $scope.fullPageLog = function() {
                 $location.path("/terminal");
@@ -69,13 +102,6 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             $scope.toggleTooltips = function() {
                 console.log("tooltips");
             };
-
-            //testing
-
-            $scope.sayTest = function() {
-                Clotho.say('This is a test message');
-            }
-
 
         },
         link: function (scope, element, attrs, controller) {

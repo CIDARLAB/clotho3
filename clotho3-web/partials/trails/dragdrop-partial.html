@@ -4,7 +4,7 @@
     <p>{{quiz.question}}</p>
     <div class="row-fluid">
         <ul class="thumbnails">
-            <li ui-drag="choice in quiz.options" class="span3">
+            <li draggable="true" ng-repeat="choice in quiz.options" class="span3">
                 <a class="thumbnail text-center" ng-click="quiz.answer = choice.value">
                     <img draggable="false" ng-if="choice.img_url" ng-src="{{choice.img_url}}" alt="{{choice.value}}" onerror="this.src='{{base64icon}}'" style="width: 100%;">
                     <p ng-if="choice.value">{{choice.value}}</p>

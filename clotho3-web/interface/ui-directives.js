@@ -57,14 +57,14 @@ Application.Interface.directive('clickOutside', ['$document', '$parse', function
         });
 
         //custom events
-        scope.$on("$event:$active", function(event, id) {
+        scope.$on("clickOutside:$active", function(event, id) {
             if (scope.$id == id) {
                 event.preventDefault();
                 $document.bind('click', handler);
             }
         });
 
-        scope.$on("$event:$inactive", function(event, id) {
+        scope.$on("clickOutside:$inactive", function(event, id) {
             if (scope.$id == id) {
                 event.preventDefault();
                 $document.unbind('click', handler);
@@ -651,120 +651,244 @@ Application.Interface.directive( 'tooltipHtmlUnsafe', [ '$tooltip', function ( $
 
 Application.Interface.directive('uiDrag', function ($document, $compile) {
 
-        var dragValue,
-            dragOrigin,
-            floaty;
+    var dragValue,
+        dragOrigin,
+        floaty;
 
-        var drag = function (ev) {
-            var x = ev.clientX,
-                y = ev.clientY;
+    var drag = function (ev) {
+        var x = ev.clientX,
+            y = ev.clientY;
 
-            floaty.css('left', x + 10 + 'px');
-            floaty.css('top', y + 10 + 'px');
-        };
+        floaty.css('left', x + 10 + 'px');
+        floaty.css('top', y + 10 + 'px');
+    };
 
-        // todo - use class unselectable (in base.css)
-        var disableSelect = function () {
-            angular.element(document.body).addClass('unselectable');
-        };
+    // todo - use class unselectable (in base.css)
+    var disableSelect = function () {
+        angular.element(document.body).addClass('unselectable');
+    };
 
-        var enableSelect = function () {
-            angular.element(document.body).removeClass('unselectable');
-        };
+    var enableSelect = function () {
+        angular.element(document.body).removeClass('unselectable');
+    };
 
-        return {
-            restrict: 'A',
-            terminal: true,
-            link: function (scope, elt, attr) {
+    return {
+        restrict: 'A',
+        terminal: true,
+        link: function (scope, elt, attr) {
 
-                // get the `thing in things` expression
-                console.log(attr);
-                console.log(elt);
-                var expression = attr.uiDrag;
-                var match = expression.match(/^\s*(.+)\s+in\s+(.*?)\s*$/);
-                if (!match) {
-                    throw Error("Expected ngRepeat in form of '_item_ in _collection_' but got '" +
-                        expression + "'.");
-                }
-                var lhs = match[1];
-                var rhs = match[2];
+            // get the `thing in things` expression
+            console.log(attr);
+            console.log(elt);
+            var expression = attr.uiDrag;
+            var match = expression.match(/^\s*(.+)\s+in\s+(.*?)\s*$/);
+            if (!match) {
+                throw Error("Expected ngRepeat in form of '_item_ in _collection_' but got '" +
+                    expression + "'.");
+            }
+            var lhs = match[1];
+            var rhs = match[2];
 
-                //todo -this sucks - rewrite
-                // pull out the template to re-use. Improvised ng-transclude.
-                var template = elt.html();
-                elt.html('');
-                var child = angular.element('<div ng-repeat="' + lhs + ' in ' + rhs + '">' + template + '</div>');
-                elt.append(child);
+            //todo -this sucks - rewrite
+            // pull out the template to re-use. Improvised ng-transclude.
+            var template = elt.html();
+            elt.html('');
+            var child = angular.element('<div ng-repeat="' + lhs + ' in ' + rhs + '">' + template + '</div>');
+            elt.append(child);
 
-                //copy over class
-                elt.removeAttr('class');
-                child.addClass(attr.class);
+            $compile(child)(scope);
 
-                $compile(child)(scope);
-
-                var spawnFloaty = function () {
-                    scope.$apply(function () {
-                        floaty = angular.element('<div style="position: fixed;">' + template + '</div>');
-                        var floatyScope = scope.$new();
-                        floatyScope[lhs] = dragValue;
-                        $compile(floaty)(floatyScope);
-                        angular.element(document.body).append(floaty);
-                    });
-
-                    $document.bind('mousemove', drag);
-                };
-
-                var killFloaty = function () {
-                    $document.unbind('mousemove', drag);
-                    if (floaty) {
-                        floaty.remove();
-                        floaty = null;
-                    }
-                };
-
-                elt.bind('mousedown', function (ev) {
-                    if (dragValue) {
-                        return;
-                    }
-                    scope.$apply(function () {
-                        var targetScope = angular.element(ev.target).scope();
-                        var value = dragValue = targetScope[lhs];
-                        //console.log(value);
-                        var list = scope.$eval(rhs);
-                        dragOrigin = list;
-                        list.splice(list.indexOf(value), 1);
-                    });
-                    spawnFloaty();
-                    drag(ev);
-                    disableSelect();
-
+            var spawnFloaty = function () {
+                scope.$apply(function () {
+                    floaty = angular.element('<div style="position: fixed;">' + template + '</div>');
+                    var floatyScope = scope.$new();
+                    floatyScope[lhs] = dragValue;
+                    $compile(floaty)(floatyScope);
+                    angular.element(document.body).append(floaty);
                 });
 
-                // handle something being dropped here
-                elt.bind('mouseup', function (ev) {
-                    if (dragValue) {
-                        scope.$apply(function () {
-                            var list = scope.$eval(rhs);
-                            list.push(dragValue);
-                            dragValue = dragOrigin = null;
-                        });
-                    }
+                $document.bind('mousemove', drag);
+            };
+
+            var killFloaty = function () {
+                $document.unbind('mousemove', drag);
+                if (floaty) {
+                    floaty.remove();
+                    floaty = null;
+                }
+            };
+
+            elt.bind('mousedown', function (ev) {
+                if (dragValue) {
+                    return;
+                }
+                scope.$apply(function () {
+                    var targetScope = angular.element(ev.target).scope();
+                    var value = dragValue = targetScope[lhs];
+                    //console.log(value);
+                    var list = scope.$eval(rhs);
+                    dragOrigin = list;
+                    list.splice(list.indexOf(value), 1);
+                });
+                disableSelect();
+                spawnFloaty();
+                drag(ev);
+
+            });
+
+            // handle something being dropped here
+            elt.bind('mouseup', function (ev) {
+                if (dragValue) {
+                    scope.$apply(function () {
+                        var list = scope.$eval(rhs);
+                        list.push(dragValue);
+                        dragValue = dragOrigin = null;
+                    });
+                }
+                enableSelect();
+                killFloaty();
+            });
+
+            // else, the event bubbles up to document
+            $document.bind('mouseup', function (ev) {
+                if (dragValue) {
+                    scope.$apply(function () {
+                        dragOrigin.push(dragValue);
+                        dragValue = dragOrigin = null;
+                    });
                     enableSelect();
                     killFloaty();
-                });
+                }
+            });
 
-                // else, the event bubbles up to document
-                $document.bind('mouseup', function (ev) {
-                    if (dragValue) {
-                        scope.$apply(function () {
-                            dragOrigin.push(dragValue);
-                            dragValue = dragOrigin = null;
-                        });
+        }
+    };
+});
+
+//note - 'draggable' is an HTML5 term - will be true or false when used natively - should use another attr
+//see http://jsfiddle.net/ADukg/2516/
+Application.Interface.directive('uiDraggable', ['$compile', '$document', function($compile, $document) {
+
+    var dragEl,
+        dragOrigin,
+        originalPositionCss;
+
+    var drag = function (ev) {
+        var x = ev.clientX,
+            y = ev.clientY;
+
+        dragEl.css('left', x + 10 + 'px');
+        dragEl.css('top', y + 10 + 'px');
+    };
+
+    // todo - use class unselectable (in base.css)?
+    var disableSelect = function () {
+        angular.element(document.body).css({
+            '-moz-user-select': '-moz-none',
+            '-khtml-user-select': 'none',
+            '-webkit-user-select': 'none',
+            '-ms-user-select': 'none',
+            'user-select': 'none'
+        });
+    };
+
+    var enableSelect = function () {
+        angular.element(document.body).css({
+            '-moz-user-select': '',
+            '-khtml-user-select': '',
+            '-webkit-user-select': '',
+            '-ms-user-select': '',
+            'user-select': ''
+        });
+    };
+
+    return {
+        restrict: 'A',
+        terminal: false,
+        link: function (scope, element, attrs) {
+            console.log(element);
+
+            var targets = $('body').find(attrs.target);
+            var template = element.html();
+            //todo - use
+            originalPositionCss = element.css('position');
+
+
+            //todo - check for siblings after
+            var saveLocation = function(element) {
+                var loc = {};
+                loc.parent = element.parent();
+                return(loc);
+            };
+
+            var restoreLocation = function(loc) {
+                if (angular.isUndefined(loc) || loc == null ||loc == {}) return;
+
+                console.log('restoring');
+
+                (loc.parent).prepend(dragEl);
+            };
+
+
+            dragOrigin = saveLocation(element);
+
+
+            var spawnFloaty = function () {
+                element.css({'position' : 'fixed'});
+                $document.bind('mousemove', drag);
+                console.log(drag);
+            };
+
+            var killFloaty = function () {
+                $document.unbind('mousemove', drag);
+                console.log(drag);
+                element.css({position: 'static'});
+                restoreLocation(dragOrigin);
+            };
+
+            //events
+
+            element.bind('mousedown', function (ev) {
+                if (dragEl) {
+                    return;
+                }
+
+                scope.$apply(function() {
+                    dragEl = element;
+                    disableSelect();
+                    spawnFloaty();
+                    drag(ev);
+                });
+            });
+
+            // handle something being dropped here
+            // todo - rewrite for target
+            element.bind('mouseup', function (ev) {
+                console.log('el mouseup');
+                if (dragEl) {
+                    console.log('el mouseup - yup dragvalue');
+                    scope.$apply(function() {
                         enableSelect();
                         killFloaty();
-                    }
-                });
+                        dragEl = dragOrigin = null;
+                    });
+                }
 
-            }
-        };
-    });
+            });
+
+            // else, the event bubbles up to document
+            $document.bind('mouseup', function (ev) {
+                console.log('ducment call');
+                if (dragEl) {
+                    console.log('mouseup doc action');
+                    scope.$apply(function () {
+                        enableSelect();
+                        killFloaty();
+                        dragEl = dragOrigin = null;
+                    });
+
+                }
+            });
+        }
+    }
+}]);
