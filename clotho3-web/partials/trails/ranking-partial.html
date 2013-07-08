@@ -4,7 +4,7 @@
     <p>{{quiz.question}}</p>
 
     <ol>
-        <li ng-repeat="choice in quiz.options">
+        <li ng-repeat="choice in quiz.options" draggable="true">
             <p><button class="btn">{{choice}}</button>
         </li>
     </ol>
