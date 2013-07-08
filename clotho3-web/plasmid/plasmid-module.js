@@ -193,7 +193,9 @@ Application.Plasmid.service('Plasmid', ['$window', '$timeout', function($window,
         //console.log('adding');
 
         if (!feat.label) {
-            feat.label = "New Feature" + Date.now();
+            var milli = new Date;
+            milli = milli.getMilliseconds();
+            feat.label = "Feature " + milli;
         }
 
         if (feat.match) {
@@ -493,7 +495,6 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                         'min-width': '100%',
                         'overflow': 'hidden',
                         'box-sizing': 'border-box',
-                        '-moz-padding-start': '1px',
                         'min-height': '22px',
                         'position': 'relative'
                     });
@@ -508,9 +509,6 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
 
                     //for $pristine etc. access in template
                     scope.ngModel = ngModel;
-                    //ngModel.$setViewValue(scope.sequence);
-
-                    //console.log(scope);
 
                     function genFiltered (text) {
                         //console.log(ngModel.$viewValue);
@@ -661,8 +659,6 @@ Application.Plasmid.filter('features', [function() {
                 } else {
                     if (feat.match) {
 
-                        //todo - check reverse direction too - note rev. direction
-
                         for (var index, offset = 0, search = angular.lowercase(text);
                              (index = search.indexOf(angular.lowercase(feat.match), offset)) > -1;
                              offset = index + feat.match.length
@@ -679,6 +675,45 @@ Application.Plasmid.filter('features', [function() {
                                 locations[end] = {"start" : [], "end" : [featIndex]};
 
                         }
+
+                        //check reverse direction too....
+
+                        var reverseMatch = angular.lowercase(feat.match);
+                        reverseMatch = reverseMatch.replace(/[actg]/g, function (m) {
+                            return {
+                                'a': 't',
+                                'c': 'g',
+                                'g': 'c',
+                                't': 'a'
+                            }[m];
+                        });
+                        //if reverse complementary, don't check again
+
+                        console.log(reverseMatch, feat.match);
+                        
+                        if (reverseMatch == angular.lowercase(feat.match).split("").reverse().join("")){
+                        } else {
+                            var reverseSeq = (angular.lowercase(text)).split("").reverse().join("");
+
+                            for (var index, offset = 0, search = reverseSeq;
+                                 (index = search.indexOf(reverseMatch, offset)) > -1;
+                                 offset = index + feat.match.length
+                                ) {
+                                //todo - better logic?
+                                //start
+                                var end = reverseSeq.length - index;
+                                locations[end] ?
+                                    locations[end]['end'].push(featIndex) :
+                                    locations[end] = {"start" : [], "end" : [featIndex]};
+                                //end
+                                var start = end - feat.match.length;
+                                locations[start] ?
+                                    locations[start]['start'].push(featIndex) :
+                                    locations[start] = {"start" : [featIndex], "end" : []};
+
+                            }
+                        }
+
                     } else {
                         //start
                         locations[feat.pos.start] ?

@@ -61,9 +61,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - (?) ui-mask for position -- probably rewrite so smaller
 
 
-- search bar
-    - keypress down -> results
-
 
 - $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
 
@@ -73,6 +70,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - draggable elements (within angular -- sortable)
+
+
 
 - clarify $dialog -- in controllers when dialog and when $dialog --- make fixes
 
