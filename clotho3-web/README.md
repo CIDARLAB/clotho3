@@ -56,12 +56,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - editor side content
 
 - plasmid
-    - highlight in element only for annotation active
     - (?) ui-mask for position -- probably rewrite so smaller
 
 
-
 - $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
+
 
 
 - allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
