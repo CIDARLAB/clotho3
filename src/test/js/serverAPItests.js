@@ -91,6 +91,8 @@ testThroughAsync("query CompositeParts",
             ok(data.composition[0].substring);
         });
 
+
+
 /*
  * TODO: some kind of promise test
  testThroughAsync("create",
@@ -117,3 +119,21 @@ asyncTest("create", function () {
         })
     };
 });
+
+asyncTest("create with schema", function () {
+    var socket = getSocket(clothosocket);
+    socket.onopen = function () {
+        send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"BasicPart"}, "8"), socket, function (data) {
+            send(new Message("get", "Created Part 2", "9"), socket, function (data2) {
+                ok(data2.hasOwnProperty("schema"));
+                ok(!(data2.hasOwnProperty("className")));
+                //tear down created data
+                send(new Message("destroy", "Created Part 2", "10"), socket, function(data){
+                    start();
+                });
+
+            });
+        })
+    };
+});
+

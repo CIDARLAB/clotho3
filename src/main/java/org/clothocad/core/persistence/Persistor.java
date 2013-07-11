@@ -164,10 +164,18 @@ public class Persistor{
             data.put("_id", id);
         }
         
+        //XXX: set up through refs instead
         if (data.containsKey("schema")){
             Object schema = data.get("schema");
+            String resolvedSchemaName;
+            try{
+                resolvedSchemaName = get(BuiltInSchema.class,resolveSelector(schema.toString(), true)).getBinaryName();
+            }
+            catch (EntityNotFoundException e){
+                resolvedSchemaName = schema.toString();
+            }
             data.remove("schema");
-            data.put("className", schema);
+            data.put("className", resolvedSchemaName);
         }
         
         
@@ -432,7 +440,7 @@ public class Persistor{
 
         for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
             Map<String, Object> query = new HashMap<>();
-            query.put("_binaryName", c.getCanonicalName());
+            query.put("binaryName", c.getCanonicalName());
             if (connection.getAsBSON(query).isEmpty()) {
                 save(new BuiltInSchema(c));
             } 

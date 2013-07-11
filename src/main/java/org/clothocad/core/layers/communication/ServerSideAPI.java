@@ -406,15 +406,15 @@ public final class ServerSideAPI {
         //list of selectors?
         if (o instanceof List) {
             for (Object obj : (List) o) {
-                destroy(persistor.resolveSelector(obj.toString(), false));
+                destroy(persistor.resolveSelector(obj.toString(), false), requestId);
             }
         } else {
-            destroy(persistor.resolveSelector(o.toString(), false));
+            destroy(persistor.resolveSelector(o.toString(), false), requestId);
         }
     }
 
     //JCA:  as of 6/9/2013 works
-    public final void destroy(ObjectId id) {
+    public final void destroy(ObjectId id, String requestId) {
         try {
             try {
                 persistor.delete(id);
@@ -422,6 +422,9 @@ public final class ServerSideAPI {
                 say(e.getMessage(), Severity.FAILURE);
             }
             say(String.format("Destroyed object #%s", id.toString()), Severity.SUCCESS);
+            //XXX: convert this to same pattern as get
+            Message message = new Message(Channel.destroy, id, requestId);
+            send(message);
         } catch (Exception e) {
             logAndSayError(String.format("Error destroying %s: %s", id.toString(), e.getMessage()), e);
         }

@@ -29,12 +29,10 @@ public class TestUtils {
     
     private static Injector injector;
 
-    static {
-        injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
-
-    }
-
     public static <T> T getA(Class<T> type) {
+        if (injector == null){
+            injector = getDefaultTestInjector();
+        }
         return injector.getInstance(type);
     }
     

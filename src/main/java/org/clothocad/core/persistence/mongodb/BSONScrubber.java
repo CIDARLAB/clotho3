@@ -57,6 +57,11 @@ public class BSONScrubber {
         for (String key : input.keySet()) {
             String keyString;
             if (excludes.contains(key)) {
+                if ("className".equals(key)){
+                    //XXX: seriously, make schemas ref based (except for inferred schemas)
+                    //more irresponsible demo hackery
+                    output.put("schema", getSchemaName(input.get("className").toString()));
+                }
                 continue;
             }
             if (key.startsWith(ClothoMappedField.VIRTUAL_PREFIX)) {
@@ -179,6 +184,16 @@ public class BSONScrubber {
             return Arrays.asList((String[]) input);
         } else {
             throw new IllegalArgumentException("Could not convert input to Collection");
+        }
+    }
+
+    private Object getSchemaName(String className) {
+        //XXX: 7 lines of utter bullshit coming up...
+        if (className.startsWith("org.eugene")) return className;
+        
+        else {
+            String[] nameParts = className.split("\\.");
+            return nameParts[nameParts.length-1];
         }
     }
 }
