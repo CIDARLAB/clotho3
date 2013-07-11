@@ -40,6 +40,7 @@
                     </includeLibsInDir>
                 </configuration>
             </plugin>
+            <!-- TODO: generate war for clotho server, use jetty plugin for start/stop integration -->
         </plugins>
     </build>
     
@@ -287,6 +288,28 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jbei</groupId>
+            <artifactId>gd-ice</artifactId>
+            <version>3.3.5-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.12</version>
+        </dependency>
+        <dependency>
+            <artifactId>xml-apis</artifactId>
+            <groupId>xml-apis</groupId>
+            <type>jar</type>
+            <version>1.4.01</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
         </dependency>
     </dependencies>
 	
