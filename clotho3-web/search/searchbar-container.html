@@ -4,7 +4,7 @@
         <div id="searchBarForm" class="navbar-form pull-left">
 
             <div class="input-append">
-                <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit()'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()'}">
+                <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit()'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
                 <button class="btn" id="searchBarSubmit" ng-click="submit(query)">Submit</button>
             </div>
 

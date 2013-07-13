@@ -38,21 +38,23 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             });
 
             //todo - fix ugly jQuery hacks
-            $scope.currentSelected = 1;
+            $scope.currentSelected = 1; //assumes that a.close is present and is first child
             $scope.selectAutoNext = function() {
-                if (!$scope.display.autocomplete) {
-                    if ($scope.display.query) {
-                        $scope.display.show('autocomplete');
-                        $scope.currentSelected = 1;
-                    }
+                if (!$scope.display.autocomplete && $scope.display.query) {
+                    $scope.display.show('autocomplete');
+                    $scope.currentSelected = 1;
                 }
 
 
-                if ($scope.autocomplete.autocompletions.length) {
+                if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
+                    console.log($scope.currentSelected);
                     $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
 
                     if ($scope.currentSelected <= $scope.autocomplete.autocompletions.length)
                         $scope.currentSelected += 1;
+
+                    console.log($scope.currentSelected);
+
 
                     var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
                     Searchbar.setQuery(current.scope().item);
@@ -61,10 +63,15 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                 }
             };
             $scope.selectAutoPrev = function() {
-                if ($scope.display.autocomplete) {
+                if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
+                    console.log($scope.currentSelected);
+
                     $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
                     if ($scope.currentSelected > 1)
                         $scope.currentSelected -= 1;
+
+                    console.log($scope.currentSelected);
+
                     var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
                     Searchbar.setQuery(current.scope().item);
                     $scope.display.detail(current.scope().item.uuid);

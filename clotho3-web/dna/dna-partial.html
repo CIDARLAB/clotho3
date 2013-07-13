@@ -1,0 +1,52 @@
+<div class="container" ng-controller="dnaCtrl">
+    <div class="row">
+        <form name="dnaPlayground" class="span12 form-horizontal">
+
+            <div class="control-group">
+                <label class="control-label" for="seq">Sequence</label>
+                <div class="controls">
+                    <input type="text" id="seq" placeholder="Sequence" ng-model="sequence">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="complement">Complement</label>
+                <div class="controls">
+                    <input type="text" id="complement" placeholder="Complement" ng-model="sequence" dna-complement>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="reverse">Reverse</label>
+                <div class="controls">
+                    <input type="text" id="reverse" placeholder="Reverse" ng-model="sequence" dna-reverse>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="revcomp">Revcomp</label>
+                <div class="controls">
+                    <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="transcribe">Transcribe</label>
+                <div class="controls">
+                    <input type="text" id="transcribe" placeholder="Transcribe" ng-model="sequence" dna-transcribe>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="translate">Translate</label>
+                <div class="controls">
+                    <input type="text" id="translate" placeholder="Translate" ng-model="sequence" dna-translate>
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+
+</div>

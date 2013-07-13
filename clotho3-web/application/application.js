@@ -16,6 +16,8 @@ Application.Interface = angular.module('clotho.interface', ['clotho.core']);
 Application.Extensions = angular.module('clotho.extensions', ['clotho.core']);
 Application.Widgets = angular.module('clotho.widgets', ['clotho.core']);
 
+Application.Dna = angular.module('clotho.dna', ['clotho.core']);
+
 Application.Browser = angular.module('clotho.browser', ['clotho.core']);
 Application.Chat = angular.module('clotho.chat', ['clotho.core']);
 Application.Dynamic = angular.module('clotho.dynamic', ['clotho.core']);
@@ -51,7 +53,7 @@ Application.Foundation = angular.module('clotho.core', [])
         };
     }]);
 
-angular.module('clothoPackage', ['clotho.browser', 'clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
+angular.module('clothoPackage', ['clotho.browser', 'clotho.core', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
@@ -93,6 +95,9 @@ angular.module('clothoRoot', ['clothoPackage']).
             }).
             when('/plasmid/:id', {
                 templateUrl:'plasmid/plasmid-partial.html'
+            }).
+            when('/dna', {
+                templateUrl:'dna/dna-partial.html'
             }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'

@@ -53,10 +53,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- editor side content
 
-- plasmid
-    - (?) ui-mask for position -- probably rewrite so smaller
+- see if can define controller inline with partial (could namespace by uuid)
+
 
 
 - $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
@@ -67,7 +66,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-- draggable elements (within angular -- sortable)
+- draggable elements (within angular -- also sortable)
 
 
 
@@ -99,8 +98,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - Search Bar
-    - keystrokes
-        - down -> autocompletes
     - reset autocomplete detail when changing
     - animate showing + hiding -- use $animate
     - autocomplete
