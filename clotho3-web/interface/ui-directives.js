@@ -107,6 +107,93 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
     }
 }]);
 
+/*****************
+text caret movement
+******************/
+
+//future
+
+
+/***********************
+ * HTML5 EXTENSIONS
+***********************/
+
+// todo - handle val() if present, default to text()
+
+Application.Interface.directive('contenteditable', [function() {
+
+    //moves cursor to end of contenteditable element -- not textarea (but those should be automatic)
+    //kinda a hack, but gives same behavior as input
+    //future - get cursor location, and reset to there rather than end
+    //note - expects DOM element, not jQuery
+    function setEndOfContenteditable(contentEditableElement)
+    {
+        var range,selection;
+        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        {
+            range = document.createRange();
+            range.selectNodeContents(contentEditableElement);
+            range.collapse(false);
+            selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+        else if(document.selection)//IE 8 and lower
+        {
+            range = document.body.createTextRange();
+            range.moveToElementText(contentEditableElement);
+            range.collapse(false);
+            range.select();
+        }
+    }
+
+    return {
+        require: '?ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            if(!ctrl) return;
+
+            // view -> model
+            elm.bind('keyup', function(event) {
+                var key = event.keyCode;
+                if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) return;
+
+                var value = elm.text();
+
+                //testing
+                //console.log("EDITABLE", ctrl.$viewValue, ctrl.$modelValue, value, ctrl.$parsers, ctrl);
+
+                //todo - use parser here, convert &nbsp; to ' '
+                //trim
+                value = (angular.isString(value) ? value.replace(/^\s*/, '').replace(/\s*$/, '') : value);
+
+                if (ctrl.$viewValue != value) {
+                    scope.$apply(function() {
+                        ctrl.$setViewValue(value);
+                        //testing
+                        //console.log("EDITABLE 2", ctrl.$viewValue, ctrl.$modelValue, value, ctrl);
+                        setEndOfContenteditable(elm[0]);
+                    });
+                }
+            });
+
+            //todo - expose
+            function isEmpty(value) {
+                return angular.isUndefined(value) || value === '' || value === null || value !== value;
+            }
+
+            // model -> view
+            ctrl.$render = function() {
+                //if (ctrl.$viewValue != elm.text())
+                    //elm.text(isEmpty(ctrl.$viewValue) ? '' : ctrl.$viewValue);
+                    elm.text(ctrl.$viewValue);
+            };
+
+            // load init value from DOM
+            //elm.text(ctrl.$modelValue);
+        }
+    };
+}]);
+
 /***********************
  BUTTONS
  ***********************/
@@ -191,6 +278,7 @@ Application.Interface.directive('btnCheckbox', function() {
  * Bind one or more handlers to particular keys or their combination
  * @param hash {mixed} keyBindings Can be an object or string where keybinding expression of keys or keys combinations and AngularJS Exspressions are set. Object syntax: "{ keys1: expression1 [, keys2: expression2 [ , ... ]]}". String syntax: ""expression1 on keys1 [ and expression2 on keys2 [ and ... ]]"". Expression is an AngularJS Expression, and key(s) are dash-separated combinations of keys and modifiers (one or many, if any. Order does not matter). Supported modifiers are 'ctrl', 'shift', 'alt' and key can be used either via its keyCode (13 for Return) or name. Named keys are 'backspace', 'tab', 'enter', 'esc', 'space', 'pageup', 'pagedown', 'end', 'home', 'left', 'up', 'right', 'down', 'insert', 'delete', 'period', 'comma'.
  * @example <input ui-keypress="{enter:'x = 1', 'ctrl-shift-space':'foo()', 'shift-13':'bar()'}" /> <input ui-keypress="foo = 2 on ctrl-13 and bar('hello') on shift-esc" />
+ * @note keypress for arrows and some other keys will not work -- use keydown or keyup in that case
  **/
 Application.Interface.directive('uiKeydown', ['keypressHelper', function(keypressHelper){
     return {
@@ -216,17 +304,31 @@ Application.Interface.directive('uiKeyup', ['keypressHelper', function(keypressH
     };
 }]);
 
+//alternative to ng-pattern, which will allow all input but if model not acceptable then not set -- this will not allow invalid values to propagate to model, or be visible in the input field
 Application.Interface.directive('restrictInput', ['$parse', function($parse) {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function(scope, iElement, iAttrs, controller) {
-            scope.$watch(iAttrs.ngModel, function(value) {
-                if (!value) {
-                    return;
+        link: function(scope, iElement, iAttrs, ngModel) {
+            var fn = function(input) {
+                //in function so remains dynamic
+                var regexp = scope.$eval(iAttrs.restrictInput);
+
+                //testing
+                //console.log("RESTRICT", ngModel.$viewValue, ngModel.$modelValue, input, ngModel);
+
+                var transformedInput = input.replace(regexp, '');
+                if (transformedInput != input) {
+                    ngModel.$setViewValue(transformedInput);
+                    ngModel.$render();
+                    //testing
+                    //console.log("RESTRICT 2", ngModel.$viewValue, ngModel.$modelValue, input, ngModel);
+
                 }
-                $parse(iAttrs.ngModel).assign(scope, value.replace(new RegExp(iAttrs.restrict, 'g'), '').replace(/\s+/g, '-'));
-            });
+                return transformedInput;
+            };
+
+            ngModel.$parsers.unshift( fn );
         }
     }
 }]);
@@ -636,7 +738,7 @@ Application.Interface.directive( 'tooltipHtmlUnsafe', [ '$tooltip', function ( $
 }]);
 
 /***************
-    DRAG N DROP
+    DRAG N DROP - work in progress
  ***************/
 
 /*

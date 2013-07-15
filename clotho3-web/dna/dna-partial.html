@@ -2,49 +2,131 @@
     <div class="row">
         <form name="dnaPlayground" class="span12 form-horizontal">
 
-            <div class="control-group">
-                <label class="control-label" for="seq">Sequence</label>
-                <div class="controls">
-                    <input type="text" id="seq" placeholder="Sequence" ng-model="sequence">
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="seq">Sequence</label>
+                    <div class="controls">
+                        <input type="text" id="seq" placeholder="Sequence" ng-model="sequence" restrict-input="DNA.regexps.strip.dna" />
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="seq2">Sequence as Pre</label>
+                    <div class="controls">
+                        <pre id="seq2" placeholder="Sequence" ng-model="sequence" restrict-input="DNA.regexps.strip.dna" contenteditable="true"></pre>
+                    </div>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="complement">Complement</label>
                 <div class="controls">
-                    <input type="text" id="complement" placeholder="Complement" ng-model="sequence" dna-complement>
+                    <input type="text" id="complement" placeholder="Complement" ng-model="sequence" dna-complement disabled>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="reverse">Reverse</label>
                 <div class="controls">
-                    <input type="text" id="reverse" placeholder="Reverse" ng-model="sequence" dna-reverse>
+                    <input type="text" id="reverse" placeholder="Reverse" ng-model="sequence" dna-reverse disabled>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="revcomp">Revcomp</label>
                 <div class="controls">
-                    <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp>
+                    <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp disabled>
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label" for="transcribe">Transcribe</label>
-                <div class="controls">
-                    <input type="text" id="transcribe" placeholder="Transcribe" ng-model="sequence" dna-transcribe>
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="transcribe">Transcribe</label>
+                    <div class="controls">
+                        <input type="text" id="transcribe" placeholder="Transcribe" ng-model="rna" disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="revTranscribe">Reverse Transcribe</label>
+                    <div class="controls">
+                        <input type="text" id="revTranscribe" placeholder="Reverse Transcribe" ng-model="rna" dna-reverse-transcribe disabled>
+                    </div>
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label" for="translate">Translate</label>
-                <div class="controls">
-                    <input type="text" id="translate" placeholder="Translate" ng-model="sequence" dna-translate>
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="translate">Translate</label>
+                    <div class="controls">
+                        <input type="text" id="translate" placeholder="Translate" ng-model="protein" disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="revtranslate">Reverse Translate (Dumb)</label>
+                    <div class="controls">
+                        <input type="text" id="revtranslate" placeholder="Reverse Translate" ng-model="protein" dna-reverse-translate disabled>
+                    </div>
                 </div>
             </div>
 
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="onetothree">One to Three</label>
+                    <div class="controls">
+                        <input type="text" id="onetothree" placeholder="One to Three Aminos" ng-model="protein" dna-amino-one-to-three disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="onetofull">One to Full</label>
+                    <div class="controls">
+                        <input type="text" id="onetofull" placeholder="One to Full" ng-model="protein" dna-amino-one-to-full disabled>
+                    </div>
+                </div>
+            </div>
 
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="shuffle">Shuffle</label>
+                    <div class="controls">
+                        <input type="text" id="shuffle" placeholder="Shuffled" ng-model="sequence" dna-shuffle disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="random">Random</label>
+                    <div class="controls">
+                        <input type="text" id="random" placeholder="Random" ng-model="sequence" dna-random disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="gc">GC Content</label>
+                    <div class="controls">
+                        <input type="text" id="gc" placeholder="GC Content" ng-model="sequence" dna-gc-content disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="melting">Melting Temp</label>
+                    <div class="controls">
+                        <input type="text" id="melting" placeholder="Melting Temp" ng-model="sequence" dna-melting-temp disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="mw">Molecular Weight</label>
+                    <div class="controls">
+                        <input type="text" id="mw" placeholder="Molecular Weight" ng-model="sequence" dna-molecular-weight disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="gibbs">Gibbs Numbers</label>
+                    <div class="controls">
+                        <input type="text" id="gibbs" placeholder="Gibbs" ng-model="sequence" dna-gibbs disabled>
+                    </div>
+                </div>
+            </div>
 
         </form>
     </div>

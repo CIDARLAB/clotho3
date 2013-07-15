@@ -53,6 +53,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- (advantage?) plasmid editor -- add locations parser to ngModel pipeline, store locations outside of ngModel, push them back in using a formatter
+
 
 - see if can define controller inline with partial (could namespace by uuid)
 
@@ -74,10 +76,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
+- caret movement directives : https://github.com/DrPheltRight/jquery-caret
 
 
 
-- move away from "model_change" etc.
+
+- move away from "model_change" etc. -> 'update', etc. etc.
 
 - trails functionality
     - youtube events - pass as param to function
@@ -138,7 +142,7 @@ UI STUFF
     - progressBar (bootstrap)
     - scrollTo (probably easy to write) / scrollfix (see angular ui utils)
 - ANIMATION
-    - see https://github.com/daneden/animate.css
+    - see CSS framework https://github.com/daneden/animate.css
 
 
 - Clotho.show()

@@ -802,7 +802,7 @@ Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
             index: '@'
         },
         transclude:true,
-        template: '<span tooltip="{{ feature.label }}" tooltip-placement="mouse" tooltip-append-to-body="true" ng-transclude></span>',
+        template: '<span tooltip="{{ feature.label }}" tooltip-placement="mouse" tooltip-animation="false" tooltip-append-to-body="true" ng-transclude></span>',
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, controller) {
