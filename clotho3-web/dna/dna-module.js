@@ -5,7 +5,7 @@
 // codon frequency e.g. e-coli --->> smart backTranslate
 // gibbs calculation
 // restriction site service
-// FASTA reader
+// FASTA reader, genbank
 // alignment
 // mutation
 // pcr products
@@ -99,7 +99,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
     maps.amino_one_to_full = {
         'A': 'Alanine',
-        'B': 'Aspartic Acid or Asparagine',
+        'B': '[Aspartic Acid or Asparagine]',
         'C': 'Cysteine',
         'D': 'Aspartic Acid',
         'E': 'Glutamic Acid',
@@ -120,7 +120,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         'W': 'Tryptophan',
         'X': 'Any',
         'Y': 'Tyrosine',
-        'Z': 'Glutamine or Glutamic Acid',
+        'Z': '[Glutamine or Glutamic Acid]',
         '*': 'Stop'
     };
 
