@@ -172,22 +172,6 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         return deferred.promise;
     };
 
-    var share = function(uuid) {
-        var dialog_opts = {
-            backdrop: true,
-            backdropFade: true,
-            keyboard: true,
-            backdropClick: true,
-            templateUrl:  'interface/dialogShare.html',
-            controller: 'DialogShareCtrl',
-            dependencies : [
-                "interface/DialogShareCtrl.js"
-            ]
-        };
-
-        $dialog.dialog(dialog_opts).open();
-    };
-
     var favorite = function(uuid) {
         console.log("favorite trail with uuid: " + uuid);
     };
@@ -197,7 +181,7 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         createAPIPlayer : createAPIPlayer,
         extract_youtube : extract_youtube,
         compile : compile,
-        share : share,
+        share : Clotho.share,
         favorite : favorite
     }
 }]);
@@ -235,18 +219,22 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             if (params.autoadvance) {
                 player.addEventListener('onStateChange', function (event) {
                     if (event.data == 0) {
-                        //video is ended, want to advance somehow
+                        //video is ended, want to advance
                         $scope.next();
                     }
                 })
             }
+
+            //todo - add events for those passed in params
         });
     };
 
     $scope.loadTemplate = function (url) {
         $http.get(url, {cache:$templateCache}).success(function (data) {
+            console.log('template loaded');
             $scope.content = $compile(data)($scope);
         });
+        //todo - fallback
     };
 
     $scope.loadQuiz = function (content) {
@@ -256,45 +244,62 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             success(function (data) {
                 $scope.content = $compile(data)($scope);
             });
+        //todo - fallback
     };
 
-    $scope.loadPaver = function (paver) {
-        var html = '<h4>Something didn&quot;t work - that type of paver wasn&quot;t recognized</h4>';
-        $scope.content = html;
+    $scope.paverError = function (paver) {
+        $scope.content = '<h4>Something didn&quot;t work - that type of paver wasn&quot;t recognized</h4>';
+        console.log(paver);
     };
 
 
     $scope.activate = function(indices) {
 
+        //don't activate already active one
+        if ($scope.current == indices) return;
+
+        console.log('activating paver');
+
         $scope.current = indices;
         $scope.content = "";
-        //module, paver
+        //in form module-paver
         var pos = indices.split("-");
         var paver = $scope.trail.contents[pos[0]]['pavers'][pos[1]];
 
-        //todo - better handling to ensure script load before next step
-        if (paver.script) {
-            var paver_name = "paver_" + $scope.uuid + "_" + indices;
-            $.getScript(paver.script);
+        function load() {
+            console.log('loading paver');
+            switch (paver.type) {
+                case 'video' : {
+                    $scope.loadVideo(paver.video);
+                    break;
+                }
+                case 'template' : {
+                    console.log('loading template');
+                    $scope.loadTemplate(paver.template);
+                    break;
+                }
+                case 'quiz' : {
+                    $scope.loadQuiz(paver.content);
+                    break;
+                }
+                default : {
+                    $scope.paverError(paver);
+                }
+            }
         }
 
-        switch (paver.type) {
-            case 'video' : {
-                $scope.loadVideo(paver.video);
-                break;
-            }
-            case 'template' : {
-                $scope.loadTemplate(paver.template);
-                break;
-            }
-            case 'quiz' : {
-                $scope.loadQuiz(paver.content);
-                break;
-            }
-            default : {
-                $scope.loadPaver(paver);
-            }
+        if (!!paver.dependencies || !!paver.script) {
+            Application.mixin(paver.dependencies).then(function() {
+                console.log('mixin loaded');
+                Application.script(paver.script).then(function() {
+                    console.log('script loaded');
+                    load()
+                });
+            });
+        } else {
+            load()
         }
+
 
     };
 

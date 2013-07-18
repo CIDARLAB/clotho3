@@ -552,6 +552,25 @@ Application.Interface.provider("$dialog", function(){
                             };
                         }
                         }});
+                },
+
+                share : function(url) {
+                    return new Dialog({
+                            backdrop: true,
+                            backdropFade: true,
+                            keyboard: true,
+                            backdropClick: true,
+                            templateUrl:  '/interface/templates/dialogShare.html',
+                            controller: 'DialogShareCtrl',
+                            resolve: {
+                                model: function() {
+                                    return {
+                                        url : url
+                                    }
+                                }
+                            }
+                        });
+
                 }
 
             };
@@ -580,5 +599,54 @@ Application.Interface.controller('ServerAlertController', ['$scope', 'dialog', '
         $scope.close('Another alert appeared');
         Clotho.say($scope.message);
     }, $scope);
+
+}]);
+
+Application.Interface.controller('DialogShareCtrl', ['$scope', '$dialog', 'model', '$location', function($scope, $dialog, model, $location){
+    $scope.close = function(result){
+        $dialog.close(result);
+    };
+
+    $scope.customUrl = model.url != '' ? model.url : false;
+
+    $scope.social = [
+        {
+            "name" : "facebook",
+            "prefix" : "http://www.facebook.com/sharer.php?u="
+        },
+        {
+            "name" : "google",
+            "prefix" : "https://plus.google.com/share?url="
+        },
+        {
+            "name" : "twitter",
+            "prefix" : "http://twitter.com/share?url="
+        },
+        {
+            "name" : "linkedin",
+            "prefix" : "http://www.linkedin.com/shareArticle?mini=true&url="
+        },
+        {
+            "name" : "digg",
+            "prefix" : "http://www.digg.com/submit?url="
+        },
+        {
+            "name" : "reddit",
+            "prefix" : "http://reddit.com/submit?url="
+        },
+        {
+            "name" : "email",
+            "prefix" : "mailto:?Body="
+        }
+    ];
+
+    $scope.share = function (site) {
+        var url = $scope.customUrl ? $scope.customUrl : site.prefix + $location.absUrl();
+
+        $scope.close();
+
+        //join location and site url
+        window.open(url, (site.name == 'email' ? '_self' : "_blank") );
+    }
 
 }]);

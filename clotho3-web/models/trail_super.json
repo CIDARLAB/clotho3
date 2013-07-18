@@ -7,13 +7,44 @@
 
     "contents" : [
         {
-            "module_title" : "Hardcoded",
+            "module_title" : "Mixin / Bootstrap",
             "pavers" : [
+
                 {
-                    "paver_title" : "Super Trail Part 1",
+                    "paver_title" : "1 - Assume Present",
                     "type" : "template",
-                    "template" : "/partials/trail_super_1.html",
-                    "script" : "/partials/trail_super_1.js"
+                    "template" : "/partials/trails/trail_super/revcomp1.html"
+                },
+                {
+                    "paver_title" : "2 - Mixin Ctrl",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp2.html",
+                    "dependencies" : "/partials/trails/trail_super/revcomp-ctrl.js"
+                },
+                {
+                    "paver_title" : "3 - Mixin Several",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp3.html",
+                    "dependencies" : ["/partials/trails/trail_super/revcomp-ctrl.js", "/partials/trails/trail_super/revcomp-dir.js", "/partials/trails/trail_super/revcomp-filter.js"]
+                },
+                {
+                    "paver_title" : "4 - Transclude",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp4.html",
+                    "dependencies" : "/extensions/revcomp.js"
+                },
+                {
+                    "paver_title" : "5 - Bootstrap",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp5.html",
+                    "script" : "/partials/trails/trail_super/revcomp5.js"
+                },
+                {
+                    "paver_title" : "6 - Bootstrap w/ Dep",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp6.html",
+                    "dependencies" : "/partials/trails/trail_super/revcomp-filter2.js",
+                    "script" : "/partials/trails/trail_super/revcomp5.js"
                 }
             ]
         },

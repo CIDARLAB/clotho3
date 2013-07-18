@@ -1,0 +1,33 @@
+<!-- fifth way --- bootstrap a widget every time -->
+
+<div>
+    <h2>Bootstrap With Dependencies</h2>
+
+    <p ng-init="seq = 'aaacccgggtttAAACCCGGGTTT'">Components that are useful elsewhere should be added to the parent app - here, a lowercaseG filter has been added:</p>
+    <p>Before: {{ seq }} <br /> After: {{ seq | dnaLowercaseG }}</p>
+    <p>The Bootstrapped app is the same:</p>
+
+    <div insertWidgetHere></div>
+
+    <div>
+        <div class="span6">
+            <h4 class="text-success">Advantages</h4>
+            <dl>
+                <dt>Reason 1</dt>
+                <dd>Reason description should be longer etc.</dd>
+                <dt>Reason 2</dt>
+                <dd>Reason description should be longer etc.</dd>
+            </dl>
+
+        </div>
+        <div class="span6">
+            <h4 class="text-error">Disadvantages</h4>
+            <dl>
+                <dt>Reason 1</dt>
+                <dd>Reason description should be longer etc.</dd>
+                <dt>Reason 2</dt>
+                <dd>Reason description should be longer etc.</dd>
+            </dl>
+        </div>
+    </div>
+</div>

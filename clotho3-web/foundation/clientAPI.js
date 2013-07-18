@@ -1,14 +1,10 @@
 'use strict';
 
 /**
- * @name clientAPI
+ * @name ClientAPI
  *
  * @description
  * This is the client Clotho API - commands issued BY the server to be run on the client
- *
- * Notes:
- *  - not really sure at this point which functions should `return` and which should have a `callback` ... so some of the functions have a parameter callback, particularly those which are asynchronous, in the event we want to pass data back, or allow for more custom operations to be made using the data passed to / from the command.
- *
  */
 Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$templateCache', '$http', '$rootScope', '$location', '$compile', '$dialog', function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
 
@@ -107,6 +103,10 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         }
     };
 
+    /**
+     * @name clientAPI.edit
+     * @param uuid UUID of sharable to edit, opens in modal
+     */
     var edit = function(uuid) {
         var dialog_opts = {
             backdrop: true,
@@ -118,6 +118,11 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         d.open();
     };
 
+    /**
+     * @name clientAPI.changeUrl
+     *
+     * @param newUrl URL to change to, angular version
+     */
     var changeUrl = function(newUrl) {
         $location.path(newUrl);
     };
@@ -324,7 +329,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     };
 
     /**
-     * @name Clotho.startTrail
+     * @name clientAPI.startTrail
      *
      * @param {string} uuid
      *
@@ -334,6 +339,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     var startTrail = function clothoAPI_startTrail(uuid) {
         $location.path("/trails/" + uuid);
     };
+
 
     // ---- COMMAND BAR ----
 

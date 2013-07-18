@@ -64,6 +64,16 @@ CUSTOM
     max-height: 700px; /*just in case... need to define with inline style*/
 }
 
+.hoverFade {
+    opacity: 1;
+    -webkit-transition: opacity 0.15s linear;
+    -moz-transition: opacity 0.15s linear;
+    -o-transition: opacity 0.15s linear;
+    transition: opacity 0.15s linear;
+}
+.hoverFade:hover {
+    opacity: 0.7;
+}
 
 
 /* override to avoid bootstrap JS */

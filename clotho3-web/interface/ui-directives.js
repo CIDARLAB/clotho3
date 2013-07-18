@@ -324,6 +324,7 @@ Application.Interface.directive('restrictInput', ['$parse', function($parse) {
                     //testing
                     //console.log("RESTRICT 2", ngModel.$viewValue, ngModel.$modelValue, input, ngModel);
 
+
                 }
                 return transformedInput;
             };

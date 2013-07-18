@@ -53,10 +53,51 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- create wrappers for directives, filters -> expose DNA functions accordingly
+
+
+- clarify $dialog -- in controllers when dialog and when $dialog
+- make fixes so share dialog etc. work
+
+
+-tooltip - mouseevents:none
+
+
+- restrict input - try putting into ngModel.$parsers to see if doesn't affect cursor movement
+
+
+- caret movement directives : https://github.com/DrPheltRight/jquery-caret
+    - see also contenteditable directive - have one working
+    - get current position and save as option
+
+
+- plasmid editors
+    - benchling
+    - sparkDNA
+
+
+- streamline display and show() + adding components
+    - declare dependencies to be mixed in in trail (not just script to run)
+    - declaring scripts inline with template?
+    - Mixing in components
+    - Adding modules
+    - deprecate ClothoAPI.bootstrap() -- use Application.bootstrap() in mixin.js
+
+- namespace better partials folder -- quizzes, trails templates, etc.
+
+
+- allow resolve of Application.mixin() in $routeProvider ---- see terminal as example (which needs controller)
+
+
+
+
+- draggable elements (within angular -- also sortable)
+    - https://github.com/fisshy/Angular-drag-drop/blob/master/javascript/dragandrop.js
+    - http://jsfiddle.net/ADukg/2516/
+
+
+
 - (advantage?) plasmid editor -- add locations parser to ngModel pipeline, store locations outside of ngModel, push them back in using a formatter
-
-
-- see if can define controller inline with partial (could namespace by uuid)
 
 
 
@@ -64,20 +105,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-- allow resolve of Application.mixin() in $routeProvider ---- see terminal as example - need controller
-
-
-
-- draggable elements (within angular -- also sortable)
-
-
-
-- clarify $dialog -- in controllers when dialog and when $dialog --- make fixes
-
-
-
-- caret movement directives : https://github.com/DrPheltRight/jquery-caret
-
+- create help tips - use position service - structure JSON
 
 
 

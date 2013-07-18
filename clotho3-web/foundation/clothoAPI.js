@@ -22,7 +22,7 @@
 
 //todo - incorporate requestId field
 
-Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout) {
+Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', '$dialog', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout, $dialog) {
 
     /**********
        Set up
@@ -112,7 +112,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
                 return data;
             } else {
                 deferred.resolve(data);
-                //deferred.promise.then(function(result) {deferred.promise = result});
                 return deferred.promise;
             }
         }
@@ -517,6 +516,29 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.api.emit('show', parameters);
     };
 
+
+    /**
+     * @name Clotho.share
+     *
+     * @description Opens a modal to share the current page
+     */
+    var share = function() {
+        /*var dialog_opts = {
+            backdrop: true,
+            backdropFade: true,
+            keyboard: true,
+            backdropClick: true,
+            templateUrl:  '/interface/templates/dialogShare.html',
+            controller: 'DialogShareCtrl',
+            dependencies : [
+                "/interface/DialogShareCtrl.js"
+            ]
+        };*/
+
+        $dialog.share().open();
+    };
+
+
     /**
      * @name Clotho.bootstrap
      *
@@ -539,17 +561,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
         var deferred = $q.defer();
 
-        /*
-        //testing
-        var id1 = angular.element(document).find("ng-app-clothoWidgets");
-        var id2 = id1.append(angular.element('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>'));
-        var id3 = id2.append('<div ng-view></div>');
-
-        console.log(id1);
-        console.log(id2);
-        console.log(id3);
-        */
-
         //angular version
         //note angular returns parent, not appended element
         //todo - if want this, select appropriate child element
@@ -558,12 +569,12 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         //jQuery version
         var insertInto = $($('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>')).appendTo($clotho.appWidgets);
 
-        $.getScript(appInfo.moduleUrl)
-            .done(function () {
-                angular.bootstrap(insertInto, [appInfo.moduleName]);
-                deferred.resolve([appUUID, "[clotho-widget-uuid="+appUUID+"]"]);
-                $rootScope.$safeApply();
-            });
+        var script = appInfo.moduleUrl ? appInfo.moduleUrl + '?_=' + Date.now() : '';
+        $script(script, function () {
+            angular.bootstrap(insertInto, [appInfo.moduleName]);
+            deferred.resolve([appUUID, "[clotho-widget-uuid="+appUUID+"]"]);
+            $rootScope.$safeApply();
+        });
 
         return deferred.promise;
     };
@@ -797,6 +808,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         on : on,
         once : once,
         off : off,
+        share : share,
 
         //searchbar
         submit: submit,

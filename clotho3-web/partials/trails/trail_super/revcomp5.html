@@ -1,0 +1,32 @@
+<!-- fifth way --- bootstrap a widget every time -->
+
+<div>
+    <h2>Bootstrap Another Angular App</h2>
+
+    <p>This approach does not rely entirely on mixing in components - components may be added to the primary app stack, but here the widget is its own angular app.</p>
+    <p>This approach calls Application.script(), a cache-busting function to execute a script every time by time-stamping it. The script bootstraps the widget and inserts it into the div below. This template has no associated controller</p>
+
+    <div insertWidgetHere></div>
+
+    <div>
+        <div class="span6">
+            <h4 class="text-success">Advantages</h4>
+            <dl>
+                <dt>Reason 1</dt>
+                <dd>Reason description should be longer etc.</dd>
+                <dt>Reason 2</dt>
+                <dd>Reason description should be longer etc.</dd>
+            </dl>
+
+        </div>
+        <div class="span6">
+            <h4 class="text-error">Disadvantages</h4>
+            <dl>
+                <dt>Reason 1</dt>
+                <dd>Reason description should be longer etc.</dd>
+                <dt>Reason 2</dt>
+                <dd>Reason description should be longer etc.</dd>
+            </dl>
+        </div>
+    </div>
+</div>
