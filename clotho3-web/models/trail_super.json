@@ -3,7 +3,7 @@
     "dependencies" : ["trail_140l", "trail_123"],
     "title" : "Combined Trail",
     "author" : "Max Bates",
-    "description" : "<blockquote><p>This module transcludes the 140L Combinatorial vdeos and a module from the Biosafety Trail.</p><p><small>Maxwell Bates</small></p></blockquote>",
+    "description" : "<blockquote><p>This module transcludes the 140L Combinatorial vdeos and a module from the Biosafety Trail. It also demos the ability to Mixin components, and bootstrap autonomous widgets.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
     "contents" : [
         {
@@ -31,7 +31,8 @@
                     "paver_title" : "4 - Transclude",
                     "type" : "template",
                     "template" : "/partials/trails/trail_super/revcomp4.html",
-                    "dependencies" : "/extensions/revcomp.js"
+                    "dependencies" : "/extensions/revcomp.js",
+                    "script" : ["/partials/simple-executable.js", "/partials/simple-executable2.js"]
                 },
                 {
                     "paver_title" : "5 - Bootstrap",

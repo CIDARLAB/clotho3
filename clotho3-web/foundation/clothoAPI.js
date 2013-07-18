@@ -496,10 +496,10 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      {
          "template" : <url>,         // required
          "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
-         "args" : {<object>}         // data to copy onto $scope
+         "args" : {<object>}         // data to extend the $scope
          "controller" : <url>,       // optional
          "dependencies" : [
-             <urls>                  // required if in controller
+             <urls>                  // required if in controller, or used in template
          ],
          styles : {
              <styles>
@@ -509,7 +509,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      }
 
      note CAVEATS:
-     - currently, controllers etc. must be tied to Application.Extensions.___
+     - currently, components (controllers etc.) must be tied to Application.Extensions.___
 
      */
     var show = function(parameters) {

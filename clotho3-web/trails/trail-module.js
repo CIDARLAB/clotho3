@@ -230,9 +230,10 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.loadTemplate = function (url) {
-        $http.get(url, {cache:$templateCache}).success(function (data) {
-            console.log('template loaded');
-            $scope.content = $compile(data)($scope);
+        $http.get(url, {cache:$templateCache}).then(function (data) {
+            console.log('8 - template loaded', data);
+            $scope.content = $compile(data.data)($scope);
+            $scope.$safeApply();
         });
         //todo - fallback
     };
@@ -258,7 +259,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         //don't activate already active one
         if ($scope.current == indices) return;
 
-        console.log('activating paver');
+        console.log('1 - activating paver');
 
         $scope.current = indices;
         $scope.content = "";
@@ -267,14 +268,14 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         var paver = $scope.trail.contents[pos[0]]['pavers'][pos[1]];
 
         function load() {
-            console.log('loading paver');
+            console.log('6 - loading paver');
             switch (paver.type) {
                 case 'video' : {
                     $scope.loadVideo(paver.video);
                     break;
                 }
                 case 'template' : {
-                    console.log('loading template');
+                    console.log('7 - loading template');
                     $scope.loadTemplate(paver.template);
                     break;
                 }
@@ -288,11 +289,13 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             }
         }
 
+        //todo - use Clotho.show() here
+
         if (!!paver.dependencies || !!paver.script) {
             Application.mixin(paver.dependencies).then(function() {
-                console.log('mixin loaded');
+                console.log('4 - mixin loaded');
                 Application.script(paver.script).then(function() {
-                    console.log('script loaded');
+                    console.log('5 - script loaded');
                     load()
                 });
             });

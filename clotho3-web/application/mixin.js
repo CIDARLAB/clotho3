@@ -22,7 +22,7 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
         //need to call this before compiling new element
         Application.Extensions.processQueue = function() {
             var queue = Application.Extensions.getQueue();
-            console.log("processing queue", queue);
+            console.log("3 - processing queue", queue);
 
             for(var i=Application.Extensions.registeredQueue;i<queue.length;i++) {
                 var call = queue[i];
@@ -64,12 +64,10 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
          */
         Application.mixin = function(urls, element, args) {
 
-            console.log('mixin called');
+            console.log('2 - mixin called');
 
             if (angular.isUndefined(urls) || urls == '') {
-                console.log('no url - return empty resolved promise');
-                //deferred.resolve();
-                //return deferred.promise;
+                console.log('3 - no url - return empty resolved promise');
                 return $q.when();
             }
 
@@ -98,16 +96,16 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
                 return $q.when();
             }
 
-            var deferred = $q.defer();
+            var deferred = $q.defer(),
+                downloads; //don't want to overwrite source urls with timestamp
 
-            //todo - test
             if (angular.isString(urls))
-                urls = urls + '?_=' + Date.now();
+                downloads = urls + '?_=' + Date.now();
             else {
+                downloads = [];
                 angular.forEach(urls, function(url, ind) {
-                    urls[ind] = url + '?_=' + Date.now();
+                    downloads.push(url + '?_=' + Date.now());
                 });
-                console.log(urls);
             }
 
             $script(urls, function() {
