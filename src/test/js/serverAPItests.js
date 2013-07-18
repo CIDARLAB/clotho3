@@ -4,38 +4,32 @@ module("Server API Tests");
 var Message = function (channel, data, requestId) {
     this.channel = channel;
     this.data = data;
-    this.requestId = requestId;
-};
-
-var send = function (message, socket, callback) {
-    socket.router.add(callback, message.channel, message.requestId);
-    socket.send(JSON.stringify(message));
-};
-
-var Router = function () {
-    this.add = function (callback, channel, id) {
-        this[channel + id] = callback;
-    };
-
-    this.onmessage = function (e) {
-        var message = JSON.parse(e.data);
-        var callbackKey = message.channel + message.requestId;
-        if (this.hasOwnProperty(callbackKey)){
-            this[callbackKey](message.data);
-        }
-    };
 };
 
 var getSocket = function (addr) {
-    var router = new Router();
-    var socket = new WebSocket(addr);
-    socket.router = router;
-    socket.onmessage = function (e) {router.onmessage(e)};
-    //socket.send = function (message){
-    //    socket.send(JSON.stringify(message));
-    //}
+    socket = new WebSocket(addr);
+    socket.idx = -1;
+    socket.callbacks = {};
+        
+    socket.oldsend = socket.send;
+
+    socket.send = function (message, callback) {
+        socket.idx += 1;
+        message.requestId = String(socket.idx);
+        socket.callbacks[message.requestId] = callback;
+        socket.oldsend(JSON.stringify(message));
+    };
+    socket.onmessage = function (e) {
+        var message = JSON.parse(e.data);
+        var callbackKey = message.requestId;
+        if (socket.callbacks.hasOwnProperty(callbackKey)){
+            callback = socket.callbacks[callbackKey];
+            delete socket.callbacks[callbackKey];
+            callback(message.data)
+        }
+    };
     return socket;
-};
+}
 
 var clothosocket = "ws://localhost:8080/websocket";
 
@@ -43,7 +37,7 @@ var testThroughAsync = function (name, message, callback) {
     asyncTest(name, function () {
         var socket = getSocket(clothosocket);
         socket.onopen = function () {
-            send(message, socket, function (data) {
+            socket.send(message, function (data) {
                 callback(data);
                 start();
             });
@@ -51,39 +45,26 @@ var testThroughAsync = function (name, message, callback) {
     });
 };
 
-/*
-   asyncTest("get", function () {
-   var m = new Message("get", "Test Part 1", "1");
-   var socket = getSocket(clothosocket);
-   socket.onopen = function () {
-   send(m, socket, function (data) {
-   equal(data.name, "Test Part 1");
-   start();
-   });
-   };
-   });
-   */
-
 testThroughAsync("get",
-        new Message("get", "Test Part 1", "2"),
+        new Message("get", "Test Part 1"),
         function (data) {
             equal(data.name, "Test Part 1");
         });
 
 testThroughAsync("query Parts",
-        new Message("query", {"schema":"Part"}, "3"),
+        new Message("query", {"schema":"Part"}),
         function (data) {
             equal(data.length, 4);
         });
 
 testThroughAsync("query BasicParts",
-        new Message("query", {"schema":"BasicPart"}, "4"),
+        new Message("query", {"schema":"BasicPart"}),
         function (data) {
             equal(data.length, 3);
         });
 
 testThroughAsync("query CompositeParts",
-        new Message("query", {"schema":"CompositePart"}, "5"),
+        new Message("query", {"schema":"CompositePart"}),
         function (data) {
             //equal(data.length, 1); -- because we unwrap the result
             equal(data.type, "COMPOSITE");
@@ -110,9 +91,9 @@ testThroughAsync("query CompositeParts",
 asyncTest("create", function () {
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
-        send( new Message("create", {"name":"Created Part", "sequence":"GGGGGG"}, "6"), socket, function (data) {
+        socket.send( new Message("create", {"name":"Created Part", "sequence":"GGGGGG"}), function (data) {
             var id = data;
-            send(new Message("get", id, "7"), socket, function (data) {
+            socket.send(new Message("get", id), function (data) {
                 equal(data.sequence, "GGGGGG");
                 start();
             });
@@ -123,12 +104,13 @@ asyncTest("create", function () {
 asyncTest("create with schema", function () {
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
-        send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"BasicPart"}, "8"), socket, function (data) {
-            send(new Message("get", "Created Part 2", "9"), socket, function (data2) {
+        socket.send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"BasicPart"}), function (data) {
+            socket.send(new Message("get", "Created Part 2"), function (data2) {
                 ok(data2.hasOwnProperty("schema"));
                 ok(!(data2.hasOwnProperty("className")));
                 //tear down created data
-                send(new Message("destroy", "Created Part 2", "10"), socket, function(data){
+                socket.send(new Message("destroy", "Created Part 2"), function(data){
+                    //TODO: ensure actually deleted
                     start();
                 });
 
