@@ -5,3 +5,7 @@ body {
   padding: 20px;
 }
 
+.sequence {
+    font-family: monospace;
+    word-wrap: break-word;
+}

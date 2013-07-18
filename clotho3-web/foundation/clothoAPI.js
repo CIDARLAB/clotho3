@@ -71,6 +71,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         )
     };
 
+    fn.deferredSend = function (channel, data) {
+        var deferred = $q.defer();
+        Socket.extendedSend(fn.pack(channel, data), function (data) {
+            $rootScope.$apply(deferred.resolve(data));
+        });
+        return deferred.promise;
+    }
+
     /**********
        Config
      **********/
@@ -382,8 +390,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
 
 
-    var query = function(str) {
-        fn.searchbar.emit("query", str);
+    var query = function(spec) {
+        return fn.deferredSend("query", spec);
     };
 
     /**
@@ -645,14 +653,13 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      * @return {object} result of running the function on the server. Returns a promise if `async` is true, otherwise waits till completion to return.
      */
-    var run = function clothoAPI_run(assistant, data, async, callback) {
-        async = async || true;
+    var run = function clothoAPI_run(id, funcName, args) {
         var packaged = {
-            "assistant" : assistant || "",
-            "data" : msg,
-            "async" : async
+            "id" : id,
+            "function" : funcName,
+            "args" : args
         };
-        fn.api.emit('run', packaged);
+        return fn.deferredSend('run', packaged);
     };
 
     // ---- TO BE IMPLEMENTED LATER ----

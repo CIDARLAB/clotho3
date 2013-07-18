@@ -94,7 +94,19 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
                 fn(args);
             });
         };
+    /*
+     * Fancy socket send with autocallbacks
+     */
+    socket.idx = -1;
+    socket.callbacks = {};
+        
 
+    socket.extendedSend = function (message, callback) {
+        socket.idx += 1;
+        message.requestId = String(socket.idx);
+        socket.callbacks[message.requestId] = callback;
+        socket.send(JSON.stringify(message));
+    };
         /************
          Socket Listener
         ************/
@@ -107,6 +119,13 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             var channel = obj.channel;
             var data = obj.data;
 
+        if ("requestId" in obj && obj.requestId in socket.callbacks){
+            var callbackKey = obj.requestId;
+            var callback = socket.callbacks[callbackKey];
+            delete socket.callbacks[callbackKey];
+            callback(obj.data)
+            return;
+        }
             //note - channel reserved for serverAPI
             if (channel == "$clotho") {
                 console.log("SOCKET\tchannel $clotho");
@@ -161,7 +180,9 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             //send properly formatted string on channel message
             send: function (data) {
             	socket.send(data);
-        	}
+        	},
+
+            extendedSend: socket.extendedSend
         }
     }
 }]);
