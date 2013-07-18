@@ -176,13 +176,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.5</version>
         </dependency>
-	
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-            <type>jar</type>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -290,12 +283,6 @@
             <version>0.9.9-RC1</version>
         </dependency>
         <dependency>
-            <groupId>org.jbei</groupId>
-            <artifactId>gd-ice</artifactId>
-            <version>3.3.5-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
             <version>2.12</version>
@@ -310,6 +297,11 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml</groupId>
+            <artifactId>jackson-xml-databind</artifactId>
+            <version>0.6.2</version>
         </dependency>
     </dependencies>
 	

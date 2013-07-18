@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 package org.clothocad.core.imports;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.layers.communication.imports.IceImporter;
@@ -49,8 +47,16 @@ public class TestIceImport {
         ints.add(255);
         ints.add(415);
         
-        IceImporter.doImport(p, ints, 0);
+        IceImporter.directImport(p, ints, 0);
         
-        System.out.println();
     }
+    
+    @Test 
+    public void testIceFaster(){
+        List<Integer> ints = new ArrayList<>();
+        ints.add(255);
+        ints.add(415);
+        
+        IceImporter.importData(ints);
+    }    
 }
