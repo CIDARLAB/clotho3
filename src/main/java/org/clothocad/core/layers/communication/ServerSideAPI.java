@@ -24,6 +24,8 @@
 package org.clothocad.core.layers.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +50,7 @@ import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
+import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
@@ -465,8 +468,32 @@ public final class ServerSideAPI {
 // </editor-fold> 
 
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
-    public final void run(Object o, String id) throws ScriptException {
+    public final void run(Object o, String id) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<String, Object> data = JSON.mappify(o);
+        
+        if (data.containsKey("id")){
+            //reflectively (ugh) run function of instance
+            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
+            List<Object> args = (List) data.get("args");
+            
+            Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
+            Object result = method.invoke(instance, args.toArray());
+            if (method.getReturnType().equals(Void.TYPE)) return;
+            List<Object> results = new ArrayList<>();
+            if (result instanceof Iterable){
+                for (Object r : ((Iterable) result)){
+                    if (r instanceof ObjBase) results.add(persistor.save((ObjBase) r));
+                    else results.add(r);
+                }
+            }
+            else {
+                      if (result instanceof ObjBase) results.add(persistor.save((ObjBase) result));
+                    else results.add(result);              
+            }
+            Message message = new Message(Channel.run, persistor.toJSON(results), id);
+            send(message);
+            return;
+        }
 
         Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
         Map<String, Object> arguments = data.containsKey("arguments")

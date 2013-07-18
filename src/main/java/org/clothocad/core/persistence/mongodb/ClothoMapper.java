@@ -11,6 +11,7 @@ import com.github.jmkgreen.morphia.mapping.MapperOptions;
 import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
 import com.github.jmkgreen.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.mongodb.DBObject;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
@@ -114,5 +115,10 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
         logger.debug("Mapping class {}", c.getCanonicalName());
         MappedClass mc = new ClothoMappedClass(c, this);
         return addMappedClass(mc, true);
+    }
+
+    @Override
+    public List<Object> toJSON(List data) {
+        return scrubber.scrub(data, null);
     }
 }

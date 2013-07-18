@@ -133,11 +133,11 @@ public class Persistor{
     
     //throws ConstraintViolationException, OverwriteConfirmationException
     
-    public void save(ObjBase obj) {
-        save(obj, false);
+    public ObjectId save(ObjBase obj) {
+        return save(obj, false);
     }
     
-    public void save(ObjBase obj, boolean overwrite) {
+    public ObjectId save(ObjBase obj, boolean overwrite) {
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
         validate(obj);
         
@@ -150,6 +150,7 @@ public class Persistor{
         }
 
         connection.saveAll(relevantObjects);
+        return obj.getUUID();
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{

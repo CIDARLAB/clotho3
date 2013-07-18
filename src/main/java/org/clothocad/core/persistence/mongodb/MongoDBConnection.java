@@ -237,6 +237,7 @@ public class MongoDBConnection
     @Override    
     public <T extends ObjBase> T getOne(Class<T> type, Map query) {
         DBObject dbResult = data.findOne(new BasicDBObject(query));
+        if (dbResult == null) return null;
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
 
