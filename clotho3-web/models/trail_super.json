@@ -9,7 +9,11 @@
         {
             "module_title" : "Mixin / Bootstrap",
             "pavers" : [
-
+                {
+                    "paver_title" : "Adding Functionality",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/intro.html"
+                },
                 {
                     "paver_title" : "1 - Assume Present",
                     "type" : "template",
@@ -33,6 +37,11 @@
                     "template" : "/partials/trails/trail_super/revcomp4.html",
                     "dependencies" : "/extensions/revcomp.js",
                     "script" : ["/partials/simple-executable.js", "/partials/simple-executable2.js"]
+                },
+                {
+                    "paver_title" : "Bootstrap Intro",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/bootstrapIntro.html"
                 },
                 {
                     "paver_title" : "5 - Bootstrap",

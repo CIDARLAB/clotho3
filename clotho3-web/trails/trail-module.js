@@ -230,11 +230,14 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.loadTemplate = function (url) {
-        $http.get(url, {cache:$templateCache}).then(function (data) {
-            console.log('8 - template loaded', data);
-            $scope.content = $compile(data.data)($scope);
-        });
-        //todo - fallback
+        $http.get(url, {cache:$templateCache})
+            .success(function(data, status, headers, config) {
+                console.log('8 - template loaded', data);
+                $scope.content = $compile(data)($scope);
+            })
+            .error(function(data, status, headers, config) {
+                // todo - fallback
+            });
     };
 
     $scope.loadQuiz = function (content) {
