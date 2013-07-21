@@ -561,7 +561,7 @@ Application.Interface.provider("$dialog", function(){
                             keyboard: true,
                             backdropClick: true,
                             templateUrl:  '/interface/templates/dialogShare.html',
-                            controller: 'DialogShareCtrl',
+                            controller: 'DialogShareController',
                             resolve: {
                                 model: function() {
                                     return {
@@ -602,12 +602,12 @@ Application.Interface.controller('ServerAlertController', ['$scope', 'dialog', '
 
 }]);
 
-Application.Interface.controller('DialogShareCtrl', ['$scope', '$dialog', 'model', '$location', function($scope, $dialog, model, $location){
+Application.Interface.controller('DialogShareController', ['$scope', 'dialog', 'model', '$location', function($scope, dialog, model, $location){
     $scope.close = function(result){
-        $dialog.close(result);
+        dialog.close(result);
     };
 
-    $scope.customUrl = model.url != '' ? model.url : false;
+    $scope.customUrl = (model.url && model.url != '') ? model.url : false;
 
     $scope.social = [
         {
@@ -645,7 +645,6 @@ Application.Interface.controller('DialogShareCtrl', ['$scope', '$dialog', 'model
 
         $scope.close();
 
-        //join location and site url
         window.open(url, (site.name == 'email' ? '_self' : "_blank") );
     }
 

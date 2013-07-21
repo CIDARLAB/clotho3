@@ -623,6 +623,9 @@ Application.Interface.provider( '$tooltip', function () {
                         // Now set the calculated positioning.
                         tooltip.css( ttPosition );
 
+                        //CUSTOM - avoid pointer events on tooltip - custom class
+                        tooltip.addClass('noPointerEvents');
+
                         // And show the tooltip.
                         scope.tt_isOpen = true;
                     }

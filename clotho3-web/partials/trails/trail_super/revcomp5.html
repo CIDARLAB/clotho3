@@ -14,10 +14,12 @@
             <dl>
                 <dt>More Native</dt>
                 <dd>Adding components is not natively supported (though doesn't seem to cause problems)</dd>
-                <dt>Autonomy</dt>
-                <dd>App remains separate from the Primary app in several respects</dd>
+                <dt>Avoid Recompiling</dt>
+                <dd>Recompiling existing content will basically ruin the app. This way we know what we're inserting, rather than telling angular to compile a div that may have already been compiled.</dd>
                 <dt>Avoid Primary App $scope Lifecycle</dt>
                 <dd>Separating your widget from the parent app would avoid unnecessary processing / dirty-checking -- e.g. click listeners, timers, etc. set by other components.</dd>
+                <dt>Autonomy</dt>
+                <dd>App remains separate from the Primary app in several respects</dd>
                 <dt>Separate Functionality</dt>
                 <dd>If desired, components can be kept out of the Primary angular app.</dd>
                 <dt>Avoid Namespace Collisions</dt>

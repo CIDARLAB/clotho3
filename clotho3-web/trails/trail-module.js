@@ -233,7 +233,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $http.get(url, {cache:$templateCache}).then(function (data) {
             console.log('8 - template loaded', data);
             $scope.content = $compile(data.data)($scope);
-            $scope.$safeApply();
         });
         //todo - fallback
     };
@@ -241,7 +240,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     $scope.loadQuiz = function (content) {
         $scope.quiz = content;
 
-        $http.get('partials/trails/' + content.type + '-partial.html', {cache: $templateCache}).
+        $http.get('partials/trails/quiz/' + content.type + '-partial.html', {cache: $templateCache}).
             success(function (data) {
                 $scope.content = $compile(data)($scope);
             });

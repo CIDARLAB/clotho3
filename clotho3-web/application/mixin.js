@@ -46,6 +46,8 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
 
             //todo - check for class ng-scope in what compile -- don't wanna recompile
 
+            //todo - should inherit from closest relative scope - not rootscope
+
             $($clotho.appRoot).injector().invoke(function($compile, $rootScope) {
                 var scope = $rootScope.$new();
                 angular.extend(scope, args);
@@ -64,7 +66,7 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
          */
         Application.mixin = function(urls, element, args) {
 
-            console.log('2 - mixin called');
+            console.log('2 - mixin called', urls);
 
             if (angular.isUndefined(urls) || urls == '') {
                 console.log('3 - no url - return empty resolved promise');

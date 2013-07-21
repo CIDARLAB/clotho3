@@ -56,13 +56,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - create wrappers for directives, filters -> expose DNA functions accordingly
 
 
-- clarify $dialog -- in controllers when dialog and when $dialog
-- make fixes so share dialog etc. work
-
-
--tooltip - mouseevents:none
-
-
 - restrict input - try putting into ngModel.$parsers to see if doesn't affect cursor movement
 
 
@@ -77,13 +70,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - streamline display and show() + adding components
-    - declare dependencies to be mixed in in trail (not just script to run)
-    - declaring scripts inline with template?
-    - Mixing in components
-    - Adding modules
-    - deprecate ClothoAPI.bootstrap() -- use Application.bootstrap() in mixin.js
-
-- namespace better partials folder -- quizzes, trails templates, etc.
+    - get bootstrapping to work
 
 
 - allow resolve of Application.mixin() in $routeProvider ---- see terminal as example (which needs controller)

@@ -11,29 +11,32 @@
 
 var Application = Application || {};
 
-Application.Primary = angular.module('clotho.primary', ['clotho.core']);
-Application.Interface = angular.module('clotho.interface', ['clotho.core']);
-Application.Extensions = angular.module('clotho.extensions', ['clotho.core']);
-Application.Widgets = angular.module('clotho.widgets', ['clotho.core']);
+Application.Primary = angular.module('clotho.primary', []);
+Application.Interface = angular.module('clotho.interface', []);
+Application.Extensions = angular.module('clotho.extensions', []);
+Application.Widgets = angular.module('clotho.widgets', []);
 
-Application.Dna = angular.module('clotho.dna', ['clotho.core']);
+Application.Dna = angular.module('clotho.dna', []);
 
-Application.Browser = angular.module('clotho.browser', ['clotho.core']);
-Application.Chat = angular.module('clotho.chat', ['clotho.core']);
-Application.Dynamic = angular.module('clotho.dynamic', ['clotho.core']);
-Application.Editor = angular.module('clotho.editor', ['clotho.core']);
-Application.Plasmid = angular.module('clotho.plasmid', ['clotho.core']);
-Application.Search = angular.module('clotho.search', ['clotho.core']);
-Application.Trails = angular.module('clotho.trails', ['clotho.core']);
+Application.Browser = angular.module('clotho.browser', []);
+Application.Chat = angular.module('clotho.chat', []);
+Application.Dynamic = angular.module('clotho.dynamic', []);
+Application.Editor = angular.module('clotho.editor', []);
+Application.Plasmid = angular.module('clotho.plasmid', []);
+Application.Search = angular.module('clotho.search', []);
+Application.Trails = angular.module('clotho.trails', []);
 
-Application.Foundation = angular.module('clotho.core', [])
+Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
         //on first run, add API to $clotho object
         window.$clotho.api = Clotho;
 
         //extend scope with Clotho API
         $rootScope.Clotho = Clotho;
+    }]);
 
+angular.module('clotho.ng-additions', [])
+    .run(['$rootScope', function($rootScope) {
         /**
          @name $rootScope.$safeApply
          @note Each app needs to insert this into its own run() clause
@@ -53,7 +56,7 @@ Application.Foundation = angular.module('clotho.core', [])
         };
     }]);
 
-angular.module('clothoPackage', ['clotho.browser', 'clotho.core', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
+angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
