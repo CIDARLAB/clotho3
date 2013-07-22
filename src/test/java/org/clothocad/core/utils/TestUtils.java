@@ -18,6 +18,7 @@ import org.clothocad.model.FreeForm;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
+import org.clothocad.model.Part.PartFunction;
 import org.clothocad.model.Person;
 
 /**
@@ -47,6 +48,8 @@ public class TestUtils {
         lab.setPI(person);
         
         Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);
+        part1.setType(PartFunction.CDS);
+        
         Part part2 = Part.generateBasic("Test Part 2", "the second test part", "TTTTTTTTTTTTTTTTTT", new FreeForm(), person);
         Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new Object(), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
                 

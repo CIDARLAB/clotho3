@@ -60,8 +60,8 @@ public class Router {
 
     // send message    
     public void sendMessage(ClientConnection connection, Message message) {
-        
-        connection.send(message.unwrapData());
+        log.debug(JSON.serialize(message));
+        connection.send(message);
     }
 
     // receive message

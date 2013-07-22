@@ -4,9 +4,6 @@
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
-import java.util.HashMap;
-import java.util.Map;
 import javax.validation.Valid;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

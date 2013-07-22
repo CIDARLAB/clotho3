@@ -72,7 +72,7 @@ public class RouterTest {
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals("Test Part 1", ((Map) returnMessage.data).get("name").toString());
+        assertEquals("Test Part 1", ((Map) ((List)returnMessage.data).get(0)).get("name").toString());
     }
 
     private void assertMatch(Message m1, Message m2) {
@@ -96,7 +96,7 @@ public class RouterTest {
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(id.toString(), returnMessage.data.toString());
+        assertEquals(id.toString(), ((List)returnMessage.data).get(0).toString());
     }
 
     @Test

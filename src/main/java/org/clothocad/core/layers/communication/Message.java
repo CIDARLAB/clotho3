@@ -38,13 +38,5 @@ public class Message {
         channel = Channel.valueOf(map.get("channel").toString());
         data = map.get("data");
         requestId = map.get("requestId").toString();
-    }*/
-    
-    
-    //XXX: not idempotent if nested lists
-    public Message unwrapData(){
-        if (data instanceof List && ((List) data).size() == 1)
-            return new Message(channel, ((List) data).get(0), requestId);
-        return this;
-    }
+    }*/   
 }

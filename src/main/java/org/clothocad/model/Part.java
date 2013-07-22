@@ -294,6 +294,6 @@ public abstract class Part extends ObjBase {
     
     public static enum PartFunction {
         //XXX: composite is not a function
-        CDS, RBS, PROMOTER, TERMINATOR, COMPOSITE
+        CDS, RBS, PROMOTER, TERMINATOR, COMPOSITE;
     }
 }

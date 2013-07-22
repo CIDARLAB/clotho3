@@ -48,7 +48,7 @@ var testThroughAsync = function (name, message, callback) {
 testThroughAsync("get",
         new Message("get", "Test Part 1"),
         function (data) {
-            equal(data.name, "Test Part 1");
+            equal(data[0].name, "Test Part 1");
         });
 
 testThroughAsync("query Parts",
@@ -66,7 +66,8 @@ testThroughAsync("query BasicParts",
 testThroughAsync("query CompositeParts",
         new Message("query", {"schema":"CompositePart"}),
         function (data) {
-            //equal(data.length, 1); -- because we unwrap the result
+            equal(data.length, 1); 
+            data = data[0]
             equal(data.type, "COMPOSITE");
             //shitty hack to test if string
             ok(data.composition[0].substring);
@@ -94,7 +95,7 @@ asyncTest("create", function () {
         socket.send( new Message("create", {"name":"Created Part", "sequence":"GGGGGG"}), function (data) {
             var id = data;
             socket.send(new Message("get", id), function (data) {
-                equal(data.sequence, "GGGGGG");
+                equal(data[0].sequence, "GGGGGG");
                 start();
             });
         })
@@ -106,6 +107,7 @@ asyncTest("create with schema", function () {
     socket.onopen = function () {
         socket.send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"BasicPart"}), function (data) {
             socket.send(new Message("get", "Created Part 2"), function (data2) {
+                data2 = data2[0]
                 ok(data2.hasOwnProperty("schema"));
                 ok(!(data2.hasOwnProperty("className")));
                 //tear down created data
