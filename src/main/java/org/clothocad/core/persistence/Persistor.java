@@ -115,6 +115,7 @@ public class Persistor{
         for (ObjBase o : getObjBaseSet(obj)){
             Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the current classes
             for (ConstraintViolation violation : cvs){
+                log.info("Constraint violation: {}", violation.getMessage());
                 violations.add(violation);
             }
         }
@@ -157,8 +158,13 @@ public class Persistor{
         //XXX: convert id field so that mongoDB understands it (hackish)
         if (data.containsKey("id") && !data.containsKey("_id")){
             Object id = data.get("id");
+            if (!(id instanceof ObjectId) && ObjectId.isValid(id.toString())){
+                id = new ObjectId(id.toString());
+            }
+            //TODO: figure out what our range of acceptable ids actually is/ what we disable for non-ObjectId ids
             data.remove("id");
             data.put("_id", id);
+            
         }
         else if (!data.containsKey("_id")){
             Object id = new ObjectId();
