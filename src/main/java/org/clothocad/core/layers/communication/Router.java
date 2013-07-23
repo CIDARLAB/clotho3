@@ -1,11 +1,8 @@
 package org.clothocad.core.layers.communication;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,7 +20,6 @@ import static org.clothocad.core.layers.communication.Channel.submit;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.util.JSON;
 
 @Slf4j
@@ -70,7 +66,7 @@ public class Router {
 
         //bind context to request
         Mind mind = getMind(connection);
-        ServerSideAPI api = mind.getAPI();
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, request.requestId);
 
 
         Channel chanEnum = request.channel;
@@ -118,23 +114,23 @@ public class Router {
                     break;
 
                 case get:
-                    api.get(data, id);
+                    api.get(data);
                     break;
                 case set:
                     api.set(JSON.mappify(data), id);
                     break;
                 case create:
-                    api.create(data, id);
+                    api.create(data);
                     break;
                 case destroy:
-                    api.destroy(data, id);
+                    api.destroy(data);
                     break;
                 case query:
-                    api.query(JSON.mappify(data), id);
+                    api.query(JSON.mappify(data));
                     break;
 
                 case run:
-                    api.run(data, id);
+                    api.run(data);
                     break;
                 case show:
                     api.show(data.toString(), null, null, null);
@@ -216,8 +212,6 @@ public class Router {
 
         Mind mind = new Mind();
 
-        ServerSideAPI api = new ServerSideAPI(mind, persistor);
-        mind.setAPI(api);
         mind.setClientConnection(connection);
         
         minds.put(id, mind);

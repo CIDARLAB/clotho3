@@ -104,7 +104,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
     socket.extendedSend = function (message, callback) {
         socket.idx += 1;
         message.requestId = String(socket.idx);
-        socket.callbacks[message.requestId] = callback;
+        socket.callbacks[message.channel + message.requestId] = callback;
         socket.send(JSON.stringify(message));
     };
         /************
@@ -119,8 +119,9 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             var channel = obj.channel;
             var data = obj.data;
 
-        if ("requestId" in obj && obj.requestId in socket.callbacks){
-            var callbackKey = obj.requestId;
+            var callbackKey = channel+obj.requestId;
+
+        if ("requestId" in obj && callbackKey in socket.callbacks){
             var callback = socket.callbacks[callbackKey];
             delete socket.callbacks[callbackKey];
             callback(obj.data)

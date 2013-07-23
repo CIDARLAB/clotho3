@@ -16,12 +16,12 @@ var getSocket = function (addr) {
     socket.send = function (message, callback) {
         socket.idx += 1;
         message.requestId = String(socket.idx);
-        socket.callbacks[message.requestId] = callback;
+        socket.callbacks[message.channel+message.requestId] = callback;
         socket.oldsend(JSON.stringify(message));
     };
     socket.onmessage = function (e) {
         var message = JSON.parse(e.data);
-        var callbackKey = message.requestId;
+        var callbackKey = message.channel+message.requestId;
         if (socket.callbacks.hasOwnProperty(callbackKey)){
             callback = socket.callbacks[callbackKey];
             delete socket.callbacks[callbackKey];

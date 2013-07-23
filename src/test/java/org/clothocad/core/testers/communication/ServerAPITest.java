@@ -47,7 +47,7 @@ public class ServerAPITest {
         Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         persistor = injector.getInstance(Persistor.class);
         mind = new Mind();
-        api = new ServerSideAPI(mind, persistor);
+        api = new ServerSideAPI(mind, persistor, null);
         persistor.connect();
         mind.setClientConnection(new TestConnection("test"));
     }
@@ -166,7 +166,7 @@ public class ServerAPITest {
         //filter out unseen results
         Map<String, Object> query = new HashMap<>();
         query.put("schema", "Part");
-        api.query(query, null);
+        api.query(query);
 
         List<Map<String, Object>> results = (List) connection.messages.get(1).data;
         assertEquals(4, results.size());

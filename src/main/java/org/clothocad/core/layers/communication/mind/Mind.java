@@ -23,13 +23,11 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.layers.communication.mind;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -40,7 +38,6 @@ import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
-import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
@@ -299,8 +296,6 @@ public final class Mind
     public ScriptEngine getEngine() {
         if (engine == null) {
             engine = new ScriptEngineManager().getEngineByName("JavaScript");
-            ServerSideAPI api = getAPI();
-            engine.put("clothoJava", api);
             
             try {
                 engine.eval(initializationScript);
@@ -310,14 +305,6 @@ public final class Mind
             }
         }
         return engine;
-    }
-
-    public ServerSideAPI getAPI() {
-        return ssAPI;
-    }
-    
-    public void setAPI(ServerSideAPI api) {
-        ssAPI = api;
     }
     
     public Person getPerson() {
@@ -344,7 +331,6 @@ public final class Mind
     private String personId;
     private transient List<Message> lastCommands = new ArrayList<>();
     private transient ScriptEngine engine;
-    private transient ServerSideAPI ssAPI;
     private transient ClientConnection connection;
     
     private Map<Date, String> commandHistory;

@@ -29,16 +29,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NonUniqueResultException;
 import javax.script.ScriptException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.persistence.Persistor;
@@ -47,15 +43,11 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
-import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
 import org.clothocad.core.schema.ReflectionUtils;
-import org.clothocad.core.util.FileUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -77,12 +69,19 @@ import org.slf4j.LoggerFactory;
  */
 @Slf4j
 public final class ServerSideAPI {
+    private static final AutoComplete completer = new AutoComplete();
+    private static final Router router = Router.get();
+    
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerSideAPI.class);
-    private Persistor persistor;
+    private final Persistor persistor;
+    private final String requestId;
+    private final Mind mind;
 
-    public ServerSideAPI(Persistor persistor) {
+
+    public ServerSideAPI(Mind mind, Persistor persistor, String requestId) {
         this.persistor = persistor;
+        this.mind = mind;
+        this.requestId = requestId;
     }
 
 // <editor-fold defaultstate="collapsed" desc="Human Interaction">      
@@ -215,7 +214,7 @@ public final class ServerSideAPI {
         data.put("class", severity);
         data.put("timestamp", new Date().getTime());
 
-        Message msg = new Message(Channel.say, data);
+        Message msg = new Message(Channel.say, data, requestId);
         router.sendMessage(mind.getClientConnection(), msg);
     }
 
@@ -250,7 +249,7 @@ public final class ServerSideAPI {
         router.sendMessage(mind.getClientConnection(), message);
     }
 
-    public final void get(Object o, String requestId) {
+    public final void get(Object o) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         //list of selectors?
         if (o instanceof List) {
@@ -343,7 +342,7 @@ public final class ServerSideAPI {
 
     
     //TODO: some global solution for jsonifying ObjectIds
-    public final void create(Object o, String requestId) {
+    public final void create(Object o) {
         List<String> returnData = new ArrayList<>();
         //list of selectors?
         if (o instanceof List) {
@@ -405,19 +404,19 @@ public final class ServerSideAPI {
         say(message, Severity.FAILURE);
     }
 
-    public final void destroy(Object o, String requestId) {
+    public final void destroy(Object o) {
         //list of selectors?
         if (o instanceof List) {
             for (Object obj : (List) o) {
-                destroy(persistor.resolveSelector(obj.toString(), false), requestId);
+                destroy(persistor.resolveSelector(obj.toString(), false));
             }
         } else {
-            destroy(persistor.resolveSelector(o.toString(), false), requestId);
+            destroy(persistor.resolveSelector(o.toString(), false));
         }
     }
 
     //JCA:  as of 6/9/2013 works
-    public final void destroy(ObjectId id, String requestId) {
+    public final void destroy(ObjectId id) {
         try {
             try {
                 persistor.delete(id);
@@ -433,7 +432,7 @@ public final class ServerSideAPI {
         }
     }
 
-    public final void query(Map<String, Object> spec, String requestId) {
+    public final void query(Map<String, Object> spec) {
         List<Map<String, Object>> objs;
 
         //XXX: demo hack to resolve schema smartly
@@ -468,7 +467,7 @@ public final class ServerSideAPI {
 // </editor-fold> 
 
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
-    public final void run(Object o, String id) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public final void run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<String, Object> data = JSON.mappify(o);
         
         if (data.containsKey("id")){
@@ -490,7 +489,7 @@ public final class ServerSideAPI {
                       if (result instanceof ObjBase) results.add(persistor.save((ObjBase) result));
                     else results.add(result);              
             }
-            Message message = new Message(Channel.run, persistor.toJSON(results), id);
+            Message message = new Message(Channel.run, persistor.toJSON(results), requestId);
             send(message);
             return;
         }
@@ -502,7 +501,7 @@ public final class ServerSideAPI {
         Object result = run(function, arguments);
         if (!result.equals(Function.NoResult.class)) {
             //TODO: Map<String, Object> reply - we need to have a way to designate which request we are responding to
-            Message message = new Message(Channel.run, result, id);
+            Message message = new Message(Channel.run, result, requestId);
             send(message);
         }
 
@@ -605,18 +604,6 @@ public final class ServerSideAPI {
     public final void unlisten(String data) {
         say("not yet implemented", Severity.FAILURE);
     }
-
-// </editor-fold> 
-    // <editor-fold defaultstate="collapsed" desc="Setup"> 
-    public ServerSideAPI(Mind mind, Persistor persistor) {
-        this.mind = mind;
-        this.persistor = persistor;
-    }
-
-    public void setMind(Mind mind) {
-        this.mind = mind;
-    }
-// </editor-fold>
 
 //    public final void test() {
 //        try {
@@ -791,22 +778,9 @@ public final class ServerSideAPI {
         try {
             return XMLParser.addPrefixToTagAttribute(script, "id", widgetIdPrefix);
         } catch (Exception ex) {
-            logger.error("", ex);
+            log.error("", ex);
         }
         return null;
-    }
-
-    // </editor-fold> 
-    /**
-     * ****** VARIABLES *******
-     */
-    //private transient Person person;
-    private static final AutoComplete completer = new AutoComplete();
-    private Mind mind;
-    private static Router router;
-
-    static {
-        router = Router.get();
     }
 
     public enum Severity {
