@@ -251,7 +251,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.paverError = function (paver) {
-        $scope.content = '<h4>Something didn&quot;t work - that type of paver wasn&quot;t recognized</h4>';
+        $scope.content = '<h4>Something didn&apos;t work - that type of paver wasn&apos;t recognized</h4>';
         console.log(paver);
     };
 
@@ -289,9 +289,18 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                     $scope.paverError(paver);
                 }
             }
+
+            if (paver.onload)
+                Application.script(paver.onload);
         }
 
         //todo - use Clotho.show() here
+
+
+        //todo - incorporate better
+        if (!!paver.css) {
+            Application.css(paver.css);
+        }
 
         if (!!paver.dependencies || !!paver.script) {
             Application.mixin(paver.dependencies).then(function() {

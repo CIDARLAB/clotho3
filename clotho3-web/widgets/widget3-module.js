@@ -16,4 +16,3 @@ angular.module('widgetApp3', ['clothoPackage'])
 
         $scope.menuItems = Clotho.get('menu_items');
     }]);
-

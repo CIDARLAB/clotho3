@@ -75,6 +75,9 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
 
             var deferred = $q.defer();
 
+            //check if CSS
+            //todo - implement
+
             $script(urls, function() {
                 Application.Extensions.processQueue();
                 Application.Extensions.recompile(element, args);
@@ -113,6 +116,36 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
             $script(urls, function() {
                 $rootScope.$safeApply(deferred.resolve());
             });
+
+            return deferred.promise;
+        };
+
+        /**
+         * @name Application.css
+         *
+         * @description Downloads and appends a CSS file to the page head, so that it will be applied properly
+         *
+         * @param {url} URL of CSS file
+         *
+         * @returns {Promise} Promise to be fulfilled once CSS files are downloaded and appended
+         */
+        Application.css = function(url) {
+
+            //todo - track so only added once
+
+            var deferred = $q.defer();
+
+            if (document.createStyleSheet) {
+                document.createStyleSheet(url); //IE
+                $rootScope.$safeApply(deferred.resolve());
+            } else {
+                var link = document.createElement("link");
+                link.type = "text/css";
+                link.rel = "stylesheet";
+                link.href = url;
+                document.getElementsByTagName("head")[0].appendChild(link);
+                $rootScope.$safeApply(deferred.resolve());
+            }
 
             return deferred.promise;
         };

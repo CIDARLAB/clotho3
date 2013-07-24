@@ -55,6 +55,24 @@
                     "template" : "/partials/trails/trail_super/revcomp6.html",
                     "dependencies" : "/partials/trails/trail_super/revcomp-filter2.js",
                     "script" : "/partials/trails/trail_super/revcomp5.js"
+                },
+                {
+                    "paver_title" : "Other Types",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp-other.html"
+                },
+                {
+                    "paver_title" : "7 - jQuery Mixin",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp7.html",
+                    "dependencies" : "/lib/typeahead.js",
+                    "onload" : "/partials/trails/trail_super/revcomp-jquery.js"
+                },
+                {
+                    "paver_title" : "8 - CSS Mixin",
+                    "type" : "template",
+                    "template" : "/partials/trails/trail_super/revcomp8.html",
+                    "css" : "/partials/trails/trail_super/revcomp-css.css"
                 }
             ]
         },

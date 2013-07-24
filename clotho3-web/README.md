@@ -53,15 +53,34 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- Mixins
+    - CSS
+    - Javascript
+        - demonstrate jQuery mixin (i.e. jQuery plugin)
+        - run after template compiled
+
+
+- bootstrapping apps without ng-view (just use ng-include)
+
+
+- clotho.validate() -- add listener for server response
+
+
 - create wrappers for directives, filters -> expose DNA functions accordingly
-
-
-- restrict input - try putting into ngModel.$parsers to see if doesn't affect cursor movement
 
 
 - caret movement directives : https://github.com/DrPheltRight/jquery-caret
     - see also contenteditable directive - have one working
     - get current position and save as option
+
+
+
+- function editor
+    - name
+    - function
+    - type
+    - example arguments + schema (inline testing)
+
 
 
 - plasmid editors
@@ -73,7 +92,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - get bootstrapping to work
 
 
-- allow resolve of Application.mixin() in $routeProvider ---- see terminal as example (which needs controller)
+
+- migrate to $log
 
 
 

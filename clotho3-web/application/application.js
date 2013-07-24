@@ -54,6 +54,19 @@ angular.module('clotho.ng-additions', [])
             if($rootScope.$$phase) { fn(); }
             else { $rootScope.$apply(fn); }
         };
+
+        //angular function extensions
+        var ext = {};
+
+        ext.isEmpty = function(value) {
+            return angular.isUndefined(value) || value === '' || value === null || value !== value;
+        };
+
+        ext.isScope = function(obj) {
+            return obj && obj.$evalAsync && obj.$watch;
+        };
+
+        angular.extend(angular, ext);
     }]);
 
 angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
@@ -114,6 +127,15 @@ angular.module('clothoRoot', ['clothoPackage']).
                 clotho : dynamicCtrl.clotho,
                 custom : {
                     model : "inst_second"
+                }
+            }).
+            when('/lazyload', {
+                //templateUrl:'dynamic/dynamic-partial.html',
+                templateUrl: '/testing/lazyLoad.html',
+                resolve: {
+                    deps : function() {
+                        return Application.mixin('/partials/trails/trail_super/revcomp-filter.js')
+                    }
                 }
             }).
             when('/terminal', {

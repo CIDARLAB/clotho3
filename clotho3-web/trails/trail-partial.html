@@ -10,7 +10,7 @@
             <ul class="nav nav-list" ng-repeat="module in trail.contents">
                 <li class="nav-header">{{module.module_title}}</li>
                 <li ng-repeat="paver in module.pavers" ng-class="{active: ('{{$parent.$index + '-' + $index}}' == current)}">
-                    <a ng-click="activate('{{$parent.$index + '-' + $index}}')">
+                    <a ng-click="activate('{{$parent.$index + '-' + $index}}')" ng-disabled="!paver.type">
                         <i class="icon-pencil" ng-if="paver.type == 'quiz'"></i>
                         {{paver.paver_title}}
                     </a>

@@ -86,7 +86,16 @@ Application.Foundation.service('PubSub', function() {
 
             var handle = [topic, callback];
             if (ref && typeof ref != 'undefined') {
-                addToRef(ref, handle);
+
+                if (angular.isScope(ref)) {
+                    ref.$on('$destroy', function() {
+                        destroy(ref.$id)
+                    });
+
+                    addToRef(ref.$id, handle);
+                } else {
+                    addToRef(ref, handle);
+                }
             }
             return handle;
         };

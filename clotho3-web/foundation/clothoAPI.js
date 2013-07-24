@@ -209,22 +209,12 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
     };
 
-    //if pass in scope, handle removing listeners
-    function silenceRefIfScope(reference) {
-        if (reference.$evalAsync && reference.$watch) {
-            reference.$on('$destroy', function() {
-                //console.log("silencing " + reference.$id);
-                silence(reference);
-            })
-        }
-    }
-
     /**
      * @name Clotho.watch
      *
      * @param {string} uuid UUID of Sharable to watch for changes
      * @param {function} callback Function to be executed on change
-     * @param {string=} reference Reference (e.g. $scope.$id) for element to unlink listener on destroy. Should be included, or will bloat.
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Should be included, or will bloat. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published changes for a given uuid
@@ -236,8 +226,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         PubSub.on('model_change:'+uuid, function(model) {
             $rootScope.$safeApply(callback(model));
         }, reference);
-
-        silenceRefIfScope(reference);
     };
 
 
@@ -248,7 +236,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @param {string} uuid UUID of Sharable to watch for changes
      * @param {object} scope Object to be updated
      * @param {string} field field in object to be updated
-     * @param {string} reference Reference (e.g. $scope.$id) for element to unlink listener on destroy
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published changes for a given uuid
@@ -260,8 +248,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         PubSub.on('model_change:'+uuid, function clothoAPI_watch2_callback(model) {
             $rootScope.$safeApply(scope[field] = model);
         }, reference);
-
-        silenceRefIfScope(reference);
     };
 
     /**
@@ -269,7 +255,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      * @param {string} channel PubSub Channel to listen to
      * @param {function} callback Function to be executed on change
-     * @param {string=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published events on a given channel, and runs a callback on the event
@@ -280,8 +266,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         PubSub.on(channel, function clothoAPI_listen_callback(data) {
             $rootScope.$safeApply(callback(data));
         }, reference);
-
-        silenceRefIfScope(reference);
     };
 
     /**
@@ -456,9 +440,26 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @returns {object} version at timestamp of resource with passed UUID
      *
      */
-        //todo - callback?
+        //todo - calllback? or does this force collection?
     var revert = function clothoAPI_revert(uuid, timestamp) {
         fn.api.emit('revert', {"uuid" : uuid, "timestamp" : timestamp});
+    };
+
+
+    /**
+     * @name Clotho.validate
+     *
+     * @param obj
+     *
+     * @description
+     * Passes an object or array of objects to the server to be validated, according to the rules of the object(s)'s respective schema(s)
+     *
+     * @returns {array} array of results of validation. Empty object means object passed validation. Populated object encountered problems. Fields are listed which were problematic, with error messages.
+     */
+    var validate = function (obj) {
+        fn.api.emit('validate', obj);
+
+        //todo - listener based on request id
     };
 
     /**

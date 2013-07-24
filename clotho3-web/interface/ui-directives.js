@@ -107,13 +107,6 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
     }
 }]);
 
-/*****************
-text caret movement
-******************/
-
-//future
-
-
 /***********************
  * HTML5 EXTENSIONS
 ***********************/
@@ -124,6 +117,7 @@ Application.Interface.directive('contenteditable', [function() {
 
     //moves cursor to end of contenteditable element -- not textarea (but those should be automatic)
     //kinda a hack, but gives same behavior as input
+    //todo - move to $caret service
     //future - get cursor location, and reset to there rather than end
     //note - expects DOM element, not jQuery
     function setEndOfContenteditable(contentEditableElement)
@@ -158,6 +152,7 @@ Application.Interface.directive('contenteditable', [function() {
                 if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) return;
 
                 var value = elm.text();
+                console.log(value);
 
                 //testing
                 //console.log("EDITABLE", ctrl.$viewValue, ctrl.$modelValue, value, ctrl.$parsers, ctrl);
@@ -175,11 +170,6 @@ Application.Interface.directive('contenteditable', [function() {
                     });
                 }
             });
-
-            //todo - expose
-            function isEmpty(value) {
-                return angular.isUndefined(value) || value === '' || value === null || value !== value;
-            }
 
             // model -> view
             ctrl.$render = function() {
