@@ -11,8 +11,8 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
     function generateCollector() {
 
         function broadcastModelUpdate(uuid, obj) {
-            PubSub.trigger("model_change", uuid);
-            PubSub.trigger("model_change:" + uuid, angular.copy(obj));
+            PubSub.trigger("update", uuid);
+            PubSub.trigger("update:" + uuid, angular.copy(obj));
         }
 
         /************

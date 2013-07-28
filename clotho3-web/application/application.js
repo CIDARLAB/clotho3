@@ -96,8 +96,9 @@ angular.module('clothoRoot', ['clothoPackage']).
                 }
             }).
             when('/editor', {
-                redirectTo:'/editor/inst_first'
+                redirectTo:'/editor/func_first'
             }).
+
             when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
                 //todo - get this working, instead of doing it in the link of directive

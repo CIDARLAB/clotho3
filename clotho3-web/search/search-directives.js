@@ -18,15 +18,19 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             $scope.execute = Searchbar.execute;
 
             //functions
+            //todo - migrate to typeahead directive? or at least integrate?
             $scope.$watch('display.query', function(newValue, oldValue) {
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
-                    Clotho.autocomplete($scope.display.query);
+                    Clotho.autocomplete($scope.display.query).then(function(data) {
+                        $scope.autocomplete.autocompletions = data;
+                    });
                 }
             });
 
             /**** click-outside watcher ***/
 
+            //todo - namespace
             $scope.$watch('display.autocomplete', function(newValue, oldValue) {
                 if (!!newValue) {
                     //console.log('inactivating autocomplete clickOutside');

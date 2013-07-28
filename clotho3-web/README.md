@@ -53,17 +53,54 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- Mixins
-    - CSS
-    - Javascript
-        - demonstrate jQuery mixin (i.e. jQuery plugin)
-        - run after template compiled
+- Server communication
+    - create custom layer for Socket Events (move out of socket service)
+    - basic node versions of:
+        - query
+        - run
+        - create
+        - revert
+
+
+- create help tips - use popovers? - structure JSON
+
+
+- $clotho.api
+    - ensure only instantiated once
+
+
+- editor
+    - use form controller for validation
+        - currently requires nested forms: https://github.com/angular/angular.js/issues/1404
+    - add novalidate via directive
+    - new fields
+        - radios
+        - file drops?
+
+
+- function editor
+    - integrate codemirror
+
+
+- UI Directives
+    - dropdown in Angular --  see angular-strap
+    - popover with HTML -- test -- see angular-strap
+        - hide on mouseleave when mouseenter trigger
+    - angular Strap: https://raw.github.com/mgcrea/angular-strap/v0.7.5/dist/angular-strap.js
+
+
+- break up UI directives, filters, etc. into modules
+
+
+- schema editor -- wait on stephanie
+
+
+- Application Mixin promises
+    - terminal controller -- required
+    - youtube API @ Trails -- not required
 
 
 - bootstrapping apps without ng-view (just use ng-include)
-
-
-- clotho.validate() -- add listener for server response
 
 
 - create wrappers for directives, filters -> expose DNA functions accordingly
@@ -72,14 +109,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - caret movement directives : https://github.com/DrPheltRight/jquery-caret
     - see also contenteditable directive - have one working
     - get current position and save as option
-
-
-
-- function editor
-    - name
-    - function
-    - type
-    - example arguments + schema (inline testing)
 
 
 
@@ -110,13 +139,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
 
-
-
-- create help tips - use position service - structure JSON
-
-
-
-- move away from "model_change" etc. -> 'update', etc. etc.
 
 - trails functionality
     - youtube events - pass as param to function

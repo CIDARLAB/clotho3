@@ -1,0 +1,12 @@
+{
+    "id" : "sharable_person",
+    "type" : "sharable",
+    "schema_id" : "schema_person",
+    "displayName" : "A Person",
+    "password" : "SecretWords",
+    "email" : "example@blah.com",
+    "institution" : "UC Berkeley",
+    "biography" : "Second person was born in a small town...",
+    "birthday" : "1989-09-19",
+    "userAccess" : true
+}

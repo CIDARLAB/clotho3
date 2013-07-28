@@ -7,29 +7,20 @@
 Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', function(Clotho, $compile, $parse) {
 
     return {
-        restrict: 'A',
+        restrict: 'CA',
         replace: false,
-        template: '<legend>{{schemaName}} View</legend>' +
-            '<insert-fields></insert-fields>' +
-            '<div class="form-actions" ng-hide="editMode">' +
-            '   <button class="btn" type="button" ng-click="edit()">Edit</button>' +
-            '   <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>' +
-            '</div>' +
-            '<div class="form-actions" ng-show="editMode">' +
-            '   <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="sharableEditor.$invalid">Save</button>' +
-            '   <button type="submit" class="btn btn-danger" ng-click="discard()">Discard</button>' +
-            '   <button type="button" class="btn btn-warning" ng-click="reset()">Reset</button>' +
-            '   <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>' +
-            '</div>',
+        require: '^form',
+        templateUrl: '/editor/sharable-partial.html',
         scope: {
             //sharable: '=',
-            id: '='
+            uuid: '='
         },
         controller: function($scope, $element, $attrs) {
+
             //if we're not linking, just pull it from the attrs
-            if (typeof $scope.id == 'undefined') {
+            if (typeof $scope.uuid == 'undefined') {
                 console.log("id not in controller, pulling");
-                $scope.id = $attrs.id;
+                $scope.uuid = $attrs.uuid;
             }
 
             $scope.schema = {};
@@ -41,38 +32,32 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
             // Listeners
 
             Clotho.listen('collector_reset', function SharableEditor_onCollectorReset() {
-
-                //note - this uses promises in the default way, angular knows how to deal with it
-                //$scope.sharable = Clotho.get($scope.id, true);
-
                 //this is how people would ideally access things (normal promise pattern)
-                Clotho.get($scope.id).then(function(result) {
+                Clotho.get($scope.uuid).then(function(result) {
                     $scope.sharable = result;
                 });
 
                 // testing - sync Clotho.get()
-                //console.log(Clotho.get($scope.id, true));
+                //console.log(Clotho.get($scope.uuid, true));
                 
             }, $scope);
 
             /*
             //note - alternate version - see also watch2 below
-            Clotho.watch($scope.id, function (data) {
+            Clotho.watch($scope.uuid, function (data) {
                 $scope.sharable = data;
             }, $scope);
              */
 
-            Clotho.watch2($scope.id, $scope, 'sharable', $scope);
-
-            //future - use return {} syntax? i.e. for inheritable directive controllers
+            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope);
         },
         compile: function compile(tElement, tAttrs, transclude) {
 
             return {
-                pre: function preLink(scope, iElement, iAttrs, controller) {
+                pre: function preLink(scope, iElement, iAttrs, ngForm) {
 
                     //todo - check out ngView and see how it compiles / links async content.
-                    //todo - interface with ngForm
+                    //fixme - interface with ngForm
                     scope.generate_fields = function() {
                         var insert = iElement.find('insert-fields').html('');
                         var fulltext = "";
@@ -103,7 +88,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                                     inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'">' + optionsText + '</select>';
                                     break;
                                 }
-                                    //todo - add filedrop support
+                                    //todo - add filedrop support, and radio. checkbox works.
                                 default: {
                                     inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'" >';
                                     break;
@@ -120,7 +105,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
 
                     //get the sharable (which says which schema it needs)
                     //note variables not compiled yet in 'pre' (e.g. if use scope: {var : '@'} and should go through $parse)
-                    Clotho.get(scope.id).then(function(result) {
+                    Clotho.get(scope.uuid).then(function(result) {
                         scope.sharable = result;
                         scope.schemaName = result.schema_id;
 
@@ -132,7 +117,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                         });
                     });
                 },
-                post: function postLink(scope, iElement, iAttrs, controller) {
+                post: function postLink(scope, iElement, iAttrs, ngForm) {
 
                     //e.g. scope.formConst.$setPristine()
                     scope.formConst = $parse(iAttrs.name)(scope);
@@ -162,7 +147,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                     //discard edits
                     scope.reset = function() {
                         scope.formConst.$setPristine();
-                        Clotho.get(scope.id).then(function(result) {
+                        Clotho.get(scope.uuid).then(function(result) {
                             scope.sharable = result;
                         });
                     };

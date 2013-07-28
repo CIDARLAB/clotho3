@@ -1,8 +1,8 @@
 {
-    "id" : "inst_first",
+    "id" : "sharable_institution",
+    "type" : "sharable",
     "schema_id" : "schema_institution",
-    "displayName" : "Remote File Person",
-    "email" : "example@blah.com",
+    "displayName" : "Some Institution",
     "city" : "Internet",
     "state" : "CA",
     "country" : "United States",

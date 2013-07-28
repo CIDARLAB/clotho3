@@ -1,0 +1,78 @@
+<legend>Function Editor</legend>
+    <div class="ng-cloak">
+
+        <div class="control-group">
+            <label class="control-label" for="functionName">Name</label>
+            <div class="controls">
+                <input type="text" id="functionName" ng-model="editable.name" ng-disabled="!editMode">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionId">ID</label>
+            <div class="controls">
+                <input type="text" id="functionId" ng-model="editable.uuid" disabled>
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="functionLang">Language</label>
+            <div class="controls">
+                <input type="text" id="functionLang" ng-model="editable.language" ng-disabled="!editMode">
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label">Arguments</label>
+            <div class="controls">
+                <div ng-repeat="param in editable.params" class="pull-left">
+                    <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.type for c in paramTypes">
+                    </select>
+                    <!-- see http://jsfiddle.net/M32pj/1/ for another select directive-->
+
+                    <!--<input type="text" ng-model="param.type" typeahead="type for type in paramTypes | filter:$viewValue" ng-disabled="!editMode">-->
+
+                    <input type="text" ng-model="param.name" ng-disabled="!editMode">
+
+                </div>
+                <button class="btn pull-right" type="button" ng-click="addParam()" ng-disabled="!editMode">+</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionCode">Code</label>
+            <div class="controls">
+                <textarea type="text" id="functionCode" class="input-large" ng-model="editable.code" style="width: 100%; height: 150px" ng-disabled="!editMode"></textarea>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Test Arguments</label>
+            <div class="controls">
+                <div ng-repeat="param in editable.params">
+                    <input type="text" ng-model="param.test.uuid" typeahead="opt for opt in param.test.options | filter:$viewValue" popover="We should set this up to work with Clotho.query(), tied to the schema restriction as above" popover-title="Easy Testing - Arguments" popover-trigger="focus" ng-disabled="!editMode">
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionTestResult">Expected Result</label>
+            <div class="controls">
+                <input type="text" id="functionTestResult" ng-model="editable.testResult" ng-disabled="!editMode">
+            </div>
+        </div>
+
+
+        <div class="form-actions" ng-hide="editMode">
+            <button class="btn" type="button" ng-click="edit()">Edit</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+        <div class="form-actions" ng-show="editMode">
+            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="sharableEditor.$invalid">Save</button>
+            <button type="button" class="btn btn-danger" ng-click="discard()">Discard</button>
+            <button type="button" class="btn btn-warning" ng-click="reset()">Reset</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+    </div>

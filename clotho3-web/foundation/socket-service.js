@@ -11,53 +11,8 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
         //created in index.html
         var socket = window['$clotho']['socket'];
 
-        //internal use (Clotho API) on channel $clotho
-        var internal = {};
-
         //external use - use in other apps, or for custom events
         var customChannels = {};
-
-        /*********
-         Socket PubSub
-         - Avoid creation of Socket.on() listeners etc. by using custom channels
-         *********/
-
-        /*
-        //INTERNAL USE
-        //note - test these --- may be better to avoid internal registers? just go through PubSub?
-        var register = function (eventName, callback) {
-            if(!internal[eventName]) {
-                internal[eventName] = [];
-            }
-            internal[eventName].push(callback);
-            return [eventName, callback];
-        };
-
-        var reg_once = function (eventName, callback) {
-            var once_fn = function(args) {
-                unregister([eventName, this]);
-                callback(args);
-            };
-            register(eventName, once_fn);
-        };
-
-        var unregister = function (handle) {
-            var t = handle[0];
-            internal[t] && angular.forEach(internal[t], function(idx){
-                if(this == handle[1]){
-                    console.log("SOCKET\tremoving listener for " + internal[t]);
-                    internal[t].splice(idx, 1);
-                }
-            });
-        };
-
-        var internal_trigger = function (channel, args) {
-            internal[channel] && angular.forEach(internal[channel], function(fn) {
-                fn(args);
-            });
-        };
-        // END INTERNAL USE
-        */
 
         //external use
         var on = function (eventName, callback) {
@@ -133,21 +88,13 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
         return {
 
-            /*
-            //only for use by Clotho API
-            //note - decide if will be used
-            register : register,
-            reg_once : reg_once,
-            unregister : unregister,
-            */
-
-
             //For adding custom channels - for use in other apps etc.
             on : on,
             once : once,
             off : off,
 
             //send a JSON on a 'custom channel' [ repackaged using send() ]
+            //note - callback is run on send, not really a callback
             emit: function (eventName, data, callback) {
                 console.log("SOCKET\tdata emitted on channel: " + eventName);
 
