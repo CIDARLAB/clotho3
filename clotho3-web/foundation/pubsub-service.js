@@ -36,6 +36,15 @@ Application.Foundation.service('PubSub', function() {
      - Once() via Flag for Boolean 'once'
      - deregistration returned as function to invoke later
         - e.g. return removeFromArray(array, val)
+
+        e.g.
+
+        var off = $scope.$on('$stateChangeStart', function(e) {
+            e.preventDefault();
+            off();
+        });
+
+
      - Each() (unexposed) to handle multiple/single items the same way
      - Off() by handle (event, specific callback)
      - Destroy() by reference

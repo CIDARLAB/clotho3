@@ -17,6 +17,13 @@ Application.Editor.directive('functionEditor', ['Clotho', '$compile', '$parse', 
                 $scope.uuid = $attrs.uuid;
             }
 
+            $scope.editing = $scope.editing || {};
+
+            $scope.editMode = false;
+            $scope.formDirty = false;
+
+            $scope.languages = ['javascript', 'python', 'java'];
+
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},
                 {name:'String', type:'Type'},
@@ -27,25 +34,16 @@ Application.Editor.directive('functionEditor', ['Clotho', '$compile', '$parse', 
             ];
 
 
-            $scope.editing = $scope.editing || {};
+
 
             function emptyParam() {return {"type" : "", "name" : "", "test" : {"uuid" : ""}}}
 
             $scope.addParam = function() {
+                if (angular.isEmpty($scope.editing.params)) {$scope.editing.params = [];}
                 $scope.editing.params.push(emptyParam());
             };
 
-            //dummy data
-            if (angular.isEmpty($scope.editing.params)) {
-                $scope.editing.params = [];
-                $scope.addParam();
-            }
 
-            //testing
-            $scope.editing.params[0].test.options = ['usdf-2323-g2', 'asdf-2-23g2-3', 'sdf0s2-232-4ff','138tr-c-1c3-111'];
-
-            $scope.editMode = false;
-            $scope.formDirty = false;
 
         },
         link: function link(scope, element, attrs, ngForm) {

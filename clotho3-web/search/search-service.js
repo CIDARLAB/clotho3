@@ -160,11 +160,6 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     Clotho.listen("activityLog", function (data) {
         receiveMessage(data);
     }, 'searchbar');
-
-    Clotho.listen('autocomplete', function(data) {
-        //todo -smarter logic here
-        autocomplete.autocompletions = data;
-    }, 'searchbar');
     
     return {
         options : options,

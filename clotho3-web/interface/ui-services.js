@@ -653,11 +653,13 @@ Application.Interface.controller('DialogShareController', ['$scope', 'dialog', '
 
 
 /*****************
- text caret movement
+ text caret selection and movement
 
  inspiration:
  - https://github.com/DrPheltRight/jquery-caret/blob/master/jquery.caret.js
  - http://plugins.jquery.com/caret/
+ - https://code.google.com/p/rangyinputs/
+ - http://stackoverflow.com/questions/1181700/set-cursor-position-on-contenteditable-div?rq=1
  ******************/
 
 //note - jQuery dependence
@@ -754,13 +756,6 @@ Application.Interface.service('$caret', ['$log', function($log) {
 
     };
 
-    /**
-     * @return {array} [start, end]
-     */
-    functions.getSel = function() {
-        //todo
-    };
-
     functions.setPos = function(el, index) {
         switch (index) {
             case angular.isEmpty(index) : {
@@ -777,6 +772,14 @@ Application.Interface.service('$caret', ['$log', function($log) {
 
         //check type - contenteditable or input
     };
+
+    /**
+     * @return {array} [start, end]
+     */
+    functions.getSel = function() {
+        //todo - see plasmid module
+    };
+
 
     functions.setSel = function(el, start, end) {
         //todo

@@ -5,17 +5,10 @@
 /*
 
  todo
- - restrict input to one of multiple sets
- - ACGT
- - plus others (degenerates - e.g. N, Y, R)
- - RNA
  - revcomp method
  - other parameters
  - circular
  - linear
- - GC content / emlting point (from server)
- - start / stop codons
- - check both directions
  - add feature directive -- tooltip?
 
  how will funciton
@@ -225,7 +218,7 @@ Application.Plasmid.service('Plasmid', ['$window', '$timeout', function($window,
         features.push(feat);
     };
 
-    var addSelection =  function (ngModel) {
+    var addSelection = function (ngModel) {
 
         var feature = emptyFeature();
 
@@ -551,6 +544,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
                     };
 
                     //todo - hacky
+                    //fixme - scope.sequence is not changing
                     scope.$watch(function() {
                         return ngModel.$viewValue;
                     }, function(viewVal) {
@@ -605,7 +599,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
     }
 }]);
 
-Application.Plasmid.filter('features', [function() {
+Application.Plasmid.filter('features', ['DNA', 'restrictionSite', function(DNA, restrictionSite) {
     return function (text, features) {
         if (features && angular.isArray(features) && angular.isString(text)) {
 
@@ -820,8 +814,6 @@ Application.Plasmid.directive('annotation', ['$tooltip', function($tooltip) {
 
                 },
                 post: function(scope, element, attrs, ctrl) {
-                    //attrs.$set('style', "background-color: #FF0000");
-
                     element.css(scope.feature.css);
 
                     //todo - simple notification - ask if want to split or what

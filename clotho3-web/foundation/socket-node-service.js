@@ -62,6 +62,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
             obj = JSON.parse(obj);
             var channel = obj.channel;
+            var requestId = obj.requestId;
             var data = obj.data;
 
             //note - channel reserved for serverAPI
@@ -77,14 +78,15 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
                 ClientAPI[channel](data);
             }
             //for custom listeners attached
-            else if (typeof customChannels[channel] == 'function') {
+            else if (typeof customChannels[channel+':'+requestId] == 'function') {
                 console.log("SOCKET\tmapping to custom listeners - " + channel);
                 trigger(channel, data);
             }
             // don't know what to do, so publish to PubSub
             else {
                 console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
-                PubSub.trigger(channel, data);
+                //fixme - temporary hack - will move to separate service soon
+                PubSub.trigger(channel+':'+requestId, data);
             }
         });
 

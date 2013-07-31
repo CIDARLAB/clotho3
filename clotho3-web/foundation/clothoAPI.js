@@ -48,12 +48,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
     fn.api.emit = function (eventName, data, requestId) {
         fn.emit("api",
-            fn.pack(eventName, data, requestId)
+            fn.pack(eventName, data),
+            requestId
         )
     };
     fn.searchbar.emit = function (eventName, data, requestId) {
         fn.emit("searchbar",
-            fn.pack(eventName, data, requestId)
+            fn.pack(eventName, data),
+            requestId
         )
     };
 
@@ -374,7 +376,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('query:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
@@ -398,7 +400,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('create:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
@@ -452,7 +454,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('revert:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
@@ -476,7 +478,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('validate:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
@@ -677,7 +679,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('autocomplete:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
@@ -734,11 +736,11 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('run:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
-        fn.api.emit('query', packaged, requestId);
+        fn.api.emit('run', packaged, requestId);
 
         return deferred.promise;
     };
@@ -779,7 +781,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('recent:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 
@@ -834,7 +836,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         var requestId = (Date.now()).toString(),
             deferred = $q.defer();
 
-        PubSub.once(requestId, function(data) {
+        PubSub.once('gradeQuiz:'+requestId, function(data) {
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
 

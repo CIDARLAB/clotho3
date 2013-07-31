@@ -3,8 +3,9 @@
 Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$location', 'Clotho', function($scope, $routeParams, $location, Clotho) {
 
     //fixme - change path, don't reinstantiate controllers etc.
-   /* $scope.$watch('id', function (newval, oldval) {
-        $location.url('/editor/' + $scope.id);
+    //note - could use search param, and set reloadOnSearch to false
+    /*$scope.$watch('id', function (newval, oldval) {
+       $location.url('/editor/' + $scope.id).replace();
     });*/
 
     //init()

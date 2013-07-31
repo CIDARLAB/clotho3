@@ -387,7 +387,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         help : help,
         revisions : revisions,
         startTrail : startTrail,
-        autocomplete : autocomplete,
+        //autocomplete : autocomplete,
         autocompleteDetail: autocompleteDetail
     }
 }]);

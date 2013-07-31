@@ -23,6 +23,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
                     Clotho.autocomplete($scope.display.query).then(function(data) {
+                        console.log('got data');
                         $scope.autocomplete.autocompletions = data;
                     });
                 }
@@ -30,7 +31,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
 
             /**** click-outside watcher ***/
 
-            //todo - namespace
+            //todo - namespace clickOutside
             $scope.$watch('display.autocomplete', function(newValue, oldValue) {
                 if (!!newValue) {
                     //console.log('inactivating autocomplete clickOutside');

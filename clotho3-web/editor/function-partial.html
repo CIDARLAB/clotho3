@@ -19,7 +19,7 @@
         <div class="control-group">
             <label class="control-label" for="functionLang">Language</label>
             <div class="controls">
-                <input type="text" id="functionLang" ng-model="editable.language" ng-disabled="!editMode">
+                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang for lang in langTypes"></select>
             </div>
         </div>
 
@@ -34,10 +34,13 @@
 
                     <!--<input type="text" ng-model="param.type" typeahead="type for type in paramTypes | filter:$viewValue" ng-disabled="!editMode">-->
 
-                    <input type="text" ng-model="param.name" ng-disabled="!editMode">
+                    <div class="input-append">
+                        <input type="text" ng-model="param.name" ng-disabled="!editMode">
+                        <button class="btn" ng-click="editable.params.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                    </div>
 
                 </div>
-                <button class="btn pull-right" type="button" ng-click="addParam()" ng-disabled="!editMode">+</button>
+                <button class="btn pull-right" type="button" ng-click="addParam()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
             </div>
         </div>
 
@@ -61,6 +64,8 @@
             <label class="control-label" for="functionTestResult">Expected Result</label>
             <div class="controls">
                 <input type="text" id="functionTestResult" ng-model="editable.testResult" ng-disabled="!editMode">
+                <button class="btn" ng-click="testFunction()" ng-disabled="!editMode">Test</button>
+
             </div>
         </div>
 

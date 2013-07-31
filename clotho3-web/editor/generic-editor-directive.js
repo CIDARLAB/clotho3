@@ -1,5 +1,8 @@
 'use strict';
 
+//todo - integrate ngFormController --- nested ngForms so validation works
+// then in template: ng-class="{error: myForm.name.$invalid}"
+
 Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', function(Clotho, $compile, $parse, $http, $templateCache) {
 
     return {
@@ -7,7 +10,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
         require: '^form',
         scope: {
             uuid: '='
-            //fixme - make not required
+            //fixme - make not required, doesn't work otherwise
             //editable: '='
         },
         controller: function($scope, $element, $attrs) {
@@ -47,6 +50,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
              FUNCTION
              ******/
 
+            $scope.langTypes = ['javascript', 'python', 'java'];
+
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},
                 {name:'String', type:'Type'},
@@ -59,7 +64,13 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             function emptyParam() {return {"type" : "", "name" : "", "test" : {"uuid" : ""}}}
 
             $scope.addParam = function() {
+                if (angular.isEmpty($scope.editable.params)) {$scope.editable.params = [];}
                 $scope.editable.params.push(emptyParam());
+            };
+
+            $scope.testFunction = function() {
+                //todo
+                $scope.result = Clotho.run($scope.editable);
             };
 
             /*********
@@ -92,6 +103,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                         }
                         case "select": {
                             var optionsText = "";
+                            //todo - use ng-options
                             angular.forEach(field.options, function(value, key) {
                                 optionsText = optionsText + '<option value="'+value+'">'+ value + '</option>';
                             });
@@ -115,12 +127,12 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             $scope.compileEditor = function() {
 
                 Clotho.get($scope.uuid).then(function(result) {
+                    $scope.editMode = false;
                     $scope.editable = result;
                     $scope.type = result.type;
 
                     switch (angular.lowercase($scope.type)) {
                         case 'sharable' : {
-                            console.log('sharable');
 
                             $scope.schemaName = result.schema_id;
 
@@ -143,7 +155,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                         }
                         case 'function' : {
-                            console.log('function');
 
                             $http.get('/editor/function-partial.html',  {cache: $templateCache})
                                 .success(function(data) {
@@ -154,8 +165,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                             break;
                         }
                         case 'schema' : {
-                            console.log('schema');
-
 
 
                             break;

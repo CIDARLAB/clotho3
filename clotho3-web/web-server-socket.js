@@ -442,6 +442,7 @@ io.sockets.on('connection', function (socket) {
     //pack for clientAPI
     api.pack.api_wrap = function(channel, data, requestId) {
         var packaged = api.pack.simple(channel, data, requestId);
+        console.log(packaged);
         return JSON.stringify(packaged);
     };
     //pack for channel $clotho, for Clotho ServerAPI
@@ -492,16 +493,18 @@ io.sockets.on('connection', function (socket) {
         var msg = data.msg;
 
         socket.send(api.pack.api_wrap('alert',
-            api.pack.nopack(msg)
-        ), requestId);
+            api.pack.nopack(msg),
+            requestId)
+        );
     };
     api.api.broadcast = function(data, requestId) {
         var channel = data.channel;
         data = data.data;
 
         socket.send(api.pack.api_wrap('broadcast',
-            api.pack.simple(channel, data)
-        ), requestId);
+            api.pack.simple(channel, data),
+            requestId)
+        );
     };
     api.api.get = function(uuid, requestId) {
         console.log("requesting model: " + uuid);
@@ -518,8 +521,9 @@ io.sockets.on('connection', function (socket) {
             collector[uuid] = data;
 
             socket.send(api.pack.api_wrap('collect',
-                api.pack.collect(uuid, "json", data)
-            ), requestId);
+                api.pack.collect(uuid, "json", data),
+                requestId)
+            );
         });
     };
     api.api.get_script = function(uuid, requestId) {
@@ -527,24 +531,27 @@ io.sockets.on('connection', function (socket) {
         var path = 'partials/' + uuid + '.js';
 
         socket.send(api.pack.api_wrap('collect',
-            api.pack.collect(uuid, "js", path, true)
-        ), requestId);
+            api.pack.collect(uuid, "js", path, true),
+            requestId)
+        );
     };
     api.api.get_template = function(uuid, requestId) {
         console.log("requesting partial URL for: " + uuid);
         var path = 'partials/' + uuid + '.html';
 
         socket.send(api.pack.api_wrap('collect',
-            api.pack.collect(uuid, "html", path, true)
-        ), requestId);
+            api.pack.collect(uuid, "html", path, true),
+            requestId)
+        );
     };
     api.api.get_url = function(uuid, requestId) {
         console.log("requesting model URL for: " + uuid);
         var path = 'models/' + uuid;
 
         socket.send(api.pack.api_wrap('collect',
-            api.pack.collect(uuid, "json", path)
-        ), requestId);
+            api.pack.collect(uuid, "json", path),
+            requestId)
+        );
     };
     api.api.gradeQuiz = function (quiz, requestId) {
         console.log(quiz);
@@ -556,9 +563,10 @@ io.sockets.on('connection', function (socket) {
             "result" : true
         };
 
-        socket.send(api.pack.requestId(requestId,
-            api.pack.nopack(result)
-        ));
+        socket.send(api.pack.api_wrap('gradeQuiz',
+            api.pack.nopack(result),
+            requestId)
+        );
     };
     api.api.log = function(data) {
         console.log("LOG\t: " + data);
@@ -577,9 +585,10 @@ io.sockets.on('connection', function (socket) {
             if (err) { console.log('Error: ' + err); return; }
             data = JSON.parse(data);
 
-            socket.send(api.pack.requestId(requestId,
-                api.pack.nopack(data)
-            ));
+            socket.send(api.pack.api_wrap('recent',
+                api.pack.nopack(data),
+                requestId)
+            );
         });
 
     };
@@ -600,8 +609,9 @@ io.sockets.on('connection', function (socket) {
         };
 
         socket.send(api.pack.api_wrap('say',
-            api.pack.nopack(message)
-        ), requestId);
+            api.pack.nopack(message),
+            requestId)
+        );
     };
     api.api.set = function(data, requestId) {
         var uuid = data.id || data.uuid;
@@ -616,8 +626,9 @@ io.sockets.on('connection', function (socket) {
 
             /*
             socket.send(api.pack.api_wrap('collect',
-                api.pack.collect(uuid, "json", data)
-            ), requestId);*/
+                api.pack.collect(uuid, "json", data),
+                requestId)
+            );*/
         }
     };
     api.api.show_old = function(data, requestId) {
@@ -631,13 +642,15 @@ io.sockets.on('connection', function (socket) {
         };
 
         socket.send(api.pack.api_wrap('display',
-            api.pack.display(uuid, data)
-        ), requestId);
+            api.pack.display(uuid, data),
+            requestId)
+        );
     };
     api.api.show = function(data, requestId) {
         socket.send(api.pack.api_wrap('display',
-            api.pack.nopack(data)
-        ), requestId);
+            api.pack.nopack(data),
+            requestId)
+        );
     };
 
     /**** SEARCHBAR ***/
@@ -645,7 +658,6 @@ io.sockets.on('connection', function (socket) {
     api.searchbar = {};
 
     api.searchbar.submit = function (data, requestId) {
-
 
         var message = {
             "text" : data.query,
@@ -655,8 +667,9 @@ io.sockets.on('connection', function (socket) {
         };
 
         socket.send(api.pack.api_wrap('say',
-            api.pack.nopack(message)
-        ), requestId);
+            api.pack.nopack(message),
+            requestId)
+        );
 
         // more serverside logic would happen here
         console.log("submit received: " + data.query);
@@ -669,8 +682,9 @@ io.sockets.on('connection', function (socket) {
         };
 
         socket.send(api.pack.api_wrap('say',
-            api.pack.nopack(response)
-        ), requestId);
+            api.pack.nopack(response),
+            requestId)
+        );
 
     };
 
@@ -713,9 +727,10 @@ io.sockets.on('connection', function (socket) {
             }
         ];
 
-        socket.send(api.pack.requestId(requestId,
-            api.pack.nopack(demo)
-        ));
+        socket.send(api.pack.api_wrap('autocomplete',
+            api.pack.nopack(demo),
+            requestId)
+        );
     };
     api.searchbar.autocompleteDetail = function(data, requestId) {
         var uuid = data.uuid;
@@ -728,8 +743,9 @@ io.sockets.on('connection', function (socket) {
             data = JSON.parse(data);
 
             socket.send(api.pack.api_wrap('autocompleteDetail',
-                api.pack.nopack(data)
-            ), requestId);
+                api.pack.nopack(data),
+                requestId)
+            );
         });
     };
 
@@ -800,7 +816,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('message', function(msg) {
         msg = JSON.parse(msg);
-        var requestId = msg.data.requestId;
+        var requestId = msg.requestId;
         var wrapper = msg.channel;
         var channel = msg.data.channel;
         var data = msg.data.data;

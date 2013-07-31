@@ -53,8 +53,14 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- grunt / yeoman --- javascript project builder
+    - package clotho api stuff (foundation folder and application.js)`
+
+
 - Server communication
-    - create custom layer for Socket Events (move out of socket service)
+    - REQUESTID REFACTOR pending Stephanie response
+        - pass requestId alongside channel, concatenate on client, listen for "<channel>:<requestId>"
+    - create custom layer for Socket Events (using PubSub??)
     - basic node versions of:
         - query
         - run
@@ -74,12 +80,15 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - currently requires nested forms: https://github.com/angular/angular.js/issues/1404
     - add novalidate via directive
     - new fields
+        - select
         - radios
         - file drops?
 
+    - function editor
+        - integrate codemirror
 
-- function editor
-    - integrate codemirror
+    - schema editor -- wait on stephanie
+
 
 
 - UI Directives
@@ -89,21 +98,16 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - angular Strap: https://raw.github.com/mgcrea/angular-strap/v0.7.5/dist/angular-strap.js
 
 
-- break up UI directives, filters, etc. into modules
 
+- plasmid editors to check out
+    - benchling
+    - sparkDNA
 
-- schema editor -- wait on stephanie
 
 
 - Application Mixin promises
     - terminal controller -- required
     - youtube API @ Trails -- not required
-
-
-- bootstrapping apps without ng-view (just use ng-include)
-
-
-- create wrappers for directives, filters -> expose DNA functions accordingly
 
 
 - caret movement directives : https://github.com/DrPheltRight/jquery-caret
@@ -112,9 +116,16 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-- plasmid editors
-    - benchling
-    - sparkDNA
+- bootstrapping apps without ng-view (just use ng-include)
+
+
+- create wrappers for directives, filters -> expose DNA functions accordingly
+
+
+
+- break up UI directives, filters, etc. into modules
+
+
 
 
 - streamline display and show() + adding components
@@ -122,8 +133,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-- migrate to $log
-
+- migrate to $log from console.log
 
 
 
@@ -138,6 +148,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
+
+
+- move searchbar to typeahead
 
 
 - trails functionality

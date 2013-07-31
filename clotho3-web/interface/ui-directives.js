@@ -1190,6 +1190,8 @@ Application.Interface.directive('typeahead', ['$compile', '$parse', '$q', '$time
                     isLoadingSetter(originalScope, true);
                     $q.when(parserResult.source(scope, locals)).then(function(matches) {
 
+                        console.log(matches);
+
                         //it might happen that several async queries were in progress if a user were typing fast
                         //but we are interested only in responses that correspond to the current view value
                         if (inputValue === modelCtrl.$viewValue) {

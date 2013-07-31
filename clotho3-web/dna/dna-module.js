@@ -8,7 +8,7 @@
 // FASTA reader, genbank
 // alignment
 // mutation
-// pcr products
+// pcr products - annealing etc.
 // fuzzy search
 
 Application.Dna.service('DNA', ['$filter', function($filter) {
@@ -28,19 +28,20 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         maps = {},
         complements = {},
         frequencies = {},
+        entropies = {},
         weights = {};
 
     regexps.letters = /[A-Z]/ig;
     regexps.nucleotide = /[gautcGAUTC]/g;
     regexps.dna = /[gatcGATC]/g;
     regexps.rna = /[gaucGAUC]/g;
-    regexps.dna_degnerate = /[gatucryswkmbdhvnxGATUCRYSWKMBDHVNX]/g;
+    regexps.nucleotide_degnerate = /[gatucryswkmbdhvnxGATUCRYSWKMBDHVNX]/g;
     regexps.protein = /[ACDEFGHIKLMNPQRSTVWYZacdefghiklmnpqrstvwyz\*]/g;
     regexps.protein_degenerate = /[ABCDEFGHIKLMNPQRSTVWYXZabcdefghiklmnpqrstvwyxz\*]/g;
 
     regexps.strip = {};
     regexps.strip.dna = /[^gatcGATC]/g;
-    regexps.strip.dna_degenerate = /[^gatucryswkmbdhvnxGATUCRYSWKMBDHVNX]/g;
+    regexps.strip.nucleotide_degenerate = /[^gatucryswkmbdhvnxGATUCRYSWKMBDHVNX]/g;
     regexps.strip.rna = /[^gaucGAUC]/g;
     regexps.strip.protein = /[^ACDEFGHIKLMNPQRSTVWYZacdefghiklmnpqrstvwyz\*]/g;
     regexps.strip.protein_degenerate = /[^ABCDEFGHIKLMNPQRSTVWYXZabcdefghiklmnpqrstvwyxz\*]/g;
@@ -52,7 +53,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     monomers.dna = ['a', 'c', 't', 'g'];
     monomers.rna = ['a', 'c', 'u', 'g'];
     monomers.nucleotide = ['a', 'c', 't', 'u', 'g'];
-    monomers.dna_degenerate = ['g','a','t','u','c','r','y','s','w','k','m','b','d','h','v','n','x'];
+    monomers.nucleotide_degenerate = ['g','a','t','u','c','r','y','s','w','k','m','b','d','h','v','n','x'];
     monomers.protein = ['A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y','Z','*'];
     monomers.protein_degnerate = ['A','B','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','*'];
     //dna, rna, protein
@@ -278,6 +279,35 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
 
+    //used in melting point calculations -- currently only DNA
+    //SantaLucia, J. (1998) Proc. Nat. Acad. Sci. USA 95, 1460.
+    entropies.ds_terminal = {
+        g : -2.8,
+        a : 4.1,
+        t : 4.1,
+        c : -2.8
+    };
+    entropies.dh_terminal = {
+        g : 0.1,
+        a : 2.3,
+        t : 2.3,
+        c : 0.1
+    };
+    entropies.ds = {
+        gg: -19.9, ag: -21.0, tg: -22.7, cg: -27.2,
+        ga: -22.2, aa: -22.2, ta: -21.3, ca: -22.7,
+        gt: -22.4, at: -20.4, tt: -22.2, ct: -21.0,
+        gc: -27.2, ac: -22.4, tc: -22.2, cc: -19.9
+    };
+    entropies.dh = {
+        gg : -8.0, ag : -7.8, tg : -8.5, cg : -10.6,
+        ga : -8.2, aa : -7.9, ta : -7.2, ca : -8.5,
+        gt : -8.4, at : -7.2, tt : -7.9, ct : -7.8,
+        gc : -10.6,ac : -8.4, tc : -8.2, cc : -8.0
+    };
+
+
+    //verify
     //deoxy bases e.g. dAMP, dTTP etc. - no salt
     weights.dna = {
         'a' : 313.2,
@@ -297,13 +327,16 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
 
 
+    /**************
+    Basics
+    **************/
 
     var removeNonLetters = function (input) {
         return input.replace(regexps.letters, '');
     };
 
     var dnaOnly = function (sequence, strict) {
-        var filter = strict ? regexps.dna : regexps.dna_degenerate;
+        var filter = strict ? regexps.dna : regexps.nucleotide_degenerate;
         return sequence.replace(filter, '');
     };
 
@@ -312,7 +345,17 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         return (sequence.search(reg) == -1)
     };
 
+    //given a sequence (e.g. ACNT), return RegExp friendly version using given map (e.g. AC[ACGTU]T)
+    //note currently only nucleotides
+    var undegenerize = function(sequence, map) {
+        map = map ? map : maps.nucleotide_degenerate;
+        return sequence.replace(regexps.nucleotide_degenerate, function(m) {return map[angular.uppercase(m)]});
+    };
 
+
+    /**************
+    Sequence manipulation
+    **************/
 
     var reverse = function(sequence) {
         return sequence.split("").reverse().join("")
@@ -345,6 +388,35 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     var revcomp = function(sequence) {
         return reverse(complement(sequence));
     };
+
+    var randomSequence = function (length, units) {
+        units = units || monomers.dna;
+        if (typeof length == 'string')
+            length = length.length;
+
+        var sequenceArray = [],
+            tempNum = 0,
+            tempChar = "";
+        for (var j = 0; j < (length); j++)	{
+            tempNum = Math.floor(Math.random() * units.length);
+            tempChar = units[tempNum];
+            sequenceArray.push(tempChar);
+        }
+        return sequenceArray.join("");
+    };
+
+    var shuffleSequence = function (sequence) {
+        return ($filter('shuffle')(sequence.split(''))).join('');
+    };
+
+    //adds a space every three characters
+    var codonify = function (sequence) {
+        return sequence.match(/.{1,3}/g).join(" ");
+    };
+
+    /**************
+     Central Dogma
+     **************/
 
     var transcribe = function (sequence) {
         return sequence.replace(regexps.dna, function(m) { return complements.transcribe[m] });
@@ -401,32 +473,64 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         return rna;
     };
 
-    var randomSequence = function (length, units) {
-        units = units || monomers.dna;
-        if (typeof length == 'string')
-            length = length.length;
+    /**************
+     Quantification
+     **************/
 
-        var sequenceArray = [],
-            tempNum = 0,
-            tempChar = "";
-        for (var j = 0; j < (length); j++)	{
-            tempNum = Math.floor(Math.random() * units.length);
-            tempChar = units[tempNum];
-            sequenceArray.push(tempChar);
-        }
-        return sequenceArray.join("");
-    };
-
-    var shuffleSequence = function (sequence) {
-        return ($filter('shuffle')(sequence.split(''))).join('');
+    /**
+     * @description Returns number of occurances of a given base or oligo in a sequence. Handles overlaps.
+     * @example occuranceCount('aataa', 'a') -> 4
+     * @example occuranceCount('aaaa', 'aa') -> 3
+     * @param sequence
+     * @param {String} oligo Single-letter base or oligo to look for
+     * @param {boolean=} convertDegenerate Whether degenerate nucleotides should be converted to standard [ACGTU]. Default is false
+     * @returns {Number} Number of matches found, 0 if none found
+     */
+    var occuranceCount = function(sequence, oligo, convertDegenerate) {
+        var search = !!convertDegenerate ? undegenerize(oligo) : oligo;
+        var matches = sequence.match(new RegExp('(?=(' + search + '))', 'gi'));
+        return !!matches ? matches.length : 0;
     };
 
     /**
-     *
+     * @description Get a count of each monomer in a sequence
+     * @param {string} sequence
+     * @param {object=} units Array or Object of monomers to search e.g. monomers.nucleotides
+     * @returns {object} object whose keys are monomers, and values are number of occurances
+     */
+    var monomer_count = function (sequence, units) {
+        units = (typeof units != 'undefined' ? units : monomers.all);
+        var counts = {};
+        angular.forEach(units, function(unit) {
+            counts[unit] = occuranceCount(sequence, unit);
+        });
+        return counts;
+    };
+
+    /**
+     * @description
+     * @note Currently only DNA
+     * @param sequence
+     * @param units
+     * @returns {{}}
+     */
+    var neighbor_count = function (sequence, units) {
+        units = (typeof units != 'undefined' ? units : monomers.dna);
+        var counts = {};
+        angular.forEach(units, function (u1) {
+            angular.forEach(units, function (u2) {
+                var combo = u1 + u2;
+                counts[combo] = occuranceCount(sequence, combo);
+            });
+        });
+        return counts;
+    };
+
+    /**
+     * @description Calculates GC content of non-degenerate nucleotide sequence
+     * @note Doesn't work for degenerate sequences
      * @param {string} dna Sequence of non-degenerate DNA or RNA
      * @returns {number} fraction of GC in whole sequence
-     * @description
-     * Doesn't work for degenerate sequences
      */
     var GC_content = function(dna) {
         var full = dna.length,
@@ -435,31 +539,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         return (gc / full);
     };
 
-    var monomer_count = function (sequence, units) {
-        units = (typeof units != 'undefined' ? units : monomers.all);
-        var counts = {};
 
-        angular.forEach(units, function(unit) {
-            counts[unit] = (sequence.replace(new RegExp('[^' + unit + ']', 'gi'), '')).length;
-        });
-
-        return counts;
-    };
-
-    var neighbor_count = function (sequence, units) {
-        units = (typeof units != 'undefined' ? units : monomers.dna);
-        var counts = {};
-        angular.forEach(units, function (u1) {
-            angular.forEach(units, function (u2) {
-                var combo = u1 + u2,
-                    matches = sequence.match(new RegExp(combo, 'gi'));
-                counts[combo] = matches != null ? matches.length : 0;
-            });
-        });
-        return counts;
-    };
-
-    //todo calc: rlnk, deltaG, H, S @ standard cond
     var gibbs = function(sequence) {
         var dg = 0,
             dh = 0,
@@ -468,44 +548,84 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
             neighbors = neighbor_count(sequence, monomers.nucleotide),
             gc = GC_content(sequence);
 
-        // convert to moles and then adjust for greater stabilizing effects of Mg compared to Na or K.
-        //salt+=(mg/Math.pow(10,3) * 140);
+        //todo calc: rlnk, deltaG, H, S @ standard cond
 
         return [dg, dh, ds]
 
     };
 
 
+    var melting_temp_basic = function (sequence) {
+        if (sequence.length < 14) {
+            var counts = monomer_count(sequence, monomers.dna);
+            return (counts['a']+counts['t'])*2 + (counts['c'] + counts['g'])*4
+        }
 
-    //todo - more rigorous - account for primer concencration, pH, mg -- should rely on Gibbs
-    //todo - write for RNA (need to account for folding etc.)
-    var melting_temp = function(dna, conc) {
-        if (dna.length < 1) return;
+        //64.9°C + 41°C x (number of G’s and C’s in the oligo – 16.4)/N
+        return 64.9+41*(GC_content(sequence)*sequence.length - 16.4)/sequence.length;
+    };
 
-        if ((regexps.strip.dna).exec(dna)) {
+    //verify
+    var melting_temp_saltAdjusted = function (sequence, saltConc) {
+        saltConc = !!saltConc ? saltConc : 0.050;
+
+        var counts = monomer_count(sequence, monomers.dna);
+
+        if (sequence.length < 14) {
+            return (counts['a']+counts['t'])*2 + (counts['c'] + counts['g'])*4 - 16.6*(Math.log(0.050) / Math.log(10)) + (16.6 * (Math.log(saltConc) / Math.log(10)))
+        } else if (sequence.length < 50) {
+            return 100.5 + (41 * (counts['g']+counts['c'])/(counts['a']+counts['t']+counts['g']+counts['c'])) - (820/(counts['a']+counts['t']+counts['g']+counts['c'])) + (16.6 * (Math.log(saltConc) / Math.log(10)))
+        } else {
+            return 81.5 + (41 * (counts['g']+counts['c'])/(counts['a']+counts['t']+counts['g']+counts['c'])) - (500/(counts['a']+counts['t']+counts['g']+counts['c'])) + (16.6 * (Math.log(saltConc) / Math.log(10)))
+        }
+    };
+
+    /**
+     * @description More complex melting temperature calculation for a given sequence. The most sophisticated Tm calculations take into account the exact sequence and base stacking parameters, not just the base composition.
+     * Tm = ((1000* dh)/(ds+(R * Math.log(primer concentration))))-273.15;
+     * @param {string} sequence ONLY CANONICAL DNA BASES (A,C,G,T)
+     * @param {object} conc Concentrations with parameters 'dna' 'salt' and 'mg' all Molar
+     */
+    var melting_temp = function (sequence, conc) {
+        if (sequence.length < 1) return;
+
+        if ((regexps.strip.dna).exec(sequence)) {
             console.log('contains non-dna letters... aborting melting temp calc');
             return;
         }
 
+        sequence = angular.lowercase(sequence);
+
         conc = typeof conc != 'undefined' ? conc : {};
-        conc.dna = typeof conc.dna != 'undefined' ? conc.dna : 0.050;     // Molar
-        conc.salt = typeof conc.salt != 'undefined' ? conc.salt : 0.050;   // Molar
-        conc.mg = typeof conc.mg != 'undefined' ? conc.mg : 0.0025;        // Molar
-        conc.ph = typeof conc.ph != 'undefined' ? conc.ph : 7.0;        //pH
+        conc.dna = typeof conc.dna != 'undefined' ? conc.dna : 0.0000002;   // Molar (200nM)
+        conc.salt = typeof conc.salt != 'undefined' ? conc.salt : 0.050;    // Molar (50mM)
+        conc.mg = typeof conc.mg != 'undefined' ? conc.mg : 0.0015;         // Molar (2.5mM)
+        //conc.ph = typeof conc.ph != 'undefined' ? conc.ph : 7.0;          //pH - NOT USED CURRENTLY
 
-        var counts = monomer_count(dna, monomers.dna);
+        var R = 1.987; //universal gas constant in Cal/degrees C * mol
+        var ds = 0;    //cal/Kelvin/mol
+        var dh = 0;    //kcal/mol
 
-        if (dna.length < 14) {
-            return (counts['a']+counts['t'])*2 + (counts['c'] + counts['g'])*4 - 16.6*(Math.log(0.050) / Math.log(10)) + (16.6 * (Math.log(conc.salt) / Math.log(10)))
-        } else if (dna.length < 50) {
-            return 100.5 + (41 * (counts['g']+counts['c'])/(counts['a']+counts['t']+counts['g']+counts['c'])) - (820/(counts['a']+counts['t']+counts['g']+counts['c'])) + (16.6 * (Math.log(conc.salt) / Math.log(10)))
-        } else {
-            return 81.5 + (41 * (counts['g']+counts['c'])/(counts['a']+counts['t']+counts['g']+counts['c'])) - (500/(counts['a']+counts['t']+counts['g']+counts['c'])) + (16.6 * (Math.log(conc.salt) / Math.log(10)))
-        }
+        // salt correction
+        var correctedSalt = conc.salt + conc.mg * 140; //adjust for greater stabilizing effects of Mg compared to Na or K. See von Ahsen et al 1999
+        ds = ds + 0.368 * (sequence.length - 1) * Math.log(correctedSalt); //from von Ahsen et al 1999
+
+        // terminal corrections
+        ds = ds + entropies.ds_terminal[sequence.charAt(0)] + entropies.ds_terminal[sequence.charAt(sequence.length - 1)];
+        dh = dh + entropies.dh_terminal[sequence.charAt(0)] + entropies.dh_terminal[sequence.charAt(sequence.length - 1)];
+
+        //nearest neighbors
+        var neighbors = neighbor_count(sequence);
+        angular.forEach(neighbors, function (num, pair) {
+            ds = ds + (entropies.ds[pair] * num);
+            dh = dh + (entropies.dh[pair] * num);
+        });
+
+        return ((1000 * dh) / (ds + (R * Math.log(conc.dna / 2)))) - 273.15;
 
     };
 
-    //todo - handle degenerate, handle proteins, verify correct
+    //todo - handle proteins, verify correct
     var molecular_weight = function(sequence) {
         if (!sequence || sequence.length < 1) return;
 
@@ -526,6 +646,11 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
 
+    var selfComplimentarity = function (rna) {
+
+    };
+
+
     return {
         regexps: regexps,
         monomers : monomers,
@@ -537,6 +662,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         removeNonLetters : removeNonLetters,
         dnaOnly : dnaOnly,
         verify : verify,
+        undegenerize : undegenerize,
 
         reverse : reverse,
         complement : complement,
@@ -545,19 +671,25 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         amino_one_to_three : amino_one_to_three,
         amino_one_to_full : amino_one_to_full,
         revcomp : revcomp,
+        randomSequence : randomSequence,
+        shuffleSequence : shuffleSequence,
+        codonify : codonify,
+
         transcribe : transcribe,
         reverseTranscribe : reverseTranscribe,
         translate : translate,
         reverseTranslate : reverseTranslate,
 
-        randomSequence : randomSequence,
-        shuffleSequence : shuffleSequence,
-        GC_content : GC_content,
+        occuranceCount : occuranceCount,
         monomer_count : monomer_count,
         neighbor_count : neighbor_count,
+        GC_content : GC_content,
         gibbs : gibbs,
+        melting_temp_basic : melting_temp_basic,
+        melting_temp_saltAdjusted : melting_temp_saltAdjusted,
         melting_temp : melting_temp,
         molecular_weight : molecular_weight
+
     }
 }]);
 
@@ -765,20 +897,6 @@ Application.Dna.directive('dnaMolecularWeight', ['DNA', '$filter', function(DNA,
         link: function(scope, element, attr, ngModel) {
             var fn = function (input) {
                 return $filter('number')(DNA.molecular_weight(input))
-            };
-            ngModel.$formatters.push(fn)
-        }
-    };
-}]);
-
-//testing only
-Application.Dna.directive('dnaGibbs', ['DNA', function(DNA) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, element, attr, ngModel) {
-            var fn = function (input) {
-                return (DNA.gibbs(input))[0];
             };
             ngModel.$formatters.push(fn)
         }
