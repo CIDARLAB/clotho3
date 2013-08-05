@@ -10,7 +10,7 @@
             <ul class="nav nav-list" ng-repeat="module in trail.contents">
                 <li class="nav-header">{{module.module_title}}</li>
                 <li ng-repeat="paver in module.pavers" ng-class="{active: ('{{$parent.$index + '-' + $index}}' == current)}">
-                    <a ng-click="activate('{{$parent.$index + '-' + $index}}')">
+                    <a ng-click="activate('{{$parent.$index + '-' + $index}}')" ng-disabled="!paver.type">
                         <i class="icon-pencil" ng-if="paver.type == 'quiz'"></i>
                         {{paver.paver_title}}
                     </a>
@@ -20,8 +20,8 @@
             <div class="btn-toolbar pagination-centered">
 
                 <div class="btn-group">
-                    <button ng-click="home()" class="btn"><i class="icon-home"></i></button>
-                    <button ng-click="favorite()" class="btn"><i class="icon-star"></i></button>
+                    <button ng-click="home()" class="btn" ng-disabled="content == trail.description"><i class="icon-info-sign"></i></button>
+                    <button ng-click="favorite()" class="btn" ng-class="{'btn-warning' : favorited}"><i class="icon-star"></i></button>
                     <button ng-click="share()" class="btn" alt="share"><i class="icon-share-alt"></i></button>
                 </div>
 

@@ -1,1 +1,1 @@
-console.log("\n\nTHIS IS FROM WITHIN script was downloaded");
+console.log("\nFrom simple-executable\n");

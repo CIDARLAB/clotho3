@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function(Clotho, Searchbar) {
+Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$location', '$window', '$timeout', function(Clotho, Searchbar, $location, $window, $timeout) {
 
     return {
         restrict: 'A',
@@ -13,25 +13,95 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
             $scope.autocomplete = Searchbar.autocomplete;
             $scope.display = Searchbar.display;
 
+            $scope.setQuery = Searchbar.setQuery;
             $scope.submit = Searchbar.submit;
             $scope.execute = Searchbar.execute;
 
             //functions
-            $scope.$watch('query', function(newValue, oldValue) {
+            //todo - migrate to typeahead directive? or at least integrate?
+            $scope.$watch('display.query', function(newValue, oldValue) {
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
-                    Clotho.autocomplete($scope.query);
+                    Clotho.autocomplete($scope.display.query).then(function(data) {
+                        $scope.autocomplete.autocompletions = data;
+                    });
                 }
             });
+
+            /**** click-outside watcher ***/
+
+            //todo - namespace clickOutside
+            $scope.$watch('display.autocomplete', function(newValue, oldValue) {
+                if (!!newValue) {
+                    //console.log('inactivating autocomplete clickOutside');
+                    $scope.$broadcast('clickOutside:$active', $scope.$id)
+                } else {
+                    //console.log('inactivating autocomplete clickOutside');
+                    $scope.$broadcast('clickOutside:$inactive', $scope.$id);
+                }
+            });
+
+            //todo - fix ugly jQuery hacks
+            $scope.currentSelected = 1; //assumes that a.close is present and is first child
+            $scope.selectAutoNext = function() {
+                if (!$scope.display.autocomplete && $scope.display.query) {
+                    $scope.display.show('autocomplete');
+                    $scope.currentSelected = 1;
+                }
+
+
+                if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
+                    console.log($scope.currentSelected);
+                    $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
+
+                    if ($scope.currentSelected <= $scope.autocomplete.autocompletions.length)
+                        $scope.currentSelected += 1;
+
+                    console.log($scope.currentSelected);
+
+
+                    var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
+                    Searchbar.setQuery(current.scope().item);
+                    $scope.display.detail(current.scope().item.uuid);
+                    current.addClass('active');
+                }
+            };
+            $scope.selectAutoPrev = function() {
+                if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
+                    console.log($scope.currentSelected);
+
+                    $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
+                    if ($scope.currentSelected > 1)
+                        $scope.currentSelected -= 1;
+
+                    console.log($scope.currentSelected);
+
+                    var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
+                    Searchbar.setQuery(current.scope().item);
+                    $scope.display.detail(current.scope().item.uuid);
+                    current.addClass('active');
+                }
+            };
+
+            $scope.fullPageLog = function() {
+                $location.path("/terminal");
+                $scope.display.hide('log')
+            };
+
+            $scope.pathIsTerminal = function() {
+                var regexp = /^\/terminal.*$/;
+                return regexp.test($location.path());
+            };
+
 
             /*** help icons ***/
 
             $scope.newPage = function() {
-                window.open("http://localhost:8000/app/index.html", "_blank");
+                $window.open($window.location.origin, "_blank");
             };
 
             $scope.newWorkspace = function() {
-                window.open("http://localhost:8000/app/index.html#/trails", "_blank");
+                $window.open($window.location.origin, "_blank");
             };
 
             $scope.showMeHow = function() {
@@ -45,13 +115,6 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', function
             $scope.toggleTooltips = function() {
                 console.log("tooltips");
             };
-
-            //testing
-
-            $scope.sayTest = function() {
-                Clotho.say('This is a test message');
-            }
-
 
         },
         link: function (scope, element, attrs, controller) {
@@ -109,4 +172,8 @@ Application.Search.directive('clothoSearchbarLog', ['Clotho', 'Searchbar', '$tim
     }
 }]);
 
+Application.Search.controller('TerminalCtrl', ['$scope', 'Clotho', 'Searchbar', '$location', function($scope, Clotho, Searchbar, $location) {
+    $scope.log = Searchbar.log;
 
+
+}]);

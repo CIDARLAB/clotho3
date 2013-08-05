@@ -11,27 +11,32 @@
 
 var Application = Application || {};
 
-Application.Chat = angular.module('clotho.chat', ['clotho.core']);
-Application.Dynamic = angular.module('clotho.dynamic', ['clotho.core']);
-Application.Editor = angular.module('clotho.editor', ['clotho.core']);
-Application.Search = angular.module('clotho.search', ['clotho.core']);
-Application.Trails = angular.module('clotho.trails', ['clotho.core']);
-Application.Primary = angular.module('clotho.primary', ['clotho.core']);
-Application.Interface = angular.module('clotho.interface', ['clotho.core']);
+Application.Primary = angular.module('clotho.primary', []);
+Application.Interface = angular.module('clotho.interface', []);
+Application.Extensions = angular.module('clotho.extensions', []);
+Application.Widgets = angular.module('clotho.widgets', []);
 
-// lazy-loading dependencies
-Application.Extensions = angular.module('clotho.extensions', ['clotho.core']);
-// adding widgets
-Application.Widgets = angular.module('clotho.widgets', ['clotho.core']);
+Application.Dna = angular.module('clotho.dna', []);
 
-Application.Foundation = angular.module('clotho.core', [])
+Application.Browser = angular.module('clotho.browser', []);
+Application.Chat = angular.module('clotho.chat', []);
+Application.Dynamic = angular.module('clotho.dynamic', []);
+Application.Editor = angular.module('clotho.editor', []);
+Application.Plasmid = angular.module('clotho.plasmid', []);
+Application.Search = angular.module('clotho.search', []);
+Application.Trails = angular.module('clotho.trails', []);
+
+Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
         //on first run, add API to $clotho object
         window.$clotho.api = Clotho;
 
         //extend scope with Clotho API
         $rootScope.Clotho = Clotho;
+    }]);
 
+angular.module('clotho.ng-additions', [])
+    .run(['$rootScope', function($rootScope) {
         /**
          @name $rootScope.$safeApply
          @note Each app needs to insert this into its own run() clause
@@ -46,26 +51,25 @@ Application.Foundation = angular.module('clotho.core', [])
          */
         $rootScope.$safeApply = function(fn) {
             fn = fn || function() {};
-            if($rootScope.$$phase) {
-                //don't worry, the value gets set and AngularJS picks up on it...
-                fn();
-            }
-            else {
-                //this will fire to tell angularjs to notice that a change has happened
-                //if it is outside of it's own behaviour...
-                $rootScope.$apply(fn);
-            }
+            if($rootScope.$$phase) { fn(); }
+            else { $rootScope.$apply(fn); }
         };
 
-        //todo - ineherit by children, silence listeners
-        var oldDestroy = $rootScope.__proto__.$destroy;
-        $rootScope.$on('$destroy', function() {
-            console.log("destroyed: " + this.$id);
-            Clotho.silence(this.$id);
-        });
+        //angular function extensions
+        var ext = {};
+
+        ext.isEmpty = function(value) {
+            return angular.isUndefined(value) || value === '' || value === null || value !== value;
+        };
+
+        ext.isScope = function(obj) {
+            return obj && obj.$evalAsync && obj.$watch;
+        };
+
+        angular.extend(angular, ext);
     }]);
 
-angular.module('clothoPackage', ['clotho.core', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.search', 'clotho.trails']);
+angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
@@ -92,18 +96,30 @@ angular.module('clothoRoot', ['clothoPackage']).
                 }
             }).
             when('/editor', {
-                redirectTo:'/editor/inst_first'
+                redirectTo:'/editor/func_first'
             }).
-            when('/editor/:uuid', {
+
+            when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
                 //todo - get this working, instead of doing it in the link of directive
                 //resolve: []
+            }).
+            when('/browser', {
+                templateUrl:'browser/browser-partial.html'
+            }).
+            when('/plasmid', {
+                templateUrl:'plasmid/plasmid-partial.html'
+            }).
+            when('/plasmid/:id', {
+                templateUrl:'plasmid/plasmid-partial.html'
+            }).
+            when('/construction', {
+                templateUrl:'dna/construction-partial.html'
             }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'
             }).
             when('/dynamic', {
-                // note: can be function in 1.1.x, not 1.0.x (currently) - see: https://github.com/angular/angular.js/pull/1849/files
                 //templateUrl:'dynamic/dynamic-partial.html',
                 templateUrl: dynamicCtrl.template,
                 resolve: {
@@ -112,6 +128,21 @@ angular.module('clothoRoot', ['clothoPackage']).
                 clotho : dynamicCtrl.clotho,
                 custom : {
                     model : "inst_second"
+                }
+            }).
+            when('/lazyload', {
+                //templateUrl:'dynamic/dynamic-partial.html',
+                templateUrl: '/testing/lazyLoad.html',
+                resolve: {
+                    deps : function() {
+                        return Application.mixin('/partials/trails/trail_super/revcomp-filter.js')
+                    }
+                }
+            }).
+            when('/terminal', {
+                templateUrl:'search/terminal-partial.html',
+                resolve : {
+                    //ctrl_dl: Application.mixin('search/terminal-controller.js')
                 }
             }).
             otherwise({
@@ -134,6 +165,9 @@ angular.module('clothoRoot', ['clothoPackage']).
 
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
         console.log("Route Change Error:");
+        console.log(event);
+        console.log(current);
+        console.log(previous);
         console.log(rejection);
     });
 

@@ -6,8 +6,20 @@
 
     <!--foundation CSS-->
     <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/searchbar.css">
+    <link rel="stylesheet" href="css/clotho.css">
+    <style type="text/css">
+        [ng-cloak], .ng-cloak {display:none;}
+        body {
+            padding: 20px;
+        }
+        .unselectable {
+            -moz-user-select: -moz-none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
 
     <!--script loader comparison: https://docs.google.com/spreadsheet/ccc?key=0Aqln2akPWiMIdERkY3J2OXdOUVJDTkNSQ2ZsV3hoWVE#gid=2 -->
     <!--<script type="text/javascript" src="lib/yepnope.js"></script>
@@ -57,12 +69,11 @@
                     "home/home-controller.js",
                     "menu/menu-controller.js",
                     "editor/editor-controller.js",
-                    "editor/sharable-editor-directive.js",
+                    "editor/sharable-editor-directive-old.js",
                     "trails/trail-module.js",
                     "chat/chat-controller.js",
                     "chat/chat-service.js",
                     "dynamic/dynamic-controller.js",
-                    "dynamic/dynamic-service.js",
                     "search/search-service.js",
                     "search/search-directives.js",
                     "interface/ui-directives.js"
@@ -94,38 +105,46 @@
      $script("https://www.youtube.com/iframe_api", "youtubeAPI");
 
     //note - dependencies prevent full asynchrony
-    $script("lib/angular-1.1.5/angular.js", "angular", function() {
-        //need to load application first so modules map properly, or could move that into this
-        $script("application/application.js", "angular-app", function() {
-            //load all angular dependencies asynchronously
-            $script([
-                //foundation
-                "foundation/clientAPI.js",
-                "foundation/clothoAPI.js",
-                "foundation/pubsub-service.js",
-                "foundation/socket-service.js",
-                "foundation/collector-service.js",
-                "application/mixin.js",
+     //todo - better jquery handling... just need to be ready before DOM content ready
+     $script.ready("jquery", function() {
+         $script("lib/angular-1.1.5/angular.js", "angular", function() {
+             //need to load application first so modules map properly, or could move that into this
+             $script("application/application.js", "angular-app", function() {
+                 //load all angular dependencies asynchronously
+                 $script([
+                     //foundation
+                     "foundation/clientAPI.js",
+                     "foundation/clothoAPI.js",
+                     "foundation/pubsub-service.js",
+                     "foundation/socket-service.js",
+                     "foundation/collector-service.js",
+                     "application/mixin.js",
 
-                //specifics
-                "home/home-controller.js",
-                "menu/menu-controller.js",
-                "editor/editor-controller.js",
-                "editor/sharable-editor-directive.js",
-                "trails/trail-module.js",
-                "chat/chat-controller.js",
-                "chat/chat-service.js",
-                "dynamic/dynamic-controller.js",
-                "dynamic/dynamic-service.js",
-                "search/search-service.js",
-                "search/search-directives.js",
-                "interface/ui-directives.js",
-                "interface/ui-filters.js",
-                "interface/ui-services.js"
+                     //specifics
+                     "home/home-controller.js",
+                     "menu/menu-controller.js",
+                     "editor/editor-controller.js",
+                     "editor/generic-editor-directive.js",
+                     "trails/trail-module.js",
+                     "browser/browser-controller.js",
+                     "chat/chat-controller.js",
+                     "chat/chat-service.js",
+                     "dynamic/dynamic-controller.js",
+                     "search/search-service.js",
+                     "search/search-directives.js",
+                     "interface/ui-directives.js",
+                     "interface/ui-filters.js",
+                     "interface/ui-services.js",
+                     "plasmid/plasmid-module.js",
+                     "dna/dna-module.js",
+                     "dna/restrictionSite-module.js",
+                     "dna/pcr-module.js",
+                     "dna/construction-controller.js"
 
-            ], "angular-stack");
-        });
-    });
+                 ], "angular-stack");
+             });
+         });
+     });
 
     $script.ready(["jquery", "angular-stack"], function() {
         var $clotho = window.$clotho = {};
@@ -133,7 +152,7 @@
         $clotho.appRoot = 'ng-app-clothoRoot';
         $clotho.appWidgets = 'ng-app-clothoWidgets';
 
-        $clotho.socket = new WebSocket("ws://localhost:8080/websocket");
+        $clotho.socket = new WebSocket("ws://" + window.location.host + window.location.pathname + "websocket");
         $clotho.socket.onopen = function () {
             angular.bootstrap(
                     angular.element(document).find($clotho.appRoot),
@@ -147,18 +166,11 @@
     <div class="container">
         <div class="navbar" ng-controller="MenuCtrl">
             <div class="navbar-inner">
-                <a class="brand" href="#">Clotho Home</a>
+                <a class="brand" href="#">Clotho Demo</a>
                 <ul class="nav">
                     <li class="ng-cloak" ng-repeat="item in modes.items" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
                 </ul>
-
-                <div class="progress pull-right" ng-class="status.class" style="width: 60px; margin: 7px 5px;"><div class="bar" style="width: 100%">Status</div></div>
-
-                <button class="btn btn-info btn-small pull-right" ng-click="logListeners()"><i class="icon-headphones"></i></button>
-                <button class="btn btn-warning btn-small pull-right" ng-click="clearStorage()"><i class="icon-trash"></i></button>
-
             </div>
-
             <div clotho-searchbar></div>
         </div>
     </div>

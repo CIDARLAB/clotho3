@@ -1,0 +1,17 @@
+<div ng-controller="TrailQuizCtrl">
+
+    <h3>{{quiz.title}}</h3>
+    <p>{{quiz.question}}</p>
+    <ol>
+        <li ng-repeat="choice in quiz.options">
+            <button class="btn" ng-class="{'btn-info': (choice == quiz.answer)}" ng-click="quiz.answer = choice">{{choice}}</button>
+        </li>
+    </ol>
+
+    <p>Your answer: {{quiz.answer}}</p>
+
+    <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
+
+    <h3 ng-if="quiz.response" ng-class="{'text-success' : quiz.response.result, 'text-error' : !quiz.response.result}">{{quiz.response.result}}</h3>
+
+</div>

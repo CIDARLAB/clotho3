@@ -2,7 +2,7 @@
 
 //note works in 1.1.4, can't pass function in 1.0.6
 
-var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clotho', '$route', '$rootScope', '$position', function($scope, Clotho, $route, $rootScope, $position) {
+var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clotho', '$route', '$rootScope', '$position', '$dialog', function($scope, Clotho, $route, $rootScope, $position, $dialog) {
 
     /*
      Purpose
@@ -41,7 +41,7 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
 
         var pos = $position.position(angular.element(event.target));
 
-        Clotho.show_simple({
+        Clotho.show({
             "template" : 'extensions/simple-template.html',
             "controller" : 'extensions/simple-controller.js',
             "dependencies" : [
@@ -56,10 +56,26 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
         });
     };
     $scope.showEditor = function() {
-        Clotho.show_simple({
+        Clotho.show({
             "template" : 'extensions/editor-template.html',
-            "target" : ".editorCatcher"
+            "args" : {
+                "id" : "inst_first"
+            }
+            //"target" : ".editorCatcher"
         });
+    };
+    $scope.showEditorModal = function() {
+
+        var editor_template = '<form sharable-editor name="sharableEditor" id="inst_first" class=" form-horizontal well" novalidate></form>';
+
+        var dialog_opts = {
+            backdrop: true,
+            keyboard: true,
+            backdropClick: true,
+            template:  editor_template
+        };
+        var d = $dialog.dialog(dialog_opts);
+        d.open();
     };
 
     //bootstrapping new apps
@@ -83,7 +99,7 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
     $scope.testData = "this is a new string";
     Clotho.listen('testMessage', function(data) {
         $scope.testData = data;
-    }, '$scope.$id');
+    }, $scope);
 
 
     //inserting new dependencies

@@ -1,112 +1,129 @@
 'use strict';
 
-Application.Directives.directive('sharableEditorOld', ['Collector', function(Collector) {
-    /*
-    //FUTURE - PROBLEMS
-    - RESET --- form dirty not set when each input is a directive - need to emit or something
-    - missing fields should be accounted for now
-     */
+//todo - sharable bindable??
+//decide if want to make sharable bindable also / instead of id (so can bind to models outside of directive)
+// would need watch statement on sharable
 
-    //TODO - load before page load, or have promise resolution re-trigger form generation
-    //NOTE - complicated by directive having isolate scope -- need to inform
-    var schemas = {};
-    //schemas.Institution = Collector.retrieveModel('schema_institution');
-    //schemas.Person = Collector.retrieveModel('schema_person');
-
-
-    // FIXME -- multiple page collector doesn't work - see below (b/c using promises) --- need consistency in passing around models
+Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', function(Clotho, $compile, $parse) {
 
     return {
+        restrict: 'CA',
         replace: false,
-        require: 'form',
-        restrict: 'A',
-        controller: function($scope, $element, $attrs, Collector) {
-            //sharable is inherited from parent, though could define it explicitly...
-            $scope.schemaName = $attrs.schema;
+        require: '^form',
+        templateUrl: '/editor/sharable-partial.html',
+        scope: {
+            //sharable: '=',
+            uuid: '='
+        },
+        controller: function($scope, $element, $attrs) {
 
-            Collector.retrieveModel($scope.schemaName).then(function(result) {
-                schemas[$scope.schemaName] = result;
-                $scope.schema = result.schema;
-                $scope.schema_custom = result.custom;
+            //if we're not linking, just pull it from the attrs
+            if (typeof $scope.uuid == 'undefined') {
+                console.log("id not in controller, pulling");
+                $scope.uuid = $attrs.uuid;
+            }
 
-                //testing
-                //console.log("schema promise fulfilled");
-                //console.log($scope.schema);
-            });
-
-            //note -- need to access form constructor like: $scope[$scope.formName].$setPristine()
-            $scope.formName = $attrs.name;
+            $scope.schema = {};
+            $scope.sharable = $scope.sharable || {};
 
             $scope.editMode = false;
             $scope.formDirty = false;
 
-            $scope.$watch('uuid', function(newval, oldval) {
-                // note - won't change if explicity set in directive (due to prototypical inheritance)
-                // testing:
-                // console.log("SHAR_ED_DIR\tuuid changed: " + newval);
-            });
+            // Listeners
 
-
-            /*Collector.watch("inst_first", function(newData) {
-                console.log("SHAR_ED_DIR\tCollector.watch: " + $scope.uuid);
-                $scope.sharable = newData
-            });*/
-
-            //switch to 'edit' mode
-            $scope.edit = function() {
-                $scope.editMode = true;
-            };
-
-            //discard edits
-            $scope.reset = function() {
-                //FUTURE - if missing fields and invalid (e.g. email) won't get reset -- replace whole sharable object... or, check for $dirty fields
-                Collector.retrieveModel($scope.uuid).then(function(result) {
+            Clotho.listen('collector_reset', function SharableEditor_onCollectorReset() {
+                //this is how people would ideally access things (normal promise pattern)
+                Clotho.get($scope.uuid).then(function(result) {
                     $scope.sharable = result;
                 });
-                $scope[$scope.formName].$setPristine();
-            };
 
-            //save edits, switch to 'view'
-            $scope.save = function() {
-                //FUTURE - make sure we want this check -- don't want when elements have own scope
-                /*
-                if ($scope.formDirty) {
-                    Collector.storeModel($scope.uuid, $scope.sharable);
-                }
-                */
-                console.log("SHAR_ED_DIR\tstoring $scope.sharable");
-                console.log($scope.sharable);
-                Collector.storeModel($scope.uuid, $scope.sharable);
-                $scope.editMode = false;
-            };
+                // testing - sync Clotho.get()
+                //console.log(Clotho.get($scope.uuid, true));
+                
+            }, $scope);
 
-            //discard edits, switch to 'view'
-            $scope.discard = function() {
-                $scope.reset();
-                $scope.editMode = false;
-            };
+            /*
+            //note - alternate version - see also watch2 below
+            Clotho.watch($scope.uuid, function (data) {
+                $scope.sharable = data;
+            }, $scope);
+             */
 
-            //testing
-            $scope.logScope = function() {
-                console.log($scope);
-            };
-
-            //can't pass in the object (in current Angular version) or breaks before promise fulfilled, so:
-            // true at the end compares values, omitting (false, default) compares references...
-            // ...(and won't fire for watching object if only a child field changes)
-            $scope.$watch('sharable', function(newVal, oldVal) {
-                //console.log($scope.sharable);
-            }, true);
+            Clotho.watch2($scope.uuid, $scope, 'sharable', $scope);
         },
         compile: function compile(tElement, tAttrs, transclude) {
 
             return {
-                pre: function preLink(scope, iElement, iAttrs, controller) {
+                pre: function preLink(scope, iElement, iAttrs, ngForm) {
 
+                    //todo - check out ngView and see how it compiles / links async content.
+                    //fixme - interface with ngForm
+                    scope.generate_fields = function() {
+                        var insert = iElement.find('insert-fields').html('');
+                        var fulltext = "";
+
+                        angular.forEach(scope.schema, function(field) {
+
+                            var type = field.type || 'text';
+                            var required = field.required ? "required='required'" : "";
+
+                            var htmlText_pre = '<div class="control-group">' +
+                                '<label class="control-label" for="' + field.name + '">' + field.readable + '</label>' +
+                                '<div class="controls">';
+                            var htmlText_post = '</div>' +
+                                '</div>';
+                            var inputText;
+
+                            switch (type) {
+                                case "textarea": {
+                                    inputText = '<textarea class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-model="sharable.'+field.name+'" ng-disabled="!editMode"></textarea>';
+                                    break;
+                                }
+                                case "select": {
+                                    var optionsText = "";
+                                    angular.forEach(field.options, function(value, key) {
+                                        optionsText = optionsText + '<option value="'+value+'">'+ value + '</option>';
+                                    });
+
+                                    inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'">' + optionsText + '</select>';
+                                    break;
+                                }
+                                    //todo - add filedrop support, and radio. checkbox works.
+                                default: {
+                                    inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'" >';
+                                    break;
+                                }
+
+                            }
+
+                            fulltext += htmlText_pre + inputText + htmlText_post;
+                        });
+                        insert.html(fulltext);
+                        $compile(insert.contents())(scope);
+                    };
+
+
+                    //get the sharable (which says which schema it needs)
+                    //note variables not compiled yet in 'pre' (e.g. if use scope: {var : '@'} and should go through $parse)
+                    Clotho.get(scope.uuid).then(function(result) {
+                        scope.sharable = result;
+                        scope.schemaName = result.schema_id;
+
+                        //get the schema
+                        Clotho.get(scope.schemaName).then(function(result) {
+                            scope.schema = result.schema;
+                            scope.schema_custom = result.custom;
+                            scope.generate_fields();
+                        });
+                    });
                 },
-                post: function postLink(scope, iElement, iAttrs, controller) {
+                post: function postLink(scope, iElement, iAttrs, ngForm) {
+
+                    //e.g. scope.formConst.$setPristine()
+                    scope.formConst = $parse(iAttrs.name)(scope);
 
                     //todo - move to native angular code to handle this
+                    //fixme - using directive to generate fields currently prevents ngForm from working
                     //avoid complex statements in watch statements (e.g. do we need the else if?)
                     //this statement only works for when form elements do not have new scope
                     scope.$watch(iAttrs.name + '.$dirty', function (newValue, oldValue) {
@@ -116,6 +133,41 @@ Application.Directives.directive('sharableEditorOld', ['Collector', function(Col
                             scope.formDirty = false;
                         } else {}
                     });
+
+                    /*
+                     functions
+                     note - not in directive controller because reinstantiated each change
+                    */
+
+                    //switch to 'edit' mode
+                    scope.edit = function() {
+                        scope.editMode = true;
+                    };
+
+                    //discard edits
+                    scope.reset = function() {
+                        scope.formConst.$setPristine();
+                        Clotho.get(scope.uuid).then(function(result) {
+                            scope.sharable = result;
+                        });
+                    };
+
+                    //save edits, switch to 'view'
+                    scope.save = function() {
+                        Clotho.set(scope.sharable);
+                        scope.editMode = false;
+                    };
+
+                    //discard edits, switch to 'view'
+                    scope.discard = function() {
+                        scope.reset();
+                        scope.editMode = false;
+                    };
+
+                    //testing
+                    scope.logScope = function() {
+                        console.log(scope);
+                    };
                 }
             }
         }

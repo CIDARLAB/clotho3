@@ -11,33 +11,18 @@
  *  - These methods are meant to communicate with the socket
  *  - They will be exposed outside of Angular
  *
- *  Most functions are written so that resulting behavior is not captured in a return, but rather by behavior within the ClientAPI. For some cases, returns are necessary for the function to make sense (e.g. Clotho.get()). Most
+ *  Most functions are written so that resulting behavior is not captured in a return, but rather by behavior within the ClientAPI. For some cases, returns are necessary for the function to make sense (e.g. Clotho.get() ).
  *
  *  At present, the goal is write them such that all resulting behavior will be captured by the messages returned over the socket from the server -- i.e. behaviour within clientAPI, PubSub, etc. This may not be possible, but regardless, the channel '$clotho' is reserved for the serverAPI (and falls through on clientAPI).
  * The main problem is get()... which by its nature should return the object to the callback. However, it may make sense to encapsulate this functionality in the collector. See note below
- *
- * Note - Dependencies & the Socket
- * This service is kept inside of Angular to take advantage of Angular core services. It should have no dependencies on services etc. written by us, in order to avoid circular dependencies.
- * While some of the functionality encapsulated by the Socket service would certaintly be useful here, and more importantly the socket.on() listener must be duplicated, that is of less concern than the serverAPI being exposed to other services (esp. Collector) and the functionality gained by keeping it within Angular.
- *
- * Note - Collector usage
- * In the app, retrieval of models should be handled by the Collector. The function can return a promise and fulfill it, but dependent on two different services. It could be handled as two steps ( in retrieveModel() ):
- *      (1) Clotho.get(uuid) to get the object, then
- *      (2) PubSub.sub_once(model_change, uuid) to set the object
- *
- * Note - Alternative Setups
- * (1) ServerAPI dependent on Socket. All other services interact only with non-Angular version.
- *      - If hacking this to avoid Angular DI, that's probably not a good idea.
- *      - by adding dependency, no other service can list this one as a dependency
- *      - Doesn't functionally accomplish much, except cleaner code
- *      + serverAPI could also interface with PubSub
- *      + only one instance of socket.on() listener
  *
  * Future todos
  *  - return angular.noop for empty callbacks, or deal with better
  */
 
-Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout) {
+//todo - incorporate requestId field
+
+Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', '$dialog', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout, $dialog) {
 
     /**********
        Set up
@@ -47,37 +32,32 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     fn.send = function(pkg) {
         Socket.send(JSON.stringify(pkg));
     };
-    fn.pack = function(channel, data) {
+    fn.pack = function(channel, data, requestId) {
         return {
             "channel" : channel,
-            "data" : data
+            "data" : data,
+            "requestId" : requestId
         };
     };
-    fn.emit = function(eventName, data) {
-        fn.send(fn.pack(eventName, data));
+    fn.emit = function(eventName, data, requestId) {
+        fn.send(fn.pack(eventName, data, requestId));
     };
 
     fn.api = {};
     fn.searchbar = {};
 
-    fn.api.emit = function (eventName, data) {
+    fn.api.emit = function (eventName, data, requestId) {
         fn.emit("api",
-            fn.pack(eventName, data)
+            fn.pack(eventName, data),
+            requestId
         )
     };
-    fn.searchbar.emit = function (eventName, data) {
+    fn.searchbar.emit = function (eventName, data, requestId) {
         fn.emit("searchbar",
-            fn.pack(eventName, data)
+            fn.pack(eventName, data),
+            requestId
         )
     };
-
-    fn.deferredSend = function (channel, data) {
-        var deferred = $q.defer();
-        Socket.extendedSend(fn.pack(channel, data), function (data) {
-            $rootScope.$apply(deferred.resolve(data));
-        });
-        return deferred.promise;
-    }
 
     /**********
        Config
@@ -89,7 +69,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      **********/
 
 
-
     /**********
          API
      **********/
@@ -97,11 +76,11 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.get
      *
-     * @param {string} uuid UUID of Sharable
+     * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      * @param {boolean=} synchronous   Default false for async, true to return value synchronously
      *
      * @description
-     * Request a Sharable from the server
+     * Request a Sharable from the server. Returns the object description for the selected objects. If a selector is ambiguous, clotho will return the first one returned by MongoDB - which is basically arbitrary. Clotho will send an error message on the 'say' channel if an object could not be retrieved.
      *
      * @returns {Promise | object} Promise to be fulfilled with JSON representation of Sharable, or the object for synchronous (blocking).
      * NB: when a promise is returned, it is resolved on $$v if you don't use .then()....
@@ -135,7 +114,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
                 return data;
             } else {
                 deferred.resolve(data);
-                //deferred.promise.then(function(result) {deferred.promise = result});
                 return deferred.promise;
             }
         }
@@ -143,7 +121,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         else {
             fn.api.emit('get', uuid);
 
-            PubSub.once('model_change:'+uuid, function(data) {
+            PubSub.once('update:'+uuid, function(data) {
                 //console.log("CLOTHOAPI\t");
                 //console.log(data);
                 $rootScope.$safeApply(deferred.resolve(data));
@@ -161,7 +139,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
                         angular.copy(response, value);
                         value.$then = then;
                     }
-                }).then;
+                });
                 return value;
             }
         }
@@ -178,9 +156,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         } else {
             fn.api.emit('get_url', uuid);
 
-            PubSub.once('model_change:'+uuid, function(data) {
+            PubSub.once('update:'+uuid, function(data) {
                 console.log("got template url for uuid " + uuid);
-                $rootScope.$apply(deferred.resolve(data));
+                $rootScope.$safeApply(deferred.resolve(data));
             });
 
             return deferred.promise;
@@ -200,28 +178,24 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.set
      *
-     * @param {string} uuid UUID of Sharable to alter
-     * @param {object} data  JSON representation of new data, may be partial (just a few fields)
+     * @param {object} sharable  JSON representation of Sharable containing new data - may be partial (just a few fields), but must contain an ID or UUID
      *
      * @description
-     * Updates a sharable with passed object. The passed object may only contain a few fields of the Sharable, but must pass validation on the server.
+     * Updates a sharable with passed object. Sets the fields present in the spec to the values in the spec. Fields missing from the spec are unchanged. If a field is missing from the specified object, it will be created. Clotho will send an error message on the 'say' channel if an update could not be applied.
      *
      * Server will emit a collect(uuid) call, upon object being updated
      */
-    var set = function clothoAPI_set(uuid, data) {
+    var set = function clothoAPI_set(sharable) {
+
+        if (angular.isEmpty(sharable)) return;
+
         //strip $$v in case use promise to set multiple times
-        while (data.$$v) {
-            data = data.$$v;
+        while (sharable.$$v) {
+            sharable = sharable.$$v;
         }
 
-        var packaged = {
-            "uuid" : uuid,
-            "data" : data
-        };
-        fn.api.emit('set', packaged);
+        fn.api.emit('set', sharable);
     };
-
-
 
 
     /**
@@ -245,7 +219,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      * @param {string} uuid UUID of Sharable to watch for changes
      * @param {function} callback Function to be executed on change
-     * @param {string=} reference Reference (e.g. $scope.$id) for element to unlink listener on destroy. Should be included, or will bloat.
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Should be included, or will bloat. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published changes for a given uuid
@@ -254,7 +228,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      */
     var watch = function clothoAPI_watch(uuid, callback, reference) {
         reference = typeof reference != 'undefined' ? reference : null;
-        PubSub.on('model_change:'+uuid, function(model) {
+        PubSub.on('update:'+uuid, function(model) {
             $rootScope.$safeApply(callback(model));
         }, reference);
     };
@@ -267,7 +241,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @param {string} uuid UUID of Sharable to watch for changes
      * @param {object} scope Object to be updated
      * @param {string} field field in object to be updated
-     * @param {string} reference Reference (e.g. $scope.$id) for element to unlink listener on destroy
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published changes for a given uuid
@@ -276,9 +250,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      */
     var watch2 = function clothoAPI_watch2(uuid, scope, field, reference) {
         reference = typeof reference != 'undefined' ? reference : null;
-        PubSub.on('model_change:'+uuid, function clothoAPI_watch2_callback(model) {
+        PubSub.on('update:'+uuid, function clothoAPI_watch2_callback(model) {
             $rootScope.$safeApply(scope[field] = model);
-        }, reference)
+        }, reference);
     };
 
     /**
@@ -286,16 +260,17 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      * @param {string} channel PubSub Channel to listen to
      * @param {function} callback Function to be executed on change
-     * @param {string=} reference Reference (e.g. $scope.$id) for element to unlink listener on destroy
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
      * Watches for published events on a given channel, and runs a callback on the event
      */
     var listen = function clothoAPI_listen(channel, callback, reference) {
         reference = typeof reference != 'undefined' ? reference : null;
+
         PubSub.on(channel, function clothoAPI_listen_callback(data) {
             $rootScope.$safeApply(callback(data));
-        }, reference)
+        }, reference);
     };
 
     /**
@@ -389,42 +364,58 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
 
 
+    /**
+     * @name Clotho.query
+     *
+     * @param obj
+     *
+     * @description
+     * Returns all objects that match the fields provided in the spec.
+     */
+    var query = function(obj) {
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
 
-    var query = function(spec) {
-        return fn.deferredSend("query", spec);
+        PubSub.once('query:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('query', obj, requestId);
+
+        return deferred.promise;
     };
+
 
     /**
      * @name Clotho.create
      *
-     * @param {string | object} schema
-     * - string: UUID of Schema to use for validation
-     * - object: JSON representation of Schema to be used
-     *
-     * @param {object} data Model for the resource to be created
-     * @param {function()=} callback
+     * @param {object} object A json object or list of json objects that describe(s) an instance or instances of a clotho schema.
      *
      * @description
-     * Create a Sharable on the server
+     * Creates the described objects. Returns a list of uuids of the created objects, in the same order as they were sent in. If an object was not created, that object's entry in the list of uuids will be null. Reasons for failing to create the failed objects will be provided in the 'say' channel.
      *
      * @returns {object} The object if created successfully, null otherwise
      */
-    var create = function clothoAPI_create(schema, data, callback) {
-        var packaged = {
-            "schema" : schema,
-            "data" : data
-        };
-        fn.api.emit('create', packaged);
-        //todo - return
+    var create = function clothoAPI_create(obj) {
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('create:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('create', obj, requestId);
+
+        return deferred.promise;
     };
 
     /**
      * @name Clotho.destroy
      *
-     * @param {string} uuid
+     * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      *
      * @description
-     * Delete a sharable, provided you have the given permissions
+     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Clotho will send an error message on the 'say' channel if destroy fails for an object.
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
@@ -456,15 +447,48 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * Revert a model to an earlier version
      *
      * @returns {object} version at timestamp of resource with passed UUID
+     * todo - force collection of new model
      *
      */
-        //todo - callback?
     var revert = function clothoAPI_revert(uuid, timestamp) {
-        fn.api.emit('revert', {"uuid" : uuid, "timestamp" : timestamp});
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('revert:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('revert', {"uuid" : uuid, "timestamp" : timestamp}, requestId);
+
+        return deferred.promise;
+    };
+
+
+    /**
+     * @name Clotho.validate
+     *
+     * @param obj
+     *
+     * @description
+     * Passes an object or array of objects to the server to be validated, according to the rules of the object(s)'s respective schema(s)
+     *
+     * @returns {array} array of results of validation. Empty object means object passed validation. Populated object encountered problems. Fields are listed which were problematic, with error messages.
+     */
+    var validate = function (obj) {
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('validate:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('validate', obj, requestId);
+
+        return deferred.promise;
     };
 
     /**
-     * @name Clotho.show
+     * @name Clotho.show_old
      *
      * @param {string} uuid
      * @param {object=} args
@@ -480,19 +504,66 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * viewID should be kept on the server, not passed explicitly to function
      *
      */
-    var show = function clothoAPI_show(uuid, args) {
+    var show_old = function clothoAPI_show(uuid, args) {
         var packaged = {
             "uuid" : uuid,
             "args" : args
         };
-        fn.api.emit('show', packaged);
+        fn.api.emit('show_old', packaged);
     };
 
 
-    //testing
-    var show_simple = function(obj) {
-        fn.api.emit('show_simple', obj);
+    /**
+     * @name Clotho.show
+     *
+     * @param {object} parameters Example given below
+     *
+     format:
+     {
+         "template" : <url>,         // required
+         "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
+         "args" : {<object>}         // data to extend the $scope
+         "controller" : <url>,       // optional
+         "dependencies" : [
+             <urls>                  // required if in controller, or used in template
+         ],
+         styles : {
+             <styles>
+             //e.g.
+             "background-color" : "#FF0000"
+         }
+     }
+
+     note CAVEATS:
+     - currently, components (controllers etc.) must be tied to Application.Extensions.___
+
+     */
+    var show = function(parameters) {
+        fn.api.emit('show', parameters);
     };
+
+
+    /**
+     * @name Clotho.share
+     *
+     * @description Opens a modal to share the current page
+     */
+    var share = function() {
+        /*var dialog_opts = {
+            backdrop: true,
+            backdropFade: true,
+            keyboard: true,
+            backdropClick: true,
+            templateUrl:  '/interface/templates/dialogShare.html',
+            controller: 'DialogShareCtrl',
+            dependencies : [
+                "/interface/DialogShareCtrl.js"
+            ]
+        };*/
+
+        $dialog.share().open();
+    };
+
 
     /**
      * @name Clotho.bootstrap
@@ -516,17 +587,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
         var deferred = $q.defer();
 
-        /*
-        //testing
-        var id1 = angular.element(document).find("ng-app-clothoWidgets");
-        var id2 = id1.append(angular.element('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>'));
-        var id3 = id2.append('<div ng-view></div>');
-
-        console.log(id1);
-        console.log(id2);
-        console.log(id3);
-        */
-
         //angular version
         //note angular returns parent, not appended element
         //todo - if want this, select appropriate child element
@@ -535,12 +595,12 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         //jQuery version
         var insertInto = $($('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>')).appendTo($clotho.appWidgets);
 
-        $.getScript(appInfo.moduleUrl)
-            .done(function () {
-                angular.bootstrap(insertInto, [appInfo.moduleName]);
-                deferred.resolve([appUUID, "[clotho-widget-uuid="+appUUID+"]"]);
-                $rootScope.$safeApply();
-            });
+        var script = appInfo.moduleUrl ? appInfo.moduleUrl + '?_=' + Date.now() : '';
+        $script(script, function () {
+            angular.bootstrap(insertInto, [appInfo.moduleName]);
+            deferred.resolve([appUUID, "[clotho-widget-uuid="+appUUID+"]"]);
+            $rootScope.$safeApply();
+        });
 
         return deferred.promise;
     };
@@ -608,7 +668,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.api.emit('alert', packaged);
     };
 
-    //testing - search bar commands
     //todo - move outside of Clotho API
     var autocomplete = function(query) {
         var packaged = {
@@ -617,18 +676,36 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
         //todo - use angular $cacheFactory to cache searches
 
-        fn.searchbar.emit('autocomplete', packaged);
-    };
-    var autocompleteDetail = function(uuid) {
-        var deferred = $q.defer();
-        var packaged = {
-            "uuid" : uuid
-        };
-        fn.searchbar.emit('autocompleteDetail', packaged);
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
 
-        PubSub.once('autocompleteDetail_'+uuid, function(data) {
-            $rootScope.$apply(deferred.resolve(data));
+        PubSub.once('autocomplete:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
+
+        fn.searchbar.emit('autocomplete', packaged, requestId);
+
+        return deferred.promise;
+    };
+
+    var autocompleteDetail = function(uuid) {
+
+        var deferred = $q.defer();
+        //check the collector first
+        if (Collector.hasItem('detail_'+uuid)) {
+            deferred.resolve(Collector.retrieveModel('detail_'+uuid));
+        } else {
+            var packaged = {
+                "uuid" : uuid
+            };
+            fn.searchbar.emit('autocompleteDetail', packaged);
+
+            //testing
+            //PubSub.once('autocompleteDetail_'+'function_id123', function(data) {
+            PubSub.once('update:detail_'+uuid, function(data) {
+                $rootScope.$safeApply(deferred.resolve(data));
+            }, '$clotho');
+        }
 
         return deferred.promise;
     };
@@ -643,24 +720,76 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.run
      *
-     * @param {string} assistant    Function to be run on the server
-     * @param {object} data JSON passed to the function
-     * @param {boolean=} async   True if the return is asynchronous or false for synchronous (default)
-     * @param {function()=} callback   Function to run upon promise resolving/failing
+     * @param {string} func Object UUID or name indicating the function to be run (follows get semantics for ambiguous selectors)
+     * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
      *
      * @description
-     * Runs a function on the server with the passed data
-     *
-     * @return {object} result of running the function on the server. Returns a promise if `async` is true, otherwise waits till completion to return.
+     * Runs a function on the server on supplied arguments.
+     * Clotho will send an error message on the 'say' channel if there is an error during function execution, there is no function matching the specifier, or there are ambiguously specified arguments.
      */
-    var run = function clothoAPI_run(id, funcName, args) {
+    var run = function clothoAPI_run(func, args) {
         var packaged = {
-            "id" : id,
-            "function" : funcName,
-            "args" : args
+            "function" : func || "",
+            "arguments" : args
         };
-        return fn.deferredSend('run', packaged);
+
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('run:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('run', packaged, requestId);
+
+        return deferred.promise;
     };
+
+
+    /**
+     * @name Clotho.recent_deprecated
+     * @note This is the old implementation. Sends request on requestRecent, and expects response on displayRecent
+     * @returns {Promise}
+     */
+    var recent_deprecated = function() {
+        fn.api.emit('requestRecent', {});
+
+        var deferred = $q.defer();
+
+        PubSub.once('displayRecent', function(data) {
+            console.log('runAPI');
+            console.log(data);
+            $rootScope.$safeApply(deferred.resolve(data));
+        }, 'clothoAPI');
+
+        return deferred.promise;
+    };
+
+    /**
+     * @name Clotho.recent
+     *
+     * @param {Object=} params Restrictions to your query
+     *
+     * //todo - examples
+     *
+     * @description
+     * Request your most recently / commonly used sharables
+     *
+     * @returns {Promise} Data once returned from server
+     */
+    var recent = function(params) {
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('recent:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('recent', params, requestId);
+
+        return deferred.promise;
+    };
+
 
     // ---- TO BE IMPLEMENTED LATER ----
 
@@ -703,13 +832,15 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      */
     var gradeQuiz = function clothoAPI_gradeQuiz(quiz) {
-        fn.api.emit('gradeQuiz', quiz);
 
-        var deferred = $q.defer();
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
 
-        PubSub.once('quizResult:' + quiz.uuid, function(data) {
-            $rootScope.$apply(deferred.resolve(data));
-        }, 'clothoAPI');
+        PubSub.once('gradeQuiz:'+requestId, function(data) {
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('gradeQuiz', quiz, requestId);
 
         return deferred.promise;
     };
@@ -722,18 +853,20 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         get_template : get_template, //testing
         get_script : get_script, //testing
         set : set,
-        clone : clone,
+        //clone : clone,
         query : query,
         create : create,
         edit : edit,
+        validate : validate,
         revert : revert,
         destroy : destroy,
         show : show,
-        show_simple : show_simple, //testing
+        show_old : show_old,
         say : say,
         log : log,
         alert : alert,
         run : run,
+        recent: recent,
         notify : notify,
         gradeQuiz : gradeQuiz,
 
@@ -749,6 +882,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         on : on,
         once : once,
         off : off,
+        share : share,
 
         //searchbar
         submit: submit,

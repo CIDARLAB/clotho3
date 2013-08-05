@@ -1,0 +1,75 @@
+<div ng-controller="PlasmidCtrl" class="container">
+    <div class="row">
+    <div class="span7">
+        <h3>
+            Sequence
+        </h3>
+        <div class="ldt">
+            <pre plasmid-editor ng-model='NucSeq.sequence' features="features" editable="!NucSeq.isLocked" style="position:relative;"></pre>
+        </div>
+
+    </div>
+    <div class="span5">
+        <h3>Features
+            <div class="btn-group">
+                <button class="btn btn-small" ng-click="showAddForm()" ng-disabled="addForm">Add Feature</button>
+                <button class="btn btn-small" ng-click="toggleActive(features, true)">Active</button>
+                <button class="btn btn-small" ng-click="toggleActive(features)">Toggle All</button>
+                <button class="btn btn-small" ng-click="toggleActive(features, false)">Inactive</button>
+            </div>
+        </h3>
+
+        <form novalidate class="well" ng-init="new = emptyFeat()" ng-show="addForm">
+            <div class="row-fluid" style="">
+                <input type="text" class="span12" placeholder="Feature Name" ng-model="new.label">
+
+                <input type="text" class="span6" placeholder="Sequence" ng-model="new.match" ng-pattern="reg_match" ng-trim="false" ng-disabled="new.pos.length"/>
+
+                <input type="text" class="span6" placeholder="Position (xx-xx)" ng-model="new.pos" ng-pattern="reg_pos" ng-trim="false" ng-disabled="new.match.length"/>
+
+                <div class="input-append span6" style="margin-left: 0px;">
+                    <input type="text" class="span9" placeholder="Text" ng-model="new.css.color" ng-pattern="reg_color" ng-trim="false" ng-disabled="new.css.background"/>
+                    <button class="add-on" ng-click="new.css.color = randomColor()" alt="Random" ng-disabled="new.css.background" style="height: inherit"><i class="icon-question-sign"></i></button>
+                </div>
+                <div class="input-append span6" >
+                    <input type="text" class="span9" placeholder="Background" ng-pattern="reg_color" ng-model="new.css.background" ng-trim="false" ng-disabled="new.css.color"/>
+                    <button class="add-on" ng-click="new.css.background = randomColor()" alt="Random" ng-disabled="new.css.color" style="height: inherit"><i class="icon-question-sign"></i></button>
+                </div>
+
+                <button class="btn btn-warning pull-left" ng-click="cancelAdd()">Cancel</button>
+                <button class="btn pull-right" ng-click="addFeature(new)" ng-disabled="!featureValid(new)">Add Feature</button>
+            </div>
+        </form>
+        <form novalidate class="well" ng-show="editForm">
+            <div class="row-fluid" style="">
+                <input type="text" class="span12" placeholder="Feature Name" ng-model="editFeat.label">
+
+                <input type="text" class="span6" placeholder="Sequence" ng-model="editFeat.match" ng-pattern="reg_match" ng-trim="false" ng-disabled="editFeat.pos.length"/>
+
+                <input type="text" class="span6" placeholder="Position (xx-xx)" ng-model="editFeat.pos" ng-pattern="reg_pos" ng-trim="false" ng-disabled="editFeat.match.length"/>
+
+                <div class="input-append span6" style="margin-left: 0px;">
+                    <input type="text" class="span9" placeholder="Text" ng-model="editFeat.css.color" ng-pattern="reg_color" ng-trim="false" ng-disabled="editFeat.css.background"/>
+                    <button class="add-on" ng-click="editFeat.css.color = randomColor()" alt="Random" ng-disabled="editFeat.css.background" style="height: inherit"><i class="icon-question-sign"></i></button>
+                </div>
+                <div class="input-append span6" >
+                    <input type="text" class="span9" placeholder="Background" ng-pattern="reg_color" ng-model="editFeat.css.background" ng-trim="false" ng-disabled="editFeat.css.color"/>
+                    <button class="add-on" ng-click="editFeat.css.background = randomColor()" alt="Random" ng-disabled="editFeat.css.color" style="height: inherit"><i class="icon-question-sign"></i></button>
+                </div>
+
+                <button class="btn btn-warning pull-left" ng-click="cancelEdit(editFeat)">Cancel</button>
+                <button class="btn pull-right" ng-click="saveEditFeature(editFeat);" ng-disabled="!featureValid(editFeat)">Save Feature</button>
+            </div>
+        </form>
+        <div class="row-fluid">
+            <div ng-repeat="feat in features">
+                <div class="btn-group">
+                    <button class="btn" ng-click="toggleActive(feat)" ng-class="{'disabled btn-danger' : !feat.active}"><i ng-class="{'icon-ok' : feat.active, 'icon-remove' : !feat.active}"></i></button>
+                    <button class="btn" ng-click="editFeature(feat, $index)"><i class="icon-pencil"></i></button>
+                </div>
+                <span ng-style="feat.css">{{ feat.label }} <span ng-if="feat.pos">@ {{ feat.pos.start }} - {{ feat.pos.end }}</span><span ng-if="feat.match"> ({{ feat.match |limitTo:10 }})</span></span>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

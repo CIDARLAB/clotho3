@@ -1,8 +1,12 @@
 {
-    "uuid" : "1234567890",
     "text" : "This is a command",
-    "command" : "clotho.run('230sdv-232', '18919e-18')",
-    "versions" : [
+    "command_native":"clotho.run('1234567890', 'plasmid_id1256');",
+    "command_object":{
+        "channel":"run",
+        "function_id":"1234567890",
+        "args":"['plasmid_id1256']"
+    },
+    "sharables" : [
         {
             "uuid" : "uuid123",
             "text" : "Reverse Complement Tool",

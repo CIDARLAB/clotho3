@@ -14,55 +14,11 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
         //created in index.html
         var socket = window['$clotho']['socket'];
 
-        //internal use (Clotho API) on channel $clotho
-        var internal = {};
-
         //external use - use in other apps, or for custom events
         var customChannels = {};
 
-        /*********
-         Socket PubSub
-         - Avoid creation of Socket.on() listeners etc. by using custom channels
-         *********/
-
-        /*
-         //INTERNAL USE
-         //note - test these --- may be better to avoid internal registers? just go through PubSub?
-         var register = function (eventName, callback) {
-         if(!internal[eventName]) {
-         internal[eventName] = [];
-         }
-         internal[eventName].push(callback);
-         return [eventName, callback];
-         };
-
-         var reg_once = function (eventName, callback) {
-         var once_fn = function(args) {
-         unregister([eventName, this]);
-         callback(args);
-         };
-         register(eventName, once_fn);
-         };
-
-         var unregister = function (handle) {
-         var t = handle[0];
-         internal[t] && angular.forEach(internal[t], function(idx){
-         if(this == handle[1]){
-         console.log("SOCKET\tremoving listener for " + internal[t]);
-         internal[t].splice(idx, 1);
-         }
-         });
-         };
-
-         var internal_trigger = function (channel, args) {
-         internal[channel] && angular.forEach(internal[channel], function(fn) {
-         fn(args);
-         });
-         };
-         // END INTERNAL USE
-         */
-
         //external use
+        //todo - use PubSub for this stuff in its own layer
         var on = function (eventName, callback) {
             if(!customChannels[eventName]) {
                 customChannels[eventName] = [];
@@ -71,6 +27,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             return [eventName, callback];
         };
 
+        //fixme - doesn't work when you do it this way
         var once = function (eventName, callback) {
             var once_fn = function(args) {
                 off([eventName, this]);
@@ -102,8 +59,10 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
          ************/
 
         socket.on('message', function (obj) {
+
             obj = JSON.parse(obj);
             var channel = obj.channel;
+            var requestId = obj.requestId;
             var data = obj.data;
 
             //note - channel reserved for serverAPI
@@ -115,38 +74,31 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
             // it's the ClientAPI method's responsibility to handle data appropriately.
             if (typeof ClientAPI[channel] == 'function') {
-                console.log("SOCKET\tmapping to ClientAPI - " + channel);
+                //console.log("SOCKET\tmapping to ClientAPI - " + channel);
                 ClientAPI[channel](data);
             }
             //for custom listeners attached
-            else if (typeof customChannels[channel] == 'function') {
+            else if (typeof customChannels[channel+':'+requestId] == 'function') {
                 console.log("SOCKET\tmapping to custom listeners - " + channel);
                 trigger(channel, data);
             }
             // don't know what to do, so publish to PubSub
             else {
-                console.log("SOCKET\tno listener found for channel: " + channel);
-                PubSub.trigger(channel, data);
+                console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
+                //fixme - temporary hack - will move to separate service soon
+                PubSub.trigger(channel+':'+requestId, data);
             }
         });
 
         return {
 
-            /*
-             //only for use by Clotho API
-             //note - decide if will be used
-             register : register,
-             reg_once : reg_once,
-             unregister : unregister,
-             */
-
-
-            //For adding custom channels - for use in other apps etc.
+            //For adding custom channels - for use in other apps etc. as a catch before PubSub
             on : on,
             once : once,
             off : off,
 
             //send a JSON on a 'custom channel' [ repackaged using send() ]
+            //note - callback is run on send, not really a callback
             emit: function (eventName, data, callback) {
                 console.log("SOCKET\tdata emitted on channel: " + eventName);
 
@@ -156,8 +108,10 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
                 };
                 socket.send(JSON.stringify(packaged));
 
-                callback(packaged);
+                if (typeof callback == 'function')
+                    callback(packaged);
             },
+
             //send properly formatted string on channel message
             send: function(data) {
                 console.log("SOCKET\tsending data: " + data);

@@ -1,0 +1,10 @@
+{
+    "id" : "sharable_institution",
+    "type" : "sharable",
+    "schema_id" : "schema_institution",
+    "displayName" : "Some Institution",
+    "city" : "Internet",
+    "state" : "CA",
+    "country" : "United States",
+    "userAccess" : false
+}

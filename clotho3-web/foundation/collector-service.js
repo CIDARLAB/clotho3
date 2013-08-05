@@ -4,15 +4,15 @@
 
 //note : Collector returns **references**. It publishes copies to PubSub. ClothoAPI should copy objects it passes from the collector.
 
-Application.Foundation.service('Collector', ['$window', 'PubSub',function($window, PubSub) {
+Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',function($window, $document, PubSub) {
 
-    return (window.$clotho.$collector) ? window.$clotho.$collector : window.$clotho.$collector = generateCollector();
+    return ($window.$clotho.$collector) ? $window.$clotho.$collector : $window.$clotho.$collector = generateCollector();
 
     function generateCollector() {
 
         function broadcastModelUpdate(uuid, obj) {
-            PubSub.trigger("model_change", uuid);
-            PubSub.trigger("model_change:" + uuid, angular.copy(obj));
+            PubSub.trigger("update", uuid);
+            PubSub.trigger("update:" + uuid, angular.copy(obj));
         }
 
         /************
@@ -38,7 +38,7 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             // Checks the browser to see if local storage is supported
             var browserSupportsLocalStorage = function () {
                 try {
-                    return ('localStorage' in window && window['localStorage'] !== null);
+                    return ('localStorage' in $window && $window['localStorage'] !== null);
                 } catch (e) {
                     return false;
                 }
@@ -50,8 +50,8 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             var browserSupportsCookies = function() {
                 try {
                     return navigator.cookieEnabled ||
-                        ("cookie" in document && (document.cookie.length > 0 ||
-                            (document.cookie = "test").indexOf.call(document.cookie, "test") > -1));
+                        ("cookie" in $document && ($document.cookie.length > 0 ||
+                            ($document.cookie = "test").indexOf.call($document.cookie, "test") > -1));
                 } catch (e) {
                     return false;
                 }
@@ -70,12 +70,10 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
             // returns an item, or optional defaultValue if not found
             var getItem = function( key, defaultValue ){
                 var value = refStorage.getItem( prefix+key );
-                if (value == null){
-                    // check to see if default is falsy
+                if (typeof value == 'undefined' || value === false){
                     return((typeof( defaultValue ) != "undefined") ? defaultValue : null );
                 } else {
                     return(serializer.parse( value ) );
-
                 }
             };
 
@@ -114,24 +112,19 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
 
             var handle_storage_change = function(e) {
                 //console.log("change made to local storage");
-                if (!e) { e = window.event; }
+                if (!e) { e = $window.event; }
 
                 //TODO - better checking for e.key across browsers
                 var uuid = e.key.replace(prefix, '') || '';
                 var obj = getItem(uuid);
                 console.log("handle_storage_event for " + uuid);
                 broadcastModelUpdate(uuid, obj)
-
             };
 
-            if (window.addEventListener) {
-                window.addEventListener("storage", handle_storage_change, false);
-                //testing
-                // console.log("local storage Listener added");
+            if ($window.addEventListener) {
+                $window.addEventListener("storage", handle_storage_change, false);
             } else {
-                window.attachEvent("onstorage", handle_storage_change); //IE8
-                //testing
-                // console.log("local storage Listener added for IE8");
+                $window.attachEvent("onstorage", handle_storage_change); //IE8
             }
 
 
@@ -163,21 +156,11 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
         };
 
         //passes update message - usual way of adding model to collector
-        var storeModel = function(uuid, obj) {
-            //testing
-            //console.log("COLLECTOR\tstoring uuid " + uuid);
-            //console.log(obj);
-
-            if (!angular.equals(collector[uuid], obj)) {
+        //pass true for 'force' to force collect and broadcast of update
+        var storeModel = function(uuid, obj, force) {
+            if (force || !angular.equals(collector[uuid], obj)) {
                 console.log("COLLECTOR\t" + uuid + " is being saved");
-
-                //notify server if api running
-                if (window.$clotho.api) {
-                    //testing
-                    //console.log("COLLECTOR\tNOTIFY for uuid: " + uuid);
-                    window.$clotho.api.set(uuid, obj);
-                }
-
+                //console.log(obj);
                 silentAddModel(uuid, obj);
                 broadcastModelUpdate(uuid, obj)
             }
@@ -217,6 +200,7 @@ Application.Foundation.service('Collector', ['$window', 'PubSub',function($windo
 
         return {
             collector : collector,
+            hasItem : angularLS.hasItem,
             silentAddModel : silentAddModel,
             storeModel : storeModel,
             retrieveModel : retrieveModel,

@@ -2,28 +2,26 @@
 
 Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$location', 'Clotho', function($scope, $routeParams, $location, Clotho) {
 
-    $scope.setUUID = function (uuid) {
-        $scope.uuid = uuid;
-        $scope.sharable = Clotho.get($scope.uuid);
-        $location.path('/editor/' + $scope.uuid);
-    };
+    //fixme - change path, don't reinstantiate controllers etc.
+    //note - could use search param, and set reloadOnSearch to false
+    /*$scope.$watch('id', function (newval, oldval) {
+       $location.url('/editor/' + $scope.id).replace();
+    });*/
 
     //init()
-    $scope.setUUID($routeParams.uuid);
+    $scope.id = $routeParams.id;
+
+    $scope.editableList = [
+        {"name" : "Person", "type" : "Sharable", "value" : "sharable_person"},
+        {"name" : "Institution", "type" : "Sharable", "value" : "sharable_institution"},
+        {"name" : "First Function", "type" : "Function", "value" : "func_first"},
+        {"name" : "Second Function", "type" : "Function", "value" : "func_second"}
+    ];
 
 
-    //testing
-    $scope.setNewFirst = function() {
-        var tempObj = {
-            "$clotho" : {
-                "schema" : "schema_institution",
-                "uuid" : "inst_first"
-            },
-            "displayName" : "New Person"
-        };
-        Clotho.set('inst_first', tempObj);
-    };
-
+//testing - typeahead
+    $scope.selected = undefined;
+    $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
 
 

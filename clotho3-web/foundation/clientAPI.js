@@ -1,14 +1,10 @@
 'use strict';
 
 /**
- * @name clientAPI
+ * @name ClientAPI
  *
  * @description
  * This is the client Clotho API - commands issued BY the server to be run on the client
- *
- * Notes:
- *  - not really sure at this point which functions should `return` and which should have a `callback` ... so some of the functions have a parameter callback, particularly those which are asynchronous, in the event we want to pass data back, or allow for more custom operations to be made using the data passed to / from the command.
- *
  */
 Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$templateCache', '$http', '$rootScope', '$location', '$compile', '$dialog', function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
 
@@ -107,9 +103,28 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         }
     };
 
-    //note - temporary - need to integrate modal
+    /**
+     * @name clientAPI.edit
+     * @param uuid UUID of sharable to edit, opens in modal
+     */
     var edit = function(uuid) {
-        $location.path('/editor/' + uuid)
+        var dialog_opts = {
+            backdrop: true,
+            keyboard: true,
+            backdropClick: true,
+            template:  '<form sharable-editor name="sharableEditor" uuid="'+uuid+'" class="span6 form-horizontal well" novalidate></form>'
+        };
+        var d = $dialog.dialog(dialog_opts);
+        d.open();
+    };
+
+    /**
+     * @name clientAPI.changeUrl
+     *
+     * @param newUrl URL to change to, angular version
+     */
+    var changeUrl = function(newUrl) {
+        $location.path(newUrl);
     };
 
     /**
@@ -147,7 +162,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     };
 
     /**
-     * @name clientAPI.display
+     * @name clientAPI.display_old
      *
      * @param {string} uuid
      * @param {object} args
@@ -162,7 +177,7 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * Show a view on the client
      *
      */
-    var display = function clientAPIDisplay(uuid, args) {
+    var display_old = function clientAPIDisplay(uuid, args) {
 
         //as a simple demo, let's assume this is all that is sent
         var model = args.model;
@@ -171,11 +186,14 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
     };
 
     /**
+     * @name clientAPI.display
+     *
      * @param {object} data
      * format:
         {
             "template" : <url>,         // required
             "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
+            "args" : {<object>}         // data to copy onto $scope
             "controller" : <url>,       // optional
             "dependencies" : [
                 <urls>                  // required if in controller
@@ -190,20 +208,21 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      note CAVEATS:
      - currently, controllers etc. must be tied to Application.Extensions.___
      */
-    var display_simple = function clientAPIDisplaySimple(data) {
+    var display = function clientAPIDisplaySimple(data) {
 
-        //console.log(data);
+        console.log(data);
 
         var template = data.template,
             controller = data.controller || "",
+            args = data.args || {},
             dependencies = data.dependencies || [],
             styles = data.styles || {},
-            target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $clotho.appRoot;
+            target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $($clotho.appRoot).find('[ng-view]');
 
         $rootScope.$safeApply($http.get(template, {cache: $templateCache})
             .success(function(precompiled) {
 
-                Application.mixin([dependencies, controller], $(precompiled).appendTo(target))
+                Application.mixin([dependencies, controller], $(precompiled).appendTo(target), args)
                     .then(function(div) {
                         //testing
                         //console.log($position.position(div));
@@ -248,13 +267,19 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * @name clientAPI.say
      *
      * @param {object} data
-     * {"msg" : <msg>}
+     * {
+            "text" : msg,
+            "from" : sender,
+            "class" : css,
+            "timestamp" : timestamp
+       }
      *
      * @description
      * Adds a message to the Command Bar's Activity Log
      *
      */
     var say = function clientAPISay(data) {
+        console.log('Hit say');
         PubSub.trigger("activityLog", data);
     };
 
@@ -303,6 +328,19 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
         PubSub.trigger('revisions:'+uuid, data);
     };
 
+    /**
+     * @name clientAPI.startTrail
+     *
+     * @param {string} uuid
+     *
+     * @description
+     * start a trail with a given uuid
+     */
+    var startTrail = function clothoAPI_startTrail(uuid) {
+        $location.path("/trails/" + uuid);
+    };
+
+
     // ---- COMMAND BAR ----
 
     /**
@@ -314,29 +352,42 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * Publishes autocompletions to PubSub for listeners to pick up
      */
     var autocomplete = function clientAPIAutocomplete(list) {
+        console.log('Hit autocomplete');
+        console.log(JSON.stringify(list));
+
         PubSub.trigger('autocomplete', list);
     };
 
-    /*var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
-        Collector.storeModel("detail_" + obj.uuid, obj);
-    };*/
+    var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
+
+        console.log('Hit autocompletedetail');
+        console.log(obj);
+        
+        var id = obj.command_object.function_id;
+
+        Collector.storeModel("detail_" + id, obj);
+        PubSub.trigger('autocompleteDetail_'+id, obj);
+    };
 
 
     return {
         mapCommand : mapCommand,
         collect : collect,
         edit : edit,
+        changeUrl : changeUrl,
         notify : notify,
         broadcast : broadcast,
         log : log,
         say : say,
         alert : alert,
         display : display,
-        display_simple : display_simple,
+        display_simple : display,
+        display_old : display_old,
         hide : hide,
         help : help,
         revisions : revisions,
-        autocomplete : autocomplete
-        //autocompleteDetail: autocompleteDetail
+        startTrail : startTrail,
+        //autocomplete : autocomplete,
+        autocompleteDetail: autocompleteDetail
     }
 }]);

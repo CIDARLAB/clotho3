@@ -1,0 +1,48 @@
+{
+   "channel":"autocompleteDetail",
+   "data":{
+      "text":"This is a command",
+      "command_native":"clotho.run('function_id123', 'plasmid_id1256');",
+      "command_object":{
+         "channel":"run",
+         "function_id":"function_id123",
+         "args":"['plasmid_id1256']"
+      },
+      "sharables":[
+         {
+            "id":"function_id123",
+            "text":"Reverse Complement Tool",
+            "author":{
+               "id":"id_author_123",
+               "name":"Joe Schmo",
+               "email":"joe@schmo.com",
+               "biography":"This is a biography about Joe Schmo. It's not too long. "
+            },
+            "description":"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.",
+            "usage":{
+               "executed":"35",
+               "successful":"27",
+               "positive":"12",
+               "negative":"3"
+            }
+         },
+         {
+            "id":"plasmid_id1256",
+            "text":"pBca 1256",
+            "author":{
+               "id":"id_author_456",
+               "name":"Chris Anderson",
+               "email":"chris@anderson.com",
+               "biography":"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            },
+            "description":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "usage":{
+               "executed":"8",
+               "successful":"8",
+               "positive":"6",
+               "negative":"0"
+            }
+         }
+      ]
+   }
+}

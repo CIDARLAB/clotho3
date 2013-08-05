@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
+Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho, $q, $dialog) {
 
     /**
      * @description Creates a youtube player within an iFrame. Use before createAPIPlayer.
@@ -172,10 +172,6 @@ Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
         return deferred.promise;
     };
 
-    var share = function(uuid) {
-        console.log("share trail with uuid: " + uuid);
-    };
-
     var favorite = function(uuid) {
         console.log("favorite trail with uuid: " + uuid);
     };
@@ -185,7 +181,7 @@ Application.Trails.service('Trails', ['Clotho', '$q', function(Clotho, $q) {
         createAPIPlayer : createAPIPlayer,
         extract_youtube : extract_youtube,
         compile : compile,
-        share : share,
+        share : Clotho.share,
         favorite : favorite
     }
 }]);
@@ -197,7 +193,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.uuid = $route.current.params.uuid;
@@ -223,68 +219,101 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             if (params.autoadvance) {
                 player.addEventListener('onStateChange', function (event) {
                     if (event.data == 0) {
-                        //video is ended, want to advance somehow
+                        //video is ended, want to advance
                         $scope.next();
                     }
                 })
             }
+
+            //todo - add events for those passed in params
         });
     };
 
     $scope.loadTemplate = function (url) {
-        //future - once clotho API can return templates, use Clotho.get
-        $http.get(url, {cache:$templateCache}).success(function (data) {
-            $scope.content = $compile(data)($scope);
-        });
-    };
-
-    $scope.loadQuiz = function (content) {
-
-        $scope.quiz = content;
-
-        $http.get('partials/trails/' + content.type + '-partial.html', {cache: $templateCache}).
-            success(function (data) {
+        $http.get(url, {cache:$templateCache})
+            .success(function(data, status, headers, config) {
+                console.log('8 - template loaded', data);
                 $scope.content = $compile(data)($scope);
+            })
+            .error(function(data, status, headers, config) {
+                // todo - fallback
             });
     };
 
-    $scope.loadPaver = function (paver) {
-        var html = '<h4>Something didn&quot;t work - that type of paver wasn&quot;t recognized</h4>';
-        $scope.content = html;
+    $scope.loadQuiz = function (content) {
+        $scope.quiz = content;
+
+        $http.get('partials/trails/quiz/' + content.type + '-partial.html', {cache: $templateCache}).
+            success(function (data) {
+                $scope.content = $compile(data)($scope);
+            });
+        //todo - fallback
+    };
+
+    $scope.paverError = function (paver) {
+        $scope.content = '<h4>Something didn&apos;t work - that type of paver wasn&apos;t recognized</h4>';
+        console.log(paver);
     };
 
 
     $scope.activate = function(indices) {
 
+        //don't activate already active one
+        if ($scope.current == indices) return;
+
+        console.log('1 - activating paver');
+
         $scope.current = indices;
         $scope.content = "";
-        //module, paver
+        //in form module-paver
         var pos = indices.split("-");
         var paver = $scope.trail.contents[pos[0]]['pavers'][pos[1]];
 
-        //todo - better handling to ensure script load before next step
-        if (paver.script) {
-            var paver_name = "paver_" + $scope.uuid + "_" + indices;
-            $.getScript(paver.script);
+        function load() {
+            console.log('6 - loading paver');
+            switch (paver.type) {
+                case 'video' : {
+                    $scope.loadVideo(paver.video);
+                    break;
+                }
+                case 'template' : {
+                    console.log('7 - loading template');
+                    $scope.loadTemplate(paver.template);
+                    break;
+                }
+                case 'quiz' : {
+                    $scope.loadQuiz(paver.content);
+                    break;
+                }
+                default : {
+                    $scope.paverError(paver);
+                }
+            }
+
+            if (paver.onload)
+                Application.script(paver.onload);
         }
 
-        switch (paver.type) {
-            case 'video' : {
-                $scope.loadVideo(paver.video);
-                break;
-            }
-            case 'template' : {
-                $scope.loadTemplate(paver.template);
-                break;
-            }
-            case 'quiz' : {
-                $scope.loadQuiz(paver.content);
-                break;
-            }
-            default : {
-                $scope.loadPaver(paver);
-            }
+        //todo - use Clotho.show() here
+
+
+        //todo - incorporate better
+        if (!!paver.css) {
+            Application.css(paver.css);
         }
+
+        if (!!paver.dependencies || !!paver.script) {
+            Application.mixin(paver.dependencies).then(function() {
+                console.log('4 - mixin loaded');
+                Application.script(paver.script).then(function() {
+                    console.log('5 - script loaded');
+                    load()
+                });
+            });
+        } else {
+            load()
+        }
+
 
     };
 
@@ -294,6 +323,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.favorite = function() {
+        //todo - better checking, do initial check
+        $scope.favorited = !$scope.favorited;
         Trails.favorite($scope.uuid);
     };
 
@@ -336,14 +367,19 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $scope.activate(newpos);
     };
 
+    $keypress.on('keydown', {'right' : 'next()', 'left' : 'prev()'}, $scope);
+
     $scope.base64icon = base64icon;
 }]);
 
 Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
 
-    //todo - pass in starting value, default to false
-    $scope.createEmptyAnswer = function(quiz) {
+    $scope.createEmptyAnswer = function(quiz, value) {
+        value = (typeof value != 'undefined') ? value : false;
         $scope.quiz.answer = new Array(quiz.options.length);
+        for (var i = 0; i < $scope.quiz.answer.length; i++) {
+            $scope.quiz.answer[i] = value;
+        }
     };
 
     $scope.answerUndefined = function(quiz) {
@@ -352,6 +388,7 @@ Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($sc
 
     $scope.submitQuestion = function(quiz) {
         Clotho.gradeQuiz(quiz).then(function (data) {
+            $scope.quiz.submitted = true;
             $scope.quiz.response = data;
         });
     }

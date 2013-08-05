@@ -1,8 +1,12 @@
 {
-    "uuid" : "817924532",
     "text" : "A Second Command",
-    "command" : "clotho.run('342452434534', '13402-3-422')",
-    "versions" : [
+    "command_native":"clotho.run('817924532', 'plasmid_id1256');",
+    "command_object":{
+        "channel":"run",
+        "function_id":"817924532",
+        "args":"['plasmid_id1256']"
+    },
+    "sharables" : [
         {
             "uuid" : "uuid923",
             "text" : "Some Fancy Tool",

@@ -1,15 +1,20 @@
 <div class="container" ng-controller="EditorCtrl">
     <div class="row">
 
-        <form sharable-editor name="sharableEditor" uuid="uuid" class="span6 form-horizontal well" novalidate></form>
+        <!--<form sharable-editor name="mySharable" uuid="id" class="span6 form-horizontal well" novalidate></form>-->
 
-        <div class="span3 well">
-            <h6>Change Institution:</h6>
-            <div class="btn-group">
-                <button class="btn" type="button" ng-click="setUUID('inst_first')">First</button>
-                <button class="btn" type="button" ng-click="setUUID('inst_second')">Second</button>
-                <button class="btn btn-info" type="button" ng-click="setNewFirst()">New 1st</button>
-            </div>
+        <!--<form function-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>-->
+
+    <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>
+
+        <div class="span2 well">
+            <h4>Demo</h4>
+
+            <input type="text" style="width: 100%; margin: 5px 0;" ng-model="selected" typeahead="state for state in states | filter:$viewValue" popover="Right now this just pulls from a list of states, but we should set this up to work with Clotho.query()" popover-title="What to Edit?" popover-trigger="focus">
+
+            <h6>Choose from List:</h6>
+            <select ng-model="id" class="span2" ng-options="c.value as c.name group by c.type for c in editableList"></select>
+
         </div>
 
     </div>

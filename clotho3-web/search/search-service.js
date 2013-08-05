@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', '$position', function(Clotho, $timeout, $q, $rootScope, $position) {
+Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', function(Clotho, $timeout, $q, $rootScope) {
 
     /******* config ******/
     var options = {};
@@ -19,35 +19,42 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
 
     //demo data
     log.entries = [
+//        {
+//            "text" : "Sending message failed",
+//            "from" : "client",
+//            "class" : "error",
+//            "timestamp" : 1288399999999
+//        },
+//        {
+//            "text" : "This is a warning",
+//            "from" : "server",
+//            "class" : "warning",
+//            "timestamp" : 1288999999999
+//        },
+//        {
+//            "text" : "Yay first message worked",
+//            "from" : "server",
+//            "class" : "success",
+//            "timestamp" : 1188323623006
+//        },
+//        {
+//            "text" : "By the way these are automatically sorted by date. This is a really long message to demonstrate what it looks like...",
+//            "from" : "client",
+//            "class" : "muted",
+//            "timestamp" : 1289999908979
+//        },
         {
-            "text" : "Sending message failed",
-            "from" : "client",
-            "class" : "text-error",
-            "timestamp" : 1288399999999
-        },
-        {
-            "text" : "This is a warning",
+            "text" : "Welcome to Clotho!",
             "from" : "server",
-            "class" : "text-warning",
-            "timestamp" : 1288999999999
-        },
-        {
-            "text" : "Yay first message worked",
-            "from" : "server",
-            "class" : "text-success",
-            "timestamp" : 1188323623006
-        },
-        {
-            "text" : "By the way these are automatically sorted by date. This is a really long message to demonstrate what it looks like...",
-            "from" : "client",
-            "class" : "muted",
-            "timestamp" : 1289999908979
+            "class" : "success",
+            "timestamp" : Date.now()
         }
     ];
 
 
     /****** display ******/
     var display = {};
+    display.query = '';
     display.autocomplete = false; // autocomplete list
     display.autocompleteDetail = false; //pane to left of autocomplete
     display.autocompleteDetailInfo = false; // e.g. command or author
@@ -55,26 +62,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     display.log = false; // activity log
     display.logSnippet = false; // snippet right of log button
 
-    //note - have to wait for app to compile so button is present, so use $timeout
-    $timeout(function() {
+    display.genLogPos = function() {
         var target = document.getElementById('searchbar_logbutton');
-
-        function generateLogpos () {
-            return {
-                left : (target.offsetLeft + (target.scrollWidth / 2) - 180) + "px",
-                top : (target.offsetTop + target.scrollHeight)  + "px"
-            };
-        }
-
-        //todo - make this a loop
-        if (typeof target == 'undefined') {
-            $timeout(function() {
-                display.logpos = generateLogpos();
-            }, 50);
-        } else {
-            display.logpos = generateLogpos();
-        }
-    });
+        display.logpos = {
+            left : (target.offsetLeft + (target.scrollWidth / 2) - 160) + "px",
+            top : (target.offsetTop + target.scrollHeight)  + "px"
+        };
+    };
 
     display.show = function (field) {
         if (!display[field])
@@ -125,34 +119,38 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
             default : {}
         }
         //choose model
-        autocomplete.detailModel = autocomplete.autoDetail.versions[index];
+        autocomplete.detailModel = autocomplete.autoDetail.sharables[index];
         if (type == "author")
             autocomplete.detailModel = autocomplete.detailModel.author;
 
         display.show('autocompleteDetailInfo');
     };
 
+
     /***** functions *****/
 
     function receiveMessage (data) {
+        log.entries.unshift(data);
         display.show('logSnippet');
         //todo - cancel if new request comes in
         $timeout( function() {
             display.hide('logSnippet');
         }, 5000);
-        log.entries.unshift(data);
+
     }
 
-    var execute = function (uuid) {
-        console.log("this would be run: " + uuid);
+    var execute = function (command) {
+        console.log("this would be run: " + command);
         display.hide('autocomplete');
         display.undetail();
     };
 
     var submit = function (query) {
+        if (typeof query == 'undefined')
+            query = display.query;
         if (!!query) {
             Clotho.submit(query);
-            display.autocomplete = false;
+            //display.autocomplete = false;
             display.undetail();
         }
     };
@@ -162,16 +160,19 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
     Clotho.listen("activityLog", function (data) {
         receiveMessage(data);
     }, 'searchbar');
-
-    Clotho.listen('autocomplete', function(data) {
-        //todo -smarter logic here
-        autocomplete.autocompletions = data;
-    }, 'searchbar');
     
     return {
         options : options,
         display : display,
         log : log,
+        setQuery : function(item, $event) {
+            if (typeof $event != 'undefined')
+                $event.preventDefault();
+            if (item.type != 'command') {
+                display.undetail();
+            }
+            display.query = !!item.value ? item.value : item.text;
+        },
         autocomplete : autocomplete,
         submit : submit,
         execute : execute

@@ -1,13 +1,18 @@
 'use strict';
 
-Application.Primary.controller('MenuCtrl', ['$scope', '$location', 'Collector', 'Clotho', 'PubSub', function($scope, $location, Collector, Clotho, PubSub) {
-    Clotho.get('menu_items').then(function(result) {
-        $scope.modes = result;
-    });
+Application.Primary.controller('MenuCtrl', ['$scope', 'Clotho', '$location', '$timeout', 'Collector', 'PubSub', function($scope, Clotho, $location, $timeout, Collector, PubSub ) {
+    $scope.modes = {"items": [
+        {"name" : "Editor", "path" : "/editor"},
+        {"name" : "Trails", "path" : "/trails"},
+        {"name" : "Browser", "path" : "/browser"},
+        {"name" : "Plasmid", "path" : "/plasmid"},
+        {"name" : "Construction", "path" : "/construction"}
+    ]};
 
     $scope.$watch(function () {
         return $location.path();
     }, function (newValue, oldValue) {
+        if (!$scope.modes) return;
         angular.forEach($scope.modes.items, function(mode, num) {
             var regexp = new RegExp('^' + mode.path + '.*$', ['i']);
             if (regexp.test(newValue)) {
@@ -18,6 +23,15 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', 'Collector', 
             }
         });
     });
+
+    //initial check of url, not picked up in watch
+    $timeout(function() {
+        var path = $location.path();
+        angular.forEach($scope.modes.items, function(mode, num) {
+            var regexp = new RegExp('^' + mode.path + '.*$', ['i']);
+            mode.class = (regexp.test(path)) ? 'active' : '';
+        });
+    }, 0);
 
     //do hrefs or this make more sense?
     $scope.goToPage = function(mode) {
@@ -46,9 +60,6 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', 'Collector', 
             "text" : "Fail to Load!",
             "class" : "progress-error"
         };
-        alert("There was an error: " + rejection);
-        //verify this works..
-        $location.path(previous);
     });
 
 }]);

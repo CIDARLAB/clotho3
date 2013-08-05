@@ -4,30 +4,32 @@
         <div id="searchBarForm" class="navbar-form pull-left">
 
             <div class="input-append">
-                <input id="searchBar" name="searchBar" type="text" placeholder="Enter Command or Search Term" class="span4" autocomplete="off" ng-model="query" ng-required>
+                <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit()'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
                 <button class="btn" id="searchBarSubmit" ng-click="submit(query)">Submit</button>
             </div>
 
-            <div click-outside="display.hide('log')" class="inline-block" style="position:relative;">
-                <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log')">
-                    <i class="icon-tasks"></i>
-                </button>
+            <!--click-outside="display.hide('log')"-->
+            <div class="inline-block" style="position:relative;" ng-init="display.genLogPos()">
+                <div class="btn-group">
+                    <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log')">
+                        <i class="icon-tasks"></i>
+                    </button>
+                </div>
                 <div clotho-searchbar-log style="position: absolute;" ng-style="display.logpos"></div>
             </div>
 
         </div>
 
-        <div class="pull-left inline alert {{log.entries[0].class}}" ng-show="display.logSnippet" style="padding: 3px 12px 4px; margin: 5px 5px 0; max-width: 308px; overflow: hidden; text-overflow: ellipsis">
+        <div id="clothoSearchbarLogSnippet" class="pull-left inline alert alert-{{log.entries[0].class}}" ng-show="display.logSnippet">
             <small>{{log.entries[0].text}}</small>
         </div>
 
         <div class="pull-right inline btn-group">
             <button class="btn" ng-click="newPage()" alt="New Page"><i class="icon-file"></i></button>
             <button class="btn" ng-click="newWorkspace()" alt="New Workspace"><i class="icon-plus"></i></button>
-            <div click-outside="display.hide('help')" class="inline-block">
-                <button class="btn" ng-click="display.toggle('help')"><i class="icon-question-sign"></i></button>
+            <!--click-outside="display.hide('help')"-->
+            <button class="btn" ng-click="display.toggle('help')"><i class="icon-question-sign"></i></button>
 
-            </div>
         </div>
     </div>
 

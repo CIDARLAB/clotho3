@@ -11,14 +11,12 @@ Application.Foundation.service('PubSub', function() {
 
     /**
      * future -- decide API later
-     * note - combine model_add and model_change
      *
      * API -- STANDARD MESSAGES
      *
-     * model_add (uuid, model) -- model added to collector
      * model_destroy (uuid, model) -- model removed from collector
-     * model_change (uuid, model) -- model is changed ---- use for listening to any model change
-     * model_change:[uuid] (model -- model with <uuid> is changed ---- use for listening for a specific model
+     * update (uuid, model) -- model is changed ---- use for listening to any model change
+     * update:[uuid] (model -- model with <uuid> is changed ---- use for listening for a specific model
      * model_request (uuid) -- model is requested from server
      * model_save (uuid, model) -- model successfully saved to server
      * model_error (uuid, model, xhr) -- saving a model to server fails
@@ -38,6 +36,15 @@ Application.Foundation.service('PubSub', function() {
      - Once() via Flag for Boolean 'once'
      - deregistration returned as function to invoke later
         - e.g. return removeFromArray(array, val)
+
+        e.g.
+
+        var off = $scope.$on('$stateChangeStart', function(e) {
+            e.preventDefault();
+            off();
+        });
+
+
      - Each() (unexposed) to handle multiple/single items the same way
      - Off() by handle (event, specific callback)
      - Destroy() by reference
@@ -86,7 +93,16 @@ Application.Foundation.service('PubSub', function() {
 
             var handle = [topic, callback];
             if (ref && typeof ref != 'undefined') {
-                addToRef(ref, handle);
+
+                if (angular.isScope(ref)) {
+                    ref.$on('$destroy', function() {
+                        destroy(ref.$id)
+                    });
+
+                    addToRef(ref.$id, handle);
+                } else {
+                    addToRef(ref, handle);
+                }
             }
             return handle;
         };

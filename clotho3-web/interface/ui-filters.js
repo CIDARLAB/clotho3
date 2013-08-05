@@ -51,8 +51,9 @@ Application.Interface.filter('unique', ['$parse', function ($parse) {
 
  <pre class="prettyprint">
  &lt;label&gt;&lt;input type=&quot;checkbox&quot; ng-model=&quot;caseSensitive&quot;&gt; Case Sensitive?&lt;/label&gt;
+ &lt;input placeholder=&quot;Custom Class Name&quot; value=&quot;ui-match&quot; ng-model=&quot;className&quot;&gt;
  &lt;input placeholder=&quot;Enter some text to highlight&quot; value=&quot;you&quot; ng-model=&quot;highlightText&quot;&gt;
- &lt;p ng-bind-html-unsafe=&quot;&#x27;Hello there, how are you today? I\'m fine thank you.&#x27; | highlight:highlightText:caseSensitive&quot;&gt;&lt;/p&gt;
+ &lt;p ng-bind-html-unsafe=&quot;&#x27;Hello there, how are you today? I\'m fine thank you.&#x27; | highlight:highlightText:className:caseSensitive&quot;&gt;&lt;/p&gt;
 
  &lt;style&gt;
  .ui-match { background: yellow; }
@@ -61,17 +62,19 @@ Application.Interface.filter('unique', ['$parse', function ($parse) {
 
  * @param text {string} haystack to search through
  * @param search {string} needle to search for
+ * @param {string} className Class name to use. Defaults to 'ui-match'
  * @param [caseSensitive] {boolean} optional boolean to use case-sensitive searching
  */
 Application.Interface.filter('highlight', function () {
-    return function (text, search, caseSensitive) {
+    return function (text, search, className, caseSensitive) {
         if (search || angular.isNumber(search)) {
+            className = angular.isDefined(className) ? className : 'ui-match';
             text = text.toString();
             search = search.toString();
             if (caseSensitive) {
-                return text.split(search).join('<span class="ui-match">' + search + '</span>');
+                return text.split(search).join('<span class="'+className+'">' + search + '</span>');
             } else {
-                return text.replace(new RegExp(search, 'gi'), '<span class="ui-match">$&</span>');
+                return text.replace(new RegExp(search, 'gi'), '<span class="'+className+'">$&</span>');
             }
         } else {
             return text;
@@ -81,6 +84,9 @@ Application.Interface.filter('highlight', function () {
 
 
 /**
+ * @name format
+ *
+ * @description
  * A replacement utility for internationalization very similar to sprintf.
  *
  * @param replace {mixed} The tokens to replace depends on type
@@ -117,3 +123,67 @@ Application.Interface.filter('format', function(){
         return target;
     };
 });
+
+/**
+ * @name shuffle
+ *
+ * @example {{myArray | shuffle}}
+ *
+ * @param [key] {string} if the key === false then no filtering will be performed
+ *
+ * @return {array}
+ *
+ */
+Application.Interface.filter('shuffle',  function() {
+    return function (items, filterOn) {
+        if (filterOn === false) { return items; }
+
+        if ((filterOn || angular.isUndefined(filterOn)) && angular.isArray(items)) {
+            var o = items.slice(0, items.length); // copy
+            for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            items = o;
+        }
+        return items;
+    }
+});
+
+
+/**
+ * todo - major refactor
+ * @name categorize
+ *
+ * @description
+ * Organize an array by a field
+ *
+ * @param [key] {string} the name of the attribute of each object to compare for uniqueness
+ if the key is empty, the entire object will be compared
+ if the key === false then no filtering will be performed
+ *
+ * @returns {object} Object with keys matching param used to sort, each containing an array
+ */
+Application.Interface.filter('categorize', ['$parse', function($parse) {
+    return function (items, filterOn) {
+        if (filterOn === false) {
+            return items;
+        }
+
+        if ((filterOn || angular.isUndefined(filterOn)) && angular.isArray(items)) {
+            var newItems = {},
+                get = angular.isString(filterOn) ? $parse(filterOn) : function (item) { return item; };
+
+            var extractValueToCompare = function (item) {
+                return angular.isObject(item) ? get(item) : item;
+            };
+
+            angular.forEach(items, function (item) {
+                var type = extractValueToCompare(item);
+                if (!newItems[type])
+                    newItems[type] = [];
+                newItems[type].push(item);
+            });
+
+            items = newItems;
+        }
+        return items;
+    }
+}]);
