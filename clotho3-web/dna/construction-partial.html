@@ -1,4 +1,4 @@
-<div class="container" ng-controller="dnaCtrl">
+<div class="container" ng-controller="constructionCtrl">
     <div class="row">
         <form name="dnaPlayground" class="span12 form-horizontal">
 
@@ -122,6 +122,54 @@
                 </div>
             </div>
 
+        </form>
+    </div>
+
+
+
+    <div class="row">
+        <form name="digestPlayground" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="digSites">BamHI Sites</label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" id="digSites" placeholder="Predicted Sequence" ng-model="digestSeq" ng-init="digestSeq = 'acgtcatcagctagcatcgatcggatccgactacagtagcgacgatgcagctacgatcacgtcg'" digest-highlight />
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <div class="row">
+        <form name="pcrPlayground" class="form-horizontal">
+            <div class="control-group">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="primer1">Primer 1</label>
+                    <div class="controls">
+                        <input type="text" id="primer1" placeholder="Primer 1" ng-model="primers[0]" restrict-input="DNA.regexps.strip.dna" />
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="primer2">Primer 2</label>
+                    <div class="controls">
+                        <input type="text" id="primer2" placeholder="Primer 2" ng-model="primers[1]"  restrict-input="DNA.regexps.strip.dna" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="backbone">Backbone</label>
+                <div class="controls">
+                    <input type="text" class="input-xxlarge" id="backbone" placeholder="Backbone" ng-model="backbone"  restrict-input="DNA.regexps.strip.dna" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="pcr_prod">PCR Product</label>
+                <div class="controls">
+                    <pre id="pcr_prod" placeholder="Predicted Sequence" pcr-predict ng-model="backbone" primers="primers"></pre>
+                </div>
+            </div>
         </form>
     </div>
 

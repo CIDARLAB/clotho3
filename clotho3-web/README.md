@@ -53,13 +53,13 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- GET DEMO READY
+
 - grunt / yeoman --- javascript project builder
     - package clotho api stuff (foundation folder and application.js)`
 
 
 - Server communication
-    - REQUESTID REFACTOR pending Stephanie response
-        - pass requestId alongside channel, concatenate on client, listen for "<channel>:<requestId>"
     - create custom layer for Socket Events (using PubSub??)
     - basic node versions of:
         - query
@@ -106,8 +106,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - Application Mixin promises
-    - terminal controller -- required
-    - youtube API @ Trails -- not required
+    - terminal controller -- required as dependency
+    - youtube API @ Trails -- not required immediately
 
 
 - caret movement directives : https://github.com/DrPheltRight/jquery-caret

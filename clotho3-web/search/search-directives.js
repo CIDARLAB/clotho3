@@ -23,7 +23,6 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
                     Clotho.autocomplete($scope.display.query).then(function(data) {
-                        console.log('got data');
                         $scope.autocomplete.autocompletions = data;
                     });
                 }

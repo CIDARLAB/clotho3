@@ -599,7 +599,7 @@ Application.Plasmid.directive('plasmidEditor', ['$parse', '$timeout', '$filter',
     }
 }]);
 
-Application.Plasmid.filter('features', ['DNA', 'restrictionSite', function(DNA, restrictionSite) {
+Application.Plasmid.filter('features', ['DNA', 'Digest', function(DNA, Digest) {
     return function (text, features) {
         if (features && angular.isArray(features) && angular.isString(text)) {
 

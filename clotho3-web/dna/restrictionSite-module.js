@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Dna.service('restrictionSite', ['Clotho', 'DNA', '$filter', function(Clotho, DNA, $filter) {
+Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, DNA, $filter) {
 
     var enzymes = {
         "BsaI" : {},
@@ -65,33 +65,33 @@ Application.Dna.service('restrictionSite', ['Clotho', 'DNA', '$filter', function
      */
     var createRegex = function (match) {
         return new RegExp(DNA.undegenerize(match), 'ig');
-    };
+    };var createR
 
 
     /**
      * @description Determine if an enzyme matches a given sequence
      * @param {String} sequence Sequence to check
-     * @param {Object} enzyme Enzyme with field 'match'
+     * @param {String} match String to use as Regexp, e.g. enzyme.match
      * @returns {boolean} Returns true if match, false otherwise
      */
-    var sitePresent = function (sequence, enzyme) {
-        return (createRegex(enzyme.match)).test(sequence);
+    var sitePresent = function (sequence, match) {
+        return (createRegex(match)).test(sequence);
     };
 
 
     /**
-     * @description Find matches for a given enzyme in a sequence
+     * @description Find matches for a given oligo in a sequence
      * @param sequence
-     * @param enzyme
+     * @param {String} match String to use as Regexp, e.g. enzyme.match
      * @returns {object} Matches in form { <match index> : <matched value> }
      */
-    var findMatches = function (sequence, enzyme) {
+    var findMatches = function (sequence, match) {
         var matches = {},
-            match,
-            reg = createRegex(enzyme.match);
+            cur,
+            reg = createRegex(match);
 
-        while ((match = reg.exec(sequence)) != null) {
-            matches[match.index] = match[0];
+        while ((cur = reg.exec(sequence)) != null) {
+            matches[cur.index] = match[0];
         }
 
         return matches;
@@ -99,15 +99,29 @@ Application.Dna.service('restrictionSite', ['Clotho', 'DNA', '$filter', function
 
 
     /**
-     * @description Finds start indices of a given enzyme's match in a given sequence
+     * @description Finds start indices of a oligo's match in a sequence
      * @param {String} sequence
-     * @param {Object} enzyme
-     * @returns {Array} List of sites (start of match)
+     * @param {String} match String to use as Regexp, e.g. enzyme.match
+     * @returns {Array} List of sites (start of match). Empty if no matches
      */
-    var findIndices = function (sequence, enzyme) {
-        return Object.keys(findMatches(sequence, enzyme));
+    var findIndices = function (sequence, match) {
+        return Object.keys(findMatches(sequence, match));
     };
 
+
+    /**
+     * @description Adds a restriction site to the end of the sequence (3') with a given gap
+     * @param {String} sequence
+     * @param {Object} enzyme
+     * @param {Number} gap number of nucleotides as spacer. Default is 3.
+     * @param {boolean} fivePrime site should be added to 5' end (beginning) of sequence
+     */
+    var addRestrictionSite = function (sequence, enzyme, gap, fivePrime) {
+        gap = angular.isDefined(gap) ? gap : 3;
+
+        var adding = DNA.randomSequence(gap) + enzyme.match + DNA.randomSequence(gap);
+        return (!!fivePrime) ? adding + sequence : sequence + adding;
+    };
 
     /**
      * @description Convert a sequence (fragment) cut by a restriction enzyme to have a sticky end.
@@ -254,9 +268,56 @@ Application.Dna.service('restrictionSite', ['Clotho', 'DNA', '$filter', function
 
 
     return {
-        findCuts: findCuts,
-        getFragments : getFragments,
+        enzymes : enzymes,
+
+        extendSequence : extendSequence,
+        circularize : circularize,
+        createRegex : createRegex,
+        sitePresent : sitePresent,
+        findMatches : findMatches,
+        findIndices : findIndices,
+        addRestrictionSite : addRestrictionSite,
+        addStickyEnd : addStickyEnd,
+        simpleFragments : simpleFragments,
+
+        findCuts: findCuts,             //testing
+        getFragments : getFragments,    //testing
+
         sortFragments: sortFragments
     }
 
+}]);
+
+//fixme why won't this link
+Application.Dna.directive('digestHighlight' ['Digest', '$filter', function(Digest, $filter) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModel) {
+            
+            console.log('linked digestHighlight');
+
+            element.css({'border': '3px solid #F0F'});
+
+            ngModel.$parsers.push(function (input) {
+                console.log(input);
+
+                var x = $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
+
+                console.log(x);
+                return x;
+
+            });
+
+            ngModel.$render = function() {
+                scope.$apply(process());
+            };
+
+            process();
+
+            function process() {
+                element.html($filter('highlight')(ngModel.$modelValue, Digest.enzymes.BamHI.match, 'text-error'))
+            }
+        }
+    }
 }]);

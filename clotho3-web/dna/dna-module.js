@@ -693,21 +693,6 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     }
 }]);
 
-Application.Dna.controller('dnaCtrl', ['$scope', 'DNA', function($scope, DNA) {
-    $scope.DNA = DNA;
-
-    //todo - if possible, assign these directly from DOM using a directive...
-    $scope.$watch('sequence', function(newval, oldval) {
-        $scope.rna = DNA.transcribe(newval);
-    });
-
-    $scope.$watch('rna', function (newval, oldval) {
-        $scope.protein = DNA.translate(newval);
-    });
-
-    $scope.sequence = 'aaatttgggcccatgcta';
-}]);
-
 Application.Dna.directive('dnaShuffle', ['DNA', function(DNA) {
     return {
         restrict: 'A',
