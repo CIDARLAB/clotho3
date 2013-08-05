@@ -4,13 +4,13 @@
  */
 package org.clothocad.core.layers.execution;
 
-import javax.script.ScriptEngine;
-
 /**
  *
  * @author spaige
  */
-public interface ScriptAPI {
-    public void importFunction(String name);
-    public void setEngine(ScriptEngine engine);
+class EngineNotFoundException extends RuntimeException {
+
+    public EngineNotFoundException() {
+    }
+    
 }

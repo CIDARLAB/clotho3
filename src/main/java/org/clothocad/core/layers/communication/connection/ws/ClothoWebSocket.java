@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
-import org.clothocad.core.layers.communication.ClothoConstants;
 import org.clothocad.core.layers.communication.Message;
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.connection.ClientConnection;

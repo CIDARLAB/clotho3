@@ -23,12 +23,15 @@
  */
 package org.clothocad.core.layers.communication;
 
+import org.clothocad.core.util.XMLParser;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
@@ -68,7 +71,7 @@ import org.clothocad.model.Person;
  * @author John Christopher Anderson
  */
 @Slf4j
-public final class ServerSideAPI {
+public class ServerSideAPI {
     private static final AutoComplete completer = new AutoComplete();
     private static final Router router = Router.get();
     
@@ -89,7 +92,7 @@ public final class ServerSideAPI {
     public final void autocomplete(String userText) {
         List<String> completions = completer.getCompletions(userText);
         Message msg = new Message(Channel.autocomplete, completions);
-        router.sendMessage(mind.getClientConnection(), msg);
+        router.sendMessage(mind.getConnection(), msg);
     }
 
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
@@ -110,7 +113,7 @@ public final class ServerSideAPI {
 
         say(command, Severity.MUTED, null, true);
 
-        if (!mind.runCommand(command)) {
+        if (!mind.runCommand(command, new ScriptAPI(mind, persistor, requestId))) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up
             return;
         }
@@ -215,14 +218,14 @@ public final class ServerSideAPI {
         data.put("timestamp", new Date().getTime());
 
         Message msg = new Message(Channel.say, data, requestId);
-        router.sendMessage(mind.getClientConnection(), msg);
+        router.sendMessage(mind.getConnection(), msg);
     }
 
     //JCA:  Java side looks fine, but client code crashes browser
     //clotho.alert("this is an alert!");
     public final void alert(String message) {
 
-        router.sendMessage(mind.getClientConnection(), new Message(Channel.alert, message));
+        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message));
     }
 
     //JCA:  This runs, and the message goes to the console.log spot.
@@ -232,7 +235,7 @@ public final class ServerSideAPI {
 
         Message msg = new Message(Channel.log, message);
 
-        router.sendMessage(mind.getClientConnection(), msg);
+        router.sendMessage(mind.getConnection(), msg);
     }
 
     //Make note of this message in my notebook
@@ -246,29 +249,30 @@ public final class ServerSideAPI {
 // </editor-fold> 
 // <editor-fold defaultstate="collapsed" desc="Data Manipulation"> 
     private void send(Message message) {
-        router.sendMessage(mind.getClientConnection(), message);
+        router.sendMessage(mind.getConnection(), message);
     }
 
-    public final void get(Object o) {
-        List<Map<String, Object>> returnData = new ArrayList<>();
-        //list of selectors?
-        if (o instanceof List) {
-            for (Object obj : (List) o) {
-                returnData.add(get(persistor.resolveSelector(obj.toString(), false)));
+    
+    private Object unwrap(Object o){
+        while (o instanceof Collection){
+            Iterator iterator = ((Collection) o).iterator();
+            if (iterator.hasNext()){
+                o = iterator.next();
             }
-        } else {
-            returnData.add(get(persistor.resolveSelector(o.toString(), false)));
+            else {
+                throw new IllegalArgumentException("Cannot unwrap an empty collection");
+            }
         }
-        Message message = new Message(Channel.get, returnData, requestId);
-        send(message);
-
+        
+        return o;
+    }
+    
+    public Map<String, Object> get(Object o) {
+        o = unwrap(o);
+        return get(persistor.resolveSelector(o.toString(), false));
     }
 
-    //clotho.get("51b362f15076024ba019a642");  for a trail
-    //clotho.get("51b29e7450765ced18af0d33");
-    //JCA:  the object is requested, println'd, and collected in the clientside collector 6/8/2013
-    //JCA:  result is also injected into the Mind's scriptengine as a proper object
-    public final Map<String, Object> get(ObjectId id) {
+    public Map<String, Object> get(ObjectId id) {
         try {
             Map<String, Object> out = persistor.getAsJSON(id);
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
@@ -281,6 +285,16 @@ public final class ServerSideAPI {
             say(String.format("No object with id %s", id.toString()), Severity.FAILURE);
             return null;
         }
+    }
+    
+    
+        
+    public final List<Map<String, Object>> getAll(List objects) {
+        List<Map<String, Object>> returnData = new ArrayList<>();
+        for (Object obj : objects) {
+            returnData.add(get(persistor.resolveSelector(obj.toString(), false)));
+        }
+        return returnData;
     }
 
     private ObjectId resolveId(String id) {
@@ -298,7 +312,14 @@ public final class ServerSideAPI {
         router.publish(obj);
     }
 
-    public final void set(Map<String, Object> values, String id) {
+    
+    public final void setAll(List<Map<String,Object>> values){
+        for (Map<String,Object> spec : values){
+            set(spec);
+        }
+    }
+    
+    public final void set(Map<String, Object> values) {
         try {
 
             if (values.get("id") == null) {
@@ -339,24 +360,22 @@ public final class ServerSideAPI {
             logAndSayError(String.format("Error setting %s: %s", values.toString(), e.getMessage()), e);
         }
     }
-
     
-    //TODO: some global solution for jsonifying ObjectIds
-    public final void create(Object o) {
-        List<String> returnData = new ArrayList<>();
-        //list of selectors?
-        if (o instanceof List) {
-            for (Object obj : (List) o) {
-                returnData.add(create(JSON.mappify(obj)).toString());
-            }
-        } else {
-            returnData.add(create(JSON.mappify(o)).toString());
-        }
-        Message message = new Message(Channel.create, returnData, requestId);
-        send(message);
+    public final String create(Object o) {
+        return create(JSON.mappify(o)).toString();
     }
 
-    public final ObjectId create(Map<String, Object> obj) {
+    //TODO: some global solution for jsonifying ObjectIds
+    public final List<String> createAll(List<Object> objects){
+        List<String> returnData = new ArrayList<>();
+        //list of selectors?
+        for (Object obj : objects) {
+            returnData.add(create(JSON.mappify(obj)).toString());
+        }
+        return returnData;
+    }
+    
+    public ObjectId create(Map<String, Object> obj) {
 
         try {
             //Confirm that there is no pre-existing object with this uuid
@@ -405,14 +424,7 @@ public final class ServerSideAPI {
     }
 
     public final void destroy(Object o) {
-        //list of selectors?
-        if (o instanceof List) {
-            for (Object obj : (List) o) {
-                destroy(persistor.resolveSelector(obj.toString(), false));
-            }
-        } else {
-            destroy(persistor.resolveSelector(o.toString(), false));
-        }
+        destroy(persistor.resolveSelector(o.toString(), false));
     }
 
     //JCA:  as of 6/9/2013 works
@@ -431,8 +443,15 @@ public final class ServerSideAPI {
             logAndSayError(String.format("Error destroying %s: %s", id.toString(), e.getMessage()), e);
         }
     }
+    
+    
+    public final void destroyAll(List<Object> objects){
+        for (Object obj : objects) {
+            destroy(persistor.resolveSelector(obj.toString(), false));
+        }
+    }
 
-    public final void query(Map<String, Object> spec) {
+    public List<Map<String,Object>> query(Map<String, Object> spec) {
         List<Map<String, Object>> objs;
 
         //XXX: demo hack to resolve schema smartly
@@ -447,9 +466,7 @@ public final class ServerSideAPI {
                 //maybe already full name?
                 logAndSayError(String.format("No schema found for selector %s", spec.get("schema").toString()), e);
                 objs = new ArrayList<>();
-                Message msg = new Message(Channel.query, objs, requestId);
-                router.sendMessage(mind.getClientConnection(), msg);
-                return;
+                return objs;
             }
         }
 
@@ -457,10 +474,10 @@ public final class ServerSideAPI {
             //Relay the query to Persistor and return the hits
             objs = persistor.findAsBSON(spec);
             say("Found " + objs.size() + " objects that satisfy your query", Severity.SUCCESS);
-            Message msg = new Message(Channel.query, objs, requestId);
-            router.sendMessage(mind.getClientConnection(), msg);
+            return objs;
         } catch (Exception e) {
             logAndSayError(String.format("Error querying %s: %s", spec.toString(), e.getMessage()), e);
+            return new ArrayList<>();
         }
 
     }
@@ -781,6 +798,12 @@ public final class ServerSideAPI {
             log.error("", ex);
         }
         return null;
+    }
+
+    Object queryOne(Map<String, Object> query) {
+        List result = query(query);
+        if (result.isEmpty()) throw new EntityNotFoundException();
+        return result.get(0);
     }
 
     public enum Severity {

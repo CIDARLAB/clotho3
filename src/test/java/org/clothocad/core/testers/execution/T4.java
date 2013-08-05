@@ -33,7 +33,7 @@ public class T4 {
     
     private Persistor persistor;
     public T4() throws UnknownHostException {
-    	this.persistor = TestUtils.getA(Persistor.class);
+    	this.persistor = new TestUtils().getA(Persistor.class);
     }
     
     //For testing: flush API between tests

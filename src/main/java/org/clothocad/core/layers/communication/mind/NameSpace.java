@@ -79,13 +79,6 @@ class NameSpace {
         }
     }
     
-    /**
-     * Should be called by Communicator to determine whether a user is invoking one
-     * of their namespaced words during the issuing of a command.
-     * */
-    boolean isNameToken(String word, Mind mind) {
-        return mind.getNameSpace().containsKey(word);
-    }
 
     private void renumber() {
         TreeMap<Integer, String>  out = new TreeMap<Integer, String>();

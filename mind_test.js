@@ -1,17 +1,5 @@
-//Quick housekeeping before tests
-println('About to run MindTest');
-var totoss = clotho.query({"city" : "Baltizam"});
-if(totoss.length>0) {
-    clotho.destroy(totoss);
-}
-totoss = clotho.query({"city" : "Whaletown"});
-if(totoss.length>0) {
-    clotho.destroy(totoss);
-}
 
-println('hi there, test runninig');
-
-var newobj = clotho.create( {"lastModified":{"$date":"2013-06-13T02:47:51.288Z"},"name":"UCM","state":"MA","className":"org.clothocad.model.Institution","isDeleted":false,"country":"United States of America","city":"Baltizam"} );
+var newobj = clotho.create( {"name":"UCM","state":"MA","schema":"Institution","country":"United States of America","city":"Baltizam"} );
 
 //Get the newobj by a get call (with different sloppiness)
 var result = clotho.get(newobj.id);
@@ -20,21 +8,6 @@ if(result.name != "UCM") {
 }
 
 result = clotho.get(newobj);
-if(result.name != "UCM") {
-    throw new Exception();
-}
-
-var wrapper = {};
-wrapper.data = newobj;
-result = clotho.get(wrapper);
-if(result.name != "UCM") {
-    throw new Exception();
-}
-
-
-wrapper = {};
-wrapper.data = newobj.id;
-result = clotho.get(wrapper);
 if(result.name != "UCM") {
     throw new Exception();
 }

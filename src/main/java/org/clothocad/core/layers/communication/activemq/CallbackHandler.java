@@ -37,7 +37,7 @@ public class CallbackHandler {
 		try {
 			Message response = session.createMessage();
 			response.setJMSCorrelationID(request.getJMSCorrelationID());
-			response.setStringProperty(Channel.response.toString(), json.toString());
+			response.setStringProperty("response", json.toString());
 
 			this.replyProducer.send(response);
 		} catch(javax.jms.InvalidDestinationException e) {

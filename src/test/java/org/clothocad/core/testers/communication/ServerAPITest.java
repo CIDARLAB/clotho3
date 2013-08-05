@@ -49,7 +49,7 @@ public class ServerAPITest {
         mind = new Mind();
         api = new ServerSideAPI(mind, persistor, null);
         persistor.connect();
-        mind.setClientConnection(new TestConnection("test"));
+        mind.setConnection(new TestConnection("test"));
     }
 
     @AfterClass
@@ -119,7 +119,7 @@ public class ServerAPITest {
     @Test
     public void createExisting() {
         TestConnection connection = new TestConnection("test");
-        mind.setClientConnection(connection);
+        mind.setConnection(connection);
 
         ObjectId id = new ObjectId();
 
@@ -161,14 +161,13 @@ public class ServerAPITest {
     public void query() throws JsonParseException {
         //TODO: switch back to Part, implement schema set
         TestConnection connection = new TestConnection("test");
-        mind.setClientConnection(connection);
+        mind.setConnection(connection);
 
         //filter out unseen results
         Map<String, Object> query = new HashMap<>();
         query.put("schema", "Part");
-        api.query(query);
-
-        List<Map<String, Object>> results = (List) connection.messages.get(1).data;
+        
+        List<Map<String, Object>> results = api.query(query);
         assertEquals(4, results.size());
         //assertEquals(3, results.size());
         Set<String> names = new HashSet();

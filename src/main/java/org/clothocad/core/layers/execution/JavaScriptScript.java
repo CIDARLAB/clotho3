@@ -5,13 +5,10 @@
 package org.clothocad.core.layers.execution;
 
 import com.github.jmkgreen.morphia.annotations.Transient;
-import com.google.common.base.Joiner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.clothocad.core.datums.util.Language;
 
 /**
  *
@@ -26,7 +23,7 @@ public class JavaScriptScript implements Script{
     //TODO: each script function needs to execute in its own scope
     //but
     //script functions should be cached somehow
-    public static ScriptEngine engine = ClothoScriptEngineManager.getEngineByName("javascript");
+    public static ScriptEngine engine = ClothoScriptEngineManager.getEngineByLanguage(Language.JAVASCRIPT);
     
     public JavaScriptScript(){};
     

@@ -7,9 +7,11 @@ package org.clothocad.core.testers.communication;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityNotFoundException;
 import org.bson.types.ObjectId;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
@@ -58,6 +60,9 @@ public class RouterTest {
 
     @After
     public void tearDown() {
+        injector.getInstance(Persistor.class).deleteAll();
+        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
+        
     }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
@@ -66,9 +71,9 @@ public class RouterTest {
     // public void hello() {}
 
     @Test
-    public void get() {
+    public void getAll() {
         TestConnection connection = new TestConnection("getTest");
-        Message message = new Message(Channel.get, "Test Part 1", "1");
+        Message message = new Message(Channel.getAll, new String[]{"Test Part 1"} , "1");
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
@@ -81,7 +86,7 @@ public class RouterTest {
     }
 
     @Test
-    public void create() {
+    public void createAll() {
         ObjectId id = new ObjectId();
         //XXX: this is actually bad data
         Map<String, Object> newPart = new HashMap<>();
@@ -92,7 +97,7 @@ public class RouterTest {
         newPart.put("id", id.toString());
 
         TestConnection connection = new TestConnection("createTest");
-        Message message = new Message(Channel.create, newPart, "2");
+        Message message = new Message(Channel.createAll, new Map[]{newPart}, "2");
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
@@ -121,6 +126,48 @@ public class RouterTest {
         assertEquals(3, ((List) returnMessage.data).size());
     }
 
+    
+    @Test
+    public void destroyAll(){
+        TestConnection connection = new TestConnection("destroyTest");
+        List<String> stringIds = new ArrayList<>();
+        for (ObjectId id : ids){
+            stringIds.add(id.toString());
+        }
+        
+        Message message = new Message(Channel.destroyAll, stringIds, "4");
+        sendMessage(message, connection);
+        Persistor persistor = injector.getInstance(Persistor.class);
+        for (ObjectId id : ids){
+            try {
+                persistor.getAsJSON(id);
+                fail();
+            } catch (EntityNotFoundException e) {}
+        }
+    }
+    
+    
+    @Test
+    public void setAll(){
+        TestConnection connection = new TestConnection("destroyTest");
+        List<Map<String,Object>> specs = new ArrayList<>();
+        
+        for (ObjectId id : ids){
+            Map<String, Object> spec = new HashMap<>();
+            spec.put("id", id.toString());
+            spec.put("name", "set");
+            specs.add(spec);
+        }
+        
+        Persistor persistor = injector.getInstance(Persistor.class);
+        Message message = new Message(Channel.setAll, specs, "5");
+        sendMessage(message, connection);
+        for (ObjectId id : ids){
+            Map<String,Object> result = persistor.getAsJSON(id);
+            assertEquals("set",result.get("name"));
+        }
+    }
+    
     private void sendMessage(Message message, ClientConnection connection) {
         String stringMessage = JSON.serialize(message);
         try {

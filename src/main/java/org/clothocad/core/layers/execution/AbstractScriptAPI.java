@@ -11,7 +11,7 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.persistence.ClothoConnection;
 
 
-abstract public class AbstractScriptAPI implements ScriptAPI {
+abstract public class AbstractScriptAPI implements DefunctScriptAPI {
     
     
     @Override

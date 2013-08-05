@@ -120,4 +120,4 @@ asyncTest("create with schema", function () {
         })
     };
 });
-
+// TODO: add tests for listener dereg

@@ -1,5 +1,6 @@
 package org.clothocad.core.layers.communication.connection;
 
+import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
 
 public abstract class ClientConnection {
@@ -13,4 +14,7 @@ public abstract class ClientConnection {
 	}
         
         public abstract void send(Message msg);
+
+    public void deregister(Channel channel, String requestId) {
+    }
 }

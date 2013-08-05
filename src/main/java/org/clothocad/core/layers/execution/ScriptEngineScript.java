@@ -60,7 +60,7 @@ public class ScriptEngineScript implements Script {
     
     @PostLoad
     public void getScriptEngine(){
-        engine = ClothoScriptEngineManager.getEngineByName(language.toString());
+        engine = ClothoScriptEngineManager.getEngineByLanguage(language);
     }
     
     

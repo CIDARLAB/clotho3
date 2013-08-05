@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 public class TestIceImport {
     
-    private static Persistor p = TestUtils.getA(Persistor.class);
+    private static Persistor p = new TestUtils().getA(Persistor.class);
     public TestIceImport() {
     }
     

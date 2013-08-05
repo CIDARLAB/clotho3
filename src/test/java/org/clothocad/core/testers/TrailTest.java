@@ -16,7 +16,7 @@ import org.junit.After;
 
 public class TrailTest {
     Mind mind = new Mind();
-    Persistor persistor = TestUtils.getA(Persistor.class);
+    Persistor persistor = new TestUtils().getA(Persistor.class);
     
     @Before
     public void setUp() {

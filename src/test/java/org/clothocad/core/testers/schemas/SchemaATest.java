@@ -48,7 +48,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class SchemaATest {
     public static void main(String[] args) throws Exception {
-        Persistor persistor = TestUtils.getA(Persistor.class);
+        Persistor persistor = new TestUtils().getA(Persistor.class);
         DBClassLoader cl = new DBClassLoader(persistor);
         
         //Create a schema and test

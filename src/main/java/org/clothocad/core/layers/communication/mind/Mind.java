@@ -24,22 +24,22 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.layers.communication.mind;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import lombok.Getter;
+import lombok.Setter;
 
 import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
+import org.clothocad.core.layers.communication.ScriptAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
-import org.clothocad.core.util.FileUtils;
+import org.clothocad.core.layers.execution.MetaEngine;
 import org.clothocad.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,11 +101,12 @@ public final class Mind
 
     /* Similar to runCommand but does not "defuzzify".
      * Used for the "serverEval" channel. */
-    public synchronized boolean eval(String socket_id, String cmd) {
+    public synchronized boolean eval(String cmd, ScriptAPI api) {
         try {
-            getEngine().eval(cmd);
+            getEngine().eval(cmd, Language.JAVASCRIPT, api);    
             return true;
         } catch (ScriptException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -119,19 +120,9 @@ public final class Mind
      * @return 
      */
     /* TODO: race condition. ScriptEngine execution needs to be serialized. */
-    public synchronized boolean runCommand(String cmd) {
-        try {
-            getEngine().eval(cmd);
-        } catch (ScriptException e) {
-            try {
-                return false;
+    public synchronized boolean runCommand(String cmd, ScriptAPI api) {
+        return eval(cmd, api);
 //                runCommandWithNamespace(cmd);
-            } catch (Exception e2) {
-                return false;
-            }
-        }
-        
-        return true;
     }
 
     private void learnCommand(String cmd) {
@@ -147,7 +138,7 @@ public final class Mind
         }
     }
 
-    private void runCommandWithNamespace(String cmd) throws Exception {
+    private void runCommandWithNamespace(String cmd, ScriptAPI api) throws Exception {
         String[] splitted = cmd.split("\\W+");
         for(int i = 0; i < splitted.length; i++) {
             String token = splitted[i];
@@ -155,46 +146,30 @@ public final class Mind
             //If any of these tokens have been namespaced recently, try that
             if(nameSpace.containsKey(token)) {
                 String helperCMD = nameSpace.get(token);
-                try {
+                //try {
                     Object existing = engine.get(token);
                     if(existing==null) {
                         //Otherwise, inject that object into the scriptengine
-                        engine.eval(helperCMD);
+                        eval(helperCMD, api);
                     } else {
                         logger.info(
                                    "token already in scriptengine: {}");
                     }
-                } catch (ScriptException e) { 
-                    /*TODO this is a hack */
+                /*} catch (ScriptException e) { 
+                    /*TODO this is a hack 
                     logger.warn("", e);
-                }
+                } */
             }
         }
         //Try executing the thing again
-        engine.eval(cmd);
+        eval(cmd, api);
     }
 
     /* client has new tab--update config */
     public void linkPage(String socket_id,
                          String ephemeral_link_page_id,
                          PageMode page_mode) {
-        config.addPage(socket_id, page_mode);
-        //XXX: this.save();
-        if (doos.containsKey(ephemeral_link_page_id)) {
-            AddPageDoo add_page_doo =
-                (AddPageDoo) doos.get(ephemeral_link_page_id);
-            if (add_page_doo.getPageMode().compareTo(page_mode) == 0) {
-                add_page_doo.terminate();
-                /* TODO: add_page_doo is done
-                 * call some sort of callback for the caller of addPage
-                 */
-            } else {
-                logger.error(
-                           "linkNewPage got page mode mismatch: {}, {}",
-                           page_mode.name(),
-                           add_page_doo.getPageMode().name());
-            }
-        }
+        throw new UnsupportedOperationException();
     }
     
     /* Instruct client to close a tab */
@@ -263,16 +238,6 @@ public final class Mind
         return config;
     }
 
-    /* TODO: this shouldn't be exposed */
-    NameSpace getNameSpace() {
-        return nameSpace;
-    }
-
-    /* TODO: this shouldn't be exposed */
-    ScriptEngine getMyEngine() {
-        return engine;
-    }
-
     public String getPersonId() {
         return personId;
     }
@@ -289,30 +254,16 @@ public final class Mind
     /**
      * Return the scripting engine
      * (or a new instance if it doesn't already exist)
-     *
-     * Injects a new ServerScriptAPI with `socket_id`
-     * `socket_id` may be null if this request is not bound to a page.
      */
-    public ScriptEngine getEngine() {
+    public MetaEngine getEngine() {
         if (engine == null) {
-            engine = new ScriptEngineManager().getEngineByName("JavaScript");
-            
-            try {
-                engine.eval(initializationScript);
-            } catch (ScriptException ex) {
-                System.out.println("Error running initialization Script!");
-                ex.printStackTrace();
-            }
+            engine = new MetaEngine();
         }
         return engine;
     }
     
     public Person getPerson() {
     	return this.person;
-    }
-    
-    public void setClientConnection(ClientConnection conn) {
-        connection = conn;
     }
     
     public List<Message> getLastCommands() {
@@ -330,51 +281,34 @@ public final class Mind
     private Person person;
     private String personId;
     private transient List<Message> lastCommands = new ArrayList<>();
-    private transient ScriptEngine engine;
+    private transient MetaEngine engine;
+
+    @Getter @Setter
     private transient ClientConnection connection;
-    
-    private Map<Date, String> commandHistory;
 
     /* <token, command to populate token>
      * ex: <"bobdole", "var bobdole = clotho.get('bobdole');">
      */
     private NameSpace nameSpace;
 
+     /**
+     * Should be called by Communicator to determine whether a user is invoking one
+     * of their namespaced words during the issuing of a command.
+     * */
+    boolean isNameToken(String word) {
+        return nameSpace.containsKey(word);
+    }
+    
     /* How the client is currently set up */
+    @Getter
     private ClientConfiguration config;
 
     /* Whether it should persist the visual configuration */
     private boolean useInitialConfiguration = false;
 
-    /* Maps "Doo ID" to Doo object */
-    
-    //JCA:  THIS IS PROBLEMATIC, IT IS HOLDING STATE FOR A DOO, NOT LOOSE-COUPLED
-    //NOT SURE WHY THIS WOULD BE HERE INSTEAD OF THE HOPPER, I THINK THIS IS PROBABLY WRONG
-    private Map<String, Doo> doos = new HashMap<String, Doo>();
-
-    private String id;
-
-public void SUPERILLEGAL_SETUUID(String string) {
-    id = string;
-}
-
-    public ClientConfiguration getConfig() {
-        return config;
-    }
-
-    public ClientConnection getClientConnection() {
-       return this.connection;
-   }
-
     public String pullUUIDFromNamespace(String str) {
         System.out.println("JCA:  Need to implement mapping names/namespace tokens to UUIDs of Sharables");
         return null;
-    }
-    
-    private static  String initializationScript;
-    static {
-        System.out.println("Someone:  Probably should pull this from elsewhere");
-        initializationScript = FileUtils.readFile("js_engine_initiation.js");
     }
 
 }

@@ -3,6 +3,7 @@ package org.clothocad.core.layers.communication;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,11 +70,11 @@ public class Router {
         ServerSideAPI api = new ServerSideAPI(mind, persistor, request.requestId);
 
 
-        Channel chanEnum = request.channel;
         Object data = request.data;
-        String id = request.requestId;
+        
+        Object response = null;
         try {
-            switch (chanEnum) {
+            switch (request.channel) {
                 case autocomplete:
                     api.autocomplete(data.toString());
                     break;
@@ -114,32 +115,44 @@ public class Router {
                     break;
 
                 case get:
-                    api.get(data);
+                    response = api.get(data);
                     break;
                 case set:
-                    api.set(JSON.mappify(data), id);
+                    api.set(JSON.mappify(data));
+                    response = Void.TYPE;
                     break;
                 case create:
-                    api.create(data);
+                    response = api.create(data);
                     break;
                 case destroy:
                     api.destroy(data);
+                    response = Void.TYPE;
                     break;
                 case query:
-                    api.query(JSON.mappify(data));
+                    response = api.query(JSON.mappify(data));
+                    break;
+                    
+                //TODO:
+                case getAll:
+                    response = api.getAll((List) data);
+                    break;
+                case createAll:
+                    response = api.createAll((List) data);
+                    break;
+                case destroyAll:
+                    api.destroyAll((List) data);
+                    response = Void.TYPE;
+                    break;
+                case setAll:
+                    api.setAll((List) data);
+                    response = Void.TYPE;
+                    break;
+                case queryOne:
+                    response = api.queryOne(JSON.mappify(data));
                     break;
 
                 case run:
                     api.run(data);
-                    break;
-                case show:
-                    api.show(data.toString(), null, null, null);
-                    break;
-                case startTrail:
-                    api.startTrail(data.toString());
-                    break;
-                case edit:
-                    api.edit(data.toString());
                     break;
                 case listen:
                     api.listen(data.toString());
@@ -148,11 +161,21 @@ public class Router {
                     api.unlisten(data.toString());
                     break;
                 default:
+                    log.warn("Unknown channel {}", request.channel);
                     break;
             }
+            
+            if (response == Void.TYPE){
+                connection.deregister(request.channel, request.requestId);
+            }
+            else {
+                Message message = new Message(request.channel, response, request.requestId);
+                connection.send(message);
+            }
+            
         } catch (Exception e) {
             //TODO: message client with failure
-            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, id);
+            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.requestId);
             log.error(e.getMessage(), e);
         }
     }
@@ -202,17 +225,17 @@ public class Router {
         String id = connection.getId();
         if (minds.containsKey(id)) {
             Mind mind = minds.get(id);
-            if (mind.getClientConnection() != connection){
+            if (mind.getConnection() != connection){
                 //XXX: this is probably disasterous in some edge cases
                 //because jetty preserves the sesson id across websocket close/open, need to check to see if the connection object in the mind is stale
-                mind.setClientConnection(connection);
+                mind.setConnection(connection);
             }
             return mind;
         }
 
         Mind mind = new Mind();
 
-        mind.setClientConnection(connection);
+        mind.setConnection(connection);
         
         minds.put(id, mind);
         return mind;

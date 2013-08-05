@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.testers.schemas;
 
+import com.google.inject.Injector;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.Converters;
@@ -24,7 +25,11 @@ import static org.junit.Assert.*;
  */
 public class ConvertersTest {
 
-    private static Persistor persistor = TestUtils.getA(Persistor.class); 
+    public static Persistor persistor;
+    {
+        Injector injector = TestUtils.getDefaultTestInjector();
+        persistor = injector.getInstance(Persistor.class);
+    } 
 
     public ConvertersTest() {
     }

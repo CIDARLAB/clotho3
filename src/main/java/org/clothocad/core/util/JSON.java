@@ -46,9 +46,9 @@ public class JSON {
         }
     }
     
-    //XXX: ugh
     public static Map<String, Object> mappify(Object o){
         try {
+                //XXX: ugh
             return deserializeObject(serialize(o));
         } catch (JsonParseException ex) {
             throw new RuntimeException(ex);

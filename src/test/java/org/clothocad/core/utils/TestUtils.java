@@ -28,9 +28,9 @@ import org.clothocad.model.Person;
 public class TestUtils {
     //not sure if this should be static 
     
-    private static Injector injector;
+    private Injector injector;
 
-    public static <T> T getA(Class<T> type) {
+    public <T> T getA(Class<T> type) {
         if (injector == null){
             injector = getDefaultTestInjector();
         }

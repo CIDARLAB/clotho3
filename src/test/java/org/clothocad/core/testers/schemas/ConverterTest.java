@@ -26,7 +26,7 @@ public class ConverterTest {
 
     public ConverterTest() {
     }
-    public static final Persistor p = TestUtils.getA(Persistor.class);
+    public static final Persistor p = new TestUtils().getA(Persistor.class);
     public static Schema basicPartSchema = p.get(Schema.class, p.resolveSelector("BasicPart", false));
 
     @Test

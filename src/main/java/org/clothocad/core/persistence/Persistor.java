@@ -200,6 +200,7 @@ public class Persistor{
     }
     
     
+    //XXX: should return set of possible schemas, not child objects
     private Set<ObjBase> getObjBaseSet(ObjBase obj){
         return getObjBaseSet(obj, new HashSet<ObjBase>());
     }
