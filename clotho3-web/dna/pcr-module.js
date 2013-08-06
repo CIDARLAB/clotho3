@@ -230,6 +230,16 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
     var ligate = function ligate(fragments) {
 
+        var fragPairs = [];
+
+        angular.forEach(fragments, function(frag) {
+
+            var ends = Digest.getStickyEnds();
+
+            fragPairs.push({
+                fragment : frag, stickyEnds : ends})
+        })
+
     };
 
 

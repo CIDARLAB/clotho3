@@ -575,6 +575,14 @@ io.sockets.on('connection', function (socket) {
         console.log("notification!");
         console.log(data);
     };
+    api.api.query = function (data, requestId) {
+        var demo = ["usdf-2323-g2", "asdf-2-23g2-3", "sdf0s2-232-4ff","138tr-c-1c3-111"];
+
+        socket.send(api.pack.api_wrap('query',
+            api.pack.nopack(demo),
+            requestId)
+        );
+    };
     api.api.recent = function(data, requestId) {
 
         //verify arguments correct

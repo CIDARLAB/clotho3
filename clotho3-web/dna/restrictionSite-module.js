@@ -3,33 +3,222 @@
 Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, DNA, $filter) {
 
     var enzymes = {
-        "BsaI" : {},
-        "BsmbI" : {},
-        "XhoI" : {},
-        "BamHI" : {
+        "BsaI" : {
             "name" : "BamHI",
-            "match" : "ggatcc",
-            "cut" : "g|gatcc",
+            "match" : "ccannnnntgg",
+            "cut" : "ccan|nnn^ntgg",
             "strand" : "",
             "methylation" : false,
-            "overhang" : 5,
-            "type" : "",
-            "subtype" : "",
+            "overhang" : 3,
+            "type" : "II",
+            "subtype" : "P",
             "notes" : {},
             "buffer" : "",
-            "description" : "",
+            "star activity" : false,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/BsaI.html",
             "personal" : {},
             "citations" : {},
             "ordering" : {}
         },
-        "EcoRI" : {},
-        "XbaI" : {},
-        "SpeI" : {},
-        "PstI" : {},
-        "HindIII" : {},
-        "AlwnI" : {},
-        "AcuI" : {},
-        "BseRI" : {}
+        "BsmbI" : {
+            "name" : "BamHI",
+            "match" : "cgtctc",
+            "cut" : "cgtctc (1/5)",
+            "strand" : "",
+            "methylation" : true,
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "S",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/BsmbI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "XhoI" : {
+            "name" : "XhoI",
+            "match" : "ctcgag",
+            "cut" : "c^tcga|g",
+            "strand" : "",
+            "methylation" : true,
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "flanking C5 methylation can slow cleavage, ATCTCTCGAGTCTA is cut v. slowly",
+            "rebase" : "http://rebase.neb.com/rebase/enz/XhoI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "BamHI" : {
+            "name" : "BamHI",
+            "match" : "ggatcc",
+            "cut" : "g^gatc|c",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/BamHI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "EcoRI" : {
+            "name" : "EcoRI",
+            "match" : "gaattc",
+            "cut" : "g^aatt|c",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : true,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/EcoRI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "XbaI" : {
+            "name" : "XbaI",
+            "match" : "tctaga",
+            "cut" : "t^ctag|a",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : true,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/XbaI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "SpeI" : {
+            "name" : "XbaI",
+            "match" : "actagt",
+            "cut" : "a^ctag|t",
+            "strand" : "",
+            "methylation" : true,
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : true,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/SpeI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "PstI" : {
+            "name" : "PstI",
+            "match" : "ctgcag",
+            "cut" : "c|tgca^g",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : true,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/PstI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "HindIII" : {
+            "name" : "HindIII",
+            "match" : "aagctt",
+            "cut" : "a^agct|t",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : true,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/HindIII.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "AlwnI" : {
+            "name" : "AlwnI",
+            "match" : "cagnnnctg",
+            "cut" : "cag|nnn^ctg",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 3,
+            "type" : "II",
+            "subtype" : "P",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/AlwnI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "AcuI" : {
+            "name" : "AcuI",
+            "match" : "ctgaag",
+            "cut" : "ctgaag (16/14)",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 2,
+            "type" : "II",
+            "subtype" : "G, S, alpha",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "Methylated product: 6-methyladenosine (base undetermined)",
+            "rebase" : "http://rebase.neb.com/rebase/enz/XbaI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
+        "BseRI" : {
+            "name" : "BseRI",
+            "match" : "gaggag",
+            "cut" : "gaggag (10/8)",
+            "strand" : "",
+            "methylation" : {},
+            "overhang" : 2,
+            "type" : "II",
+            "subtype" : "G, S",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "Methylated Product: 6-methyladenosine (base undetermined)",
+            "rebase" : "http://rebase.neb.com/rebase/enz/XbaI.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        }
     };
 
 
@@ -65,7 +254,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      */
     var createRegex = function (match) {
         return new RegExp(DNA.undegenerize(match), 'ig');
-    };var createR
+    };
 
 
     /**
@@ -76,6 +265,10 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      */
     var sitePresent = function (sequence, match) {
         return (createRegex(match)).test(sequence);
+    };
+
+    var identifySite = function (match) {
+        
     };
 
 
@@ -123,15 +316,68 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         return (!!fivePrime) ? adding + sequence : sequence + adding;
     };
 
+    var swapoutSites = function (sequence, enzyme) {
+        //todo - need to find ORF
+
+    };
+
     /**
      * @description Convert a sequence (fragment) cut by a restriction enzyme to have a sticky end.
      * @example given acgtacgACAGTG -> acgtacgA|CAGTG
      * @param {string} fragment
      * @param {object} enzyme
+     * DEPRECATED
      */
     var addStickyEnd = function (fragment, enzyme) {
         fragment.replace(createRegex(enzyme.match), enzyme.cut);
     };
+
+
+
+    var markSites = function (sequence, enzyme) {
+        //add cut marks ^ and |
+    };
+
+    //purpose?
+    var extractSites = function (fragment) {
+        var findSiteReg = /[\^|\|].+?[\|\^]/gi,
+            match,
+            matches = {};
+
+        while ((match = findSiteReg.exec(fragment)) != null) {
+            matches[findSiteReg.lastIndex] = match;
+        }
+    };
+
+    var makeCuts = function (sequence, enzyme) {
+        //todo - handle enzymes like BsmBI with cut in form NNNNNNN (##/##)
+        //todo - implement elsewhere
+
+        //todo - handle multiple cuts (regExp.exec in loop)
+
+        var indices = findIndices(sequence, enzyme.match),
+            localReg = /(.+)^(.+)/ig,
+            localCuts = localReg.exec(enzyme.cut),
+            nonLocalReg = /\((\d+)\/(\d+)\)/ig,
+            nonLocalCuts = nonLocalReg.exec(enzyme.cut),
+            starts = [], ends = [];
+
+        if (nonLocalCuts) {
+            angular.forEach(indices, function (ind) {
+                starts.push(ind + enzyme.match.length + nonLocalCuts[1]);
+                ends.push(ind + enzyme.match.length + nonLocalCuts[2]);
+            });
+
+            //todo - finish, decide format for cuts
+
+            return sequence;
+        } else {
+            return sequence.replace(createRegex(enzyme.match), enzyme.cut)
+        }
+    };
+
+
+
 
 
     /**
@@ -276,48 +522,38 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         sitePresent : sitePresent,
         findMatches : findMatches,
         findIndices : findIndices,
+
         addRestrictionSite : addRestrictionSite,
         addStickyEnd : addStickyEnd,
+        makeCuts : makeCuts,
+        extractSites : extractSites,
         simpleFragments : simpleFragments,
 
-        findCuts: findCuts,             //testing
-        getFragments : getFragments,    //testing
+        findCuts: findCuts,             //in progress
+        getFragments : getFragments,    //in progress
 
         sortFragments: sortFragments
     }
 
 }]);
 
-//fixme why won't this link
-Application.Dna.directive('digestHighlight' ['Digest', '$filter', function(Digest, $filter) {
+Application.Dna.directive('digestHighlight', ['Digest', '$filter', function(Digest, $filter) {
     return {
         restrict: 'A',
         require: 'ngModel',
-        link: function(scope, element, attrs, ngModel) {
-            
-            console.log('linked digestHighlight');
+        link : function(scope, element, attrs, ngModel) {
 
-            element.css({'border': '3px solid #F0F'});
-
-            ngModel.$parsers.push(function (input) {
-                console.log(input);
-
-                var x = $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
-
-                console.log(x);
-                return x;
-
-            });
-
-            ngModel.$render = function() {
-                scope.$apply(process());
+            var highlightSites = function (input) {
+                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
+                return Digest.makeCut(input, Digest.enzymes.BamHI)
             };
 
-            process();
+            var unhighlightSites = function (input) {
+                return input.replace(/[^A-Z]/ig, '');
+            };
 
-            function process() {
-                element.html($filter('highlight')(ngModel.$modelValue, Digest.enzymes.BamHI.match, 'text-error'))
-            }
+            ngModel.$parsers.unshift(unhighlightSites);
+            ngModel.$formatters.push(highlightSites);
         }
     }
 }]);

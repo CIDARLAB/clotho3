@@ -20,8 +20,6 @@
  *  - return angular.noop for empty callbacks, or deal with better
  */
 
-//todo - incorporate requestId field
-
 Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', '$dialog', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout, $dialog) {
 
     /**********

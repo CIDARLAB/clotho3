@@ -55,7 +55,7 @@
             <label class="control-label">Test Arguments</label>
             <div class="controls">
                 <div ng-repeat="param in editable.params">
-                    <input type="text" ng-model="param.test.uuid" typeahead="opt for opt in param.test.options | filter:$viewValue" popover="We should set this up to work with Clotho.query(), tied to the schema restriction as above" popover-title="Easy Testing - Arguments" popover-trigger="focus" ng-disabled="!editMode">
+                    <input type="text" ng-model="param.test.uuid" typeahead="opt for opt in queryWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="We should set this up to work with Clotho.query(), tied to the schema restriction as above" popover-title="Easy Testing - Arguments" popover-trigger="focus" ng-disabled="!editMode">
                 </div>
             </div>
         </div>
