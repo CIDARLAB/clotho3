@@ -79,7 +79,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 data.args = $scope.editable.params.map(function (param){
                     return param.test.uuid;
                 });
-
                 Clotho.run(data.id, data.args).then(function (result){
                     if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
@@ -88,6 +87,13 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     }
                 });
             };
+
+			$scope.queryWrapper = function(schemaType) {
+                return Clotho.query({schema: schemaType}).then(function (result) {
+                    return $filter('limitTo')(result, 10);
+                })
+            };
+
 
             /*********
             COMPILATION

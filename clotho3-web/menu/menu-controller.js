@@ -1,6 +1,7 @@
 'use strict';
 
-Application.Primary.controller('MenuCtrl', ['$scope', 'Clotho', '$location', '$timeout', 'Collector', 'PubSub', function($scope, Clotho, $location, $timeout, Collector, PubSub ) {
+Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', function($scope, $location, $timeout, Collector, PubSub ) {
+
     $scope.modes = {"items": [
         {"name" : "Editor", "path" : "/editor"},
         {"name" : "Trails", "path" : "/trails"},

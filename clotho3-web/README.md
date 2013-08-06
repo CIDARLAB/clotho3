@@ -53,19 +53,32 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- GET DEMO READY
-
 - grunt / yeoman --- javascript project builder
     - package clotho api stuff (foundation folder and application.js)`
 
 
 - Server communication
-    - create custom layer for Socket Events (using PubSub??)
+    - create custom layer for Socket Events (using PubSub alternative implementation)
     - basic node versions of:
         - query
         - run
         - create
         - revert
+
+
+- DNA Functions
+    - decide data structure
+    - DNA
+        - determine ORF
+        - parse: gb, fasta, embl
+        - silent sites
+        - BLAST
+    - Digest
+        - swapout Digest site
+        - import strider format (REBASE) / NEB format
+        - Dam/Dcm methylation
+    - PCR
+        - other pcr types
 
 
 - create help tips - use popovers? - structure JSON
@@ -85,13 +98,18 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - file drops?
 
     - function editor
-        - integrate codemirror
+        - integrate codemirror, tie to language selection
 
     - schema editor -- wait on stephanie
 
 
 
 - UI Directives
+    - typeahead with async content
+        - http://stackoverflow.com/questions/15930339/how-to-tie-angular-uis-typeahead-with-a-server-via-http-for-server-side-optimi
+        - http://plnkr.co/edit/eGG9Kj?p=preview
+    - rewrite contenteditable
+        - make play nicely (e.g. with digest-highlight)
     - dropdown in Angular --  see angular-strap
     - popover with HTML -- test -- see angular-strap
         - hide on mouseleave when mouseenter trigger

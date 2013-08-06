@@ -27,6 +27,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         monomers = {},
         maps = {},
         complements = {},
+        geneticCodes = {},
         frequencies = {},
         entropies = {},
         weights = {};
@@ -65,6 +66,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         'K': '[GTU]', 'M': '[AC]', 'N': '[ACGTU]', 'R': '[AG]', 'S': '[CG]',
         'T': 'T', 'U': 'U', 'V': '[ACG]', 'W': '[ATU]', 'Y': '[CTU]',
         '.': '[ACGTU]', '-': '[ACGTU]'};
+    maps.nucleotide_undegenerate = {A: "A", C: "C", G: "G", T: "T", U: "U", '[ACGTU]': "N", '[ACG]': "V", '[ACTU]': "H", '[AC]': "M", '[AGTU]': "D", '[AG]': "R", '[ATU]': "W", '[CGTU]': "B", '[CG]': "S", '[CTU]': "Y", '[GTU]': "K"};
     maps.dna_degenerate = {'A':'A','B':'[CGT]','C':'C','D':'[AGT]','G':'G',
         'H':'[ACT]','K':'[GT]','M':'[AC]','N':'[ACGT]','R':'[AG]','S':'[CG]',
         'T':'T','V':'[ACG]','W':'[AT]','Y':'[CT]','.':'[ACGT]','-':'[ACGT]'};
@@ -274,6 +276,13 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
 
     //todo
+    //https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c
+    geneticCodes.standard = {}
+
+
+
+    //todo
+    //see
     frequencies.ecoli = {
 
     };
@@ -424,6 +433,10 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
     var reverseTranscribe = function (sequence) {
         return sequence.replace(regexps.rna, function(m) { return complements.reverse_transcribe[m] });
+    };
+
+    var determineORF = function (sequence) {
+
     };
 
     /**
@@ -656,6 +669,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         monomers : monomers,
         maps : maps,
         complements : complements,
+        geneticCodes : geneticCodes,
         frequencies : frequencies,
         weights : weights,
 

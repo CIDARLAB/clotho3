@@ -17,8 +17,13 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'DNA', 'Digest', 'PCR'
     $scope.sequence = 'aaatttgggcccatgcta';
 
 
+    //Digest
+    $scope.digestSeq = 'acaactacgacggatccagtcgtacatgcatcgatcgacggatccagatcgactagc';
+
+
     //PCR predict
     $scope.primers = ['tatcgatcgta', 'gatcgatcgat'];
     $scope.backbone = 'cccccccccccagctacgatcgataaaaaaaaaaattttttttttttgatcgatcgatagctaggggggggggggg';
+
 
 }]);
