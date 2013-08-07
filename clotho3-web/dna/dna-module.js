@@ -423,7 +423,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
     //adds a space every three characters
-    var codonify = function (sequence) {
+    var codonSpace = function (sequence) {
         return sequence.match(/.{1,3}/g).join(" ");
     };
 
@@ -437,10 +437,6 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
     var reverseTranscribe = function (sequence) {
         return sequence.replace(regexps.rna, function(m) { return complements.reverse_transcribe[m] });
-    };
-
-    var determineORF = function (sequence) {
-
     };
 
     /**
@@ -488,6 +484,14 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         }
 
         return rna;
+    };
+
+    var probableORF = function (sequence) {
+        var offset = 0;
+
+        //todo - look at each translated and choose longest?
+
+        return offset;
     };
 
     /**************
@@ -708,12 +712,13 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         revcomp : revcomp,
         randomSequence : randomSequence,
         shuffleSequence : shuffleSequence,
-        codonify : codonify,
+        codonSpace : codonSpace,
 
         transcribe : transcribe,
         reverseTranscribe : reverseTranscribe,
         translate : translate,
         reverseTranslate : reverseTranslate,
+        probableORF : probableORF,
 
         occuranceCount : occuranceCount,
         monomer_count : monomer_count,

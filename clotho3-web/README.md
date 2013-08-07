@@ -81,15 +81,17 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - BLAST breakout
     - Digest
         - import NEB enzymes, use same format
+            - call NEB @ 1-800-632-7799
             - cuts: ^   |   _
-            - broaden methylation categories
+            - broaden methylation categories: dam, dcm, cpg
         - dep on DNA service new functions
             - swapout Digest site (need to know ORF)
         - import strider format (REBASE) / NEB format
-        - Dam/Dcm methylation
     - PCR
         - other pcr types
 
+
+- popover with HTML
 
 
 - Trails
@@ -102,6 +104,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - editor
+    - popup to display UUID in test arguments
     - use form controller for validation
         - currently requires nested forms: https://github.com/angular/angular.js/issues/1404
     - add novalidate via directive
@@ -120,9 +123,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - UI Directives
-    - typeahead with async content
-        - http://stackoverflow.com/questions/15930339/how-to-tie-angular-uis-typeahead-with-a-server-via-http-for-server-side-optimi
-        - http://plnkr.co/edit/eGG9Kj?p=preview
     - rewrite contenteditable
         - make play nicely (e.g. with digest-highlight)
     - dropdown in Angular --  see angular-strap

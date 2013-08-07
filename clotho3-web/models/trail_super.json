@@ -1,5 +1,6 @@
 {
     "uuid" : "trail_super",
+    "schema" : "Trail",
     "dependencies" : ["trail_140l", "trail_123"],
     "title" : "Combined Trail",
     "author" : "Max Bates",
