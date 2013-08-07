@@ -154,7 +154,9 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         'D' : 'H',
         'H' : 'D',
         'n' : 'n',
-        'N' : 'N'
+        'N' : 'N',
+        '^' : '|',
+        '|' : '^'
     };
     complements.rna = {
         'a': 'u',
@@ -340,7 +342,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     Basics
     **************/
 
-    var removeNonLetters = function (input) {
+    var lettersOnly = function (input) {
         return input.replace(regexps.letters, '');
     };
 
@@ -402,6 +404,8 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         units = units || monomers.dna;
         if (typeof length == 'string')
             length = length.length;
+
+        if (length == 0) return '';
 
         var sequenceArray = [],
             tempNum = 0,
@@ -660,8 +664,25 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
 
     var selfComplimentarity = function (rna) {
-
+        //todo calculate 2° structure
     };
+
+
+    /****************
+     PARSING -- future
+     ****************/
+
+    var parseFASTA = {};
+
+    var parseEMBL = {};
+
+    var parseGenbank = {};
+
+    var outputFASTA = {};
+
+    var outputEMBL = {};
+
+    var outputGenbank = {};
 
 
     return {
@@ -673,7 +694,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         frequencies : frequencies,
         weights : weights,
 
-        removeNonLetters : removeNonLetters,
+        lettersOnly : lettersOnly,
         dnaOnly : dnaOnly,
         verify : verify,
         undegenerize : undegenerize,
@@ -837,7 +858,7 @@ Application.Dna.directive('dnaRemoveNonLetters', ['DNA', function(DNA) {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, element, attr, ngModel) {
-            ngModel.$formatters.push(DNA.removeNonLetters)
+            ngModel.$formatters.push(DNA.lettersOnly)
         }
     };
 }]);

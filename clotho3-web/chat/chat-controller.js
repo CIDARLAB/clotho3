@@ -85,5 +85,12 @@ Application.Chat.controller('ChatCtrl', ['$scope', 'Clotho', 'ChatSocket', '$dia
     $keypress.on('keypress', {'shift-enter' : 'foo()'}, $scope);
     $scope.foo = function() {
         $dialog.serverAlert("blah").open();
-    }
+    };
+
+    $scope.items = [
+        {"name" : "one", "uuid" : 8932300239423},
+        {"name" : "two", "uuid" : 1928791248129},
+        {"name" : "three", "uuid" : 1308710239132}
+    ]
+
 }]);

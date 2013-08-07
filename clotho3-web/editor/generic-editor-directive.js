@@ -88,7 +88,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 });
             };
 
-			$scope.queryWrapper = function(schemaType) {
+            $scope.queryWrapper = function(schemaType) {
                 return Clotho.query({schema: schemaType}).then(function (result) {
                     return $filter('limitTo')(result, 10);
                 })
@@ -172,8 +172,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                             $http.get('/editor/sharable-partial.html', {cache: $templateCache})
                                 .then(function(result) {
-                                    $element.html(result.data);
-                                    $compile($element.contents())($scope);
+                                    var el = $compile(result.data)($scope);
+                                    $element.append(el);
                                 })
                                 .then(function() {
                                     Clotho.get($scope.schemaName).then(function(result) {

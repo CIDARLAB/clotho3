@@ -104,11 +104,9 @@
         //future - use CDN for these
         $script("lib/underscore.js", "underscore");
         $script("lib/jquery-1.9.1.js", "jquery", function() {
-            $script("lib/jquery-ui-1.10.2.js", "jquery-ui");
+            $script("lib/jquery-ui-1.10.3.drag-sort.js", "jquery-ui");
         });
-        $script("https://www.youtube.com/iframe_api", "youtubeAPI");
 
-        //note - dependencies prevent full asynchrony
         //todo - better jquery handling... just need to be ready before DOM content ready
         $script.ready("jquery", function() {
             $script("lib/angular-1.1.5/angular.js", "angular", function() {
