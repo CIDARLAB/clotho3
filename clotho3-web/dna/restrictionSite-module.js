@@ -316,8 +316,9 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
 
 
     var swapoutSites = function (sequence, enzyme, orfOffset) {
-        //todo - need to find most probable ORF (use DNA service)
+        var offset = orfOffset ? orfOffset : DNA.probableORF(sequence);
 
+        // todo
     };
 
 
@@ -325,12 +326,13 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      * @description Find matches for a given oligo in a sequence
      * @param sequence
      * @param {String} match String to use as Regexp, e.g. enzyme.match
+     * @param {boolean} bothStrands Whether revcomp of match should be searched as well
      * @returns {object} Matches in form { <match index> : <matched value> }
      */
-    var findMatches = function (sequence, match) {
+    var findMatches = function (sequence, match, bothStrands) {
         var matches = {},
             cur,
-            reg = createRegex(match, true);
+            reg = createRegex(match, bothStrands !== false);
 
         while ((cur = reg.exec(sequence)) != null) {
             matches[cur.index] = match[0];
@@ -344,10 +346,11 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      * @description Finds start indices of a oligo's match in a sequence
      * @param {String} sequence
      * @param {String} match String to use as Regexp, e.g. enzyme.match
+     * @param {boolean} bothStrands Whether revcomp of match should be searched as well
      * @returns {Array} List of sites (start of match). Empty if no matches
      */
-    var findIndices = function (sequence, match) {
-        return Object.keys(findMatches(sequence, match));
+    var findIndices = function (sequence, match, bothStrands) {
+        return Object.keys(findMatches(sequence, match, bothStrands));
     };
 
 
@@ -366,6 +369,9 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     var markSites = function (sequence, enzyme) {
 
         //todo - match cut (i.e. ^ vs. | being first)
+
+        //todo - handle 3' overhangs (e.g. ATCGTG (20/18))
+        //todo - handle one positive one negative number
 
         sequence = DNA.dnaOnly(sequence);
 
@@ -386,12 +392,12 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
 
                 //forward
                 var cutFor = new RegExp(brs.gap2 + brs.gap1 + brs.enz, 'ig');
-                sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
+                sequence = sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
                     return [ '|' + $1 + '^' + $2 + '(' + $3 + ')']
                 });
                 //reverse
                 var cutRev = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
-                sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
+                sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
                     return [ '(' + $1 + ')' + $2 + '^' + $3 + '|']
                 });
 
@@ -401,20 +407,22 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
 
                 //forward
                 var cutFor = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
-                sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
+                sequence = sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
                     return [ '(' + $1 + ')' + $2 + '^' + $3 + '|']
                 });
                 //reverse
                 var cutRev = new RegExp(brs.gap2 + brs.gap1 + brs.rev, 'ig');
-                sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
+                sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
                     return [ '|' + $1 + '^' + $2 + '(' + $3 + ')']
                 });
+                
+                console.log(sequence);
             }
 
         } else {
             //need to check for forward and reverse matches, update replacement appropriately
-            sequence.replace(createRegex(enzyme.match), '(' + enzyme.cut + ')');
-            sequence.replace(createRegex(DNA.revcomp(enzyme.match)), '(' + DNA.revcomp(enzyme.cut) + ')');
+            sequence = sequence.replace(createRegex(enzyme.match), '(' + enzyme.cut + ')');
+            sequence = sequence.replace(createRegex(DNA.revcomp(enzyme.match)), '(' + DNA.revcomp(enzyme.cut) + ')');
         }
 
         return sequence;

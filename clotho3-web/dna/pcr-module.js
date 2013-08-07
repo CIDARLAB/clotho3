@@ -43,8 +43,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
         //future - move to fuzzy search, account for tail on primer
 
-        var forward = Digest.findIndices(sequence, primer);
-        var reverse = Digest.findIndices(sequence, DNA.revcomp(primer));
+        var forward = Digest.findIndices(sequence, primer, false);
+        var reverse = Digest.findIndices(sequence, DNA.revcomp(primer), false);
 
         return {forward: forward, reverse: reverse}
     };

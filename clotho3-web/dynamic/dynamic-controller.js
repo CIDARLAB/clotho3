@@ -59,7 +59,12 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
             "args" : {
                 "id" : "sharable_person"
             },
-            "target" : ".editorCatcher"
+            "styles" : {
+                'position' : 'absolute',
+                'top' : '100px',
+                'left' : '200px'
+            },
+            "target" : "[ng-view]"
         });
     };
     $scope.showEditorModal = function() {
