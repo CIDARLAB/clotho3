@@ -4,10 +4,15 @@
  */
 package org.clothocad.core.persistence;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  *
  * @author spaige
  */
+
+@Retention(value = RetentionPolicy.RUNTIME)
 public @interface Rename {
     public String value();
 }

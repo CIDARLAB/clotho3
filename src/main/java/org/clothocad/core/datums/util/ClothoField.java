@@ -37,6 +37,7 @@ import lombok.Setter;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.Rename;
 import org.clothocad.core.persistence.Replace;
 import org.clothocad.core.persistence.mongodb.ClothoMappedField;
 import org.clothocad.core.schema.Access;
@@ -56,7 +57,13 @@ public class ClothoField {
     private ClothoField() {}
     
     public ClothoField(Field field){
-        name = field.getName();
+        
+        if (field.getAnnotation(Rename.class) != null){
+            name = field.getAnnotation(Rename.class).value();
+        } else {
+            name = field.getName();            
+        }
+        
         type = field.getType();
         reference = field.getAnnotation(Reference.class) != null;
         

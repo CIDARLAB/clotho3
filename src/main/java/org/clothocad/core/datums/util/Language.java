@@ -40,6 +40,7 @@ public enum Language {
     
     @Override
     public String toString() {return stringValue;}
+    
     public List<String> extensions() {return extensions;}
     private final String stringValue;
     private final List<String> extensions;

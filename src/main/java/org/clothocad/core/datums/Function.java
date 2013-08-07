@@ -7,6 +7,7 @@ package org.clothocad.core.datums;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import javax.script.ScriptException;
 import lombok.Getter;
+import lombok.Setter;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
 
@@ -31,6 +32,10 @@ public class Function extends ObjBase {
         this.argNames = argNames;
     }
     
+    @Getter
+    @Setter
+    private Language language;
+    
     @Reference
     private Person author;
     private String description;
@@ -49,8 +54,8 @@ public class Function extends ObjBase {
     //XXX: all our target languages have single return value, so multiple return value is undefined
         //XXX: python has automatic tuple unpacking, is that what is intended?
     
-    private Script preconditions;
-    private Script action;
+    private Script precondition;
+    private Script code;
     
     public boolean canDooIt(Object... args){
         //args match input types
@@ -64,8 +69,8 @@ public class Function extends ObjBase {
         }
 
         
-        if (preconditions != null) try {
-            return (Boolean) preconditions.run(args);
+        if (precondition != null) try {
+            return (Boolean) precondition.run(args);
         } catch (ScriptException ex) {
             return false;
         }
@@ -75,7 +80,7 @@ public class Function extends ObjBase {
     //TODO: convert to dict-style
     public Object execute(Object... args) throws ScriptException{
         if (canDooIt(args)){
-            return action.run(args);
+            return code.run(args);
         }
         return null;
     }

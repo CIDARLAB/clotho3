@@ -25,6 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Ambassador;
 
 import java.util.UUID;
+import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 
 /**
@@ -36,13 +37,9 @@ import org.clothocad.core.datums.ObjBase;
 public class Sister 
 		extends ObjBase {
     public Sister(String id, String url, int port) {
-        this.id = id;
+        this.setUUID(new ObjectId(id));
         this.url = url;
         this.port = port;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public int getPort() {
@@ -79,7 +76,6 @@ public class Sister
         TRUSTED   //I've gone through the process of granting this Clotho full access
     }
     
-    private final String id;  //the uuid of that ClothoCore in all of Clotho land
     private String url; //the current url of that ClothoCore
     private int port;   //the port that this ClothoCore uses for communication
     private TrustLevel trust = TrustLevel.UNKNOWN;
