@@ -35,6 +35,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.Replace;
 import org.clothocad.core.persistence.mongodb.ClothoMappedField;
@@ -68,13 +69,12 @@ public class ClothoField {
     
     private static final Logger logger = LoggerFactory.getLogger(ClothoField.class);
     
-    public ClothoField(String name, Class type, String example, String description, Function validate, boolean reference, Access access) {
+    public ClothoField(String name, Class type, String example, String description, boolean reference, Access access) {
         this.name = name;
         this.type = type;
         this.example = example;
         this.access = access; 
         this.reference = reference;
-        this.validate = validate;
         this.description = description;
     }
     
@@ -86,7 +86,6 @@ public class ClothoField {
     private String example;   //A string representation/explanation of an expected value
     private Access access;  
     private boolean reference;
-    private Function validate;
     
     @Replace(encoder="prettyPrintConstraints", decoder="decodeConstraints")
     private Set<Constraint>  constraints;
@@ -128,9 +127,16 @@ public class ClothoField {
     public static String jsonifyFieldType(Class c){
         if (Schema.isSchemaClassName(c.getName())) ///XXX: fix for inner classes
             return Schema.extractIdFromClassName(c.getName());
-        if (String.class.isAssignableFrom(c)) return "string";
-        if (Boolean.class.isAssignableFrom(c)) return "boolean";
-        if (Number.class.isAssignableFrom(c)) return "number"; // String.format("number(%s)", c.getSimpleName());
+        if (ObjBase.class.isAssignableFrom(c)) return c.getSimpleName();
+        if (String.class.isAssignableFrom(c) || c.equals(char.class)) return "string";
+        if (Boolean.class.isAssignableFrom(c) || c.equals(boolean.class)) return "boolean";
+        if (Number.class.isAssignableFrom(c) || 
+                c.equals(byte.class) || 
+                c.equals(short.class) ||
+                c.equals(int.class) ||
+                c.equals(long.class) ||
+                c.equals(float.class) ||
+                c.equals(double.class)) return "number"; // String.format("number(%s)", c.getSimpleName());
         if (c.isArray() || Collection.class.isAssignableFrom(c)){
             return "array";
         }

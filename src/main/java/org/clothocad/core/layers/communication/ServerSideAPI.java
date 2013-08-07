@@ -477,6 +477,7 @@ public class ServerSideAPI {
             return objs;
         } catch (Exception e) {
             logAndSayError(String.format("Error querying %s: %s", spec.toString(), e.getMessage()), e);
+            e.printStackTrace();
             return new ArrayList<>();
         }
 
@@ -484,17 +485,41 @@ public class ServerSideAPI {
 // </editor-fold> 
 
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
-    public final void run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public final Object run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<String, Object> data = JSON.mappify(o);
+        List<Object> args = (List) data.get("args");
+        
+        for (int i = 0; i< args.size(); i++){
+            try {
+                ObjectId id = new ObjectId(args.get(i).toString());
+                args.set(i, id);
+            } catch (IllegalArgumentException e){
+                
+            }
+        }
+
         
         if (data.containsKey("id")){
+            //XXX:(ugh ugh) end-run if *Function
+            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id").toString()));
+            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")){
+                try {
+                    return mind.evalFunction(functionData.get("code").toString(), "f"+functionData.get("id").toString(), args, new ScriptAPI(mind,persistor,requestId));
+                } catch (ScriptException e){
+                    logAndSayError("Script Exception thrown", e);
+                    return Void.TYPE;
+                }
+            }
+            
+            
             //reflectively (ugh) run function of instance
             ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
-            List<Object> args = (List) data.get("args");
+            
+            
             
             Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
             Object result = method.invoke(instance, args.toArray());
-            if (method.getReturnType().equals(Void.TYPE)) return;
+            if (method.getReturnType().equals(Void.TYPE)) return Void.TYPE;
             List<Object> results = new ArrayList<>();
             if (result instanceof Iterable){
                 for (Object r : ((Iterable) result)){
@@ -508,7 +533,7 @@ public class ServerSideAPI {
             }
             Message message = new Message(Channel.run, persistor.toJSON(results), requestId);
             send(message);
-            return;
+            return Void.TYPE;
         }
 
         Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
@@ -521,6 +546,8 @@ public class ServerSideAPI {
             Message message = new Message(Channel.run, result, requestId);
             send(message);
         }
+        
+        return Void.TYPE;
 
     }
 

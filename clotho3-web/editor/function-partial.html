@@ -11,7 +11,7 @@
         <div class="control-group">
             <label class="control-label" for="functionId">ID</label>
             <div class="controls">
-                <input type="text" id="functionId" ng-model="editable.uuid" disabled>
+                <input type="text" id="functionId" ng-model="editable.id" disabled>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
             <label class="control-label" for="functionTestResult">Expected Result</label>
             <div class="controls">
                 <input type="text" id="functionTestResult" ng-model="editable.testResult" ng-disabled="!editMode">
-                <button class="btn" ng-click="testFunction()" ng-disabled="!editMode">Test</button>
+                <button ng-class="'btn '+testColor" ng-click="testFunction()" ng-disabled="editMode">Test</button>
 
             </div>
         </div>

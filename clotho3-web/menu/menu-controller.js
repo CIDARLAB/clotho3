@@ -6,7 +6,9 @@ Application.Primary.controller('MenuCtrl', ['$scope', 'Clotho', '$location', '$t
         {"name" : "Trails", "path" : "/trails"},
         {"name" : "Browser", "path" : "/browser"},
         {"name" : "Plasmid", "path" : "/plasmid"},
-        {"name" : "Construction", "path" : "/construction"}
+        {"name" : "Construction", "path" : "/construction"},
+        {"name" : "Schemas", "path":"/schemas"},
+        {"name" : "Scripts", "path":"/scripts"}
     ]};
 
     $scope.$watch(function () {

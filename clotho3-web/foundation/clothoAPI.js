@@ -30,7 +30,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     var fn = {};
 
     fn.send = function(pkg) {
-        Socket.send(JSON.stringify(pkg));
+        Socket.send(angular.toJson(pkg));
     };
     fn.pack = function(channel, data, requestId) {
         return {
@@ -47,16 +47,10 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     fn.searchbar = {};
 
     fn.api.emit = function (eventName, data, requestId) {
-        fn.emit("api",
-            fn.pack(eventName, data),
-            requestId
-        )
+        fn.emit(eventName, data, requestId);
     };
     fn.searchbar.emit = function (eventName, data, requestId) {
-        fn.emit("searchbar",
-            fn.pack(eventName, data),
-            requestId
-        )
+        fn.emit(eventName, data, requestId);
     };
 
     /**********
@@ -119,13 +113,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         }
         //otherwise request over socket, will be collected, listen for event
         else {
-            fn.api.emit('get', uuid);
 
-            PubSub.once('update:'+uuid, function(data) {
-                //console.log("CLOTHOAPI\t");
-                //console.log(data);
-                $rootScope.$safeApply(deferred.resolve(data));
+            var requestId = (Date.now()).toString(),
+                deferred = $q.defer();
+
+            PubSub.once('get:'+requestId, function(data) {
+                $rootScope.$safeApply(deferred.resolve(data))
             }, '$clotho');
+            fn.api.emit('get', uuid, requestId);
 
             if (!synchronous) {
                 return deferred.promise;
@@ -729,8 +724,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      */
     var run = function clothoAPI_run(func, args) {
         var packaged = {
-            "function" : func || "",
-            "arguments" : args
+            "id" : func,
+            "args" : args
         };
 
         var requestId = (Date.now()).toString(),

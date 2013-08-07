@@ -80,7 +80,7 @@ public class ClothoSchemaTest {
 
     public static Schema createFeatureSchema() {
 
-        ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", null, false, Access.PUBLIC);
+        ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", false, Access.PUBLIC);
         field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
         Set<ClothoField> fields = Sets.newHashSet(field);
 

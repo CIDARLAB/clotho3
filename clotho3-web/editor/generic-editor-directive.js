@@ -3,7 +3,7 @@
 //todo - integrate ngFormController --- nested ngForms so validation works
 // then in template: ng-class="{error: myForm.name.$invalid}"
 
-Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', function(Clotho, $compile, $parse, $http, $templateCache) {
+Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', 'ClientAPI', function(Clotho, $compile, $parse, $http, $templateCache, ClientAPI) {
 
     return {
         restrict: 'A',
@@ -50,16 +50,20 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
              FUNCTION
              ******/
 
-            $scope.langTypes = ['javascript', 'python', 'java'];
+            $scope.langTypes = ['JavaScript', 'Python', 'Java'];
 
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},
                 {name:'String', type:'Type'},
                 {name:'Integer', type:'Type'},
-                {name:'Sequence', type:'Schema'},
-                {name:'Person', type:'Schema'},
-                {name:'Institution', type:'Schema'}
             ];
+
+            Clotho.query({schema:"Schema"}).then(function(data){
+                angular.forEach(data, function(schema){
+                    $scope.paramTypes.push({name:schema.name, type:'Schema'});
+                });
+            });
+                
 
             function emptyParam() {return {"type" : "", "name" : "", "test" : {"uuid" : ""}}}
 
@@ -69,8 +73,20 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             };
 
             $scope.testFunction = function() {
-                //todo
-                $scope.result = Clotho.run($scope.editable);
+                var data = {};
+                data.id = $scope.editable.id;
+                if (angular.isEmpty($scope.editable.params)) {$scope.editable.params = [];}
+                data.args = $scope.editable.params.map(function (param){
+                    return param.test.uuid;
+                });
+
+                Clotho.run(data.id, data.args).then(function (result){
+                    if (result == angular.fromJson($scope.editable.testResult)) {
+                        ClientAPI.say({text:"test success!"});
+                    } else {
+                        ClientAPI.say({text:"test failed!"});
+                    }
+                });
             };
 
             /*********
@@ -84,13 +100,14 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             function generateDynamicForm () {
                 var fulltext = "";
 
-                angular.forEach($scope.schema, function(field) {
+                angular.forEach($scope.schema.fields, function(field) {
 
                     var type = field.type || 'text';
+                    if (type == '?') field.type == 'text';
                     var required = field.required ? "required='required'" : "";
 
                     var htmlText_pre = '<div class="control-group">' +
-                        '<label class="control-label" for="' + field.name + '">' + field.readable + '</label>' +
+                        '<label class="control-label" for="' + field.name + '">' + field.name + '</label>' +
                         '<div class="controls">';
                     var htmlText_post = '</div>' +
                         '</div>';
@@ -111,6 +128,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                             inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="editable.'+field.name+'">' + optionsText + '</select>';
                             break;
                         }
+                        case "sharable": {
+                        }
                         //todo - add filedrop support, and radio. checkbox works.
                         default: {
                             inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="editable.'+field.name+'" >';
@@ -129,12 +148,21 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 Clotho.get($scope.uuid).then(function(result) {
                     $scope.editMode = false;
                     $scope.editable = result;
-                    $scope.type = result.type;
+                    //$scope.type = result.type;
+                    var suffix = 'function';
+                    var str = angular.lowercase(result.schema)
+                    var endswith = str.indexOf(suffix, str.length - suffix.length) !== -1
+                    if (endswith){
+                        $scope.type = 'function';
+                    } else {
+                        $scope.type = 'sharable';
+                    }
+
 
                     switch (angular.lowercase($scope.type)) {
                         case 'sharable' : {
 
-                            $scope.schemaName = result.schema_id;
+                            $scope.schemaName = result.schema;
 
                             $http.get('/editor/sharable-partial.html', {cache: $templateCache})
                                 .then(function(result) {
@@ -143,7 +171,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                                 })
                                 .then(function() {
                                     Clotho.get($scope.schemaName).then(function(result) {
-                                        $scope.schema = result.schema;
+                                        $scope.schema = result;
                                         $scope.schema_custom = result.custom;
 
                                         var insert = $element.find('insert-fields').html(generateDynamicForm($scope));

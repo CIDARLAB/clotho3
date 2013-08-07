@@ -25,6 +25,8 @@ Application.Editor = angular.module('clotho.editor', []);
 Application.Plasmid = angular.module('clotho.plasmid', []);
 Application.Search = angular.module('clotho.search', []);
 Application.Trails = angular.module('clotho.trails', []);
+Application.Schemas = angular.module('clotho.schemas',[]);
+Application.Functions = angular.module('clotho.functions',[]);
 
 Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
@@ -69,7 +71,7 @@ angular.module('clotho.ng-additions', [])
         angular.extend(angular, ext);
     }]);
 
-angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
+angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails', 'clotho.schemas', 'clotho.functions']);
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
@@ -96,9 +98,8 @@ angular.module('clothoRoot', ['clothoPackage']).
                 }
             }).
             when('/editor', {
-                redirectTo:'/editor/func_first'
+                templateUrl:'editor/editor-partial.html'
             }).
-
             when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
                 //todo - get this working, instead of doing it in the link of directive
@@ -118,6 +119,12 @@ angular.module('clothoRoot', ['clothoPackage']).
             }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'
+            }).
+            when('/schemas', {
+                templateUrl:'schemas/schemas-partial.html'
+            }).
+            when('/scripts', {
+                templateUrl:'functions/functions-partial.html'
             }).
             when('/dynamic', {
                 //templateUrl:'dynamic/dynamic-partial.html',

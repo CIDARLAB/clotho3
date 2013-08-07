@@ -5,7 +5,7 @@
 
         <!--<form function-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>-->
 
-    <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>
+        <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>
 
         <div class="span2 well">
             <h4>Demo</h4>
@@ -13,7 +13,7 @@
             <input type="text" style="width: 100%; margin: 5px 0;" ng-model="selected" typeahead="state for state in states | filter:$viewValue" popover="Right now this just pulls from a list of states, but we should set this up to work with Clotho.query()" popover-title="What to Edit?" popover-trigger="focus">
 
             <h6>Choose from List:</h6>
-            <select ng-model="id" class="span2" ng-options="c.value as c.name group by c.type for c in editableList"></select>
+            <select ng-model="id" class="span2" ng-options="c.id as c.name group by c.schema for c in editableList"></select>
 
         </div>
 

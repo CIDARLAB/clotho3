@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.inject.Inject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
@@ -46,6 +47,7 @@ public class Router {
     private ExecutorService pool;
     
     @Inject
+    @Getter
     private Persistor persistor;
    
     public Router() {
@@ -152,7 +154,7 @@ public class Router {
                     break;
 
                 case run:
-                    api.run(data);
+                    response = api.run(data);
                     break;
                 case listen:
                     api.listen(data.toString());

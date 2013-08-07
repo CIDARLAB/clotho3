@@ -77,8 +77,8 @@ public class SchemaATest {
     
     private static Schema createSchema(){
         
-        Set<ClothoField> thefields = newHashSet(new ClothoField("name", String.class, "GFPmut3", "the feature name", null, false, Access.PUBLIC),
-                                                new ClothoField("sequence", String.class, "atgcatgagatcatgcagccaactatttattaa", "the feature sequence", null, false, Access.PUBLIC));
+        Set<ClothoField> thefields = newHashSet(new ClothoField("name", String.class, "GFPmut3", "the feature name", false, Access.PUBLIC),
+                                                new ClothoField("sequence", String.class, "atgcatgagatcatgcagccaactatttattaa", "the feature sequence", false, Access.PUBLIC));
 
         Schema schema = new ClothoSchema("Feature", "Act ontology standard representation ofa genetic feature", null, null, thefields);
         System.out.println(schema.toString());

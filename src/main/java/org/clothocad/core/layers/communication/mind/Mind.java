@@ -38,11 +38,13 @@ import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
 import org.clothocad.core.layers.communication.ScriptAPI;
+import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.clothocad.core.layers.execution.MetaEngine;
 import org.clothocad.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.org.mozilla.javascript.NativeFunction;
 
 /**
  * A 'Mind' is the thing on the server that connects up a User and a Client.  Minds talk
@@ -309,6 +311,10 @@ public final class Mind
     public String pullUUIDFromNamespace(String str) {
         System.out.println("JCA:  Need to implement mapping names/namespace tokens to UUIDs of Sharables");
         return null;
+    }
+
+    public Object evalFunction(String code, String name, List args, ScriptAPI api) throws ScriptException {
+        return getEngine().invoke(code, name, args);
     }
 
 }

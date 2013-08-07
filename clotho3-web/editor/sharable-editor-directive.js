@@ -81,7 +81,7 @@ Application.Editor.directive('sharableEditor', ['Clotho', '$compile', '$parse', 
                         var insert = iElement.find('insert-fields').html('');
                         var fulltext = "";
 
-                        angular.forEach(scope.schema, function(field) {
+                        angular.forEach(scope.schema.fields, function(field) {
 
                             var type = field.type || 'text';
                             var required = field.required ? "required='required'" : "";

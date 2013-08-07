@@ -56,7 +56,7 @@ public class ClothoWebserver {
         		resHandler,        		
         		wsHandler });
         server.setHandler(handlers);
- 
+
         server.start();
         
         //System.out.println("Ernst, please silence these println statements");

@@ -5,13 +5,16 @@
 package org.clothocad.core.layers.execution;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.ScriptAPI;
+import static org.clothocad.core.layers.execution.JavaScriptScript.engine;
 
 /**
  *
@@ -48,6 +51,17 @@ public class MetaEngine {
 
     public Object get(String token) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Object invoke(String code, String name, List args) throws ScriptException {
+        try {
+            ScriptEngine engine = getEngine(Language.JAVASCRIPT);
+            engine.eval("var " + name+ " = " + code);
+            Invocable invocable = (Invocable) engine;
+            return invocable.invokeFunction(name, args);
+        } catch (NoSuchMethodException ex) {
+            throw new ScriptException(ex);
+        }
     }
     
 }

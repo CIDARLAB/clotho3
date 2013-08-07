@@ -1,0 +1,60 @@
+<div class="container" ng-controller="SchemasCtrl" >
+    <div class="row">
+        <div class="span12">
+            <div class="page-header" style="position:relative">
+
+                <div class="clearfix" style="position: absolute; bottom: 0; right: 20px; display: block;">
+                    <ul class="nav nav-tabs pull-right" style=" margin-bottom:0; border-bottom: 0;">
+                        <li ng-repeat="mode in nav" ng-class="{'active' : mode == current}">
+                            <a ng-click="setCurrent(mode)">{{mode}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <h1>Schemas</h1>
+
+            </div>
+        </div>
+    </div>
+    <div ng-show="current == nav[0]">
+        Search: <input ng-model="query"></input>
+
+        <div class="span12" ng-repeat="schema in schemas | filter:query">
+            <h3 class="span12"><button ng-click="create(schema)">+</button> {{schema.name}} <small>{{schema.description}}</small></h3>
+                <div class="span11 pull-right"ng-repeat="field in schema.fields">
+                    <h4>{{field.name}} <small>{{field.type}}</small></h4>
+                    <p>{{field.description}}</p>
+                    <p ng-show="field.example">Example: {{field.example}}</p>
+                    <h5 ng-show="field.constraints">Constraints</h5>
+                    <div ng-repeat="constraint in field.constraints">
+                        {{constraint.type}}: {{constraint.value}}
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div ng-show="current == nav[1]">
+        Name: <input ng-model="created.name"></input>
+        Parent: <select ng-model="created.parentSchema" ng-options="schema.name for schema in schemas">
+            <option value="">-- none --</option>
+        </select>
+        Description: <input ng-model="created.description"></input>
+        Fields:
+        <div class="span11 pull-right" ng-repeat="field in created.fields">
+            Name: <input ng-model="field.name"></input>
+            Type: <select ng-model="field.type" ng-options="schema.name for schema in getTypes()">
+                <option value="string"></option>
+            </select>
+            Description: <input ng-model="field.description"></input>
+            Example: <input ng-model="field.example"></input>
+            Access: <select ng-model="field.access" ng-options="access for access in ACCESS_LIST"></select>
+            Constraints: 
+            <div class="span10 pull-right" ng-repeat="constraint in field.constraints">
+                Type: <select ng-model="constraint.type" ng-options="type for type in CONSTRAINTS"></select>
+                Value: <input ng-model="constraint.value"></input>
+            </div>
+            <button ng-click="field.constraints.push(newConstraintDescription())">Add Constraint</button>
+        </div>
+        <button ng-click="created.fields.push(newFieldDescription())">Add Field</button>
+        <button ng-click="submit(created)">Create</button>
+    </div>
+</div>

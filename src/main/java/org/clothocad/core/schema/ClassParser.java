@@ -46,7 +46,7 @@ public class ClassParser extends ClassVisitor{
         Boolean reference = false;
         Class type = Type.getType(desc).getClass();
         
-        ClothoField field = new ClothoField(name, type, example, description, null, reference, acc);
+        ClothoField field = new ClothoField(name, type, example, description, reference, acc);
         
         target.fields.add(field);
         return new FieldParser(field);

@@ -18,6 +18,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.Adds;
 import org.clothocad.core.persistence.DBClassLoader;
@@ -90,6 +91,18 @@ public abstract class Schema extends Sharable {
     }
     
     public static boolean isSchemaClassName(String className){
+        //Router router = Router.get();
+        //if persistor is null, we're in bootstrapping, so don't bother
+        /*if (router.getPersistor() == null) return false;
+        if (router.getPersistor().resolveSchemaFromClassName(className) != null){
+            return true;
+        }*/
         return ObjectId.isValid(extractIdFromClassName(className));
     }  
+
+    public boolean childOf(Schema schema) {
+        if (schema == null || superClass == null) return false;
+        if (schema.getUUID().equals(superClass.getUUID())) return true;
+        return (childOf(schema.superClass));
+    }
 }

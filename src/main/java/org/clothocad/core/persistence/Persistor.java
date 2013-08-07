@@ -25,6 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.persistence;
 
+import com.mongodb.BasicDBObject;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -48,11 +49,14 @@ import org.clothocad.core.datums.Sharable;
 import org.reflections.Reflections;
 import static java.lang.reflect.Modifier.isAbstract;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
 import org.clothocad.core.schema.BuiltInSchema;
+import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
+import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.model.BasicPartConverter;
 import org.clothocad.model.Part;
@@ -444,35 +448,62 @@ public class Persistor{
 
     private void initializeBuiltInSchemas() {
         //XXX: just built-in models for now
-        Reflections models = new Reflections("org.clothocad.model");
+        Reflections models = new Reflections("org.clothocad");
 
         for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
-            Map<String, Object> query = new HashMap<>();
-            query.put("binaryName", c.getCanonicalName());
-            if (connection.getAsBSON(query).isEmpty()) {
-                save(new BuiltInSchema(c));
-            } 
+            if (c.getSuperclass() == ObjBase.class){
+                makeBuiltIns(c, null, models);
+            }
+        }
+        
+        
+    }
+    
+    private void makeBuiltIns(Class<? extends ObjBase> c, Schema superSchema, Reflections ref){
+        Schema builtIn = new BuiltInSchema(c, superSchema);
+        save(builtIn);
+        for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){
+            if (subClass.getSuperclass() == c){
+                makeBuiltIns(subClass, builtIn, ref);                
+            }
         }
     }
-
+    
     public <T extends ObjBase> Collection<T> getAll(Class<T> aClass) {
         return connection.getAll(aClass);
     }
 
-
-    private List<String> getRelatedSchemas(String originalSchema) {
+    private static List<Class<? extends Schema>> authoredSchemas = new ArrayList<>();
+    static {
+        authoredSchemas.add(ClothoSchema.class);
+        authoredSchemas.add(JavaSchema.class);
+    }
+    
+    private List<String> getRelatedSchemas(String originalSchemaName) {
         List<String> out = new ArrayList();
         try {
-            //XXX demo hack
-            Class<?> type = Class.forName(originalSchema.toString());
-            Reflections r = new Reflections("org.clothocad.model"); //hacking again
+            //get any built-in classes
+            //TODO: cache reflections
+            Class<?> type = Class.forName(originalSchemaName);
+            Reflections r = new Reflections("org.clothocad"); 
             for (Class c : r.getSubTypesOf(type)) {
                 out.add(c.getName());
             }
+            
+            //get any authored schemas
+            Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
+            for (Class<? extends Schema> c : authoredSchemas){
+                for (Schema schema : this.getAll(c)){
+                    if (schema.childOf(originalSchema)){
+                        out.add(schema.getBinaryName());
+                    }
+                }
+            }
+            
 
         } catch (ClassNotFoundException ex) {
         }
-        out.add(originalSchema);
+        out.add(originalSchemaName);
         return out;
     }
 
@@ -493,6 +524,10 @@ public class Persistor{
             newJSON.put(field, sourceJSON.get(field));
         }
         return newJSON;
+    }
+    
+    public Schema resolveSchemaFromClassName(String className){
+        return connection.getOne(Schema.class, new BasicDBObject("binaryName", className));
     }
     
     public ObjectId resolveSelector(String selector, boolean strict) {
@@ -519,7 +554,7 @@ public class Persistor{
         //name of something?
         List<Map<String, Object>> results = findAsBSON(spec);
 
-        if (results.isEmpty()) throw new EntityNotFoundException();
+        if (results.isEmpty()) throw new EntityNotFoundException(selector);
         
         id = new ObjectId(results.get(0).get("id").toString());
         if (results.size() == 1 || !strict) {
