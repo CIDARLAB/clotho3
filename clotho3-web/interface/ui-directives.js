@@ -162,6 +162,7 @@ Application.Interface.directive('contenteditable', [function() {
                         ngModel.$setViewValue(value);     //normal way of doing this
                         //ngModel.$modelValue = value;        // (doesn't work) force through parsers
                     });
+                    //ngModel.$render();
                     //elm.text(ngModel.$viewValue);   //messes up cursor position
                 }
 
@@ -186,6 +187,300 @@ Application.Interface.directive('contenteditable', [function() {
         }
     };
 }]);
+
+
+/***********************
+ DRAG N SORT
+ ***********************/
+
+Application.Interface.service('jqDragDrop', ['$timeout', '$parse', function($timeout, $parse) {
+
+}]);
+
+Application.Interface.directive('jqDraggable', ['$compile', function($compile) {
+    return {
+        restrict : 'A',
+        require: '?ngModel',
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs) {
+                    element.css({'position' : 'absolute'});
+                },
+                post: function (scope, element, attrs, ngModel) {
+
+                    //set up
+                    function combineCallbacks(first,second){
+                        if( second && (typeof second === "function") ){
+                            return function(e,ui){
+                                first(e,ui);
+                                second(e,ui);
+                            };
+                        }
+                        return first;
+                    }
+
+                    var opts = {};
+                    var callbacks = {
+                        start: null,
+                        stop: null,
+                        drag: null
+                    };
+
+
+                    //model handling
+                    //todo - decide
+                    //reference : https://github.com/codef0rmer/angular-dragdrop
+                    if (ngModel) {
+                        callbacks.start = function(e, ui) {
+
+                        };
+
+                        callbacks.stop = function(e, ui) {
+
+                        };
+
+                        callbacks.drag = function(e, ui) {
+
+                        };
+                    }
+
+
+                    //watchers
+                    scope.$watch(function() {
+                        return scope.$eval(attrs.jqDraggableDisabled)
+                    },
+                    function(newval, oldval) {
+                        element.draggable({disabled: newval})
+                    });
+
+                    //custom listeners and jQuery UI Draggable options
+                    scope.$watch(attrs.jqDraggable, function (newval, oldval) {
+                        angular.forEach(newval, function (value, key) {
+                            if( callbacks[key] ){
+                                // wrap the callback
+                                value = combineCallbacks( callbacks[key], value );
+                            }
+                            element.sortable('option', key, value);
+                        })
+                    });
+
+                    angular.forEach(callbacks, function(value, key ){
+                        opts[key] = combineCallbacks(value, opts[key]);
+                    });
+
+                    //create
+                    element.draggable(opts);
+                }
+            }
+        }
+    }
+}]);
+
+Application.Interface.directive('jqDroppable', [function() {
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+
+            //set up
+            function combineCallbacks(first,second){
+                if( second && (typeof second === "function") ){
+                    return function(e,ui){
+                        first(e,ui);
+                        second(e,ui);
+                    };
+                }
+                return first;
+            }
+
+            var opts = {};
+            var callbacks = {
+                over: null,
+                out: null,
+                drop: null
+            };
+
+
+            //model handling
+            //todo - decide
+            //reference : https://github.com/codef0rmer/angular-dragdrop
+            if (ngModel) {
+                callbacks.over = function(e, ui) {
+
+                };
+
+                callbacks.out = function(e, ui) {
+
+                };
+
+                callbacks.drop = function(e, ui) {
+
+                };
+            }
+
+
+            //watchers
+            scope.$watch(function() {
+                return scope.$eval(attrs.jqDroppableDisabled)
+            },
+            function(newval, oldval) {
+                element.droppable({disabled: newval})
+            });
+
+            //custom listeners and jQuery UI Droppable options
+            scope.$watch(attrs.jqDroppable, function (newval, oldval) {
+                angular.forEach(newval, function (value, key) {
+                    if( callbacks[key] ){
+                        // wrap the callback
+                        value = combineCallbacks( callbacks[key], value );
+                    }
+                    element.sortable('option', key, value);
+                })
+            });
+
+            angular.forEach(callbacks, function(value, key ){
+                opts[key] = combineCallbacks(value, opts[key]);
+            });
+
+            //finally, create
+            element.droppable(opts)
+        }
+    }
+}]);
+
+
+/**
+ *
+ * @description This directive allows you to sort array with drag & drop
+ *
+ * @note ngModel is optional, but required to make changes to model. Otherwise, the jQuery UI sortable is simply applied to the list.
+
+ * @example
+ <ul jquery-sortable="sortableOptions" ng-model="items">
+    <li ng-repeat="item in items">{{ item }}</li>
+ </ul>
+ * @example All the jQueryUI Sortable options can be passed through the directive, to create custom events and handlers. For example,
+ $scope.sortableOptions = {
+    update: function(e, ui) { ... },
+    axis: 'x'
+  };
+ */
+Application.Interface.directive('jqSortable', [function() {
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+
+            function combineCallbacks(first,second){
+                if( second && (typeof second === "function") ){
+                    return function(e,ui){
+                        first(e,ui);
+                        second(e,ui);
+                    };
+                }
+                return first;
+            }
+
+            var opts = {};
+
+            var callbacks = {
+                receive: null,
+                remove:null,
+                start:null,
+                stop:null,
+                update:null
+            };
+
+            if (ngModel) {
+                ngModel.$render = function() {
+                    element.sortable("refresh")
+                };
+
+                callbacks.start = function(e, ui) {
+                    // Save position of dragged item
+                    ui.item.sortable = { index: ui.item.index() };
+                };
+
+                callbacks.update = function(e, ui) {
+                    // For some reason the reference to ngModel in stop() is wrong
+                    ui.item.sortable.resort = ngModel;
+                };
+
+                callbacks.receive = function(e, ui) {
+                    ui.item.sortable.relocate = true;
+                    // added item to array into correct position and set up flag
+                    ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                };
+
+                callbacks.remove = function(e, ui) {
+                    // copy data into item
+                    if (ngModel.$modelValue.length === 1) {
+                        ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
+                    } else {
+                        ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
+                    }
+                };
+
+                callbacks.stop = function(e, ui) {
+                    // digest all prepared changes
+                    if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
+
+                        // Fetch saved and current position of dropped element
+                        var end, start;
+                        start = ui.item.sortable.index;
+                        end = ui.item.index();
+
+                        // Reorder array and apply change to scope
+                        ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
+
+                    }
+                    if (ui.item.sortable.resort || ui.item.sortable.relocate) {
+                        scope.$apply();
+                    }
+                };
+            }
+
+
+            /*
+            //note - old version - all that is minimally required
+            scope.dragStart = function(e, ui) {
+                ui.item.data('start', ui.item.index());
+            };
+
+            scope.dragEnd = function(e, ui) {
+                var start = ui.item.data('start'),
+                    end = ui.item.index();
+
+                ngModel.$viewValue.splice(end, 0,
+                    ngModel.$viewValue.splice(start, 1)[0]);
+
+                scope.$apply();
+            };*/
+
+            scope.$watch(attrs.jqSortable, function(newVal, oldVal){
+                angular.forEach(newVal, function(value, key){
+
+                    if( callbacks[key] ){
+                        // wrap the callback
+                        value = combineCallbacks( callbacks[key], value );
+                    }
+
+                    element.sortable('option', key, value);
+                });
+            }, true);
+
+            angular.forEach(callbacks, function(value, key ){
+
+                opts[key] = combineCallbacks(value, opts[key]);
+            });
+
+            //finally, create
+            element.sortable(opts);
+        }
+    }
+}]);
+
+
 
 /***********************
  BUTTONS
@@ -383,6 +678,22 @@ Application.Interface.directive('restrictInput', ['$parse', function($parse) {
  DIALOG / MODAL
  ***********************/
 
+Application.Interface.directive('closeable', ['$compile', function($compile) {
+    return {
+        restrict : 'A',
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs) {
+                    scope.removeElement = function() {
+                        element.remove();
+                    };
+                    element.prepend($compile('<a class="close" style="position: absolute; top: 12px; right: 15px;" ng-click="removeElement()">&times;</a>')(scope));
+                }
+            }
+        }
+    }
+}]);
+
 Application.Interface.directive('modal', ['$parse', '$dialog', function($parse, $dialog) {
     return {
         restrict: 'EA',
@@ -450,315 +761,316 @@ Application.Interface.directive('modal', ['$parse', '$dialog', function($parse, 
  * houses global options for them.
  */
 Application.Interface.provider( '$tooltip', function () {
-    // The default options tooltip and popover.
-    var defaultOptions = {
-        placement: 'top',
-        animation: true,
-        popupDelay: 0
-    };
+        // The default options tooltip and popover.
+        var defaultOptions = {
+            placement: 'top',
+            animation: true,
+            popupDelay: 0
+        };
 
-    // Default hide triggers for each show trigger
-    var triggerMap = {
-        'mouseenter': 'mouseleave',
-        'click': 'click',
-        'focus': 'blur'
-    };
+        // Default hide triggers for each show trigger
+        var triggerMap = {
+            'mouseenter': 'mouseleave',
+            'click': 'click',
+            'focus': 'blur'
+        };
 
-    // The options specified to the provider globally.
-    var globalOptions = {};
+        // The options specified to the provider globally.
+        var globalOptions = {};
 
-    /**
-     * `options({})` allows global configuration of all tooltips in the
-     * application.
-     *
-     *   var app = angular.module( 'App', ['ui.bootstrap.tooltip'], function( $tooltipProvider ) {
+        /**
+         * `options({})` allows global configuration of all tooltips in the
+         * application.
+         *
+         *   var app = angular.module( 'App', ['ui.bootstrap.tooltip'], function( $tooltipProvider ) {
    *     // place tooltips left instead of top by default
    *     $tooltipProvider.options( { placement: 'left' } );
    *   });
-     */
-    this.options = function( value ) {
-        angular.extend( globalOptions, value );
-    };
+         */
+        this.options = function( value ) {
+            angular.extend( globalOptions, value );
+        };
 
-    /**
-     * This allows you to extend the set of trigger mappings available. E.g.:
-     *
-     *   $tooltipProvider.setTriggers( 'openTrigger': 'closeTrigger' );
-     */
-    this.setTriggers = function setTriggers ( triggers ) {
-        angular.extend( triggerMap, triggers );
-    };
+        /**
+         * This allows you to extend the set of trigger mappings available. E.g.:
+         *
+         *   $tooltipProvider.setTriggers( 'openTrigger': 'closeTrigger' );
+         */
+        this.setTriggers = function setTriggers ( triggers ) {
+            angular.extend( triggerMap, triggers );
+        };
 
-    /**
-     * This is a helper function for translating camel-case to snake-case.
-     */
-    function snake_case(name){
-        var regexp = /[A-Z]/g;
-        var separator = '-';
-        return name.replace(regexp, function(letter, pos) {
-            return (pos ? separator : '') + letter.toLowerCase();
-        });
-    }
+        /**
+         * This is a helper function for translating camel-case to snake-case.
+         */
+        function snake_case(name){
+            var regexp = /[A-Z]/g;
+            var separator = '-';
+            return name.replace(regexp, function(letter, pos) {
+                return (pos ? separator : '') + letter.toLowerCase();
+            });
+        }
 
-    /**
-     * Returns the actual instance of the $tooltip service.
-     * TODO support multiple triggers
-     */
-    this.$get = [ '$window', '$compile', '$timeout', '$parse', '$document', '$position', '$interpolate', function ( $window, $compile, $timeout, $parse, $document, $position, $interpolate ) {
-        return function $tooltip ( type, prefix, defaultTriggerShow ) {
-            var options = angular.extend( {}, defaultOptions, globalOptions );
+        /**
+         * Returns the actual instance of the $tooltip service.
+         * TODO support multiple triggers
+         */
+        this.$get = [ '$window', '$compile', '$timeout', '$parse', '$document', '$position', '$interpolate', function ( $window, $compile, $timeout, $parse, $document, $position, $interpolate ) {
+            return function $tooltip ( type, prefix, defaultTriggerShow ) {
+                var options = angular.extend( {}, defaultOptions, globalOptions );
 
-            /**
-             * Returns an object of show and hide triggers.
-             *
-             * If a trigger is supplied,
-             * it is used to show the tooltip; otherwise, it will use the `trigger`
-             * option passed to the `$tooltipProvider.options` method; else it will
-             * default to the trigger supplied to this directive factory.
-             *
-             * The hide trigger is based on the show trigger. If the `trigger` option
-             * was passed to the `$tooltipProvider.options` method, it will use the
-             * mapped trigger from `triggerMap` or the passed trigger if the map is
-             * undefined; otherwise, it uses the `triggerMap` value of the show
-             * trigger; else it will just use the show trigger.
-             */
-            function getTriggers ( trigger ) {
-                var show = trigger || options.trigger || defaultTriggerShow;
-                var hide = triggerMap[show] || show;
+                /**
+                 * Returns an object of show and hide triggers.
+                 *
+                 * If a trigger is supplied,
+                 * it is used to show the tooltip; otherwise, it will use the `trigger`
+                 * option passed to the `$tooltipProvider.options` method; else it will
+                 * default to the trigger supplied to this directive factory.
+                 *
+                 * The hide trigger is based on the show trigger. If the `trigger` option
+                 * was passed to the `$tooltipProvider.options` method, it will use the
+                 * mapped trigger from `triggerMap` or the passed trigger if the map is
+                 * undefined; otherwise, it uses the `triggerMap` value of the show
+                 * trigger; else it will just use the show trigger.
+                 */
+                function getTriggers ( trigger ) {
+                    var show = trigger || options.trigger || defaultTriggerShow;
+                    var hide = triggerMap[show] || show;
+                    return {
+                        show: show,
+                        hide: hide
+                    };
+                }
+
+                var directiveName = snake_case( type );
+
+                var startSym = $interpolate.startSymbol();
+                var endSym = $interpolate.endSymbol();
+                var template =
+                    '<'+ directiveName +'-popup '+
+                        'title="'+startSym+'tt_title'+endSym+'" '+
+                        'content="'+startSym+'tt_content'+endSym+'" '+
+                        'placement="'+startSym+'tt_placement'+endSym+'" '+
+                        'animation="tt_animation()" '+
+                        'is-open="tt_isOpen"'+
+                        '>'+
+                        '</'+ directiveName +'-popup>';
+
                 return {
-                    show: show,
-                    hide: hide
-                };
-            }
+                    restrict: 'EA',
+                    scope: true,
+                    link: function link ( scope, element, attrs ) {
+                        var tooltip = $compile( template )( scope );
+                        var transitionTimeout;
+                        var popupTimeout;
+                        var $body;
+                        var appendToBody = angular.isDefined( options.appendToBody ) ? options.appendToBody : false;
+                        var triggers = getTriggers( undefined );
+                        var hasRegisteredTriggers = false;
 
-            var directiveName = snake_case( type );
-
-            var startSym = $interpolate.startSymbol();
-            var endSym = $interpolate.endSymbol();
-            var template =
-                '<'+ directiveName +'-popup '+
-                    'title="'+startSym+'tt_title'+endSym+'" '+
-                    'content="'+startSym+'tt_content'+endSym+'" '+
-                    'placement="'+startSym+'tt_placement'+endSym+'" '+
-                    'animation="tt_animation()" '+
-                    'is-open="tt_isOpen"'+
-                    '>'+
-                    '</'+ directiveName +'-popup>';
-
-            return {
-                restrict: 'EA',
-                scope: true,
-                link: function link ( scope, element, attrs ) {
-                    var tooltip = $compile( template )( scope );
-                    var transitionTimeout;
-                    var popupTimeout;
-                    var $body;
-                    var appendToBody = angular.isDefined( options.appendToBody ) ? options.appendToBody : false;
-                    var triggers = getTriggers( undefined );
-                    var hasRegisteredTriggers = false;
-
-                    // By default, the tooltip is not open.
-                    // TODO add ability to start tooltip opened
-                    scope.tt_isOpen = false;
-
-                    function toggleTooltipBind () {
-                        if ( ! scope.tt_isOpen ) {
-                            showTooltipBind();
-                        } else {
-                            hideTooltipBind();
-                        }
-                    }
-
-                    // Show the tooltip with delay if specified, otherwise show it immediately
-                    function showTooltipBind() {
-                        if ( scope.tt_popupDelay ) {
-                            popupTimeout = $timeout( show, scope.tt_popupDelay );
-                        } else {
-                            scope.$apply( show );
-                        }
-                    }
-
-                    function hideTooltipBind () {
-                        scope.$apply(function () {
-                            hide();
-                        });
-                    }
-
-                    // Show the tooltip popup element.
-                    function show() {
-                        var position,
-                            ttWidth,
-                            ttHeight,
-                            ttPosition;
-
-                        // Don't show empty tooltips.
-                        if ( ! scope.tt_content ) {
-                            return;
-                        }
-
-                        // If there is a pending remove transition, we must cancel it, lest the
-                        // tooltip be mysteriously removed.
-                        if ( transitionTimeout ) {
-                            $timeout.cancel( transitionTimeout );
-                        }
-
-                        // Set the initial positioning.
-                        tooltip.css({ top: 0, left: 0, display: 'block' });
-
-                        // Now we add it to the DOM because need some info about it. But it's not
-                        // visible yet anyway.
-                        if ( appendToBody ) {
-                            $body = $body || $document.find( 'body' );
-                            $body.append( tooltip );
-                        } else {
-                            element.after( tooltip );
-                        }
-
-                        // Get the position of the directive element.
-                        position = appendToBody ? $position.offset( element ) : $position.position( element );
-
-                        // Get the height and width of the tooltip so we can center it.
-                        ttWidth = tooltip.prop( 'offsetWidth' );
-                        ttHeight = tooltip.prop( 'offsetHeight' );
-
-                        // Calculate the tooltip's top and left coordinates to center it with
-                        // this directive.
-                        switch ( scope.tt_placement ) {
-                            case 'mouse':
-                                var mousePos = $position.mouse();
-                                ttPosition = {
-                                    top: mousePos.y,
-                                    left: mousePos.x
-                                };
-                                break;
-                            case 'right':
-                                ttPosition = {
-                                    top: position.top + position.height / 2 - ttHeight / 2,
-                                    left: position.left + position.width
-                                };
-                                break;
-                            case 'bottom':
-                                ttPosition = {
-                                    top: position.top + position.height,
-                                    left: position.left + position.width / 2 - ttWidth / 2
-                                };
-                                break;
-                            case 'left':
-                                ttPosition = {
-                                    top: position.top + position.height / 2 - ttHeight / 2,
-                                    left: position.left - ttWidth
-                                };
-                                break;
-                            default:
-                                ttPosition = {
-                                    top: position.top - ttHeight,
-                                    left: position.left + position.width / 2 - ttWidth / 2
-                                };
-                                break;
-                        }
-
-                        ttPosition.top += 'px';
-                        ttPosition.left += 'px';
-
-                        // Now set the calculated positioning.
-                        tooltip.css( ttPosition );
-
-                        //CUSTOM
-                        tooltip.addClass('noPointerEvents');
-
-                        // And show the tooltip.
-                        scope.tt_isOpen = true;
-                    }
-
-                    // Hide the tooltip popup element.
-                    function hide() {
-                        // First things first: we don't show it anymore.
+                        // By default, the tooltip is not open.
+                        // TODO add ability to start tooltip opened
                         scope.tt_isOpen = false;
 
-                        //if tooltip is going to be shown after delay, we must cancel this
-                        $timeout.cancel( popupTimeout );
-
-                        // And now we remove it from the DOM. However, if we have animation, we
-                        // need to wait for it to expire beforehand.
-                        // FIXME: this is a placeholder for a port of the transitions library.
-                        if ( angular.isDefined( scope.tt_animation ) && scope.tt_animation() ) {
-                            transitionTimeout = $timeout( function () { tooltip.remove(); }, 500 );
-                        } else {
-                            tooltip.remove();
-                        }
-                    }
-
-                    /**
-                     * Observe the relevant attributes.
-                     */
-                    attrs.$observe( type, function ( val ) {
-                        scope.tt_content = val;
-                    });
-
-                    attrs.$observe( prefix+'Title', function ( val ) {
-                        scope.tt_title = val;
-                    });
-
-                    attrs.$observe( prefix+'Placement', function ( val ) {
-                        scope.tt_placement = angular.isDefined( val ) ? val : options.placement;
-                    });
-
-                    attrs.$observe( prefix+'Animation', function ( val ) {
-                        scope.tt_animation = angular.isDefined( val ) ? $parse( val ) : function(){ return options.animation; };
-                    });
-
-                    attrs.$observe( prefix+'PopupDelay', function ( val ) {
-                        var delay = parseInt( val, 10 );
-                        scope.tt_popupDelay = ! isNaN(delay) ? delay : options.popupDelay;
-                    });
-
-                    attrs.$observe( prefix+'Trigger', function ( val ) {
-
-                        if (hasRegisteredTriggers) {
-                            element.unbind( triggers.show, showTooltipBind );
-                            element.unbind( triggers.hide, hideTooltipBind );
+                        function toggleTooltipBind () {
+                            if ( ! scope.tt_isOpen ) {
+                                showTooltipBind();
+                            } else {
+                                hideTooltipBind();
+                            }
                         }
 
-                        triggers = getTriggers( val );
-
-                        if ( triggers.show === triggers.hide ) {
-                            element.bind( triggers.show, toggleTooltipBind );
-                        } else {
-                            element.bind( triggers.show, showTooltipBind );
-                            element.bind( triggers.hide, hideTooltipBind );
+                        // Show the tooltip with delay if specified, otherwise show it immediately
+                        function showTooltipBind() {
+                            if ( scope.tt_popupDelay ) {
+                                popupTimeout = $timeout( show, scope.tt_popupDelay );
+                            } else {
+                                scope.$apply( show );
+                            }
                         }
 
-                        hasRegisteredTriggers = true;
-                    });
+                        function hideTooltipBind () {
+                            scope.$apply(function () {
+                                hide();
+                            });
+                        }
 
-                    attrs.$observe( prefix+'AppendToBody', function ( val ) {
-                        appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;
-                    });
+                        // Show the tooltip popup element.
+                        function show() {
+                            var position,
+                                ttWidth,
+                                ttHeight,
+                                ttPosition;
 
-                    // if a tooltip is attached to <body> we need to remove it on
-                    // location change as its parent scope will probably not be destroyed
-                    // by the change.
-                    if ( appendToBody ) {
-                        scope.$on('$locationChangeSuccess', function closeTooltipOnLocationChangeSuccess () {
+                            // Don't show empty tooltips.
+                            if ( ! scope.tt_content ) {
+                                return;
+                            }
+
+                            // If there is a pending remove transition, we must cancel it, lest the
+                            // tooltip be mysteriously removed.
+                            if ( transitionTimeout ) {
+                                $timeout.cancel( transitionTimeout );
+                            }
+
+                            // Set the initial positioning.
+                            tooltip.css({ top: 0, left: 0, display: 'block' });
+
+                            // Now we add it to the DOM because need some info about it. But it's not
+                            // visible yet anyway.
+                            if ( appendToBody ) {
+                                $body = $body || $document.find( 'body' );
+                                $body.append( tooltip );
+                            } else {
+                                element.after( tooltip );
+                            }
+
+                            // Get the position of the directive element.
+                            position = appendToBody ? $position.offset( element ) : $position.position( element );
+
+                            // Get the height and width of the tooltip so we can center it.
+                            ttWidth = tooltip.prop( 'offsetWidth' );
+                            ttHeight = tooltip.prop( 'offsetHeight' );
+
+                            // Calculate the tooltip's top and left coordinates to center it with
+                            // this directive.
+                            switch ( scope.tt_placement ) {
+                                case 'mouse':
+                                    var mousePos = $position.mouse();
+                                    ttPosition = {
+                                        top: mousePos.y,
+                                        left: mousePos.x
+                                    };
+                                    break;
+                                case 'right':
+                                    ttPosition = {
+                                        top: position.top + position.height / 2 - ttHeight / 2,
+                                        left: position.left + position.width
+                                    };
+                                    break;
+                                case 'bottom':
+                                    ttPosition = {
+                                        top: position.top + position.height,
+                                        left: position.left + position.width / 2 - ttWidth / 2
+                                    };
+                                    break;
+                                case 'left':
+                                    ttPosition = {
+                                        top: position.top + position.height / 2 - ttHeight / 2,
+                                        left: position.left - ttWidth
+                                    };
+                                    break;
+                                default:
+                                    ttPosition = {
+                                        top: position.top - ttHeight,
+                                        left: position.left + position.width / 2 - ttWidth / 2
+                                    };
+                                    break;
+                            }
+
+                            ttPosition.top += 'px';
+                            ttPosition.left += 'px';
+
+                            // Now set the calculated positioning.
+                            tooltip.css( ttPosition );
+
+                            //CUSTOM
+                            tooltip.addClass('noPointerEvents');
+
+                            // And show the tooltip.
+                            scope.tt_isOpen = true;
+                        }
+
+                        // Hide the tooltip popup element.
+                        function hide() {
+                            // First things first: we don't show it anymore.
+                            scope.tt_isOpen = false;
+
+                            //if tooltip is going to be shown after delay, we must cancel this
+                            $timeout.cancel( popupTimeout );
+
+                            // And now we remove it from the DOM. However, if we have animation, we
+                            // need to wait for it to expire beforehand.
+                            // FIXME: this is a placeholder for a port of the transitions library.
+                            if ( angular.isDefined( scope.tt_animation ) && scope.tt_animation() ) {
+                                transitionTimeout = $timeout( function () { tooltip.remove(); }, 500 );
+                            } else {
+                                tooltip.remove();
+                            }
+                        }
+
+                        /**
+                         * Observe the relevant attributes.
+                         */
+                        attrs.$observe( type, function ( val ) {
+                            scope.tt_content = val;
+                        });
+
+                        attrs.$observe( prefix+'Title', function ( val ) {
+                            scope.tt_title = val;
+                        });
+
+                        attrs.$observe( prefix+'Placement', function ( val ) {
+                            scope.tt_placement = angular.isDefined( val ) ? val : options.placement;
+                        });
+
+                        attrs.$observe( prefix+'Animation', function ( val ) {
+                            scope.tt_animation = angular.isDefined( val ) ? $parse( val ) : function(){ return options.animation; };
+                        });
+
+                        attrs.$observe( prefix+'PopupDelay', function ( val ) {
+                            var delay = parseInt( val, 10 );
+                            scope.tt_popupDelay = ! isNaN(delay) ? delay : options.popupDelay;
+                        });
+
+                        attrs.$observe( prefix+'Trigger', function ( val ) {
+
+                            if (hasRegisteredTriggers) {
+                                element.unbind( triggers.show, showTooltipBind );
+                                element.unbind( triggers.hide, hideTooltipBind );
+                            }
+
+                            triggers = getTriggers( val );
+
+                            if ( triggers.show === triggers.hide ) {
+                                element.bind( triggers.show, toggleTooltipBind );
+                            } else {
+                                element.bind( triggers.show, showTooltipBind );
+                                element.bind( triggers.hide, hideTooltipBind );
+                            }
+
+                            hasRegisteredTriggers = true;
+                        });
+
+                        attrs.$observe( prefix+'AppendToBody', function ( val ) {
+                            appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;
+                        });
+
+                        // if a tooltip is attached to <body> we need to remove it on
+                        // location change as its parent scope will probably not be destroyed
+                        // by the change.
+                        if ( appendToBody ) {
+                            scope.$on('$locationChangeSuccess', function closeTooltipOnLocationChangeSuccess () {
+                                if ( scope.tt_isOpen ) {
+                                    hide();
+                                }
+                            });
+                        }
+
+                        // Make sure tooltip is destroyed and removed.
+                        scope.$on('$destroy', function onDestroyTooltip() {
                             if ( scope.tt_isOpen ) {
                                 hide();
+                            } else {
+                                tooltip.remove();
                             }
                         });
                     }
-
-                    // Make sure tooltip is destroyed and removed.
-                    scope.$on('$destroy', function onDestroyTooltip() {
-                        if ( scope.tt_isOpen ) {
-                            hide();
-                        } else {
-                            tooltip.remove();
-                        }
-                    });
-                }
+                };
             };
-        };
-    }];
-});
+        }];
+    });
+
 
 Application.Interface.directive( 'tooltipPopup', function () {
     return {
@@ -933,6 +1245,7 @@ Application.Interface.directive('typeahead', ['$compile', '$parse', '$q', '$time
                 isLoadingSetter(originalScope, true);
                 $q.when(parserResult.source(scope, locals)).then(function(matches) {
 
+                    //CUSTOM
                     console.log(matches);
 
                     //it might happen that several async queries were in progress if a user were typing fast
@@ -1148,7 +1461,7 @@ Application.Interface.filter('typeaheadHighlight', function() {
 
 
 /***************
-    DRAG N DROP - work in progress
+    DRAG N DROP - work in progress --- see also above in code for jQuery UI versions
  ***************/
 
 /*

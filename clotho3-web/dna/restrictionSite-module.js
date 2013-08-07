@@ -4,7 +4,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
 
     var enzymes = {
         "BsaI" : {
-            "name" : "BamHI",
+            "name" : "BasI",
             "match" : "ccannnnntgg",
             "cut" : "ccan|nnn^ntgg",
             "strand" : "",
@@ -22,7 +22,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
             "ordering" : {}
         },
         "BsmbI" : {
-            "name" : "BamHI",
+            "name" : "BsmbI",
             "match" : "cgtctc",
             "cut" : "cgtctc (1/5)",
             "strand" : "",
@@ -221,6 +221,24 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         }
     };
 
+    //calculated on the fly, reverse lookup by match or cut sequence
+    var enzymesReverse = {};
+    angular.forEach(enzymes, function (enz, name) {
+        enzymesReverse[enz.match] = name;
+        enzymesReverse[enz.cut] = name;
+    });
+
+    var cuts = {
+        'blunt' : '|',
+        'main'  : '^',
+        'comp'  : '_'
+    };
+
+    //todo - rewrite to handle new cut marks
+    var regexps = {};
+    regexps.localCuts = /\((.*?)([\^|\|])(.+?)([\|\^])(.*?)\)/ig;
+    regexps.nonLocalCuts = /\((\d+)\/(\d+)\)/ig;
+    regexps.findOverhang = /([\^|\|])(.+?)([\|\^])/ig;
 
     /**
      * @description Extend a sequence by a defined length, repeating monomers from the beginning.
@@ -250,10 +268,12 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      * @description Creates a regular expression for a given enzyme, converting degenerate match sequence appropriately
      * @example ACGTBDHVN -> ACGT[CGTU][AGTU][ACTU][ACG][ACGTU]
      * @param {String} match String to use as Regexp, e.g. enzyme.match
+     * @param {boolean=} doubleStrand  Whether match should account for both strands (revcomp). Default is false.
      * @returns {RegExp}
      */
-    var createRegex = function (match) {
-        return new RegExp(DNA.undegenerize(match), 'ig');
+    var createRegex = function (match, doubleStrand) {
+        var degen = doubleStrand ? (match + '|' + DNA.revcomp(match)) : match;
+        return new RegExp(DNA.undegenerize(degen), 'ig');
     };
 
 
@@ -264,11 +284,40 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      * @returns {boolean} Returns true if match, false otherwise
      */
     var sitePresent = function (sequence, match) {
-        return (createRegex(match)).test(sequence);
+        return (createRegex(match, true)).test(sequence);
     };
 
+
+    /**
+     * @description Identify the enzyme whose recognition sequence matches 'match'
+     * @param match Should match either enzyme.match or enzyme.cut
+     * @returns {string} Name of enzyme, same as key in enzymes object
+     */
     var identifySite = function (match) {
-        
+        return enzymesReverse[match];
+    };
+
+    /**
+     * @description Adds a restriction site to the end of the sequence (3') with a given gap
+     * @param {String} sequence
+     * @param {Object} enzyme
+     * @param {Number} gap Number of nucleotides as spacer. Default is 3.
+     * @param {boolean} fivePrime Whether site should be added to 5' (beginning) or 3' (end)
+     * @param {boolean} oppStrand Whether site is on opposite strand (should be reverse complemented)
+     */
+    var addRestrictionSite = function (sequence, enzyme, gap, fivePrime, oppStrand) {
+        gap = angular.isDefined(gap) ? gap : 3;
+
+        var adding = DNA.randomSequence(gap) +
+            (oppStrand ? DNA.revcomp(enzyme.match) : enzyme.match) +
+            DNA.randomSequence(gap);
+        return (!!fivePrime) ? adding + sequence : sequence + adding;
+    };
+
+
+    var swapoutSites = function (sequence, enzyme, orfOffset) {
+        //todo - need to find most probable ORF (use DNA service)
+
     };
 
 
@@ -281,7 +330,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     var findMatches = function (sequence, match) {
         var matches = {},
             cur,
-            reg = createRegex(match);
+            reg = createRegex(match, true);
 
         while ((cur = reg.exec(sequence)) != null) {
             matches[cur.index] = match[0];
@@ -303,206 +352,119 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
 
 
     /**
-     * @description Adds a restriction site to the end of the sequence (3') with a given gap
-     * @param {String} sequence
-     * @param {Object} enzyme
-     * @param {Number} gap number of nucleotides as spacer. Default is 3.
-     * @param {boolean} fivePrime site should be added to 5' end (beginning) of sequence
+     * @description Marks enzyme recognitions sites and cut marks on a sequence
+     * @param {string} sequence
+     * @param {object} enzyme
+     * @returns {string} Returns sequence with cuts and recognition sites marked
+     *
+     * @example BamHI { "cut" : "g^gatc|c" } NNNNNggatccNNNN -> NNNNN(g^gatc|c)NNNNN
+     * @example BsmbI { "cut" : "cgtctc (1/5)" } NNNcgtctcNNNNNNNNN -> NNN(cgtctc)N^NNNN|NNNN
+     * @example BsmbI { "cut" : "cgtctc (1/5)" } NNNNNNNNNgagacgNNN -> NNNN|NNNN^N(gagacg)NNN
+     *
+     * note - won't handle case where enzyme cuts on either side of reg site (i.e. one negative, one positive number
      */
-    var addRestrictionSite = function (sequence, enzyme, gap, fivePrime) {
-        gap = angular.isDefined(gap) ? gap : 3;
+    var markSites = function (sequence, enzyme) {
 
-        var adding = DNA.randomSequence(gap) + enzyme.match + DNA.randomSequence(gap);
-        return (!!fivePrime) ? adding + sequence : sequence + adding;
-    };
+        //todo - match cut (i.e. ^ vs. | being first)
 
-    var swapoutSites = function (sequence, enzyme) {
-        //todo - need to find ORF
+        sequence = DNA.dnaOnly(sequence);
 
+        var nonLocalCuts = (/\((\d+)\/(\d+)\)/ig).exec(enzyme.cut);
+
+        if (nonLocalCuts) {
+
+            //matches to extract (for constructing regexp)
+            var brs = {};
+            brs.enz = '(' + enzyme.match + ')';
+            brs.rev = '(' + DNA.revcomp(enzyme.match) + ')';
+
+
+            //cuts before recognition sequence
+            if (nonLocalCuts[1] < 0) {
+                brs.gap1 = '(.{'+Math.abs(nonLocalCuts[1]-nonLocalCuts[2])+'})';
+                brs.gap2 = '(.{'+Math.abs(nonLocalCuts[2])+'})';
+
+                //forward
+                var cutFor = new RegExp(brs.gap2 + brs.gap1 + brs.enz, 'ig');
+                sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
+                    return [ '|' + $1 + '^' + $2 + '(' + $3 + ')']
+                });
+                //reverse
+                var cutRev = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
+                sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
+                    return [ '(' + $1 + ')' + $2 + '^' + $3 + '|']
+                });
+
+            } else {
+                brs.gap1 = '(.{'+nonLocalCuts[1]+'})';
+                brs.gap2 = '(.{'+(nonLocalCuts[2]-nonLocalCuts[1])+'})';
+
+                //forward
+                var cutFor = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
+                sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
+                    return [ '(' + $1 + ')' + $2 + '^' + $3 + '|']
+                });
+                //reverse
+                var cutRev = new RegExp(brs.gap2 + brs.gap1 + brs.rev, 'ig');
+                sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
+                    return [ '|' + $1 + '^' + $2 + '(' + $3 + ')']
+                });
+            }
+
+        } else {
+            //need to check for forward and reverse matches, update replacement appropriately
+            sequence.replace(createRegex(enzyme.match), '(' + enzyme.cut + ')');
+            sequence.replace(createRegex(DNA.revcomp(enzyme.match)), '(' + DNA.revcomp(enzyme.cut) + ')');
+        }
+
+        return sequence;
     };
 
     /**
-     * @description Convert a sequence (fragment) cut by a restriction enzyme to have a sticky end.
-     * @example given acgtacgACAGTG -> acgtacgA|CAGTG
-     * @param {string} fragment
-     * @param {object} enzyme
-     * DEPRECATED
+     * @description Marks recognition sites by surrounding with parentheses
+     * @param {string} sequence
+     * @param {string} enzyme
+     * @returns {string} Sequence with marked restriction sites
      */
-    var addStickyEnd = function (fragment, enzyme) {
-        fragment.replace(createRegex(enzyme.match), enzyme.cut);
+    var markMatches = function (sequence, enzyme) {
+        return sequence.replace(createRegex(enzyme.match, true), function(match) {
+            return '(' + match + ')'
+        });
     };
 
 
-
-    var markSites = function (sequence, enzyme) {
-        //add cut marks ^ and |
+    var markCuts = function (sequence, enzyme) {
+        sequence = markSites(sequence, enzyme);
+        return sequence.replace(/\(|\)/gi, '');
     };
 
-    //purpose?
-    var extractSites = function (fragment) {
-        var findSiteReg = /[\^|\|].+?[\|\^]/gi,
+
+    var extractSites = function (sequence) {
+        var reg = regexps.findOverhang,
             match,
             matches = {};
 
-        while ((match = findSiteReg.exec(fragment)) != null) {
-            matches[findSiteReg.lastIndex] = match;
+        while ((match = (reg).exec(sequence)) != null) {
+            matches[reg.lastIndex] = match;
         }
+
+        return matches;
     };
-
-    var makeCuts = function (sequence, enzyme) {
-        //todo - handle enzymes like BsmBI with cut in form NNNNNNN (##/##)
-        //todo - implement elsewhere
-
-        //todo - handle multiple cuts (regExp.exec in loop)
-
-        var indices = findIndices(sequence, enzyme.match),
-            localReg = /(.+)^(.+)/ig,
-            localCuts = localReg.exec(enzyme.cut),
-            nonLocalReg = /\((\d+)\/(\d+)\)/ig,
-            nonLocalCuts = nonLocalReg.exec(enzyme.cut),
-            starts = [], ends = [];
-
-        if (nonLocalCuts) {
-            angular.forEach(indices, function (ind) {
-                starts.push(ind + enzyme.match.length + nonLocalCuts[1]);
-                ends.push(ind + enzyme.match.length + nonLocalCuts[2]);
-            });
-
-            //todo - finish, decide format for cuts
-
-            return sequence;
-        } else {
-            return sequence.replace(createRegex(enzyme.match), enzyme.cut)
-        }
-    };
-
-
-
-
 
     /**
      * @description Determine fragments for a sequence cut by a single enzyme
      * @param {string} sequence
      * @param {object} enzyme
+     * @param {boolean=} Whether fragments should be circularized. Defaults to true
      * @returns {Array} Array of strings representing cut fragments
      */
-    var simpleFragments = function (sequence, enzyme) {
+    var makeCuts = function (sequence, enzyme, circular) {
+        //todo - more complex logic?
+        var fragments = (markSites(sequence, enzyme)).split('^');
+        console.log(fragments);
 
-        //todo - handle circular (beyond lookahead, should wrap around and join fragments)
-
-        return sequence.split(createRegex(enzyme.match));
+        return (circular === false) ? fragments : circularize(fragments);
     };
-
-
-
-    /* todo - rewrite so calculate:
-     - if circular or linear
-     - INFO NEED
-        - if sites overlap - makes much harder to calculate
-        - fragments
-            - number
-            - length of sequence
-            - sticky ends (which enzyme)
-
-     */
-    var findCuts = function(sequence, enzymes) {
-
-        //todo - finish rewriting
-        var matches = {};
-
-        angular.forEach(enzymes, function (enzyme) {
-
-        });
-
-        /**
-         * @description Looks for sites only in one direction. Adds to locations array (extending object when revcomping may lead to overwrites)
-         * @param {string} sequence
-         * @param {Array} enzymes
-         */
-        function findSites (sequence, enzymes) {
-            angular.forEach(enzymes, function (enz, index) {
-
-                var seq = extendSequence(sequence, enz.match.length - 1);
-
-                for (var index, offset = 0, search = angular.lowercase(seq);
-                     (index = search.indexOf(angular.lowercase(enz.match), offset)) > -1;
-                     offset = index + enz.match.length
-                    ) {
-                    //start
-                    var start = index;
-                    locations[start] ?
-                        locations[start]['start'].push(enz) :
-                        locations[start] = {"start" : [enz], "end" : []};
-                    //end
-                    var end = start + enz.match.length;
-                    locations[end] ?
-                        locations[end]['end'].push(enz) :
-                        locations[end] = {"start" : [], "end" : [enz]};
-
-                }
-            });
-        }
-
-
-        findSites(sequence, enzymes);
-        var revcomp = DNA.revcomp(sequence);
-        findSites(revcomp, enzymes);
-    
-        console.log(locations);
-
-        return locations
-
-    };
-
-
-    var getFragments = function (sequence, enzymes) {
-
-        var locations = findCuts(sequence, enzymes),
-            fragments = [],
-            prevCut = undefined,
-            revIndices = Object.keys(locations).reverse();
-
-        //start from end, taking fragments
-        angular.forEach(revIndices, function(index, ind) {
-            angular.forEach(locations[index], function(array, key) {
-                                        //this shouldn't happen
-                if ((!array.length) || (sequence.length < index)) return;
-
-                var seq = sequence;
-
-                angular.forEach(array, function(enz) {
-                    if (key == 'start') {
-
-                        var frag = "";
-
-                        //todo
-
-
-                        //end sticky end
-                        if (prevCut) {
-
-                        }
-
-                        frag = frag + sequence.substring(index);
-
-
-                        //start sticky end
-                        if (ind != revIndices.length - 1) {
-
-                            //todo handle circular
-
-                        }
-
-
-                        fragments.unshift(frag);
-
-                    }
-                });
-            });
-        });
-
-    };
-
 
     /**
      * @note Should only be called after fragments have been circularized
@@ -520,17 +482,17 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         circularize : circularize,
         createRegex : createRegex,
         sitePresent : sitePresent,
+        identifySite : identifySite,
+        addRestrictionSite : addRestrictionSite,
+        swapoutSites : swapoutSites,
+
         findMatches : findMatches,
         findIndices : findIndices,
-
-        addRestrictionSite : addRestrictionSite,
-        addStickyEnd : addStickyEnd,
-        makeCuts : makeCuts,
+        markSites : markSites,
+        markMatches : markMatches,
+        markCuts : markCuts,
         extractSites : extractSites,
-        simpleFragments : simpleFragments,
-
-        findCuts: findCuts,             //in progress
-        getFragments : getFragments,    //in progress
+        makeCuts : makeCuts,
 
         sortFragments: sortFragments
     }
@@ -545,7 +507,7 @@ Application.Dna.directive('digestHighlight', ['Digest', '$filter', function(Dige
 
             var highlightSites = function (input) {
                 //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
-                return Digest.makeCut(input, Digest.enzymes.BamHI)
+                return Digest.markSites(input, Digest.enzymes.BsmbI)
             };
 
             var unhighlightSites = function (input) {

@@ -92,6 +92,9 @@ angular.module('clothoRoot', ['clothoPackage']).
                             });
                         });
                         return deferred.promise;
+                    },
+                    deps : function() {
+                        return Application.mixin('https://www.youtube.com/iframe_api');
                     }
                 }
             }).
@@ -123,11 +126,7 @@ angular.module('clothoRoot', ['clothoPackage']).
                 //templateUrl:'dynamic/dynamic-partial.html',
                 templateUrl: dynamicCtrl.template,
                 resolve: {
-                    resolve: dynamicCtrl.resolve
-                },
-                clotho : dynamicCtrl.clotho,
-                custom : {
-                    model : "inst_second"
+                    resolve : dynamicCtrl.resolve
                 }
             }).
             when('/lazyload', {
@@ -142,7 +141,9 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/terminal', {
                 templateUrl:'search/terminal-partial.html',
                 resolve : {
-                    //ctrl_dl: Application.mixin('search/terminal-controller.js')
+                    deps : function() {
+                        return Application.mixin('search/terminal-controller.js')
+                    }
                 }
             }).
             otherwise({

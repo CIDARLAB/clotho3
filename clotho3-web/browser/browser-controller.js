@@ -57,7 +57,7 @@ Application.Browser.directive('sharable', ['$compile', '$http', '$templateCache'
 
     return {
         restrict: "E",
-        rep1ace: true,
+        replace: true,
         compile: function compile(element, attrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, controller) {

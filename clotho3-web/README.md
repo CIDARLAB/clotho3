@@ -53,8 +53,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- tie github pulls to original repositories and keep in sync
+
+
 - grunt / yeoman --- javascript project builder
-    - package clotho api stuff (foundation folder and application.js)`
+    - package clotho api stuff (foundation folder and application.js)
 
 
 - Server communication
@@ -69,19 +72,29 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - DNA Functions
     - decide data structure
     - DNA
-        - determine ORF
+        - required upstream
+            - determine ORF
+            - species specific
+                - codon optimize
+                - silent sites
         - parse: gb, fasta, embl
-        - silent sites
-        - BLAST
+        - BLAST breakout
     - Digest
-        - swapout Digest site
+        - import NEB enzymes, use same format
+            - cuts: ^   |   _
+            - broaden methylation categories
+        - dep on DNA service new functions
+            - swapout Digest site (need to know ORF)
         - import strider format (REBASE) / NEB format
         - Dam/Dcm methylation
     - PCR
         - other pcr types
 
 
-- create help tips - use popovers? - structure JSON
+
+- Trails
+    - get bootstrapping to work
+    - implement quizzes with sortable
 
 
 - $clotho.api
@@ -93,9 +106,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - currently requires nested forms: https://github.com/angular/angular.js/issues/1404
     - add novalidate via directive
     - new fields
+        - multiple select
         - select
         - radios
         - file drops?
+    - custom validation using ngForm or ngModel.$setValidity
 
     - function editor
         - integrate codemirror, tie to language selection
@@ -114,6 +129,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - popover with HTML -- test -- see angular-strap
         - hide on mouseleave when mouseenter trigger
     - angular Strap: https://raw.github.com/mgcrea/angular-strap/v0.7.5/dist/angular-strap.js
+    - DRAGGABLE
+        - https://github.com/fisshy/Angular-drag-drop
+        - need to handle drop + other events
 
 
 
@@ -121,11 +139,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - benchling
     - sparkDNA
 
-
-
-- Application Mixin promises
-    - terminal controller -- required as dependency
-    - youtube API @ Trails -- not required immediately
 
 
 - caret movement directives : https://github.com/DrPheltRight/jquery-caret
@@ -145,23 +158,13 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-
-- streamline display and show() + adding components
-    - get bootstrapping to work
-
-
-
-- migrate to $log from console.log
-
-
-
 - draggable elements (within angular -- also sortable)
     - https://github.com/fisshy/Angular-drag-drop/blob/master/javascript/dragandrop.js
     - http://jsfiddle.net/ADukg/2516/
 
 
 
-- (advantage?) plasmid editor -- add locations parser to ngModel pipeline, store locations outside of ngModel, push them back in using a formatter
+- (advantage?) plasmid editor -- add locations parser to ngModel pipeline, store locations inside of ngModel (on the object), push them back in using a formatter
 
 
 
@@ -172,8 +175,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - trails functionality
-    - youtube events - pass as param to function
-    - keybindings for advancing etc.
+    - youtube events - NOT WORKING
+        - pass as param to function
     - templates
         - types
             - sequence
@@ -213,17 +216,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - Reference
         - watch : https://github.com/mhevery/angular.js/blob/dte/src/auto/injector.js
         - controllers : https://github.com/matys84pl/angularjs-requirejs-lazy-controllers
-    - load and apply css (via jquery? - whatever use for getting scripts)
-        - test downloading css and see if applies
-    - simple Clotho.show()
-        - get one master object for controller
-        - template tied to that controller
 
 
 
 
 UI STUFF
-- sharable modal --- make it actually share
 - services to write / borrow
     - dropdown (bootstrap)
         - use for searchbar help
@@ -294,35 +291,8 @@ UI STUFF
 
 
 
-- modal & $dialog
-    - create mode for Clotho API
-        - assign uuid to dialog (should come from server?)
-    - fix $animation (on way out) (or wait for project to do it)
-
-
-
-
 - deep-linking for search bar and editor
     - http://stackoverflow.com/questions/14974271/can-you-change-a-path-without-reloading-the-controller-in-angularjs
-
-
-
-
-
--Editor
-    - tied to ngForm
-    - form coloring - check for both: required (red), and validation (yellow)
-        - class assignment not working as expected right now... waiting for next angular steady version
-        - http://stackoverflow.com/questions/7792652/what-is-the-best-way-to-conditionally-apply-a-class-with-angularjs/8309832#8309832
-
-    - file drop as input type
-
-    - SCHEMA
-        - add hierarchies in schema?
-        - permissions - pass in sharable data, not schema
-
-    - REGEXP FOR VALIDATION e.g. state
-        - use ng-pattern: use regexp e.g. $scope.state =  /^\w\w$/
 
 
 
@@ -337,10 +307,6 @@ UI STUFF
 
 
 - decorators? i.e. for $http
-
-
-
-- schema builder
 
 
 ------ experiments ------

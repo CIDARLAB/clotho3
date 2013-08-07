@@ -70,7 +70,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.testFunction = function() {
                 //todo
-                $scope.result = Clotho.run($scope.editable);
+                $scope.editable.testResult = Clotho.run($scope.editable);
             };
 
             $scope.queryWrapper = function(schemaType) {
@@ -145,8 +145,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                             $http.get('/editor/sharable-partial.html', {cache: $templateCache})
                                 .then(function(result) {
-                                    $element.html(result.data);
-                                    $compile($element.contents())($scope);
+                                    var el = $compile(result.data)($scope);
+                                    $element.append(el);
                                 })
                                 .then(function() {
                                     Clotho.get($scope.schemaName).then(function(result) {

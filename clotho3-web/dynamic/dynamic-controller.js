@@ -1,7 +1,5 @@
 'use strict';
 
-//note works in 1.1.4, can't pass function in 1.0.6
-
 var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clotho', '$route', '$rootScope', '$position', '$dialog', function($scope, Clotho, $route, $rootScope, $position, $dialog) {
 
     /*
@@ -59,14 +57,14 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
         Clotho.show({
             "template" : 'extensions/editor-template.html',
             "args" : {
-                "id" : "inst_first"
-            }
-            //"target" : ".editorCatcher"
+                "id" : "sharable_person"
+            },
+            "target" : ".editorCatcher"
         });
     };
     $scope.showEditorModal = function() {
 
-        var editor_template = '<form sharable-editor name="sharableEditor" id="inst_first" class=" form-horizontal well" novalidate></form>';
+        var editor_template = '<form clotho-editor name="modalEditor" uuid="sharable_person" class=" form-horizontal well" novalidate></form>';
 
         var dialog_opts = {
             backdrop: true,
@@ -144,7 +142,7 @@ dynamicCtrl.resolve = function(Clotho, $q, $timeout) {
     var deferred = $q.defer();
 
     $q.all([
-        resolved.model = Clotho.get('inst_first'),
+        resolved.model = Clotho.get('sharable_person'),
         resolved.template_url = Clotho.get_url('show_template.html')
 
         //testing
