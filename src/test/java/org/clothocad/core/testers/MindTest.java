@@ -1,6 +1,7 @@
 package org.clothocad.core.testers;
 
 import com.google.inject.Injector;
+import javax.script.ScriptException;
 import org.clothocad.core.layers.communication.ScriptAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class MindTest {
     }*/
     
     @Test
-    public void testScript() {
+    public void testScript() throws ScriptException {
         TestConnection connection = new TestConnection("testScriptGet");
         mind.setConnection(connection);
         Injector injector = TestUtils.getDefaultTestInjector();
@@ -47,19 +48,19 @@ public class MindTest {
                         "if(result.name != \"UCM\") {\n" +
                         "    throw \"wrong name: \" + result.name;\n" +
                         "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, "")));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
         script = "result = clotho.get('UCM');\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, "")));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
         script = "wrapper = [];\n" +
                  "wrapper[0] = newobjid;\n" +
                  "result = clotho.get(wrapper);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, "")));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
         
         script = "var listy = clotho.query({\"city\" : \"Baltizam\"});\n" +
                  "if (listy.length != 1) {\n" +
@@ -69,7 +70,7 @@ public class MindTest {
                  "if(existing.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + existing.name;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, "")));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
         
         script = "var args = {};\n" +
                  "args.id = newobjid;\n" +
@@ -78,7 +79,7 @@ public class MindTest {
                  "if(result.city != \"Paris\") {\n" +
                  "    throw \"wrong city: \" + result.city;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, ""))); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
         
         script = "existing.name = \"Shamoo University\"; \n" +
                  "existing.city = \"Whaletown\"; \n" +
@@ -90,19 +91,19 @@ public class MindTest {
                  "if(result.state != \"NR\") {\n" +
                  "    throw \"wrong state: \" + result.state;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, ""))); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
         
         script = "var finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=1) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, ""))); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
         
         script = "clotho.destroy(newobjid);\n" +
                  "finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=0) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        assertTrue(mind.runCommand(script, new ScriptAPI(mind, persistor, ""))); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
     }
 }

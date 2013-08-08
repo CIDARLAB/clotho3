@@ -50,7 +50,9 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
              FUNCTION
              ******/
 
-            $scope.langTypes = ['JavaScript', 'Python', 'Java'];
+            $scope.langTypes = [{name:'JavaScript', value:'JAVASCRIPT'}, 
+                                {name:'Python', value:'PYTHON'},
+                                {name:'Java', value: 'JAVA' }];
 
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},

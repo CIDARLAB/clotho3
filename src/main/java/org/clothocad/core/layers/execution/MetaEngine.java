@@ -66,7 +66,7 @@ public class MetaEngine {
             ScriptEngine engine = getEngine(Language.JAVASCRIPT);
             engine.eval("var " + name+ " = " + code);
             Invocable invocable = (Invocable) engine;
-            return invocable.invokeFunction(name, args);
+            return invocable.invokeFunction(name, args.toArray());
         } catch (NoSuchMethodException ex) {
             throw new ScriptException(ex);
         }

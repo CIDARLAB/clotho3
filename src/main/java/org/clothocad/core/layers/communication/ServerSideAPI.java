@@ -486,6 +486,7 @@ public class ServerSideAPI {
 // </editor-fold> 
 
 // <editor-fold defaultstate="collapsed" desc="Execution"> 
+    //TODO: needs serious cleaning up
     public final Object run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<String, Object> data = JSON.mappify(o);
         List<Object> args = (List) data.get("args");
@@ -493,7 +494,7 @@ public class ServerSideAPI {
         for (int i = 0; i< args.size(); i++){
             try {
                 ObjectId id = new ObjectId(args.get(i).toString());
-                args.set(i, id);
+                args.set(i, persistor.get(ObjBase.class, id));
             } catch (IllegalArgumentException e){
                 
             }
@@ -502,7 +503,7 @@ public class ServerSideAPI {
         
         if (data.containsKey("id")){
             //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id").toString()));
+            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")){
                 try {
                     return mind.evalFunction(functionData.get("code").toString(), "f"+functionData.get("id").toString(), args, new ScriptAPI(mind,persistor,requestId));
@@ -542,7 +543,7 @@ public class ServerSideAPI {
                 ? JSON.mappify(data.get("arguments"))
                 : null;
         Object result = run(function, arguments);
-        if (!result.equals(Function.NoResult.class)) {
+        if (!result.equals(Void.TYPE)) {
             //TODO: Map<String, Object> reply - we need to have a way to designate which request we are responding to
             Message message = new Message(Channel.run, result, requestId);
             send(message);

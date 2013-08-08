@@ -4,10 +4,13 @@
  */
 package org.clothocad.core.layers.communication;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.script.ScriptException;
 import org.bson.types.ObjectId;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
@@ -52,6 +55,17 @@ public class ScriptAPI {
     
     public void destroy(ObjectId id){
         api.destroy(id);
+    }
+    
+    public Object run(Object selector, Object arg) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+        return run(selector, Arrays.asList(arg));
+    }
+    
+    public Object run(Object selector, List<Object> args) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", selector);
+        data.put("args", args);
+        return api.run(data);
     }
  
     //XXX: augh, would be best if we had scriptengines that could treat maps as native objects

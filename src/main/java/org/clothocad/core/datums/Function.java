@@ -20,16 +20,14 @@ import org.clothocad.model.Person;
 //java object for first-class functions?
 //declaration of requrirements?
 public class Function extends ObjBase {
-    public static final class NoResult{};
     
     public Function(){};
     
-    public Function(String name, String[] argNames, Class[] input, Class output, String source, Language language){
-        this.inputTypes = input;
+    public Function(String name, Argument[] arguments, Class output, String source, Language language){
         this.outputType = output;
         this.setName(name);
         //this.action = new ScriptEngineScript(name, source, language);
-        this.argNames = argNames;
+        this.arguments = arguments;
     }
     
     @Getter
@@ -40,13 +38,12 @@ public class Function extends ObjBase {
     private Person author;
     private String description;
     
-    @Getter
-    private String[] argNames;
+    @Getter 
+    private Argument[] arguments;
     
-    private String[] dependencies;
+    @Reference
+    private Function[] dependencies;
     
-    @Getter
-    private Class[] inputTypes;
     //XXX: losing some duck-typing style flexibility
     private Class outputType;
     //XXX: if single return type, could make things more typesafe java-side
@@ -60,8 +57,8 @@ public class Function extends ObjBase {
     public boolean canDooIt(Object... args){
         //args match input types
         try {
-            for (int i = 0; i<inputTypes.length; i++){
-                if (!inputTypes[i].isInstance(args[i])) return false;
+            for (int i = 0; i<arguments.length; i++){
+                if (!arguments[i].getType().isInstance(args[i])) return false;
                 //XXX: throw type exception
              }
         } catch (IndexOutOfBoundsException e){

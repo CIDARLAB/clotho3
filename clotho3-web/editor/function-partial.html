@@ -19,7 +19,7 @@
         <div class="control-group">
             <label class="control-label" for="functionLang">Language</label>
             <div class="controls">
-                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang for lang in langTypes"></select>
+                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes"></select>
             </div>
         </div>
 
@@ -27,7 +27,7 @@
         <div class="control-group">
             <label class="control-label">Arguments</label>
             <div class="controls">
-                <div ng-repeat="param in editable.params" class="pull-left">
+                <div ng-repeat="param in editable.arguments" class="pull-left">
                     <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.type for c in paramTypes">
                     </select>
                     <!-- see http://jsfiddle.net/M32pj/1/ for another select directive-->
@@ -36,7 +36,7 @@
 
                     <div class="input-append">
                         <input type="text" ng-model="param.name" ng-disabled="!editMode">
-                        <button class="btn" ng-click="editable.params.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                        <button class="btn" ng-click="editable.arguments.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     </div>
 
                 </div>
@@ -54,7 +54,7 @@
         <div class="control-group">
             <label class="control-label">Test Arguments</label>
             <div class="controls">
-                <div ng-repeat="param in editable.params">
+                <div ng-repeat="param in editable.arguments">
                     <input type="text" ng-model="param.test.uuid" typeahead="opt for opt in queryWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="We should set this up to work with Clotho.query(), tied to the schema restriction as above" popover-title="Easy Testing - Arguments" popover-trigger="focus" ng-disabled="!editMode">
                 </div>
             </div>
