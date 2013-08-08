@@ -703,11 +703,20 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         return deferred.promise;
     };
 
+
+    fn.emitAndSubOnce = function(channel, query, id) {
+        var deferred = $q.defer();
+        if (id == null) id = Date.now().toString();
+        PubSub.once(channel+':'+id, function(data){
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+        fn.emit(channel, query, id);
+        return deferred.promise;
+    }
+
+
     var submit = function(query) {
-        var packaged = {
-            "query" : query
-        };
-        fn.searchbar.emit('submit', packaged);
+        return fn.emitAndSubOnce('submit', query);
     };
 
     /**

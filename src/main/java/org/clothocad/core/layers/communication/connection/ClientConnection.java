@@ -15,6 +15,7 @@ public abstract class ClientConnection {
         
         public abstract void send(Message msg);
 
+        //TODO (make abstract)
     public void deregister(Channel channel, String requestId) {
     }
 }

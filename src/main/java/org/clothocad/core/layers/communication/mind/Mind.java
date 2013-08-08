@@ -103,14 +103,8 @@ public final class Mind
 
     /* Similar to runCommand but does not "defuzzify".
      * Used for the "serverEval" channel. */
-    public synchronized boolean eval(String cmd, ScriptAPI api) {
-        try {
-            getEngine().eval(cmd, Language.JAVASCRIPT, api);    
-            return true;
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public synchronized Object eval(String cmd, ScriptAPI api) throws ScriptException {
+            return getEngine().eval(cmd, Language.JAVASCRIPT, api);    
     }
 
     /**
@@ -122,7 +116,7 @@ public final class Mind
      * @return 
      */
     /* TODO: race condition. ScriptEngine execution needs to be serialized. */
-    public synchronized boolean runCommand(String cmd, ScriptAPI api) {
+    public synchronized Object runCommand(String cmd, ScriptAPI api) throws ScriptException {
         return eval(cmd, api);
 //                runCommandWithNamespace(cmd);
     }

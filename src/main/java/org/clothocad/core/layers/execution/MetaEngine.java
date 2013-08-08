@@ -15,6 +15,7 @@ import javax.script.SimpleScriptContext;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.ScriptAPI;
 import static org.clothocad.core.layers.execution.JavaScriptScript.engine;
+import sun.org.mozilla.javascript.RhinoException;
 
 /**
  *
@@ -30,8 +31,14 @@ public class MetaEngine {
         ScriptEngine engine = getEngine(language);
         
         injectAPI(api, context);
-        
-        return engine.eval(script, context);
+        try{
+            return engine.eval(script, context);          
+        }
+        //XXX: ew, referring to a concrete engine implementation!
+        catch (RhinoException e){
+            //is this terrible?
+            throw new ScriptException(e);
+        }
     }
 
     private ScriptContext getContext(Language language) {
@@ -53,6 +60,7 @@ public class MetaEngine {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    //XXX: de-js-ify this!
     public Object invoke(String code, String name, List args) throws ScriptException {
         try {
             ScriptEngine engine = getEngine(Language.JAVASCRIPT);

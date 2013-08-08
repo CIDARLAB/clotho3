@@ -108,18 +108,19 @@ public class ServerSideAPI {
     }
 
     //JCA:  as 0f 6/6/2013 submit seems to work
-    public final void submit(String command) {
+    public final Object submit(String command) {
         //Resolve the arguments to a command string
-
-        say(command, Severity.MUTED, null, true);
-
-        if (!mind.runCommand(command, new ScriptAPI(mind, persistor, requestId))) {
+        //say(command, Severity.MUTED, null, true);
+        try{
+            Object returnValue = mind.runCommand(command, new ScriptAPI(mind, persistor, requestId));
+            //If the command successfully executed, it gets retained
+            mind.addLastCommand(Channel.submit, command);
+            return returnValue;
+        } catch (ScriptException ex) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up
-            return;
+            logAndSayError("Error while executing script", ex);
+            return Void.TYPE;
         }
-
-        //If the command successfully executed, it gets retained
-        mind.addLastCommand(Channel.submit, command);
     }
 
     public final void learn(Object data) {
