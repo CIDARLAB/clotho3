@@ -168,6 +168,42 @@ public class RouterTest {
         }
     }
     
+        @Test
+    public void testConstructFunction() {
+        String script = 
+                  "var data = {};\n"
+                + "data.name = \"reverse\";\n"
+                + "data.language = \"JAVASCRIPT\";\n"
+                + "data.schema = \"JavaScriptFunction\";\n"
+                + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
+                + "data.arguments = [{name:'sequence', type:'String'}];\n"
+                + "\n"
+                + "clotho.create(data);\n"
+                + "\n"
+                + "clotho.run(\"reverse\", [\"AAACCC\"]);";
+        TestConnection connection = new TestConnection("constructFunction");
+        
+        sendMessage(new Message(Channel.submit, script, "6"), connection);
+        
+        assertEquals("CCCAAA", connection.messages.get(1).data);
+        
+    }
+
+    //TODO:
+    public void testConstructFunctionStreamlined() {
+        String script = 
+                  "var reverse = function(sequence) {\n"
+                + "	return sequence.split('').reverse().join('');\n"
+                + "};\n"
+                + "\n"
+                + "clotho.save(reverse);\n"
+                + "\n"
+                + "reverse(\"AAACCC\");";
+    }
+    
+    
+    
+    
     private void sendMessage(Message message, ClientConnection connection) {
         String stringMessage = JSON.serialize(message);
         try {
