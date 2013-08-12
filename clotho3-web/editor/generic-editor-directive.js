@@ -51,10 +51,10 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
              ******/
 
             $scope.langTypes = [
-                {name:'JavaScript', type:'JAVASCRIPT'},
-                {name:'Java', type:'JAVA'},
-                {name:'Python', type:'PYTHON'},
-                {name:'Groovy', type:'GROOVY'}
+                {name:'JavaScript', value:'JAVASCRIPT'},
+                {name:'Java', value:'JAVA'},
+                {name:'Python', value:'PYTHON'},
+                {name:'Groovy', value:'GROOVY'}
             ];
 
 
@@ -71,13 +71,14 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 {name:'Integer', type:'Type'},
                 {name:'Boolean', type:'Type'}
             ];
-
             Clotho.query({schema:"Schema"}).then(function(data){
                 angular.forEach(data, function(schema){
                     $scope.paramTypes.push({name:schema.name, type:'Schema'});
                 });
             });
-                
+
+
+
             $scope.addArg = function() {
                 if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
                 $scope.editable.args.push({"type" : "", "name" : "", "test" : {"uuid" : ""}});
@@ -89,15 +90,21 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             };
 
             $scope.testFunction = function() {
+
                 var data = {};
                 data.id = $scope.editable.id;
-                data.args = []; //TODO
+                if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
+                data.args = $scope.editable.args.map(function (param){
+                    return param.test.uuid ? param.test.uuid : param.test.value;
+                });
+
                 Clotho.run(data.id, data.args).then(function (result){
-                    if (result == angular.fromJson($scope.editable.testResult)) {
+                   Clotho.say(result);
+                   /* if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
                     } else {
                         ClientAPI.say({text:"test failed!"});
-                    }
+                    }*/
                 });
             };
 
