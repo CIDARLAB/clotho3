@@ -50,27 +50,44 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
              FUNCTION
              ******/
 
-            $scope.langTypes = ['javascript', 'python', 'java'];
+            $scope.langTypes = [
+                {name:'JavaScript', type:'JAVASCRIPT'},
+                {name:'Java', type:'JAVA'},
+                {name:'Python', type:'PYTHON'},
+                {name:'Groovy', type:'GROOVY'}
+            ];
+
+
+            $scope.simpleTypes = {
+                "Object" : true,
+                "String" : true,
+                "Integer" : true,
+                "Boolean" : true
+            };
 
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},
                 {name:'String', type:'Type'},
                 {name:'Integer', type:'Type'},
+                {name:'Boolean', type:'Type'},
                 {name:'Sequence', type:'Schema'},
                 {name:'Person', type:'Schema'},
                 {name:'Institution', type:'Schema'}
             ];
 
-            function emptyParam() {return {"type" : "", "name" : "", "test" : {"uuid" : ""}}}
+            $scope.addArg = function() {
+                if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
+                $scope.editable.args.push({"type" : "", "name" : "", "test" : {"uuid" : ""}});
+            };
 
-            $scope.addParam = function() {
-                if (angular.isEmpty($scope.editable.params)) {$scope.editable.params = [];}
-                $scope.editable.params.push(emptyParam());
+            $scope.addDep = function() {
+                if (angular.isEmpty($scope.editable.dependencies)) {$scope.editable.dependencies = [];}
+                $scope.editable.dependencies.push({"id" : "", "name" : ""});
             };
 
             $scope.testFunction = function() {
                 //todo
-                $scope.editable.testResult = Clotho.run($scope.editable);
+                $scope.editable.value = Clotho.run($scope.editable);
             };
 
             $scope.queryWrapper = function(schemaType) {
@@ -190,11 +207,16 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
 
+                    //verify works
+                    //iAttrs.$set('novalidate', true);
+
                     //note - separation at this point into pre is not important as nothing is linked to form
                     scope.compileEditor();
 
                 },
                 post: function postLink(scope, iElement, iAttrs, controller) {
+
+                    scope.form = $parse(iAttrs.name)(scope);
 
                     scope.$watch('uuid', function(newval, oldval) {
                         if (!!newval && newval != oldval) {
