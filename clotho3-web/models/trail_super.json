@@ -24,19 +24,19 @@
                     "paver_title" : "2 - Mixin Ctrl",
                     "type" : "template",
                     "template" : "/partials/trails/trail_super/revcomp2.html",
-                    "dependencies" : "/partials/trails/trail_super/revcomp-ctrl.js"
+                    "mixin" : "/partials/trails/trail_super/revcomp-ctrl.js"
                 },
                 {
                     "paver_title" : "3 - Mixin Several",
                     "type" : "template",
                     "template" : "/partials/trails/trail_super/revcomp3.html",
-                    "dependencies" : ["/partials/trails/trail_super/revcomp-ctrl.js", "/partials/trails/trail_super/revcomp-dir.js", "/partials/trails/trail_super/revcomp-filter.js"]
+                    "mixin" : ["/partials/trails/trail_super/revcomp-ctrl.js", "/partials/trails/trail_super/revcomp-dir.js", "/partials/trails/trail_super/revcomp-filter.js"]
                 },
                 {
                     "paver_title" : "4 - Transclude",
                     "type" : "template",
                     "template" : "/partials/trails/trail_super/revcomp4.html",
-                    "dependencies" : "/extensions/revcomp.js",
+                    "mixin" : "/extensions/revcomp.js",
                     "script" : ["/partials/simple-executable.js", "/partials/simple-executable2.js"]
                 },
                 {
@@ -54,7 +54,7 @@
                     "paver_title" : "6 - Bootstrap w/ Dep",
                     "type" : "template",
                     "template" : "/partials/trails/trail_super/revcomp6.html",
-                    "dependencies" : "/partials/trails/trail_super/revcomp-filter2.js",
+                    "mixin" : "/partials/trails/trail_super/revcomp-filter2.js",
                     "script" : "/partials/trails/trail_super/revcomp5.js"
                 },
                 {
@@ -66,7 +66,7 @@
                     "paver_title" : "7 - jQuery Mixin",
                     "type" : "template",
                     "template" : "/partials/trails/trail_super/revcomp7.html",
-                    "dependencies" : "/lib/typeahead.js",
+                    "mixin" : "/lib/typeahead.js",
                     "onload" : "/partials/trails/trail_super/revcomp-jquery.js"
                 },
                 {
