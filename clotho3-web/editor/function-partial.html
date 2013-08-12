@@ -18,7 +18,7 @@
         <div class="control-group">
             <label class="control-label" for="functionLang">Language</label>
             <div class="controls">
-                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.type as lang.name for lang in langTypes" required></select>
+                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
             </div>
         </div>
 
@@ -97,7 +97,7 @@
                 <select ng-model="editable.output.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.type for c in paramTypes">
                 </select>
                 <input type="text" id="functionTestResult" ng-model="editable.output.expect" ng-disabled="!editMode">
-                <button class="btn" ng-click="testFunction()" ng-disabled="!editMode || form.$invalid">Test</button>
+                <button class="btn" ng-click="testFunction()" ng-disabled="form.$invalid">Test</button>
             </div>
         </div>
 
