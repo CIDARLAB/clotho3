@@ -99,7 +99,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 });
 
                 Clotho.run(data.id, data.args).then(function (result){
-                   Clotho.say(result);
+                   Clotho.say({text: result});
                    /* if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
                     } else {
@@ -184,6 +184,9 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                         $scope.type = 'sharable';
                     }
 
+
+                    if (angular.lowercase(result.schema).indexOf('function', ((result.schema).length - 8)) !== -1)
+                        $scope.type = 'function';
 
                     switch (angular.lowercase($scope.type)) {
                         case 'sharable' : {
