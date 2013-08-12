@@ -1,23 +1,30 @@
 {
     "name" : "First Function",
     "type" : "function",
-    "uuid" : "1881-x9-1-333xcc2",
-    "code" : "some code",
-    "language" : "javascript",
-    "params" : [
+    "id" : "507f191e810c19729de860ea",
+    "code" : "function reverse(string) { return string.split('').reverse().join('') }",
+    "language" : "JAVASCRIPT",
+    "description" : "This function should reverse a string",
+    "precondition" : "",
+    "dependencies" : [
+        {
+            "id" : "128719827591295",
+            "name" : "Example Function"
+        }
+    ],
+    "args" : [
         {
             "type" : "String",
-            "name" : "Simple String",
+            "name" : "Reversable",
             "test" : {
+                "value" : "Reverse Me!",
                 "uuid" : "",
                 "options" : ["usdf-2323-g2", "asdf-2-23g2-3", "sdf0s2-232-4ff","138tr-c-1c3-111"]
             }
-        },
-        {
-            "type" : "Person",
-            "name" : "Owner",
-            "test" : {"uuid" : "567-x131c-1355"}
         }
     ],
-    "testResult" : "Expected Result"
+    "output" : {
+        "type" : "String",
+        "expect" : "!eM esreveR"
+    }
 }

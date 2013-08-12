@@ -3,7 +3,7 @@
 //todo - integrate ngFormController --- nested ngForms so validation works
 // then in template: ng-class="{error: myForm.name.$invalid}"
 
-Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', 'ClientAPI', function(Clotho, $compile, $parse, $http, $templateCache, ClientAPI) {
+Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', '$filter', function(Clotho, $compile, $parse, $http, $templateCache, $filter) {
 
     return {
         restrict: 'A',
@@ -50,14 +50,26 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
              FUNCTION
              ******/
 
-            $scope.langTypes = [{name:'JavaScript', value:'JAVASCRIPT'}, 
-                                {name:'Python', value:'PYTHON'},
-                                {name:'Java', value: 'JAVA' }];
+            $scope.langTypes = [
+                {name:'JavaScript', type:'JAVASCRIPT'},
+                {name:'Java', type:'JAVA'},
+                {name:'Python', type:'PYTHON'},
+                {name:'Groovy', type:'GROOVY'}
+            ];
+
+
+            $scope.simpleTypes = {
+                "Object" : true,
+                "String" : true,
+                "Integer" : true,
+                "Boolean" : true
+            };
 
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},
                 {name:'String', type:'Type'},
                 {name:'Integer', type:'Type'},
+                {name:'Boolean', type:'Type'}
             ];
 
             Clotho.query({schema:"Schema"}).then(function(data){
@@ -66,21 +78,20 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 });
             });
                 
+            $scope.addArg = function() {
+                if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
+                $scope.editable.args.push({"type" : "", "name" : "", "test" : {"uuid" : ""}});
+            };
 
-            function emptyParam() {return {"type" : "", "name" : "", "test" : {"uuid" : ""}}}
-
-            $scope.addParam = function() {
-                if (angular.isEmpty($scope.editable.params)) {$scope.editable.params = [];}
-                $scope.editable.params.push(emptyParam());
+            $scope.addDep = function() {
+                if (angular.isEmpty($scope.editable.dependencies)) {$scope.editable.dependencies = [];}
+                $scope.editable.dependencies.push({"id" : "", "name" : ""});
             };
 
             $scope.testFunction = function() {
                 var data = {};
                 data.id = $scope.editable.id;
-                if (angular.isEmpty($scope.editable.params)) {$scope.editable.params = [];}
-                data.args = $scope.editable.params.map(function (param){
-                    return param.test.uuid;
-                });
+                data.args = []; //TODO
                 Clotho.run(data.id, data.args).then(function (result){
                     if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
@@ -219,11 +230,16 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
 
+                    //verify works
+                    //iAttrs.$set('novalidate', true);
+
                     //note - separation at this point into pre is not important as nothing is linked to form
                     scope.compileEditor();
 
                 },
                 post: function postLink(scope, iElement, iAttrs, controller) {
+
+                    scope.form = $parse(iAttrs.name)(scope);
 
                     scope.$watch('uuid', function(newval, oldval) {
                         if (!!newval && newval != oldval) {

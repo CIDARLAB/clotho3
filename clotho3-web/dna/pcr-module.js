@@ -56,6 +56,61 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      PCR algorithms
      ****************/
 
+
+    /** verification **/
+    /*
+     multiple matches:
+        - will work, multiple (unexpected?) products
+     one match each: {p1_fwd,  p1_rev, p1_absent} x {p2_fwd,  p2_rev, p2_absent}
+        - 3 cases (fails): 1 or both absent
+        - 2 cases (fails): same direction
+        - 2 cases: point toward each other
+            p1 = fwd, p2 = rev (fwd < rev)  or p1 = rev, p2 = fwd (fwd < rev)
+        - 2 cases: point away from each other
+            same as above but (fwd > rev)
+     special cases: ?
+     */
+    /**
+     * @description Determines if primers will anneal and only once (Simple PCR)
+     * @param sequence
+     * @param primer1
+     * @param primer2
+     * @returns {string|boolean} true if no error, otherwise string with error
+     */
+    var verifyPrimers = function verifyPrimers(sequence, primer1, primer2) {
+
+        var p1 = primerPos(sequence, primer1),
+            p2 = primerPos(sequence, primer2);
+
+        /** check zero matches **/
+
+        if (p1.forward.length + p1.reverse.length < 1) {
+            return "primer1 : no matches"
+        }
+        if (p2.forward.length + p2.reverse.length < 1) {
+            return "primer2 : no matches"
+        }
+
+        /** check multiple matches **/
+
+        if (p1.forward.length + p1.reverse.length > 1) {
+            return "primer1 : multiple matches"
+        }
+        if (p2.forward.length + p2.reverse.length > 1) {
+            return "primer2 : multiple matches"
+        }
+
+        /** check directions */
+
+        if ((p1.forward.length && p2.forward.length) || (p1.reverse.length && p2.reverse.length))
+            return "primers point same direction";
+
+        return true;
+
+    };
+
+
+
     // see https://www.ncbi.nlm.nih.gov/tools/epcr/
 
     //wrapper function, currently only handles PCR and EIPCR
@@ -117,60 +172,6 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         }
     };
 
-
-    /** verification **/
-    /*
-    multiple matches:
-        - will work, multiple (unexpected?) products
-    one match each: {p1_fwd,  p1_rev, p1_absent} x {p2_fwd,  p2_rev, p2_absent}
-        - 3 cases (fails): 1 or both absent
-        - 2 cases (fails): same direction
-        - 2 cases: point toward each other
-            p1 = fwd, p2 = rev (fwd < rev)  or p1 = rev, p2 = fwd (fwd < rev)
-        - 2 cases: point away from each other
-            same as above but (fwd > rev)
-    special case: ?
-     */
-
-
-    /**
-     * @description Determines if primers will anneal and only once (Simple PCR)
-     * @param sequence
-     * @param primer1
-     * @param primer2
-     * @returns {string|boolean} true if no error, otherwise string with error
-     */
-    var verifyPrimers = function verifyPrimers(sequence, primer1, primer2) {
-
-        var p1 = primerPos(sequence, primer1),
-            p2 = primerPos(sequence, primer2);
-
-        /** check zero matches **/
-
-        if (p1.forward.length + p1.reverse.length < 1) {
-            return "primer1 : no matches"
-        }
-        if (p2.forward.length + p2.reverse.length < 1) {
-            return "primer2 : no matches"
-        }
-
-        /** check multiple matches **/
-
-        if (p1.forward.length + p1.reverse.length > 1) {
-            return "primer1 : multiple matches"
-        }
-        if (p2.forward.length + p2.reverse.length > 1) {
-            return "primer2 : multiple matches"
-        }
-
-        /** check directions */
-
-        if ((p1.forward.length && p2.forward.length) || (p1.reverse.length && p2.reverse.length))
-            return "primers point same direction";
-
-        return true;
-
-    };
 
 
     /** extension **/
@@ -236,9 +237,10 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
             var ends = Digest.getStickyEnds();
 
-            fragPairs.push({
-                fragment : frag, stickyEnds : ends})
-        })
+            fragPairs.push( {fragment : frag, stickyEnds : ends} )
+        });
+
+        //todo
 
     };
 

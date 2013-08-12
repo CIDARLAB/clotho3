@@ -1,11 +1,15 @@
 {
-    "name" : "Second Function",
+    "name" : "First Function",
     "type" : "function",
-    "uuid" : "131512512-5125",
-    "code" : "different code",
-    "language" : "python",
-    "params" : [
-        {"type" : "Person", "name" : "A Person", "test" : {"uuid" : "1380132-1-13"}}
-    ],
-    "testResult" : "Expected Result"
+    "id" : "507f191e810c19729de861bc",
+    "code" : "function demo() { return true }",
+    "language" : "PYTHON",
+    "description" : "Another Demo function",
+    "precondition" : "function() { return true }",
+    "dependencies" : [],
+    "args" : [],
+    "output" : {
+        "type" : "Boolean",
+        "expect" : "true"
+    }
 }
