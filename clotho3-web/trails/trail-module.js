@@ -1,5 +1,61 @@
 'use strict';
 
+//note - requires youtube iFrame API be present
+Application.Trails.directive('youtube', [function() {
+
+    return {
+        restrict : 'EA',
+        replace: true,
+        scope: {
+            videoId : '@youtube',
+            params : '=?',
+            onComplete : '&?'
+        },
+        //template: '<iframe width="{{ params.width }}" height="{{ params.height }}" ng-src="https://www.youtube.com/embed/{{ params.videoId }}?enablejsapi=1&modestbranding=1&rel=0&version=3&playerapiid=trailPlayer&autoplay={{ params.autoplay }}&autohide={{ params.autohide }}&start={{ params.start }}&end={{ params.end }}" frameborder="0" allowfullscreen="1"></iframe>',
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs) {
+
+                },
+                post: function postLink(scope, element, attrs) {
+
+                    if (!scope.videoId) return;
+
+                    //todo - center if width < 700
+
+                    //defaults
+                    var defaults = {
+                        width : 700,
+                        height : 395,
+                        videoId : scope.videoId,
+                        playerVars : {
+                            autoplay : 1,
+                            autohide : 1,
+                            rel : 0
+                        },
+                        events : {}
+                    };
+                    scope.params = angular.extend(defaults, scope.params);
+
+                    //todo - add more hooks
+
+                    //todo - avoid overwriting onComplete() if pass in onStateChange()
+                    scope.params.events.onStateChange = function (event) {
+                        if (event.data == 0) {
+                            console.log('ended');
+                            scope.onComplete();
+                        }
+                    };
+
+
+                    var player = new YT.Player(element[0], scope.params);
+                    //console.log(player, player.getIframe());
+                }
+            }
+        }
+    }
+}]);
+
 Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho, $q, $dialog) {
 
     /**
@@ -104,8 +160,8 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
 
     var compile = function (trail) {
 
-        //need to copy, or compiling will alter the file in the collector (because pass reference)
-        trail = angular.copy(trail);
+        //If pass by reference (depending on Clotho.get() ) need to copy to don't edit in dependencies
+        //trail = angular.copy(trail);
 
         var transcludes = trail.dependencies || null,
             deferred = $q.defer();
@@ -202,6 +258,19 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
     $scope.loadVideo = function (url) {
 
+        //note - need outer parent div to compile properly
+        var videoId = Trails.extract_youtube(url),
+            template = '<div><div youtube="' + videoId + '" params="" on-complete="next()"></div></div>';
+
+        //todo - write to avoid timeout? video doesn't update on next() otherwise
+        $timeout(function() {
+            $scope.content = $compile(template)($scope);
+        });
+
+
+        /*
+        //OLD DEPRECATED WAY
+
         var params = {
             "divId" : "ytplayer",
             "height" : 525,
@@ -224,9 +293,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                     }
                 })
             }
-
-            //todo - add events for those passed in params
-        });
+        });*/
     };
 
     $scope.loadTemplate = function (url) {
@@ -290,7 +357,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                 }
             }
 
-            if (paver.onload)
+            if (!!paver.onload)
                 Application.script(paver.onload);
         }
 
@@ -302,8 +369,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             Application.css(paver.css);
         }
 
-        if (!!paver.dependencies || !!paver.script) {
-            Application.mixin(paver.dependencies).then(function() {
+        if (!!paver.mixin || !!paver.script) {
+            Application.mixin(paver.mixin).then(function() {
                 console.log('4 - mixin loaded');
                 Application.script(paver.script).then(function() {
                     console.log('5 - script loaded');
@@ -344,6 +411,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             $scope.current = undefined;
             return;
         }
+
+        console.log('next is: ' + newpos);
 
         $scope.activate(newpos);
     };

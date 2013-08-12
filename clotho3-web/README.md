@@ -94,32 +94,53 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - popover with HTML
 
 
-- Trails
-    - get bootstrapping to work
-    - implement quizzes with sortable
-
-
 - $clotho.api
     - ensure only instantiated once
 
 
+- Trails
+    - icons other paver types
+    - add schema field to trails, rename by id, add to demo folder
+    - exercise template (into, video if want, question)
+    - prettyprint directive
+    - implement quizzes with sortable
+    - bootstrapping??
+
+
 - editor
-    - popup to display UUID in test arguments
+    - use "ID" not "UUID"
+    - add description and dependencies fields
+        - dependencies should query other functions
+    - map BSON -> HTML5 data types
+    - create button
+        - typeahead searches schemas
+            - {"schema": "Schema", "name" : $viewValue}
+        - list some, and create button (which returns and sets controller id accordingly)
+    - query for test args
+        - show name, not uuid
+        - Popver with whole JSON shown
     - use form controller for validation
         - currently requires nested forms: https://github.com/angular/angular.js/issues/1404
-    - add novalidate via directive
     - new fields
         - multiple select
         - select
         - radios
         - file drops?
-    - custom validation using ngForm or ngModel.$setValidity
+    - add novalidate via directive
+        - need to test novalidate="true"
+        - custom validation using ngForm or ngModel.$setValidity
 
     - function editor
         - integrate codemirror, tie to language selection
 
     - schema editor -- wait on stephanie
 
+
+
+- directive wrapper that expects response from clotho server
+
+
+- $http for data like menu_items, not Clotho.get()
 
 
 - UI Directives
