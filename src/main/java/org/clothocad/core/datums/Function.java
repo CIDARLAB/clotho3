@@ -5,6 +5,7 @@
 package org.clothocad.core.datums;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
+import java.util.List;
 import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class Function extends ObjBase {
         this.outputType = output;
         this.setName(name);
         //this.action = new ScriptEngineScript(name, source, language);
-        this.arguments = arguments;
+        this.args = arguments;
     }
     
     @Getter
@@ -39,7 +40,10 @@ public class Function extends ObjBase {
     private String description;
     
     @Getter 
-    private Argument[] arguments;
+    private Argument[] args;
+    
+    @Getter 
+    private FunctionTest[] tests;
     
     @Reference
     private Function[] dependencies;
@@ -57,8 +61,8 @@ public class Function extends ObjBase {
     public boolean canDooIt(Object... args){
         //args match input types
         try {
-            for (int i = 0; i<arguments.length; i++){
-                if (!arguments[i].getType().isInstance(args[i])) return false;
+            for (int i = 0; i<this.args.length; i++){
+                if (!this.args[i].getType().isInstance(args[i])) return false;
                 //XXX: throw type exception
              }
         } catch (IndexOutOfBoundsException e){
@@ -81,4 +85,18 @@ public class Function extends ObjBase {
         }
         return null;
     }
+
+    public static class FunctionTest {
+        private  List<Object> args;
+        private  Object value;
+
+        public FunctionTest(List<Object> argValues, Object expectedResult) {
+            this.args = argValues; 
+            this.value = expectedResult;
+        }
+        
+        public FunctionTest(){};
+    }
+    
+    
 }
