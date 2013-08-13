@@ -1,5 +1,5 @@
 {
-    "uuid" : "trail_super",
+    "id" : "trail_super",
     "schema" : "Trail",
     "dependencies" : ["trail_140l", "trail_123"],
     "title" : "Combined Trail",
@@ -80,14 +80,14 @@
         {
             "module_title" : "Full Transclude",
             "transclude" : {
-                "uuid" : "trail_140l",
+                "id" : "trail_140l",
                 "modules" : "all"
             }
         },
         {
             "module_title" : "Partial Transclude",
             "transclude" : {
-                "uuid" : "trail_123",
+                "id" : "trail_123",
                 "modules" : "0-1"
             }
         }

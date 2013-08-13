@@ -1,7 +1,7 @@
 {
     "id" : "sharable_person",
     "type" : "sharable",
-    "schema_id" : "schema_person",
+    "schema" : "schema_person",
     "displayName" : "A Person",
     "password" : "SecretWords",
     "email" : "example@blah.com",

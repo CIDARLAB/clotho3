@@ -173,18 +173,19 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     $scope.editable = result;
                     $scope.type = result.type;
 
-                    if (angular.lowercase(result.schema).indexOf('function', ((result.schema).length - 8)) !== -1)
+                    if (angular.lowercase(result.schema).indexOf('function', ((result.schema).length - 8)) !== -1) {
                         $scope.type = 'function';
+                    }
 
                     switch (angular.lowercase($scope.type)) {
                         case 'sharable' : {
 
-                            $scope.schemaName = result.schema_id;
+                            $scope.schemaName = result.schema;
 
                             $http.get('/editor/sharable-partial.html', {cache: $templateCache})
                                 .then(function(result) {
                                     var el = $compile(result.data)($scope);
-                                    $element.append(el);
+                                    $element.html(el);
                                 })
                                 .then(function() {
                                     Clotho.get($scope.schemaName).then(function(result) {

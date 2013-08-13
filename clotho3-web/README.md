@@ -53,6 +53,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- once stephanie merges
+- src/test/resources/max ---> add --> demo.json (functions, jsons, trails, etc. to load at start)
+- add trail to same folder (add schema "Trail" and approrpriate ID)
+
+
 - tie github pulls to original repositories and keep in sync
 
 
@@ -91,7 +96,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - other pcr types
 
 
-- popover with HTML
+- popover with HTML (see angularStrap, or wait for bootstrap UI)
 
 
 - $clotho.api
@@ -100,7 +105,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - Trails
     - icons other paver types
-    - add schema field to trails, rename by id, add to demo folder
     - exercise template (into, video if want, question)
     - prettyprint directive
     - implement quizzes with sortable

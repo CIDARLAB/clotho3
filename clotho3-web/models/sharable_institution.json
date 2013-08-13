@@ -1,7 +1,7 @@
 {
     "id" : "sharable_institution",
     "type" : "sharable",
-    "schema_id" : "schema_institution",
+    "schema" : "schema_institution",
     "displayName" : "Some Institution",
     "city" : "Internet",
     "state" : "CA",
