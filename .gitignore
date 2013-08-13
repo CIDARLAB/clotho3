@@ -6,3 +6,5 @@ bin
 .settings
 data/
 /nbactions.xml
+
+clotho3-web/.idea/*
