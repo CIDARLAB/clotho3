@@ -94,7 +94,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     var get = function clothoAPI_get(uuid, synchronous) {
 
         //default to false (return promise)
-        synchronous = typeof synchronous != 'undefined' ? synchronous : false;
+        synchronous = typeof synchronous != 'undefined' ? !!synchronous : false;
 
         var deferred = $q.defer();
 
@@ -123,7 +123,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
             if (!synchronous) {
                 return deferred.promise;
             } else {
-                //fixme - need to timeout or something for synchronous use -- look for $timeout.resolve solution
+                //fixme - need REST API for this to work, promises don't work like this
 
                 var value = {};
                 value.$then = deferred.promise.then(function (response) {

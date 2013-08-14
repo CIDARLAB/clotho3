@@ -1,7 +1,7 @@
 {
-    "uuid" : "trail_super",
+    "id" : "bb7f191e810c19729de860bb",
     "schema" : "Trail",
-    "dependencies" : ["trail_140l", "trail_123"],
+    "dependencies" : ["bb7f191e810c19729de860ab", "bb7f191e810c19729de860aa"],
     "title" : "Combined Trail",
     "author" : "Max Bates",
     "description" : "<blockquote><p>This module transcludes the 140L Combinatorial vdeos and a module from the Biosafety Trail. It also demos the ability to Mixin components, and bootstrap autonomous widgets.</p><p><small>Maxwell Bates</small></p></blockquote>",
@@ -80,14 +80,14 @@
         {
             "module_title" : "Full Transclude",
             "transclude" : {
-                "uuid" : "trail_140l",
+                "id" : "bb7f191e810c19729de860aa",
                 "modules" : "all"
             }
         },
         {
             "module_title" : "Partial Transclude",
             "transclude" : {
-                "uuid" : "trail_123",
+                "id" : "bb7f191e810c19729de860ab",
                 "modules" : "0-1"
             }
         }

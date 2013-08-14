@@ -59,8 +59,9 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
          ************/
 
         socket.on('message', function (obj) {
-
+            console.log(obj);
             obj = JSON.parse(obj);
+
             var channel = obj.channel;
             var requestId = obj.requestId;
             var data = obj.data;
@@ -115,6 +116,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             //send properly formatted string on channel message
             send: function(data) {
                 console.log("SOCKET\tsending data: " + data);
+                console.log(data);
                 socket.send(data);
             }
         }

@@ -24,10 +24,18 @@
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label" for="reverse">Reverse</label>
-                <div class="controls">
-                    <input type="text" id="reverse" placeholder="Reverse" ng-model="sequence" dna-reverse disabled>
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="reverse">Reverse</label>
+                    <div class="controls">
+                        <input type="text" id="reverse" placeholder="Reverse" ng-model="sequence" dna-reverse disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="clothorun">Clotho.run directive</label>
+                    <div class="controls">
+                        <input type="text" id="clothorun" placeholder="UPPERCASE" ng-model="sequence" clotho-run disabled>
+                    </div>
                 </div>
             </div>
 

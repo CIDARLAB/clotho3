@@ -653,6 +653,8 @@ Application.Interface.controller('DialogShareController', ['$scope', 'dialog', '
 /*****************
  text caret selection and movement
 
+ - see framework in references folder
+
  inspiration:
  - https://github.com/DrPheltRight/jquery-caret/blob/master/jquery.caret.js
  - http://plugins.jquery.com/caret/

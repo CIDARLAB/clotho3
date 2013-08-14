@@ -1,6 +1,7 @@
 {
     "name" : "First Function",
     "type" : "function",
+    "schema" : "JavaScriptFunction",
     "id" : "507f191e810c19729de860ea",
     "code" : "function reverse(string) { return string.split('').reverse().join('') }",
     "language" : "JAVASCRIPT",

@@ -3,13 +3,13 @@
     <h3>{{quiz.title}}</h3>
     <p>{{quiz.question}}</p>
 
-    <ol>
-        <li ng-repeat="choice in quiz.options" draggable="true">
-            <p><button class="btn">{{choice}}</button>
+    <ul jq-sortable ng-model="quiz.answer" class="unstyled">
+        <li ng-repeat="choice in quiz.options">
+            <a class="btn"><span class="badge">{{ $index + 1 }}</span>&nbsp;&nbsp;{{choice}}</a>
         </li>
-    </ol>
+    </ul>
 
-    <button class="btn btn-warning" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
+    <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
 
     <h3 ng-if="quiz.response" ng-class="{'text-success' : quiz.response.result, 'text-error' : !quiz.response.result}">{{quiz.response.result}}</h3>
 

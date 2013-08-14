@@ -175,17 +175,17 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
             promises = [];
 
         //get the transcluded trails... will be fast if in collector already
-        angular.forEach(transcludes, function(uuid) {
-            promises.push(Clotho.get(uuid));
+        angular.forEach(transcludes, function(id) {
+            promises.push(Clotho.get(id));
         });
 
         //after download all, pluck out the modules we need
         $q.all(promises).then(function (downloads) {
 
-            //reorganize transcludes so can reference by uuid
+            //reorganize transcludes so can reference by id
             transcludes = {};
             angular.forEach(downloads, function(transclude) {
-                transcludes[transclude.uuid] = transclude;
+                transcludes[transclude.id] = transclude;
             });
 
             //iterate through trail, pushing in modules
@@ -198,7 +198,7 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
                     final_contents.push(mod);
                 } else {
                     //modules to include :
-                    var modUUID = mod.transclude.uuid,
+                    var modUUID = mod.transclude.id,
                         modNum = mod.transclude.modules;
 
                     if ((modNum == "all") || (typeof modNum == 'undefined')) {
@@ -228,8 +228,8 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         return deferred.promise;
     };
 
-    var favorite = function(uuid) {
-        console.log("favorite trail with uuid: " + uuid);
+    var favorite = function(id) {
+        console.log("favorite trail with id: " + id);
     };
 
     return {
@@ -252,7 +252,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
 Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress) {
 
     //inherited from $routeProvider.resolve clause in application.js
-    $scope.uuid = $route.current.params.uuid;
+    $scope.id = $route.current.params.id;
     $scope.trail = $route.current.locals.trail;
     $scope.content = $scope.trail.description;
 
@@ -392,11 +392,11 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     $scope.favorite = function() {
         //todo - better checking, do initial check
         $scope.favorited = !$scope.favorited;
-        Trails.favorite($scope.uuid);
+        Trails.favorite($scope.id);
     };
 
     $scope.share = function() {
-        Trails.share($scope.uuid)
+        Trails.share($scope.id)
     };
 
     $scope.next = function() {

@@ -3,15 +3,15 @@
     <h3>{{quiz.title}}</h3>
     <p>{{quiz.question}}</p>
 
-    <ol class="span4">
-        <li ng-repeat="choice in quiz.options" draggable="true">
-            <p><button class="btn">{{choice}}</button>
+    <ul class="span4">
+        <li ng-repeat="choice in quiz.options" jq-draggable>
+            <button class="btn">{{choice}}</button>
         </li>
-    </ol>
+    </ul>
 
-    <ul class="offset2 span5">
+    <ul  ng-model="quiz.matches" class="offset2 span5">
         <li ng-repeat="choice in quiz.matches" style="list-style: none;">
-            <p class="well">{{choice}}</p>
+            <p class="well" jq-droppable>{{choice}}</p>
         </li>
     </ul>
 

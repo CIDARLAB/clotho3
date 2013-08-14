@@ -174,9 +174,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 Clotho.get($scope.uuid).then(function(result) {
                     $scope.editMode = false;
                     $scope.editable = result;
+
+                    //todo - rewrite
                     //$scope.type = result.type;
                     var suffix = 'function';
-                    var str = angular.lowercase(result.schema)
+                    var str = angular.lowercase(result.schema);
                     var endswith = str.indexOf(suffix, str.length - suffix.length) !== -1
                     if (endswith){
                         $scope.type = 'function';
@@ -196,7 +198,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                             $http.get('/editor/sharable-partial.html', {cache: $templateCache})
                                 .then(function(result) {
                                     var el = $compile(result.data)($scope);
-                                    $element.append(el);
+                                    $element.html(el);
                                 })
                                 .then(function() {
                                     Clotho.get($scope.schemaName).then(function(result) {
@@ -215,8 +217,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                             $http.get('/editor/function-partial.html',  {cache: $templateCache})
                                 .success(function(data) {
-                                    $element.html(data);
-                                    $compile($element.contents())($scope);
+                                    var el = $compile(data)($scope);
+                                    $element.html(el);
                                 });
 
                             break;

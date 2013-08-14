@@ -193,162 +193,6 @@ Application.Interface.directive('contenteditable', [function() {
  DRAG N SORT
  ***********************/
 
-Application.Interface.service('jqDragDrop', ['$timeout', '$parse', function($timeout, $parse) {
-
-}]);
-
-Application.Interface.directive('jqDraggable', ['$compile', function($compile) {
-    return {
-        restrict : 'A',
-        require: '?ngModel',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs) {
-                    element.css({'position' : 'absolute'});
-                },
-                post: function (scope, element, attrs, ngModel) {
-
-                    //set up
-                    function combineCallbacks(first,second){
-                        if( second && (typeof second === "function") ){
-                            return function(e,ui){
-                                first(e,ui);
-                                second(e,ui);
-                            };
-                        }
-                        return first;
-                    }
-
-                    var opts = {};
-                    var callbacks = {
-                        start: null,
-                        stop: null,
-                        drag: null
-                    };
-
-
-                    //model handling
-                    //todo - decide
-                    //reference : https://github.com/codef0rmer/angular-dragdrop
-                    if (ngModel) {
-                        callbacks.start = function(e, ui) {
-
-                        };
-
-                        callbacks.stop = function(e, ui) {
-
-                        };
-
-                        callbacks.drag = function(e, ui) {
-
-                        };
-                    }
-
-
-                    //watchers
-                    scope.$watch(function() {
-                        return scope.$eval(attrs.jqDraggableDisabled)
-                    },
-                    function(newval, oldval) {
-                        element.draggable({disabled: newval})
-                    });
-
-                    //custom listeners and jQuery UI Draggable options
-                    scope.$watch(attrs.jqDraggable, function (newval, oldval) {
-                        angular.forEach(newval, function (value, key) {
-                            if( callbacks[key] ){
-                                // wrap the callback
-                                value = combineCallbacks( callbacks[key], value );
-                            }
-                            element.sortable('option', key, value);
-                        })
-                    });
-
-                    angular.forEach(callbacks, function(value, key ){
-                        opts[key] = combineCallbacks(value, opts[key]);
-                    });
-
-                    //create
-                    element.draggable(opts);
-                }
-            }
-        }
-    }
-}]);
-
-Application.Interface.directive('jqDroppable', [function() {
-    return {
-        restrict: 'A',
-        require: '?ngModel',
-        link: function(scope, element, attrs, ngModel) {
-
-            //set up
-            function combineCallbacks(first,second){
-                if( second && (typeof second === "function") ){
-                    return function(e,ui){
-                        first(e,ui);
-                        second(e,ui);
-                    };
-                }
-                return first;
-            }
-
-            var opts = {};
-            var callbacks = {
-                over: null,
-                out: null,
-                drop: null
-            };
-
-
-            //model handling
-            //todo - decide
-            //reference : https://github.com/codef0rmer/angular-dragdrop
-            if (ngModel) {
-                callbacks.over = function(e, ui) {
-
-                };
-
-                callbacks.out = function(e, ui) {
-
-                };
-
-                callbacks.drop = function(e, ui) {
-
-                };
-            }
-
-
-            //watchers
-            scope.$watch(function() {
-                return scope.$eval(attrs.jqDroppableDisabled)
-            },
-            function(newval, oldval) {
-                element.droppable({disabled: newval})
-            });
-
-            //custom listeners and jQuery UI Droppable options
-            scope.$watch(attrs.jqDroppable, function (newval, oldval) {
-                angular.forEach(newval, function (value, key) {
-                    if( callbacks[key] ){
-                        // wrap the callback
-                        value = combineCallbacks( callbacks[key], value );
-                    }
-                    element.sortable('option', key, value);
-                })
-            });
-
-            angular.forEach(callbacks, function(value, key ){
-                opts[key] = combineCallbacks(value, opts[key]);
-            });
-
-            //finally, create
-            element.droppable(opts)
-        }
-    }
-}]);
-
-
 /**
  *
  * @description This directive allows you to sort array with drag & drop
@@ -356,11 +200,11 @@ Application.Interface.directive('jqDroppable', [function() {
  * @note ngModel is optional, but required to make changes to model. Otherwise, the jQuery UI sortable is simply applied to the list.
 
  * @example
- <ul jquery-sortable="sortableOptions" ng-model="items">
-    <li ng-repeat="item in items">{{ item }}</li>
+ <ul jq-sortable="sortableParams" ng-model="items">
+ <li ng-repeat="item in items">{{ item }}</li>
  </ul>
  * @example All the jQueryUI Sortable options can be passed through the directive, to create custom events and handlers. For example,
- $scope.sortableOptions = {
+ $scope.sortableParams = {
     update: function(e, ui) { ... },
     axis: 'x'
   };
@@ -440,23 +284,6 @@ Application.Interface.directive('jqSortable', [function() {
                 };
             }
 
-
-            /*
-            //note - old version - all that is minimally required
-            scope.dragStart = function(e, ui) {
-                ui.item.data('start', ui.item.index());
-            };
-
-            scope.dragEnd = function(e, ui) {
-                var start = ui.item.data('start'),
-                    end = ui.item.index();
-
-                ngModel.$viewValue.splice(end, 0,
-                    ngModel.$viewValue.splice(start, 1)[0]);
-
-                scope.$apply();
-            };*/
-
             scope.$watch(attrs.jqSortable, function(newVal, oldVal){
                 angular.forEach(newVal, function(value, key){
 
@@ -476,6 +303,187 @@ Application.Interface.directive('jqSortable', [function() {
 
             //finally, create
             element.sortable(opts);
+        }
+    }
+}]);
+
+
+
+Application.Interface.service('jqDragDrop', ['$timeout', '$parse', function($timeout, $parse) {
+
+}]);
+
+Application.Interface.directive('jqDraggable', ['$compile', function($compile) {
+    return {
+        restrict : 'A',
+        require: ['?ngModel', '^?jqDroppable'],
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs) {
+                    scope.$watch(function() {
+                        return attrs.jqDraggableFloat
+                    }, function (newval, oldval) {
+                        if (!!newval)
+                            element.css({'position' : 'absolute'});
+                    });
+
+                },
+                post: function (scope, element, attrs, ngModel) {
+
+                    //set up
+                    function combineCallbacks(first,second){
+                        if( second && (typeof second === "function") ){
+                            return function(e,ui){
+                                first(e,ui);
+                                second(e,ui);
+                            };
+                        }
+                        return first;
+                    }
+
+                    var opts = {};
+                    var callbacks = {
+                        create: null,
+                        drag: null,
+                        start: null,
+                        stop: null
+                    };
+
+
+                    //model handling
+                    //todo - decide
+                    //reference : https://github.com/codef0rmer/angular-dragdrop
+                    if (ngModel) {
+                        console.log(ngModel);
+
+                        ngModel.$render = function() {
+                            element.draggable("refresh")
+                        };
+
+                        callbacks.start = function(e, ui) {
+
+                        };
+
+                        callbacks.stop = function(e, ui) {
+
+                        };
+
+                        callbacks.drag = function(e, ui) {
+
+                        };
+                    }
+
+
+                    //watchers
+                    //attr level listener for disabled state
+                    scope.$watch(function() {
+                        return scope.$eval(attrs.jqDraggableDisabled)
+                    },
+                    function(newval, oldval) {
+                        console.log(!!newval);
+                        element.draggable({disabled: !!newval})
+                    });
+
+                    //custom listeners and jQuery UI Draggable options
+                    scope.$watch(attrs.jqDraggable, function (newval, oldval) {
+                        angular.forEach(newval, function (value, key) {
+                            if( callbacks[key] ){
+                                // wrap the callback
+                                value = combineCallbacks( callbacks[key], value );
+                            }
+                            element.draggable('option', key, value);
+                        })
+                    }, true);
+
+                    angular.forEach(callbacks, function(value, key ){
+                        opts[key] = combineCallbacks(value, opts[key]);
+                    });
+
+                    //create
+                    element.draggable(opts);
+                }
+            }
+        }
+    }
+}]);
+
+Application.Interface.directive('jqDroppable', [function() {
+    return {
+        restrict: 'A',
+        require: ['?ngModel', '^?jqDraggable'],
+        link: function(scope, element, attrs, ngModel) {
+
+            //set up
+            function combineCallbacks(first,second){
+                if( second && (typeof second === "function") ){
+                    return function(e,ui){
+                        first(e,ui);
+                        second(e,ui);
+                    };
+                }
+                return first;
+            }
+
+            var opts = {};
+            var callbacks = {
+                create: null,
+                drop: null,
+                over: null,
+                out: null,
+                activate: null,
+                inactivate: null
+            };
+
+
+            //model handling
+            //todo - decide
+            //reference : https://github.com/codef0rmer/angular-dragdrop
+            if (ngModel) {
+
+                ngModel.$render = function() {
+                    element.droppable("refresh")
+                };
+
+                callbacks.over = function(e, ui) {
+
+                };
+
+                callbacks.out = function(e, ui) {
+
+                };
+
+                callbacks.drop = function(e, ui) {
+
+                };
+            }
+
+
+            //watchers
+            //attr level listener for disabled state
+            scope.$watch(function() {
+                return scope.$eval(attrs.jqDroppableDisabled)
+            },
+            function(newval, oldval) {
+                element.droppable({disabled: newval})
+            });
+
+            //custom listeners and jQuery UI Droppable options
+            scope.$watch(attrs.jqDroppable, function (newval, oldval) {
+                angular.forEach(newval, function (value, key) {
+                    if( callbacks[key] ){
+                        // wrap the callback
+                        value = combineCallbacks( callbacks[key], value );
+                    }
+                    element.droppable('option', key, value);
+                })
+            }, true);
+
+            angular.forEach(callbacks, function(value, key ){
+                opts[key] = combineCallbacks(value, opts[key]);
+            });
+
+            //finally, create
+            element.droppable(opts);
         }
     }
 }]);
@@ -681,15 +689,12 @@ Application.Interface.directive('restrictInput', ['$parse', function($parse) {
 Application.Interface.directive('closeable', ['$compile', function($compile) {
     return {
         restrict : 'A',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs) {
-                    scope.removeElement = function() {
-                        element.remove();
-                    };
-                    element.prepend($compile('<a class="close" style="position: absolute; top: 12px; right: 15px;" ng-click="removeElement()">&times;</a>')(scope));
-                }
-            }
+        priority : 1100,
+        link: function compile(scope, element, attrs) {
+            scope.removeElement = function() {
+                element.remove();
+            };
+            element.prepend($compile('<a class="close" style="position: absolute; top: 12px; right: 15px;" ng-click="removeElement()">&times;</a>')(scope));
         }
     }
 }]);

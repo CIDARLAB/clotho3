@@ -82,13 +82,13 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/trails', {
                 templateUrl:'trails/trail_browser-partial.html'
             }).
-            when('/trails/:uuid', {
+            when('/trails/:id', {
                 templateUrl:'trails/trail-partial.html',
                 resolve : {
                     trail : function (Clotho, $q, $route, Trails) {
                         var deferred = $q.defer();
                         //todo - add timeout
-                        Clotho.get($route.current.params.uuid).then(function(result) {
+                        Clotho.get($route.current.params.id).then(function(result) {
                             Trails.compile(result).then(function (compiled) {
                                 deferred.resolve(compiled);
                             });

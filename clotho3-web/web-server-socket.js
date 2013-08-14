@@ -485,8 +485,7 @@ io.sockets.on('connection', function (socket) {
 
     /***** SIMPLE MESSAGES *****/
 
-    api.api = {};
-    api.api.alert = function(data, requestId) {
+    api.alert = function(data, requestId) {
         var user = data.userID;
         //todo - logic to route to a specific user
 
@@ -497,7 +496,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.broadcast = function(data, requestId) {
+    api.broadcast = function(data, requestId) {
         var channel = data.channel;
         data = data.data;
 
@@ -506,7 +505,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.get = function(uuid, requestId) {
+    api.get = function(uuid, requestId) {
         console.log("requesting model: " + uuid);
         var path = require('path').resolve(model_folder, uuid + ".json");
 
@@ -526,7 +525,7 @@ io.sockets.on('connection', function (socket) {
             );
         });
     };
-    api.api.get_script = function(uuid, requestId) {
+    api.get_script = function(uuid, requestId) {
         console.log("requesting script for: " + uuid);
         var path = 'partials/' + uuid + '.js';
 
@@ -535,7 +534,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.get_template = function(uuid, requestId) {
+    api.get_template = function(uuid, requestId) {
         console.log("requesting partial URL for: " + uuid);
         var path = 'partials/' + uuid + '.html';
 
@@ -544,7 +543,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.get_url = function(uuid, requestId) {
+    api.get_url = function(uuid, requestId) {
         console.log("requesting model URL for: " + uuid);
         var path = 'models/' + uuid;
 
@@ -553,7 +552,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.gradeQuiz = function (quiz, requestId) {
+    api.gradeQuiz = function (quiz, requestId) {
         console.log(quiz);
 
         //just send back everything is correct for now...
@@ -568,14 +567,14 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.log = function(data) {
+    api.log = function(data) {
         console.log("LOG\t: " + data);
     };
-    api.api.notify = function(data) {
+    api.notify = function(data) {
         console.log("notification!");
         console.log(data);
     };
-    api.api.query = function (data, requestId) {
+    api.query = function (data, requestId) {
         var demo = ["usdf-2323-g2", "asdf-2-23g2-3", "sdf0s2-232-4ff","138tr-c-1c3-111"];
 
         socket.send(api.pack.api_wrap('query',
@@ -583,7 +582,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.recent = function(data, requestId) {
+    api.recent = function(data, requestId) {
 
         //verify arguments correct
 
@@ -600,7 +599,17 @@ io.sockets.on('connection', function (socket) {
         });
 
     };
-    api.api.say = function(data, requestId) {
+    api.run = function(data, requestId) {
+        var command = data.id,
+            args = data.args,
+            result = data.args.toUpperCase();
+
+        socket.send(api.pack.api_wrap('run',
+            api.pack.nopack(result),
+            requestId)
+        );
+    };
+    api.say = function(data, requestId) {
         var user = data.userID,
         //todo - separation for sending messages from "server" vs. "client"
         sender = data.sender || "server",
@@ -621,7 +630,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.set = function(data, requestId) {
+    api.set = function(data, requestId) {
         var uuid = data.id || data.uuid;
         data = data.data;
 
@@ -639,7 +648,7 @@ io.sockets.on('connection', function (socket) {
             );*/
         }
     };
-    api.api.show_old = function(data, requestId) {
+    api.show_old = function(data, requestId) {
         var uuid = data.uuid;
         data = data.data;
 
@@ -654,7 +663,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.api.show = function(data, requestId) {
+    api.show = function(data, requestId) {
         socket.send(api.pack.api_wrap('display',
             api.pack.nopack(data),
             requestId)
@@ -663,9 +672,7 @@ io.sockets.on('connection', function (socket) {
 
     /**** SEARCHBAR ***/
 
-    api.searchbar = {};
-
-    api.searchbar.submit = function (data, requestId) {
+    api.submit = function (data, requestId) {
 
         var message = {
             "text" : data.query,
@@ -696,7 +703,7 @@ io.sockets.on('connection', function (socket) {
 
     };
 
-    api.searchbar.autocomplete = function(data, requestId) {
+    api.autocomplete = function(data, requestId) {
         var query = data.query;
 
         var demo = [
@@ -740,7 +747,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
-    api.searchbar.autocompleteDetail = function(data, requestId) {
+    api.autocompleteDetail = function(data, requestId) {
         var uuid = data.uuid;
         console.log("requested detail for uuid: " + data.uuid);
 
@@ -825,19 +832,14 @@ io.sockets.on('connection', function (socket) {
     socket.on('message', function(msg) {
         msg = JSON.parse(msg);
         var requestId = msg.requestId;
-        var wrapper = msg.channel;
-        var channel = msg.data.channel;
-        var data = msg.data.data;
+        var channel = msg.channel;
+        var data = msg.data;
 
         console.log(msg);
-        console.log("CUSTOM\t command in " + wrapper + " received: " + channel + "\tdata: " + data + "\trequestId: " + requestId);
+        console.log("CUSTOM\t command received: " + channel + "\tdata: " + data + "\trequestId: " + requestId);
         
-        if (api[wrapper][channel]) {
+        if (api[channel]) {
             //easy....
-            api[wrapper][channel](data, requestId);
-        }
-        else if (api[channel]){
-            //custom events
             api[channel](data, requestId);
         }
         else {
