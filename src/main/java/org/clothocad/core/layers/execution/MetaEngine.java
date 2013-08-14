@@ -14,8 +14,7 @@ import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.ScriptAPI;
-import static org.clothocad.core.layers.execution.JavaScriptScript.engine;
-import sun.org.mozilla.javascript.RhinoException;
+import org.mozilla.javascript.RhinoException;
 
 /**
  *
@@ -28,7 +27,7 @@ public class MetaEngine {
     
     public Object eval(String script, Language language, ScriptAPI api) throws ScriptException{
         ScriptContext context = getContext(language);
-        ScriptEngine engine = getEngine(language);
+        HackEngine engine = getEngine(language);
         
         injectAPI(api, context);
         try{
@@ -46,10 +45,12 @@ public class MetaEngine {
         return contexts.get(language);
     }
 
-    private ScriptEngine getEngine(Language language) {
+    private HackEngine getEngine(Language language) {
+        if (language == Language.JAVASCRIPT) return new JavaScriptEngine();
+        
         if (!engines.containsKey(language)) engines.put(language, ClothoScriptEngineManager.getEngineByLanguage(language));
         if (engines.get(language) == null) throw new EngineNotFoundException();
-        return engines.get(language);
+        return new WrappedScriptEngine(engines.get(language));
     }
 
     private void injectAPI(ScriptAPI api, ScriptContext context) {
@@ -63,10 +64,9 @@ public class MetaEngine {
     //XXX: de-js-ify this!
     public Object invoke(String code, String name, List args) throws ScriptException {
         try {
-            ScriptEngine engine = getEngine(Language.JAVASCRIPT);
+            HackEngine engine = getEngine(Language.JAVASCRIPT);
             engine.eval("var " + name+ " = " + code);
-            Invocable invocable = (Invocable) engine;
-            return invocable.invokeFunction(name, args.toArray());
+            return engine.invokeFunction(name, args.toArray());
         } catch (NoSuchMethodException ex) {
             throw new ScriptException(ex);
         }

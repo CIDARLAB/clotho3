@@ -14,15 +14,14 @@ import javax.script.ScriptException;
 import org.bson.types.ObjectId;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
-import sun.org.mozilla.javascript.Scriptable;
-import sun.org.mozilla.javascript.Context;
-import sun.org.mozilla.javascript.NativeArray;
-import sun.org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
 
 /**
  *
  * @author spaige
  */
+//XXX: actually JavaScriptAPI
 public class ScriptAPI {
     ServerSideAPI api;
     
@@ -46,14 +45,14 @@ public class ScriptAPI {
     public List<Map<String, Object>> query(Map<String, Object> spec) {
         return convertToNative(api.query(spec)); 
     }
-
+    
     
     public Object set(Map<String, Object> spec){
         api.set(new HashMap(spec));
         return get(spec.get("id"));
     }
     
-    public void destroy(ObjectId id){
+    public void destroy(String id){
         api.destroy(id);
     }
     

@@ -44,7 +44,7 @@ import org.clothocad.core.layers.execution.MetaEngine;
 import org.clothocad.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.org.mozilla.javascript.NativeFunction;
+import org.mozilla.javascript.NativeFunction;
 
 /**
  * A 'Mind' is the thing on the server that connects up a User and a Client.  Minds talk
