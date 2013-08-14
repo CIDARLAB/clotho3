@@ -8,3 +8,4 @@ data/
 /nbactions.xml
 
 clotho3-web/.idea/*
+*.DS_Store
