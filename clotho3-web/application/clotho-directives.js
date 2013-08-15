@@ -1,18 +1,27 @@
 'use strict';
 
-//note - ngModel doesn't work for directives with isolate scope..
-//  - https://github.com/angular/angular.js/issues/1924
-//todo - broaden for other function use
-//note - this implementation is meant for directives that already handle ngModel.$render (e.g. input)
-Application.Foundation.directive('clothoRun', ['Clotho', '$timeout', function(Clotho, $timeout) {
+/*This is meant for read-only modifications to the model - Can't use ngModel $formatters with promises (angular-1.1.5). Calling $setViewValue affects model and propagates, which is often undesired (e.g. if revcomp a sequence for display, don't want to change model).
+
+NB if DO want to update model: ngModel weirdness in isolate scope -- call $parent.model
+*/
+
+//todo - broaden for other clotho function use - decide how to pass in
+Application.Foundation.directive('clothoRun', ['Clotho', function(Clotho) {
+
+    var inputsVal = {input: true, textarea : true, select: true};
+
     return {
         restrict : 'A',
         require : 'ngModel',
-        //scope: true,
+        scope : true,
         link: function (scope, element, attrs, ngModel) {
 
-            console.log(scope);
-            console.log(ngModel);
+            //config
+            var useVal = !!inputsVal[angular.lowercase(element[0].nodeName)];
+            if (useVal) {
+                //avoid flicker
+                ngModel.$render = angular.noop;
+            }
 
             //command, args
             scope.$watch(function() {
@@ -20,39 +29,29 @@ Application.Foundation.directive('clothoRun', ['Clotho', '$timeout', function(Cl
             }, function(newval, oldval) {
                 console.log(newval);
 
+                //todo - better handling
 
             });
 
-            //model listeners
-
-            /*scope.$watch(
-            //'model'
-            function() {return ngModel.$modelValue}
-            , function(newval, oldval) {
-
+            //model changes
+            scope.$watch(function() {
+                return ngModel.$modelValue
+            }, function(newval, oldval) {
                 console.log(newval);
-                if (!newval) return;
+                runFunction(newval);
+            });
 
-                Clotho.run('blah', newval).then(function(data) {
-                    console.log(data);
-                    ngModel.$setViewValue(data);
+
+            var runFunction = function(input) {
+                return Clotho.run(attrs.clothoRun, input).then(function(result) {
+                    updateElement(result);
                 });
-            });*/
-
-
-            /*$timeout(function() {
-                ngModel.$setViewValue('sup')
-            }, 2000);*/
-
-
-            var fn = function(input) {
-                var promise = Clotho.run('blah', input).then(function (data) { return data });
-                console.log(promise);
-                return promise;
             };
 
-            ngModel.$formatters.push(fn)
-
+            var updateElement = function(newval) {
+                var method = useVal ? 'val' : 'text';
+                element[method](newval);
+            };
         }
     }
 }]);

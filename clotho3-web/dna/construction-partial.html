@@ -34,15 +34,23 @@
                 <div class="span6 pull-right">
                     <label class="control-label" for="clothorun">Clotho.run directive</label>
                     <div class="controls">
-                        <input type="text" id="clothorun" placeholder="UPPERCASE" ng-model="sequence" clotho-run disabled>
+                        <input type="text" id="clothorun" placeholder="remote Reverse" ng-model="sequence" clotho-run="uppercase" disabled>
                     </div>
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label" for="revcomp">Revcomp</label>
-                <div class="controls">
-                    <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp disabled>
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="revcomp">Revcomp</label>
+                    <div class="controls">
+                        <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="clothorunpre">Clotho.run pre</label>
+                    <div class="controls">
+                        <pre id="clothorunpre" placeholder="Remote reverse" ng-model="sequence" clotho-run="reverse"></pre>
+                    </div>
                 </div>
             </div>
 
