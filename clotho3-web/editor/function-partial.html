@@ -77,12 +77,19 @@
             </div>
         </div>
 
-        <h3 class="text-center">Tests <button class="btn btn-small" ng-disabled="form.$invalid">Run All</button></h3>
+        <h3 class="text-center">
+            Tests
+            <div class="btn-group">
+                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="form.$invalid">Run All</button>
+            </div>
+            <button class="btn pull-right" type="button" ng-click="addTest()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+        </h3>
 
         <div ng-repeat="test in editable.tests">
             <div class="control-group">
                 <label class="control-label" for="functionTestArg{{ $index }}">Test Arguments</label>
                 <div class="controls">
+                    <button class="btn pull-right" ng-click="editable.tests.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     <div ng-repeat="param in editable.args">
                         <div ng-if="simpleTypes[param.type]">
                             <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" ng-disabled="!editMode">
@@ -100,7 +107,7 @@
                     <select ng-model="test.output.type" class="span2" ng-disabled="!editMode" ng-options="t.value as t.name for t in outputTypes">
                     </select>
                     <input type="text" id="functionTestResult{{ $index }}" ng-model="test.output.value" ng-disabled="!editMode">
-                    <button class="btn" ng-click="testFunction()" ng-disabled="form.$invalid">Test</button>
+                    <button class="btn" ng-click="singleTest($index)" ng-disabled="form.$invalid" ng-class="{'btn-success' : testResults[$index] === true, 'btn-danger' : testResults[$index] === false}">Test</button>
                 </div>
             </div>
         </div>

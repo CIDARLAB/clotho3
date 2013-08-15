@@ -39,6 +39,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             Clotho.watch2($scope.uuid, $scope, 'editable', $scope);
 
+            $scope.logScope = function() { console.log($scope); };
+
 
             /******
              SHARABLE
@@ -85,7 +87,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.addArg = function() {
                 if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
-                $scope.editable.args.push({"type" : "", "name" : "", "test" : {"uuid" : ""}});
+                $scope.editable.args.push({"type" : "", "name" : ""});
             };
 
             $scope.addDep = function() {
@@ -93,31 +95,39 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.editable.dependencies.push({"id" : "", "name" : ""});
             };
 
-            //todo - currently only runs first test
-            $scope.testFunction = function() {
+            $scope.addTest = function() {
+                if (angular.isEmpty($scope.editable.tests)) {$scope.editable.tests = [];}
+                $scope.editable.tests.push({"args" : [], "output" : {"value" : "", "type" : ""}});
+            };
+
+            $scope.testResults = {};
+            $scope.singleTest = function(index) {
 
                 var data = {};
                 data.id = $scope.editable.id;
                 if (angular.isEmpty($scope.editable.tests)) {
-                    //$scope.editable.tests = [];
                     data.args = [];
                 }
-                /*
-                data.args = $scope.editable.tests[0].args.map(function (param){
-                    return param.test.uuid ? param.test.uuid : param.test.value;
-                 });
-                 */
-                else
-                    data.args = $scope.editable.tests[0].args;
+                else {
+                    data.args = $scope.editable.tests[index].args;
+                }
 
                 Clotho.run(data.id, data.args).then(function (result){
-                   Clotho.say({text: result});
+                    console.log(result);
+                    console.log(result == $scope.editable.tests[index].output.value);
+                    $scope.testResults[index] = (result == $scope.editable.tests[index].output.value);
                    /* if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
                     } else {
                         ClientAPI.say({text:"test failed!"});
                     }*/
                 });
+            };
+
+            $scope.runAllTests = function() {
+                for (var i = 0; i < $scope.editable.tests.length; i++) {
+                    $scope.singleTest(i);
+                }
             };
 
             $scope.queryWrapper = function(schemaType) {

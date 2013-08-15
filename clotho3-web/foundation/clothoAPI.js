@@ -55,14 +55,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
     //helper functions
 
-    //if simply want a response and resolve promise
-    fn.emitSubOnce = function(channel, query, requestId) {
+    //if simply want a response and resolve promise, no further logic required
+    fn.emitSubOnce = function(channel, data, requestId) {
         var deferred = $q.defer();
         if (requestId == null) requestId = Date.now().toString();
         PubSub.once(channel+':'+requestId, function(data){
             $rootScope.$safeApply(deferred.resolve(data))
         }, '$clotho');
-        fn.emit(channel, query, requestId);
+        fn.emit(channel, data, requestId);
         return deferred.promise;
     };
 

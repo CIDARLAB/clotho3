@@ -8,12 +8,10 @@
             <select ng-model="id" class="span2" ng-options="c.id as c.name group by c.schema for c in editableList"></select>
 
             <h5>Create new</h5>
-            <input type="text" style="width: 100%; margin: 5px 0;" ng-model="selected" typeahead="schema as schema.name for schema in schemas | filter:$viewValue | limitTo:10" popover="Choose the schema of the object you wish to create and edit" popover-title="Choose a Schema" popover-trigger="focus">
+            <!--popover induces isolate scope, need to call $parent.selected in ngModel, see angular issue https://github.com/angular/angular.js/issues/1924 -->
+            <input type="text" style="width: 100%; margin: 5px 0;" ng-model="$parent.selected" typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10" popover="Type and select a schema to create an object with pre-determined fields" popover-title="Choose a Schema" popover-trigger="focus">
             <button class="btn" ng-click="createNewObject()" ng-disabled="!selected">Create</button>
-            {{ selected | json }}
-
 
         </div>
-
     </div>
 </div>

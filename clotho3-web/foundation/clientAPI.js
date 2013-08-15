@@ -9,23 +9,6 @@
 Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$templateCache', '$http', '$rootScope', '$location', '$compile', '$dialog', function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
 
     /**
-     * @name clientAPI.mapCommand
-     *
-     * @param command {string} the command to run
-     * @param data {object} JSON to pass along
-     *
-     * @description
-     * Given a command
-     *
-     */
-    var mapCommand = function clientAPIMapCommand(command, data) {
-        //todo - should have more logic than simply calling ClientAPI[command](data)
-        console.log("CLIENTAPI\tmapCommand called on channel " + command);
-
-
-    };
-
-    /**
      * DEPRECATED - now handled in Clotho.get() logic
      * @name clientAPI.collect
      *
@@ -225,7 +208,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      *
      */
     var say = function clientAPISay(data) {
-        console.log('Hit say');
         PubSub.trigger("activityLog", data);
     };
 
@@ -317,7 +299,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
 
 
     return {
-        mapCommand : mapCommand,
         collect : collect,
         edit : edit,
         changeUrl : changeUrl,
