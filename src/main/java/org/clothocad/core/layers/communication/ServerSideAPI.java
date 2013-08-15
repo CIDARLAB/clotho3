@@ -429,32 +429,30 @@ public class ServerSideAPI {
         say(message, Severity.FAILURE);
     }
 
-    public final void destroy(Object o) {
-        destroy(persistor.resolveSelector(o.toString(), false));
-    }
-
-    //JCA:  as of 6/9/2013 works
-    public final void destroy(ObjectId id) {
+    public final ObjectId destroy(Object id) {
+        ObjectId resolvedId = persistor.resolveSelector(id.toString(), false);
+        if (resolvedId == null) return null;
         try {
             try {
-                persistor.delete(id);
+                persistor.delete(resolvedId);
             } catch (UnauthorizedException e) {
                 say(e.getMessage(), Severity.FAILURE);
             }
-            say(String.format("Destroyed object #%s", id.toString()), Severity.SUCCESS);
-            //XXX: convert this to same pattern as get
-            Message message = new Message(Channel.destroy, id, requestId);
-            send(message);
+            say(String.format("Destroyed object #%s", resolvedId.toString()), Severity.SUCCESS);
+            return resolvedId;
         } catch (Exception e) {
             logAndSayError(String.format("Error destroying %s: %s", id.toString(), e.getMessage()), e);
+            return null;
         }
     }
     
     
-    public final void destroyAll(List<Object> objects){
+    public final List<ObjectId> destroyAll(List<Object> objects){
+        List<ObjectId> out = new ArrayList<>();
         for (Object obj : objects) {
-            destroy(persistor.resolveSelector(obj.toString(), false));
+            out.add(destroy(obj));
         }
+        return out;
     }
 
     public List<Map<String,Object>> query(Map<String, Object> spec) {

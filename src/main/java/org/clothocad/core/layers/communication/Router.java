@@ -127,8 +127,8 @@ public class Router {
                     response = api.create(data);
                     break;
                 case destroy:
-                    api.destroy(data);
-                    response = Void.TYPE;
+                    response = api.destroy(data);
+                    if (response == null) response = Void.TYPE;
                     break;
                 case query:
                     response = api.query(JSON.mappify(data));
