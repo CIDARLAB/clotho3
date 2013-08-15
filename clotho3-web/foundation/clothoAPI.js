@@ -25,6 +25,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**********
        Set up
      **********/
+    //socket communication
     var fn = {};
 
     fn.send = function(pkg) {
@@ -41,14 +42,28 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.send(fn.pack(eventName, data, requestId));
     };
 
+    //note: wrappers no longer in use
     fn.api = {};
     fn.searchbar = {};
-
     fn.api.emit = function (eventName, data, requestId) {
         fn.emit(eventName, data, requestId);
     };
     fn.searchbar.emit = function (eventName, data, requestId) {
         fn.emit(eventName, data, requestId);
+    };
+
+
+    //helper functions
+
+    //if simply want a response and resolve promise
+    fn.emitSubOnce = function(channel, query, requestId) {
+        var deferred = $q.defer();
+        if (requestId == null) requestId = Date.now().toString();
+        PubSub.once(channel+':'+requestId, function(data){
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+        fn.emit(channel, query, requestId);
+        return deferred.promise;
     };
 
     /**********
@@ -109,13 +124,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
                 return deferred.promise;
             }
         }
-        //otherwise request over socket, will be collected, listen for event
+        //otherwise request over socket, save to collector
         else {
 
             var requestId = (Date.now()).toString(),
                 deferred = $q.defer();
 
             PubSub.once('get:'+requestId, function(data) {
+                Collector.storeModel(uuid, data);
                 $rootScope.$safeApply(deferred.resolve(data))
             }, '$clotho');
             fn.api.emit('get', uuid, requestId);
@@ -125,6 +141,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
             } else {
                 //fixme - need REST API for this to work, promises don't work like this
 
+                /*
                 var value = {};
                 value.$then = deferred.promise.then(function (response) {
                     var then = value.$then;
@@ -134,38 +151,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
                     }
                 });
                 return value;
+                */
             }
         }
-    };
-
-    //for testing
-    var get_url = function clothoAPI_get_url(uuid) {
-        var deferred = $q.defer();
-
-        var data = Collector.retrieveModel(uuid);
-        if (data && typeof data != 'undefined') {
-            deferred.resolve(data);
-            return deferred.promise;
-        } else {
-            fn.api.emit('get_url', uuid);
-
-            PubSub.once('update:'+uuid, function(data) {
-                console.log("got template url for uuid " + uuid);
-                $rootScope.$safeApply(deferred.resolve(data));
-            });
-
-            return deferred.promise;
-        }
-    };
-
-    //for testing
-    var get_template = function clothoAPI_get_template(uuid) {
-        fn.api.emit('get_template', uuid);
-    };
-
-    //for testing
-    var get_script = function clothoAPI_get_script(uuid) {
-        fn.api.emit('get_script', uuid);
     };
 
     /**
@@ -366,16 +354,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * Returns all objects that match the fields provided in the spec.
      */
     var query = function(obj) {
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('query:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('query', obj, requestId);
-
-        return deferred.promise;
+        return fn.emitSubOnce('query', obj);
     };
 
 
@@ -390,16 +369,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @returns {object} The object if created successfully, null otherwise
      */
     var create = function clothoAPI_create(obj) {
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('create:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('create', obj, requestId);
-
-        return deferred.promise;
+        return fn.emitSubOnce('create', obj);
     };
 
     /**
@@ -444,16 +414,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      */
     var revert = function clothoAPI_revert(uuid, timestamp) {
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('revert:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('revert', {"uuid" : uuid, "timestamp" : timestamp}, requestId);
-
-        return deferred.promise;
+        var packaged = {"uuid" : uuid, "timestamp" : timestamp};
+        return fn.emitSubOnce('revert', packaged);
     };
 
 
@@ -468,16 +430,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @returns {array} array of results of validation. Empty object means object passed validation. Populated object encountered problems. Fields are listed which were problematic, with error messages.
      */
     var validate = function (obj) {
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('validate:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('validate', obj, requestId);
-
-        return deferred.promise;
+        return fn.emitSubOnce('validate', obj);
     };
 
     /**
@@ -559,6 +512,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
 
     /**
+     * DEPRECATED - use Application.bootstrap in Application.mixin.js
      * @name Clotho.bootstrap
      *
      * @param appInfo {object} Object with necessary information to bootstrap, minimally including:
@@ -661,24 +615,13 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         fn.api.emit('alert', packaged);
     };
 
-    //todo - move outside of Clotho API
     var autocomplete = function(query) {
         var packaged = {
             "query" : query
         };
 
-        //todo - use angular $cacheFactory to cache searches
-
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('autocomplete:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.searchbar.emit('autocomplete', packaged, requestId);
-
-        return deferred.promise;
+        //todo - use angular $cacheFactory to cache searches (break out from this wrapper)
+        return fn.emitSubOnce('autocomplete', packaged);
     };
 
     var autocompleteDetail = function(uuid) {
@@ -704,19 +647,11 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     };
 
 
-    fn.emitAndSubOnce = function(channel, query, id) {
-        var deferred = $q.defer();
-        if (id == null) id = Date.now().toString();
-        PubSub.once(channel+':'+id, function(data){
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-        fn.emit(channel, query, id);
-        return deferred.promise;
-    }
+
 
 
     var submit = function(query) {
-        return fn.emitAndSubOnce('submit', query);
+        return fn.emitSubOnce('submit', query);
     };
 
     /**
@@ -735,16 +670,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
             "args" : args
         };
 
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('run:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('run', packaged, requestId);
-
-        return deferred.promise;
+        return fn.emitSubOnce('run', packaged);
     };
 
 
@@ -780,16 +706,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @returns {Promise} Data once returned from server
      */
     var recent = function(params) {
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('recent:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('recent', params, requestId);
-
-        return deferred.promise;
+        return fn.emitSubOnce('recent', params);
     };
 
 
@@ -809,7 +726,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
             "query" : query,
             "association" : assoc
         };
-        fn.api.emit('learn', packaged);
+        return fn.emitSubOnce('learn', packaged);
     };
 
     /**
@@ -834,28 +751,14 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      */
     var gradeQuiz = function clothoAPI_gradeQuiz(quiz) {
-
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('gradeQuiz:'+requestId, function(data) {
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
-
-        fn.api.emit('gradeQuiz', quiz, requestId);
-
-        return deferred.promise;
+        return fn.emitSubOnce('gradeQuiz', quiz);
     };
 
 
     return {
         //api
         get : get,
-        get_url : get_url, //testing
-        get_template : get_template, //testing
-        get_script : get_script, //testing
         set : set,
-        //clone : clone,
         query : query,
         create : create,
         edit : edit,

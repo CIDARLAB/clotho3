@@ -26,11 +26,11 @@ var dynamicCtrl = Application.Dynamic.controller('DynamicCtrl', ['$scope', 'Clot
     };
 
     $scope.showTemplate = function(uuid) {
-        $scope.customTemplate = 'partials/' + uuid + '.html';
+        $scope.customTemplate = 'partials/dynamic-page/' + uuid + '.html';
     };
 
     $scope.showDynamic = function(uuid) {
-        $scope.dynTemplate = 'partials/' + uuid + '.html';
+        $scope.dynTemplate = 'partials/dynamic-page/' + uuid + '.html';
     };
 
     // testing show / display

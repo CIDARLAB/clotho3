@@ -57,6 +57,10 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 {name:'Groovy', value:'GROOVY'}
             ];
 
+            $scope.outputTypes = [
+                {name:'Value', value:'VALUE'},
+                {name:'Reference', value:'REFERENCE'}
+            ];
 
             $scope.simpleTypes = {
                 "Object" : true,
@@ -89,14 +93,22 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.editable.dependencies.push({"id" : "", "name" : ""});
             };
 
+            //todo - currently only runs first test
             $scope.testFunction = function() {
 
                 var data = {};
                 data.id = $scope.editable.id;
-                if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
-                data.args = $scope.editable.args.map(function (param){
+                if (angular.isEmpty($scope.editable.tests)) {
+                    //$scope.editable.tests = [];
+                    data.args = [];
+                }
+                /*
+                data.args = $scope.editable.tests[0].args.map(function (param){
                     return param.test.uuid ? param.test.uuid : param.test.value;
-                });
+                 });
+                 */
+                else
+                    data.args = $scope.editable.tests[0].args;
 
                 Clotho.run(data.id, data.args).then(function (result){
                    Clotho.say({text: result});

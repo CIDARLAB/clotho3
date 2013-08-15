@@ -1,16 +1,21 @@
 {
     "name" : "Second Function",
     "type" : "function",
-    "schema" : "JavaScriptFunction",
-    "id" : "507f191e810c19729de861bc",
+    "schema" : "PythonFunction",
+    "id" : "aa7f191e810c19729de86102",
     "code" : "function demo() { return true }",
     "language" : "PYTHON",
     "description" : "Another Demo function",
     "precondition" : "function() { return true }",
     "dependencies" : [],
     "args" : [],
-    "output" : {
-        "type" : "Boolean",
-        "expect" : "true"
-    }
+    "tests" : [
+        {
+            "args" : [],
+            "output" : {
+                "value" : "",
+                "type" : "VALUE"
+            }
+        }
+    ]
 }

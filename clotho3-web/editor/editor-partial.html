@@ -1,19 +1,17 @@
 <div class="container" ng-controller="EditorCtrl">
     <div class="row">
 
-        <!--<form sharable-editor name="mySharable" uuid="id" class="span6 form-horizontal well" novalidate></form>-->
-
-        <!--<form function-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>-->
-
-    <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well"></form>
+        <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well"></form>
 
         <div class="span2 well">
-            <h4>Demo</h4>
-
-            <input type="text" style="width: 100%; margin: 5px 0;" ng-model="selected" typeahead="state for state in states | filter:$viewValue" popover="Right now this just pulls from a list of states, but we should set this up to work with Clotho.query()" popover-title="What to Edit?" popover-trigger="focus">
-
-            <h6>Choose from List:</h6>
+            <h5>Select an Object</h5>
             <select ng-model="id" class="span2" ng-options="c.id as c.name group by c.schema for c in editableList"></select>
+
+            <h5>Create new</h5>
+            <input type="text" style="width: 100%; margin: 5px 0;" ng-model="selected" typeahead="schema as schema.name for schema in schemas | filter:$viewValue | limitTo:10" popover="Choose the schema of the object you wish to create and edit" popover-title="Choose a Schema" popover-trigger="focus">
+            <button class="btn" ng-click="createNewObject()" ng-disabled="!selected">Create</button>
+            {{ selected | json }}
+
 
         </div>
 

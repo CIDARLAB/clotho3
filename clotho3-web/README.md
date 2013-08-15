@@ -58,6 +58,15 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - add trail to same folder (add schema "Trail" and approrpriate ID)
 
 
+- DIRECTIVE FOR CLOTHO API CALLS
+
+
+- API
+    - move collect() to get(), redo clothoAPI get and collector interaction
+    - move listeners to match command (e.g. show -> show not display)
+    - set() and destroy() update collector on message receipt from server
+
+
 - tie github pulls to original repositories and keep in sync
 
 
@@ -113,14 +122,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - editor
     - replace internal HTML, not whole thing (closeable directive)
+    - ******* create button
+        - create also sets controller id so start editing
     - use "ID" not "UUID"
-    - add description and dependencies fields
-        - dependencies should query other functions
+    - dependencies field should query other functions
+    - use accordion for tests div
     - map BSON -> HTML5 data types
-    - create button
-        - typeahead searches schemas
-            - {"schema": "Schema", "name" : $viewValue}
-        - list some, and create button (which returns and sets controller id accordingly)
     - query for test args
         - show name, not uuid
         - Popver with whole JSON shown

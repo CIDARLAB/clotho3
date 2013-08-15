@@ -77,27 +77,31 @@
             </div>
         </div>
 
-        <div class="control-group">
-            <label class="control-label">Test Arguments</label>
-            <div class="controls">
-                <div ng-repeat="param in editable.args">
-                    <div ng-if="simpleTypes[param.type]">
-                        <input type="text" ng-model="param.test.value" ng-disabled="!editMode">
-                    </div>
-                    <div ng-if="!simpleTypes[param.type]">
-                        <input type="text" ng-model="param.test.uuid" typeahead="opt for opt in queryWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="We should set this up to work with Clotho.query(), tied to the schema restriction as above" popover-title="Easy Testing - Arguments" popover-trigger="focus" ng-disabled="!editMode">
+        <h3 class="text-center">Tests <button class="btn btn-small" ng-disabled="form.$invalid">Run All</button></h3>
+
+        <div ng-repeat="test in editable.tests">
+            <div class="control-group">
+                <label class="control-label" for="functionTestArg{{ $index }}">Test Arguments</label>
+                <div class="controls">
+                    <div ng-repeat="param in editable.args">
+                        <div ng-if="simpleTypes[param.type]">
+                            <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" ng-disabled="!editMode">
+                        </div>
+                        <div ng-if="!simpleTypes[param.type]">
+                            <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" typeahead="opt for opt in queryWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="Search for an object of type {{ param.type }}" popover-trigger="focus" ng-disabled="!editMode">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="control-group">
-            <label class="control-label" for="functionTestResult">Expected Result</label>
-            <div class="controls">
-                <select ng-model="editable.output.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.type for c in paramTypes">
-                </select>
-                <input type="text" id="functionTestResult" ng-model="editable.output.expect" ng-disabled="!editMode">
-                <button class="btn" ng-click="testFunction()" ng-disabled="form.$invalid">Test</button>
+            <div class="control-group">
+                <label class="control-label" for="functionTestResult{{ $index }}">Expected Output</label>
+                <div class="controls">
+                    <select ng-model="test.output.type" class="span2" ng-disabled="!editMode" ng-options="t.value as t.name for t in outputTypes">
+                    </select>
+                    <input type="text" id="functionTestResult{{ $index }}" ng-model="test.output.value" ng-disabled="!editMode">
+                    <button class="btn" ng-click="testFunction()" ng-disabled="form.$invalid">Test</button>
+                </div>
             </div>
         </div>
 

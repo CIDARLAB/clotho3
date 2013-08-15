@@ -17,7 +17,7 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
     Application.Extensions.registeredQueue = Application.Extensions.getQueue().length;
 
 }])
-    .run(['$rootScope', '$q', '$timeout', function($rootScope, $q, $timeout) {
+    .run(['$rootScope', '$q', '$timeout', '$templateCache', '$http', function($rootScope, $q, $timeout, $templateCache, $http) {
 
         //need to call this before compiling new element
         Application.Extensions.processQueue = function() {
@@ -146,6 +146,25 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
                 document.getElementsByTagName("head")[0].appendChild(link);
                 $rootScope.$safeApply(deferred.resolve());
             }
+
+            return deferred.promise;
+        };
+
+        /**
+         * @name Application.cache
+         *
+         * @description Downloads caches an angular template for later use
+         *
+         * @param {url} URL of angular template file
+         *
+         * @returns {Promise} Promise to be fulfilled once CSS files are downloaded and appended
+         */
+        Application.cache = function(url) {
+            var deferred = $q.defer();
+
+            $http.get(url, {cache:$templateCache})
+                .success(function() {deferred.resolve()})
+                .error(function() {deferred.reject()});
 
             return deferred.promise;
         };

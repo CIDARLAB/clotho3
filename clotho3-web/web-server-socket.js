@@ -461,13 +461,11 @@ io.sockets.on('connection', function (socket) {
     /* Command Specifics */
 
     //pack for a collect command
-    api.pack.collect = function(uuid, type, model_or_url, isURL) {
-        isURL = !!isURL || false; //for templates
+    api.pack.collect = function(uuid, type, model) {
         return {
             "uuid" : uuid,
             "type" : type,
-            "model" : model_or_url,
-            "isURL" : isURL
+            "model" : model,
         }
     };
     //pack for a say or alert command
@@ -519,38 +517,11 @@ io.sockets.on('connection', function (socket) {
             //make assumption that get will be in client collector, so put in local collector so don't re-send on set()
             collector[uuid] = data;
 
-            socket.send(api.pack.api_wrap('collect',
-                api.pack.collect(uuid, "json", data),
+            socket.send(api.pack.api_wrap('get',
+                api.pack.nopack(data),
                 requestId)
             );
         });
-    };
-    api.get_script = function(uuid, requestId) {
-        console.log("requesting script for: " + uuid);
-        var path = 'partials/' + uuid + '.js';
-
-        socket.send(api.pack.api_wrap('collect',
-            api.pack.collect(uuid, "js", path, true),
-            requestId)
-        );
-    };
-    api.get_template = function(uuid, requestId) {
-        console.log("requesting partial URL for: " + uuid);
-        var path = 'partials/' + uuid + '.html';
-
-        socket.send(api.pack.api_wrap('collect',
-            api.pack.collect(uuid, "html", path, true),
-            requestId)
-        );
-    };
-    api.get_url = function(uuid, requestId) {
-        console.log("requesting model URL for: " + uuid);
-        var path = 'models/' + uuid;
-
-        socket.send(api.pack.api_wrap('collect',
-            api.pack.collect(uuid, "json", path),
-            requestId)
-        );
     };
     api.gradeQuiz = function (quiz, requestId) {
         console.log(quiz);
@@ -602,7 +573,7 @@ io.sockets.on('connection', function (socket) {
     api.run = function(data, requestId) {
         var command = data.id,
             args = data.args,
-            result = data.args.toUpperCase();
+            result = args.toUpperCase(); //for testing
 
         socket.send(api.pack.api_wrap('run',
             api.pack.nopack(result),

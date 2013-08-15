@@ -8,7 +8,7 @@ Application.Foundation.directive('clothoRun', ['Clotho', '$timeout', function(Cl
     return {
         restrict : 'A',
         require : 'ngModel',
-        scope: true,
+        //scope: true,
         link: function (scope, element, attrs, ngModel) {
 
             console.log(scope);
@@ -25,7 +25,7 @@ Application.Foundation.directive('clothoRun', ['Clotho', '$timeout', function(Cl
 
             //model listeners
 
-            scope.$watch(
+            /*scope.$watch(
             //'model'
             function() {return ngModel.$modelValue}
             , function(newval, oldval) {
@@ -37,7 +37,7 @@ Application.Foundation.directive('clothoRun', ['Clotho', '$timeout', function(Cl
                     console.log(data);
                     ngModel.$setViewValue(data);
                 });
-            });
+            });*/
 
 
             /*$timeout(function() {
@@ -45,16 +45,13 @@ Application.Foundation.directive('clothoRun', ['Clotho', '$timeout', function(Cl
             }, 2000);*/
 
 
-            /*
             var fn = function(input) {
-
                 var promise = Clotho.run('blah', input).then(function (data) { return data });
                 console.log(promise);
                 return promise;
             };
 
             ngModel.$formatters.push(fn)
-            */
 
         }
     }
