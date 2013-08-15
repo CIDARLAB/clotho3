@@ -106,6 +106,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - popover with HTML (see angularStrap, or wait for bootstrap UI)
+    - https://github.com/angular-ui/bootstrap/issues/220
 
 
 - $clotho.api
