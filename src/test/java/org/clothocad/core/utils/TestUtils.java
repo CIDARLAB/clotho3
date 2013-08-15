@@ -4,12 +4,19 @@
  */
 package org.clothocad.core.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
@@ -25,7 +32,24 @@ import org.clothocad.model.Person;
  *
  * @author spaige
  */
+@Slf4j
 public class TestUtils {
+
+    private static void importTestJSON(Persistor persistor) {
+        ObjectReader reader = new ObjectMapper().reader(Map.class);
+        for (File child : new File("src/test/resources/testData").listFiles()){
+            try {
+                MappingIterator<Map> it = reader.readValues(child);
+                while (it.hasNext()){
+                    persistor.save(it.next());
+                }
+            } catch (JsonProcessingException ex) {
+                log.warn("Could not process {} as JSON", child.getAbsolutePath());
+            } catch (IOException ex) {
+                log.warn("Could not open {}", child.getAbsolutePath());
+            }
+        }
+    }
     //not sure if this should be static 
     
     private Injector injector;
@@ -42,6 +66,8 @@ public class TestUtils {
     }
     
     public static List<ObjectId> setupTestData(Persistor persistor){
+        importTestJSON(persistor);
+        
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
         Person person = new Person("Test Person", lab, null);
