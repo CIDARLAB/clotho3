@@ -129,7 +129,16 @@ public class MongoDBConnection
 
     @Override
     public void save(Map obj) {
-        data.save(new BasicDBObject(obj));
+        //test merge to make sure it merges sub-documents
+        DBObject query = new BasicDBObject("_id", obj.get("_id"));
+
+        if (null != data.findOne(query)) {
+            obj.remove("_id");
+            data.update(query, new BasicDBObject("$set", obj));
+            obj.put("_id", query.get("_id"));
+        } else {
+            data.save(new BasicDBObject(obj));
+        }
     }
     
     

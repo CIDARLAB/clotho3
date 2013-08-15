@@ -149,7 +149,7 @@ public class RouterTest {
     
     @Test
     public void setAll(){
-        TestConnection connection = new TestConnection("destroyTest");
+        TestConnection connection = new TestConnection("setTest");
         List<Map<String,Object>> specs = new ArrayList<>();
         
         for (ObjectId id : ids){
@@ -165,7 +165,8 @@ public class RouterTest {
         for (ObjectId id : ids){
             Map<String,Object> result = persistor.getAsJSON(id);
             assertEquals("set",result.get("name"));
-        }
+            assertNotNull(result.get("schema"));
+        }       
     }
     
         @Test
