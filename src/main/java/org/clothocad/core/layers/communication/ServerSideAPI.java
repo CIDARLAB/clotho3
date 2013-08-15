@@ -314,28 +314,30 @@ public class ServerSideAPI {
     }
 
     
-    public final void setAll(List<Map<String,Object>> values){
+    public final List<ObjectId> setAll(List<Map<String,Object>> values){
+        List<ObjectId> out = new ArrayList<>();
         for (Map<String,Object> spec : values){
-            set(spec);
+            out.add(set(spec));
         }
+        return out;
     }
     
-    public final void set(Map<String, Object> values) {
+    public final ObjectId set(Map<String, Object> values) {
         try {
 
             if (values.get("id") == null) {
-                say("No uuid provided", Severity.FAILURE);
-                return;
+                say("set: No uuid provided", Severity.WARNING);
+                return create(values);
             }
 
             ObjectId uuid = resolveId(values.get("id").toString());
             if (uuid == null) {
-                return;
+                return null;
             }
 
             if (!persistor.has(uuid)) {
-                say("No object with this id exists", Severity.FAILURE);
-                return;
+                say("set: No object with this id exists", Severity.WARNING);
+                return create(values);
             }
 
             //Grab the object to be altered
@@ -355,10 +357,13 @@ public class ServerSideAPI {
 
             //Relay the data change to listening clients
             publish(altered); //publish by uuid?
+            return uuid;
         } catch (UnauthorizedException e) {
             say(e.getMessage(), Severity.FAILURE);
+            return null;
         } catch (Exception e) {
             logAndSayError(String.format("Error setting %s: %s", values.toString(), e.getMessage()), e);
+            return null;
         }
     }
     

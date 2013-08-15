@@ -88,6 +88,22 @@ public class ServerAPITest {
 
     @Test
     public void setNonExistent() {
+        //XXX: this is actually bad data
+        Map<String, Object> newPart = new HashMap<>();
+        newPart.put("name", "Test Part 5");
+        newPart.put("description", "previously unsaved test part");
+        newPart.put("sequence", "ATCGATCG");
+        newPart.put("format", "FreeForm");
+
+        
+        
+        ObjectId id = api.set(new HashMap(newPart));
+        
+        Map<String, Object> createdPart = api.get(id);
+        
+        for (String key : newPart.keySet()){
+            assertEquals(newPart.get(key), createdPart.get(key));
+        }
     }
 
     @Test

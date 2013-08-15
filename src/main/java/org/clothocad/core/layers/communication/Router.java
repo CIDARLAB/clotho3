@@ -120,8 +120,8 @@ public class Router {
                     response = api.get(data);
                     break;
                 case set:
-                    api.set(JSON.mappify(data));
-                    response = Void.TYPE;
+                    response = api.set(JSON.mappify(data));
+                    if (response == null) response = Void.TYPE;
                     break;
                 case create:
                     response = api.create(data);
