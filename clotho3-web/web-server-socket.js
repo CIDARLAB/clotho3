@@ -573,7 +573,21 @@ io.sockets.on('connection', function (socket) {
     api.run = function(data, requestId) {
         var command = data.id,
             args = data.args,
-            result = args.toUpperCase(); //for testing
+            result;
+
+        switch (command) {
+            case 'reverse' : {
+                result = args.split('').reverse().join('');
+                break;
+            }
+            case 'uppercase' : {
+                result = args.toUpperCase();
+                break;
+            }
+            default : {
+                result = args;
+            }
+        }
 
         socket.send(api.pack.api_wrap('run',
             api.pack.nopack(result),
