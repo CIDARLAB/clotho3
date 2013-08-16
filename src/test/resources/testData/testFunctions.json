@@ -1,0 +1,14 @@
+{
+    "name":"reverse",
+    "language":"JAVASCRIPT",
+    "schema":"JavaScriptFunction",
+    "code":"function(sequence) {return sequence.split('').reverse().join('');};",
+    "arguments":[{"name":"sequence","type":"String"}]
+}
+{
+    "name":"uppercase",
+    "language":"JAVASCRIPT",
+    "schema":"JavaScriptFunction",
+    "code":"function (str) {return str.toUpperCase();};",
+    "arguments":[{"name":"str", "type":"String"}]
+}

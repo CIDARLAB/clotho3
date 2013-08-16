@@ -43,7 +43,7 @@ Application.Foundation.directive('clothoRun', ['Clotho', function(Clotho) {
 
 
             var runFunction = function(input) {
-                return Clotho.run(attrs.clothoRun, input).then(function(result) {
+                return Clotho.run(attrs.clothoRun, [input]).then(function(result) {
                     updateElement(result);
                 });
             };

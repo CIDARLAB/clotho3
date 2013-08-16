@@ -492,7 +492,15 @@ public class ServerSideAPI {
     //TODO: needs serious cleaning up
     public final Object run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<String, Object> data = JSON.mappify(o);
-        List<Object> args = (List) data.get("args");
+        List<Object> args;
+        
+        try {
+            args = (List) data.get("args");            
+        } catch (ClassCastException e){
+            say("Arguments must be a list or array");
+            return null;
+        }
+
         
         for (int i = 0; i< args.size(); i++){
             try {

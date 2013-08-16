@@ -169,11 +169,11 @@ public class RouterTest {
         }       
     }
     
-        @Test
+    @Test
     public void testConstructFunction() {
         String script = 
                   "var data = {};\n"
-                + "data.name = \"reverse\";\n"
+                + "data.name = \"reverse1\";\n"
                 + "data.language = \"JAVASCRIPT\";\n"
                 + "data.schema = \"JavaScriptFunction\";\n"
                 + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
@@ -181,7 +181,7 @@ public class RouterTest {
                 + "\n"
                 + "clotho.create(data);\n"
                 + "\n"
-                + "clotho.run(\"reverse\", [\"AAACCC\"]);";
+                + "clotho.run(\"reverse1\", [\"AAACCC\"]);";
         TestConnection connection = new TestConnection("constructFunction");
         
         sendMessage(new Message(Channel.submit, script, "6"), connection);
