@@ -40,12 +40,23 @@
 
 <div class="container" ng-controller="HomeCtrl">
     <div class="row">
-        <div class="span12">
+        <div class="span12" ng-click="enterClotho()" style="cursor: pointer;">
 
             <div class="hero-unit text-center" style="padding: 10px">
                 <h1>Clotho 3.0</h1>
             </div>
             <div class="shadowBox"><img src="../images/clotho-intro.jpg" class="img-rounded"/></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span6 img-rounded" style="background: #fff; cursor: pointer;" ng-click="enterEugene()">
+            <img src="../images/eugeneLogo.png" class="img-rounded pull-left" />
+            <h3>Eugene Lab</h3>
+        </div>
+        <div class="span6 img-rounded" style="background: #fff; cursor: pointer;" ng-click="enterRaven()">
+            <img src="../images/ravenLogo.png" class="img-rounded pull-left" />
+            <h3>RavenCAD</h3>
         </div>
     </div>
 </div>

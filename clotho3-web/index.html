@@ -171,6 +171,8 @@
                 <ul class="nav">
                     <li class="ng-cloak" ng-repeat="item in modes.items" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
                 </ul>
+
+                <button class="btn btn-warning btn-small pull-right" ng-click="clearStorage()"><i class="icon-trash"></i></button>
             </div>
             <div clotho-searchbar></div>
         </div>

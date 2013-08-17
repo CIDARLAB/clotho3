@@ -156,13 +156,14 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
         };
 
         //passes update message - usual way of adding model to collector
-        //pass true for 'force' to force collect and broadcast of update
+        //pass true for 'force' to force collect even if obj identical and broadcast of update
         var storeModel = function(uuid, obj, force) {
             if (force || !angular.equals(collector[uuid], obj)) {
                 console.log("COLLECTOR\t" + uuid + " is being saved");
                 //console.log(obj);
                 silentAddModel(uuid, obj);
-                broadcastModelUpdate(uuid, obj)
+                broadcastModelUpdate(uuid, obj);
+                console.log(collector[uuid]);
             }
             else {
                 console.log("COLLECTOR\t" + uuid + "model is same as collector");
@@ -189,6 +190,16 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
             }
         };
 
+        var removeModel = function (uuid) {
+            if (collector[uuid]) {
+                collector[uuid] = null;
+                angularLS.removeItem(uuid);
+                return true;
+            } else {
+                return false;
+            }
+        };
+
         var clearStorage = function() {
             angularLS.clear();
             collector = {};
@@ -205,6 +216,7 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
             storeModel : storeModel,
             retrieveModel : retrieveModel,
             retrieveRef : retrieveRef,
+            removeModel : removeModel,
             clearStorage : clearStorage
         }
     }

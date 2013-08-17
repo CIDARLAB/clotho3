@@ -27,23 +27,24 @@ Application.Foundation.directive('clothoRun', ['Clotho', function(Clotho) {
             scope.$watch(function() {
                 return attrs.clothoRun
             }, function(newval, oldval) {
-                console.log(newval);
+                //console.log(newval);
+                //todo - better handling once decide format
 
-                //todo - better handling
-
+                if (!!newval) runFunction(ngModel.$modelValue);
             });
 
             //model changes
             scope.$watch(function() {
                 return ngModel.$modelValue
             }, function(newval, oldval) {
-                console.log(newval);
+                //console.log(newval);
                 runFunction(newval);
             });
 
-
+            //todo - handle higher arity
             var runFunction = function(input) {
                 return Clotho.run(attrs.clothoRun, [input]).then(function(result) {
+                    console.log(result);
                     updateElement(result);
                 });
             };

@@ -9,14 +9,15 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
         restrict: 'A',
         require: '^form',
         scope: {
-            uuid: '='
-            //fixme - make not required, doesn't work otherwise
-            //editable: '='
+            uuid: '=',
+            editable: '=?'
         },
         controller: function($scope, $element, $attrs) {
             /******
             GENERAL
             ******/
+
+            //todo - map editable to ngModel if present and don't require uuid
 
             //if we're not linking, just pull it from the attrs -- i.e. put in a string
             if (typeof $scope.uuid == 'undefined') {
@@ -24,12 +25,14 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.uuid = $attrs.uuid;
             }
 
+
             $scope.schema = {};
             $scope.editable = $scope.editable || {};
 
             $scope.editMode = false;
             $scope.formDirty = false;
 
+            //todo - don't assume same schema necessarily
             Clotho.listen('collector_reset', function Editor_onCollectorReset() {
                 Clotho.get($scope.uuid).then(function(result) {
                     $scope.editable = result;
@@ -264,7 +267,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
 
-                    //verify works
+                    //todo - verify works
                     //iAttrs.$set('novalidate', true);
 
                     //note - separation at this point into pre is not important as nothing is linked to form
@@ -306,6 +309,16 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     scope.discard = function() {
                         scope.reset();
                         scope.editMode = false;
+                    };
+
+                    scope.destroy = function()  {
+                        Clotho.destroy(scope.editable.id).then(function() {
+                            console.log('bam');
+                            scope.editMode = false;
+                            scope.editable = undefined;
+                            scope.id = undefined;
+                        });
+
                     };
 
                 }

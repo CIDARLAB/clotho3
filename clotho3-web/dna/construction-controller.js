@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Dna.controller('constructionCtrl', ['$scope', 'DNA', 'Digest', 'PCR', function($scope, DNA, Digest, PCR) {
+Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Digest', 'PCR', function($scope, Clotho, DNA, Digest, PCR) {
     $scope.DNA = DNA;
     $scope.PCR = PCR;
     $scope.Digest = Digest;
@@ -24,6 +24,12 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'DNA', 'Digest', 'PCR'
     //PCR predict
     $scope.primers = ['tatcgatcgta', 'gatcgatcgat'];
     $scope.backbone = 'cccccccccccagctacgatcgataaaaaaaaaaattttttttttttgatcgatcgatagctaggggggggggggg';
+
+    $scope.clothoFunctions = [];
+    Clotho.query({schema: "Function"}).then(function(result) {
+        console.log(result);
+        $scope.clothoFunctions = result;
+    });
 
 
 }]);
