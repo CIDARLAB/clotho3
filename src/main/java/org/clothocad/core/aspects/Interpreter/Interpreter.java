@@ -23,9 +23,9 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.aspects.Interpreter;
 
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.Set;
-import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson
@@ -51,7 +51,7 @@ public class Interpreter {
      * @param cmd
      * @param action
      */
-    public void learnNative(String cmd, JSONObject action) {
+    public void learnNative(String cmd, Map<String, Object> action) {
         Learner.learn(cmd, action);
     }
     

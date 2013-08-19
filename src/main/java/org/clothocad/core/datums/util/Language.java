@@ -23,20 +23,26 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.datums.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author John Christopher Anderson
  */
 public enum Language {
-    JAVASCRIPT("JavaScript"),
-    PYTHON("Python"),
-    GROOVY("Groovy"),
-    JAVA("Java"),
-    JSONSCHEMA("JSON Schema");
+    JAVASCRIPT("JavaScript", Arrays.asList(new String[]{"js"})),
+    PYTHON("Python", Arrays.asList(new String[]{"py"})),
+    GROOVY("Groovy", Arrays.asList(new String[]{"groovy"})),
+    JAVA("Java", Arrays.asList(new String[]{"java"})),
+    JSONSCHEMA("JSON Schema", Arrays.asList(new String[]{}));
     
-    private Language(final String s){stringValue=s;}
+    private Language(final String s, final List<String> strList){stringValue=s; extensions=strList;}
     
     @Override
     public String toString() {return stringValue;}
+    
+    public List<String> extensions() {return extensions;}
     private final String stringValue;
+    private final List<String> extensions;
 
 }

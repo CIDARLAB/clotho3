@@ -27,13 +27,14 @@ package org.clothocad.core.layers.communication;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
-import org.json.JSONObject;
+import org.clothocad.core.util.JSON;
 
 /**
  * @author John Christopher Anderson
@@ -45,12 +46,12 @@ public class UpdateIndex {
 
     public void register(Sharable sharable, Widget widget, Mind mind) {
         //Register the sharable --> widget hash
-        String sharableId = sharable.getId();
+        ObjectId sharableId = sharable.getId();
         Set<Widget> widgets = null;
         if(sharableToWidget.containsKey(sharableId)) {
             widgets = sharableToWidget.get(sharableId);
         } else {
-            widgets = new HashSet<Widget>();
+            widgets = new HashSet<>();
         }
         widgets.add(widget);
         sharableToWidget.put(sharableId, widgets);
@@ -71,7 +72,7 @@ public class UpdateIndex {
             return;
         }
         
-        JSONObject data = sharable.toJSON();
+        Map<String, Object> data = JSON.mappify(sharable);
         
         for(Widget widg : widgets) {
             try {
@@ -83,6 +84,6 @@ public class UpdateIndex {
         }
     }
 
-    private HashMap<String, Set<Widget>> sharableToWidget = new HashMap<String, Set<Widget>>();
+    private HashMap<ObjectId, Set<Widget>> sharableToWidget = new HashMap<>();
     private HashMap<String, WeakReference<Mind>> widgetToMind = new HashMap<String, WeakReference<Mind>>();
 }

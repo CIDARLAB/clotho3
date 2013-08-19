@@ -23,27 +23,26 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.layers.communication.mind;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import lombok.Getter;
+import lombok.Setter;
 
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.layers.communication.ServerSideAPI;
+import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.layers.communication.Channel;
+import org.clothocad.core.layers.communication.Message;
+import org.clothocad.core.layers.communication.ScriptAPI;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
+import org.clothocad.core.layers.execution.MetaEngine;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,13 +71,6 @@ public final class Mind
 	
     static final Logger logger = LoggerFactory.getLogger(Mind.class);
     
-    public static Mind create(ClientConnection connection) {
-        Mind mind = new Mind();
-        mind.connection = connection;        
-        mind.ssAPI = new ServerSideAPI();
-        mind.ssAPI.setMind(mind);
-        return mind;
-    }
     /**
      * This is not a serverside API method
      * @param client
@@ -89,7 +81,7 @@ public final class Mind
         /* TODO check if this Mind already exists */
         //Create the new Mind object
         Mind out = new Mind();
-        out.personId = person.getId();
+        out.personId = person.getUUID().toString();
         //out.save();
         return out;
     }
@@ -110,13 +102,8 @@ public final class Mind
 
     /* Similar to runCommand but does not "defuzzify".
      * Used for the "serverEval" channel. */
-    public synchronized boolean eval(String socket_id, String cmd) {
-        try {
-            getEngine().eval(cmd);
-            return true;
-        } catch (ScriptException e) {
-            return false;
-        }
+    public synchronized Object eval(String cmd, ScriptAPI api) throws ScriptException {
+            return getEngine().eval(cmd, Language.JAVASCRIPT, api);    
     }
 
     /**
@@ -128,37 +115,16 @@ public final class Mind
      * @return 
      */
     /* TODO: race condition. ScriptEngine execution needs to be serialized. */
-    public synchronized boolean runCommand(String cmd) {
-        try {
-            getEngine().eval(cmd);
-        } catch (ScriptException e) {
-            return false;
-        }
-        
-        return true;
+    public synchronized Object runCommand(String cmd, ScriptAPI api) throws ScriptException {
+        return eval(cmd, api);
+//                runCommandWithNamespace(cmd);
     }
 
     /* client has new tab--update config */
     public void linkPage(String socket_id,
                          String ephemeral_link_page_id,
                          PageMode page_mode) {
-        config.addPage(socket_id, page_mode);
-        //XXX: this.save();
-        if (doos.containsKey(ephemeral_link_page_id)) {
-            AddPageDoo add_page_doo =
-                (AddPageDoo) doos.get(ephemeral_link_page_id);
-            if (add_page_doo.getPageMode().compareTo(page_mode) == 0) {
-                add_page_doo.terminate();
-                /* TODO: add_page_doo is done
-                 * call some sort of callback for the caller of addPage
-                 */
-            } else {
-                logger.error(
-                           "linkNewPage got page mode mismatch: {}, {}",
-                           page_mode.name(),
-                           add_page_doo.getPageMode().name());
-            }
-        }
+        throw new UnsupportedOperationException();
     }
     
     /* Instruct client to close a tab */
@@ -180,9 +146,9 @@ public final class Mind
     }
 
     public Iterable<Map<String, String>> getPageSummary() {
-        List<Map<String, String>> out = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> out = new ArrayList<>();
         for (String socket_id : config.getSocketIDs()) {
-            Map<String, String> out_item = new HashMap<String, String>();
+            Map<String, String> out_item = new HashMap<>();
             out_item.put("socket_id", socket_id);
             out_item.put("name", "(No Name)");
             out_item.put("mode",
@@ -227,11 +193,6 @@ public final class Mind
         return config;
     }
 
-    /* TODO: this shouldn't be exposed */
-    ScriptEngine getMyEngine() {
-        return engine;
-    }
-
     public String getPersonId() {
         return personId;
     }
@@ -248,66 +209,36 @@ public final class Mind
     /**
      * Return the scripting engine
      * (or a new instance if it doesn't already exist)
-     *
-     * Injects a new ServerScriptAPI with `socket_id`
-     * `socket_id` may be null if this request is not bound to a page.
      */
-    public ScriptEngine getEngine() {
+    public MetaEngine getEngine() {
         if (engine == null) {
-            engine = new ScriptEngineManager().getEngineByName("JavaScript");
-            ServerSideAPI api = getAPI();
-            engine.put("clothoJava", api);
-            
-            try {
-                engine.eval(initializationScript);
-            } catch (ScriptException ex) {
-                System.out.println("Error running initialization Script!");
-                ex.printStackTrace();
-            }
+            engine = new MetaEngine();
         }
         return engine;
-    }
-
-    public ServerSideAPI getAPI() {
-        if (ssAPI == null) {
-            ssAPI = new ServerSideAPI(this);
-        }
-        return ssAPI;
     }
     
     public Person getPerson() {
     	return this.person;
     }
     
-    public void setClientConnection(ClientConnection conn) {
-        connection = conn;
-    }
-    
-    public List<JSONObject> getLastCommands() {
+    public List<Message> getLastCommands() {
         return this.lastCommands;
     }
-    
-    public void addLastCommand(String str) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("text", str);
-            obj.put("type", "phrase");
-            lastCommands.add(obj);
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        }
+
+    public void addLastCommand(Message command){
+        lastCommands.add(command);
     }
     
-    public void addLastCommand(JSONObject json) {
-        lastCommands.add(json);
+    public void addLastCommand(Channel channel, Object data){
+        lastCommands.add(new Message(channel, data));
     }
     
     private Person person;
     private String personId;
-    private transient List<JSONObject> lastCommands = new ArrayList<JSONObject>();
-    private transient List<String> lastSharables = new ArrayList<String>();
-    private transient ScriptEngine engine;
-    private transient ServerSideAPI ssAPI;
+    private transient List<Message> lastCommands = new ArrayList<>();
+    private transient MetaEngine engine;
+    private transient List<String> lastSharables = new ArrayList<>();
+    @Getter @Setter
     private transient ClientConnection connection;
     
     private Map<Date, String> commandHistory;
@@ -315,6 +246,7 @@ public final class Mind
     private static final int MAX_SIZE_LAST_SHARABLES = 50;
 
     /* How the client is currently set up */
+    @Getter
     private ClientConfiguration config;
 
     /* Whether it should persist the visual configuration */
@@ -324,17 +256,13 @@ public final class Mind
     
     //JCA:  THIS IS PROBLEMATIC, IT IS HOLDING STATE FOR A DOO, NOT LOOSE-COUPLED
     //NOT SURE WHY THIS WOULD BE HERE INSTEAD OF THE HOPPER, I THINK THIS IS PROBABLY WRONG
-    private Map<String, Doo> doos = new HashMap<String, Doo>();
+    private Map<String, Doo> doos = new HashMap<>();
 
     private String id;
 
 public void SUPERILLEGAL_SETUUID(String string) {
     id = string;
 }
-
-    public ClientConfiguration getConfig() {
-        return config;
-    }
 
     public ClientConnection getClientConnection() {
        return this.connection;
@@ -363,6 +291,10 @@ public void SUPERILLEGAL_SETUUID(String string) {
         if(lastSharables.size() > MAX_SIZE_LAST_SHARABLES) {
             lastSharables.remove(MAX_SIZE_LAST_SHARABLES);
         }
+    }
+    
+    public Object evalFunction(String code, String name, List args, ScriptAPI api) throws ScriptException {
+        return getEngine().invoke(code, name, args);
     }
 
 }

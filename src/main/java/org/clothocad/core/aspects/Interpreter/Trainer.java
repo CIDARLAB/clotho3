@@ -1,6 +1,6 @@
-package org.clothocad.core.aspects.Interpreter;
-import org.json.JSONException;
-import org.json.JSONObject;
+package org.clothocad.core.aspects.Interpreter;import com.fasterxml.jackson.core.JsonParseException;
+import java.util.Map;
+import org.clothocad.core.util.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class Trainer {
     /**
      * Allows user to input and save all the command/action relationships.
      */
-    public static void inputTrainingData() throws JSONException{
+    public static void inputTrainingData() throws JsonParseException{
         while (true) {
             System.out.println("Type in relationship 'command/action': ");
             String input = inputReader.readString();
@@ -49,11 +49,11 @@ public class Trainer {
             } else if (input.contains("/")) {
                 try {
                     String[] cmdAct = input.split("/");
-                    JSONObject json = new JSONObject(cmdAct[1]);
+                    Map<String, Object> json = JSON.deserializeObject(cmdAct[1]);
                     Interpreter.get().learnNative(cmdAct[0], json);
-                } catch (JSONException ex) {
+                } catch (JsonParseException ex) {
                     ex.printStackTrace();
-                }
+                } 
             } 
         }
     }
@@ -61,14 +61,14 @@ public class Trainer {
     /**
      * Temporary hacky way to test the NGrams algorithm
      */
-    private static void multiTrain (int rep) throws JSONException {
+    private static void multiTrain (int rep) throws JsonParseException {
         int reps = rep;
         System.out.println("MultiTrain~ Type in relationship 'command/action': ");
         String input = inputReader.readString();
         if (input.contains("/")) {
             while (reps > 0) {
                 String[] cmdAct = input.split("/");
-                JSONObject json = new JSONObject(cmdAct[1]);
+                Map<String, Object> json = JSON.deserializeObject(cmdAct[1]);
                 Interpreter.get().learnNative(cmdAct[0], json);
                 reps -= 1;
             }

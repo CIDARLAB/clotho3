@@ -2,16 +2,17 @@ package org.clothocad.core.aspects.Interpreter;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import org.clothocad.core.persistence.Persistor;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 class Learner{
     final static Logger logger = LoggerFactory.getLogger(Learner.class);
+    public static Persistor persistor;
 
     /**
      * Provided the list of n-gram features and the action that they map to,
@@ -20,7 +21,7 @@ class Learner{
      * @param features
      * @param action 
      */
-    public static void learn(String cmd, JSONObject action) {
+    public static void learn(String cmd, Map<String, Object> action) {
         String[] features = Handler.convertToFeatures(Utilities.tokenize(cmd));
         for(String feature : features) {
             if (feature != null) {
@@ -108,7 +109,7 @@ class Learner{
      * @param feature 
      */
     public static HashMap<String, Integer> getIndexEntry(String feature) {
-        HashMap<String, Integer> out = Persistor.get().loadFeature(feature);
+        HashMap<String, Integer> out = persistor.loadFeature(feature);
         return out;
     }
 
@@ -118,7 +119,7 @@ class Learner{
      * @param HashMap 
      */
     private static void saveIndexEntry(HashMap<String, Integer> StoreGrams, String feature) {
-        Persistor.get().persistFeature(StoreGrams, feature);
+        persistor.persistFeature(StoreGrams, feature);
     }
 
     /* TODO replace autocollapse's job with Decider. If decide to keep then replace 

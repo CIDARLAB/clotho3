@@ -20,6 +20,7 @@ Application.Services.service('CollectorOld', ['$resource', '$rootScope', 'angula
 
     //does not broadcast update (locally at least, but angularLS will via localStorage updates)
     var silentAddModel = function(uuid, obj) {
+        if (!uuid) return;
         if (typeof obj == 'string') {obj = JSON.parse(obj);}
         collector[uuid] = obj;
         angularLS.setItem(uuid, obj);

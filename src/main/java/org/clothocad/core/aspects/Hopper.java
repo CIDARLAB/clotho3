@@ -25,10 +25,9 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects;
 
 import java.util.HashMap;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The hopper is where Doo's are held while a process is going on elsewhere.
@@ -51,18 +50,20 @@ import org.slf4j.LoggerFactory;
  * @author John Christopher Anderson
  */
 
-
-public class Hopper implements Aspect {
-    public static Logger logger = LoggerFactory.getLogger(Hopper.class);
-    /**
+@Slf4j
+public class Hopper implements Aspect {    /**
      * Pull the Doo out of the Hopper and return it
      * @param dooId
      * @return 
      */
-    public Doo extract(String dooId) {
+    public Doo extract(ObjectId dooId) {
         Doo extracted = dooList.get(dooId);
         dooList.remove(dooId);
         return extracted;
+    }
+    
+    public Doo extract(String dooId) {
+        return extract(new ObjectId(dooId));
     }
     
     /**
@@ -73,12 +74,12 @@ public class Hopper implements Aspect {
      * @param dooId
      * @return 
      */
-    public boolean terminate(String dooId) {
+    public boolean terminate(ObjectId dooId) {
         Doo doo = dooList.get(dooId);
 
         if(doo==null) {
             //THIS SHOULD BE AN ERROR-MESSAGE SCENARIO FOR SURE AS IT DROPPED A DOO, WHICH IS A NO-NO FOR SURE.
-            logger.error(dooId);
+            log.error("terminate: Cannot find doo with id {}", dooId);
             return false;
         }
         //IF THE DOO TELLS CLOTHO TO DO ANYTHING NOW, DOO IT HERE
@@ -95,7 +96,7 @@ public class Hopper implements Aspect {
      * @param doo 
      */
     public void add(Doo doo) {
-        dooList.put(doo.getId(), doo);
+        dooList.put(doo.getUUID(), doo);
     }
     
     //Singleton stuff
@@ -106,7 +107,7 @@ public class Hopper implements Aspect {
     }
     
     
-    private HashMap<String, Doo> dooList = new HashMap<String, Doo>();
+    private HashMap<ObjectId, Doo> dooList = new HashMap<>();
     
     
 }

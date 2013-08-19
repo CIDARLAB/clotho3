@@ -9,3 +9,4 @@ data/
 
 clotho3-web/.idea/
 clotho3-web/.idea/workspace.xml
+*.DS_Store

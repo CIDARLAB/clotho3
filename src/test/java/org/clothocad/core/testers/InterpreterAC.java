@@ -1,6 +1,7 @@
 package org.clothocad.core.testers;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ class InterpreterAC {
 
     public static void test1() {
         AutoComplete completer1 = completer1();
-        ArrayList<String> results = completer1.getCompletions("wa");
+        List<String> results = completer1.getCompletions("wa");
         check(results.get(0), "walk my cat");
         check(results.get(1), "walk my dog");
         check(results.get(2), "walk my friend");
@@ -48,7 +49,7 @@ class InterpreterAC {
 
     public static void test2() {
         AutoComplete completer1 = completer1();
-        ArrayList<String> results = completer1.getCompletions("sa");
+        List<String> results = completer1.getCompletions("sa");
         check(results.get(0), "sail on my boat");
         check(results.get(1), "samba");
         check(results.size(), 2);
@@ -56,7 +57,7 @@ class InterpreterAC {
 
     public static void test3() {
         AutoComplete completer2 = completer2();
-        ArrayList<String> results = completer2.getCompletions("com");
+        List<String> results = completer2.getCompletions("com");
         check(results.get(0), "complete this sentence");
         check(results.get(2), "complete thissentence");
         check(results.size(), 3);

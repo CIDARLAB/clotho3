@@ -24,10 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.objbases;
 
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
+import java.util.Map;
+import javax.validation.constraints.AssertTrue;
+import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 
 
 /**
@@ -52,10 +52,11 @@ import org.json.JSONObject;
  */
 
 
-public class Badge  extends ObjBase {
+public class Badge 
+		extends SharableObjBase{
 
-	public Badge(String name) {
-		super(name);
+	public Badge(Person author) {
+		super("", author);
 	}
 
 	//
@@ -98,9 +99,9 @@ public class Badge  extends ObjBase {
 //    }
 //
 //    @Override
-//    public final JSONObject getJSON() {
+//    public final Map<String, Object> getJSON() {
 //        try {
-//            JSONObject out = new JSONObject();
+//            Map<String, Object> out = new Map<String, Object>();
 //            out.put("type", "BADGE");
 //            out.put("name", this.name);
 //            out.put("description", description);
@@ -114,7 +115,7 @@ public class Badge  extends ObjBase {
 //    }
 //
 //    @Override
-//    public void set(JSONObject permissions, String userId) {
+//    public void set(Map<String, Object> permissions, String userId) {
 //        
 //    }
 //
@@ -126,6 +127,12 @@ public class Badge  extends ObjBase {
     public final boolean hasBadge(String personId) {
 return true;
         //        return haveBadge.contains(personId);
+    }
+
+	//XXX: move to ObjBase or Sharable
+    @AssertTrue
+    public boolean validate(Map<String, Object> obj) {
+        return true;
     }
 //    
     /**

@@ -22,21 +22,18 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import org.clothocad.core.datums.ObjBase;
-
 import com.github.jmkgreen.morphia.annotations.Reference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.clothocad.core.datums.JCAClothoSchema;
-import org.json.JSONObject;
+import org.clothocad.core.datums.SharableObjBase;
 
 /**
  *
  * @author J. Christopher Anderson
  */
 @NoArgsConstructor
-public class Person extends ObjBase implements JCAClothoSchema {
+public class Person extends SharableObjBase {
 
     @Getter
     @Setter
@@ -60,7 +57,8 @@ public class Person extends ObjBase implements JCAClothoSchema {
     //unique name criterion
     //valid or nonexistent email
     public Person( String displayname, Lab alab, String rawPassword ) {
-        super(displayname);
+        //XXX:  Do people have authors?
+        super(displayname, null);
         lab = alab;
         //changePassword( rawPassword );
         myCollection = new Collection();
@@ -237,19 +235,6 @@ public class Person extends ObjBase implements JCAClothoSchema {
         return false;
     }*/
 
-
-    /**
-     * Get the name a person wishes to be called
-     * @return a String
-     */
-    public String getNickName() {
-        if ( nickName == null ) {
-            return "";
-        } else {
-            return nickName;
-        }
-    }
-
     /**
      * Is the person an administrator?
      * @return true if they are
@@ -285,13 +270,4 @@ public class Person extends ObjBase implements JCAClothoSchema {
     public String toString() {
         return getName();
     }
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        //TO DO: check for uniqueness of name?
-        
-        return true;
-    }
-    
-
 }

@@ -9,34 +9,10 @@
 Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$templateCache', '$http', '$rootScope', '$location', '$compile', '$dialog', function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
 
     /**
-     * @name clientAPI.mapCommand
-     *
-     * @param command {string} the command to run
-     * @param data {object} JSON to pass along
-     *
-     * @description
-     * Given a command
-     *
-     */
-    var mapCommand = function clientAPIMapCommand(command, data) {
-        //todo - should have more logic than simply calling ClientAPI[command](data)
-        console.log("CLIENTAPI\tmapCommand called on channel " + command);
-
-
-    };
-
-    /**
+     * DEPRECATED - now handled in Clotho.get() logic
      * @name clientAPI.collect
      *
-     * @param {object} data
-     * JSON as outlined below:
-     *
-     *  {
-     *      "uuid" : {string} UUID
-     *      "type" : {string} json | html | css | javascript
-     *      "model" : {JSON | string} for json, object to store. for url, url as string
-     *      "isURL" : if URL, true if URL, false if template
-     *  }
+     * @param {object} data with field id
      *
      * @description
      * Store a resource
@@ -48,59 +24,12 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      * Because models will be updated automatically, collecting a model will update a view
      *
      */
-    //future - share templatecache across apps
-    //todo - better handling of url vs. model for template -- use regex and get rid of isURL
 
     var collect = function clientAPICollect(data) {
+        var model = data,
+            id = model.id || model.uuid || false;
 
-        var type = data.type;
-        var uuid = data.uuid;
-        var model_or_url = data.model;
-        var isURL = data.isURL;
-
-        switch (type) {
-            case "json" :
-                Collector.storeModel(uuid, model_or_url);
-                break;
-            case "html" :
-                if (isURL) {
-
-                    //todo - remove and reset if exists
-                    // http://deansofer.com/posts/view/14/AngularJs-Tips-and-Tricks-UPDATED#refresh-partials
-                    /*
-                     //check cache
-                     var template = $templateCache.get(model_or_url);
-                     console.log(template);
-                     if (template) {
-                     //don't do anything
-                     console.log("already exists");
-                     } else {
-                     $http.get(model_or_url, {cache:$templateCache})
-                     .then(function(result) {
-                     console.log("got template: " + uuid);
-                     console.log(result);
-                     })
-                     }*/
-
-
-                    $rootScope.$safeApply($http.get(model_or_url, {cache:$templateCache}));
-
-                } else {
-                    //sending the actual template (isURL = false)
-                    $templateCache.put(uuid, model_or_url);
-                }
-                break;
-            case "js-template" :
-                //todo - handle passing template as script
-                break;
-            case "js" :
-                $script(model_or_url, uuid);
-                break;
-            default :
-                console.log("CLIENTAPI\tcollect\ttype not sent just download: " + uuid);
-                $rootScope.$safeApply($http.get(model_or_url));
-                break;
-        }
+        Collector.storeModel(id, model);
     };
 
     /**
@@ -371,7 +300,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
 
 
     return {
-        mapCommand : mapCommand,
         collect : collect,
         edit : edit,
         changeUrl : changeUrl,

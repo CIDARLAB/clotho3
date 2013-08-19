@@ -5,6 +5,7 @@
 package org.clothocad.core.schema;
 
 import java.util.HashSet;
+import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
@@ -31,9 +32,18 @@ public class ClassParser extends ClassVisitor{
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         String description = "";
+        
         Class[] input = typesToClasses(Type.getArgumentTypes(desc));
+        Argument[] arguments = new Argument[input.length];
+        for (int i = 0; i<input.length; i ++){
+            //TODO: real argument names
+            arguments[i] = new Argument("", input[i]);
+        }
+        
         Class output = Type.getReturnType(desc).getClass();
-        Function method = new Function(name, new String[]{}, input, output, "", target.getLanguage());
+        
+        
+        Function method = new Function(name, arguments, output, "", target.getLanguage());
         target.methods.add(method);
         return null;
     }
@@ -46,7 +56,7 @@ public class ClassParser extends ClassVisitor{
         Boolean reference = false;
         Class type = Type.getType(desc).getClass();
         
-        ClothoField field = new ClothoField(name, type, example, description, null, reference, acc);
+        ClothoField field = new ClothoField(name, type, example, description, reference, acc);
         
         target.fields.add(field);
         return new FieldParser(field);

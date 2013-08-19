@@ -24,17 +24,11 @@ package org.clothocad.model;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.awt.Color;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
-import org.clothocad.core.datums.JCAClothoSchema;
-import org.clothocad.core.datums.ObjBase;
-import org.json.JSONObject;
+import org.clothocad.core.datums.SharableObjBase;
 
 /**
  *
@@ -51,7 +45,7 @@ import org.json.JSONObject;
 //took out notes for demo
 
 @NoArgsConstructor
-public class Feature extends ObjBase implements JCAClothoSchema {
+public class Feature extends SharableObjBase {
     /**
      * Relayed constructor of a new Feature
      * @param name
@@ -59,9 +53,8 @@ public class Feature extends ObjBase implements JCAClothoSchema {
      * @param author
      */
     private Feature(String name, NucSeq seq, Person author, boolean iscds) {
-        super(name);
+        super(name, author);
         sequence = seq;
-        this.author = author;
         isCDS = iscds;
     }
 
@@ -398,7 +391,7 @@ public class Feature extends ObjBase implements JCAClothoSchema {
      * @param newseq the new sequence of the Feature
      */
     public void setSequenceSequence(final String newseq) {
-        if (newseq.equals("") || newseq == null) {
+        if (newseq == null || newseq.equals("")) {
             //fireData(new RefreshEvent(this, RefreshEvent.Condition.SEQUENCE_CHANGED));
             return;
         }
@@ -416,7 +409,6 @@ public class Feature extends ObjBase implements JCAClothoSchema {
             //addUndo("_riskGroup", _featDatum._riskGroup, newrg);
             riskGroup = newrg;
            // setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.RISK_GROUP_CHANGED);
-            return;
         }
         //todo: throw appropriate invalid operation exception
     }
@@ -441,7 +433,6 @@ public class Feature extends ObjBase implements JCAClothoSchema {
     @Reference
     private NucSeq sequence;
     
-    @NotNull
     @Setter
     private Color forwardColor, reverseColor;
     @Setter
@@ -460,10 +451,5 @@ public class Feature extends ObjBase implements JCAClothoSchema {
        
     @Getter
     private boolean isCDS;
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        return true;
-    }
 
 }

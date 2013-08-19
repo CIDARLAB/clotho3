@@ -1,0 +1,38 @@
+{
+    "name" : "First Function",
+    "type" : "function",
+    "schema" : "JavaScriptFunction",
+    "id" : "aa7f191e810c19729de86101",
+    "code" : "function reverse(string) { return string.split('').reverse().join('') }",
+    "language" : "JAVASCRIPT",
+    "description" : "This function should reverse a string",
+    "precondition" : "",
+    "dependencies" : [
+        {
+            "id" : "128719827591295",
+            "name" : "Example Function"
+        }
+    ],
+    "args" : [
+        {
+            "type" : "String",
+            "name" : "Reversable"
+        }
+    ],
+    "tests" : [
+        {
+            "args" : ["Reverse Me!"],
+            "output" : {
+                "value" : "!eM esreveR",
+                "type" : "VALUE"
+            }
+        },
+        {
+            "args" : ["Another test"],
+            "output" : {
+                "value" : "tset rehtonA",
+                "type" : "VALUE"
+            }
+        }
+    ]
+}

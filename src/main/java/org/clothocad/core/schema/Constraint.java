@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.clothocad.core.schema.constraintutils.ConstraintValues;
+import org.clothocad.core.schema.constraintutils.PatternValues;
 
 /**
  *
@@ -26,7 +28,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Constraint {
     public Constraint(String constraint, Object... args){
-        values = new HashMap<>();
+        values = getConstraintValue(constraint, null);
         this.constraint = constraint;
         if (args.length % 2 != 0){
             throw new IllegalArgumentException("Needs value for each value name");
@@ -41,7 +43,7 @@ public class Constraint {
     
     public Constraint(String constraint, Map<String, Object> values){
         this.constraint = constraint;
-        this.values = values;
+        this.values = getConstraintValue(constraint, values);
     }
     
     @Getter
@@ -50,7 +52,7 @@ public class Constraint {
     
     private static final Map<String, Class> annotations;
     static {
-        annotations = new HashMap<String,Class>();
+        annotations = new HashMap<>();
         annotations.put("pattern", Pattern.class);
         annotations.put("true", AssertTrue.class);
         annotations.put("false", AssertFalse.class);
@@ -60,8 +62,7 @@ public class Constraint {
         annotations.put("size", Size.class);
     }
     
-    protected Map<String, Object> values;
-    
+    protected ConstraintValues values;
     
     public Set<String> getValues(){
        Set<String> set  =  values.keySet();
@@ -74,5 +75,24 @@ public class Constraint {
     
     public Class getAnnotation(){
         return annotations.get(constraint);
+    }
+
+    protected ConstraintValues getConstraintValue(String constraint, Map<String, Object> values){
+        ConstraintValues cvs;
+        switch(constraint){
+            case("pattern"):
+                cvs = new PatternValues();
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        
+        if (values != null){
+            for (String key : values.keySet()){
+                cvs.put(key, values.get(key));
+            }
+        }
+        
+        return cvs;
     }
 }

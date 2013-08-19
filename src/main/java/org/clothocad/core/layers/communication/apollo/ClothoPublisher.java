@@ -1,5 +1,6 @@
 package org.clothocad.core.layers.communication.apollo;
 
+import java.util.Map;
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.JMSException;
@@ -10,7 +11,6 @@ import javax.jms.Session;
 import org.clothocad.core.layers.communication.protocol.ActionType;
 import org.fusesource.stomp.jms.StompJmsConnectionFactory;
 import org.fusesource.stomp.jms.StompJmsDestination;
-import org.json.JSONObject;
 
 public class ClothoPublisher {
 
@@ -37,7 +37,7 @@ public class ClothoPublisher {
 
 	}
 	
-	public void publish(JSONObject json) {
+	public void publish(Map<String, Object> json) {
 		try {
 			System.out.println("[ClothoPublisher.publish] -> "+json);
 			

@@ -5,11 +5,8 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.ClothoConstants;
-import org.clothocad.core.layers.communication.protocol.ActionType;
 import org.fusesource.stomp.jms.StompJmsDestination;
-import org.json.JSONObject;
 
 public class CallbackHandler {
 
@@ -22,7 +19,7 @@ public class CallbackHandler {
 		this.request = request;
 		
 		try {
-		// Setup a message producer to respond to messages from clients, we will get the destination
+			// Setup a message producer to respond to messages from clients, we will get the destination
 	        // to send to from the JMSReplyTo header field from a Message
 	        this.replyProducer = this.session.createProducer(
 	        		new StompJmsDestination(ClothoConstants.CLOTHO_RESPONSE_QUEUE));
@@ -33,11 +30,12 @@ public class CallbackHandler {
 		}
     }
 	
-	public void respond(JSONObject json) {
+        //XXX: this probably needs to be revisited, use JSON.serialize, etc
+	public void respond(Object json) {
 		try {
-			Message response = this.session.createMessage();
-			response.setJMSCorrelationID(this.request.getJMSCorrelationID());
-			response.setStringProperty(Channel.response.toString(), json.toString());
+			Message response = session.createMessage();
+			response.setJMSCorrelationID(request.getJMSCorrelationID());
+			response.setStringProperty("response", json.toString());
 
                         System.out.println("[CallbackHandler.response] -> "+request.getJMSCorrelationID()
                                 +" -> "+ClothoConstants.CLOTHO_RESPONSE_QUEUE);

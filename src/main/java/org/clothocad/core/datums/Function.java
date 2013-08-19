@@ -5,8 +5,10 @@
 package org.clothocad.core.datums;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
+import java.util.List;
 import javax.script.ScriptException;
 import lombok.Getter;
+import lombok.Setter;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.model.Person;
 
@@ -22,25 +24,30 @@ public class Function extends ObjBase {
     
     public Function(){};
     
-    public Function(String name, String[] argNames, Class[] input, Class output, String source, Language language){
-        this.inputTypes = input;
+    public Function(String name, Argument[] arguments, Class output, String source, Language language){
         this.outputType = output;
         this.setName(name);
         //this.action = new ScriptEngineScript(name, source, language);
-        this.argNames = argNames;
+        this.args = arguments;
     }
+    
+    @Getter
+    @Setter
+    private Language language;
     
     @Reference
     private Person author;
     private String description;
     
-    @Getter
-    private String[] argNames;
+    @Getter 
+    private Argument[] args;
     
-    private String[] dependencies;
+    @Getter 
+    private FunctionTest[] tests;
     
-    @Getter
-    private Class[] inputTypes;
+    @Reference
+    private Function[] dependencies;
+    
     //XXX: losing some duck-typing style flexibility
     private Class outputType;
     //XXX: if single return type, could make things more typesafe java-side
@@ -48,14 +55,14 @@ public class Function extends ObjBase {
     //XXX: all our target languages have single return value, so multiple return value is undefined
         //XXX: python has automatic tuple unpacking, is that what is intended?
     
-    private Script preconditions;
-    private Script action;
+    private Script precondition;
+    private Script code;
     
     public boolean canDooIt(Object... args){
         //args match input types
         try {
-            for (int i = 0; i<inputTypes.length; i++){
-                if (!inputTypes[i].isInstance(args[i])) return false;
+            for (int i = 0; i<this.args.length; i++){
+                if (!this.args[i].getType().isInstance(args[i])) return false;
                 //XXX: throw type exception
              }
         } catch (IndexOutOfBoundsException e){
@@ -63,18 +70,33 @@ public class Function extends ObjBase {
         }
 
         
-        if (preconditions != null) try {
-            return (Boolean) preconditions.run(args);
+        if (precondition != null) try {
+            return (Boolean) precondition.run(args);
         } catch (ScriptException ex) {
             return false;
         }
         return true;
     }
     
+    //TODO: convert to dict-style
     public Object execute(Object... args) throws ScriptException{
         if (canDooIt(args)){
-            return action.run(args);
+            return code.run(args);
         }
         return null;
     }
+
+    public static class FunctionTest {
+        private  List<Object> args;
+        private  Object value;
+
+        public FunctionTest(List<Object> argValues, Object expectedResult) {
+            this.args = argValues; 
+            this.value = expectedResult;
+        }
+        
+        public FunctionTest(){};
+    }
+    
+    
 }

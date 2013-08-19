@@ -4,21 +4,17 @@
  */
 package org.clothocad.core.datums;
 
+import org.bson.types.ObjectId;
 import org.clothocad.model.Person;
-import org.json.JSONObject;
 
 /**
  *
  * @author jcanderson
  */
 public interface Sharable  {
-
-    //Functional requirements of all Sharables
-    public JSONObject toJSON();
-    public String getId();
-    
     //Metadata for all Sharables
-    Person getAuthor();
+    public ObjectId getId();
+    public Person getAuthor();
     public String getIcon();
     public String getName();
     public String getDescription();

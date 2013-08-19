@@ -39,6 +39,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             Clotho.watch2($scope.uuid, $scope, 'editable', $scope);
 
+<<<<<<< HEAD
+=======
+            $scope.logScope = function() { console.log($scope); };
+
+>>>>>>> refactoring-overhaul
 
             /******
              SHARABLE
@@ -57,6 +62,13 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 {name:'Groovy', value:'GROOVY'}
             ];
 
+<<<<<<< HEAD
+=======
+            $scope.outputTypes = [
+                {name:'Value', value:'VALUE'},
+                {name:'Reference', value:'REFERENCE'}
+            ];
+>>>>>>> refactoring-overhaul
 
             $scope.simpleTypes = {
                 "Object" : true,
@@ -81,7 +93,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.addArg = function() {
                 if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
+<<<<<<< HEAD
                 $scope.editable.args.push({"type" : "", "name" : "", "test" : {"uuid" : ""}});
+=======
+                $scope.editable.args.push({"type" : "", "name" : ""});
+>>>>>>> refactoring-overhaul
             };
 
             $scope.addDep = function() {
@@ -89,6 +105,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.editable.dependencies.push({"id" : "", "name" : ""});
             };
 
+<<<<<<< HEAD
             $scope.testFunction = function() {
 
                 var data = {};
@@ -100,6 +117,29 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                 Clotho.run(data.id, data.args).then(function (result){
                    Clotho.say({text: result});
+=======
+            $scope.addTest = function() {
+                if (angular.isEmpty($scope.editable.tests)) {$scope.editable.tests = [];}
+                $scope.editable.tests.push({"args" : [], "output" : {"value" : "", "type" : ""}});
+            };
+
+            $scope.testResults = {};
+            $scope.singleTest = function(index) {
+
+                var data = {};
+                data.id = $scope.editable.id;
+                if (angular.isEmpty($scope.editable.tests)) {
+                    data.args = [];
+                }
+                else {
+                    data.args = $scope.editable.tests[index].args;
+                }
+
+                Clotho.run(data.id, data.args).then(function (result){
+                    console.log(result);
+                    console.log(result == $scope.editable.tests[index].output.value);
+                    $scope.testResults[index] = (result == $scope.editable.tests[index].output.value);
+>>>>>>> refactoring-overhaul
                    /* if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
                     } else {
@@ -108,6 +148,15 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 });
             };
 
+<<<<<<< HEAD
+=======
+            $scope.runAllTests = function() {
+                for (var i = 0; i < $scope.editable.tests.length; i++) {
+                    $scope.singleTest(i);
+                }
+            };
+
+>>>>>>> refactoring-overhaul
             $scope.queryWrapper = function(schemaType) {
                 return Clotho.query({schema: schemaType}).then(function (result) {
                     return $filter('limitTo')(result, 10);
@@ -126,6 +175,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             function generateDynamicForm () {
                 var fulltext = "";
 
+<<<<<<< HEAD
                 angular.forEach($scope.schema, function(field) {
 
                     var type = field.type || 'text';
@@ -133,6 +183,16 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                     var htmlText_pre = '<div class="control-group">' +
                         '<label class="control-label" for="' + field.name + '">' + field.readable + '</label>' +
+=======
+                angular.forEach($scope.schema.fields, function(field) {
+
+                    var type = field.type || 'text';
+                    if (type == '?') field.type == 'text';
+                    var required = field.required ? "required='required'" : "";
+
+                    var htmlText_pre = '<div class="control-group">' +
+                        '<label class="control-label" for="' + field.name + '">' + field.name + '</label>' +
+>>>>>>> refactoring-overhaul
                         '<div class="controls">';
                     var htmlText_post = '</div>' +
                         '</div>';
@@ -153,6 +213,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                             inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="editable.'+field.name+'">' + optionsText + '</select>';
                             break;
                         }
+<<<<<<< HEAD
+=======
+                        case "sharable": {
+                        }
+>>>>>>> refactoring-overhaul
                         //todo - add filedrop support, and radio. checkbox works.
                         default: {
                             inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="editable.'+field.name+'" >';
@@ -171,12 +236,31 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 Clotho.get($scope.uuid).then(function(result) {
                     $scope.editMode = false;
                     $scope.editable = result;
+<<<<<<< HEAD
                     $scope.type = result.type;
 
                     if (angular.lowercase(result.schema).indexOf('function', ((result.schema).length - 8)) !== -1) {
                         $scope.type = 'function';
                     }
 
+=======
+
+                    //todo - rewrite
+                    //$scope.type = result.type;
+                    var suffix = 'function';
+                    var str = angular.lowercase(result.schema);
+                    var endswith = str.indexOf(suffix, str.length - suffix.length) !== -1
+                    if (endswith){
+                        $scope.type = 'function';
+                    } else {
+                        $scope.type = 'sharable';
+                    }
+
+
+                    if (angular.lowercase(result.schema).indexOf('function', ((result.schema).length - 8)) !== -1)
+                        $scope.type = 'function';
+
+>>>>>>> refactoring-overhaul
                     switch (angular.lowercase($scope.type)) {
                         case 'sharable' : {
 
@@ -189,7 +273,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                                 })
                                 .then(function() {
                                     Clotho.get($scope.schemaName).then(function(result) {
+<<<<<<< HEAD
                                         $scope.schema = result.schema;
+=======
+                                        $scope.schema = result;
+>>>>>>> refactoring-overhaul
                                         $scope.schema_custom = result.custom;
 
                                         var insert = $element.find('insert-fields').html(generateDynamicForm($scope));
@@ -204,8 +292,13 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                             $http.get('/editor/function-partial.html',  {cache: $templateCache})
                                 .success(function(data) {
+<<<<<<< HEAD
                                     $element.html(data);
                                     $compile($element.contents())($scope);
+=======
+                                    var el = $compile(data)($scope);
+                                    $element.html(el);
+>>>>>>> refactoring-overhaul
                                 });
 
                             break;

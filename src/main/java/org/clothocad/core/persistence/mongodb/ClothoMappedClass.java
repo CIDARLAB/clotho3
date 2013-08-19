@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.Adds;
 import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.core.persistence.Replace;
 
@@ -31,6 +32,14 @@ class ClothoMappedClass extends MappedClass {
         if (anns != null) for (Annotation ann : anns){
             Add add = (Add) ann;
             this.getMappedFields().add(new ClothoMappedField(add, this.getClazz()));
+        }
+        
+        anns = this.getAnnotations(Adds.class);
+        if (anns != null) for (Annotation ann : anns){
+            Adds adds = (Adds) ann;
+            for (Add add : adds.value()){
+                this.getMappedFields().add(new ClothoMappedField(add, this.getClazz()));
+            }
         }
         
         List<MappedField> fields = this.getFieldsAnnotatedWith(Replace.class);

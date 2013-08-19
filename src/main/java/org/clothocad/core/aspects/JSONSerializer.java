@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.aspects;
 
+import java.util.List;
 import java.util.Map;
 import org.clothocad.core.datums.ObjBase;
 
@@ -14,4 +15,5 @@ import org.clothocad.core.datums.ObjBase;
 public interface JSONSerializer {
     public Map<String,Object> toJSON(ObjBase obj);
     public Map<String,Object> toJSON(Map data);
+    public List<Object> toJSON(List data);
 }

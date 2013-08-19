@@ -5,15 +5,11 @@
 package org.clothocad.model;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.clothocad.core.datums.JCAClothoSchema;
 
-import org.clothocad.core.datums.ObjBase;
-import org.hibernate.validator.constraints.URL;
-import org.json.JSONObject;
+import org.clothocad.core.datums.SharableObjBase;
 
 
 /**
@@ -21,7 +17,7 @@ import org.json.JSONObject;
  * @author jcanderson
  */
 @NoArgsConstructor
-public class Lab extends ObjBase implements JCAClothoSchema {
+public class Lab extends SharableObjBase{
 
     @Getter
     @Setter
@@ -29,7 +25,6 @@ public class Lab extends ObjBase implements JCAClothoSchema {
           
     @Getter
     @Setter
-    @NotNull
     private String website;
     @Getter
     @Setter
@@ -42,39 +37,15 @@ public class Lab extends ObjBase implements JCAClothoSchema {
     //TODO: validation: unique name criterion
 
     public Lab( Institution inst, Person PI, String name, String department, String address ) {
-        super(name);
+        //XXX: Lab seems to be an example of a Sharable that does not have an author
+        super(name, null);
         this.department = department;
         this.address = address;
         institution = inst;
         this.PI = PI;
     }
 
-
-
-
-
-    /*(@Override
-    public boolean addObject( ObjBase dropObject ) {
-        switch ( dropObject.getType() ) {
-            case PERSON:
-                //PUT THE PERSON IN this LAB, or change their affiliation
-                return true;
-            default:
-                return false;
-        }
-
-    }*/
-
-   
-
-
     public static Lab retrieveByName( String name ) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    @Override
-    public boolean validate(JSONObject obj) {
-        return true;
-    }
-
 }

@@ -31,14 +31,14 @@ public enum Channel {
     destroy, //Delete a sharable with this uuid
     query, //Find all Sharables that satisfy this formally-expressed constraint
     
+    getAll,
+    createAll,
+    destroyAll,
+    setAll,
+    queryOne,
+    
 //EXECUTION
     run, //run this Function
-    show, //Instantiate the View with this uuid
-    startTrail, //Show this trail
-    edit, //Open a sharable in an editor
     listen, //Listen for events, and in response do this execution statement
     unlisten, //Remove a listener for an event
-    
-// RESPONSE
-    response // for the response message to the client
 }

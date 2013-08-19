@@ -22,9 +22,6 @@ ENHANCEMENTS, OR MODIFICATIONS.
  */
 package org.clothocad.core.layers.communication;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.layers.communication.mind.Mind;
 
@@ -36,6 +33,4 @@ class CommunicatorDoo extends Doo {
     Mind mind = null;
     /*TODO: Page is not publicly accessible*/
     /*Page page = null;*/
-    JSONObject message = null;
-    JSONObject result;
 }

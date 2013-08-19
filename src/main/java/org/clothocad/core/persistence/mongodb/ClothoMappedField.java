@@ -26,10 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import lombok.Getter;
 import org.clothocad.core.persistence.Add;
-import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.core.persistence.Replace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +106,7 @@ public class ClothoMappedField extends MappedField{
     @Override
     public void setFieldValue(Object classInst, Object value) throws IllegalArgumentException {
         if (field == null) return;
-        super.setFieldValue(classInst, value); //To change body of generated methods, choose Tools | Templates.
+        super.setFieldValue(classInst, value); 
     }
     
    

@@ -8,7 +8,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Set;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
-import org.json.JSONObject;
+import org.clothocad.model.Person;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -29,8 +29,8 @@ public class ClothoSchema extends Schema {
     public ClothoSchema() {}
 
     
-    public ClothoSchema(String name, Schema superClass, Set<ClothoField> fields){
-        super(name);
+    public ClothoSchema(String name, String description, Person author, Schema superClass, Set<ClothoField> fields){
+        super(name, description, author);
         this.fields = fields;
         this.superClass = superClass;
     }
@@ -165,5 +165,4 @@ public class ClothoSchema extends Schema {
             visitor.visit(name, value);
         }
     }
-
 }

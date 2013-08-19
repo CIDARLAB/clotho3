@@ -1,13 +1,20 @@
 package org.clothocad.core.layers.communication.connection.ws;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.clothocad.core.layers.communication.Channel;
 
-import org.clothocad.core.layers.communication.ClothoConstants;
+import org.clothocad.core.layers.communication.Message;
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
+import org.clothocad.core.util.JSON;
 import org.eclipse.jetty.websocket.WebSocket;
-import org.json.JSONObject;
 
+@Slf4j
 public class ClothoWebSocket 
 	extends ClientConnection 
 	implements WebSocket.OnTextMessage {
@@ -15,45 +22,36 @@ public class ClothoWebSocket
 	private WebSocket.Connection connection;
 	
 	public ClothoWebSocket(String id) {
-            super(id);
+		super(id);
 	}
 	
 	@Override
 	public void onClose(int closeCode, String message) {
 	}
 
-	public void sendMessage(String data) 
-                throws IOException {
-            if(connection.isOpen()) {
-                connection.sendMessage(data);
-            }
-	}
+    @Override
+    public void send(Message msg) {
+        try {
+            connection.sendMessage(JSON.serialize(msg));
+            log.trace("sent: {}", JSON.serialize(msg));
+        } catch (IOException ex) {
+            log.error("Cannot send message", ex);
+        }
+    }
 
-	@Override
-	public void onMessage(String message) {
-		// here, we need to forward the message dependent on its content
-
-            JSONObject json = null;
-            try {
-                json = new JSONObject(message);
-            } catch(Exception e) {
-                // invalid json object -> do some error handling
-                e.printStackTrace();
-            }					
-		
-            // do the unmarshaling
-            if(null != json) {
-                try {					
-                    // do some routing
-                    Router.get().receiveMessage(
-                        this, 
-                        json.getString(ClothoConstants.CHANNEL), 
-                        json);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-	}
+    @Override
+    public void onMessage(String messageString) {
+        log.trace("Websocket #{} recieved message {}", this.getId(), messageString);
+        try {
+            Message message = JSON.mapper.readValue(messageString, Message.class);
+            Router.get().receiveMessage(this, message);
+        } catch (JsonParseException ex) {
+            log.error("Websocket #{} recived malformed message: {}", this.getId(), messageString);
+        } catch (JsonMappingException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+        }
+    }
 
 	public boolean isOpen() {
 		return connection.isOpen();
@@ -63,11 +61,23 @@ public class ClothoWebSocket
 	public void onOpen(Connection connection) {
 		this.connection = connection;
                 //Close out after 1 hour idle time
-                //connection.setMaxIdleTime(3600000); 
+                connection.setMaxIdleTime(3600000); 
 
 		//WebSocketTable.put(this.getId(), this);
 		
 		// TODO: store the connection information into the Mind
 		
 	}
+    @Override
+    public void deregister(Channel channel, String requestId) {
+        Map<String, String> message = new HashMap<>();
+        message.put("channel", channel.toString());
+        message.put("requestId", requestId);
+        try {
+            connection.sendMessage(JSON.serialize(message));
+            log.trace("sent deregister: {}", JSON.serialize(message));
+        } catch (IOException ex) {
+            log.error("cannot send deregister message:{}", ex.getMessage());
+        }
+    }
 }

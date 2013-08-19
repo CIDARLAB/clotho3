@@ -3,8 +3,13 @@ package org.clothocad.core.layers.communication;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.inject.Inject;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.Sharable;
@@ -14,14 +19,12 @@ import static org.clothocad.core.layers.communication.Channel.destroy;
 import static org.clothocad.core.layers.communication.Channel.log;
 import static org.clothocad.core.layers.communication.Channel.submit;
 
-import org.clothocad.core.layers.communication.apollo.ClothoMessageProducer;
 import org.clothocad.core.layers.communication.connection.ClientConnection;
-import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
-import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.util.JSON;
 
+@Slf4j
 public class Router {
 
 	/** DOUBLE-CHECKED LOCKING **/
@@ -42,237 +45,215 @@ public class Router {
     
     private ExecutorService pool;
     
-    public Router() {    	
-    	
-    	// create the thread-pool of ssAPI objects
-    	this.pool = Executors.newFixedThreadPool(100);
+    @Inject
+    @Getter
+    private Persistor persistor;
+   
+    public Router() {
+
+        // create the thread-pool of ssAPI objects
+        this.pool = Executors.newFixedThreadPool(100);
+        minds = new HashMap<>();
     }
-    
+
     // send message    
-    public void sendMessage(
-		ClientConnection connection, JSONObject message) {
-
-	try {
-            if(connection instanceof ClothoWebSocket) {
-                    ClothoWebSocket websocket = (ClothoWebSocket)connection;
-                    if(null != websocket) {				
-                            websocket.sendMessage(message.toString());
-                    }
-            } else if(connection instanceof ApolloConnection) {	
-                if(null == message) {
-                    new ClothoMessageProducer((ApolloConnection)connection).onFailure(
-                            new Throwable("SOMETHING WENT WRONG!"));
-                } else {
-                    new ClothoMessageProducer((ApolloConnection)connection).onSuccess(message);
-                }
-            }
-	} catch(Exception e) {
-		e.printStackTrace();
-	}
+    public void sendMessage(ClientConnection connection, Message message) {
+        log.debug(JSON.serialize(message));
+        connection.send(message);
     }
-	
-	// receive message
-	public void receiveMessage(ClientConnection connection, String channel, JSONObject json) {
 
-            try {
-                    RouterDoo doo = new RouterDoo();
-                    
-                    String auth_key = null;
-                    try {
-                         auth_key = json.getString("auth_key");
-                    } catch(Exception error) {
-                        //error.printStackTrace();
-                        //JSONObject responseJSON = new JSONObject();
-                        //responseJSON.put("CLOTHO-ERROR", error.getMessage());
-                        //this.sendMessage(connection, responseJSON);
-                        //return;
-                    }
-                    
-                    /** TODO: check the auth_key **/
-                    
-                    // changed by EO for the demo...
-                    Mind mind = Mind.create(connection);                    
-                    
-                    //Mind mind = Communicator.get().getMind(auth_key);
-                    //mind.setClientConnection(connection);
-                    doo.mindId = mind.getUUID();
-                    doo.message = json;
-                    ServerSideAPI api = mind.getAPI();
-                    
-                    /* currently we are converting between JSONObjects and Strings multiple times... */
-                    /* WE NEED TO CHANGE THAT! 
-                     * -> either JSONObject or String
-                     * EO would prefer using JSONObject
-                     */
-                   
-                    Channel chanEnum = null;
-                    String data = null;
-                    try {
-                        chanEnum = Channel.valueOf(channel);
-                        data = json.getString("data");
-                    } catch(Exception err) {
-                        try {
-                            JSONObject obj = json.getJSONObject("data");
-                            data = obj.getString("data");
-                            String schann = obj.getString("channel");
-                            chanEnum = Channel.valueOf(schann);
-                        } catch(Exception err2) {
-                            throw err2;
-                        }
-                    }
-                    
-                    switch(chanEnum) {
-                        case autocomplete:
-                            api.autocomplete(data);
-                            break;
-                        case autocompleteDetail:
-                            api.autocompleteDetail(data);
-                            break;
-                        case requestRecent:
-                            api.requestRecent();
-                            break;
-                        case submit:
-                            api.submit(data);
-                            break;
-                        case clear:
-                            api.clear();
-                            break;
-                        case login:
-                            // LOGIN is a synchronous call
-                            api.login(new JSONObject(data));
-                            break;
-                        case logout:
-                            // LOGOUT is a synchronous call
-                            
-                            // here we need to do something like this
-                            /*
-                             * Mind.get().remove(auth_key);
-                             */
-                            
-                            api.logout();
-                            break;
-                        case changePassword:
-                            api.changePassword(data);
-                            break;
-                        case learn:
-                            api.learn(data, null);
-                            break;
+    // receive message
+    public void receiveMessage(ClientConnection connection, Message request) {
+        RouterDoo doo = new RouterDoo();
 
-                        case log:
-                            api.log(data);
-                            break;
-                        case say:
-                            api.say(data);
-                            break;
-                        case note:
-                            api.note(data);
-                            break;
-                        case alert:
-                            api.alert(data);
-                            break;
+        //bind context to request
+        Mind mind = getMind(connection);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, request.requestId);
 
-                        case get:
-                            api.get(data);
-                            break;
-                        case set:
-                            api.set(data);
-                            break;
-                        case create:
-                            api.create(data);
-                            break;
-                        case destroy:
-                            api.destroy(data);
-                            break;
-                        case query:
-                            api.query(data);
-                            break;
 
-                        case run:
-                            api.run(data, null);
-                            break;
-                        case show:
-                            api.show(data, null, null, null);
-                            break;
-                        case startTrail:
-                            api.startTrail(data);
-                            break;
-                        case edit:
-                            api.edit(data);
-                            break;
-                        case listen:
-                            api.listen(data);
-                            break;
-                        case unlisten:
-                            api.unlisten(data);
-                            break;
-                        default:
-                            break;
-                    }
-		} catch(Exception e) {
-			e.printStackTrace();
-                        
-                        JSONObject errorJSON = new JSONObject();
-                        try {
-                            errorJSON.put("CLOTHO-ERROR", e.getMessage());
-                            this.sendMessage(connection, 
-                                errorJSON);
-                        } catch(Exception exc) {}
-		}
-	}	
+        Object data = request.data;
+        
+        Object response = null;
+        try {
+            switch (request.channel) {
+                case autocomplete:
+                    api.autocomplete(data.toString());
+                    break;
+                case autocompleteDetail:
+                    api.autocompleteDetail(data.toString());
+                    break;
+                case submit:
+                    response = api.submit(data.toString());
+                    break;
+                case clear:
+                    api.clear();
+                    break;
+                case login:
+                    //TODO
+                    api.login(null, null);
+                    break;
+                case logout:
+                    api.logout();
+                    break;
+                case changePassword:
+                    api.changePassword(data.toString());
+                    break;
+                case learn:
+                    api.learn(data);
+                    break;
+
+                case log:
+                    api.log(data.toString());
+                    break;
+                case say:
+                    api.say(data);
+                    break;
+                case note:
+                    api.note(data.toString());
+                    break;
+                case alert:
+                    api.alert(data.toString());
+                    break;
+
+                case get:
+                    response = api.get(data);
+                    break;
+                case set:
+                    response = api.set(JSON.mappify(data));
+                    if (response == null) response = Void.TYPE;
+                    break;
+                case create:
+                    response = api.create(data);
+                    break;
+                case destroy:
+                    response = api.destroy(data);
+                    if (response == null) response = Void.TYPE;
+                    break;
+                case query:
+                    response = api.query(JSON.mappify(data));
+                    break;
+                    
+                //TODO:
+                case getAll:
+                    response = api.getAll((List) data);
+                    break;
+                case createAll:
+                    response = api.createAll((List) data);
+                    break;
+                case destroyAll:
+                    api.destroyAll((List) data);
+                    response = Void.TYPE;
+                    break;
+                case setAll:
+                    api.setAll((List) data);
+                    response = Void.TYPE;
+                    break;
+                case queryOne:
+                    response = api.queryOne(JSON.mappify(data));
+                    break;
+
+                case run:
+                    response = api.run(data);
+                    break;
+                case listen:
+                    api.listen(data.toString());
+                    break;
+                case unlisten:
+                    api.unlisten(data.toString());
+                    break;
+                default:
+                    log.warn("Unknown channel {}", request.channel);
+                    break;
+            }
+            
+            if (response == Void.TYPE){
+                connection.deregister(request.channel, request.requestId);
+            }
+            else {
+                Message message = new Message(request.channel, response, request.requestId);
+                connection.send(message);
+            }
+            
+        } catch (Exception e) {
+            //TODO: message client with failure
+            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.requestId);
+            log.error(e.getMessage(), e);
+        }
+    }
 
     //Start JCA's hack of a pubsub, to be replaced by Ernst
-    void publish(Sharable object) {
-            try {
-                System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
-                String uuid = object.getId();
-                JSONObject msg = ServerSideAPI.makeCollect(object);
-                HashSet<WeakReference<ClientConnection>> targets = pubsub.get(uuid);
-                for(WeakReference<ClientConnection> wr : targets) {
-                    ClientConnection conn = wr.get();
-                    if(conn==null) {
-                        continue;
-                    }
-                    try {
-                        sendMessage(conn, msg);
-                    } catch(Exception err) { }
-                }
+   /* void publish(Sharable object) {
+     try {
+     System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
+     String uuid = object.getUUID().toString();
+     Map<String, Object> msg = persistor.
+     HashSet<WeakReference<ClientConnection>> targets = pubsub.get(uuid);
+     for(WeakReference<ClientConnection> wr : targets) {
+     ClientConnection conn = wr.get();
+     if(conn==null) {
+     continue;
+     }
+     try {
+     sendMessage(conn, msg);
+     } catch(Exception err) { }
+     }
                         
                 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         
+     }*/
+    void publish(Map object) {
+        //doesn't do anything.
+        //Is here because Stephanie thinks we should publish the JSON data, not the actual object
     }
-    
-    private HashMap<String, HashSet<WeakReference<ClientConnection>>> pubsub = new  HashMap<String, HashSet<WeakReference<ClientConnection>>>();
+    private HashMap<String, HashSet<WeakReference<ClientConnection>>> pubsub = new HashMap<>();
 
     void register(ClientConnection connection, Sharable object) {
-        String uuid = object.getId();
+        String uuid = object.getId().toString();
         HashSet<WeakReference<ClientConnection>> existing = pubsub.get(uuid);
-        if(existing==null) {
-            existing = new HashSet<WeakReference<ClientConnection>>();
+        if (existing == null) {
+            existing = new HashSet<>();
         }
-        
-        existing.add(new WeakReference<ClientConnection>(connection));
+
+        existing.add(new WeakReference<>(connection));
         pubsub.put(uuid, existing);
     }
-    
     //End JCA's hack of a pubsub, to be replaced by Ernst
     
+    private Mind getMind(ClientConnection connection) {
+        String id = connection.getId();
+        if (minds.containsKey(id)) {
+            Mind mind = minds.get(id);
+            if (mind.getConnection() != connection){
+                //XXX: this is probably disasterous in some edge cases
+                //because jetty preserves the sesson id across websocket close/open, need to check to see if the connection object in the mind is stale
+                mind.setConnection(connection);
+            }
+            return mind;
+        }
+
+        Mind mind = new Mind();
+
+        mind.setConnection(connection);
+        
+        minds.put(id, mind);
+        return mind;
+    }
     
+    private Map<String, Mind> minds;
+
     /**
      * The Doo's that manage any Client-derived message.  Doo's handle even key
      * commands to avoid synchronization issues.
      */
     public class RouterDoo extends Doo {
+
         public RouterDoo() {
             super(null, false);
         }
-
-        JSONObject message;
+        Message message;
         ObjectId mindId;
     }
-    
-    
-    
 }

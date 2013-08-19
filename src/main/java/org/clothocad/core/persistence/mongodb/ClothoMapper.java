@@ -11,8 +11,10 @@ import com.github.jmkgreen.morphia.mapping.MapperOptions;
 import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
 import com.github.jmkgreen.morphia.mapping.lazy.proxy.ProxyHelper;
 import com.mongodb.DBObject;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import org.clothocad.core.datums.ObjBase;
@@ -25,8 +27,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author spaige
  */
-//TODO: perferentially remove schema classes from cache
+//TODO: preferentially remove schema classes from cache
 import org.clothocad.core.aspects.JSONSerializer;
+import org.clothocad.core.persistence.Adds;
+import org.clothocad.core.persistence.DBClassLoader;
 
 public class ClothoMapper extends DefaultMapper implements JSONSerializer {
 
@@ -35,10 +39,13 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
     public ClothoMapper(MapperOptions opts) {
         super(opts);
     }
-
-    public ClothoMapper() {
-        super(defaultOptions);
+    
+    @Inject
+    public ClothoMapper(DBClassLoader cl){
+       super(defaultOptions);
+       this.cl = cl; 
     }
+    
     static final Logger logger = LoggerFactory.getLogger(ClothoMapper.class);
     static final MapperOptions defaultOptions = new MapperOptions();
 
@@ -49,6 +56,7 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
     static {
         //add our annotations to the interesting annotations lists
         MappedClass.interestingAnnotations.add(Add.class);
+        MappedClass.interestingAnnotations.add(Adds.class);
         MappedField.interestingAnnotations.add(DBOnly.class);
         MappedField.interestingAnnotations.add(Replace.class);
     }
@@ -107,5 +115,10 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
         logger.debug("Mapping class {}", c.getCanonicalName());
         MappedClass mc = new ClothoMappedClass(c, this);
         return addMappedClass(mc, true);
+    }
+
+    @Override
+    public List<Object> toJSON(List data) {
+        return scrubber.scrub(data, null);
     }
 }

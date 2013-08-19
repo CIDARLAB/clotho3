@@ -27,11 +27,10 @@ import static java.util.Arrays.asList;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.ToolProvider;
-import lombok.Data;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.util.compiler.DynamicFileManager;
 import org.clothocad.core.util.compiler.JavaSourceFromString;
-import org.json.JSONObject;
+import org.clothocad.model.Person;
 import org.objectweb.asm.ClassReader;
 
 
@@ -40,12 +39,13 @@ public class JavaSchema
 
     public JavaSchema() {super();}
 	
-    public JavaSchema(String name, 
+    public JavaSchema(Person author,
+            String name, 
             String description,
             String source) {
     	
-    	super(name);
-
+    	super(name, description, author);
+        
         setSource(source);
     } 
     
@@ -60,6 +60,7 @@ public class JavaSchema
     
     //TODO: handle files that result in multiple source files;
     //TODO: supply uuid's of referenced classes to resolve name conflicts
+    @Override
     public void setSource(String source){
         this.source = source;
         
@@ -94,6 +95,6 @@ public class JavaSchema
     public Language getLanguage() {
         return Language.JAVA;
     }
-
+    
 }
 

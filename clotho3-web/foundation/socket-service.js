@@ -56,7 +56,11 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
         socket.onmessage = function (obj) {
 
             // testing
+<<<<<<< HEAD
             console.log('SOCKET\treceiving: ' + obj.data);
+=======
+            //console.log('SOCKET\treceiving: ' + obj.data);
+>>>>>>> refactoring-overhaul
 
             obj = JSON.parse(obj.data);
             var channel = obj.channel;

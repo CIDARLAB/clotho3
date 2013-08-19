@@ -461,6 +461,7 @@ io.sockets.on('connection', function (socket) {
     /* Command Specifics */
 
     //pack for a collect command
+<<<<<<< HEAD
     api.pack.collect = function(uuid, type, model_or_url, isURL) {
         isURL = !!isURL || false; //for templates
         return {
@@ -468,6 +469,13 @@ io.sockets.on('connection', function (socket) {
             "type" : type,
             "model" : model_or_url,
             "isURL" : isURL
+=======
+    api.pack.collect = function(uuid, type, model) {
+        return {
+            "uuid" : uuid,
+            "type" : type,
+            "model" : model,
+>>>>>>> refactoring-overhaul
         }
     };
     //pack for a say or alert command
@@ -485,8 +493,12 @@ io.sockets.on('connection', function (socket) {
 
     /***** SIMPLE MESSAGES *****/
 
+<<<<<<< HEAD
     api.api = {};
     api.api.alert = function(data, requestId) {
+=======
+    api.alert = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var user = data.userID;
         //todo - logic to route to a specific user
 
@@ -497,7 +509,11 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.api.broadcast = function(data, requestId) {
+=======
+    api.broadcast = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var channel = data.channel;
         data = data.data;
 
@@ -506,7 +522,11 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.api.get = function(uuid, requestId) {
+=======
+    api.get = function(uuid, requestId) {
+>>>>>>> refactoring-overhaul
         console.log("requesting model: " + uuid);
         var path = require('path').resolve(model_folder, uuid + ".json");
 
@@ -520,12 +540,18 @@ io.sockets.on('connection', function (socket) {
             //make assumption that get will be in client collector, so put in local collector so don't re-send on set()
             collector[uuid] = data;
 
+<<<<<<< HEAD
             socket.send(api.pack.api_wrap('collect',
                 api.pack.collect(uuid, "json", data),
+=======
+            socket.send(api.pack.api_wrap('get',
+                api.pack.nopack(data),
+>>>>>>> refactoring-overhaul
                 requestId)
             );
         });
     };
+<<<<<<< HEAD
     api.api.get_script = function(uuid, requestId) {
         console.log("requesting script for: " + uuid);
         var path = 'partials/' + uuid + '.js';
@@ -554,6 +580,9 @@ io.sockets.on('connection', function (socket) {
         );
     };
     api.api.gradeQuiz = function (quiz, requestId) {
+=======
+    api.gradeQuiz = function (quiz, requestId) {
+>>>>>>> refactoring-overhaul
         console.log(quiz);
 
         //just send back everything is correct for now...
@@ -568,6 +597,7 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.api.log = function(data) {
         console.log("LOG\t: " + data);
     };
@@ -576,6 +606,16 @@ io.sockets.on('connection', function (socket) {
         console.log(data);
     };
     api.api.query = function (data, requestId) {
+=======
+    api.log = function(data) {
+        console.log("LOG\t: " + data);
+    };
+    api.notify = function(data) {
+        console.log("notification!");
+        console.log(data);
+    };
+    api.query = function (data, requestId) {
+>>>>>>> refactoring-overhaul
         var demo = ["usdf-2323-g2", "asdf-2-23g2-3", "sdf0s2-232-4ff","138tr-c-1c3-111"];
 
         socket.send(api.pack.api_wrap('query',
@@ -583,7 +623,11 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.api.recent = function(data, requestId) {
+=======
+    api.recent = function(data, requestId) {
+>>>>>>> refactoring-overhaul
 
         //verify arguments correct
 
@@ -600,7 +644,35 @@ io.sockets.on('connection', function (socket) {
         });
 
     };
+<<<<<<< HEAD
     api.api.say = function(data, requestId) {
+=======
+    api.run = function(data, requestId) {
+        var command = data.id,
+            args = data.args,
+            result;
+
+        switch (command) {
+            case 'reverse' : {
+                result = args.split('').reverse().join('');
+                break;
+            }
+            case 'uppercase' : {
+                result = args.toUpperCase();
+                break;
+            }
+            default : {
+                result = args;
+            }
+        }
+
+        socket.send(api.pack.api_wrap('run',
+            api.pack.nopack(result),
+            requestId)
+        );
+    };
+    api.say = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var user = data.userID,
         //todo - separation for sending messages from "server" vs. "client"
         sender = data.sender || "server",
@@ -621,7 +693,11 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.api.set = function(data, requestId) {
+=======
+    api.set = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var uuid = data.id || data.uuid;
         data = data.data;
 
@@ -639,7 +715,11 @@ io.sockets.on('connection', function (socket) {
             );*/
         }
     };
+<<<<<<< HEAD
     api.api.show_old = function(data, requestId) {
+=======
+    api.show_old = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var uuid = data.uuid;
         data = data.data;
 
@@ -654,7 +734,11 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.api.show = function(data, requestId) {
+=======
+    api.show = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         socket.send(api.pack.api_wrap('display',
             api.pack.nopack(data),
             requestId)
@@ -663,9 +747,13 @@ io.sockets.on('connection', function (socket) {
 
     /**** SEARCHBAR ***/
 
+<<<<<<< HEAD
     api.searchbar = {};
 
     api.searchbar.submit = function (data, requestId) {
+=======
+    api.submit = function (data, requestId) {
+>>>>>>> refactoring-overhaul
 
         var message = {
             "text" : data.query,
@@ -696,7 +784,11 @@ io.sockets.on('connection', function (socket) {
 
     };
 
+<<<<<<< HEAD
     api.searchbar.autocomplete = function(data, requestId) {
+=======
+    api.autocomplete = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var query = data.query;
 
         var demo = [
@@ -740,7 +832,11 @@ io.sockets.on('connection', function (socket) {
             requestId)
         );
     };
+<<<<<<< HEAD
     api.searchbar.autocompleteDetail = function(data, requestId) {
+=======
+    api.autocompleteDetail = function(data, requestId) {
+>>>>>>> refactoring-overhaul
         var uuid = data.uuid;
         console.log("requested detail for uuid: " + data.uuid);
 
@@ -825,6 +921,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('message', function(msg) {
         msg = JSON.parse(msg);
         var requestId = msg.requestId;
+<<<<<<< HEAD
         var wrapper = msg.channel;
         var channel = msg.data.channel;
         var data = msg.data.data;
@@ -838,6 +935,16 @@ io.sockets.on('connection', function (socket) {
         }
         else if (api[channel]){
             //custom events
+=======
+        var channel = msg.channel;
+        var data = msg.data;
+
+        console.log(msg);
+        console.log("CUSTOM\t command received: " + channel + "\tdata: " + data + "\trequestId: " + requestId);
+        
+        if (api[channel]) {
+            //easy....
+>>>>>>> refactoring-overhaul
             api[channel](data, requestId);
         }
         else {

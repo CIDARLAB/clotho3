@@ -7,7 +7,13 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
         {"name" : "Trails", "path" : "/trails"},
         {"name" : "Browser", "path" : "/browser"},
         {"name" : "Plasmid", "path" : "/plasmid"},
+<<<<<<< HEAD
         {"name" : "Construction", "path" : "/construction"}
+=======
+        {"name" : "Construction", "path" : "/construction"},
+        {"name" : "Schemas", "path":"/schemas"},
+        {"name" : "Scripts", "path":"/scripts"}
+>>>>>>> refactoring-overhaul
     ]};
 
     $scope.$watch(function () {

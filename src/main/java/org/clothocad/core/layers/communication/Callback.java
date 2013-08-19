@@ -23,13 +23,13 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.layers.communication;
 
-import org.json.JSONObject;
+import java.util.Map;
 
 /**
  * @author John Christopher Anderson
  */
 
 public interface Callback {
-    public void onSuccess(JSONObject outputData);
+    public void onSuccess(Object outputData);
     public void onFailure(Throwable err);
 }

@@ -7,39 +7,48 @@ package org.clothocad.core.schema;
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.Adds;
+import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.DBOnly;
+import org.clothocad.model.Person;
 
 /**
+ *
  * @author spaige
  */
+
+@EqualsAndHashCode(exclude={"fields", "methods"}, callSuper = true)
 @Data
 @NoArgsConstructor
-@Add(name="language", provider="getLanguage")
-public abstract class Schema extends ObjBase {
+@Slf4j
+@Adds({@Add(name="language", provider="getLanguage"),
+@Add(name="binaryName", provider="getBinaryName")})
+public abstract class Schema extends SharableObjBase {
     
-    public Schema(String name){
-        super(name);
+    public Schema(String name, String description, Person author){
+        super(name, author, description);
     }
     
     protected static final String BASE_PACKAGE_BINARY = "org.clothocad.loadedschemas.";
-    public static  ClassLoader cl = null;
+   
+    @Inject
+    public static  DBClassLoader cl = null;
     
     @DBOnly
-    protected byte[] classData; //JCA:  this probably is no longer necessary
-    
+    protected byte[] classData;
     protected Map<String, ObjectId> dependencies;
-//    protected String description;  //JCA:  description is already in Objbase
-//    protected String largeIconURL;  ////JCA:  description is already in Objbase
-//    protected String smallIconURL;  ////JCA:  description is already in Objbase
-    
     protected String source;
     
     //These are settable only in ClothoSchema - they are derived from source in other languages
@@ -67,8 +76,8 @@ public abstract class Schema extends ObjBase {
     }
     
     //the classloader can only find saved schemas, so if this throws an exception, try saving the schema
-    public <T extends ObjBase> Class<T> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
-        return (Class<T>) cl.loadClass(getBinaryName());
+    public Class<? extends ObjBase> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
+        return (Class<? extends ObjBase>) cl.loadClass(getBinaryName());
     }
     
     public static String extractIdFromClassName(String className){
@@ -77,6 +86,18 @@ public abstract class Schema extends ObjBase {
     }
     
     public static boolean isSchemaClassName(String className){
+        //Router router = Router.get();
+        //if persistor is null, we're in bootstrapping, so don't bother
+        /*if (router.getPersistor() == null) return false;
+        if (router.getPersistor().resolveSchemaFromClassName(className) != null){
+            return true;
+        }*/
         return ObjectId.isValid(extractIdFromClassName(className));
+    }  
+
+    public boolean childOf(Schema schema) {
+        if (schema == null || superClass == null) return false;
+        if (schema.getUUID().equals(superClass.getUUID())) return true;
+        return (childOf(schema.superClass));
     }
 }

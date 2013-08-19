@@ -1,6 +1,10 @@
 'use strict';
 
+<<<<<<< HEAD
 Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope', function(Clotho, $timeout, $q, $rootScope) {
+=======
+Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q', '$rootScope', function(Clotho, ClientAPI, $timeout, $q, $rootScope) {
+>>>>>>> refactoring-overhaul
 
     /******* config ******/
     var options = {};
@@ -149,7 +153,13 @@ Application.Search.service('Searchbar', ['Clotho', '$timeout', '$q', '$rootScope
         if (typeof query == 'undefined')
             query = display.query;
         if (!!query) {
+<<<<<<< HEAD
             Clotho.submit(query);
+=======
+            Clotho.submit(query).then(function(result){
+                ClientAPI.say({text:"Return value: " + result});
+            });
+>>>>>>> refactoring-overhaul
             //display.autocomplete = false;
             display.undetail();
         }

@@ -4,9 +4,9 @@
  */
 package org.clothocad.core.aspects.Proctor;
 
+import java.util.Map;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.layers.communication.mind.Mind;
-import org.json.JSONObject;
 
 /**
  *
@@ -23,7 +23,7 @@ public class QuizDoo extends Doo  {
      * @param quizJSON
      * @param mind 
      */
-    public QuizDoo(JSONObject quizJSON, Mind mind, Doo parent) {
+    public QuizDoo(Map<String, Object> quizJSON, Mind mind, Doo parent) {
         super(parent, false);
         
     }

@@ -26,11 +26,8 @@ package org.clothocad.core.datums;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import org.bson.types.ObjectId;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.settings.Settings;
-import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson

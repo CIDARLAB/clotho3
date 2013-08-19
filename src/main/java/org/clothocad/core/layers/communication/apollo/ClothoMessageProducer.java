@@ -1,8 +1,9 @@
 package org.clothocad.core.layers.communication.apollo;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.clothocad.core.layers.communication.Callback;
 import org.clothocad.core.layers.communication.connection.apollo.ApolloConnection;
-import org.json.JSONObject;
 
 public class ClothoMessageProducer 
 		implements Callback {
@@ -13,7 +14,7 @@ public class ClothoMessageProducer
 	}
 
 	@Override
-	public void onSuccess(JSONObject json) {
+	public void onSuccess(Object json) {
             CallbackHandler cbh = 
                     CallbackHandlerTable.get(connection.getId());
             if(null != cbh) {
@@ -27,7 +28,7 @@ public class ClothoMessageProducer
             CallbackHandler cbh = CallbackHandlerTable.get(
                             connection.getId());
             if(null != cbh) {
-                JSONObject jsonResponse = new JSONObject();
+                Map<String,Object> jsonResponse = new HashMap<>();
                 try {
                     jsonResponse.put("CLOTHO-ERROR", err.getLocalizedMessage());
                 } catch(Exception e) {}

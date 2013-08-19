@@ -23,11 +23,11 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.aspects;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.clothocad.core.layers.communication.Callback;
-import org.json.JSONObject;
 
 /**
  * @author John Christopher Anderson
@@ -39,11 +39,11 @@ public class Process {
         singleton.executeOnError(callback, err);
     }
     
-    public static void nextTick(Callback callback, JSONObject data) {
+    public static void nextTick(Callback callback, Map<String, Object> data) {
         singleton.executeOnSuccess(callback, data);
     }
     
-    private void executeOnSuccess(final Callback callback, final JSONObject data) {
+    private void executeOnSuccess(final Callback callback, final Map<String, Object> data) {
         executorService.submit(new Runnable(){
             @Override
             public void run() {

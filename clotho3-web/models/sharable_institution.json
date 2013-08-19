@@ -2,6 +2,10 @@
     "id" : "sharable_institution",
     "type" : "sharable",
     "schema" : "schema_institution",
+<<<<<<< HEAD
+=======
+    "schema_id" : "schema_institution",
+>>>>>>> refactoring-overhaul
     "displayName" : "Some Institution",
     "city" : "Internet",
     "state" : "CA",

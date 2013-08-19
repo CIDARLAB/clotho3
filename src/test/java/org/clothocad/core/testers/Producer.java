@@ -1,9 +1,10 @@
 package org.clothocad.core.testers;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
+import org.fusesource.stomp.jms.StompJmsConnectionFactory;
 
 public class Producer {
+
     private static final String BROKER_URL = "tcp://localhost:61613";
     private static final Boolean NON_TRANSACTED = false;
     private static final int NUM_MESSAGES_TO_SEND = 100;
@@ -11,13 +12,14 @@ public class Producer {
 
     public static void main(String[] args) {
 
-        System.out.println("Using connection: " + BROKER_URL);
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("admin", "password", BROKER_URL);
+        StompJmsConnectionFactory factory =
+                new StompJmsConnectionFactory();
+        factory.setBrokerURI(BROKER_URL);
         Connection connection = null;
 
         try {
 
-            connection = connectionFactory.createConnection();
+            connection = factory.createConnection("admin", "password");
             connection.start();
 
             System.out.println("Started Connection...");
@@ -37,8 +39,7 @@ public class Producer {
 
         } catch (Exception e) {
             System.out.println("Caught exception!");
-        }
-        finally {
+        } finally {
             if (connection != null) {
                 try {
                     connection.close();

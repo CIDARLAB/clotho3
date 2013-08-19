@@ -1,6 +1,5 @@
 package org.clothocad.core.persistence.mongodb;
 
-import java.lang.reflect.Array;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,14 +20,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.util.JSON;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
-import org.json.JSONObject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,21 +34,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author spaige
  */
+@Singleton
 public class MongoDBConnection
         implements ClothoConnection {
     
-    public MongoDBConnection() {
-
-        morphia = new Morphia(new ClothoMapper());
-    }
-    
-    @Inject 
     public MongoDBConnection(Mapper mapper) {
         morphia = new Morphia(mapper);
     }
     
-    
-    public MongoDBConnection(int port, String host, String dbName, Mapper mapper){
+    @Inject
+    public MongoDBConnection(@Named("dbport") int port, @Named("dbhost")String host, @Named("dbname") String dbName, Mapper mapper){
         this.host = host;
         this.port = port;
         this.dbName = dbName;
@@ -62,9 +55,9 @@ public class MongoDBConnection
     
     private static final Logger logger = LoggerFactory.getLogger(MongoDBConnection.class);
 
-    private String host = "localhost";
-    private int port = 27017;
-    private String dbName = "clotho";
+    private String host;
+    private int port;
+    private String dbName;
     
     
     //the demo will break if you change this without changing the Entity annotation on ObjBase
@@ -109,94 +102,11 @@ public class MongoDBConnection
     }
 
 //var inst = {"city":"Paris","className":"org.clothocad.model.Institution","country":"United States of America","isDeleted":false,"lastModified":{"$date":"2013-06-08T02:48:10.254Z"},"name":"Test institution","state":"SC"};clotho.say(inst.city);   var obj = clotho.create(inst);
-    /**
-     * JCA:  This is a hard save to the database with no verification of the data or authorization.  Those checks are done by the calling Aspect.  However, the setting of the UUID is done here.
-     * @param json
-     * @return H
-     */
-    @Override
-    public String save(JSONObject json) {
-        try {
-            System.out.println("JCA implemented, Stephanie change this probably [MongoDBConnection.save] -> "+json);
-            
-            //Figure out the uuid
-            ObjectId id = null;
-            if(json.has("id")) {
-                id = new ObjectId(json.getString("id"));  //If there is an id field, reuse that UUID
-            } else {
-                id = ObjectId.get();                      //Otherwise create a new UUID
-            }
-            
-            //Destroy any other UUID references
-            // ???
-            json.put("id", "");
-            json.put("uuid", "");
-            json.put("_id", "");
-            json.put("$clotho", "");
-            json.remove("id");
-            json.remove("uuid");
-            json.remove("_id");
-            json.remove("$clotho");
-            
-            //Convert it to a BSON
-            String jsonstr = json.toString();
-            DBObject bson = ( DBObject ) JSON.parse( jsonstr );
-
-            //Install the OID object
-            bson.put("_id", id);
-            
-            //Save it to the database and return the uuid
-            data.save(new BasicDBObject(bson.toMap()));
-            return id.toString();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
+      
     
     @Override
-    //Cascade save
-    public void save(ObjBase obj){
-        System.out.println("Stephanie:  save in connection should either return false or throw exception when fails.  change required in interface.");
-        save(obj, new HashSet<ObjBase>());
-    }
-    
-    //actual meat of cascade save in here
-    private boolean save(ObjBase obj, Set<ObjBase> exclude){
-    	
-        boolean newId = obj.getUUID() == null;
-        if(newId) obj.setUUID(ObjectId.get());
-        exclude.add(obj);        
-        
-        //recurse on object's children
-        for (ObjBase child: obj.getChildren()) {
-            //TODO: needs to detect and skip proxies if lazy loading is used
-            if (!exclude.contains(child) && child != null){
-                if (!save(child, exclude)){
-                    return false;
-                }
-            }
-        }
-        
-        //write obj to DB
-        try {
-            singleSave(obj);
-        }
-        catch (Exception e){
-            //throw e;
-            //if we set an id in anticipation of saving, but the save failed, revert to null (so id is consistent w/ db state)
-            logger.error("Error while saving", e);
-            if (newId) obj.setUUID(null);
-            return false;
-        }
-        return true;
-    }
-    
-    public void singleSave(ObjBase obj) {
-        //needs to update lastUpdated field only if save succeeds
+    public void save(ObjBase obj) {
         //needs to check if thing actually needs saving
-        //needs to validate object
-        obj.setLastModified(new Date());
         if (null != data.findOne(new BasicDBObject("_id", obj.getUUID()))) {
             dataStore.merge(obj);
         } else {
@@ -205,19 +115,10 @@ public class MongoDBConnection
 
     }
 
-    @Override
-    public int save(Collection<ObjBase> objs) {
-        int i = 0;
+    public void saveAll(Iterable<ObjBase> objs) {
         for (ObjBase o : objs) {
-            try{
-                save(o);
-                i++;
-            } catch (Exception e) {
-                logger.error("Error while saving collection", e);
-                //aggregate errors and pass back to user - not sure on details yet
-            }
+            save(o);
         }
-        return i;
     }
     
 
@@ -228,7 +129,16 @@ public class MongoDBConnection
 
     @Override
     public void save(Map obj) {
-        data.save(new BasicDBObject(obj));
+        //test merge to make sure it merges sub-documents
+        DBObject query = new BasicDBObject("_id", obj.get("_id"));
+
+        if (null != data.findOne(query)) {
+            obj.remove("_id");
+            data.update(query, new BasicDBObject("$set", obj));
+            obj.put("_id", query.get("_id"));
+        } else {
+            data.save(new BasicDBObject(obj));
+        }
     }
     
     
@@ -269,7 +179,11 @@ public class MongoDBConnection
 
     @Override
     public BSONObject getAsBSON(ObjectId uuid) {
-        return data.findOne(new BasicDBObject("_id", uuid));
+        BSONObject out =  data.findOne(new BasicDBObject("_id", uuid));
+        if (out == null){
+            throw new EntityNotFoundException(String.format("No object with id #%s in database", uuid.toString()));
+        }
+        return out;
     }
 
     /*Query construction forthcoming
@@ -332,6 +246,7 @@ public class MongoDBConnection
     @Override    
     public <T extends ObjBase> T getOne(Class<T> type, Map query) {
         DBObject dbResult = data.findOne(new BasicDBObject(query));
+        if (dbResult == null) return null;
         return (T) mapper.fromDBObject(type, dbResult, mapper.createEntityCache());
     }
 
@@ -438,6 +353,16 @@ public class MongoDBConnection
     @Override
     public <T extends ObjBase> BSONObject getOneAsBSON(Class<T> type, String name) {
         return getOneAsBSON(new BasicDBObject("name", name));
+    }
+
+    @Override
+    public boolean exists(ObjectId id) {
+        try {
+            getAsBSON(id);
+            return true;
+        } catch (EntityNotFoundException e){
+            return false;
+        }
     }
 
 }
