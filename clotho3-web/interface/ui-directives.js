@@ -193,165 +193,6 @@ Application.Interface.directive('contenteditable', [function() {
  DRAG N SORT
  ***********************/
 
-<<<<<<< HEAD
-Application.Interface.service('jqDragDrop', ['$timeout', '$parse', function($timeout, $parse) {
-
-}]);
-
-Application.Interface.directive('jqDraggable', ['$compile', function($compile) {
-    return {
-        restrict : 'A',
-        require: '?ngModel',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs) {
-                    element.css({'position' : 'absolute'});
-                },
-                post: function (scope, element, attrs, ngModel) {
-
-                    //set up
-                    function combineCallbacks(first,second){
-                        if( second && (typeof second === "function") ){
-                            return function(e,ui){
-                                first(e,ui);
-                                second(e,ui);
-                            };
-                        }
-                        return first;
-                    }
-
-                    var opts = {};
-                    var callbacks = {
-                        start: null,
-                        stop: null,
-                        drag: null
-                    };
-
-
-                    //model handling
-                    //todo - decide
-                    //reference : https://github.com/codef0rmer/angular-dragdrop
-                    if (ngModel) {
-                        callbacks.start = function(e, ui) {
-
-                        };
-
-                        callbacks.stop = function(e, ui) {
-
-                        };
-
-                        callbacks.drag = function(e, ui) {
-
-                        };
-                    }
-
-
-                    //watchers
-                    scope.$watch(function() {
-                        return scope.$eval(attrs.jqDraggableDisabled)
-                    },
-                    function(newval, oldval) {
-                        element.draggable({disabled: newval})
-                    });
-
-                    //custom listeners and jQuery UI Draggable options
-                    scope.$watch(attrs.jqDraggable, function (newval, oldval) {
-                        angular.forEach(newval, function (value, key) {
-                            if( callbacks[key] ){
-                                // wrap the callback
-                                value = combineCallbacks( callbacks[key], value );
-                            }
-                            element.sortable('option', key, value);
-                        })
-                    });
-
-                    angular.forEach(callbacks, function(value, key ){
-                        opts[key] = combineCallbacks(value, opts[key]);
-                    });
-
-                    //create
-                    element.draggable(opts);
-                }
-            }
-        }
-    }
-}]);
-
-Application.Interface.directive('jqDroppable', [function() {
-    return {
-        restrict: 'A',
-        require: '?ngModel',
-        link: function(scope, element, attrs, ngModel) {
-
-            //set up
-            function combineCallbacks(first,second){
-                if( second && (typeof second === "function") ){
-                    return function(e,ui){
-                        first(e,ui);
-                        second(e,ui);
-                    };
-                }
-                return first;
-            }
-
-            var opts = {};
-            var callbacks = {
-                over: null,
-                out: null,
-                drop: null
-            };
-
-
-            //model handling
-            //todo - decide
-            //reference : https://github.com/codef0rmer/angular-dragdrop
-            if (ngModel) {
-                callbacks.over = function(e, ui) {
-
-                };
-
-                callbacks.out = function(e, ui) {
-
-                };
-
-                callbacks.drop = function(e, ui) {
-
-                };
-            }
-
-
-            //watchers
-            scope.$watch(function() {
-                return scope.$eval(attrs.jqDroppableDisabled)
-            },
-            function(newval, oldval) {
-                element.droppable({disabled: newval})
-            });
-
-            //custom listeners and jQuery UI Droppable options
-            scope.$watch(attrs.jqDroppable, function (newval, oldval) {
-                angular.forEach(newval, function (value, key) {
-                    if( callbacks[key] ){
-                        // wrap the callback
-                        value = combineCallbacks( callbacks[key], value );
-                    }
-                    element.sortable('option', key, value);
-                })
-            });
-
-            angular.forEach(callbacks, function(value, key ){
-                opts[key] = combineCallbacks(value, opts[key]);
-            });
-
-            //finally, create
-            element.droppable(opts)
-        }
-    }
-}]);
-
-
-=======
->>>>>>> refactoring-overhaul
 /**
  *
  * @description This directive allows you to sort array with drag & drop
@@ -359,19 +200,11 @@ Application.Interface.directive('jqDroppable', [function() {
  * @note ngModel is optional, but required to make changes to model. Otherwise, the jQuery UI sortable is simply applied to the list.
 
  * @example
-<<<<<<< HEAD
- <ul jquery-sortable="sortableOptions" ng-model="items">
-    <li ng-repeat="item in items">{{ item }}</li>
- </ul>
- * @example All the jQueryUI Sortable options can be passed through the directive, to create custom events and handlers. For example,
- $scope.sortableOptions = {
-=======
  <ul jq-sortable="sortableParams" ng-model="items">
  <li ng-repeat="item in items">{{ item }}</li>
  </ul>
  * @example All the jQueryUI Sortable options can be passed through the directive, to create custom events and handlers. For example,
  $scope.sortableParams = {
->>>>>>> refactoring-overhaul
     update: function(e, ui) { ... },
     axis: 'x'
   };
@@ -429,54 +262,6 @@ Application.Interface.directive('jqSortable', [function() {
                         ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
                     } else {
                         ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
-<<<<<<< HEAD
-                    }
-                };
-
-                callbacks.stop = function(e, ui) {
-                    // digest all prepared changes
-                    if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
-
-                        // Fetch saved and current position of dropped element
-                        var end, start;
-                        start = ui.item.sortable.index;
-                        end = ui.item.index();
-
-                        // Reorder array and apply change to scope
-                        ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
-
-                    }
-                    if (ui.item.sortable.resort || ui.item.sortable.relocate) {
-                        scope.$apply();
-                    }
-                };
-            }
-
-
-            /*
-            //note - old version - all that is minimally required
-            scope.dragStart = function(e, ui) {
-                ui.item.data('start', ui.item.index());
-            };
-
-            scope.dragEnd = function(e, ui) {
-                var start = ui.item.data('start'),
-                    end = ui.item.index();
-
-                ngModel.$viewValue.splice(end, 0,
-                    ngModel.$viewValue.splice(start, 1)[0]);
-
-                scope.$apply();
-            };*/
-
-            scope.$watch(attrs.jqSortable, function(newVal, oldVal){
-                angular.forEach(newVal, function(value, key){
-
-                    if( callbacks[key] ){
-                        // wrap the callback
-                        value = combineCallbacks( callbacks[key], value );
-                    }
-=======
                     }
                 };
 
@@ -506,7 +291,6 @@ Application.Interface.directive('jqSortable', [function() {
                         // wrap the callback
                         value = combineCallbacks( callbacks[key], value );
                     }
->>>>>>> refactoring-overhaul
 
                     element.sortable('option', key, value);
                 });
@@ -524,8 +308,6 @@ Application.Interface.directive('jqSortable', [function() {
 }]);
 
 
-<<<<<<< HEAD
-=======
 
 Application.Interface.service('jqDragDrop', ['$timeout', '$parse', function($timeout, $parse) {
 
@@ -707,7 +489,6 @@ Application.Interface.directive('jqDroppable', [function() {
 }]);
 
 
->>>>>>> refactoring-overhaul
 
 /***********************
  BUTTONS
@@ -883,7 +664,6 @@ Application.Interface.directive('restrictInput', ['$parse', function($parse) {
 
                 //testing
                 //console.log("RESTRICT", ngModel.$viewValue, ngModel.$modelValue, input, ngModel);
-<<<<<<< HEAD
 
                 var transformedInput = input.replace(regexp, '');
                 if (transformedInput != input) {
@@ -893,46 +673,6 @@ Application.Interface.directive('restrictInput', ['$parse', function($parse) {
                     //console.log("RESTRICT 2", ngModel.$viewValue, ngModel.$modelValue, input, ngModel);
 
 
-                }
-                return transformedInput;
-            };
-=======
-
-                var transformedInput = input.replace(regexp, '');
-                if (transformedInput != input) {
-                    ngModel.$setViewValue(transformedInput);
-                    ngModel.$render();
-                    //testing
-                    //console.log("RESTRICT 2", ngModel.$viewValue, ngModel.$modelValue, input, ngModel);
->>>>>>> refactoring-overhaul
-
-            ngModel.$parsers.unshift( fn );
-        }
-    }
-}]);
-
-<<<<<<< HEAD
-/***********************
- DIALOG / MODAL
- ***********************/
-
-Application.Interface.directive('closeable', ['$compile', function($compile) {
-    return {
-        restrict : 'A',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs) {
-                    scope.removeElement = function() {
-                        element.remove();
-                    };
-                    element.prepend($compile('<a class="close" style="position: absolute; top: 12px; right: 15px;" ng-click="removeElement()">&times;</a>')(scope));
-                }
-            }
-        }
-    }
-}]);
-
-=======
                 }
                 return transformedInput;
             };
@@ -959,7 +699,6 @@ Application.Interface.directive('closeable', ['$compile', function($compile) {
     }
 }]);
 
->>>>>>> refactoring-overhaul
 Application.Interface.directive('modal', ['$parse', '$dialog', function($parse, $dialog) {
     return {
         restrict: 'EA',
@@ -1006,13 +745,8 @@ Application.Interface.directive('modal', ['$parse', '$dialog', function($parse, 
         }
     };
 }]);
-<<<<<<< HEAD
 
 
-=======
-
-
->>>>>>> refactoring-overhaul
 /******************
  TOOLTIP + POPOVER
  ******************/
@@ -1156,11 +890,7 @@ Application.Interface.provider( '$tooltip', function () {
                             if ( scope.tt_popupDelay ) {
                                 popupTimeout = $timeout( show, scope.tt_popupDelay );
                             } else {
-<<<<<<< HEAD
-                                scope.$apply( show );
-=======
                                 scope.$safeApply( show );
->>>>>>> refactoring-overhaul
                             }
                         }
 
@@ -1423,30 +1153,12 @@ Application.Interface.directive( 'popover', [ '$compile', '$timeout', '$parse', 
 
 
 
-<<<<<<< HEAD
-=======
 Application.Interface
 
->>>>>>> refactoring-overhaul
 /**
  * A helper service that can parse typeahead's syntax (string provided by users)
  * Extracted to a separate service for ease of unit testing
  */
-<<<<<<< HEAD
-Application.Interface.factory('typeaheadParser', ['$parse', function ($parse) {
-
-    //                      00000111000000000000022200000000000000003333333333333330000000000044000
-    var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
-
-    return {
-        parse:function (input) {
-
-            var match = input.match(TYPEAHEAD_REGEXP), modelMapper, viewMapper, source;
-            if (!match) {
-                throw new Error(
-                    "Expected typeahead specification in form of '_modelValue_ (as _label_)? for _item_ in _collection_'" +
-                        " but got '" + input + "'.");
-=======
     .factory('typeaheadParser', ['$parse', function ($parse) {
 
         //                      00000111000000000000022200000000000000003333333333333330000000000044000
@@ -1468,339 +1180,10 @@ Application.Interface.factory('typeaheadParser', ['$parse', function ($parse) {
                     viewMapper:$parse(match[2] || match[1]),
                     modelMapper:$parse(match[1])
                 };
->>>>>>> refactoring-overhaul
             }
         };
     }])
 
-<<<<<<< HEAD
-            return {
-                itemName:match[3],
-                source:$parse(match[4]),
-                viewMapper:$parse(match[2] || match[1]),
-                modelMapper:$parse(match[1])
-            };
-        }
-    };
-}]);
-
-Application.Interface.directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$position', 'typeaheadParser', function ($compile, $parse, $q, $timeout, $document, $position, typeaheadParser) {
-
-    var HOT_KEYS = [9, 13, 27, 38, 40];
-
-    return {
-        require:'ngModel',
-        link:function (originalScope, element, attrs, modelCtrl) {
-
-            //SUPPORTED ATTRIBUTES (OPTIONS)
-
-            //minimal no of characters that needs to be entered before typeahead kicks-in
-            var minSearch = originalScope.$eval(attrs.typeaheadMinLength) || 1;
-
-            //minimal wait time after last character typed before typehead kicks-in
-            var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
-
-            //should it restrict model values to the ones selected from the popup only?
-            var isEditable = originalScope.$eval(attrs.typeaheadEditable) !== false;
-
-            //binding to a variable that indicates if matches are being retrieved asynchronously
-            var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
-
-            //a callback executed when a match is selected
-            var onSelectCallback = $parse(attrs.typeaheadOnSelect);
-
-            var inputFormatter = attrs.typeaheadInputFormatter ? $parse(attrs.typeaheadInputFormatter) : undefined;
-
-            //INTERNAL VARIABLES
-
-            //model setter executed upon match selection
-            var $setModelValue = $parse(attrs.ngModel).assign;
-
-            //expressions used by typeahead
-            var parserResult = typeaheadParser.parse(attrs.typeahead);
-
-
-            //pop-up element used to display matches
-            var popUpEl = angular.element('<typeahead-popup></typeahead-popup>');
-            popUpEl.attr({
-                matches: 'matches',
-                active: 'activeIdx',
-                select: 'select(activeIdx)',
-                query: 'query',
-                position: 'position'
-            });
-            //custom item template
-            if (angular.isDefined(attrs.typeaheadTemplateUrl)) {
-                popUpEl.attr('template-url', attrs.typeaheadTemplateUrl);
-            }
-
-            //create a child scope for the typeahead directive so we are not polluting original scope
-            //with typeahead-specific data (matches, query etc.)
-            var scope = originalScope.$new();
-            originalScope.$on('$destroy', function(){
-                scope.$destroy();
-            });
-
-            var resetMatches = function() {
-                scope.matches = [];
-                scope.activeIdx = -1;
-            };
-
-            var getMatchesAsync = function(inputValue) {
-
-                var locals = {$viewValue: inputValue};
-                isLoadingSetter(originalScope, true);
-                $q.when(parserResult.source(scope, locals)).then(function(matches) {
-
-                    //CUSTOM
-                    console.log(matches);
-
-                    //it might happen that several async queries were in progress if a user were typing fast
-                    //but we are interested only in responses that correspond to the current view value
-                    if (inputValue === modelCtrl.$viewValue) {
-                        if (matches.length > 0) {
-
-                            scope.activeIdx = 0;
-                            scope.matches.length = 0;
-
-                            //transform labels
-                            for(var i=0; i<matches.length; i++) {
-                                locals[parserResult.itemName] = matches[i];
-                                scope.matches.push({
-                                    label: parserResult.viewMapper(scope, locals),
-                                    model: matches[i]
-                                });
-                            }
-
-                            scope.query = inputValue;
-                            //position pop-up with matches - we need to re-calculate its position each time we are opening a window
-                            //with matches as a pop-up might be absolute-positioned and position of an input might have changed on a page
-                            //due to other elements being rendered
-                            scope.position = $position.position(element);
-                            scope.position.top = scope.position.top + element.prop('offsetHeight');
-
-                        } else {
-                            resetMatches();
-                        }
-                        isLoadingSetter(originalScope, false);
-                    }
-                }, function(){
-                    resetMatches();
-                    isLoadingSetter(originalScope, false);
-                });
-            };
-
-            resetMatches();
-
-            //we need to propagate user's query so we can higlight matches
-            scope.query = undefined;
-
-            //Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
-            var timeoutPromise;
-
-            //plug into $parsers pipeline to open a typeahead on view changes initiated from DOM
-            //$parsers kick-in on all the changes coming from the view as well as manually triggered by $setViewValue
-            modelCtrl.$parsers.push(function (inputValue) {
-
-                resetMatches();
-                if (inputValue && inputValue.length >= minSearch) {
-                    if (waitTime > 0) {
-                        if (timeoutPromise) {
-                            $timeout.cancel(timeoutPromise);//cancel previous timeout
-                        }
-                        timeoutPromise = $timeout(function () {
-                            getMatchesAsync(inputValue);
-                        }, waitTime);
-                    } else {
-                        getMatchesAsync(inputValue);
-                    }
-                }
-
-                return isEditable ? inputValue : undefined;
-            });
-
-            modelCtrl.$formatters.push(function (modelValue) {
-
-                var candidateViewValue, emptyViewValue;
-                var locals = {};
-
-                if (inputFormatter) {
-
-                    locals['$model'] = modelValue;
-                    return inputFormatter(originalScope, locals);
-
-                } else {
-                    locals[parserResult.itemName] = modelValue;
-
-                    //it might happen that we don't have enough info to properly render input value
-                    //we need to check for this situation and simply return model value if we can't apply custom formatting
-                    candidateViewValue = parserResult.viewMapper(originalScope, locals);
-                    emptyViewValue = parserResult.viewMapper(originalScope, {});
-
-                    return candidateViewValue!== emptyViewValue ? candidateViewValue : modelValue;
-                }
-            });
-
-            scope.select = function (activeIdx) {
-                //called from within the $digest() cycle
-                var locals = {};
-                var model, item;
-
-                locals[parserResult.itemName] = item = scope.matches[activeIdx].model;
-                model = parserResult.modelMapper(originalScope, locals);
-                $setModelValue(originalScope, model);
-
-                onSelectCallback(originalScope, {
-                    $item: item,
-                    $model: model,
-                    $label: parserResult.viewMapper(originalScope, locals)
-                });
-
-                //return focus to the input element if a mach was selected via a mouse click event
-                resetMatches();
-                element[0].focus();
-            };
-
-            //bind keyboard events: arrows up(38) / down(40), enter(13) and tab(9), esc(27)
-            element.bind('keydown', function (evt) {
-
-                //typeahead is open and an "interesting" key was pressed
-                if (scope.matches.length === 0 || HOT_KEYS.indexOf(evt.which) === -1) {
-                    return;
-                }
-
-                evt.preventDefault();
-
-                if (evt.which === 40) {
-                    scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
-                    scope.$digest();
-
-                } else if (evt.which === 38) {
-                    scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.matches.length) - 1;
-                    scope.$digest();
-
-                } else if (evt.which === 13 || evt.which === 9) {
-                    scope.$apply(function () {
-                        scope.select(scope.activeIdx);
-                    });
-
-                } else if (evt.which === 27) {
-                    evt.stopPropagation();
-
-                    resetMatches();
-                    scope.$digest();
-                }
-            });
-
-            $document.bind('click', function(){
-                resetMatches();
-                scope.$digest();
-            });
-
-            element.after($compile(popUpEl)(scope));
-        }
-    };
-
-}]);
-
-Application.Interface.directive('typeaheadPopup', function () {
-    return {
-        restrict:'E',
-        scope:{
-            matches:'=',
-            query:'=',
-            active:'=',
-            position:'=',
-            select:'&'
-        },
-        replace:true,
-        templateUrl:'/interface/templates/typeahead-popup.html',
-        link:function (scope, element, attrs) {
-
-            scope.templateUrl = attrs.templateUrl;
-
-            scope.isOpen = function () {
-                return scope.matches.length > 0;
-            };
-
-            scope.isActive = function (matchIdx) {
-                return scope.active == matchIdx;
-            };
-
-            scope.selectActive = function (matchIdx) {
-                scope.active = matchIdx;
-            };
-
-            scope.selectMatch = function (activeIdx) {
-                scope.select({activeIdx:activeIdx});
-            };
-        }
-    };
-});
-
-Application.Interface.directive('typeaheadMatch', ['$http', '$templateCache', '$compile', '$parse', function ($http, $templateCache, $compile, $parse) {
-    return {
-        restrict:'E',
-        scope:{
-            index:'=',
-            match:'=',
-            query:'='
-        },
-        link:function (scope, element, attrs) {
-            var tplUrl = $parse(attrs.templateUrl)(scope.$parent) || '/interface/templates/typeahead-match.html';
-            $http.get(tplUrl, {cache: $templateCache}).success(function(tplContent){
-                element.replaceWith($compile(tplContent.trim())(scope));
-            });
-        }
-    };
-}]);
-
-Application.Interface.filter('typeaheadHighlight', function() {
-
-    function escapeRegexp(queryToEscape) {
-        return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-    }
-
-    return function(matchItem, query) {
-        return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<strong>$&</strong>') : query;
-    };
-});
-
-
-/***************
-    DRAG N DROP - work in progress --- see also above in code for jQuery UI versions
- ***************/
-
-/*
- * angular-dragon-drop v0.0.1
- * (c) 2013 Brian Ford http://briantford.com
- * License: MIT
- *
- * todo - clicking sometimes causes deletion of element
- * note - replaces ngRepeat in form draggable="item in collection"
- */
-
-
-Application.Interface.directive('uiDrag', function ($document, $compile) {
-
-    var dragValue,
-        dragOrigin,
-        floaty;
-
-    var drag = function (ev) {
-        var x = ev.clientX,
-            y = ev.clientY;
-
-        floaty.css('left', x + 10 + 'px');
-        floaty.css('top', y + 10 + 'px');
-    };
-
-    // todo - use class unselectable (in base.css)
-    var disableSelect = function () {
-        angular.element(document.body).addClass('unselectable');
-    };
-
-=======
     .directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$position', 'typeaheadParser', function ($compile, $parse, $q, $timeout, $document, $position, typeaheadParser) {
 
         var HOT_KEYS = [9, 13, 27, 38, 40];
@@ -2115,7 +1498,6 @@ Application.Interface.directive('uiDrag', function ($document, $compile) {
         angular.element(document.body).addClass('unselectable');
     };
 
->>>>>>> refactoring-overhaul
     var enableSelect = function () {
         angular.element(document.body).removeClass('unselectable');
     };
@@ -2183,7 +1565,6 @@ Application.Interface.directive('uiDrag', function ($document, $compile) {
                 drag(ev);
 
             });
-<<<<<<< HEAD
 
             // handle something being dropped here
             elt.bind('mouseup', function (ev) {
@@ -2218,42 +1599,6 @@ Application.Interface.directive('uiDrag', function ($document, $compile) {
 //see http://jsfiddle.net/ADukg/2516/
 Application.Interface.directive('uiDraggable', ['$compile', '$document', function($compile, $document) {
 
-=======
-
-            // handle something being dropped here
-            elt.bind('mouseup', function (ev) {
-                if (dragValue) {
-                    scope.$apply(function () {
-                        var list = scope.$eval(rhs);
-                        list.push(dragValue);
-                        dragValue = dragOrigin = null;
-                    });
-                }
-                enableSelect();
-                killFloaty();
-            });
-
-            // else, the event bubbles up to document
-            $document.bind('mouseup', function (ev) {
-                if (dragValue) {
-                    scope.$apply(function () {
-                        dragOrigin.push(dragValue);
-                        dragValue = dragOrigin = null;
-                    });
-                    enableSelect();
-                    killFloaty();
-                }
-            });
-
-        }
-    };
-});
-
-//note - 'draggable' is an HTML5 term - will be true or false when used natively - should use another attr
-//see http://jsfiddle.net/ADukg/2516/
-Application.Interface.directive('uiDraggable', ['$compile', '$document', function($compile, $document) {
-
->>>>>>> refactoring-overhaul
     var dragEl,
         dragOrigin,
         originalPositionCss;

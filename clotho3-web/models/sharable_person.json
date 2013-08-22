@@ -2,10 +2,7 @@
     "id" : "sharable_person",
     "type" : "sharable",
     "schema" : "schema_person",
-<<<<<<< HEAD
-=======
     "schema_id" : "schema_person",
->>>>>>> refactoring-overhaul
     "displayName" : "A Person",
     "password" : "SecretWords",
     "email" : "example@blah.com",

@@ -1,12 +1,7 @@
 {
-<<<<<<< HEAD:clotho3-web/models/trail_140l.json
-    "id" : "trail_140l",
-    "title" : "Combinatorial Libraries",
-=======
     "id" : "bb7f191e810c19729de860aa",
     "schema" : "Trail",
     "name" : "Combinatorial Libraries",
->>>>>>> refactoring-overhaul:clotho3-web/models/bb7f191e810c19729de860aa.json
     "author" : "Chris Anderson",
     "description" : "<blockquote><p>In this trail you will learn about Combinatorial Libraries. Some more text. blah blah blah blah blah blah </p><p><small>Chris Anderson</small></p></blockquote>",
 

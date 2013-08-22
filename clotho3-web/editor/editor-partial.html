@@ -1,23 +1,6 @@
 <div class="container" ng-controller="EditorCtrl">
     <div class="row">
 
-<<<<<<< HEAD
-        <!--<form sharable-editor name="mySharable" uuid="id" class="span6 form-horizontal well" novalidate></form>-->
-
-        <!--<form function-editor name="myFunction" uuid="id" class="span8 form-horizontal well" novalidate></form>-->
-
-    <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well"></form>
-
-        <div class="span2 well">
-            <h4>Demo</h4>
-
-            <input type="text" style="width: 100%; margin: 5px 0;" ng-model="selected" typeahead="state for state in states | filter:$viewValue" popover="Right now this just pulls from a list of states, but we should set this up to work with Clotho.query()" popover-title="What to Edit?" popover-trigger="focus">
-
-            <h6>Choose from List:</h6>
-            <select ng-model="id" class="span2" ng-options="c.value as c.name group by c.type for c in editableList"></select>
-
-        </div>
-=======
         <form clotho-editor name="myFunction" uuid="id" class="span8 form-horizontal well"></form>
 
         <div class="span2 well">
@@ -28,7 +11,6 @@
             <!--popover induces isolate scope, need to call $parent.selected in ngModel, see angular issue https://github.com/angular/angular.js/issues/1924 -->
             <input type="text" style="width: 100%; margin: 5px 0;" ng-model="$parent.selected" typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10" popover="Type and select a schema to create an object with pre-determined fields" popover-title="Choose a Schema" popover-trigger="focus">
             <button class="btn" ng-click="createNewObject()" ng-disabled="!selected">Create</button>
->>>>>>> refactoring-overhaul
 
         </div>
     </div>

@@ -77,29 +77,6 @@
             </div>
         </div>
 
-<<<<<<< HEAD
-        <div class="control-group">
-            <label class="control-label">Test Arguments</label>
-            <div class="controls">
-                <div ng-repeat="param in editable.args">
-                    <div ng-if="simpleTypes[param.type]">
-                        <input type="text" ng-model="param.test.value" ng-disabled="!editMode">
-                    </div>
-                    <div ng-if="!simpleTypes[param.type]">
-                        <input type="text" ng-model="param.test.uuid" typeahead="opt for opt in queryWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="We should set this up to work with Clotho.query(), tied to the schema restriction as above" popover-title="Easy Testing - Arguments" popover-trigger="focus" ng-disabled="!editMode">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="functionTestResult">Expected Result</label>
-            <div class="controls">
-                <select ng-model="editable.output.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.type for c in paramTypes">
-                </select>
-                <input type="text" id="functionTestResult" ng-model="editable.output.expect" ng-disabled="!editMode">
-                <button class="btn" ng-click="testFunction()" ng-disabled="form.$invalid">Test</button>
-=======
         <h3 class="text-center">
             Tests
             <div class="btn-group">
@@ -132,7 +109,6 @@
                     <input type="text" id="functionTestResult{{ $index }}" ng-model="test.output.value" ng-disabled="!editMode">
                     <button class="btn" ng-click="singleTest($index)" ng-disabled="form.$invalid" ng-class="{'btn-success' : testResults[$index] === true, 'btn-danger' : testResults[$index] === false}">Test</button>
                 </div>
->>>>>>> refactoring-overhaul
             </div>
         </div>
 

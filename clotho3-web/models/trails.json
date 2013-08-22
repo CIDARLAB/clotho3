@@ -1,13 +1,6 @@
 {"items" : [
-<<<<<<< HEAD
-    {"uuid" : "automation_tools", "title" : "Automation Tools", "author" : "Chris Anderson"},
-    {"uuid" : "trail_super", "title" : "Transclude Trails", "author" : "Max Bates"},
-    {"uuid" : "trail_140l", "title" : "140L Combinatorial Videos", "author" : "Chris Anderson"},
-    {"uuid" : "trail_123", "title" : "Biosafety Module", "author" : "UC Berkeley"}
-=======
     {"id" : "bb7f191e810c19729de860cc", "title" : "Automation Tools", "author" : "Chris Anderson"},
     {"id" : "bb7f191e810c19729de860bb", "title" : "Transclude Trails", "author" : "Max Bates"},
     {"id" : "bb7f191e810c19729de860aa", "title" : "140L Combinatorial Videos", "author" : "Chris Anderson"},
     {"id" : "bb7f191e810c19729de860ab", "title" : "Biosafety Module", "author" : "UC Berkeley"}
->>>>>>> refactoring-overhaul
 ]}

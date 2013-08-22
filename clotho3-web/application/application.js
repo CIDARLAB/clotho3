@@ -25,11 +25,8 @@ Application.Editor = angular.module('clotho.editor', []);
 Application.Plasmid = angular.module('clotho.plasmid', []);
 Application.Search = angular.module('clotho.search', []);
 Application.Trails = angular.module('clotho.trails', []);
-<<<<<<< HEAD
-=======
 Application.Schemas = angular.module('clotho.schemas',[]);
 Application.Functions = angular.module('clotho.functions',[]);
->>>>>>> refactoring-overhaul
 
 Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
@@ -65,18 +62,6 @@ angular.module('clotho.ng-additions', [])
 
         ext.isEmpty = function(value) {
             return angular.isUndefined(value) || value === '' || value === null || value !== value;
-<<<<<<< HEAD
-        };
-
-        ext.isScope = function(obj) {
-            return obj && obj.$evalAsync && obj.$watch;
-        };
-
-        angular.extend(angular, ext);
-    }]);
-
-angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails']);
-=======
         };
 
         ext.isScope = function(obj) {
@@ -87,7 +72,6 @@ angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-ad
     }]);
 
 angular.module('clothoPackage', ['clotho.browser', 'clotho.setup', 'clotho.ng-additions', 'clotho.dna', 'clotho.extensions', 'clotho.interface', 'clotho.primary', 'clotho.widgets', 'clotho.chat', 'clotho.dynamic', 'clotho.editor', 'clotho.plasmid', 'clotho.search', 'clotho.trails', 'clotho.schemas', 'clotho.functions']);
->>>>>>> refactoring-overhaul
 
 angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
@@ -117,14 +101,8 @@ angular.module('clothoRoot', ['clothoPackage']).
                 }
             }).
             when('/editor', {
-<<<<<<< HEAD
-                redirectTo:'/editor/func_first'
-            }).
-
-=======
                 templateUrl:'editor/editor-partial.html'
             }).
->>>>>>> refactoring-overhaul
             when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
                 //todo - get this working, instead of doing it in the link of directive

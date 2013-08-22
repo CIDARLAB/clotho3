@@ -59,11 +59,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
          ************/
 
         socket.on('message', function (obj) {
-<<<<<<< HEAD
-
-=======
             console.log(obj);
->>>>>>> refactoring-overhaul
             obj = JSON.parse(obj);
 
             var channel = obj.channel;

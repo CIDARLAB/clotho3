@@ -11,15 +11,6 @@ Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$locatio
     //init()
     $scope.id = $routeParams.id;
 
-<<<<<<< HEAD
-    $scope.editableList = [
-        {"name" : "Person", "type" : "Sharable", "value" : "sharable_person"},
-        {"name" : "Institution", "type" : "Sharable", "value" : "sharable_institution"},
-        {"name" : "First Function", "type" : "Function", "value" : "func_first"},
-        {"name" : "Second Function", "type" : "Function", "value" : "func_second"}
-    ];
-
-=======
     //data
 
     $scope.schemas = [];
@@ -51,11 +42,7 @@ Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$locatio
     $scope.logSelected = function() {
         console.log($scope.selected);
     };
->>>>>>> refactoring-overhaul
 
-//testing - typeahead
-    $scope.selected = undefined;
-    $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
 
 

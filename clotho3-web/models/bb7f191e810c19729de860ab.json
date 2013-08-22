@@ -1,12 +1,7 @@
 {
-<<<<<<< HEAD:clotho3-web/models/trail_123.json
-    "id" : "trail_123",
-    "title" : "Biosafety Module",
-=======
     "id" : "bb7f191e810c19729de860ab",
     "schema" : "Trail",
     "name" : "Biosafety Module",
->>>>>>> refactoring-overhaul:clotho3-web/models/bb7f191e810c19729de860ab.json
     "author" : "UC Berkeley",
     "description" : "<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
