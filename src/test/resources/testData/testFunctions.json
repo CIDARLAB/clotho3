@@ -1,14 +1,21 @@
 [{
-    "name":"reverse",
-    "language":"JAVASCRIPT",
-    "schema":"JavaScriptFunction",
-    "code":"function(sequence) {return sequence.split('').reverse().join('');};",
-    "arguments":[{"name":"sequence","type":"String"}]
-},
-{
     "name":"uppercase",
     "language":"JAVASCRIPT",
-    "schema":"JavaScriptFunction",
+    "schema":"Function",
     "code":"function (str) {return str.toUpperCase();};",
     "arguments":[{"name":"str", "type":"String"}]
+},
+{
+"name":"lowercase",
+"language":"JAVASCRIPT",
+"schema":"Function",
+"code":"function (str) {return str.toLowerCase();};",
+"arguments":[{"name":"str", "type":"String"}]
+},
+{
+"name":"spaceout",
+"language":"JAVASCRIPT",
+"schema":"Function",
+"code":"function (str) {return str.split('').join(' ');};",
+"arguments":[{"name":"str", "type":"String"}]
 }]

@@ -1,19 +1,36 @@
 {
-    "name" : "Second Function",
+    "name" : "revcomp",
     "type" : "function",
-    "schema" : "PythonFunction",
-    "id" : "aa7f191e810c19729de86102",
-    "code" : "function demo() { return true }",
-    "language" : "PYTHON",
-    "description" : "Another Demo function",
-    "precondition" : "function() { return true }",
-    "dependencies" : [],
-    "args" : [],
+    "schema" : "Function",
+    "id" : "aa7f191e810c19729de86101",
+    "code" : "function revcomp(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]});  }",
+    "language" : "JAVASCRIPT",
+    "description" : "This function should reverse complement a string",
+    "precondition" : "",
+    "dependencies" : [
+        {
+            "id" : "128719827591295",
+            "name" : "Example Function"
+        }
+    ],
+    "args" : [
+        {
+            "type" : "String",
+            "name" : "Reversable"
+        }
+    ],
     "tests" : [
         {
-            "args" : [],
+            "args" : ["Reverse Me!"],
             "output" : {
-                "value" : "",
+                "value" : "!eM esreveR",
+                "type" : "VALUE"
+            }
+        },
+        {
+            "args" : ["Another test"],
+            "output" : {
+                "value" : "tset rehtonA",
                 "type" : "VALUE"
             }
         }

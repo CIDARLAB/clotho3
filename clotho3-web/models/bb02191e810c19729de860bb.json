@@ -1,0 +1,20 @@
+{
+    "id" : "bb02191e810c19729de860bb",
+    "schema" : "Trail",
+    "name" : "RavenCAD Intro",
+    "author" : "Boston University",
+    "description" : "<blockquote><p>A short introduction to RavenCAD.</p><p><small>Boston University</small></p></blockquote>",
+
+    "contents" : [
+        {
+            "module_title" : "Intro to Raven",
+            "pavers" : [
+                {
+                    "paver_title" : "Introduction",
+                    "type" : "template",
+                    "template" : "/partials/trails/boston/raven.html"
+                }
+            ]
+        }
+    ]
+}

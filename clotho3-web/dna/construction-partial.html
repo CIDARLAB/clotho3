@@ -17,10 +17,18 @@
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label" for="complement">Complement</label>
-                <div class="controls">
-                    <input type="text" id="complement" placeholder="Complement" ng-model="sequence" dna-complement disabled>
+            <div class="control-group row">
+                <div class="span6 pull-left">
+                    <label class="control-label" for="complement">Complement</label>
+                    <div class="controls">
+                        <input type="text" id="complement" placeholder="Complement" ng-model="sequence" dna-complement disabled>
+                    </div>
+                </div>
+                <div class="span6 pull-right">
+                    <label class="control-label" for="clothorun">Clotho.run (choose below)</label>
+                    <div class="controls">
+                        <input type="text" id="clothorun" placeholder="remote Reverse" ng-model="sequence" clotho-run="{{ chooseFunction }}" disabled>
+                    </div>
                 </div>
             </div>
 
@@ -45,9 +53,9 @@
                     </div>
                 </div>
                 <div class="span6 pull-right">
-                    <label class="control-label" for="clothorun">Clotho.run directive</label>
+                    <label class="control-label" for="clothofn">Choose Clotho Function</label>
                     <div class="controls">
-                        <input type="text" id="clothorun" placeholder="remote Reverse" ng-model="sequence" clotho-run="uppercase" disabled>
+                        <input type="text" id="clothofn" placeholder="Choose a function to Run" ng-model="chooseFunction" ng-init="chooseFunction = 'lowercase'" typeahead="fn.name for fn in clothoFunctions">
                     </div>
                 </div>
             </div>
@@ -60,7 +68,7 @@
                     </div>
                 </div>
                 <div class="span6 pull-right">
-                    <label class="control-label" for="clothorunpre">Clotho.run pre</label>
+                    <label class="control-label" for="clothorunpre">Clotho.run 'reverse'</label>
                     <div class="controls">
                         <pre id="clothorunpre" placeholder="Remote reverse" ng-model="sequence" clotho-run="reverse"></pre>
                     </div>

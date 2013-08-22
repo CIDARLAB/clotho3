@@ -244,7 +244,13 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
 
 
 Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
-    $scope.trails = Clotho.get('trails');
+
+    $scope.trails = "loading...";
+
+    Clotho.query({schema : "Trail"}).then(function(result) {
+        console.log(result);
+        $scope.trails = result;
+    });
 
     $scope.base64icon = base64icon;
 }]);

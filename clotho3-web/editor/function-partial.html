@@ -103,7 +103,7 @@
         <h3 class="text-center">
             Tests
             <div class="btn-group">
-                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="form.$invalid">Run All</button>
+                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="form.$invalid || editable.tests.length < 1">Run All</button>
             </div>
             <button class="btn pull-right" type="button" ng-click="addTest()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
         </h3>
@@ -138,13 +138,14 @@
 
 
         <div class="form-actions" ng-hide="editMode">
-            <button class="btn" type="button" ng-click="edit()">Edit</button>
+            <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
             <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
         </div>
         <div class="form-actions" ng-show="editMode">
-            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid">Save</button>
-            <button type="button" class="btn btn-danger" ng-click="discard()">Discard</button>
-            <button type="button" class="btn btn-warning" ng-click="reset()">Reset</button>
+            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
+            <button type="button" class="btn btn-danger" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+            <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
+            <button type="button" class="btn btn-warning" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
             <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
         </div>
     </div>

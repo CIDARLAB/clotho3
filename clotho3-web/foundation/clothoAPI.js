@@ -212,6 +212,8 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 =======
 >>>>>>> refactoring-overhaul
     /**
+     * todo - update doc
+     *
      * @name Clotho.set
      *
      * @param {object} sharable  JSON representation of Sharable containing new data - may be partial (just a few fields), but must contain an ID or UUID
@@ -223,14 +225,24 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      */
     var set = function clothoAPI_set(sharable) {
 
-        if (angular.isEmpty(sharable)) return;
+        if (angular.isEmpty(sharable)) return false;
 
         //strip $$v in case use promise to set multiple times
         while (sharable.$$v) {
             sharable = sharable.$$v;
         }
 
-        fn.api.emit('set', sharable);
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('set:'+requestId, function(data) {
+            Collector.storeModel(sharable.id, sharable);
+            $rootScope.$safeApply(deferred.resolve(sharable))
+        }, '$clotho');
+
+        fn.api.emit('set', sharable, requestId);
+
+        return deferred.promise;
     };
 
 
@@ -454,6 +466,9 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     };
 
     /**
+     *
+     * todo - update doc
+     *
      * @name Clotho.destroy
      *
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
@@ -463,7 +478,17 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
-        fn.api.emit('destroy', uuid);
+        var requestId = (Date.now()).toString(),
+            deferred = $q.defer();
+
+        PubSub.once('destroy:'+requestId, function(data) {
+            Collector.removeModel(uuid, data);
+            $rootScope.$safeApply(deferred.resolve(data))
+        }, '$clotho');
+
+        fn.api.emit('destroy', uuid, requestId);
+
+        return deferred.promise;
     };
 
     /**

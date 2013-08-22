@@ -53,15 +53,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- once stephanie merges
-- src/test/resources/max ---> add --> demo.json (functions, jsons, trails, etc. to load at start)
-- add trail to same folder (add schema "Trail" and approrpriate ID)
+-folder actions to push changes to models folder to testData folder
 
-
-<<<<<<< HEAD
-=======
-- DIRECTIVE FOR CLOTHO API CALLS
-
+- verify collector updates on set() and destroy()
+    - collect queries?
 
 - API
     - move collect() to get(), redo clothoAPI get and collector interaction
@@ -69,7 +64,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - set() and destroy() update collector on message receipt from server
 
 
->>>>>>> refactoring-overhaul
 - tie github pulls to original repositories and keep in sync
 
 
@@ -109,18 +103,15 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - popover with HTML (see angularStrap, or wait for bootstrap UI)
-<<<<<<< HEAD
-=======
     - https://github.com/angular-ui/bootstrap/issues/220
->>>>>>> refactoring-overhaul
 
 
 - $clotho.api
     - ensure only instantiated once
+    - wrapper for functions which have callback (set, get, destroy, etc.)
 
 
 - Trails
-    - icons other paver types
     - exercise template (into, video if want, question)
     - prettyprint directive
     - implement quizzes with sortable
@@ -128,24 +119,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - editor
-<<<<<<< HEAD
-    - use "ID" not "UUID"
-    - add description and dependencies fields
-        - dependencies should query other functions
-    - map BSON -> HTML5 data types
-    - create button
-        - typeahead searches schemas
-            - {"schema": "Schema", "name" : $viewValue}
-        - list some, and create button (which returns and sets controller id accordingly)
-=======
     - replace internal HTML, not whole thing (closeable directive)
-    - ******* create button
-        - create also sets controller id so start editing
+    - map editable to ngModel if present and don't require uuid
     - use "ID" not "UUID"
     - dependencies field should query other functions
     - use accordion for tests div
     - map BSON -> HTML5 data types
->>>>>>> refactoring-overhaul
     - query for test args
         - show name, not uuid
         - Popver with whole JSON shown
