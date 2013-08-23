@@ -65,13 +65,13 @@ public class IceImporter {
             client.setRequestMethod("POST");
             client.setRequestProperty("Content-Type", "text/x-gwt-rpc; charset=UTF-8");
             client.setRequestProperty("X-GWT-Module-Base", "https://public-registry.jbei.org/gwt_ice/");
-            client.setRequestProperty("X-GWT-Permutation", "9EA0328C0DA2DFA9BDCB1545031EA97B");
-            String response = httpSend(client, "7|0|7|https://public-registry.jbei.org/gwt_ice/|2FBE993B4B2F20199659A778FE0578F8|org.jbei.ice.client.RegistryService|login|java.lang.String/2004016611|stmpaige@gmail.com|blue j 5|1|2|3|4|2|5|5|6|7|");
+            client.setRequestProperty("X-GWT-Permutation", "13BBE744E36634F5EBE2ABA886E06E57");
+            String response = httpSend(client, "7|0|7|https://public-registry.jbei.org/gwt_ice/|AA9EDD4C8A99C9E2FBB951C601A209D2|org.jbei.ice.client.RegistryService|login|java.lang.String/2004016611|stmpaige@gmail.com|blue j 5|1|2|3|4|2|5|5|6|7|");
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             List r = mapper.readValue(response.substring(4), List.class);
 
-            String sessionid = (String) ((List) r.get(15)).get(8);
+            String sessionid = (String) ((List) r.get(16)).get(8);
 
             //get exported entries
             URL queryURL = new URL("https://public-registry.jbei.org/export?type=XML&entries=" + Joiner.on(",").join(entries));
