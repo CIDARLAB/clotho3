@@ -1,0 +1,25 @@
+{
+    "schema" : "Module",
+    "type" : "sharable",
+    "fields" : [
+        {
+            "module_title" : {
+                "required" : true,
+                "type" : "String"
+            },
+            "pavers" : {
+                "required" : false,
+                "type" : "Array",
+                "schema" : "Paver",
+                "note" : "Must define either `pavers` or `translude`"
+            },
+            "transclude" : {
+                "required" : false,
+                "type" : "Object",
+                "schema" : "TrailTransclude",
+                "note" : "Must define either `pavers` or `translude`"
+            }
+
+        }
+    ]
+}

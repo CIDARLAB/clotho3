@@ -1,0 +1,18 @@
+{
+    "schema" : "TrailTransclude",
+    "type" : "sharable",
+    "fields" : [
+        {
+            "id" : {
+                "required" : true,
+                "type" : "String",
+                "note" : "ID of trail from which pulling content. Must be defined also in Trail > Dependencies"
+            },
+            "modules" : {
+                "required" : true,
+                "type" : "String",
+                "note" : "Can take one of three forms: 'all' to transclude all modules, '#' to transclude a single module, or '#-#' to give a start and end module to transclude"
+            }
+        }
+    ]
+}

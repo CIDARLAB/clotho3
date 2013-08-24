@@ -1,0 +1,82 @@
+<legend>Schema Editor</legend>
+<div class="ng-cloak">
+
+    <div class="control-group">
+        <label class="control-label" for="schemaName">Name</label>
+        <div class="controls">
+            <input type="text" id="schemaName" ng-model="editable.name" ng-disabled="!editMode">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="schemaParent">Parent</label>
+        <div class="controls">
+            <select id="schemaParent" ng-model="editable.parentSchema" ng-options="schema.name for schema in schemas" ng-disabled="!editMode">
+                <option value="">-</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="schemaDesc">Description</label>
+        <div class="controls">
+            <textarea type="text" id="schemaDesc" class="input-large" ng-model="editable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
+        </div>
+    </div>
+
+    <h4>
+        Fields
+    </h4>
+
+    <div ng-repeat="field in editable.fields">
+        <div class="row-fluid">
+            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in paramTypes">
+                <option value="" disabled>Type</option>
+            </select>
+            <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name">
+            <select ng-model="field.access" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in accessTypes">
+                <option value="" disabled>Access</option>
+            </select>
+        </div>
+        <div class="row-fluid clearfix">
+            <div class="span6 pull-left">
+                <input class="span12" type="text" ng-model="field.description" ng-disabled="!editMode" placeholder="Field Description">
+                <input class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example">
+            </div>
+            <div class="span6 pull-right">
+                <div ng-show="!!field.constraints">
+                    <h5>
+                        Constraints
+                        <button class="btn pull-right" type="button" ng-click="field.constraints.push(newConstraint())" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+                    </h5>
+                    <div ng-repeat="constraint in field.constraints" class="row-fluid">
+                        <select ng-model="constraint.type" class="span4" ng-disabled="!editMode" ng-options="t.value as t.name for t in constraintTypes"></select>
+                        <input class="span8" type="text" ng-model="constraint.value" ng-disabled="!editMode" placeholder="Constraint Value">
+                    </div>
+                </div>
+                <div ng-hide="!!field.constraints">
+                    <button class="btn pull-right" type="button" ng-click="addConstraint($index)" ng-disabled="!editMode"><i class="icon-plus"></i>Add Constraint</button>
+                </div>
+
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <button class="btn" type="button" ng-click="addField()" ng-disabled="!editMode"><i class="icon-plus"></i> New Field</button>
+
+
+
+
+    <div class="form-actions" ng-hide="editMode">
+        <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
+        <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+    </div>
+    <div class="form-actions" ng-show="editMode">
+        <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
+        <button type="button" class="btn btn-danger" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+        <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
+        <button type="button" class="btn btn-warning" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
+        <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+    </div>
+</div>

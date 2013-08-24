@@ -1,0 +1,37 @@
+{
+    "schema" : "Quiz",
+    "type" : "sharable",
+    "note" : "id field is used when checking answer for a quiz, as the answer is not sent to the client",
+    "fields" : [
+        {
+            "title" : {
+                "required" : true,
+                "type" : "String"
+            },
+            "type" : {
+                "required" : true,
+                "type" : "String",
+                "note" : "Options include: 'mc' (Multiple Choice), 'multipic' (Multi-Picture), 'fillin' (Fill in the Blank), 'essay' (Essay), 'dragdrop' (Drag and Drop Categories), 'multicheck' (Multiple Check), 'ranking' (Ranking), 'match' (Matching)"
+            },
+            "question" : {
+                "required" : true,
+                "type" : "HTML"
+            },
+            "options" : {
+                "required" : false,
+                "type" : "Array",
+                "note" : "Required for most quiz types, exceptions are: 'truefalse', 'fillin', 'essay'. Generally an array of strings, currently exceptions are: 'multipic', 'dragdrop'"
+            },
+            "categories" : {
+                "required" : false,
+                "type" : "Array",
+                "note" : "Required for 'dragdrop'"
+            },
+            "matches" : {
+                "required" : false,
+                "type" : "Array",
+                "note" : "Required for 'matching'"
+            }
+        }
+    ]
+}

@@ -53,31 +53,44 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
--folder actions to push changes to models folder to testData folder
+- move to 1.2.0
 
-- verify collector updates on set() and destroy()
-    - collect queries?
+- anderson lab site
+
+- finish schema editor
 
 - API
-    - move collect() to get(), redo clothoAPI get and collector interaction
+    - wrapper for functions with callback (set, get, destroy)
+    - ensure instantiated only once
+    - Socket events in own layer (outside PubSub)
+    - verify collector updates on set() and destroy() and get()
+        - collect queries
+        - reset editor on destroy() callback
+    - options for get() and query()
+    - cache query() results
     - move listeners to match command (e.g. show -> show not display)
-    - set() and destroy() update collector on message receipt from server
 
 
-- tie github pulls to original repositories and keep in sync
+- Trails
+    - start writing demo trail
+    - Trail schema writeup / Trail
+    - Trail service to persist variables -- Trails.persist()
+    - Trail editor -- req. schema finalized
+    - exercise template (intro, tempalate / video, question)
+    - prettyprint directive
+    - start approaching construction files
 
 
-- grunt / yeoman --- javascript project builder
+- Clotho Directive
+    - expose model (not read-only)
+    - higher arity (assume ngModel appropriate, simple checks)
+
+
+- Mac Housekeeping
+    - folder actions to push changes to models folder to testData folder
+    - tie github pulls to original repositories and keep in sync
     - package clotho api stuff (foundation folder and application.js)
-
-
-- Server communication
-    - create custom layer for Socket Events (using PubSub alternative implementation)
-    - basic node versions of:
-        - query
-        - run
-        - create
-        - revert
+        - grunt / yeoman --- javascript project builder
 
 
 - DNA Functions
@@ -102,32 +115,15 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - other pcr types
 
 
-- popover with HTML (see angularStrap, or wait for bootstrap UI)
-    - https://github.com/angular-ui/bootstrap/issues/220
-
-
-- $clotho.api
-    - ensure only instantiated once
-    - wrapper for functions which have callback (set, get, destroy, etc.)
-
-
-- Trails
-    - exercise template (into, video if want, question)
-    - prettyprint directive
-    - implement quizzes with sortable
-    - bootstrapping??
-
-
 - editor
     - replace internal HTML, not whole thing (closeable directive)
-    - map editable to ngModel if present and don't require uuid
     - use "ID" not "UUID"
     - dependencies field should query other functions
     - use accordion for tests div
     - map BSON -> HTML5 data types
     - query for test args
         - show name, not uuid
-        - Popver with whole JSON shown
+        - Popover with whole JSON shown
     - use form controller for validation
         - currently requires nested forms: https://github.com/angular/angular.js/issues/1404
     - new fields
@@ -142,17 +138,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - function editor
         - integrate codemirror, tie to language selection
 
-    - schema editor -- wait on stephanie
-
-
-
-- directive wrapper that expects response from clotho server
-
-
-- $http for data like menu_items, not Clotho.get()
-
 
 - UI Directives
+    - popover with HTML (see angularStrap, or wait for bootstrap UI)
+        - https://github.com/angular-ui/bootstrap/issues/220
     - rewrite contenteditable
         - make play nicely (e.g. with digest-highlight)
     - dropdown in Angular --  see angular-strap
@@ -177,7 +166,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-- bootstrapping apps without ng-view (just use ng-include)
+- bootstrapping apps without ng-view (just use ng-include or templates)
+    - use ng 1.2.0 - routes not included by default
+
 
 
 - create wrappers for directives, filters -> expose DNA functions accordingly

@@ -568,9 +568,29 @@ Application.Interface.provider("$dialog", function(){
                                 }
                             }
                         });
+                },
 
+                video : function(videoId, videoParams) {
+                    //todo: preserve aspect ratio
+                    angular.extend(videoParams, {width: "560"});
+
+                    return new Dialog({
+                        backdrop: true,
+                        backdropFade: true,
+                        keyboard: true,
+                        backdropClick: true,
+                        template:  '<div youtube="{{ videoId }}" params="videoParams""></div>',
+                        controller: 'VideoDialogController',
+                        resolve: {
+                            model: function() {
+                                return {
+                                    videoId : videoId,
+                                    videoParams : videoParams
+                                }
+                            }
+                        }
+                    })
                 }
-
             };
         }];
 });
@@ -646,6 +666,15 @@ Application.Interface.controller('DialogShareController', ['$scope', 'dialog', '
         window.open(url, (site.name == 'email' ? '_self' : "_blank") );
     }
 
+}]);
+
+
+Application.Interface.controller('VideoDialogController', ['$scope', 'dialog', 'model', function($scope, dialog, model){
+    $scope.videoId = model.videoId;
+    $scope.videoParams = model.videoParams;
+    $scope.close = function(res){
+        dialog.close(res);
+    };
 }]);
 
 

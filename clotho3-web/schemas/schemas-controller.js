@@ -85,7 +85,7 @@ Application.Schemas.controller('SchemasCtrl', ['$scope', 'Clotho', '$filter', '$
     $scope.create = function (schema) {
         var skeleton = {"schema":schema.name};
         Clotho.create(skeleton).then(function (id){
-            $location.path("#/editor");
+            $location.path("editor");
         });
     };
 

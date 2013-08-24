@@ -232,20 +232,32 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         console.log("favorite trail with id: " + id);
     };
 
+    //across Trail persistence
+    //todo - better logic...
+    var _persisted = {};
+    var persist = function(obj) {
+        _persisted = obj;
+    };
+    var getPersisted = function() {
+        return _persisted;
+    };
+
     return {
         createFrame : createFrame,
         createAPIPlayer : createAPIPlayer,
         extract_youtube : extract_youtube,
         compile : compile,
         share : Clotho.share,
-        favorite : favorite
+        favorite : favorite,
+        persist : persist,
+        getPersisted : getPersisted
     }
 }]);
 
 
 Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
 
-    $scope.trails = "loading...";
+    $scope.trails = [];
 
     Clotho.query({schema : "Trail"}).then(function(result) {
         console.log(result);

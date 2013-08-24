@@ -18,16 +18,13 @@
         </div>
     </div>
 
-    <div class="control-group">
-        <div class="span6">
+    <div class="control-group clearfix">
+        <div class="span6 pull-left">
             <label class="control-label" for="clothorunpre">Clotho.run as pre</label>
             <div class="controls">
                 <pre id="clothorunpre" placeholder="Remote reverse" ng-model="sequence" clotho-run="{{ chooseFunction }}"></pre>
             </div>
         </div>
-    </div>
-
-    <div class="control-group">
         <div class="span6 pull-right">
             <label class="control-label" for="clothorun">Clotho.run as input</label>
             <div class="controls">
@@ -35,4 +32,9 @@
             </div>
         </div>
     </div>
+
+
+    <h3>Demoing a few other things</h3>
+    <button class="btn" ng-click="openVideo()">Open video Modal</button>
+
 </div>

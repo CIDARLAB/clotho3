@@ -16,21 +16,34 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             /******
             GENERAL
             ******/
+            console.log($scope.editable);
 
-            //todo - map editable to ngModel if present and don't require uuid
-
-            //if we're not linking, just pull it from the attrs -- i.e. put in a string
-            if (typeof $scope.uuid == 'undefined') {
-                console.log("id [" + $scope.uuid + "] not in controller, pulling");
-                $scope.uuid = $attrs.uuid;
-            }
-
+            /** config **/
 
             $scope.schema = {};
-            $scope.editable = $scope.editable || {};
-
             $scope.editMode = false;
             $scope.formDirty = false;
+            $scope.logScope = function() { console.log($scope); };
+
+
+            /** model **/
+
+            //if editable is defined, ignore passed id
+            if (angular.isDefined($scope.editable) && angular.isObject($scope.editable)) {
+                console.log('editable passed');
+
+                $scope.uuid = $scope.editable.id;
+
+            } else {
+                //if we're not linking, just pull it from the attrs -- i.e. put in a string
+                if (typeof $scope.uuid == 'undefined') {
+                    console.log("id [" + $scope.uuid + "] not in controller, pulling");
+                    $scope.uuid = $attrs.uuid;
+                }
+
+            }
+
+            /** watchers **/
 
             //todo - don't assume same schema necessarily
             Clotho.listen('collector_reset', function Editor_onCollectorReset() {
@@ -41,8 +54,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             }, $scope);
 
             Clotho.watch2($scope.uuid, $scope, 'editable', $scope);
-
-            $scope.logScope = function() { console.log($scope); };
 
 
             /******
@@ -76,6 +87,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.paramTypes = [
                 {name:'Object', type:'Type'},
+                {name:'Array', type:'Type'},
                 {name:'String', type:'Type'},
                 {name:'Integer', type:'Type'},
                 {name:'Boolean', type:'Type'}
@@ -141,6 +153,59 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
 
             /*********
+             SCHEMA
+             **********/
+
+            $scope.schemas = [];
+            Clotho.query({"schema": "Schema"}).then(function(data) {
+                $scope.schemas = data;
+            });
+
+            $scope.submitSchema = function (partial) {
+
+            };
+
+            $scope.accessTypes = [
+                {name:'Public', value:'PUBLIC'},
+                {name:'Private', value:'PRIVATE'},
+                {name:'Read Only', value:'READONLY'}
+            ];
+
+            $scope.constraintTypes = [
+                {name:'RegExp', value:'regex'},
+                {name: 'Not Null', value: 'notnull'}
+            ];
+
+            $scope.newField = function() {
+                return {
+                    name: "NewField",
+                    type: "",
+                    constraints: [],
+                    access: "PUBLIC"
+                }
+            };
+
+            $scope.addField = function() {
+                if (angular.isEmpty($scope.editable.fields)) {$scope.editable.fields = [];}
+                $scope.editable.fields.push($scope.newField());
+            };
+
+            $scope.newConstraint = function() {
+                return {
+                    type: "",
+                    value: ""
+                };
+            };
+
+            $scope.addConstraint = function(index) {
+                if (angular.isEmpty($scope.editable.fields[index].constraints)) {$scope.editable.fields[index].constraints = [];}
+                $scope.editable.fields[index].constraints.push($scope.newConstraint())
+            };
+
+
+
+
+            /*********
             COMPILATION
             **********/
 
@@ -194,73 +259,91 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 return fulltext;
             }
 
+            //wrapper function
             $scope.compileEditor = function() {
-
                 Clotho.get($scope.uuid).then(function(result) {
-                    $scope.editMode = false;
                     $scope.editable = result;
 
-                    //todo - rewrite
-                    //$scope.type = result.type;
-                    var suffix = 'function';
-                    var str = angular.lowercase(result.schema);
-                    var endswith = str.indexOf(suffix, str.length - suffix.length) !== -1
-                    if (endswith){
-                        $scope.type = 'function';
-                    } else {
-                        $scope.type = 'sharable';
-                    }
-
-
-                    if (angular.lowercase(result.schema).indexOf('function', ((result.schema).length - 8)) !== -1)
-                        $scope.type = 'function';
-
-                    switch (angular.lowercase($scope.type)) {
-                        case 'sharable' : {
-
-                            $scope.schemaName = result.schema;
-
-                            $http.get('/editor/sharable-partial.html', {cache: $templateCache})
-                                .then(function(result) {
-                                    var el = $compile(result.data)($scope);
-                                    $element.html(el);
-                                })
-                                .then(function() {
-                                    Clotho.get($scope.schemaName).then(function(result) {
-                                        $scope.schema = result;
-                                        $scope.schema_custom = result.custom;
-
-                                        var insert = $element.find('insert-fields').html(generateDynamicForm($scope));
-                                        $compile(insert.contents())($scope);
-                                    });
-                                });
-
-                            break;
-
-                        }
-                        case 'function' : {
-
-                            $http.get('/editor/function-partial.html',  {cache: $templateCache})
-                                .success(function(data) {
-                                    var el = $compile(data)($scope);
-                                    $element.html(el);
-                                });
-
-                            break;
-                        }
-                        case 'schema' : {
-
-
-                            break;
-                        }
-                        default : {
-                            console.log('unknown type');
-
-                        }
-                    }
+                    $scope.type = $scope.determineType(result);
+                    $scope.getPartialAndCompile($scope.type, result);
                 });
             };
 
+
+            $scope.determineType = function(obj) {
+                function endsWith(str, suffix) {
+                    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+                }
+
+                //todo - better fallthrough
+                if (angular.isUndefined(obj)) { return 'undefined' }
+
+                var schema = angular.lowercase(obj.schema);
+
+                if (endsWith(schema, 'schema'))
+                    return 'schema';
+
+                if (endsWith(schema, 'function')) {
+                    return 'function';
+                }
+
+                //default, even if empty
+                return 'sharable';
+            };
+
+            $scope.getPartialAndCompile = function(type, obj) {
+                $scope.editMode = false;
+
+                switch (angular.lowercase(type)) {
+                    case 'sharable' : {
+
+                        $http.get('/editor/sharable-partial.html', {cache: $templateCache})
+                            .then(function(result) {
+                                var el = $compile(result.data)($scope);
+                                $element.html(el);
+                            })
+                            .then(function() {
+                                //todo - fallthrough
+                                $scope.schemaName = obj.schema;
+
+                                Clotho.get($scope.schemaName).then(function(result) {
+                                    $scope.schema = result;
+                                    $scope.schema_custom = result.custom;
+
+                                    var insert = $element.find('insert-fields').html(generateDynamicForm($scope));
+                                    $compile(insert.contents())($scope);
+                                });
+                            });
+
+                        break;
+
+                    }
+                    case 'function' : {
+
+                        $http.get('/editor/function-partial.html',  {cache: $templateCache})
+                            .success(function(data) {
+                                var el = $compile(data)($scope);
+                                $element.html(el);
+                            });
+
+                        break;
+                    }
+                    case 'schema' : {
+
+                        $http.get('/editor/schema-partial.html',  {cache: $templateCache})
+                            .success(function(data) {
+                                var el = $compile(data)($scope);
+                                $element.html(el);
+                            });
+
+                        break;
+                    }
+                    default : {
+                        console.log('unknown type');
+
+                    }
+                }
+            };
         },
         compile: function compile(tElement, tAttrs, transclude) {
 
@@ -276,36 +359,26 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 },
                 post: function postLink(scope, iElement, iAttrs, controller) {
 
+                    /* config */
+
                     scope.form = $parse(iAttrs.name)(scope);
 
-                    scope.$watch('uuid', function(newval, oldval) {
-                        if (!!newval && newval != oldval) {
-                            scope.compileEditor();
-                        }
-                    });
-
-                    //e.g. scope.formConst.$setPristine()
-                    scope.formConst = $parse(iAttrs.name)(scope);
-                    //switch to 'edit' mode
                     scope.edit = function() {
                         scope.editMode = true;
                     };
 
-                    //discard edits
                     scope.reset = function() {
-                        scope.formConst.$setPristine();
+                        scope.form.$setPristine();
                         Clotho.get(scope.uuid).then(function(result) {
                             scope.editable = result;
                         });
                     };
 
-                    //save edits, switch to 'view'
                     scope.save = function() {
                         Clotho.set(scope.editable);
                         scope.editMode = false;
                     };
 
-                    //discard edits, switch to 'view'
                     scope.discard = function() {
                         scope.reset();
                         scope.editMode = false;
@@ -313,13 +386,31 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                     scope.destroy = function()  {
                         Clotho.destroy(scope.editable.id).then(function() {
-                            console.log('bam');
                             scope.editMode = false;
                             scope.editable = undefined;
                             scope.id = undefined;
                         });
-
                     };
+
+                    /* watchers */
+
+                    scope.$watch('uuid', function(newval, oldval) {
+                        if (!!newval && newval != oldval) {
+                            scope.compileEditor();
+                        }
+                    });
+
+
+                    scope.$watch('editable', function(newval, oldval) {
+                        console.log(newval);
+
+                        if (!!newval && !!newval.id) {
+                            scope.uuid = newval.id;
+                        } else {
+                            console.log('object doesnt have id -- assume has type');
+                            scope.getPartialAndCompile(scope.determineType(newval), newval);
+                        }
+                    });
 
                 }
             }

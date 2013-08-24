@@ -43,6 +43,9 @@ Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$locatio
         console.log($scope.selected);
     };
 
+    $scope.createNewSchema = function() {
+        $scope.editable = {schema: "Schema"};
+    };
 
 
 

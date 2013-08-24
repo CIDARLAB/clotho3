@@ -1,0 +1,24 @@
+{
+    "schema" : "Trail",
+    "type" : "sharable",
+    "note" : "Container object for a trail",
+    "fields" : [
+        {
+            "dependencies" : {
+                "required" : false,
+                "type" : "Array|String",
+                "schema" : "Trail",
+                "note" : "Dependencies are downloaded at initial stage of Trail compilation, must be defined here if transcluding modules from other Trails"
+            },
+            "description" : {
+                "required" : true,
+                "type" : "HTML|String"
+            },
+            "contents" : {
+                "required" : true,
+                "type" : "Object",
+                "schema" : "Module"
+            }
+        }
+    ]
+}
