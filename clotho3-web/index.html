@@ -21,74 +21,6 @@
         }
     </style>
 
-    <!--script loader comparison: https://docs.google.com/spreadsheet/ccc?key=0Aqln2akPWiMIdERkY3J2OXdOUVJDTkNSQ2ZsV3hoWVE#gid=2 -->
-    <!--<script type="text/javascript" src="lib/yepnope.js"></script>
-
-    <script type="text/javascript">
-        //todo - optimize loading order
-    var $clotho = window.$clotho = {};
-
-    //future CDN:
-    // e.g. <script src="http://cdn.socket.io/stable/socket.io.js">
-    yepnope({
-        load: {
-            "jquery" : "lib/jquery-1.9.1.js",
-            "socket" : "http://localhost:8080/socket.io/socket.io.js",
-            "underscore" : "lib/underscore.js"
-        },
-        callback : {
-            'jquery' : function() {
-                yepnope({
-                    load: {
-                        "angular" : "lib/angular-1.1.4/angular.js",
-                        "jquery-ui" : "lib/jquery-ui-1.10.2.js"
-                    },
-                    callback : {
-                        'angular' : function() {
-                            yepnope("application/application.js")
-                        }
-                    }
-                })
-            },
-            'socket' : function() {
-                $clotho.socket = io.connect('http://localhost:8080');
-            }
-        },
-        complete: function() {
-            yepnope({
-                load: [
-                    //foundation
-                    "foundation/clientAPI.js",
-                    "foundation/clothoAPI.js",
-                    "foundation/pubsub-service.js",
-                    "foundation/socket-service.js",
-                    "foundation/collector-service.js",
-                    "application/mixin.js",
-
-                    //specifics
-                    "home/home-controller.js",
-                    "menu/menu-controller.js",
-                    "editor/editor-controller.js",
-                    "editor/sharable-editor-directive-old.js",
-                    "trails/trail-module.js",
-                    "chat/chat-controller.js",
-                    "chat/chat-service.js",
-                    "dynamic/dynamic-controller.js",
-                    "search/search-service.js",
-                    "search/search-directives.js",
-                    "interface/ui-directives.js"
-                ],
-                complete: function() {
-                    $clotho.appRoot = 'ng-app-clothoRoot';
-                    $clotho.appWidgets = 'ng-app-clothoWidgets';
-
-                    angular.bootstrap(angular.element(document).find($clotho.appRoot), ['clothoRoot']);
-                }
-            })
-        }
-    });
-    </script>-->
-
      <script type="text/javascript">
      /*!
      Async script loader
@@ -153,7 +85,7 @@
         $clotho.appRoot = 'ng-app-clothoRoot';
         $clotho.appWidgets = 'ng-app-clothoWidgets';
 
-        $clotho.socket = new WebSocket("ws://" + window.location.host + window.location.pathname + "websocket");
+        $clotho.socket = new WebSocket("wss://" + window.location.host + window.location.pathname + "websocket");
         $clotho.socket.onopen = function () {
             angular.bootstrap(
                     angular.element(document).find($clotho.appRoot),

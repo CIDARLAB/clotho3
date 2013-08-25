@@ -1,30 +1,49 @@
 package org.clothocad.webserver.jetty;
 
+import java.security.KeyStore;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketHandler;
 import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 public class ClothoWebserver {
 
     @Getter
     final Server server;
-    
+
     @Inject
-    public ClothoWebserver(@Named("port") int nPort)
+    public ClothoWebserver(@Named("port") int nPort,
+            KeyStore keystore)
             throws Exception {
-        
+
         server = new Server(nPort);
+
+        //Connectors
+
+        SelectChannelConnector connector0 = new SelectChannelConnector();
+        connector0.setPort(8080);
+        connector0.setMaxIdleTime(30000);
+        connector0.setRequestHeaderSize(8192);
+
+        SslSelectChannelConnector ssl_connector = new SslSelectChannelConnector();
+        ssl_connector.setPort(8443);
+        SslContextFactory cf = ssl_connector.getSslContextFactory();
+        cf.setKeyStore(keystore);
+        server.setConnectors(new Connector[]{connector0, ssl_connector});
 
         /**
          * for WEB resources (HTML, CSS, JavaScript etc.) *
@@ -47,6 +66,7 @@ public class ClothoWebserver {
                 return new ClothoWebSocket(request.getSession().getId());
             }
         };
+
         ContextHandler contextHandler = new ContextHandler();
         contextHandler.setContextPath("/websocket");
         contextHandler.setHandler(wsHandler);

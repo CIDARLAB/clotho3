@@ -286,6 +286,12 @@
             <artifactId>jackson-xml-databind</artifactId>
             <version>0.6.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.49</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 	
     <properties>
