@@ -81,20 +81,21 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             $scope.simpleTypes = {
                 "Object" : true,
                 "String" : true,
-                "Integer" : true,
-                "Boolean" : true
+                "Number" : true,
+                "Boolean" : true,
+                "Array" : true
             };
 
             $scope.paramTypes = [
-                {name:'Object', type:'Type'},
-                {name:'Array', type:'Type'},
-                {name:'String', type:'Type'},
-                {name:'Integer', type:'Type'},
-                {name:'Boolean', type:'Type'}
+                {name:'Object', value: "object", type:'Type', javaType : "java.util.HashMap"},
+                {name:'Array', value : "array", type:'Type', javaType : "java.util.Arrays"},
+                {name:'String', value : "string", type:'Type', javaType : "java.lang.String"},
+                {name:'Number', value : "number", type:'Type', javaType : "java.lang.Long"},
+                {name:'Boolean', value : "boolean", type:'Type', javaType : "java.lang.Boolean"}
             ];
             Clotho.query({schema:"Schema"}).then(function(data){
                 angular.forEach(data, function(schema){
-                    $scope.paramTypes.push({name:schema.name, type:'Schema'});
+                    $scope.paramTypes.push(angular.extend(schema, {type:'Schema'}));
                 });
             });
 
@@ -161,10 +162,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.schemas = data;
             });
 
-            $scope.submitSchema = function (partial) {
-
-            };
-
             $scope.accessTypes = [
                 {name:'Public', value:'PUBLIC'},
                 {name:'Private', value:'PRIVATE'},
@@ -175,6 +172,34 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 {name:'RegExp', value:'regex'},
                 {name: 'Not Null', value: 'notnull'}
             ];
+
+            $scope.primitiveToJava = {
+                "string" : "java.lang.String",
+                "number" : "java.lang.Long",
+                "boolean" : "java.lang.Boolean",
+                "object" : "java.util.HashMap",
+                "array" : "java.utils.Arrays"
+            };
+
+            $scope.parseField = function(field) {
+                //only passed field.value so map onto options properly
+
+                //todo
+
+                if ($scope.simpleTypes[field.type]) {
+                    field.javaType = $scope.primitiveToJava[field.type];
+                    field.reference = false;
+                } else {
+
+                    field.reference = true;
+                }
+
+                console.log(field);
+            };
+
+            $scope.submitSchema = function (partial) {
+
+            };
 
             $scope.newField = function() {
                 return {

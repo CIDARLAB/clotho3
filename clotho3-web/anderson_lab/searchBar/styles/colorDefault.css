@@ -1,0 +1,51 @@
+.searchbarWrapper input[type="submit"] {
+  /* background fall back */
+  background: #f77d06 url('../images/iconSlice.png') 16px -19px no-repeat;
+  /* background treatment for all modern browsers */
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -webkit-gradient(linear, 0 0, 0 100%, from(#f77d06), to(#bb5e04));
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -webkit-linear-gradient(#f77d06, #bb5e04);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -moz-linear-gradient(top, #f77d06, #bb5e04);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -ms-linear-gradient(#f77d06, #bb5e04);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -o-linear-gradient(#f77d06, #bb5e04);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, linear-gradient(#f77d06, #bb5e04);
+  /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f77d06', endColorstr='#bb5e04', GradientType=0);*/
+}
+.searchbarWrapper input[type="submit"]:hover {
+  /* background fall back */
+  background: #914305 url('../images/iconSlice.png') 16px -19px no-repeat;
+  /* background treatment for all modern browsers */
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -webkit-gradient(linear, 0 0, 0 100%, from(#914305), to(#6d3506));
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -webkit-linear-gradient(#914305, #6d3506);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -moz-linear-gradient(top, #914305, #6d3506);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -ms-linear-gradient(#914305, #6d3506);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, -o-linear-gradient(#914305, #6d3506);
+  background: url('../images/iconSlice.png') 16px -19px no-repeat, linear-gradient(#914305, #6d3506);
+  /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#914305', endColorstr='#6d3506', GradientType=0);*/
+}
+#log > a {
+  /* background fall back */
+  background: #818285 url('../images/iconSlice.png') 5px -42px no-repeat;
+  /* background treatment for all modern browsers */
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -webkit-gradient(linear, 0 0, 0 100%, from(#818285), to(#5c5d5f));
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -webkit-linear-gradient(#818285, #5c5d5f);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -moz-linear-gradient(top, #818285, #5c5d5f);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -ms-linear-gradient(#818285, #5c5d5f);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -o-linear-gradient(#818285, #5c5d5f);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, linear-gradient(#818285, #5c5d5f);
+  /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#818285', endColorstr='#5c5d5f', GradientType=0);*/
+  border-bottom: 1px solid #333;
+  border-left: 1px solid #4a505b;
+  border-right: 1px solid #4a505b;
+}
+#log:hover > a {
+/* background fall back */
+  background: #5a5b5d url('../images/iconSlice.png') 5px -42px no-repeat;
+  /* background treatment for all modern browsers */
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -webkit-gradient(linear, 0 0, 0 100%, from(#5a5b5d), to(#413f40));
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -webkit-linear-gradient(#5a5b5d, #413f40);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -moz-linear-gradient(top, #5a5b5d, #413f40);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -ms-linear-gradient(#5a5b5d, #413f40);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, -o-linear-gradient(#5a5b5d, #413f40);
+  background: url('../images/iconSlice.png') 5px -42px no-repeat, linear-gradient(#5a5b5d, #413f40);
+  /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5a5b5d', endColorstr='#413f40', GradientType=0);*/
+}

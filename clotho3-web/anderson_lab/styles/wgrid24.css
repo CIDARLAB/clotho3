@@ -1,0 +1,116 @@
+/**
+ *  wgrid24
+ *  grid implementation for 12 columns. default width of container is 960px
+ */
+body {
+  min-width: 960px;
+}
+.container { 
+  width: 960px;
+  margin: 0 auto;
+  zoom: 1;
+}
+.container:before,
+.container:after {
+  display: table;  /* note: can’t use position:relative on element with display:table */
+  content: "";
+  zoom: 1;
+}
+.container:after {
+  clear: both;
+}
+.row {
+  zoom: 1;
+}
+.row:before,
+.row:after {
+  display: table;  /* note: can’t use position:relative on element with display:table */
+  content: "";
+  zoom: 1;
+}
+.row:after {
+  clear: both;
+}
+.col {
+  float: left; 
+  display: inline;
+  margin-left: 5px; 
+  margin-right: 5px;
+}
+.row .col.first {
+  margin-left:  0;
+}
+.row .col.last {
+  margin-right: 0;
+}
+
+/**
+ *  base grid
+ */
+.width1      { width: 30px; }
+.width2      { width: 70px; }
+.width3      { width: 110px; }
+.width4      { width: 150px; }
+.width5      { width: 190px; }
+.width6      { width: 230px; }
+.width7      { width: 270px; }
+.width8      { width: 310px; }
+.width9      { width: 350px; }
+.width10     { width: 390px; }
+.width11     { width: 430px; }
+.width12     { width: 470px; }
+.width13     { width: 510px; }
+.width14     { width: 550px; }
+.width15     { width: 590px; }
+.width16     { width: 630px; }
+.width17     { width: 670px; }
+.width18     { width: 710px; }
+.width19     { width: 750px; }
+.width20     { width: 790px; }
+.width21     { width: 830px; }
+.width22     { width: 870px; }
+.width23     { width: 910px; }
+.width24     { width: 950px; }
+
+.oneFourth   { width: 230px; }
+.twoFourth   { width: 470px; }
+.threeFourth { width: 710px; }
+
+.oneThird    { width: 310px; }
+.twoThird    { width: 630px; }
+
+.half        { width: 470px; }
+
+.full        { width: 950px; }
+
+/**
+ *  left offsets 
+ */
+.offset1     { margin-left:  45px;}
+.offset2     { margin-left:  85px;}
+.offset3     { margin-left:  125px;}
+.offset4     { margin-left:  165px;}
+.offset5     { margin-left:  205px;}
+.offset6     { margin-left:  245px;}
+.offset7     { margin-left:  285px;}
+.offset8     { margin-left:  325px;}
+.offset9     { margin-left:  365px;}
+.offset10    { margin-left:  405px;}
+.offset11    { margin-left:  445px;}
+.offset12    { margin-left:  485px;}
+.offset13    { margin-left:  525px;}
+.offset14    { margin-left:  565px;}
+.offset15    { margin-left:  605px;}
+.offset16    { margin-left:  645px;}
+.offset17    { margin-left:  685px;}
+.offset18    { margin-left:  725px;}
+.offset19    { margin-left:  765px;}
+.offset20    { margin-left:  805px;}
+.offset21    { margin-left:  845px;}
+.offset22    { margin-left:  885px;}
+.offset23    { margin-left:  925px;}
+
+
+
+
+

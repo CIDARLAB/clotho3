@@ -44,7 +44,7 @@ Application.Editor.controller('EditorCtrl', ['$scope', '$routeParams', '$locatio
     };
 
     $scope.createNewSchema = function() {
-        $scope.editable = {schema: "Schema"};
+        $scope.editable = {schema: "ClothoSchema", language: "JSONSCHEMA"};
     };
 
 

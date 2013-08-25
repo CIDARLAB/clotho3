@@ -1,4 +1,7 @@
 <legend>Schema Editor</legend>
+
+{{ editable | json }}
+
 <div class="ng-cloak">
 
     <div class="control-group">
@@ -9,9 +12,9 @@
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="schemaParent">Parent</label>
+        <label class="control-label" for="superClass">Parent</label>
         <div class="controls">
-            <select id="schemaParent" ng-model="editable.parentSchema" ng-options="schema.name for schema in schemas" ng-disabled="!editMode">
+            <select id="superClass" ng-model="editable.superClass" ng-options="schema.id as schema.name for schema in schemas" ng-disabled="!editMode">
                 <option value="">-</option>
             </select>
         </div>
@@ -30,7 +33,7 @@
 
     <div ng-repeat="field in editable.fields">
         <div class="row-fluid">
-            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in paramTypes">
+            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in paramTypes" ng-change="parseField(field)">
                 <option value="" disabled>Type</option>
             </select>
             <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name">
@@ -79,4 +82,5 @@
         <button type="button" class="btn btn-warning" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
         <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
     </div>
+
 </div>
