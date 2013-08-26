@@ -14,6 +14,7 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.DatastoreImpl;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.github.jmkgreen.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -27,6 +28,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.persistence.EntityNotFoundException;
+import org.apache.shiro.authc.SimpleAccount;
+import org.clothocad.core.security.CredentialStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class MongoDBConnection
-        implements ClothoConnection {
+        implements ClothoConnection, CredentialStore {
     
     public MongoDBConnection(Mapper mapper) {
         morphia = new Morphia(mapper);
@@ -363,6 +366,21 @@ public class MongoDBConnection
         } catch (EntityNotFoundException e){
             return false;
         }
+    }
+
+    @Override
+    public void saveAccount(SimpleAccount account) {
+        dataStore.save(account);
+    }
+    
+    @Override
+    public SimpleAccount getAccount(String username) {
+        Query<SimpleAccount> results = dataStore.find(SimpleAccount.class, "username", username);
+        if (results.iterator().hasNext()){
+            return results.iterator().next();
+        }
+        
+        return null;
     }
 
 }

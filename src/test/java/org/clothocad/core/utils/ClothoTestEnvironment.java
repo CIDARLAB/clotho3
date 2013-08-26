@@ -4,9 +4,13 @@
  */
 package org.clothocad.core.utils;
 
+import org.clothocad.core.security.SecurityModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.servlet.ServletModule;
 import java.util.Properties;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -28,12 +32,19 @@ public class ClothoTestEnvironment {
         Properties properties = new Properties();
         properties.setProperty("port", nPort.toString());
 
-        Injector injector = Guice.createInjector(new ClothoTestModule(properties), new MongoDBModule());
+        Injector injector = Guice.createInjector(
+                new ClothoTestModule(properties), 
+                new MongoDBModule());
+        
+        SecurityManager securityManager = injector.getInstance(SecurityManager.class);
+        SecurityUtils.setSecurityManager(securityManager);
         
         Persistor persistor = injector.getInstance(Persistor.class);
         persistor.deleteAll();
         TestUtils.setupTestData(persistor);
         
         ClothoWebserver server = injector.getInstance(ClothoWebserver.class);
+        
+        server.start();
     }
 }

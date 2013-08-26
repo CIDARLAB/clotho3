@@ -33,6 +33,8 @@ public class ClothoStarter
         Injector injector = Guice.createInjector(new ClothoModule(properties), new MongoDBModule());
 
         ClothoWebserver server = injector.getInstance(ClothoWebserver.class);
+        
+        server.start();
     }
     private DaemonContext context;
 

@@ -13,12 +13,14 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
+//TODO: convert config to guice module
 public class ClothoWebserver {
 
     @Getter
@@ -26,23 +28,23 @@ public class ClothoWebserver {
 
     @Inject
     public ClothoWebserver(@Named("port") int nPort,
-            KeyStore keystore)
+            KeyStore keystore, @Named("containerServletContext") ServletContextHandler servletHandler)
             throws Exception {
 
         server = new Server(nPort);
 
         //Connectors
 
-        SelectChannelConnector connector0 = new SelectChannelConnector();
-        connector0.setPort(nPort);
-        connector0.setMaxIdleTime(30000);
-        connector0.setRequestHeaderSize(8192);
+       // SelectChannelConnector connector0 = new SelectChannelConnector();
+       // connector0.setPort(nPort);
+       // connector0.setMaxIdleTime(30000);
+       // connector0.setRequestHeaderSize(8192);
 
         SslSelectChannelConnector ssl_connector = new SslSelectChannelConnector();
         ssl_connector.setPort(8443); //TODO: make configurable
         SslContextFactory cf = ssl_connector.getSslContextFactory();
         cf.setKeyStore(keystore);
-        server.setConnectors(new Connector[]{connector0, ssl_connector});
+        server.setConnectors(new Connector[]{ssl_connector});
         
         //Websocket
 
@@ -61,7 +63,6 @@ public class ClothoWebserver {
         
         //Handler stack
         
-        ServletContextHandler servletHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletHandler.setContextPath("/");
         servletHandler.setResourceBase("./clotho3-web/");
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
@@ -72,6 +73,10 @@ public class ClothoWebserver {
         
         server.setHandler(servletHandler);
 
+    }
+    
+    
+    public void start() throws Exception {
         server.start();
     }
 }

@@ -7,10 +7,9 @@ package org.clothocad.core.persistence.mongodb;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
-import java.util.Properties;
 import org.clothocad.core.aspects.JSONSerializer;
 import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.security.CredentialStore;
 
 /**
  *
@@ -24,6 +23,9 @@ public class MongoDBModule extends AbstractModule {
         //set up morphia slf4j logging
         
         bind(ClothoConnection.class).to(MongoDBConnection.class);
+        bind(CredentialStore.class).to(MongoDBConnection.class);
+        bind(MongoDBConnection.class).in(Singleton.class);
+        
         bind(JSONSerializer.class).to(ClothoMapper.class);
         bind(Mapper.class).to(ClothoMapper.class);
         bind(ClothoMapper.class).in(Singleton.class);

@@ -11,6 +11,8 @@ import java.security.KeyStore;
 import java.util.Properties;
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.SecurityModule;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
 /**
  *
@@ -45,6 +47,11 @@ public class ClothoModule extends AbstractModule {
         //TODO: make router completely DI (?)
         requestInjection(Router.get());
         requestStaticInjection(Schema.class);
+        
+        //XXX: put this somewhere more reasonable
+        ServletContextHandler sch = new ServletContextHandler();
+        bind(ServletContextHandler.class).annotatedWith(Names.named("containerServletContext")).toInstance(sch);
+        binder().install(new SecurityModule(sch));
     }
     
     @Provides
