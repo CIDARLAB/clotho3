@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.bson.types.ObjectId;
 import org.clothocad.core.layers.communication.Channel;
 import org.clothocad.core.layers.communication.Message;
@@ -46,6 +48,7 @@ public class RouterTest {
     public static void setUpClass() {
         injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         router = Router.get();
+        SecurityUtils.setSecurityManager(new DefaultSecurityManager());
     }
 
     @AfterClass

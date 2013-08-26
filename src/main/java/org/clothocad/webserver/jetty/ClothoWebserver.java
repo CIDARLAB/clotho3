@@ -10,10 +10,8 @@ import lombok.Getter;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
-import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -25,7 +23,9 @@ public class ClothoWebserver {
 
     @Getter
     final Server server;
+    
 
+    
     @Inject
     public ClothoWebserver(@Named("port") int nPort,
             KeyStore keystore, @Named("containerServletContext") ServletContextHandler servletHandler)
@@ -64,7 +64,7 @@ public class ClothoWebserver {
         //Handler stack
         
         servletHandler.setContextPath("/");
-        servletHandler.setResourceBase("./clotho3-web/");
+        servletHandler.setResourceBase("./clotho3-web/"); 
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
         
         servletHandler.addFilter(GuiceFilter.class, "/*", null);

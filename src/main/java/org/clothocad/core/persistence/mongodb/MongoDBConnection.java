@@ -29,6 +29,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.persistence.EntityNotFoundException;
 import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.clothocad.core.security.CredentialStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,8 @@ public class MongoDBConnection
     
     
     //the demo will break if you change this without changing the Entity annotation on ObjBase
-    private String dataCollName = "data";
+    private final String dataCollName = "data";
+    private final String credCollName = "cred";
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
 
@@ -72,6 +75,7 @@ public class MongoDBConnection
     private MongoClient connection;
     private DB db;
     private DBCollection data;
+    private DBCollection cred;
     private Datastore dataStore;
     private Mapper mapper;
 
@@ -81,6 +85,7 @@ public class MongoDBConnection
         connection = new MongoClient(host, port);
         db = connection.getDB(dbName);
         data = db.getCollection(dataCollName);
+        cred = db.getCollection(credCollName);
         dataStore = new DatastoreImpl(morphia, connection, dbName);
         mapper = dataStore.getMapper();
     }
@@ -368,19 +373,30 @@ public class MongoDBConnection
         }
     }
 
-    @Override
-    public void saveAccount(SimpleAccount account) {
-        dataStore.save(account);
-    }
+
     
     @Override
     public SimpleAccount getAccount(String username) {
-        Query<SimpleAccount> results = dataStore.find(SimpleAccount.class, "username", username);
-        if (results.iterator().hasNext()){
-            return results.iterator().next();
-        }
+        DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
+        if (accountData == null) return null;
         
-        return null;
+        SimpleAccount account = new SimpleAccount(username, accountData.get("hash"), ByteSource.Util.bytes(accountData.get("salt")), "clotho");
+        return account;
+    }
+
+    @Override
+    public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt) {
+        //create account needs to fail if username exists
+        DBObject account = new BasicDBObject("_id", username);
+        account.put("hash", hashedPw.getBytes());
+        account.put("salt", salt.getBytes());
+        
+        cred.save(account);
+    }
+
+    @Override
+    public void deleteAllCredentials() {
+        cred.drop();
     }
 
 }

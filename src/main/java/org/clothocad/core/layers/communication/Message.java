@@ -6,14 +6,14 @@ package org.clothocad.core.layers.communication;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import java.util.Map;
-import org.clothocad.core.util.JSON;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author spaige
  */
+//TODO: figure out how to make immutable again w/ Morphia (subclass objectfactory)
+@NoArgsConstructor
 public class Message {
     public Message(Channel channel, Object data){
         this(channel, data, null);
@@ -27,9 +27,9 @@ public class Message {
         this.requestId = requestId;
     }
     
-    public final Channel channel;
-    public final Object data;
-    public final String requestId;
+    public Channel channel;
+    public Object data;
+    public String requestId;
 
     
     /*//assumes String describes JSONObject with keys "channel","data", and "requestId"

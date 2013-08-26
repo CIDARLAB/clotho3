@@ -16,6 +16,7 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -34,7 +35,8 @@ public class ClothoRealm extends AuthorizingRealm {
         super();
         
         //XXX: up number of iterations
-        CredentialsMatcher matcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
+        HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
+        matcher.setStoredCredentialsHexEncoded(false);
         
         this.store = store;
         setAuthenticationTokenClass(UsernamePasswordToken.class);
@@ -57,9 +59,12 @@ public class ClothoRealm extends AuthorizingRealm {
     public void addAccount(String username, String password) {
         
         ByteSource salt = new SecureRandomNumberGenerator().nextBytes();
-        Object hashedPw = new Sha256Hash(username, salt);
+        SimpleHash hashedPw = new SimpleHash(Sha256Hash.ALGORITHM_NAME, password, salt);
         
-        SimpleAccount account = new SimpleAccount(username, hashedPw, salt, "clotho");
+        store.saveAccount(username, hashedPw, salt);
     }
-    
+
+    public void deleteAll(){
+        store.deleteAllCredentials();
+    }
 }

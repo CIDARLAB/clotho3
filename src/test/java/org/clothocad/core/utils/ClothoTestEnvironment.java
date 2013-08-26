@@ -13,6 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.webserver.jetty.ClothoWebserver;
 
@@ -39,9 +40,14 @@ public class ClothoTestEnvironment {
         SecurityManager securityManager = injector.getInstance(SecurityManager.class);
         SecurityUtils.setSecurityManager(securityManager);
         
+        //test-specific setup
+        
         Persistor persistor = injector.getInstance(Persistor.class);
+        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
         persistor.deleteAll();
+        realm.deleteAll();
         TestUtils.setupTestData(persistor);
+        TestUtils.setupTestUsers(realm);
         
         ClothoWebserver server = injector.getInstance(ClothoWebserver.class);
         

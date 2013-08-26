@@ -31,7 +31,7 @@ var getSocket = function (addr) {
     return socket;
 }
 
-var clothosocket = "ws://localhost:8080/websocket";
+var clothosocket = "wss://localhost:8443/websocket";
 
 var testThroughAsync = function (name, message, callback) {
     asyncTest(name, function () {
@@ -137,4 +137,29 @@ asyncTest("set", function (){
     };
 });
 
+asyncTest("login/logout", function(){
+    var credentials = {"username":"testuser", "password":"password"};
+
+    var socket = getSocket(clothosocket);
+    socket.onopen = function () {
+        socket.send(new Message("login" , credentials), function (data){
+            socket.send(new Message("submit", "var persistMe = 42"), function (data){
+                socket.send(new Message("submit", "persistMe"), function (data){
+                    equal(data, 42);
+                    socket.send(new Message("logout", ""), function (data) {
+                        socket.send(new Message("submit", "persistMe"), function (data) {
+                            notEqual(data, 42, "data retained on logout?");
+                            socket.send(new Message("login", credentials), function(data){
+                                socket.send(new Message("submit", "persistMe"), function (data){
+                                    equal(data, 42, "data recovered on login?");
+                                    start();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    };
+});
 // TODO: add tests for listener dereg

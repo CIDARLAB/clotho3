@@ -5,6 +5,8 @@
 package org.clothocad.core.security;
 
 import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 
 /**
  *
@@ -13,5 +15,7 @@ import org.apache.shiro.authc.SimpleAccount;
 public interface CredentialStore {
     SimpleAccount getAccount(String username);
     
-    void saveAccount(SimpleAccount account); 
+    public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt);
+    
+    public void deleteAllCredentials();
 }

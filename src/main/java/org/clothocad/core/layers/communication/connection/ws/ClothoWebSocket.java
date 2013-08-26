@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.clothocad.core.layers.communication.Channel;
 
 import org.clothocad.core.layers.communication.Message;
@@ -20,6 +23,24 @@ public class ClothoWebSocket
 	implements WebSocket.OnTextMessage {
 
 	private WebSocket.Connection connection;
+        
+            private Subject subject;
+
+    private class CallRouter implements Callable {
+        private final Message message;
+        private final ClientConnection connection;
+        CallRouter(ClientConnection connection, Message message){
+            this.message = message;
+            this.connection = connection;
+        }
+
+        @Override
+        public Object call() throws Exception {
+            Router.get().receiveMessage(connection, message);
+            return null;
+        }
+        
+    }
 	
 	public ClothoWebSocket(String id) {
 		super(id);
@@ -44,12 +65,14 @@ public class ClothoWebSocket
         log.trace("Websocket #{} recieved message {}", this.getId(), messageString);
         try {
             Message message = JSON.mapper.readValue(messageString, Message.class);
-            Router.get().receiveMessage(this, message);
+            subject.execute(new CallRouter(this, message));
         } catch (JsonParseException ex) {
             log.error("Websocket #{} recived malformed message: {}", this.getId(), messageString);
         } catch (JsonMappingException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
+        }   catch (Exception ex) {
+                throw new RuntimeException(ex);
         }
     }
 
@@ -63,11 +86,11 @@ public class ClothoWebSocket
                 //Close out after 1 hour idle time
                 connection.setMaxIdleTime(3600000); 
 
-		//WebSocketTable.put(this.getId(), this);
-		
-		// TODO: store the connection information into the Mind
+		subject = SecurityUtils.getSubject();
 		
 	}
+        
+    
     @Override
     public void deregister(Channel channel, String requestId) {
         Map<String, String> message = new HashMap<>();
