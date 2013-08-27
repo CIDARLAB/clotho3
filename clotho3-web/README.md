@@ -56,6 +56,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - anderson lab site
 
 - finish schema editor -- verify with stephanie
+    - selecting parent should insert fields
 
 - search bar rewrite
     - autocomplete positioning using $position

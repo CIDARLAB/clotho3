@@ -1,0 +1,100 @@
+{
+    "id" : "bb7f191e810c19729de860bb",
+    "schema" : "Trail",
+    "name" : "Learning Clotho",
+    "author" : "UC Berkeley",
+    "description" : "<blockquote><p>This is what will ultimately be the demo trail. Let's put a video here or something.</p><p><small>Maxwell Bates</small></p></blockquote>",
+
+    "contents" : [
+        {
+            "module_title" : "Introducing Clotho",
+            "pavers" : [
+                {
+                    "paver_title" : "Intro to DNA",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/TcokQWySo4Y"
+                },
+                {
+                    "paver_title" : "Reverse Complement",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg"
+                },
+                {
+                    "paver_title" : "Tools in Clotho",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/rhguyAUGN6A"
+                },
+                {
+                    "paver_title" : "Scripting in Clotho",
+                    "type" : "video",
+                    "video" : "http://www.youtube.com/embed/08MUBVp2RQ4"
+                }
+            ]
+        },
+        {
+            "module_title" : "Manipulating DNA",
+            "pavers" : [
+                {
+                    "paver_title" : "Restriction Digests",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
+                },
+                {
+                    "paver_title" : "Ligation",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
+                },
+                {
+                    "paver_title" : "PCR",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+                }
+            ]
+        },
+        {
+            "module_title" : "Construction Files",
+            "pavers" : [
+                {
+                    "paver_title" : "Examining",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
+                },
+                {
+                    "paver_title" : "Simulation",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
+                },
+                {
+                    "paver_title" : "Writing",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+                }
+            ]
+        },
+        {
+            "module_title" : "Do it Yourself",
+            "pavers" : [
+                {
+                    "paver_title" : "Choose a Sequence",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
+                },
+                {
+                    "paver_title" : "Design a PCR Product",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
+                },
+                {
+                    "paver_title" : "Write Construction File",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+                },
+                {
+                    "paver_title" : "Simulation",
+                    "type" : "video",
+                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+                }
+            ]
+        }
+    ]
+}
