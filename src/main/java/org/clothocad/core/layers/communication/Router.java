@@ -10,8 +10,11 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.layers.communication.Channel.create;
@@ -64,10 +67,16 @@ public class Router {
 
     // receive message
     public void receiveMessage(ClientConnection connection, Message request) {
-        RouterDoo doo = new RouterDoo();
 
         //bind context to request
-        Mind mind = getMind(connection);
+        Subject subject = SecurityUtils.getSubject();
+        Mind mind;
+        if (subject.isAuthenticated()){
+            mind = getAuthenticatedMind(subject.getPrincipal().toString());
+            mind.setConnection(connection);
+        } else {
+            mind = getMind(connection);
+        }
         ServerSideAPI api = new ServerSideAPI(mind, persistor, request.requestId);
 
 
@@ -89,11 +98,17 @@ public class Router {
                     api.clear();
                     break;
                 case login:
-                    //TODO
-                    api.login(null, null);
+                    
+                    Map map = (Map) data;
+                    
+                    api.login(map.get("username").toString(), map.get("password").toString());
+                    response = Void.TYPE;
                     break;
                 case logout:
+                    String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     api.logout();
+                    authenticatedMinds.remove(key);
+                    response = Void.TYPE;
                     break;
                 case changePassword:
                     api.changePassword(data.toString());
@@ -243,17 +258,35 @@ public class Router {
     }
     
     private Map<String, Mind> minds;
+    private Map<String, Mind> authenticatedMinds = new HashMap<>();
 
-    /**
-     * The Doo's that manage any Client-derived message.  Doo's handle even key
-     * commands to avoid synchronization issues.
-     */
-    public class RouterDoo extends Doo {
-
-        public RouterDoo() {
-            super(null, false);
+    private Mind getAuthenticatedMind(String username)  {
+        //XXX: this whole method is janky
+        if (authenticatedMinds.containsKey(username)){
+            return authenticatedMinds.get(username);
         }
-        Message message;
-        ObjectId mindId;
+        
+        
+        Map<String,Object> query = new HashMap();
+        query.put("username", username);
+        query.put("className", Mind.class.getCanonicalName());
+        try{
+            Iterable<ObjBase> minds = persistor.find(query);
+
+        Mind mind;
+        
+        if (!minds.iterator().hasNext()){
+            mind = new Mind();
+            authenticatedMinds.put(username, mind);
+        } else {
+            mind = (Mind) minds.iterator().next();
+        }
+        
+        return mind;
+                }catch (Exception ex){
+            ex.printStackTrace();
+            throw ex;
+        }
     }
+
 }

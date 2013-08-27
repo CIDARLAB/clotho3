@@ -14,6 +14,7 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.DatastoreImpl;
 import com.github.jmkgreen.morphia.Morphia;
 import com.github.jmkgreen.morphia.mapping.Mapper;
+import com.github.jmkgreen.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -27,6 +28,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.persistence.EntityNotFoundException;
+import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
+import org.clothocad.core.security.CredentialStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class MongoDBConnection
-        implements ClothoConnection {
+        implements ClothoConnection, CredentialStore {
     
     public MongoDBConnection(Mapper mapper) {
         morphia = new Morphia(mapper);
@@ -61,7 +66,8 @@ public class MongoDBConnection
     
     
     //the demo will break if you change this without changing the Entity annotation on ObjBase
-    private String dataCollName = "data";
+    private final String dataCollName = "data";
+    private final String credCollName = "cred";
     //initialization should be revisited when we integrate parts
     private static Morphia morphia;
 
@@ -69,6 +75,7 @@ public class MongoDBConnection
     private MongoClient connection;
     private DB db;
     private DBCollection data;
+    private DBCollection cred;
     private Datastore dataStore;
     private Mapper mapper;
 
@@ -78,6 +85,7 @@ public class MongoDBConnection
         connection = new MongoClient(host, port);
         db = connection.getDB(dbName);
         data = db.getCollection(dataCollName);
+        cred = db.getCollection(credCollName);
         dataStore = new DatastoreImpl(morphia, connection, dbName);
         mapper = dataStore.getMapper();
     }
@@ -363,6 +371,32 @@ public class MongoDBConnection
         } catch (EntityNotFoundException e){
             return false;
         }
+    }
+
+
+    
+    @Override
+    public SimpleAccount getAccount(String username) {
+        DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
+        if (accountData == null) return null;
+        
+        SimpleAccount account = new SimpleAccount(username, accountData.get("hash"), ByteSource.Util.bytes(accountData.get("salt")), "clotho");
+        return account;
+    }
+
+    @Override
+    public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt) {
+        //create account needs to fail if username exists
+        DBObject account = new BasicDBObject("_id", username);
+        account.put("hash", hashedPw.getBytes());
+        account.put("salt", salt.getBytes());
+        
+        cred.save(account);
+    }
+
+    @Override
+    public void deleteAllCredentials() {
+        cred.drop();
     }
 
 }

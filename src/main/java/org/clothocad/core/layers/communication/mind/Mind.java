@@ -23,17 +23,16 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.layers.communication.mind;
 
+import com.github.jmkgreen.morphia.annotations.NotSaved;
+import com.github.jmkgreen.morphia.annotations.PostLoad;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.clothocad.core.aspects.Aspect;
-import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.Channel;
@@ -66,8 +65,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public final class Mind 
-		extends ObjBase
-		implements Aspect {
+		extends ObjBase {
 	
     static final Logger logger = LoggerFactory.getLogger(Mind.class);
     
@@ -81,14 +79,12 @@ public final class Mind
         /* TODO check if this Mind already exists */
         //Create the new Mind object
         Mind out = new Mind();
-        out.personId = person.getUUID().toString();
+        out.person = person;
         //out.save();
         return out;
     }
 
-    //THIS SHOULD BE CHANGED TO PRIVATE, BUT TESTERS NEED IT FOR NOW
     public Mind() {
-        config = new ClientConfiguration();
         engine = getEngine();
     }
 
@@ -118,94 +114,8 @@ public final class Mind
     public synchronized Object runCommand(String cmd, ScriptAPI api) throws ScriptException {
         return eval(cmd, api);
 //                runCommandWithNamespace(cmd);
-    }
+    } 
 
-    /* client has new tab--update config */
-    public void linkPage(String socket_id,
-                         String ephemeral_link_page_id,
-                         PageMode page_mode) {
-        throw new UnsupportedOperationException();
-    }
-    
-    /* Instruct client to close a tab */
-    public void removePage(String socket_id) {
-         /* TODO: DO WHATEVER IT TAKES TO programmatically remove THE TAB */
-    }
-
-    /* client lost a page--update config */
-    public void unlinkPage(String socket_id) {
-        config.removePage(socket_id);
-        //XXX: this.save();
-    }
-    
-    public void setVisible(Page page, boolean new_visibility) {
-        /* TODO: DO WHATEVER IT TAKES TO programmatically show or hide the tab */
-        
-        page.toggleVisible(new_visibility ^ page.toggleVisible(false));
-        //XXX: this.save();
-    }
-
-    public Iterable<Map<String, String>> getPageSummary() {
-        List<Map<String, String>> out = new ArrayList<>();
-        for (String socket_id : config.getSocketIDs()) {
-            Map<String, String> out_item = new HashMap<>();
-            out_item.put("socket_id", socket_id);
-            out_item.put("name", "(No Name)");
-            out_item.put("mode",
-                         config.getPage(socket_id).getPageMode().name());
-            out.add(out_item);
-        }
-        return out;
-    }    
-
-    public void removeWidget(Page page, Widget widget) {
-        /* TODO: remove the widget from the client's page */
-        page.removeWidget(widget.getId());
-        //XXX: this.save();
-    }
-
-    public void unlinkWidget(String socket_id, String widget_id) {
-        Page target_page = config.getPage(socket_id);
-        if (target_page == null) {
-            logger.error("can't get page with socket_id: " + socket_id);
-            return;
-        }
-        target_page.removeWidget(widget_id);
-        //XXX: this.save();
-    }
-
-    public void moveWidget(Widget widget,
-                           Page page,
-                           Double posx,
-                           Double posy,
-                           Double width,
-                           Double height) {
-        //DO WHATEVER IT TAKES TO programmatically move the widget inside the client
-        
-        widget.setPositionAbsolute(posx, posy);
-        widget.setDimensions(width, Widget.SizeType.RELATIVE, height, Widget.SizeType.RELATIVE);
-        
-        //XXX: this.save();
-    }
-
-    /* TODO: this shouldn't be exposed */
-    ClientConfiguration getClientConfiguration() {
-        return config;
-    }
-
-    public String getPersonId() {
-        return personId;
-    }
-    
-    /**
-     * THIS ALL FEELS A LITTLE FISHY--IT PROBABLY NEEDS TO SAVE THIS DATA CHANGE
-     * NEED TO FIGURE OUT WHY THERE IS A NEED TO SET THIS IN NameSpace
-     * @param newid 
-     */
-    public void setPersonId(String newid) {
-        this.personId = newid;
-    }
-    
     /**
      * Return the scripting engine
      * (or a new instance if it doesn't already exist)
@@ -234,35 +144,30 @@ public final class Mind
     }
     
     private Person person;
-    private String personId;
-    private transient List<Message> lastCommands = new ArrayList<>();
+    
+    @Setter
+    private String username;
+    
+    @NotSaved
+    private List<Message> lastCommands = new ArrayList<>();
+    
     private transient MetaEngine engine;
-    private transient List<String> lastSharables = new ArrayList<>();
-    @Getter @Setter
+    
+    private  List<String> lastSharables = new ArrayList<>();
+    @Getter @Setter @NotSaved
     private transient ClientConnection connection;
     
     private Map<Date, String> commandHistory;
     
     private static final int MAX_SIZE_LAST_SHARABLES = 50;
 
-    /* How the client is currently set up */
-    @Getter
-    private ClientConfiguration config;
 
-    /* Whether it should persist the visual configuration */
-    private boolean useInitialConfiguration = false;
+
 
     /* Maps "Doo ID" to Doo object */
     
     //JCA:  THIS IS PROBLEMATIC, IT IS HOLDING STATE FOR A DOO, NOT LOOSE-COUPLED
     //NOT SURE WHY THIS WOULD BE HERE INSTEAD OF THE HOPPER, I THINK THIS IS PROBABLY WRONG
-    private Map<String, Doo> doos = new HashMap<>();
-
-    private String id;
-
-public void SUPERILLEGAL_SETUUID(String string) {
-    id = string;
-}
 
     public ClientConnection getClientConnection() {
        return this.connection;
@@ -271,12 +176,6 @@ public void SUPERILLEGAL_SETUUID(String string) {
     public String pullUUIDFromNamespace(String str) {
         System.out.println("JCA:  Need to implement mapping names/namespace tokens to UUIDs of Sharables");
         return null;
-    }
-    
-    private static  String initializationScript;
-    static {
-        System.out.println("Someone:  Probably should pull this from elsewhere");
-        initializationScript = FileUtils.readFile("js_engine_initiation.js");
     }
 
     public List<String> getRecentSharables() {

@@ -37,7 +37,11 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.subject.Subject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.persistence.Persistor;
@@ -138,10 +142,21 @@ public class ServerSideAPI {
         }
     }
 
-    public final void login(String personRef, String password) {
+    public final void login(String username, String password) {
+        try {
+            SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
+        } catch (AuthenticationException e){
+            logAndSayError("Authentication attempt failed for username "+ username, e);
+        }
     }
 
     public final void logout() {
+        if (SecurityUtils.getSubject().isAuthenticated()){
+            mind.setUsername(SecurityUtils.getSubject().getPrincipal().toString());
+            persistor.save(mind);
+            SecurityUtils.getSubject().logout();           
+        }
+
     }
 
     public final boolean changePassword(String newPassword) {

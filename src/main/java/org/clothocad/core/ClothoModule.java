@@ -5,10 +5,14 @@
 package org.clothocad.core;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.name.Names;
+import java.security.KeyStore;
 import java.util.Properties;
 import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.SecurityModule;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
 /**
  *
@@ -21,6 +25,9 @@ public class ClothoModule extends AbstractModule {
         defaults.put("dbhost", "localhost");
         defaults.put("dbport", "27017");
         defaults.put("loglevel", "warn"); //TODO: doesn't affect anything yet
+        defaults.put("keystorepath", "."); //System.getProperty("java.home") + "/lib/security/cacerts".replace('/', File.separatorChar);
+        defaults.put("keystorepass", "");
+        defaults.put("keymanagerpass", "");
         this.properties = new Properties(defaults);
         if (properties != null) this.properties.putAll(properties);
     }
@@ -31,7 +38,7 @@ public class ClothoModule extends AbstractModule {
     
     protected final Properties defaults = new Properties();
     
-    private final Properties properties;
+    protected final Properties properties;
     
 
     @Override
@@ -40,7 +47,17 @@ public class ClothoModule extends AbstractModule {
         //TODO: make router completely DI (?)
         requestInjection(Router.get());
         requestStaticInjection(Schema.class);
+        
+        //XXX: put this somewhere more reasonable
+        ServletContextHandler sch = new ServletContextHandler();
+        bind(ServletContextHandler.class).annotatedWith(Names.named("containerServletContext")).toInstance(sch);
+        binder().install(new SecurityModule(sch));
     }
     
+    @Provides
+    protected KeyStore provideKeyStore() throws Exception {
+        //loads keystore from provided parameters
+        throw new UnsupportedOperationException();
+    }
     
 }
