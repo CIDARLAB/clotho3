@@ -12,7 +12,7 @@ Application.Foundation = angular.module('clotho.setup', [])
     }]);
 
 
-angular.module('andersonLab', ['clotho.search', 'clotho.setup', 'clotho.interface'])
+angular.module('andersonLab', ['ngRoute', 'clotho.search', 'clotho.setup', 'clotho.interface'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/', {
@@ -62,4 +62,12 @@ angular.module('andersonLab', ['clotho.search', 'clotho.setup', 'clotho.interfac
         $scope.id = $route.current.params.id;
 
     }])
-    .directive('slideshow', [function()]);
+    .directive('slideshow', [function() {
+
+        return {
+            restrict: 'A',
+            scope: {},
+
+        }
+
+    }]);

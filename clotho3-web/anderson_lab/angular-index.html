@@ -30,12 +30,16 @@
 
         $script("scripts/jquery-1.9.0.min.js", "jquery", function() {
             $script("scripts/jquery-ui-1.10.0.min.js", "jquery-ui");
-            $script("scripts/cl02.js", "slideshow");
+
          });
 
         $script.ready("jquery", function() {
-            $script("/lib/angular-1.1.5/angular.js", "angular", function() {
-                $script("application/application.js", "angular-app", function() {
+            $script("/lib/angular-1.2.0rc1/angular.js", "angular", function() {
+                $script([
+                    "application/application.js",
+                    "/lib/angular-1.2.0rc1/angular-route.js",
+                    "/lib/angular-1.2.0rc1/angular-animate.js"
+                ], "angular-app", function() {
                     $script([
                         //foundation
                         "/foundation/clientAPI.js",
@@ -45,8 +49,7 @@
                         "/foundation/collector-service.js",
                         "/search/search-service.js",
                         "/search/search-directives.js",
-                        "/interface/ui-services.js",
-                        "/interface/ui-directives.js"
+                        "/interface/ui-services.js"
                     ], "angular-stack");
                 });
             });
@@ -58,6 +61,10 @@
             $clotho.socket = new WebSocket("ws://" + window.location.host + window.location.pathname + "websocket");
             $clotho.socket.onopen = function () {
                 angular.bootstrap(document, ['andersonLab']);
+
+                //todo - write angular directives
+                $script("scripts/cl02.js", "slideshow");
+                $script("scripts/slides.min.jquery.js", "slideshow");
             }
         });
     </script>
