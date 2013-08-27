@@ -38,11 +38,20 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
     display.log = false; // activity log
     display.logSnippet = false; // snippet right of log button
 
+    // todo - DRY
     display.genLogPos = function() {
         var target = document.getElementById('searchbar_logbutton');
         display.logpos = {
             left : (target.offsetLeft + (target.scrollWidth / 2) - 160) + "px",
             top : (target.offsetTop + target.scrollHeight)  + "px"
+        };
+    };
+
+    display.genAutocompletePos = function() {
+        var target = document.getElementById('searchBarInput');
+        display.autocompletePos = {
+            left : (target.offsetLeft) + "px",
+            top : (target.offsetTop + target.scrollHeight + 6)  + "px"
         };
     };
 

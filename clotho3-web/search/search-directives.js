@@ -5,7 +5,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: "/search/searchbar-container.html",
+        templateUrl: "/search/searchbar.html",
         controller: function($scope, $element, $attrs) {
 
             $scope.options = Searchbar.options;
@@ -18,7 +18,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             $scope.execute = Searchbar.execute;
 
             //functions
-            //todo - migrate to typeahead directive? or at least integrate?
+            //todo - implement functionality of typeahead directive, but don't rely (don't make angular UI a dependency)
             $scope.$watch('display.query', function(newValue, oldValue) {
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
@@ -123,57 +123,6 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
     }
 }]);
 
-Application.Search.directive('clothoSearchbarHelppane', ['Clotho', function(Clotho) {
-
-    return {
-        restrict: 'A',
-        replace: true,
-        template: "",
-        controller: function($scope, $element, $attrs) {
-
-        },
-        link: function($scope, $element, $attrs) {
-
-        }
-    }
-}]);
-
-Application.Search.directive('clothoSearchbarAutocomplete', ['Clotho', 'Searchbar', function(Clotho, Searchbar) {
-
-    return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '/search/autocomplete-partial.html',
-        controller: function($scope, $element, $attrs) {
-            //inherited, not necessary
-            //$scope.display = Searchbar.display;
-            //$scope.autocomplete = Searchbar.autocomplete;
-        },
-        link: function($scope, $element, $attrs) {
-
-        }
-    }
-}]);
-
-Application.Search.directive('clothoSearchbarLog', ['Clotho', 'Searchbar', '$timeout', function(Clotho, Searchbar, $timeout) {
-
-    return {
-        restrict: 'A',
-        replace: true,
-        templateUrl : "/search/log-partial.html",
-        controller: function($scope, $element, $attrs) {
-            //inherited, not necessary
-            //$scope.options = Searchbar.options;
-            //$scope.log = Searchbar.log;
-        },
-        link: function($scope, $element, $attrs) {
-
-        }
-    }
-}]);
-
 Application.Search.controller('TerminalCtrl', ['$scope', 'Clotho', 'Searchbar', '$location', function($scope, Clotho, Searchbar, $location) {
     $scope.log = Searchbar.log;
-
-
 }]);

@@ -533,21 +533,14 @@ Application.Interface.provider("$dialog", function(){
                         }});
                 },
 
-                login : function(url) {
+                login : function() {
                     return new Dialog({
                         backdrop: true,
                         backdropFade: true,
                         keyboard: true,
                         backdropClick: true,
                         templateUrl:  '/interface/templates/dialogLogin.html',
-                        controller: 'DialogLoginController',
-                        resolve: {
-                            model: function() {
-                                return {
-                                    url : url
-                                }
-                            }
-                        }
+                        controller: 'DialogLoginController'
                     });
                 },
 
@@ -627,12 +620,15 @@ Application.Interface.controller('DialogLoginController', ['$scope', 'dialog', '
         dialog.close(res);
     };
 
+    $scope.notification = {};
     $scope.cred = {username : "", password: ""};
 
     $scope.login = Clotho.login($scope.cred.username, $scope.cred.password).then(function (result) {
         if (!!result) {
-            $scope.close();
+            $scope.notification = {class : "alert-success", message: "Log in Success"};
+            dialog.close($scope.cred.username);
         } else {
+            $scope.notification = {class : "alert-error", message: "Log in Error"};
             $scope.cred = {username : "", password: ""};
         }
     });

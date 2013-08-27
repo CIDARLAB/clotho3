@@ -59,13 +59,12 @@ SEARCH BAR ONLY
 **************/
 
 #clothoSearchbarAutocomplete {
-    margin: -10px 0 0 20px;
-    display:block;
     z-index: 1001;
 }
 
 #clothoSearchbarAutocompleteList {
     width: 350px;
+    display: block;
 }
 
 .clothoSearchbarAutocompleteListItem {
@@ -88,11 +87,12 @@ SEARCH BAR ONLY
     width: 316px;
 }
 
-/* todo - viewport to hide scrollbar */
+/* todo - viewport container to hide scrollbar */
 #clothoSearchbarLog {
     z-index:999;
     max-width: 320px;
     width: 320px;
+    display: block; /*override bootstrap*/
 }
 
 #clothoSearchbarLogSnippet {
@@ -101,24 +101,13 @@ SEARCH BAR ONLY
     max-width: 278px;
     max-height: 21px;
     overflow: hidden;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
 }
 
 #clothoSearchbarLog .logEntry {
     max-width: 300px;
 }
 
-
-/* override to avoid bootstrap JS */
-#clothoSearchbar .dropdown-menu {
-    display: block;
-    position: absolute;
-}
-
-#clothoSearchbar .popover {
-    display: block;
-    position: absolute;
-}
 
 /* to fit into bootstrap */
 .clotho-icon {

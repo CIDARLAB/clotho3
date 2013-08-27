@@ -495,6 +495,7 @@ Application.Interface.directive('jqDroppable', [function() {
  ***********************/
 
 //future - pending AngularUI rewrite - pull once merged
+// https://github.com/angular-ui/bootstrap/issues/284
 /**
  * @description Provides dropdown menu functionality in place of bootstrap js
  * @example

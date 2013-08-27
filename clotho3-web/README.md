@@ -58,10 +58,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - finish schema editor -- verify with stephanie
     - selecting parent should insert fields
 
-- search bar rewrite
-    - autocomplete positioning using $position
+- login -> searchbar
 
-- login window
+- search bar rewrite
+    - CSS classes
+    - avoid UI directives etc.
+    - avoid using several templates
 
 - API
     - Socket events in own layer (outside PubSub)
@@ -151,7 +153,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - need to handle drop + other events
 
 
-- FUTURE : move to angular 1.2.0
+- FUTURE
+    - move to angular 1.2.0
+    - angularUI update
 
 
 - plasmid editors to check out

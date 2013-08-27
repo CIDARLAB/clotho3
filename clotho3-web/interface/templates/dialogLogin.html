@@ -1,8 +1,11 @@
 <div class="modal-header">
-    <button type="button" class="close" ng-click="close()">&times;</button>
+    <button type="button" class="close" ng-click="close(false)">&times;</button>
     <h3>Clotho Login</h3>
 </div>
 <div class="modal-body">
+
+    <div ng-show="!!notification.message" class="alert" ng-class="notification.class">{{ notification.message }}</div>
+
     <form name="loginForm" class="form-horizontal">
         <div class="control-group"  ng-class="{error: loginForm.username.$invalid}">
             <label class="control-label" for="inputUsername">Username</label>

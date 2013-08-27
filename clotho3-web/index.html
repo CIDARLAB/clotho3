@@ -104,11 +104,17 @@
                 </ul>
 
                 <div class="btn-group pull-right">
-                    <button class="btn btn-info btn-small" ng-click="showLogin()"><i class="icon-user"></i></button>
+                    <button class="btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="icon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
                     <button class="btn btn-warning btn-small" ng-click="clearStorage()"><i class="icon-trash"></i></button>
                 </div>
             </div>
-            <div clotho-searchbar></div>
+
+            <div id="clothoSearchbar" class="navbar-inner">
+                <div style="margin: 0 auto; width: 900px">
+                    <div clotho-searchbar></div>
+                </div>
+            </div>
+
         </div>
     </div>
 

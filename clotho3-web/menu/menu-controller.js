@@ -11,6 +11,7 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
         {"name" : "Schemas", "path":"/schemas"}
     ]};
 
+
     $scope.$watch(function () {
         return $location.path();
     }, function (newValue, oldValue) {
@@ -35,37 +36,29 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
         });
     }, 0);
 
+
     //do hrefs or this make more sense?
     $scope.goToPage = function(mode) {
         $location.path($scope.modes[mode]);
         //note: $location.path().replace() will avoid creation of page in history
     };
 
+
     $scope.clearStorage = function() {Collector.clearStorage()};
     $scope.logListeners = function() {PubSub.logListeners()};
 
-    $scope.showLogin = function() {
-        $dialog.login().open();
-    };
 
-    //route handling
-    $scope.$on("$routeChangeStart", function (event, next, current) {
-        $scope.status = {
-            "text" : "Loading...",
-            "class" : "progress-striped active progress-warning"
-        };
-    });
-    $scope.$on("$routeChangeSuccess", function (event, current, previous) {
-        $scope.status = {
-            "text" : "Successfully Loaded!",
-            "class" : "progress-success"
-        }
-    });
-    $scope.$on("$routeChangeError", function (current, previous, rejection) {
-        $scope.status = {
-            "text" : "Fail to Load!",
-            "class" : "progress-error"
-        };
-    });
+
+    $scope.loggedIn = false;
+    $scope.showLogin = function() {
+        $dialog.login().open().then(function(result) {
+            console.log(result);
+            if (result) {
+                $scope.username = result;
+                $scope.loggedIn = true;
+            }
+        });
+
+    };
 
 }]);
