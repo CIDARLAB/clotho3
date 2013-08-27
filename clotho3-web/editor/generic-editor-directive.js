@@ -182,7 +182,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             };
 
             $scope.parseField = function(field) {
-                //only passed field.value so map onto options properly
+                //only passed field.value so model maps onto options properly in html
 
                 //todo
 
@@ -301,7 +301,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 }
 
                 //todo - better fallthrough
-                if (angular.isUndefined(obj)) { return 'undefined' }
+                if (angular.isUndefined(obj) || angular.isEmpty(obj)) { return 'undefined' }
 
                 var schema = angular.lowercase(obj.schema);
 
@@ -365,6 +365,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     }
                     default : {
                         console.log('unknown type');
+                        $element.html('<p class="text-center">Please select an Object</p>');
 
                     }
                 }
@@ -412,8 +413,9 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     scope.destroy = function()  {
                         Clotho.destroy(scope.editable.id).then(function() {
                             scope.editMode = false;
-                            scope.editable = undefined;
-                            scope.id = undefined;
+                            scope.editable = null;
+                            scope.uuid = null;
+                            scope.compileEditor();
                         });
                     };
 

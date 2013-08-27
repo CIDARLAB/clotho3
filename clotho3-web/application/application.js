@@ -30,10 +30,8 @@ Application.Functions = angular.module('clotho.functions',[]);
 
 Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
-        //on first run, add API to $clotho object
-        window.$clotho.api = Clotho;
 
-        //extend scope with Clotho API
+        //extend scope with Clotho API. Don't need to do this in each controller.
         $rootScope.Clotho = Clotho;
     }]);
 
@@ -125,9 +123,6 @@ angular.module('clothoRoot', ['clothoPackage']).
             }).
             when('/schemas', {
                 templateUrl:'schemas/schemas-partial.html'
-            }).
-            when('/scripts', {
-                templateUrl:'functions/functions-partial.html'
             }).
             when('/dynamic', {
                 //templateUrl:'dynamic/dynamic-partial.html',

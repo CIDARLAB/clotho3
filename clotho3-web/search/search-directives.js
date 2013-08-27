@@ -5,7 +5,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: "search/searchbar-container.html",
+        templateUrl: "/search/searchbar-container.html",
         controller: function($scope, $element, $attrs) {
 
             $scope.options = Searchbar.options;
@@ -143,7 +143,7 @@ Application.Search.directive('clothoSearchbarAutocomplete', ['Clotho', 'Searchba
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: 'search/autocomplete-partial.html',
+        templateUrl: '/search/autocomplete-partial.html',
         controller: function($scope, $element, $attrs) {
             //inherited, not necessary
             //$scope.display = Searchbar.display;
@@ -160,7 +160,7 @@ Application.Search.directive('clothoSearchbarLog', ['Clotho', 'Searchbar', '$tim
     return {
         restrict: 'A',
         replace: true,
-        templateUrl : "search/log-partial.html",
+        templateUrl : "/search/log-partial.html",
         controller: function($scope, $element, $attrs) {
             //inherited, not necessary
             //$scope.options = Searchbar.options;

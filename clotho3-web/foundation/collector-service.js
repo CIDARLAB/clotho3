@@ -159,11 +159,10 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
         //pass true for 'force' to force collect even if obj identical and broadcast of update
         var storeModel = function(uuid, obj, force) {
             if (force || !angular.equals(collector[uuid], obj)) {
-                console.log("COLLECTOR\t" + uuid + " is being saved");
-                //console.log(obj);
+                //testing console.log("COLLECTOR\t" + uuid + " is being saved");
                 silentAddModel(uuid, obj);
                 broadcastModelUpdate(uuid, obj);
-                console.log(collector[uuid]);
+                //testing console.log(collector[uuid]);
             }
             else {
                 console.log("COLLECTOR\t" + uuid + "model is same as collector");

@@ -19,30 +19,6 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
 
     //demo data
     log.entries = [
-//        {
-//            "text" : "Sending message failed",
-//            "from" : "client",
-//            "class" : "error",
-//            "timestamp" : 1288399999999
-//        },
-//        {
-//            "text" : "This is a warning",
-//            "from" : "server",
-//            "class" : "warning",
-//            "timestamp" : 1288999999999
-//        },
-//        {
-//            "text" : "Yay first message worked",
-//            "from" : "server",
-//            "class" : "success",
-//            "timestamp" : 1188323623006
-//        },
-//        {
-//            "text" : "By the way these are automatically sorted by date. This is a really long message to demonstrate what it looks like...",
-//            "from" : "client",
-//            "class" : "muted",
-//            "timestamp" : 1289999908979
-//        },
         {
             "text" : "Welcome to Clotho!",
             "from" : "server",

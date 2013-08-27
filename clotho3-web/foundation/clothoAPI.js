@@ -20,7 +20,12 @@
  *  - return angular.noop for empty callbacks, or deal with better
  */
 
-Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q', '$rootScope', '$location', '$timeout', '$dialog', function(Socket, Collector, PubSub, $q, $rootScope, $location, $timeout, $dialog) {
+Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$window', '$q', '$rootScope', '$location', '$timeout', '$dialog', function(Socket, Collector, PubSub, $window, $q, $rootScope, $location, $timeout, $dialog) {
+
+//attach to window, only instantiate once
+return ($window.$clotho.api) ? $window.$clotho.api : $window.$clotho.api = generateClothoAPI();
+
+function generateClothoAPI() {
 
     /**********
        Set up
@@ -31,15 +36,16 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     fn.send = function(pkg) {
         Socket.send(angular.toJson(pkg));
     };
-    fn.pack = function(channel, data, requestId) {
+    fn.pack = function(channel, data, requestId, options) {
         return {
             "channel" : channel,
             "data" : data,
-            "requestId" : requestId
+            "requestId" : requestId,
+            "options" : options
         };
     };
-    fn.emit = function(eventName, data, requestId) {
-        fn.send(fn.pack(eventName, data, requestId));
+    fn.emit = function(eventName, data, requestId, options) {
+        fn.send(fn.pack(eventName, data, requestId, options));
     };
 
     //note: wrappers no longer in use
@@ -55,16 +61,27 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
     //helper functions
 
-    //if simply want a response and resolve promise, no further logic required
-    fn.emitSubOnce = function(channel, data, requestId) {
-        var deferred = $q.defer();
-        if (requestId == null) requestId = Date.now().toString();
+    fn.emitSubCallback = function(channel, data, func, options) {
+        var deferred = $q.defer(),
+            requestId = Date.now().toString();
+
+        if (!angular.isFunction(func))
+            func = angular.noop() ;
+
         PubSub.once(channel+':'+requestId, function(data){
-            $rootScope.$safeApply(deferred.resolve(data))
+            $rootScope.$safeApply(deferred.resolve(data));
+            func(data);
         }, '$clotho');
-        fn.emit(channel, data, requestId);
+        fn.emit(channel, data, requestId, options);
         return deferred.promise;
     };
+
+    //if simply want a response and resolve promise, no further logic required
+    fn.emitSubOnce = function(channel, data, options) {
+        return fn.emitSubCallback(channel, data, angular.noop, options);
+    };
+
+
 
     /**********
        Config
@@ -84,6 +101,7 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * @name Clotho.get
      *
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
+     * @param {object} options
      * @param {boolean=} synchronous   Default false for async, true to return value synchronously
      *
      * @description
@@ -103,56 +121,52 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      * ... later ...
      * var populated = workWithMe.$$v
      *
-     * todo - add callback? Promises too complicated?
-     * todo - look at angular resource - doesn't populate on $$V???
      */
-    var get = function clothoAPI_get(uuid, synchronous) {
+    var get = function clothoAPI_get(uuid, options, synchronous) {
 
         //default to false (return promise)
         synchronous = typeof synchronous != 'undefined' ? !!synchronous : false;
 
-        var deferred = $q.defer();
+        return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
+    };
 
+    var get_async = function clothoAPI_get_async(uuid, options) {
         //check collector
         var data = Collector.retrieveModel(uuid);
 
-        if (data && typeof data != 'undefined') {
-            if (synchronous) {
-                return data;
-            } else {
-                deferred.resolve(data);
-                return deferred.promise;
-            }
-        }
-        //otherwise request over socket, save to collector
-        else {
-
-            var requestId = (Date.now()).toString(),
-                deferred = $q.defer();
-
-            PubSub.once('get:'+requestId, function(data) {
+        if (!!data) {
+            var deferred = $q.defer();
+            deferred.resolve(data);
+            return deferred.promise;
+        } else {
+            var callback = function(data) {
                 Collector.storeModel(uuid, data);
-                $rootScope.$safeApply(deferred.resolve(data))
-            }, '$clotho');
-            fn.api.emit('get', uuid, requestId);
+            };
 
-            if (!synchronous) {
-                return deferred.promise;
-            } else {
-                //fixme - need REST API for this to work, promises don't work like this
+            return fn.emitSubCallback('get', uuid, callback, options);
+        }
+    };
 
-                /*
-                var value = {};
-                value.$then = deferred.promise.then(function (response) {
-                    var then = value.$then;
-                    if (response) {
-                        angular.copy(response, value);
-                        value.$then = then;
-                    }
-                });
-                return value;
-                */
-            }
+    var get_sync = function clothoAPI_get_sync(uuid, options) {
+        //check collector
+        var data = Collector.retrieveModel(uuid);
+
+        if (!!data) {
+            return data
+        } else {
+            //future - need REST API
+
+            /* OLD ATTEMPT
+             var value = {};
+             value.$then = deferred.promise.then(function (response) {
+                var then = value.$then;
+                if (response) {
+                    angular.copy(response, value);
+                    value.$then = then;
+                }
+             });
+             return value;
+             */
         }
     };
 
@@ -172,22 +186,16 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
 
         if (angular.isEmpty(sharable)) return false;
 
-        //strip $$v in case use promise to set multiple times
+        //strip $$v (angular promise value wrapper)
         while (sharable.$$v) {
             sharable = sharable.$$v;
         }
 
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
-
-        PubSub.once('set:'+requestId, function(data) {
+        var callback = function() {
             Collector.storeModel(sharable.id, sharable);
-            $rootScope.$safeApply(deferred.resolve(sharable))
-        }, '$clotho');
+        };
 
-        fn.api.emit('set', sharable, requestId);
-
-        return deferred.promise;
+        return fn.emitSubCallback('set', sharable, callback);
     };
 
 
@@ -360,20 +368,32 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
     /**
      * @name Clotho.query
      *
-     * @param obj
+     * @param obj Constraints for query.
+     * @param options Options, e.g. fields to return
+     *
+     * @example To get all schemas, Clotho.query({"schema" : "Schema"})
      *
      * @description
      * Returns all objects that match the fields provided in the spec.
      */
-    var query = function(obj) {
-        return fn.emitSubOnce('query', obj);
+    var query = function(obj, options) {
+        var callback = function(data) {
+            //store query
+            //todo
+
+            //store models
+            angular.forEach(data, function(sharable) {
+                Collector.storeModel(sharable.id, sharable);
+            })
+        };
+        return fn.emitSubCallback('query', obj, callback, options);
     };
 
 
     /**
      * @name Clotho.create
      *
-     * @param {object} object A json object or list of json objects that describe(s) an instance or instances of a clotho schema.
+     * @param {object} obj A json object or list of json objects that describe(s) an instance or instances of a clotho schema.
      *
      * @description
      * Creates the described objects. Returns a list of uuids of the created objects, in the same order as they were sent in. If an object was not created, that object's entry in the list of uuids will be null. Reasons for failing to create the failed objects will be provided in the 'say' channel.
@@ -397,17 +417,12 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
-        var requestId = (Date.now()).toString(),
-            deferred = $q.defer();
 
-        PubSub.once('destroy:'+requestId, function(data) {
-            Collector.removeModel(uuid, data);
-            $rootScope.$safeApply(deferred.resolve(data))
-        }, '$clotho');
+        var callback = function() {
+            Collector.removeModel(uuid);
+        };
 
-        fn.api.emit('destroy', uuid, requestId);
-
-        return deferred.promise;
+        return fn.emitSubCallback('destroy', uuid, callback);
     };
 
     /**
@@ -820,4 +835,6 @@ Application.Foundation.service('Clotho', ['Socket', 'Collector', 'PubSub', '$q',
         autocompleteDetail : autocompleteDetail
 
     }
+
+}
 }]);

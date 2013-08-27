@@ -57,18 +57,19 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - anderson lab site
 
-- finish schema editor
+- finish schema editor -- need stephanie response
+
+- search bar rewrite
+    - autocomplete positioning using $position
+
+- login window
 
 - API
-    - wrapper for functions with callback (set, get, destroy)
-    - ensure instantiated only once
     - Socket events in own layer (outside PubSub)
     - verify collector updates on set() and destroy() and get()
         - collect queries
-        - reset editor on destroy() callback
-    - options for get() and query()
-    - cache query() results
-    - move listeners to match command (e.g. show -> show not display)
+    - add-in $dialog for alert() and edit() but don't make dependency
+        - remove from anderson_lab dependencies
 
 
 - Trails
@@ -81,10 +82,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - start approaching construction files
 
 
-- Clotho Directive
-    - expose model (not read-only)
-    - higher arity (assume ngModel appropriate, simple checks)
-
+- Random Fixes
+    - search module requests [object Object] -- find where and remove
 
 - Mac Housekeeping
     - folder actions to push changes to models folder to testData folder

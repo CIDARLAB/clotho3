@@ -9,20 +9,12 @@
 Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$templateCache', '$http', '$rootScope', '$location', '$compile', '$dialog', function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
 
     /**
-     * DEPRECATED - now handled in Clotho.get() logic
      * @name clientAPI.collect
      *
      * @param {object} data with field id
      *
      * @description
-     * Store a resource
-     * - Models (JSON) will go into the collector
-     * - templates (HTML) will be cached in the Angular template cache
-     * - CSS, JS, will be downloaded and cached automatically with the right headers
-     *      - they should be versioned e.g. clotho.com/css/some_css.css?version=1.1
-     *
-     * Because models will be updated automatically, collecting a model will update a view
-     *
+     * Store an object. Generally, objects are requested via get(). However, the server can add objects to the client collector via collect().
      */
 
     var collect = function clientAPICollect(data) {
@@ -30,6 +22,18 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
             id = model.id || model.uuid || false;
 
         Collector.storeModel(id, model);
+    };
+
+    /**
+     * @name clientAPI.update
+     *
+     * @param data
+     *
+     * @description
+     * Update an object. TODO according to options and caching queries
+     */
+    var update = function clientAPIUpdate (data) {
+
     };
 
     /**

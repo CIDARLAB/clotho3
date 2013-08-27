@@ -31,9 +31,11 @@
         Fields
     </h4>
 
+    {{ paramTypes | json }}
+
     <div ng-repeat="field in editable.fields">
         <div class="row-fluid">
-            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in paramTypes" ng-change="parseField(field)">
+            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name for t in paramTypes" ng-change="parseField(field)">
                 <option value="" disabled>Type</option>
             </select>
             <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name">
@@ -44,7 +46,8 @@
         <div class="row-fluid clearfix">
             <div class="span6 pull-left">
                 <input class="span12" type="text" ng-model="field.description" ng-disabled="!editMode" placeholder="Field Description">
-                <input class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example">
+                <input ng-if="!field.reference" class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example">
+                <input ng-if="field.reference" class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example" typeahead="opt for opt in queryWrapper(field.type) | filter:$viewValue" typeahead-min-length="0" />
             </div>
             <div class="span6 pull-right">
                 <div ng-show="!!field.constraints">

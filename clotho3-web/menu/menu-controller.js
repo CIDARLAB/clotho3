@@ -8,8 +8,7 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
         {"name" : "Browser", "path" : "/browser"},
         {"name" : "Plasmid", "path" : "/plasmid"},
         {"name" : "Construction", "path" : "/construction"},
-        {"name" : "Schemas", "path":"/schemas"},
-        {"name" : "Scripts", "path":"/scripts"}
+        {"name" : "Schemas", "path":"/schemas"}
     ]};
 
     $scope.$watch(function () {
