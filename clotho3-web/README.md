@@ -55,7 +55,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - anderson lab site
 
-- finish schema editor -- need stephanie response
+- finish schema editor -- verify with stephanie
 
 - search bar rewrite
     - autocomplete positioning using $position

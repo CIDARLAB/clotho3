@@ -79,23 +79,23 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             ];
 
             $scope.simpleTypes = {
-                "Object" : true,
-                "String" : true,
-                "Number" : true,
-                "Boolean" : true,
-                "Array" : true
+                "object" : true,
+                "string" : true,
+                "number" : true,
+                "boolean" : true,
+                "array" : true
             };
 
             $scope.paramTypes = [
-                {name:'Object', value: "object", type:'Type', javaType : "java.util.HashMap"},
-                {name:'Array', value : "array", type:'Type', javaType : "java.util.Arrays"},
-                {name:'String', value : "string", type:'Type', javaType : "java.lang.String"},
-                {name:'Number', value : "number", type:'Type', javaType : "java.lang.Long"},
-                {name:'Boolean', value : "boolean", type:'Type', javaType : "java.lang.Boolean"}
+                {name:'object', type: "object", category:'Primitive', javaType : "java.util.HashMap", reference: false},
+                {name:'array', type : "array", category:'Primitive', javaType : "java.util.Arrays", reference: false},
+                {name:'string', type : "string", category:'Primitive', javaType : "java.lang.String", reference: false},
+                {name:'number', type : "number", category:'Primitive', javaType : "java.lang.Long", reference: false},
+                {name:'boolean', type : "boolean", category:'Primitive', javaType : "java.lang.Boolean", reference: false}
             ];
             Clotho.query({schema:"Schema"}).then(function(data){
                 angular.forEach(data, function(schema){
-                    $scope.paramTypes.push(angular.extend(schema, {type:'Schema'}));
+                    $scope.paramTypes.push(angular.extend(schema, {category:'Schema'}));
                 });
             });
 
@@ -183,9 +183,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.parseField = function(field) {
                 //only passed field.value so model maps onto options properly in html
-
-                //todo
-
                 if ($scope.simpleTypes[field.type]) {
                     field.javaType = $scope.primitiveToJava[field.type];
                     field.reference = false;
@@ -193,12 +190,20 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                     field.reference = true;
                 }
-
-                console.log(field);
             };
 
-            $scope.submitSchema = function (partial) {
+            $scope.submitSchema = function (schema) {
+                //todo - wrapping at all?
 
+                console.log('creating:', schema);
+
+                Clotho.create(schema).then(function (data){
+                    console.log('created!', data);
+                    $scope.editMode = false;
+
+                    //todo - update schemas? Handled by client or server?
+
+                });
             };
 
             $scope.newField = function() {

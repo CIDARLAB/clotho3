@@ -31,11 +31,11 @@
         Fields
     </h4>
 
-    {{ paramTypes | json }}
+    {{ editable | json }}
 
     <div ng-repeat="field in editable.fields">
         <div class="row-fluid">
-            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name for t in paramTypes" ng-change="parseField(field)">
+            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name as t.name group by t.category for t in paramTypes" ng-change="parseField(field)">
                 <option value="" disabled>Type</option>
             </select>
             <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name">
@@ -80,9 +80,9 @@
     </div>
     <div class="form-actions" ng-show="editMode">
         <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
-        <button type="button" class="btn btn-danger" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+        <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
         <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
-        <button type="button" class="btn btn-warning" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
+        <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
         <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
     </div>
 

@@ -54,7 +54,7 @@
             <label class="control-label">Arguments</label>
             <div class="controls">
                 <div ng-repeat="param in editable.args" class="pull-left">
-                    <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.type for c in paramTypes">
+                    <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.category for c in paramTypes">
                     </select>
                     <!-- see http://jsfiddle.net/M32pj/1/ for another select directive-->
 
@@ -119,9 +119,9 @@
         </div>
         <div class="form-actions" ng-show="editMode">
             <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
-            <button type="button" class="btn btn-danger" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+            <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
             <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
-            <button type="button" class="btn btn-warning" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
+            <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
             <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
         </div>
     </div>
