@@ -53,8 +53,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- move to 1.2.0
-
 - anderson lab site
 
 - finish schema editor -- need stephanie response
@@ -151,6 +149,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - https://github.com/fisshy/Angular-drag-drop
         - need to handle drop + other events
 
+
+- FUTURE : move to angular 1.2.0
 
 
 - plasmid editors to check out

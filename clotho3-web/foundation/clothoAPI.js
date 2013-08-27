@@ -98,6 +98,22 @@ function generateClothoAPI() {
      **********/
 
     /**
+     * @name Clotho.login
+     *
+     * @param username
+     * @param password
+     *
+     * @description
+     * Authenticate with Clotho
+     *
+     * @returns {Promise} result of login
+     */
+    var login = function clothoAPI_login(username, password) {
+        var cred = {username: username, password: password};
+        return fn.emitSubOnce('login', cred);
+    };
+
+    /**
      * @name Clotho.get
      *
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
@@ -797,6 +813,7 @@ function generateClothoAPI() {
 
     return {
         //api
+        login : login,
         get : get,
         set : set,
         query : query,

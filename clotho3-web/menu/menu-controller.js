@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', function($scope, $location, $timeout, Collector, PubSub ) {
+Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', '$dialog', function($scope, $location, $timeout, Collector, PubSub, $dialog ) {
 
     $scope.modes = {"items": [
         {"name" : "Editor", "path" : "/editor"},
@@ -43,6 +43,10 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
 
     $scope.clearStorage = function() {Collector.clearStorage()};
     $scope.logListeners = function() {PubSub.logListeners()};
+
+    $scope.showLogin = function() {
+        $dialog.login().open();
+    };
 
     //route handling
     $scope.$on("$routeChangeStart", function (event, next, current) {
