@@ -101,14 +101,12 @@ public class Router {
                     
                     Map map = (Map) data;
                     
-                    api.login(map.get("username").toString(), map.get("password").toString());
-                    response = Void.TYPE;
+                    response = api.login(map.get("username").toString(), map.get("password").toString());
                     break;
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
-                    api.logout();
+                    response = api.logout();
                     authenticatedMinds.remove(key);
-                    response = Void.TYPE;
                     break;
                 case changePassword:
                     api.changePassword(data.toString());

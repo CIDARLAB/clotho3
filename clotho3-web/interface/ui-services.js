@@ -629,13 +629,16 @@ Application.Interface.controller('DialogLoginController', ['$scope', 'dialog', '
 
     $scope.cred = {username : "", password: ""};
 
-    $scope.login = Clotho.login($scope.cred.username, $scope.cred.password).then(function (result) {
-        if (!!result) {
-            $scope.close();
-        } else {
-            $scope.cred = {username : "", password: ""};
-        }
-    });
+    $scope.login = function() {
+        Clotho.login($scope.cred.username, $scope.cred.password)
+        .then(function (result) {
+            if (!!result) {
+                $scope.close();
+            } else {
+                $scope.cred = {username : "", password: ""};
+            }
+        });
+    }
 
 }]);
 
