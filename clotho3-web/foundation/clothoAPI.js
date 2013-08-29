@@ -148,11 +148,11 @@ function generateClothoAPI() {
 
     var get_async = function clothoAPI_get_async(uuid, options) {
         //check collector
-        var data = Collector.retrieveModel(uuid);
+        var retrieved = Collector.retrieveModel(uuid);
 
-        if (!!data) {
+        if (!!retrieved) {
             var deferred = $q.defer();
-            deferred.resolve(data);
+            deferred.resolve(retrieved);
             return deferred.promise;
         } else {
             var callback = function(data) {

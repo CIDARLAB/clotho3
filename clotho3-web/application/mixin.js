@@ -17,7 +17,7 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
     Application.Extensions.registeredQueue = Application.Extensions.getQueue().length;
 
 }])
-    .run(['$rootScope', '$q', '$timeout', '$templateCache', '$http', function($rootScope, $q, $timeout, $templateCache, $http) {
+    .run(['$rootScope', '$q', '$timeout', '$templateCache', '$http', '$rootElement', function($rootScope, $q, $timeout, $templateCache, $http, $rootElement) {
 
         //need to call this before compiling new element
         Application.Extensions.processQueue = function() {
@@ -35,7 +35,6 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
                 }
             }
 
-            //verify this is passed by reference i.e. not only changed locally
             Application.Extensions.registeredQueue = Application.Extensions.getQueue().length;
         };
 
@@ -48,7 +47,7 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
 
             //todo - should inherit from closest relative scope - not rootscope
 
-            $($clotho.appRoot).injector().invoke(function($compile, $rootScope) {
+            $rootElement.injector().invoke(function($compile, $rootScope) {
                 var scope = $rootScope.$new();
                 angular.extend(scope, args);
                 $compile($(element))(scope);

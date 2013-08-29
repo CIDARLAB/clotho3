@@ -32,7 +32,7 @@
                             <td style="cursor: pointer" ng-class="{'info': item.author === autocomplete.detailModel}" ng-click="display.detailInfo('author', $index)">{{item.author.name}}</td>
                         </tr>
                     </table>
-                    <div ng-include src="autocomplete.detailTemplate" ng-show="display.autocompleteDetailInfo" ng-model="autocomplete.detailModel">
+                    <div ng-if="display.autocompleteDetailInfo" ng-include="autocomplete.detailTemplate" ng-model="autocomplete.detailModel">
                     </div>
                 </div>
             </div>
@@ -82,10 +82,10 @@
         <button class="btn" ng-click="newPage()" alt="New Page"><i class="icon-file"></i></button>
         <button class="btn" ng-click="newWorkspace()" alt="New Workspace"><i class="icon-plus"></i></button>
         <a class="btn dropdown dropdown-toggle" style="padding-left: 12px; padding-right: 12px;" id="searchbar_helpbutton"><i class="icon-question-sign"></i></a>
-            <ul class="dropdown-menu">
-                <li><a ng-click="showMeHow()" tabindex="-1"><i class="icon-eye-open"></i> Show me how</a></li>
-                <li><a ng-click="aboutClotho()" tabindex="-1"><i class="clotho-icon"></i> About Clotho</a></li>
-                <li><a ng-click="toggleTooltips()" tabindex="-1"><i class="icon-tag"></i> Toggle Tooltips</a></li>
-            </ul>
+        <ul class="dropdown-menu">
+            <li><a ng-click="showMeHow()" tabindex="-1"><i class="icon-eye-open"></i> Show me how</a></li>
+            <li><a ng-click="aboutClotho()" tabindex="-1"><i class="clotho-icon"></i> About Clotho</a></li>
+            <li><a ng-click="toggleTooltips()" tabindex="-1"><i class="icon-tag"></i> Toggle Tooltips</a></li>
+        </ul>
     </div>
 </div>

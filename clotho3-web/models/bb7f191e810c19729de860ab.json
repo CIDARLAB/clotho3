@@ -14,6 +14,23 @@
                     "type" : "template",
                     "template" : "/partials/trails/trail_123/trail_123_1.html",
                     "mixin" : "/partials/trails/trail_123/demoClothoDirectives.js"
+                },
+                {
+                    "paver_title" : "Exercise",
+                    "type" : "exercise",
+                    "exercise" : {
+                        "text" : "This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size.",
+                        "template" : "/partials/trails/trail_123/exercise1.html",
+                        "video" : {
+                            "id" : "efAUCG9oTb8",
+                            "params" : {
+                                "width" : 350,
+                                "height" : 198
+                            }
+                        },
+                        "tool" : "This part needs to get roughed out still - need server to test"
+                    },
+                    "mixin" : "/partials/trails/trail_123/demoClothoDirectives.js"
                 }
             ]
         },

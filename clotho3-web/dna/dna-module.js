@@ -494,6 +494,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         return offset;
     };
 
+
     /**************
      Quantification
      **************/
@@ -607,6 +608,8 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
      * @param {string} sequence ONLY CANONICAL DNA BASES (A,C,G,T)
      * @param {object} conc Concentrations with parameters 'dna' 'salt' and 'mg' all Molar
      */
+
+    //todo - account for buffers, see NEB site @ https://www.neb.com/tools-and-resources/interactive-tools/tm-calculator
     var melting_temp = function (sequence, conc) {
         if (sequence.length < 1) return;
 
@@ -670,6 +673,38 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     var selfComplimentarity = function (rna) {
         //todo calculate 2° structure
     };
+
+
+
+    /**************
+     Checks
+     **************/
+
+    var verifyRepeats = function(oligo) {
+        var max = 4;
+
+        //todo
+    };
+
+    var verifyRuns = function(oligo) {
+        var max = 4;
+
+        //todo using occuranceCounts
+    };
+
+    var verifyPrimerMeltingTemps = function(primers) {
+        var max = 0, min = 0;
+        for (var i = 0; i < primers.length; i++) {
+            var temp = melting_temp(primers[i]);
+            max = (max > temp) ? max : temp;
+            min = (min < temp) ? min : temp;
+        }
+
+        if (max == 0 || min == 0) {}
+
+        return ((max - min) > 6) ? false : true;
+    };
+
 
 
     /****************

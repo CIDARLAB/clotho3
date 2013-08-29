@@ -334,6 +334,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
             cur,
             reg = createRegex(match, bothStrands !== false);
 
+        //todo - move to fuzzy search
+
         while ((cur = reg.exec(sequence)) != null) {
             matches[cur.index] = match[0];
         }
@@ -354,6 +356,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     };
 
 
+
     /**
      * @description Marks enzyme recognitions sites and cut marks on a sequence
      * @param {string} sequence
@@ -363,9 +366,10 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      * @example BamHI { "cut" : "g^gatc|c" } NNNNNggatccNNNN -> NNNNN(g^gatc|c)NNNNN
      * @example BsmbI { "cut" : "cgtctc (1/5)" } NNNcgtctcNNNNNNNNN -> NNN(cgtctc)N^NNNN|NNNN
      * @example BsmbI { "cut" : "cgtctc (1/5)" } NNNNNNNNNgagacgNNN -> NNNN|NNNN^N(gagacg)NNN
-     *
-     * note - won't handle case where enzyme cuts on either side of reg site (i.e. one negative, one positive number
+
      */
+
+    //todo - handle cuts on both sides (e.g. Bsp24I (8/13)GACNNNNNNTGG(12/7) and one on either side
     var markSites = function (sequence, enzyme) {
 
         //todo - match cut (i.e. ^ vs. | being first)

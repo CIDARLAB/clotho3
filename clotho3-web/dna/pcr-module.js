@@ -50,7 +50,52 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     };
 
 
-    //TODO - write algorithm they runs the PCR, not as predictive
+    var annealFuzzy = function(sequence, primer) {
+
+    };
+
+    var annealSimple = function (sequence, primer) {
+
+        //start from 3', go back until have unique match
+        var searchFrag, searchReg, matches = {}, result;
+        for(var initialBack = 8, start = primer.length - initialBack;
+                searchFrag = primer.substring(start), searchReg = DNA.createRegex(searchFrag);
+                start++) {
+
+            //check forward
+            matches.forward = sequence.match(searchReg);
+            //check revcomp
+            matches.reverse = DNA.revcomp(sequence).match(searchReg);
+
+            if (!(matches.forward.length || matches.reverse.length)) {
+                console.log('no *exact* matches found for length ' + start + ' from 3 prime end');
+                result = false;
+                break;
+            } else if ((matches.forward.length + matches.reverse.length) == 1) {
+                //return index of single match
+                //todo - store forward or reverse?
+                result = matches.forward.length ? sequence.search(searchReg) : DNA.revcomp(sequence).search(searchReg);
+                break;
+            }
+        }
+
+        return result;
+    };
+
+    //e.g. PCA, given array of oligos, find which match which
+    var annealArray = function (oligos) {
+
+        var track = {};
+        for (var i = 0; i < oligos.length; i++) {
+            track[i] = {oligo : oligos[i]};
+
+            //todo - find matches in oligos
+        }
+
+    };
+
+
+    //TODO - write algorithm that runs the PCR, not as predictive
 
     /**************
      PCR algorithms

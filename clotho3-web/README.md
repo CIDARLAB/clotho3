@@ -58,10 +58,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - finish schema editor -- verify with stephanie
     - selecting parent should insert fields
 
-- login -> searchbar
-
 - search bar rewrite
-    - CSS classes
+    - add login
+    - pass in options
+    - rename CSS classes
     - avoid UI directives etc.
     - avoid using several templates
 
@@ -74,17 +74,24 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - Trails
+    - make quiz a directive
+    - demo event at time in video (e.g. type something via jQuery)
+        -- also demonstrate can use angular $scope events (like next() and will compile)
+    - exercise template (intro, tempalate / video, question)
+        - form of question / tool??
     - start writing demo trail
     - Trail schema writeup / Trail
-    - Trail service to persist variables -- Trails.persist()
     - Trail editor -- req. schema finalized
-    - exercise template (intro, tempalate / video, question)
     - prettyprint directive
     - start approaching construction files
+    - Quizzes
+        - answer -> color side nav
+        - templates
+            - write assertion example
+            - write multi-tf (need directive?)
+            - multipic : active class
 
 
-- Random Fixes
-    - search module requests [object Object] -- find where and remove
 
 - Mac Housekeeping
     - folder actions to push changes to models folder to testData folder
@@ -95,6 +102,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - DNA Functions
     - decide data structure
+    - add Underscore.js to Clotho
     - DNA
         - required upstream
             - determine ORF
@@ -105,7 +113,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - BLAST breakout
     - Digest
         - import NEB enzymes, use same format
-            - call NEB @ 1-800-632-7799
+            - import
+                - formats: ftp://ftp.neb.com/pub/rebase/REBASE.DOC
+                - GCG format: ftp://ftp.neb.com/pub/rebase/gcg.txt
+                - also: star, homing, etc. etc. etc. -- write parsers
             - cuts: ^   |   _
             - broaden methylation categories: dam, dcm, cpg
         - dep on DNA service new functions
@@ -134,22 +145,23 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - add novalidate via directive
         - need to test novalidate="true"
         - custom validation using ngForm or ngModel.$setValidity
-
     - function editor
         - integrate codemirror, tie to language selection
+    - deep linking using search and $routeProvider.when( ... reloadOnSearch = false)
 
 
 - UI Directives
     - popover with HTML (see angularStrap, or wait for bootstrap UI)
         - https://github.com/angular-ui/bootstrap/issues/220
+        - hide on mouseleave when mouseenter trigger
+        - angular Strap: https://raw.github.com/mgcrea/angular-strap/v0.7.5/dist/angular-strap.js
     - rewrite contenteditable
         - make play nicely (e.g. with digest-highlight)
-    - dropdown in Angular --  see angular-strap
-    - popover with HTML -- test -- see angular-strap
-        - hide on mouseleave when mouseenter trigger
-    - angular Strap: https://raw.github.com/mgcrea/angular-strap/v0.7.5/dist/angular-strap.js
     - DRAGGABLE
+        - http://www.bennadel.com/blog/2446-Using-Controllers-In-Directives-In-AngularJS.htm
         - https://github.com/fisshy/Angular-drag-drop
+        - https://github.com/fisshy/Angular-drag-drop/blob/master/javascript/dragandrop.js
+        - http://jsfiddle.net/ADukg/2516/
         - need to handle drop + other events
 
 
@@ -174,18 +186,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - use ng 1.2.0 - routes not included by default
 
 
-
-- create wrappers for directives, filters -> expose DNA functions accordingly
-
-
-
 - break up UI directives, filters, etc. into modules
-
-
-
-- draggable elements (within angular -- also sortable)
-    - https://github.com/fisshy/Angular-drag-drop/blob/master/javascript/dragandrop.js
-    - http://jsfiddle.net/ADukg/2516/
 
 
 
@@ -196,61 +197,15 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
 
 
-- move searchbar to typeahead
-
-
-- trails functionality
-    - youtube events - NOT WORKING
-        - pass as param to function
-    - templates
-        - types
-            - sequence
-            - assertion / reason
-            - hot spot (choose the wrong thing) /// paragraph with multi TFs
-            - multipic - add active class
-            - drag-drop - make draggable
-            - ranking - tie to model
-    - UI directives
-        - draggable
-            - see UI-sortable
-            - drag-to for drag-drop
-    - answering quiz colors + disables side-nav
-
-
-- Search Bar
-    - reset autocomplete detail when changing
-    - animate showing + hiding -- use $animate
-    - autocomplete
-        - use cache for results?
-        - $timeout sending to 50ms?
-    - mouseenter and leave events -- maybe size list items differently
-        - undetail propagate to children? why?
-        - see: http://plnkr.co/edit/QSgRu4Sr8TSqR86eAfvq?p=preview
-    - future: rewrite
-        - easy to transclude, with customizable / default options
-
-
-
 - favorite() API method - and unfavorite() and dislike()
 
 
 - clickOutside handlers - better logic esp. for ID
 
 
-- Dynamic Adds
-    - Reference
-        - watch : https://github.com/mhevery/angular.js/blob/dte/src/auto/injector.js
-        - controllers : https://github.com/matys84pl/angularjs-requirejs-lazy-controllers
-
-
-
-
 UI STUFF
 - services to write / borrow
-    - dropdown (bootstrap)
-        - use for searchbar help
     - progressBar (bootstrap)
-    - scrollTo (probably easy to write) / scrollfix (see angular ui utils)
 - ANIMATION
     - see CSS framework https://github.com/daneden/animate.css
 
@@ -291,8 +246,6 @@ UI STUFF
         - deregistration returned as function to invoke later
         - http://www.bennadel.com/blog/2480-Unbinding-watch-Listeners-In-AngularJS.htm
     - reg app ID with each app
-    - make universal --> $scope.$on('$destroy', Clotho.silence($scope.$id))
-            -i.e. (?) extend $rootScope.$destroy() if possible
 
 
 

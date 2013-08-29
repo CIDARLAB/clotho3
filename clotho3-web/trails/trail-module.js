@@ -37,7 +37,7 @@ Application.Trails.directive('youtube', [function() {
                     };
                     scope.params = angular.extend(defaults, scope.params);
 
-                    //todo - add more hooks
+                    //todo (?) - add more default hooks
 
                     //todo - avoid overwriting onComplete() if pass in onStateChange()
                     scope.params.events.onStateChange = function (event) {
@@ -57,92 +57,6 @@ Application.Trails.directive('youtube', [function() {
 }]);
 
 Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho, $q, $dialog) {
-
-    /**
-     * @description Creates a youtube player within an iFrame. Use before createAPIPlayer.
-     * @param {object} params as defined:
-     * {
-     *     videoId:
-     *     divId
-     *     height:
-     *     width:
-     *     autoplay:
-     *     events: {
-     *
-     *     }
-     *     start:
-     *     end:
-     *     autoadvance:
-    }
-    */
-    var createFrame = function(params) {
-        //if just one parameter, assume its the video id
-        if (typeof params == 'string')
-            params.videoId = params;
-
-        if (params.cleanId = extract_youtube(params.videoId)) {
-
-            //todo - scale dimensions to max-width:700
-
-            var frame = '<iframe id="'+(params.divId || 'ytplayer')+'" frameborder="0" allowfullscreen="1" ' +
-                'width="' + (params.width || 700) + '" ' +
-                'height="' + (params.height || 395) + '" ' +
-                'src="http://www.youtube.com/embed/'+params.cleanId+'?' +
-                'enablejsapi=1&' +
-                'modestbranding=1&' +
-                'rel=0&' +
-                'playerapiid=trailPlayer&' +
-                'autoplay=' + (params.autoplay || 1) + '&' +
-                'autohide=' + (params.autohide || 1) + '&' +
-                (params.start ? 'start=' + params.start : '') + '&' +
-                (params.end ? 'end=' + params.end : '') +
-                '"></iframe>';
-
-            return frame;
-        } else {
-            return false;
-        }
-    };
-
-    var createAPIPlayer = function (params) {
-        params = params || {};
-        params.events = params.events || {};
-
-        //note: can overwrite certain events if we want to... e.g. params.events.onReady = ...
-
-        /* old code
-        var player = new YT.Player(params.divId || 'ytplayer', {
-            videoId: cleanId,
-            height: params.height || 525,
-            width: params.width || 700,
-            playervars : {
-                enablejsapi: 1,
-                modestbranding: 1,
-                autohide: params.autohide || 1,
-                autoplay: params.autoplay || 1
-            },
-            events: {
-                'onReady': onPlayerReady
-                //'onStateChange': onPlayerStateChange
-            }
-        });
-        */
-
-        var player = new YT.Player(document.getElementById(params.divId || 'ytplayer'), {
-            events: params.events
-        });
-
-        //note: or add custom events...
-        /*
-        player.addEventListener('onReady', function() {
-            console.log("video ready");
-        });
-        */
-
-        return player;
-    };
-
-
 
     /**
      * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work. Adapted from:
@@ -232,25 +146,15 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         console.log("favorite trail with id: " + id);
     };
 
-    //across Trail persistence
     //todo - better logic...
-    var _persisted = {};
-    var persist = function(obj) {
-        _persisted = obj;
-    };
-    var getPersisted = function() {
-        return _persisted;
-    };
+    var persist = {};
 
     return {
-        createFrame : createFrame,
-        createAPIPlayer : createAPIPlayer,
         extract_youtube : extract_youtube,
         compile : compile,
         share : Clotho.share,
         favorite : favorite,
-        persist : persist,
-        getPersisted : getPersisted
+        persist : persist
     }
 }]);
 
@@ -260,7 +164,6 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.trails = [];
 
     Clotho.query({schema : "Trail"}).then(function(result) {
-        console.log(result);
         $scope.trails = result;
     });
 
@@ -276,7 +179,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
     $scope.loadVideo = function (url) {
 
-        //note - need outer parent div to compile properly
+        //note - need single outer parent div to compile properly (maybe not in ng-1.2.x)
         var videoId = Trails.extract_youtube(url),
             template = '<div><div youtube="' + videoId + '" params="" on-complete="next()"></div></div>';
 
@@ -284,34 +187,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $timeout(function() {
             $scope.content = $compile(template)($scope);
         });
-
-
-        /*
-        //OLD DEPRECATED WAY
-
-        var params = {
-            "divId" : "ytplayer",
-            "height" : 525,
-            "width" : 700,
-            "videoId" : url,
-            "autoadvance" : true
-        };
-
-        $scope.content = Trails.createFrame(params);
-
-        //timeout so content is updated, run after digest()
-        $timeout(function() {
-            var player = Trails.createAPIPlayer();
-
-            if (params.autoadvance) {
-                player.addEventListener('onStateChange', function (event) {
-                    if (event.data == 0) {
-                        //video is ended, want to advance
-                        $scope.next();
-                    }
-                })
-            }
-        });*/
     };
 
     $scope.loadTemplate = function (url) {
@@ -321,18 +196,33 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                 $scope.content = $compile(data)($scope);
             })
             .error(function(data, status, headers, config) {
-                // todo - fallback
+                $scope.content = "<p>Template could not be found...</p>";
+            });
+    };
+
+    $scope.loadExercise = function(exercise) {
+        $scope.exercise = exercise;
+
+        $http.get('partials/trails/exercise-partial.html', {cache:$templateCache})
+            .success(function(data, status, headers, config) {
+                console.log('8 - exercise loaded', data);
+                $scope.content = $compile(data)($scope);
+            })
+            .error(function(data, status, headers, config) {
+                $scope.content = "<p>Exercise template couldn't be loaded...</p>";
             });
     };
 
     $scope.loadQuiz = function (content) {
         $scope.quiz = content;
 
-        $http.get('partials/trails/quiz/' + content.type + '-partial.html', {cache: $templateCache}).
-            success(function (data) {
+        $http.get('partials/trails/quiz/' + content.type + '-partial.html', {cache: $templateCache})
+            .success(function (data) {
                 $scope.content = $compile(data)($scope);
+            })
+            .error(function(data, status, headers, config) {
+                $scope.content = "<p>Template could not be found...</p>";
             });
-        //todo - fallback
     };
 
     $scope.paverError = function (paver) {
@@ -366,6 +256,11 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                     $scope.loadTemplate(paver.template);
                     break;
                 }
+                case 'exercise' : {
+                    console.log('7 - loading exercise');
+                    $scope.loadExercise(paver.exercise);
+                    break;
+                }
                 case 'quiz' : {
                     $scope.loadQuiz(paver.content);
                     break;
@@ -379,13 +274,15 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                 Application.script(paver.onload);
         }
 
-        //todo - use Clotho.show() here
+        //todo - use Clotho.show() here???
 
 
         //todo - incorporate better
         if (!!paver.css) {
             Application.css(paver.css);
         }
+
+        console.log(paver);
 
         if (!!paver.mixin || !!paver.script) {
             Application.mixin(paver.mixin).then(function() {
