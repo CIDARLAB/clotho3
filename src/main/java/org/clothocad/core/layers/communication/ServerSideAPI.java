@@ -142,21 +142,31 @@ public class ServerSideAPI {
         }
     }
 
-    public final void login(String username, String password) {
+    public final boolean login(String username, String password) {
         try {
             SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
+            say("Welcome, " + username, Severity.SUCCESS);
+            log.info("User {} logged in", username);
+            return true;
         } catch (AuthenticationException e){
             logAndSayError("Authentication attempt failed for username "+ username, e);
+            return false;
         }
     }
 
-    public final void logout() {
+    public final boolean logout() {
         if (SecurityUtils.getSubject().isAuthenticated()){
-            mind.setUsername(SecurityUtils.getSubject().getPrincipal().toString());
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+            mind.setUsername(username);
             persistor.save(mind);
             SecurityUtils.getSubject().logout();           
+            say("Logged out", Severity.SUCCESS);
+            log.info("User {} logged out", username);
+            return true;
         }
-
+        
+        say("You are not logged in", Severity.WARNING);
+        return false;
     }
 
     public final boolean changePassword(String newPassword) {

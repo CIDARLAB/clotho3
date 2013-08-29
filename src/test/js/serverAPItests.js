@@ -143,13 +143,16 @@ asyncTest("login/logout", function(){
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
         socket.send(new Message("login" , credentials), function (data){
+            equal(data, true);
             socket.send(new Message("submit", "var persistMe = 42"), function (data){
                 socket.send(new Message("submit", "persistMe"), function (data){
                     equal(data, 42);
                     socket.send(new Message("logout", ""), function (data) {
+                        equal(data,true);
                         socket.send(new Message("submit", "persistMe"), function (data) {
                             notEqual(data, 42, "data retained on logout?");
                             socket.send(new Message("login", credentials), function(data){
+                                equal(data,true);
                                 socket.send(new Message("submit", "persistMe"), function (data){
                                     equal(data, 42, "data recovered on login?");
                                     start();
