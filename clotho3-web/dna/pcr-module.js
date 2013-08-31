@@ -34,12 +34,12 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      **************/
 
     /**
-     * @description Finds indices where primer anneals to sequence, as given by Digest.findIndices()
+     * @description Finds indices where primer anneals to sequence, as given by Digest.findIndices() -- i.e. exact match without tail
      * @param sequence
      * @param primer
      * @returns {Object} In form {forward: Array, reverse: Array}} where each array is indices the primer anneals, empty if no matches.
      */
-    var primerPos = function primerPos(sequence, primer) {
+    var findAnnealFull = function findAnnealFull(sequence, primer) {
 
         //future - move to fuzzy search, account for tail on primer
 
@@ -50,22 +50,25 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     };
 
 
-    var annealFuzzy = function(sequence, primer) {
-
+    var findAnnealFuzzy = function(sequence, primer) {
+        //todo
     };
 
-    var annealSimple = function (sequence, primer) {
-
+    var findAnnealSimple = function(template, primer) {
         //start from 3', go back until have unique match
         var searchFrag, searchReg, matches = {}, result;
-        for(var initialBack = 8, start = primer.length - initialBack;
-                searchFrag = primer.substring(start), searchReg = DNA.createRegex(searchFrag);
-                start++) {
+
+        for(var initialBack = 8,
+                start = primer.length - initialBack;
+            searchFrag = primer.substring(start),
+                searchReg = Digest.createRegex(searchFrag);
+            start++)
+        {
 
             //check forward
-            matches.forward = sequence.match(searchReg);
+            matches.forward = template.match(searchReg);
             //check revcomp
-            matches.reverse = DNA.revcomp(sequence).match(searchReg);
+            matches.reverse = DNA.revcomp(template).match(searchReg);
 
             if (!(matches.forward.length || matches.reverse.length)) {
                 console.log('no *exact* matches found for length ' + start + ' from 3 prime end');
@@ -74,12 +77,19 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
             } else if ((matches.forward.length + matches.reverse.length) == 1) {
                 //return index of single match
                 //todo - store forward or reverse?
-                result = matches.forward.length ? sequence.search(searchReg) : DNA.revcomp(sequence).search(searchReg);
+                result = matches.forward.length ? template.search(searchReg) : DNA.revcomp(template).search(searchReg);
                 break;
             }
         }
 
         return result;
+    };
+
+    var anneal = function (template, primer) {
+        var method = findAnnealSimple;
+
+        //todo
+
     };
 
     //e.g. PCA, given array of oligos, find which match which
@@ -124,8 +134,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      */
     var verifyPrimers = function verifyPrimers(sequence, primer1, primer2) {
 
-        var p1 = primerPos(sequence, primer1),
-            p2 = primerPos(sequence, primer2);
+        var p1 = findAnnealFull(sequence, primer1),
+            p2 = findAnnealFull(sequence, primer2);
 
         /** check zero matches **/
 
@@ -175,8 +185,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
 
         //future - not DRY
-        var p1 = primerPos(sequence, primer1),
-            p2 = primerPos(sequence, primer2);
+        var p1 = findAnnealFull(sequence, primer1),
+            p2 = findAnnealFull(sequence, primer2);
 
 
         /** orient primers **/
@@ -253,13 +263,60 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
     };
 
+    var Gibson = function Gibson() {
+        //adds ligase (remove nicks)
+        //5' exo nuclease
+    };
+
+    var SLIC = function SLIC() {
+        //3' exo nuclease
+
+    };
+
+
+    /*************
+     Simple Enzyme Funcitons
+     *************/
+
+    /**
+     * @description
+     * @param sequence
+     *
+     * @example nn_nnnn^ -> nn
+     * note - also handle beyond only sticky ends
+     */
+    var exonuclease35 = function(sequence) {
+
+    };
+
+    /**
+     * @description
+     * @param sequence
+     *
+     * @example
+     * note - also handle beyond only sticky ends
+     */
+    var exonuclease53 = function(sequence) {
+
+    };
+
+    /**
+     * @description
+     * @param sequence
+     *
+     * @example nn^nnnn_ -> nnnnnn
+     * note - also handle beyond only sticky ends
+     */
+    var polymerase53 = function(sequence) {
+
+    };
+
+
 
 
     /**************
      Alignment
      **************/
-
-
 
 
     /**************
@@ -276,16 +333,25 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
     var ligate = function ligate(fragments) {
 
-        var fragPairs = [];
+        var overhangs = [],
+            blunts = [];
 
-        angular.forEach(fragments, function(frag) {
+        for (var i = 0; i < fragments.length; i++) {
+            var frag = fragments[i],
+                ends = Digest.findOverhangs(frag);
 
-            var ends = Digest.getStickyEnds();
+            for (var j = 0; j < ends.length; j++) {
+                if (ends[i].isBlunt) {
+                    blunts.push({fragment : frag, ends : ends})
+                } else {
+                    overhangs.push({fragment : frag, ends : ends})
+                }
+            }
 
-            fragPairs.push( {fragment : frag, stickyEnds : ends} )
-        });
+        }
 
         //todo
+        //note - blunt ends can ligate in multiple directions
 
     };
 

@@ -104,6 +104,7 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
                 //todo - get this working, instead of doing it in the link of directive
+                //use search param and set reloadOnSearch to false
                 //resolve: []
             }).
             when('/browser', {

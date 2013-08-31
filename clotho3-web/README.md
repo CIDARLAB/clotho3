@@ -54,6 +54,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 ### Current Tasks
 
 - anderson lab site
+    - fix styling
+    - slideshow directive
+    - people page with ng-repeat
+
+- ensure server runs EMACS5 (e.g. Object.Keys)
 
 - finish schema editor -- verify with stephanie
     - selecting parent should insert fields
@@ -102,10 +107,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - DNA Functions
     - decide data structure
-    - add Underscore.js to Clotho
+    - add Underscore.js to Clotho server
     - DNA
         - required upstream
-            - determine ORF
             - species specific
                 - codon optimize
                 - silent sites
@@ -117,7 +121,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
                 - formats: ftp://ftp.neb.com/pub/rebase/REBASE.DOC
                 - GCG format: ftp://ftp.neb.com/pub/rebase/gcg.txt
                 - also: star, homing, etc. etc. etc. -- write parsers
-            - cuts: ^   |   _
             - broaden methylation categories: dam, dcm, cpg
         - dep on DNA service new functions
             - swapout Digest site (need to know ORF)

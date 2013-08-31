@@ -51,14 +51,14 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     regexps.strip.whitespace = /\s/g;
 
 
-    monomers.dna = ['a', 'c', 't', 'g'];
-    monomers.rna = ['a', 'c', 'u', 'g'];
-    monomers.nucleotide = ['a', 'c', 't', 'u', 'g'];
-    monomers.nucleotide_degenerate = ['g','a','t','u','c','r','y','s','w','k','m','b','d','h','v','n','x'];
-    monomers.protein = ['A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y','Z','*'];
-    monomers.protein_degnerate = ['A','B','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','*'];
+    monomers.dna = ('acgt').split('');
+    monomers.rna = ('acug').split('');
+    monomers.nucleotide = ('acgtu').split('');
+    monomers.nucleotide_degenerate = ('acgturyswkmbdhvnx').split('');
+    monomers.protein = ('ACDEFGHIKLMNPQRSTVWYZ*').split('');
+    monomers.protein_degnerate = ('ABCDEFGHIKLMNPQRSTVWXYZ*').split('');
     //dna, rna, protein
-    monomers.all = ['A','B','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z','*'];
+    monomers.all = ("ABCDEFGHIKLMNPQRSTUVWXYZ*").split('');
 
 
     maps.nucleotide_degenerate = {
@@ -444,22 +444,25 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
      * @param {string} sequence RNA Sequence to be translated. DNA will be converted (not transcribed) to RNA.
      * @returns {string} Polypeptide translated
      */
-    var translate = function (sequence) {
-        //todo - multiple orfs instead of just trimming
+    var translate = function (sequence, forceOffset) {
 
+        //checks
         if (verify(sequence, regexps.strip.dna)) {
             sequence = dna_to_rna(sequence);
         }
-
         var seqlen = sequence.length;
         if (seqlen < 3) return '';
-
         sequence = angular.lowercase(sequence);
+
+
+        var offset = (!!forceOffset) ? forceOffset : probableORF(sequence),
+            polypep = "";
+
+        sequence = sequence.substring(offset);
 
         if ((seqlen % 3) != 0)
             sequence = sequence.substring(0, (Math.floor(seqlen / 3) * 3));
 
-        var polypep = "";
         for (var i = 0; i < sequence.length; i = i+3) {
             polypep = polypep + complements.translate[sequence.substr(i, 3)];
         }
@@ -478,7 +481,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
             if (dumb) {
                 rna = rna + options[Math.floor(Math.random()*options.length)]
             } else {
-                //todo implement non-dumb version once have frequency table...
+                //future implement non-dumb version once have frequency table...
                 rna = rna + options[0]
             }
         }
@@ -486,10 +489,67 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         return rna;
     };
 
-    var probableORF = function (sequence) {
-        var offset = 0;
 
-        //todo - look at each translated and choose longest?
+    /**
+     * @description Determines fragments for each ORF for a given sequence
+     * @param sequence
+     * @returns {object} in the form, with frags descending by length:
+     {
+        sequence : <input sequence>,
+        frags : [
+            {
+                match : <matched seq (from atg ... tag|tga|taa)>
+                index : <match index>
+                length : <dna seq length>
+            }
+            ...
+        ],
+        longest : <length of longest putative protein>
+     }
+
+     */
+    var calcORFs = function(sequence) {
+        var frames = {},
+            orfReg = new RegExp('((atg)(.+?)(ta[agr]|tga|t[agr]a))', 'gi');
+
+        for (var i = 0; i < 3; i++) {
+            frames[i].sequence = sequence;
+            frames[i].frags = [];
+
+            var match;
+            while ((match = orfReg.exec(sequence)) != null) {
+                frames[i].frags.push({
+                    match : match[0],
+                    index : match.index,
+                    length : match[0].length
+                })
+            }
+            frames[i].frags.sort(function(a, b){ return b.length - a.length; });
+            frames[i].longest = frames[i].frags[0].length;
+        }
+
+        return frames;
+    };
+
+    /**
+     * @description Returns the offset for the longest ORF
+     * @param sequence
+     * @returns {number}
+     */
+    var probableORF = function (sequence) {
+        var offset = 0,
+            longest = 0;
+
+        var frames = calcORFs(sequence);
+
+        for (var i = 0; i < frames.length; i++) {
+            if (longest < frames[i].longest) {
+                longest = frames[i].longest;
+                offset = i;
+            }
+        }
+        //future - check codon frequency
+        //future - alignment to database e.g. blast or something
 
         return offset;
     };
@@ -530,19 +590,23 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
     /**
-     * @description
+     * @description Determines number of occurances of neighboring nucleotides, e.g. 'ac' -> 4
      * @note Currently only DNA
      * @param sequence
+     * @param minCount
      * @param units
-     * @returns {{}}
+     * @returns {object}
      */
-    var neighbor_count = function (sequence, units) {
-        units = (typeof units != 'undefined' ? units : monomers.dna);
+    var neighbor_count = function (sequence, minCount, units) {
+        units = (typeof units != 'undefined') ? units : monomers.dna;
+        minCount = (typeof minCount != 'undefined') ? minCount : 0;
         var counts = {};
         angular.forEach(units, function (u1) {
             angular.forEach(units, function (u2) {
-                var combo = u1 + u2;
-                counts[combo] = occuranceCount(sequence, combo);
+                var combo = u1 + u2,
+                    count = occuranceCount(sequence, combo);
+                if (count >= minCount)
+                    counts[combo] = count;
             });
         });
         return counts;
@@ -609,7 +673,8 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
      * @param {object} conc Concentrations with parameters 'dna' 'salt' and 'mg' all Molar
      */
 
-    //todo - account for buffers, see NEB site @ https://www.neb.com/tools-and-resources/interactive-tools/tm-calculator
+    //todo - account for buffers, see NEB site
+    //https://www.neb.com/tools-and-resources/interactive-tools/tm-calculator
     var melting_temp = function (sequence, conc) {
         if (sequence.length < 1) return;
 
@@ -680,19 +745,62 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
      Checks
      **************/
 
-    var verifyRepeats = function(oligo) {
-        var max = 4;
-
-        //todo
+    /**
+     * @description
+     * @param unit
+     * @param repeat
+     * @returns {string}
+     */
+    var createRun = function(unit, repeat) {
+        return new Array(repeat).join(unit);
     };
 
-    var verifyRuns = function(oligo) {
-        var max = 4;
+    /**
+     * @description Look for double repeats like 'acacacac'
+     * @note currently DNA only
+     * @param oligo
+     * @param max
+     */
+    var verifyRepeats = function(oligo, max) {
+        var flag = true;
+        max = typeof max != 'undefined' ? max : 4;
+        monomers = typeof monomers != 'undefined' ? monomers : monomers.nucleotide;
 
-        //todo using occuranceCounts
+        //first, neighbor count for possible problems
+        var counts = neighbor_count(oligo, max);
+
+        //then go through neighbors
+        for (var index in counts) {
+            if (!counts.hasOwnProperty(index))
+                break;
+            if ((new RegExp(createRun(index, max), 'ig')).test(oligo))
+                flag = false;
+        }
+
+        return flag;
     };
 
-    var verifyPrimerMeltingTemps = function(primers) {
+    /**
+     * @description checks for runs of the same nucleotide (e.g. 'aaaa')
+     * @param oligo
+     * @param max
+     * @param monomers
+     * @returns {boolean}
+     */
+    var verifyRuns = function(oligo, max) {
+        var flag = true;
+        max = typeof max != 'undefined' ? max : 4;
+        monomers = monomers.nucleotide;
+
+        for (var i = 0; i < monomers.length; i++) {
+            if ( occuranceCount( oligo, createRun(monomers[i], max) ) )
+                flag = false;
+        }
+
+        return flag;
+    };
+
+    var verifyMeltingTemps = function(primers) {
         var max = 0, min = 0;
         for (var i = 0; i < primers.length; i++) {
             var temp = melting_temp(primers[i]);
@@ -702,7 +810,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
         if (max == 0 || min == 0) {}
 
-        return ((max - min) > 6) ? false : true;
+        return ((max - min) <= 6);
     };
 
 
@@ -725,6 +833,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
 
     return {
+        //config, info
         regexps: regexps,
         monomers : monomers,
         maps : maps,
@@ -733,11 +842,13 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         frequencies : frequencies,
         weights : weights,
 
+        //utility
         lettersOnly : lettersOnly,
         dnaOnly : dnaOnly,
         verify : verify,
         undegenerize : undegenerize,
 
+        //manipulation
         reverse : reverse,
         complement : complement,
         rna_to_dna : rna_to_dna,
@@ -749,12 +860,15 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         shuffleSequence : shuffleSequence,
         codonSpace : codonSpace,
 
+        //central dogma
         transcribe : transcribe,
         reverseTranscribe : reverseTranscribe,
         translate : translate,
         reverseTranslate : reverseTranslate,
+        calcORFs : calcORFs,
         probableORF : probableORF,
 
+        //quantification
         occuranceCount : occuranceCount,
         monomer_count : monomer_count,
         neighbor_count : neighbor_count,
@@ -763,8 +877,13 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         melting_temp_basic : melting_temp_basic,
         melting_temp_saltAdjusted : melting_temp_saltAdjusted,
         melting_temp : melting_temp,
-        molecular_weight : molecular_weight
+        molecular_weight : molecular_weight,
 
+        //cehcks
+        createRun : createRun,
+        verifyRepeats : verifyRepeats,
+        verifyRuns : verifyRuns,
+        verifyMeltingTemps : verifyMeltingTemps
     }
 }]);
 
