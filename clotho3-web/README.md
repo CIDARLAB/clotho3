@@ -54,7 +54,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 ### Current Tasks
 
 - anderson lab site
-    - fix styling
     - slideshow directive
     - people page with ng-repeat
 

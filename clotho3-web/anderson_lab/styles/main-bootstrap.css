@@ -4,6 +4,37 @@
 body {
     font-size: 12px;
 }
+
+h1, h2, h3, h4 {
+    font-weight: normal;
+}
+h1 {
+    font-size: 36px;
+    color: #1f2125;
+}
+h2 {
+    font-size: 24px;
+    color: #1f2125;
+}
+h3 {
+    font-size: 14px;
+    font-weight: bold;
+}
+h4 {
+    font-size: 12px;
+}
+a {
+    text-decoration: none;
+    color: #487f93;
+}
+a:hover {
+    color: #2c5665;
+    text-decoration: none;
+}
+
+
+
+
 .row {
     margin-left: 0px;
 }
@@ -308,7 +339,6 @@ footer li {
     color: #fff;
     text-decoration: none;
     /* background */
-    background-color: ##searchBarContainer;
     background-repeat: no-repeat;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5a8c9e), to(#417385));
     background-image: -webkit-linear-gradient(#5a8c9e, #417385);

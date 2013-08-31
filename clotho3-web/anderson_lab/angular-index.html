@@ -59,13 +59,14 @@
             var $clotho = window.$clotho = {};
 
             $clotho.socket = new WebSocket("ws://" + window.location.host + window.location.pathname + "websocket");
-            $clotho.socket.onopen = function () {
+            //testing while server not working
+            //$clotho.socket.onopen = function () {
                 angular.bootstrap(document, ['andersonLab']);
 
                 //todo - write angular directives
                 $script("scripts/slides.min.jquery.js", "slideshow");
                 $script("scripts/cl02.js", "clotho");
-            }
+            //}
         });
     </script>
 </head>
