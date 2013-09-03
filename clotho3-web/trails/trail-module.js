@@ -184,59 +184,44 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             template = '<div><div youtube="' + videoId + '" params="" on-complete="next()"></div></div>';
 
         //todo - write to avoid timeout? video doesn't update on next() otherwise
-        $timeout(function() {
-            $scope.content = $compile(template)($scope);
+        return $timeout(function() {
+           return $compile(template)($scope);
         });
     };
 
     $scope.loadTemplate = function (url) {
-        $http.get(url, {cache:$templateCache})
-            .success(function(data, status, headers, config) {
-                console.log('8 - template loaded', data);
-                $scope.content = $compile(data)($scope);
-            })
-            .error(function(data, status, headers, config) {
-                $scope.content = "<p>Template could not be found...</p>";
-            });
+        return $http.get(url, {cache:$templateCache}).then(function (data) {
+            //todo - check for error here (need to use then)
+            return $compile(data.data)($scope);
+        });
     };
 
     $scope.loadExercise = function(exercise) {
         $scope.exercise = exercise;
 
-        $http.get('partials/trails/exercise-partial.html', {cache:$templateCache})
-            .success(function(data, status, headers, config) {
-                console.log('8 - exercise loaded', data);
-                $scope.content = $compile(data)($scope);
-            })
-            .error(function(data, status, headers, config) {
-                $scope.content = "<p>Exercise template couldn't be loaded...</p>";
-            });
+        return $http.get('partials/trails/exercise-partial.html', {cache:$templateCache}).then(function (data) {
+            //todo - check for error here (need to use then)
+            return $compile(data.data)($scope);
+        });
     };
 
     $scope.loadQuiz = function (content) {
-        /*$scope.quiz = content;
-
-        $http.get('partials/trails/quiz/' + content.type + '-partial.html', {cache: $templateCache})
-            .success(function (data) {
-                $scope.content = $compile(data)($scope);
-            })
-            .error(function(data, status, headers, config) {
-                $scope.content = "<p>Template could not be found...</p>";
-            });*/
-
-
         $scope.quiz = content;
         $scope.gradeCallback = function(data) {
             console.log(data);
         };
 
         var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback()"></div>';
-        $scope.content = $compile(template)($scope);
+        return $compile(template)($scope);
+    };
+
+    $scope.loadTool = function (tool) {
+
     };
 
     $scope.paverError = function (paver) {
-        $scope.content = '<h4>Something didn&apos;t work - that type of paver wasn&apos;t recognized</h4>';
         console.log(paver);
+        return '<h4>Something didn&apos;t work - that type of paver wasn&apos;t recognized</h4>';
     };
 
 
@@ -255,35 +240,36 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         function load() {
             console.log('6 - loading paver');
+
+            //todo - allow multiple types, append to content
+
             switch (paver.type) {
                 case 'video' : {
-                    $scope.loadVideo(paver.video);
+                    $scope.content = $scope.loadVideo(paver.video);
                     break;
                 }
                 case 'template' : {
                     console.log('7 - loading template');
-                    $scope.loadTemplate(paver.template);
+                    $scope.content = $scope.loadTemplate(paver.template);
                     break;
                 }
                 case 'exercise' : {
                     console.log('7 - loading exercise');
-                    $scope.loadExercise(paver.exercise);
+                    $scope.content = $scope.loadExercise(paver.exercise);
                     break;
                 }
                 case 'quiz' : {
-                    $scope.loadQuiz(paver.content);
+                    $scope.content = $scope.loadQuiz(paver.content);
                     break;
                 }
                 default : {
-                    $scope.paverError(paver);
+                    $scope.content = $scope.paverError(paver);
                 }
             }
 
             if (!!paver.onload)
                 Application.script(paver.onload);
         }
-
-        //todo - use Clotho.show() here???
 
 
         //todo - incorporate better
@@ -406,7 +392,7 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
                             element.html($compile(data)(scope));
                         })
                         .error(function(data, status, headers, config) {
-                            element.html('<p>Template could not be found...</p>');
+                            element.html('<p>Template could not be found...</p>' + JSON.stringify(scope.quiz));
                         });
 
                 },

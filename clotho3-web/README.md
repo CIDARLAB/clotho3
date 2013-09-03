@@ -60,7 +60,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - ensure server runs EMACS5 (e.g. Object.Keys)
 
 - finish schema editor -- verify with stephanie
-    - selecting parent should insert fields
+    - selecting parent should show parent fields (disabled)
+    - typeahead with custom template for methods
+        - http://stackoverflow.com/questions/18245834/bootstrap-ui-typeahead-display-more-than-one-property-in-results-list/18251561#18251561
 
 - search bar rewrite
     - add login
