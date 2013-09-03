@@ -1,5 +1,3 @@
-'use strict';
-
 Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA, Digest) {
 
     /**************
@@ -115,14 +113,14 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     /** verification **/
     /*
      multiple matches:
-        - will work, multiple (unexpected?) products
+     - will work, multiple (unexpected?) products
      one match each: {p1_fwd,  p1_rev, p1_absent} x {p2_fwd,  p2_rev, p2_absent}
-        - 3 cases (fails): 1 or both absent
-        - 2 cases (fails): same direction
-        - 2 cases: point toward each other
-            p1 = fwd, p2 = rev (fwd < rev)  or p1 = rev, p2 = fwd (fwd < rev)
-        - 2 cases: point away from each other
-            same as above but (fwd > rev)
+     - 3 cases (fails): 1 or both absent
+     - 2 cases (fails): same direction
+     - 2 cases: point toward each other
+     p1 = fwd, p2 = rev (fwd < rev)  or p1 = rev, p2 = fwd (fwd < rev)
+     - 2 cases: point away from each other
+     same as above but (fwd > rev)
      special cases: ?
      */
     /**
@@ -275,18 +273,29 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
 
     /*************
-     Simple Enzyme Funcitons
+     Simple Enzyme Functions
      *************/
 
     /**
      * @description
      * @param sequence
      *
+     * @example nnnnnn -> nnnnnn
      * @example nn_nnnn^ -> nn
-     * note - also handle beyond only sticky ends
+     * @example nnnn_nnnnnnn -> nnnn
+     * todo - handle beyond only sticky ends
      */
     var exonuclease35 = function(sequence) {
 
+        if (sequence.indexOf('_') < 0)
+            return sequence;
+
+        var regex = /(.*?)(_.+?\^?.*)/gi,
+            matches = regex.exec(sequence),
+            removed = matches[2],
+            remaining = matches[1];
+
+        return remaining;
     };
 
     /**
@@ -304,8 +313,12 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      * @description
      * @param sequence
      *
+     * @example nnnnnn -> nnnnnn
+     * @example nn^nnnn -> ___________
      * @example nn^nnnn_ -> nnnnnn
-     * note - also handle beyond only sticky ends
+     * @example nn_nnnn^nn -> ______________ exonuclease activity?
+     *
+     * todo - determine above, also handle beyond only sticky ends
      */
     var polymerase53 = function(sequence) {
 
@@ -361,6 +374,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
     }
 }]);
+
+'use strict';
 
 Application.Dna.directive('pcrPredict', ['PCR', function(PCR) {
 

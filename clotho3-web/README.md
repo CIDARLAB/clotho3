@@ -78,11 +78,13 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - Trails
+    - youtube directive - listen for changes to id, recompile
     - make quiz a directive
+        - check gradeCallback
+    - exercise template (intro, template / video, question)
+        - form of question / tool??
     - demo event at time in video (e.g. type something via jQuery)
         -- also demonstrate can use angular $scope events (like next() and will compile)
-    - exercise template (intro, tempalate / video, question)
-        - form of question / tool??
     - start writing demo trail
     - Trail schema writeup / Trail
     - Trail editor -- req. schema finalized
@@ -106,7 +108,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - DNA Functions
     - decide data structure
-    - add Underscore.js to Clotho server
     - DNA
         - required upstream
             - species specific

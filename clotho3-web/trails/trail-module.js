@@ -214,7 +214,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.loadQuiz = function (content) {
-        $scope.quiz = content;
+        /*$scope.quiz = content;
 
         $http.get('partials/trails/quiz/' + content.type + '-partial.html', {cache: $templateCache})
             .success(function (data) {
@@ -222,7 +222,16 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             })
             .error(function(data, status, headers, config) {
                 $scope.content = "<p>Template could not be found...</p>";
-            });
+            });*/
+
+
+        $scope.quiz = content;
+        $scope.gradeCallback = function(data) {
+            console.log(data);
+        };
+
+        var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback()"></div>';
+        $scope.content = $compile(template)($scope);
     };
 
     $scope.paverError = function (paver) {
@@ -377,5 +386,57 @@ Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($sc
         });
     }
 }]);
+
+Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile', 'Clotho', function($http, $templateCache, $compile, Clotho) {
+    return {
+        restrict: "EA",
+        require: 'ngModel',
+        //could assume function onGrade (or variant) will be present on scope, but I think more maintainable to explicitly declare as attr
+        scope: {
+            quiz: '=ngModel',
+            gradeCallback : '&'
+        },
+
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs) {
+
+                    $http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
+                        .success(function (data) {
+                            element.html($compile(data)(scope));
+                        })
+                        .error(function(data, status, headers, config) {
+                            element.html('<p>Template could not be found...</p>');
+                        });
+
+                },
+                post: function postLink(scope, element, attrs) {
+
+                    scope.createEmptyAnswer = function(quiz, value) {
+                        value = (typeof value != 'undefined') ? value : false;
+                        scope.quiz.answer = new Array(quiz.options.length);
+                        for (var i = 0; i < scope.quiz.answer.length; i++) {
+                            scope.quiz.answer[i] = value;
+                        }
+                    };
+
+                    scope.answerUndefined = function(quiz) {
+                        return (typeof quiz.answer == 'undefined' || quiz.answer === '');
+                    };
+
+                    scope.submitQuestion = function(quiz) {
+                        Clotho.gradeQuiz(quiz).then(function (data) {
+                            scope.quiz.submitted = true;
+                            scope.quiz.response = data;
+                            scope.gradeCallback(data);
+                        });
+                    };
+
+                }
+            }
+        }
+    }
+}]);
+
 
 var base64icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACtElEQVR4Xu2Y3UtqURDFlyYVqQhBQon5koqYiUIElSD951qa+AkGUWDUgxC9KEhqfnfXgOLl3gKP2Xlw5kXO0T2zZ+2Z+eG2NBqNCdbYLCqAVoC2gM6ANZ6B0CGoFFAKKAWUAkqBNVZAMagYVAwqBhWDawwB/TOkGFQMKgYVg4pBxeAaK7A0Bh8fH/H6+orJZIL9/X0Eg0FYLJaZpH8og/v7e+zs7CAWi/313Ve6r8LnV7GWEuDh4QH1eh02m038D4dD+Hw++P1+eaYoqVRK3m9ubuLy8hJWq/XbeluFz+8CGhZgNBohnU7LiSYSCQwGA7y8vMDpdMLj8UjMWq0m72jb29u4uLhAu91GtVrFxsYG4vE43t/fwaS3trYQiURwc3OzsM/5ilu0mw0L0O/3ZbPj8ViS/vj4kBYIBAKyh263i0wmg8PDQ7RaLXQ6HRGKmy2VSmg2m9jd3ZV1/I5Vw/VGfS6a+PT3hgVgb5fLZfHDFmCZ05hEOByWJJl4MplEPp9Hr9ebCTAvHte4XC6cnp5iGZ+/LgBPOJvNSumen5/LKeZyOen1k5MTFItF2O12eL1ePD09SaUcHR3JM+35+Vne087OzqSKlvVpRATDFcAT5wxgb1OA6TMFCIVCqFQq/+yHA/Dq6gqcH9fX17Oq2dvbQzQanfkw4tNI8lxjWABOeFYAT+3g4EA+2ddutxvHx8dgmdOYdKFQkOR40kzu7u4Ob29vcDgcUjmsDg5ArjXq89cFYEAOsNvbWzlRGtuBvcwk542tQQFIAc4FCjKlB4Ug9zlHpjRZ1KcpFJhPkCij8UR/ylbh8397M9wCP5Wo2X5UAL0R0hshvRHSGyGzJ7GZ8ZUCSgGlgFJAKWDmFDY7tlJAKaAUUAooBcyexGbGVwooBZQCSgGlgJlT2OzYSoF1p8AnDSiNnx2jBucAAAAASUVORK5CYII=";
