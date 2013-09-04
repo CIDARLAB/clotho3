@@ -615,7 +615,7 @@ Application.Interface.controller('MessageBoxController', ['$scope', 'dialog', 'm
     };
 }]);
 
-Application.Interface.controller('DialogLoginController', ['$scope', 'dialog', 'model', 'Clotho', function($scope, dialog, model, Clotho){
+Application.Interface.controller('DialogLoginController', ['$scope', 'dialog', 'Clotho', function($scope, dialog, Clotho){
     $scope.close = function(res){
         dialog.close(res);
     };
@@ -623,15 +623,18 @@ Application.Interface.controller('DialogLoginController', ['$scope', 'dialog', '
     $scope.notification = {};
     $scope.cred = {username : "", password: ""};
 
-    $scope.login = Clotho.login($scope.cred.username, $scope.cred.password).then(function (result) {
-        if (!!result) {
-            $scope.notification = {class : "alert-success", message: "Log in Success"};
-            dialog.close($scope.cred.username);
-        } else {
-            $scope.notification = {class : "alert-error", message: "Log in Error"};
-            $scope.cred = {username : "", password: ""};
-        }
-    });
+    $scope.login = function() {
+        Clotho.login($scope.cred.username, $scope.cred.password).then(function (result) {
+            console.log('run login');
+            if (!!result) {
+                $scope.notification = {class : "alert-success", message: "Log in Success"};
+                dialog.close($scope.cred.username);
+            } else {
+                $scope.notification = {class : "alert-error", message: "Log in Error"};
+                $scope.cred = {username : "", password: ""};
+            }
+        });
+    };
 
 }]);
 

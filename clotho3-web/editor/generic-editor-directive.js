@@ -99,6 +99,12 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 });
             });
 
+            $scope.clothoFunctions = [];
+            Clotho.query({schema: "Function"}).then(function(result) {
+                console.log(result);
+                $scope.clothoFunctions = result;
+            });
+
 
 
             $scope.addArg = function() {

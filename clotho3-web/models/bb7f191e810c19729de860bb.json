@@ -8,84 +8,84 @@
 
     "contents" : [
         {
-            "module_title" : "Mixin / Bootstrap",
+            "module" : "Mixin / Bootstrap",
             "pavers" : [
                 {
-                    "paver_title" : "Adding Functionality",
-                    "type" : "template",
+                    "paver" : "Adding Functionality",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/intro.html"
                 },
                 {
-                    "paver_title" : "1 - Assume Present",
-                    "type" : "template",
+                    "paver" : "1 - Assume Present",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp1.html"
                 },
                 {
-                    "paver_title" : "2 - Mixin Ctrl",
-                    "type" : "template",
+                    "paver" : "2 - Mixin Ctrl",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp2.html",
                     "mixin" : "/partials/trails/trail_super/revcomp-ctrl.js"
                 },
                 {
-                    "paver_title" : "3 - Mixin Several",
-                    "type" : "template",
+                    "paver" : "3 - Mixin Several",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp3.html",
                     "mixin" : ["/partials/trails/trail_super/revcomp-ctrl.js", "/partials/trails/trail_super/revcomp-dir.js", "/partials/trails/trail_super/revcomp-filter.js"]
                 },
                 {
-                    "paver_title" : "4 - Transclude",
-                    "type" : "template",
+                    "paver" : "4 - Transclude",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp4.html",
                     "mixin" : "/extensions/revcomp.js",
                     "script" : ["/partials/simple-executable.js", "/partials/simple-executable2.js"]
                 },
                 {
-                    "paver_title" : "Bootstrap Intro",
-                    "type" : "template",
+                    "paver" : "Bootstrap Intro",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/bootstrapIntro.html"
                 },
                 {
-                    "paver_title" : "5 - Bootstrap",
-                    "type" : "template",
+                    "paver" : "5 - Bootstrap",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp5.html",
                     "script" : "/partials/trails/trail_super/revcomp5.js"
                 },
                 {
-                    "paver_title" : "6 - Bootstrap w/ Dep",
-                    "type" : "template",
+                    "paver" : "6 - Bootstrap w/ Dep",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp6.html",
                     "mixin" : "/partials/trails/trail_super/revcomp-filter2.js",
                     "script" : "/partials/trails/trail_super/revcomp5.js"
                 },
                 {
-                    "paver_title" : "Other Types",
-                    "type" : "template",
+                    "paver" : "Other Types",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp-other.html"
                 },
                 {
-                    "paver_title" : "7 - jQuery Mixin",
-                    "type" : "template",
+                    "paver" : "7 - jQuery Mixin",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp7.html",
                     "mixin" : "/lib/typeahead.js",
                     "onload" : "/partials/trails/trail_super/revcomp-jquery.js"
                 },
                 {
-                    "paver_title" : "8 - CSS Mixin",
-                    "type" : "template",
+                    "paver" : "8 - CSS Mixin",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_super/revcomp8.html",
                     "css" : "/partials/trails/trail_super/revcomp-css.css"
                 }
             ]
         },
         {
-            "module_title" : "Full Transclude",
+            "module" : "Full Transclude",
             "transclude" : {
                 "id" : "bb7f191e810c19729de860aa",
                 "modules" : "all"
             }
         },
         {
-            "module_title" : "Partial Transclude",
+            "module" : "Partial Transclude",
             "transclude" : {
                 "id" : "bb7f191e810c19729de860ab",
                 "modules" : "0-1"

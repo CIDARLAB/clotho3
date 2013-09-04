@@ -7,40 +7,37 @@
 
     "contents" : [
         {
-            "module_title" : "Clotho Directives",
+            "module" : "Clotho Directives",
             "pavers" : [
                 {
-                    "paver_title" : "Basic Example",
-                    "type" : "template",
+                    "paver" : "Basic Example",
+                    "icon" : "template",
                     "template" : "/partials/trails/trail_123/trail_123_1.html",
                     "mixin" : "/partials/trails/trail_123/demoClothoDirectives.js"
                 },
                 {
-                    "paver_title" : "Exercise",
-                    "type" : "exercise",
-                    "exercise" : {
-                        "text" : "This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size.",
-                        "template" : "/partials/trails/trail_123/exercise1.html",
-                        "video" : {
-                            "id" : "efAUCG9oTb8",
-                            "params" : {
-                                "width" : 350,
-                                "height" : 198
-                            }
-                        },
-                        "tool" : "This part needs to get roughed out still - need server to test"
+                    "paver" : "Exercise",
+                    "icon" : "exercise",
+                    "text" : "This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size. Tools should be included in either the intro text or ending text",
+                    "template" : "/partials/trails/trail_123/exercise1.html",
+                    "video" : {
+                        "id" : "efAUCG9oTb8",
+                        "params" : {
+                            "width" : 350,
+                            "height" : 198
+                        }
                     },
                     "mixin" : "/partials/trails/trail_123/demoClothoDirectives.js"
                 }
             ]
         },
         {
-            "module_title" : "Demo Quizzes",
+            "module" : "Demo Quizzes",
             "pavers" : [
                 {
-                    "paver_title" : "MC Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "MC Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "123456",
                         "title" : "Question 1",
                         "type" : "mc",
@@ -54,9 +51,9 @@
                     }
                 },
                 {
-                    "paver_title" : "MultiPic Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "MultiPic Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "67890",
                         "title" : "Choose the right image",
                         "type" : "multipic",
@@ -78,9 +75,9 @@
                     }
                 },
                 {
-                    "paver_title" : "Fill-in Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "Fill-in Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "klasdhf",
                         "title" : "Another Question",
                         "type" : "fillin",
@@ -88,9 +85,9 @@
                     }
                 },
                 {
-                    "paver_title" : "Essay Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "Essay Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "asdkgjasdg",
                         "title" : "A much longer question",
                         "type" : "essay",
@@ -98,9 +95,9 @@
                     }
                 },
                 {
-                    "paver_title" : "Drag-Drop Categories",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "Drag-Drop Categories",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "dragdrop12345",
                         "title" : "Drag Answers to the right section",
                         "type" : "dragdrop",
@@ -133,9 +130,9 @@
                     }
                 },
                 {
-                    "paver_title" : "Multicheck Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "Multicheck Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "sfgsufigdjl",
                         "title" : "Select all the correct answers",
                         "type" : "multicheck",
@@ -149,9 +146,9 @@
                     }
                 },
                 {
-                    "paver_title" : "Ranking Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "Ranking Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "s08ergsho",
                         "title" : "Place the options in the correct order",
                         "type" : "ranking",
@@ -166,9 +163,9 @@
                     }
                 },
                 {
-                    "paver_title" : "True/False Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "True/False Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "sfgsufigdjl",
                         "title" : "Is it true or false?",
                         "type" : "truefalse",
@@ -176,9 +173,9 @@
                     }
                 },
                 {
-                    "paver_title" : "Matching Question",
-                    "type" : "quiz",
-                    "content" : {
+                    "paver" : "Matching Question",
+                    "icon" : "quiz",
+                    "quiz" : {
                         "uuid" : "sasdfas9d",
                         "title" : "Match each",
                         "type" : "match",
@@ -192,6 +189,27 @@
                             "monomer",
                             "polymer",
                             "oligomer"
+                        ]
+                    }
+                },
+                {
+                    "paver" : "Assertion Question",
+                    "icon" : "quiz",
+                    "quiz" : {
+                        "uuid" : "138957413135",
+                        "title" : "Answer and Reason",
+                        "type" : "assert",
+                        "question" : "Choose the correct and the best reason for it",
+                        "options" : [
+                            "Statement 1",
+                            "Something else that may or may not be true",
+                            "Final statement is never the one to pick..."
+                        ],
+                        "assertions" : [
+                            "Reason 1",
+                            "another silly reason",
+                            "a somewhat plausible reason",
+                            "this is probably the best answer because it's long"
                         ]
                     }
                 }

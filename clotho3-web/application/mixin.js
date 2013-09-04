@@ -65,17 +65,14 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
          */
         Application.mixin = function(urls, element, args) {
 
-            console.log('2 - mixin called', urls);
-
             if (angular.isUndefined(urls) || urls == '') {
-                console.log('3 - no url - return empty resolved promise');
-                return $q.when();
+                //console.log('[Application.mixin] no url - return empty resolved promise');
+                return $q.when('no mixin url');
             }
 
-            var deferred = $q.defer();
+            //console.log('2 - Application.mixin called:', urls);
 
-            //check if CSS
-            //todo - implement
+            var deferred = $q.defer();
 
             $script(urls, function() {
                 Application.Extensions.processQueue();
@@ -97,7 +94,7 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
         Application.script = function(urls) {
 
             if (angular.isUndefined(urls) || urls == '') {
-                return $q.when();
+                return $q.when('no script url');
             }
 
             var deferred = $q.defer(),
@@ -130,12 +127,17 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
          */
         Application.css = function(url) {
 
+            if (angular.isUndefined(url) || url == '') {
+                return $q.when('no css url');
+            }
+
             //todo - track so only added once
+            //todo - handle array
 
             var deferred = $q.defer();
 
-            if (document.createStyleSheet) {
-                document.createStyleSheet(url); //IE
+            if (document.createStyleSheet) { //IE
+                document.createStyleSheet(url);
                 $rootScope.$safeApply(deferred.resolve());
             } else {
                 var link = document.createElement("link");
@@ -159,6 +161,11 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
          * @returns {Promise} Promise to be fulfilled once CSS files are downloaded and appended
          */
         Application.cache = function(url) {
+
+            if (angular.isUndefined(url) || url == '') {
+                return $q.when();
+            }
+
             var deferred = $q.defer();
 
             $http.get(url, {cache:$templateCache})
@@ -192,6 +199,10 @@ Application.Extensions.config(['$routeProvider', '$controllerProvider', '$compil
             //note angular returns parent, not appended element
             //todo - if want this, select appropriate child element
             //var insertInto = angular.element(document).find("ng-app-clothoWidgets").append(angular.element('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>'));
+
+
+            //todo - move away from ng-view and routing - just use a template
+
 
             //jQuery version
             var insertInto = $($('<div clotho-widget clotho-widget-uuid="'+widgetID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>')).appendTo($clotho.appWidgets);

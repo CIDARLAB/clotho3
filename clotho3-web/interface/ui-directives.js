@@ -39,7 +39,8 @@ Application.Interface.directive('uiEvent', ['$parse',
         };
     }]);
 
-// note - requires jQuery
+//todo - add activate attr, deregister listener based on it
+// note - requires jQuery has()
 // future - to make more universal, see:
 // https://raw.github.com/cowboy/jquery-outside-events/v1.1/jquery.ba-outside-events.js
 // angular way of creating ng-directives
@@ -87,7 +88,7 @@ Application.Interface.directive('myMouseleave', ['$parse', function($parse) {
     };
 }]);
 
-//future - remove polyfill once available-- currently not present in angular (1.1.5)
+//future - remove polyfill past ng-1.2.x
 Application.Interface.directive('ngFocus', ['$parse', function($parse) {
     return function(scope, element, attr) {
         var fn = $parse(attr['ngFocus']);
@@ -99,7 +100,7 @@ Application.Interface.directive('ngFocus', ['$parse', function($parse) {
     }
 }]);
 
-//future - remove polyfill once available-- currently not present in angular (1.1.5)
+//future - remove polyfill past ng-1.2.x
 Application.Interface.directive('ngBlur', ['$parse', function($parse) {
     return function(scope, element, attr) {
         var fn = $parse(attr['ngBlur']);

@@ -53,6 +53,14 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- rewrite trails
+    - example of assertion quiz
+    - todo
+        - tempalte / templateUrl
+        - video as object (url, params) -- handle in compile
+
+- rewrite clickOutside, with activate attr, deregister automatically w/o events
+
 - anderson lab site
     - slideshow directive
     - people page with ng-repeat
@@ -60,16 +68,19 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - ensure server runs EMACS5 (e.g. Object.Keys)
 
 - finish schema editor -- verify with stephanie
-    - selecting parent should show parent fields (disabled)
-    - typeahead with custom template for methods
-        - http://stackoverflow.com/questions/18245834/bootstrap-ui-typeahead-display-more-than-one-property-in-results-list/18251561#18251561
+    - methods section
+        - typeahead with custom template for methods
+            - http://stackoverflow.com/questions/18245834/
+    - selecting parent should show parent fields (but they are disabled)
 
 - search bar rewrite
-    - add login
+    - use typeahead with custom template??
+        - want to reduce bootstrap reliance, but well-written. maybe move to core
+    - add login functionality (not showing for demo)
     - pass in options
     - rename CSS classes
-    - avoid UI directives etc.
-    - avoid using several templates
+    - avoid ui-directives.js etc.
+    - reduce template use
 
 - API
     - Socket events in own layer (outside PubSub)
@@ -80,14 +91,20 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - Trails
-    - youtube directive - listen for changes to id, recompile
+    - rewrite trails for new style
+    - demo trail
+        - add explanation text, multiple components alongside
+    - youtube directive
+        - extract param for autoplay
+        - slideout attribute (show only when request, don't autoplay)
+        - listen for changes to id, recompile
     - make quiz a directive
         - check gradeCallback
-    - exercise template (intro, template / video, question)
-        - form of question / tool??
+    - tool -- how to load?
+        - clotho-run is easy...
+        - widgets?
     - demo event at time in video (e.g. type something via jQuery)
         -- also demonstrate can use angular $scope events (like next() and will compile)
-    - start writing demo trail
     - Trail schema writeup / Trail
     - Trail editor -- req. schema finalized
     - prettyprint directive
@@ -95,7 +112,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - Quizzes
         - answer -> color side nav
         - templates
-            - write assertion example
             - write multi-tf (need directive?)
             - multipic : active class
 
@@ -125,7 +141,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
                 - also: star, homing, etc. etc. etc. -- write parsers
             - broaden methylation categories: dam, dcm, cpg
         - dep on DNA service new functions
-            - swapout Digest site (need to know ORF)
+            - swapout Digest site (need to know ORF) -- not demo
         - import strider format (REBASE) / NEB format
     - PCR
         - other pcr types
@@ -195,7 +211,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
-- (advantage?) plasmid editor -- add locations parser to ngModel pipeline, store locations inside of ngModel (on the object), push them back in using a formatter
+- (cool idea // advantage?) plasmid editor -- add locations parser to ngModel pipeline, store locations inside of ngModel (on the object), push them back in using a formatter
 
 
 

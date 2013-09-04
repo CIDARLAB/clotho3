@@ -28,6 +28,17 @@
     </div>
 
     <h4>
+        Methods - not working yet
+        <button class="btn pull-right" type="button" ng-click="editable.methods.push({name: '', id : ''});" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+    </h4>
+
+        {{ editable.methods | json }}
+
+    <div ng-repeat="method in editable.methods">
+        <input type="text" id="method{{ $index }}" ng-model="editable.methods[$index]" typeahead="opt.name for opt in clothoFunctions | filter:$viewValue" typeahead-min-length="0" />
+    </div>
+
+    <h4>
         Fields
     </h4>
 

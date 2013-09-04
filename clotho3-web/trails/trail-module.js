@@ -38,18 +38,17 @@ Application.Trails.directive('youtube', [function() {
                     scope.params = angular.extend(defaults, scope.params);
 
                     //todo (?) - add more default hooks
-
                     //todo - avoid overwriting onComplete() if pass in onStateChange()
+                    //todo - add $scope.$apply wrapper to all passed in events
+
                     scope.params.events.onStateChange = function (event) {
                         if (event.data == 0) {
-                            console.log('ended');
-                            scope.onComplete();
+                            scope.$apply(scope.onComplete());
                         }
                     };
 
 
-                    var player = new YT.Player(element[0], scope.params);
-                    //console.log(player, player.getIframe());
+                    scope.player = new YT.Player(element[0], scope.params);
                 }
             }
         }
@@ -59,8 +58,8 @@ Application.Trails.directive('youtube', [function() {
 Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho, $q, $dialog) {
 
     /**
-     * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work. Adapted from:
-     * @url: http://stackoverflow.com/a/10315969/624466
+     * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work.
+     * @source http://stackoverflow.com/a/10315969/624466
      * @note assumes length of 11 characters. Youtube may change this in the future.
      *
      * @param {string} url
@@ -170,62 +169,72 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.id = $route.current.params.id;
     $scope.trail = $route.current.locals.trail;
     $scope.content = $scope.trail.description;
 
-    $scope.loadVideo = function (url) {
+    var load = {};
 
-        //note - need single outer parent div to compile properly (maybe not in ng-1.2.x)
-        var videoId = Trails.extract_youtube(url),
-            template = '<div><div youtube="' + videoId + '" params="" on-complete="next()"></div></div>';
+    load.text = function loadText(text) {
+        if (!text) return $q.when();
 
-        //todo - write to avoid timeout? video doesn't update on next() otherwise
+        //$compile just in case you put something angular in here
+        return $q.when(text);
+    };
+
+    load.video = function loadVideo(obj) {
+        if (!obj) return $q.when();
+
+        var videoId = Trails.extract_youtube( (angular.isString(obj) ? obj : obj.id) );
+        $scope.videoParams = (!!obj.params) ? obj.params : {};
+
+        //note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
+        var template = '<div><div youtube="' + videoId + '" params="videoParams" on-complete="next()"></div></div>';
+
+        //todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
         return $timeout(function() {
-           return $compile(template)($scope);
+           return template;
         });
     };
 
-    $scope.loadTemplate = function (url) {
-        return $http.get(url, {cache:$templateCache}).then(function (data) {
-            //todo - check for error here (need to use then)
-            return $compile(data.data)($scope);
+    load.template = function loadTemplate (url) {
+        if (!url) return $q.when();
+
+        //todo - check for url vs. simple template inline
+
+        return $http.get(url, {cache:$templateCache}).then(function (success) {
+            return success.data;
+        }, function(error) {
+            console.log('error retrieving template at: ' + url);
+            return '<p class="alert alert-error">That template couldn\'t be found :(</p>'
         });
     };
 
-    $scope.loadExercise = function(exercise) {
-        $scope.exercise = exercise;
+    load.quiz = function loadQuiz (content) {
+        if (!content) return $q.when();
 
-        return $http.get('partials/trails/exercise-partial.html', {cache:$templateCache}).then(function (data) {
-            //todo - check for error here (need to use then)
-            return $compile(data.data)($scope);
-        });
-    };
-
-    $scope.loadQuiz = function (content) {
         $scope.quiz = content;
         $scope.gradeCallback = function(data) {
             console.log(data);
         };
 
         var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback()"></div>';
-        return $compile(template)($scope);
+        return $q.when(template);
     };
 
-    $scope.loadTool = function (tool) {
-
-    };
-
-    $scope.paverError = function (paver) {
-        console.log(paver);
+    load.error = function loadError(error) {
         return '<h4>Something didn&apos;t work - that type of paver wasn&apos;t recognized</h4>';
     };
 
 
     $scope.activate = function(indices) {
+
+        // fields that are handled:
+        // backend: CSS (url), mixin (array|url), script (array|url), onload (array|url)
+        // content: text (html), video (object), template (url / html), quiz (object)
 
         //don't activate already active one
         if ($scope.current == indices) return;
@@ -234,64 +243,54 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         $scope.current = indices;
         $scope.content = "";
-        //in form module-paver
+        //in form <module>-<paver>
         var pos = indices.split("-");
         var paver = $scope.trail.contents[pos[0]]['pavers'][pos[1]];
 
-        function load() {
-            console.log('6 - loading paver');
+        //future in ng-1.2.x, use notify callbacks for updates
+        //todo - error callbacks
 
-            //todo - allow multiple types, append to content
+        var loading = $q.defer();
+        $scope.content = "loading..";
 
-            switch (paver.type) {
-                case 'video' : {
-                    $scope.content = $scope.loadVideo(paver.video);
-                    break;
-                }
-                case 'template' : {
-                    console.log('7 - loading template');
-                    $scope.content = $scope.loadTemplate(paver.template);
-                    break;
-                }
-                case 'exercise' : {
-                    console.log('7 - loading exercise');
-                    $scope.content = $scope.loadExercise(paver.exercise);
-                    break;
-                }
-                case 'quiz' : {
-                    $scope.content = $scope.loadQuiz(paver.content);
-                    break;
-                }
-                default : {
-                    $scope.content = $scope.paverError(paver);
-                }
-            }
+        loading.promise = $q.all({
+            css : Application.css(paver.css),
+            mixin: Application.mixin(paver.mixin)
+        })
+        .then(function() {
+            console.log('loading script');
 
-            if (!!paver.onload)
-                Application.script(paver.onload);
-        }
+            return Application.script(paver.script)
 
+        })
+        .then(function (){
+            console.log('loading content');
 
-        //todo - incorporate better
-        if (!!paver.css) {
-            Application.css(paver.css);
-        }
-
-        console.log(paver);
-
-        if (!!paver.mixin || !!paver.script) {
-            Application.mixin(paver.mixin).then(function() {
-                console.log('4 - mixin loaded');
-                Application.script(paver.script).then(function() {
-                    console.log('5 - script loaded');
-                    load()
-                });
+            return $q.all({
+                text : load.text(paver.text),
+                video : load.video(paver.video),
+                template : load.template(paver.template),
+                quiz : load.quiz(paver.quiz)
             });
-        } else {
-            load()
-        }
+        })
+        .then(function(content) {
+            console.log(loading, content);
 
+            var contentText = (content.text || "") + (content.video || "") + (content.template || "") + (content.quiz || "");
 
+            console.log(contentText);
+
+            $scope.content = $compile(contentText)($scope);
+
+            console.log('loading onload script');
+            return Application.script(paver.onload);
+
+        }, function(error) {
+            //content loading error
+            console.log(error);
+            //todo - do correctly
+            return $q.reject(load.error(error));
+        });
     };
 
     $scope.home = function() {
@@ -324,6 +323,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         console.log('next is: ' + newpos);
 
+        //todo - force this to run
         $scope.activate(newpos);
     };
 
@@ -343,6 +343,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             return;
         }
 
+        //todo - force this to run - as in next()
         $scope.activate(newpos);
     };
 

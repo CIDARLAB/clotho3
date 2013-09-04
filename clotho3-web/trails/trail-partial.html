@@ -8,14 +8,15 @@
     <div class="row-fluid">
         <div class="well span3" style="padding: 8px 0;">
             <ul class="nav nav-list" ng-repeat="module in trail.contents">
-                <li class="nav-header">{{module.module_title}}</li>
+                <li class="nav-header">{{module.module}}</li>
                 <li ng-repeat="paver in module.pavers" ng-class="{active: ('{{$parent.$index + '-' + $index}}' == current)}">
                     <a ng-click="activate('{{$parent.$index + '-' + $index}}')" ng-disabled="!paver.type">
-                        <i ng-class="{'icon-pencil' : {{ paver.type == 'quiz' }},
-                        'icon-film' : {{ paver.type == 'video' }},
-                        'icon-book' : {{ paver.type == 'template' }},
-                        'icon-edit' : {{ paver.type == 'exercise' }} }"></i>
-                        {{paver.paver_title}}
+                        <i ng-class="{'icon-pencil' : {{ paver.icon == 'quiz' }},
+                        'icon-film' : {{ paver.icon == 'video' }},
+                        'icon-book' : {{ paver.icon == 'template' }},
+                        'icon-edit' : {{ paver.icon == 'exercise' }},
+                        'icon-file' : {{ paver.icon == undefined }} }"></i>
+                        {{paver.paver}}
                     </a>
                 </li>
             </ul>
