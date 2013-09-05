@@ -18,7 +18,7 @@
                 {
                     "paver" : "Exercise",
                     "icon" : "exercise",
-                    "text" : "This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size. Tools should be included in either the intro text or ending text",
+                    "text" : "<p>This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size. Tools should be included in either the intro text or ending text.</p>",
                     "template" : "/partials/trails/trail_123/exercise1.html",
                     "video" : {
                         "id" : "efAUCG9oTb8",

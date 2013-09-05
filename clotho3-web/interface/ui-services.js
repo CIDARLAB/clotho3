@@ -505,6 +505,12 @@ Application.Interface.provider("$dialog", function(){
 
             // The actual `$dialog` service that is injected in controllers.
             return {
+
+                //CUSTOM
+                backdrop : function(zindex) {
+
+                },
+
                 // Creates a new `Dialog` with the specified options.
                 dialog: function(opts){
                     return new Dialog(opts);
@@ -854,4 +860,34 @@ Application.Interface.service('$caret', ['$log', function($log) {
     };
 
     return functions;
+}]);
+
+
+//note - jQuery reliance
+//todo - rewrite to use $dialog service
+Application.Interface.service('$focus', ['$document', '$timeout', function($document, $timeout) {
+    var maxZ = Math.max.apply(null,
+        $.map($('body *'), function(e,n) {
+            if ($(e).css('position') != 'static')
+                return parseInt($(e).css('z-index')) || 1;
+        })
+    );
+
+    var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
+
+    var addBackdrop = function(zindex) {
+        $document.find('body').append(backdrop.css("z-index", zindex || 1000));
+        $timeout(function() {backdrop.addClass('in')});
+    };
+
+    var removeBackdrop = function() {
+        backdrop.remove();
+    };
+
+
+    return {
+        maxZ : maxZ,
+        addBackdrop : addBackdrop,
+        removeBackdrop : removeBackdrop
+    }
 }]);

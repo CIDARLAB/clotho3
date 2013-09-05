@@ -82,6 +82,7 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         //if no dependencies listed, don't need to compile
         if (!transcludes) {
             deferred.resolve(trail);
+            return deferred.promise;
         }
 
         var final_contents = [],
@@ -181,7 +182,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     load.text = function loadText(text) {
         if (!text) return $q.when();
 
-        //$compile just in case you put something angular in here
+        //todo - ensure html, if not then surround with tag
+
         return $q.when(text);
     };
 
@@ -192,7 +194,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $scope.videoParams = (!!obj.params) ? obj.params : {};
 
         //note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
-        var template = '<div><div youtube="' + videoId + '" params="videoParams" on-complete="next()"></div></div>';
+        var template = '<div style="background-color: #efefef"><div youtube="' + videoId + '" params="videoParams" on-complete="next()"></div></div>';
 
         //todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
         return $timeout(function() {
@@ -251,34 +253,35 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         //todo - error callbacks
 
         var loading = $q.defer();
-        $scope.content = "loading..";
+        $scope.content = '<div class="alert alert-info"><p>Loading content...</p></div>';
 
         loading.promise = $q.all({
             css : Application.css(paver.css),
             mixin: Application.mixin(paver.mixin)
         })
         .then(function() {
-            console.log('loading script');
+            //console.log('loading script');
 
             return Application.script(paver.script)
 
         })
         .then(function (){
-            console.log('loading content');
+            //console.log('loading content');
 
             return $q.all({
-                text : load.text(paver.text),
+                intro : load.text(paver.intro),
                 video : load.video(paver.video),
                 template : load.template(paver.template),
-                quiz : load.quiz(paver.quiz)
+                quiz : load.quiz(paver.quiz),
+                outro : load.text(paver.outro)
             });
         })
         .then(function(content) {
-            console.log(loading, content);
+            //console.log(loading, content);
 
-            var contentText = (content.text || "") + (content.video || "") + (content.template || "") + (content.quiz || "");
+            var contentText = (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "");
 
-            console.log(contentText);
+            //console.log(contentText);
 
             $scope.content = $compile(contentText)($scope);
 

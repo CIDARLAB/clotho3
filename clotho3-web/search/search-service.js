@@ -131,8 +131,11 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
     };
 
     var submit = function (query) {
-        if (typeof query == 'undefined')
+        if (!query)
             query = display.query;
+
+        console.log(query);
+
         if (!!query) {
             Clotho.submit(query).then(function(result){
                 ClientAPI.say({text:"Return value: " + result});

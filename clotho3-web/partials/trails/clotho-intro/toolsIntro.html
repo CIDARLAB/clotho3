@@ -1,0 +1,18 @@
+<div class="alert alert-info">
+
+    <div class="control-group clearfix">
+        <div class="span6 pull-left">
+            <label class="control-label" for="seq">Enter your sequence</label>
+            <div class="controls">
+                <input type="text" id="seq" placeholder="DNA Sequence" ng-model="sequence" ng-init="sequence = 'actacgta'">
+            </div>
+        </div>
+        <div class="span6 pull-right">
+            <label class="control-label" for="clothorun">Reverse Complement</label>
+            <div class="controls">
+                <input type="text" id="clothorun" placeholder="Reverse Complement" ng-model="sequence" clotho-run="revcomp" disabled>
+            </div>
+        </div>
+    </div>
+
+</div>

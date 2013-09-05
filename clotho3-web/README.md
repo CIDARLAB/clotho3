@@ -54,18 +54,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 ### Current Tasks
 
 - rewrite trails
-    - example of assertion quiz
     - todo
         - tempalte / templateUrl
-        - video as object (url, params) -- handle in compile
-
-- rewrite clickOutside, with activate attr, deregister automatically w/o events
 
 - anderson lab site
     - slideshow directive
     - people page with ng-repeat
-
-- ensure server runs EMACS5 (e.g. Object.Keys)
 
 - finish schema editor -- verify with stephanie
     - methods section
@@ -82,6 +76,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - avoid ui-directives.js etc.
     - reduce template use
 
+
+-typeahead with Clotho.query() promise as async match -- get working when not in controller
+    - custom template: http://stackoverflow.com/questions/18245834/bootstrap-ui-typeahead-display-more-than-one-property-in-results-list/18251561#18251561
+
 - API
     - Socket events in own layer (outside PubSub)
     - verify collector updates on set() and destroy() and get()
@@ -91,15 +89,16 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - Trails
-    - rewrite trails for new style
     - demo trail
         - add explanation text, multiple components alongside
     - youtube directive
-        - extract param for autoplay
+        - extract param for autoplay in attrs
         - slideout attribute (show only when request, don't autoplay)
         - listen for changes to id, recompile
+    - $focus service - use for search bar input, etc.
     - make quiz a directive
         - check gradeCallback
+        - offering hints
     - tool -- how to load?
         - clotho-run is easy...
         - widgets?
@@ -148,6 +147,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - editor
+    - reset tests on changing id, editMode, etc.
     - replace internal HTML, not whole thing (closeable directive)
     - use "ID" not "UUID"
     - dependencies field should query other functions
@@ -186,11 +186,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - need to handle drop + other events
 
 
-- FUTURE
-    - move to angular 1.2.0
-    - angularUI update
-
-
 - plasmid editors to check out
     - benchling
     - sparkDNA
@@ -205,6 +200,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - bootstrapping apps without ng-view (just use ng-include or templates)
     - use ng 1.2.0 - routes not included by default
+    - register app id with module
 
 
 - break up UI directives, filters, etc. into modules
@@ -220,8 +216,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - favorite() API method - and unfavorite() and dislike()
 
-
-- clickOutside handlers - better logic esp. for ID
 
 
 UI STUFF
@@ -262,13 +256,6 @@ UI STUFF
 
 
 
-- remove listeners
-    - see $scope.$watch:
-        - deregistration returned as function to invoke later
-        - http://www.bennadel.com/blog/2480-Unbinding-watch-Listeners-In-AngularJS.htm
-    - reg app ID with each app
-
-
 
 - Refine PubSub / communication
     - REMOVE SOCKET LISTENERS (only listen to PubSub)
@@ -281,17 +268,11 @@ UI STUFF
 
 
 - Routing
-    - app with no routes (i.e. for widgets) ???
     - test asynchronously adding routes via controller
         - reference
            - http://stackoverflow.com/questions/13153121/how-to-defer-routes-definition-in-angular-js
            - https://groups.google.com/forum/#!msg/angular/mrcy_2BZavQ/Mqte8AvEh0QJ
            - http://stackoverflow.com/questions/13681116/angularjs-dynamic-routing
-
-
-
-- deep-linking for search bar and editor
-    - http://stackoverflow.com/questions/14974271/can-you-change-a-path-without-reloading-the-controller-in-angularjs
 
 
 

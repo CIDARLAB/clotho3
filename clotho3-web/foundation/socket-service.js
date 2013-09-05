@@ -55,10 +55,13 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
 
         socket.onmessage = function (obj) {
 
-            // testing
-            //console.log('SOCKET\treceiving: ' + obj.data);
+
 
             obj = JSON.parse(obj.data);
+
+            // testing
+            console.log('SOCKET\treceived', obj);
+
             var channel = obj.channel;
             var requestId = obj.requestId;
             var data = obj.data;

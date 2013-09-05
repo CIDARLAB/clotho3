@@ -3,7 +3,7 @@
     "type" : "function",
     "schema" : "Function",
     "id" : "aa7f191e810c19729de86101",
-    "code" : "function revcomp(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]});  }",
+    "code" : "function revcomp(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c' }; var reversed = string.split('').reverse().join(''); return reversed.replace(/[acgt]/g, function(i) {return map[i]});  }",
     "language" : "JAVASCRIPT",
     "description" : "This function should reverse complement a string",
     "precondition" : "",
@@ -21,16 +21,16 @@
     ],
     "tests" : [
         {
-            "args" : ["Reverse Me!"],
+            "args" : ["aaccgt"],
             "output" : {
-                "value" : "!eM esreveR",
+                "value" : "acggtt",
                 "type" : "VALUE"
             }
         },
         {
-            "args" : ["Another test"],
+            "args" : ["SHORTCOMING"],
             "output" : {
-                "value" : "tset rehtonA",
+                "value" : "GNIMONTROHS",
                 "type" : "VALUE"
             }
         }

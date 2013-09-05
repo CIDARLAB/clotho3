@@ -44,37 +44,38 @@ Application.Interface.directive('uiEvent', ['$parse',
 // future - to make more universal, see:
 // https://raw.github.com/cowboy/jquery-outside-events/v1.1/jquery.ba-outside-events.js
 // angular way of creating ng-directives
-// note - Requires manual activiation to avoid too many $digests()
-//      - activate with $scope.$broadcast('$event:$active')
 Application.Interface.directive('clickOutside', ['$document', '$parse', function($document, $parse) {
-    return function(scope, element, attr, ctrl) {
-        var handler = function(event) {
-            //todo - rewrite without jQuery.has()
-            if (element.has(event.target).length == 0)
-                scope.$safeApply(
-                    $parse(attr['clickOutside'])(scope, {$event: event})
-                );
+    return function(scope, element, attr) {
+
+        //todo - add watch for action
+        var clickAction = $parse(attr['clickOutside']),
+            active;
+
+        attr.$observe('clickOutsideActive', function(value) {
+            active = !!value;
+        });
+
+        var handler = function (event) {
+
+            if (active) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (element.has(event.target).length == 0)
+                    scope.$apply( clickAction(scope, {$event:event}) );
+
+                //todo - how handle deregistration???
+                /*$document.bind('click', function() {
+                 active = false;
+                 })*/
+            }
         };
 
-        //kill on scope desctruction
+        $document.bind('click', handler);
+
         scope.$on('$destroy', function() {
             $document.unbind('click', handler);
-        });
-
-        //custom events
-        scope.$on("clickOutside:$active", function(event, id) {
-            if (scope.$id == id) {
-                event.preventDefault();
-                $document.bind('click', handler);
-            }
-        });
-
-        scope.$on("clickOutside:$inactive", function(event, id) {
-            if (scope.$id == id) {
-                event.preventDefault();
-                $document.unbind('click', handler);
-            }
-        });
+        })
     }
 }]);
 

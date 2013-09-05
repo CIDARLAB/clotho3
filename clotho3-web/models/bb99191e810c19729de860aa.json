@@ -12,23 +12,32 @@
                 {
                     "paver" : "Intro to DNA",
                     "icon" : "video",
-                    "text" : "<p>This is some intro text. It should be HTML, particularly if it's more than just a paragraph. That might get tricky if oyu want to anything more than simple tags (i.e. something with quotes will need to be escaped).</p>",
+                    "intro" : "<p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p>",
                     "video" : "http://www.youtube.com/embed/TcokQWySo4Y"
                 },
                 {
                     "paver" : "Reverse Complement",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg"
+                    "icon" : "exercise",
+                    "intro" : "<p>DNA is double stranded, but we represent it as a single strand for convenience.  Often you’ll need to know the sequence of the other strand (the reverse-complement).</p>",
+                    "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
+                    "quiz" : {
+                        "title" : "Reverse Complement",
+                        "type" : "fillin",
+                        "question" : "What is the reverse complement of the sequence <code>ACCTAGT</code>?"
+                    }
                 },
                 {
                     "paver" : "Tools in Clotho",
-                    "icon" : "video",
-                    "video" : "http://www.youtube.com/embed/rhguyAUGN6A"
+                    "icon" : "exercise",
+                    "intro" : "<p>Clotho can automate several common tasks, such as reverse complementing a sequence.</p>",
+                    "template" : "/partials/trails/clotho-intro/toolsIntro.html"
                 },
                 {
                     "paver" : "Scripting in Clotho",
-                    "icon" : "video",
-                    "video" : "http://www.youtube.com/embed/08MUBVp2RQ4"
+                    "icon" : "exercise",
+                    "intro" : "<p>Clotho commands can also be issued from the search bar.</p>",
+                    "template" : "/partials/trails/clotho-intro/scriptingIntro.html",
+                    "mixin" : "/partials/trails/clotho-intro/scriptingIntro.js"
                 }
             ]
         },
