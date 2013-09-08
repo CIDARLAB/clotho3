@@ -6,9 +6,12 @@ package org.clothocad.core.layers.execution;
 
 import com.github.jmkgreen.morphia.annotations.Transient;
 import com.github.jmkgreen.morphia.annotations.PostLoad;
+import java.util.Collection;
+import java.util.Set;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import org.bson.types.ObjectId;
 import org.clothocad.core.datums.util.Language;
 
 /**
@@ -73,5 +76,20 @@ public class ScriptEngineScript implements Script {
         } catch (NoSuchMethodException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public Set<ObjectId> findDependencies() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getSource() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String generateImports(Collection<ObjectId> listedButNotDeclared) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

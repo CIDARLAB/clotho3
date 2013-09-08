@@ -19,4 +19,21 @@
     "schema":"Function",
     "code":"function (str) {return str.split('').join(' ');};",
     "arguments":[{"name":"str", "type":"String"}]
-}]
+},
+{
+    "name":"testModule",
+    "id":"522af4b4b22548ae323e4475",
+    "language":"JAVASCRIPT",
+    "schema":"Module",
+    "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
+},
+{
+    "name":"moduleTestFunction",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function() {return testModule.moduleMethod() + testModule.moduleProperty;};",
+    "arguments":[],
+    "dependencies":["522af4b4b22548ae323e4475"]
+}
+]
+

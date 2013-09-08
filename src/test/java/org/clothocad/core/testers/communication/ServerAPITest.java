@@ -145,14 +145,14 @@ public class ServerAPITest {
         api.create(obj);
         api.create(obj);
         
-        assertEquals(ServerSideAPI.Severity.FAILURE, ((Map) connection.messages.get(1).data).get("class"));
+        assertEquals(ServerSideAPI.Severity.FAILURE, ((Map) connection.messages.get(2).data).get("class"));
 
         obj = new HashMap();
         obj.put("_id", id);
         
         api.create(obj);
         
-        assertEquals(ServerSideAPI.Severity.FAILURE, ((Map) connection.messages.get(2).data).get("class"));
+        assertEquals(ServerSideAPI.Severity.FAILURE, ((Map) connection.messages.get(3).data).get("class"));
     }
 
     public void createWithBadId(){

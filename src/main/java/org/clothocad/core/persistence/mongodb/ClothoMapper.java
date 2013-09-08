@@ -4,19 +4,24 @@
  */
 package org.clothocad.core.persistence.mongodb;
 
+import com.github.jmkgreen.morphia.annotations.Reference;
 import com.github.jmkgreen.morphia.mapping.DefaultMapper;
 import com.github.jmkgreen.morphia.mapping.MappedClass;
 import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MapperOptions;
 import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
 import com.github.jmkgreen.morphia.mapping.lazy.proxy.ProxyHelper;
+import com.mongodb.BasicDBList;
+import com.mongodb.DB;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.DBOnly;
@@ -65,6 +70,10 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
     //XXX: circular reference (this -> cl -> persistor -> this)
     protected ClassLoader cl;
 
+    @Setter
+    protected DB db;
+    
+    
     @Override
     public Map<String, Object> toJSON(Map data) {
         return scrubber.scrub(data);
@@ -80,6 +89,24 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
                 throw new RuntimeException(e);
             }
         } else {
+            //massage any String references to DbRefs
+            //TODO: Make this work with proxies
+            if (mf.hasAnnotation(Reference.class)){
+                if (mf.isMultipleValues()){
+                    Object fieldValue = dbObject.get(mf.getNameToStore());
+                    //XXX: that second check shouldn't do anything
+                    if (fieldValue != null && !(fieldValue instanceof DBRef)){
+                        List values = (List) fieldValue;
+                        for (int i=0; i<values.size(); i++){
+                            Object value = values.get(i);
+                            if (value instanceof String){
+                                values.set(i, new DBRef(db, "data", new ObjectId(value.toString())));
+                            }
+                        }
+                    }
+                }
+            }
+            
             super.readMappedField(dbObject, mf, entity, cache); //To change body of generated methods, choose Tools | Templates.
         }
     }

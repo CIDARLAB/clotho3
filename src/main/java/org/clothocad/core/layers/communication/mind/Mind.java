@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.Language;
@@ -192,8 +193,12 @@ public final class Mind
         }
     }
     
+    //TODO: clean up interface here
     public Object evalFunction(String code, String name, List args, ScriptAPI api) throws ScriptException {
-        return getEngine().invoke(code, name, args);
+        return getEngine().invoke(code, name, args, api);
     }
 
+    public Object evalFunction(String code, String setup, String name, List args, ScriptAPI api) throws ScriptException {
+        return getEngine().invoke(code, setup, name, args, api);
+    }
 }

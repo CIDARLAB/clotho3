@@ -25,15 +25,22 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.datums.util;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.mapping.MappingException;
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.Add;
@@ -90,6 +97,7 @@ public class ClothoField {
     
     @Replace(encoder="jsonifyFieldType", decoder="decodeFieldType")
     private Class<?> type;
+    private Type subtype;
     private String example;   //A string representation/explanation of an expected value
     private Access access;  
     private boolean reference;
@@ -128,13 +136,13 @@ public class ClothoField {
     }
     
     public String jsonifyFieldType(){
-        return jsonifyFieldType(type);
-    }
-    
-    public static String jsonifyFieldType(Class c){
+        Class c = this.type;
+        
         if (Schema.isSchemaClassName(c.getName())) ///XXX: fix for inner classes
             return Schema.extractIdFromClassName(c.getName());
         if (ObjBase.class.isAssignableFrom(c)) return c.getSimpleName();
+        if (ObjectId.class.isAssignableFrom(c)) return "id";
+        if (Date.class.isAssignableFrom(c)) return "date";
         if (String.class.isAssignableFrom(c) || c.equals(char.class)) return "string";
         if (Boolean.class.isAssignableFrom(c) || c.equals(boolean.class)) return "boolean";
         if (Number.class.isAssignableFrom(c) || 
@@ -145,11 +153,13 @@ public class ClothoField {
                 c.equals(float.class) ||
                 c.equals(double.class)) return "number"; // String.format("number(%s)", c.getSimpleName());
         if (c.isArray() || Collection.class.isAssignableFrom(c)){
+           //todo: parameterize array types;
             return "array";
+            
         }
         if (Map.class.isAssignableFrom(c)) return "object";
         logger.warn("Unable to jsonify field type {}", c.getName());
-        return "?";
+        return "object";
     }
     
     public void decodeFieldType(Map object){
@@ -210,6 +220,35 @@ public class ClothoField {
     
     //notnull
     
-    
+    public static Type getParameterizedType(Type type) {
+        int index = 0;
+        if (type instanceof ParameterizedType) {
+            ParameterizedType ptype = (ParameterizedType) type;
+            if ((ptype.getActualTypeArguments() != null) && (ptype.getActualTypeArguments().length <= index)) {
+                return null;
+            }
+            Type paramType = ptype.getActualTypeArguments()[index];
+            if (paramType instanceof GenericArrayType) {
+                return ((GenericArrayType) paramType).getGenericComponentType();
+            } else {
+                if (paramType instanceof ParameterizedType) {
+                    return paramType;
+                } else {
+                    if (paramType instanceof TypeVariable) {
+                        // TODO: Figure out what to do... Walk back up the to
+                        // the parent class and try to get the variable type
+                        // from the T/V/X
+//						throw new MappingException("Generic Typed Class not supported:  <" + ((TypeVariable) paramType).getName() + "> = " + ((TypeVariable) paramType).getBounds()[0]);
+                        return paramType;
+                    } else if (paramType instanceof Class) {
+                        return (Class) paramType;
+                    } else {
+                        throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                    }
+                }
+            }
+        }
+        return null;
+    }
     
 }
