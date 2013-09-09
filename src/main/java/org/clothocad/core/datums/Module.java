@@ -46,14 +46,22 @@ public class Module extends ObjBase {
         return code.toString();
     }
     
-    public void decodeScript(Map obj){
-        switch (Language.valueOf(obj.get("language").toString())){
+    public void setCode(String code){
+        setCode(code, language);
+    }
+    
+    protected void setCode(String code, Language language){
+        switch (language){
             case JAVASCRIPT:
-                code = new JavaScriptScript(obj.get("code").toString());
+                this.code = new JavaScriptScript(code);
                 break;
             default:
                 throw new UnsupportedOperationException("unsupported language");
-        }
+        }        
+    }
+    
+    public void decodeScript(Map obj){
+        setCode(obj.get("code").toString(), Language.valueOf(obj.get("language").toString()));
     }
     
 //    @PrePersist
@@ -96,5 +104,13 @@ public class Module extends ObjBase {
     
     public String getSetup(){
         return this.code.generateImports(getDependencySet(dependencies));
+    }
+
+    public Function getFunction(String name) {
+        Function function = new Function(name, null, null, null, language);
+        function.dependencies = new Module[]{this};
+        String formatString = "function () { return %s.%s.apply(this,arguments);};";
+        function.setCode(String.format(formatString, this.getName(), name));
+        return function;
     }
 }

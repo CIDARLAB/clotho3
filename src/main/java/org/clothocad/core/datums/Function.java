@@ -29,6 +29,10 @@ public class Function extends Module {
         this.setName(name);
         //this.action = new ScriptEngineScript(name, source, language);
         this.args = arguments;
+        this.language = language;
+        if (language != null){
+            this.setCode(source, language);
+        }
     }
     
     @Reference

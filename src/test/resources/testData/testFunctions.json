@@ -31,7 +31,7 @@
     "name":"moduleTestFunction",
     "language":"JAVASCRIPT",
     "schema":"Function",
-    "code":"function() {return testModule.moduleMethod() + testModule.moduleProperty;};",
+    "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
     "arguments":[],
     "dependencies":["522af4b4b22548ae323e4475"]
 }

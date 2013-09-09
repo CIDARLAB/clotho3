@@ -47,6 +47,7 @@ import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
@@ -547,8 +548,6 @@ public class ServerSideAPI {
             Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    //XXX: should really just create a Function object & use those methods
-                    
                     Function function = persistor.get(Function.class,  persistor.resolveSelector(data.get("id").toString(), true));
                     
                     return mind.evalFunction(functionData.get("code").toString(), function.getSetup(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
@@ -557,7 +556,17 @@ public class ServerSideAPI {
                     return Void.TYPE;
                 }
             }
-
+            //XXX: this whole function is still a mess
+            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")){
+                try {
+                    Function function = persistor.get(Module.class,  persistor.resolveSelector(data.get("id").toString(), true)).getFunction(data.get("function").toString());
+                    
+                    return mind.evalFunction(function.getCode(), function.getSetup(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
+                } catch (ScriptException e) {
+                    logAndSayError("Script Exception thrown", e);
+                    return Void.TYPE;
+                }
+            }
 
             //reflectively (ugh) run function of instance
             ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));

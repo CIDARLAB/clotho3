@@ -33,6 +33,7 @@ import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Module;
 
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.Language;

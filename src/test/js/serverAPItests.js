@@ -170,8 +170,14 @@ asyncTest("login/logout", function(){
 
 module("Functions and Modules")
 testThroughAsync("module scoping",
-        new Message("run", {id:"moduleTestFunction", args:[]}),
+        new Message("run", {id:"moduleTestFunction", args:[1]}),
         function(data){
-            equal(data, 3);
+            equal(data, 4);
+        });
+
+testThroughAsync("invoke module method",
+        new Message("run", {id:"testModule", "function":"moduleMethod", args:[]}),
+        function(data){
+            equal(data, 2);
         });
 //TODO: test property invocation
