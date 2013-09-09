@@ -1,0 +1,12 @@
+{
+    "schema" : "Usage",
+    "type" : "sharable",
+    "fields" : [
+        {
+            "execution" : {
+                "required" : true,
+                "type" : "String"
+            }
+        }
+    ]
+}

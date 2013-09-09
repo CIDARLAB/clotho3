@@ -1,0 +1,16 @@
+{
+    "id" : "19b9ad83cb39da83",
+    "schema" : "Construction File",
+    "name" : "Construction File Demo",
+    "author" : "Maxwell Bates",
+    "fields" : {
+        "description" : "",
+        "notes" : "",
+        "Usage" : {
+
+        },
+        "steps" : [
+
+        ]
+    }
+}

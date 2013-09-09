@@ -7,7 +7,7 @@
     <div class="control-group">
         <label class="control-label" for="schemaName">Name</label>
         <div class="controls">
-            <input type="text" id="schemaName" ng-model="editable.name" ng-disabled="!editMode">
+            <input type="text" id="schemaName" ng-model="editable.name" ng-disabled="!editMode" required>
         </div>
     </div>
 
@@ -46,10 +46,10 @@
 
     <div ng-repeat="field in editable.fields">
         <div class="row-fluid">
-            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name as t.name group by t.category for t in paramTypes" ng-change="parseField(field)">
+            <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name as t.name group by t.category for t in paramTypes" ng-change="parseField(field)" required>
                 <option value="" disabled>Type</option>
             </select>
-            <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name">
+            <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name (no spaces)" required>
             <select ng-model="field.access" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in accessTypes">
                 <option value="" disabled>Access</option>
             </select>
@@ -64,7 +64,7 @@
                 <div ng-show="!!field.constraints">
                     <h5>
                         Constraints
-                        <button class="btn pull-right" type="button" ng-click="field.constraints.push(newConstraint())" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+                        <button class="btn pull-right" type="button" ng-click="addConstraint($index)" ng-disabled="!editMode"><i class="icon-plus"></i></button>
                     </h5>
                     <div ng-repeat="constraint in field.constraints" class="row-fluid">
                         <select ng-model="constraint.type" class="span4" ng-disabled="!editMode" ng-options="t.value as t.name for t in constraintTypes"></select>
@@ -90,7 +90,7 @@
         <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
     </div>
     <div class="form-actions" ng-show="editMode">
-        <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
+        <button type="submit" class="btn btn-primary" ng-click="saveSchema()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
         <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
         <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
         <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>

@@ -279,7 +279,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
     //todo
     //https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c
-    geneticCodes.standard = {}
+    geneticCodes.standard = {};
 
 
 
@@ -442,6 +442,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     /**
      * @name DNA.translate
      * @param {string} sequence RNA Sequence to be translated. DNA will be converted (not transcribed) to RNA.
+     * @param {number} forceOffset Force an offset of 0,1,2 bases as reading frame
      * @returns {string} Polypeptide translated
      */
     var translate = function (sequence, forceOffset) {
@@ -493,7 +494,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     /**
      * @description Determines fragments for each ORF for a given sequence
      * @param sequence
-     * @returns {object} in the form, with frags descending by length:
+     * @returns {boolean|object} false if no proteins (atg...stop), otherwise object in the following form, with frags descending by length:
      {
         sequence : <input sequence>,
         frags : [
@@ -512,7 +513,11 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         var frames = {},
             orfReg = new RegExp('((atg)(.+?)(ta[agr]|tga|t[agr]a))', 'gi');
 
+        //no real proteins
+        if (!orfReg.test(sequence)) return false;
+
         for (var i = 0; i < 3; i++) {
+            frames[i] = {};
             frames[i].sequence = sequence;
             frames[i].frags = [];
 
@@ -541,6 +546,9 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
             longest = 0;
 
         var frames = calcORFs(sequence);
+
+        //no proteins, retruned false
+        if (!frames) return 0;
 
         for (var i = 0; i < frames.length; i++) {
             if (longest < frames[i].longest) {
@@ -737,6 +745,22 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
     var selfComplimentarity = function (rna) {
         //todo calculate 2° structure
+    };
+
+
+
+    /**************
+     Species Specific
+     **************/
+
+    //todo
+    var codonOptimize = function(sequence, species) {
+
+    };
+
+    //todo
+    var findSilentSites = function(sequence, species) {
+
     };
 
 

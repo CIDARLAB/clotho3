@@ -506,11 +506,6 @@ Application.Interface.provider("$dialog", function(){
             // The actual `$dialog` service that is injected in controllers.
             return {
 
-                //CUSTOM
-                backdrop : function(zindex) {
-
-                },
-
                 // Creates a new `Dialog` with the specified options.
                 dialog: function(opts){
                     return new Dialog(opts);
@@ -864,8 +859,8 @@ Application.Interface.service('$caret', ['$log', function($log) {
 
 
 //note - jQuery reliance
-//todo - rewrite to use $dialog service
-Application.Interface.service('$focus', ['$document', '$timeout', function($document, $timeout) {
+//todo - rewrite to use $modal service (esp. for backdrop)
+Application.Interface.service('$focus', ['$document', '$timeout', '$q', function($document, $timeout, $q) {
     var maxZ = Math.max.apply(null,
         $.map($('body *'), function(e,n) {
             if ($(e).css('position') != 'static')
@@ -873,21 +868,100 @@ Application.Interface.service('$focus', ['$document', '$timeout', function($docu
         })
     );
 
+    var setZ = function(zindex, element) {
+        return $q.when(element.css({"z-index": zindex, 'position' : 'relative'}));
+    };
+
+    var bringToFront = function(element) {
+        var newZ = maxZ + 1;
+        setZ(newZ, element);
+        return $q.when(newZ);
+    };
+
+
+    var typeOut = function(element, string, model) {
+        var inputsVal = {input: true, textarea : true, select: true},
+            valType = (!!inputsVal[angular.lowercase(element[0].nodeName)]) ? "val" : "text",
+            timeOut,
+            txtLen = string.length,
+            charInd = 0,
+            deferred = $q.defer();
+
+
+        function setDescendentProperty(obj, desc, val) {
+            var arr = desc.split(".");
+            while(arr.length > 1 && (obj = obj[arr.shift()]));
+            obj[arr.shift()] = val;
+        }
+
+        function typeIt() {
+            console.log('executing', valType, charInd);
+            timeOut = $timeout(function() {
+                charInd++;
+                element[valType](string.substring(0, charInd) + '|');
+                typeIt();
+
+                if (charInd == txtLen) {
+                    element[valType](element[valType]().slice(0, -1)); // remove the '|'
+
+                    //update scope
+                    if (!!model) {
+                        var scope = element.scope();
+                        //todo - handle two layers in
+                        setDescendentProperty(scope, model, string);
+                        scope.$apply();
+                    }
+
+                    deferred.resolve();
+                    $timeout.cancel(timeOut);
+                }
+
+            }, Math.round(Math.random() * (30 - 30)) + 30);
+        }
+
+        typeIt();
+        return deferred.promise;
+    };
+
+
     var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
 
+    //this is gross and hacky
     var addBackdrop = function(zindex) {
-        $document.find('body').append(backdrop.css("z-index", zindex || 1000));
-        $timeout(function() {backdrop.addClass('in')});
+
+        backdrop.bind('click', function (e) {
+            e.preventDefault();
+            removeBackdrop();
+        });
+        $document.find('body').append(backdrop.css("z-index", zindex || maxZ + 1));
+        return $timeout(function() {backdrop.addClass('in')});
     };
 
     var removeBackdrop = function() {
-        backdrop.remove();
+        return $q.when(backdrop.removeClass('in'))
+        .then($timeout(function() {
+            console.log('remove');
+            backdrop.remove()
+        }, 150));
     };
+
+
+
+    //return function to un-highlight
+    var highlightElement = function(el) {
+
+    };
+
+
 
 
     return {
         maxZ : maxZ,
+        setZ : setZ,
+        bringToFront : bringToFront,
+        typeOut : typeOut,
         addBackdrop : addBackdrop,
-        removeBackdrop : removeBackdrop
+        removeBackdrop : removeBackdrop,
+        highlightElement : highlightElement
     }
 }]);

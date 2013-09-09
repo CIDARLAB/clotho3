@@ -3,8 +3,8 @@
 
         <!--input-->
         <div class="input-append">
-            <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit()'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
-            <button class="btn" id="searchBarSubmit" ng-click="submit()">Submit</button>
+            <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
+            <button class="btn" id="searchBarSubmit" ng-click="submit(display.query)">Submit</button>
         </div>
 
         <!--autocomplete -->
@@ -41,8 +41,9 @@
         <!--log-->
         <div class="inline-block" style="position:relative;" ng-init="display.genLogPos()">
             <div class="btn-group">
-                <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log')">
+                <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log'); log.unread = null">
                     <i class="icon-tasks"></i>
+                    <span class="label label-info" ng-if="log.unread">{{ log.unread }}</span>
                 </button>
             </div>
 

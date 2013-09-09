@@ -252,8 +252,10 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         //future in ng-1.2.x, use notify callbacks for updates
         //todo - error callbacks
 
+        console.log(paver.intro, paver.template, paver.video, paver.text);
+
         var loading = $q.defer();
-        $scope.content = '<div class="alert alert-info"><p>Loading content...</p></div>';
+        //$scope.content = '<div class="alert alert-info"><p>Loading content...</p></div>';
 
         loading.promise = $q.all({
             css : Application.css(paver.css),
@@ -268,6 +270,10 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         .then(function (){
             //console.log('loading content');
 
+            if (!!paver.dictionary) {
+                angular.extend($scope, paver.dictionary);
+            }
+
             return $q.all({
                 intro : load.text(paver.intro),
                 video : load.video(paver.video),
@@ -277,7 +283,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             });
         })
         .then(function(content) {
-            //console.log(loading, content);
+            console.log(loading, content);
 
             var contentText = (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "");
 

@@ -152,6 +152,10 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 }
             };
 
+            $scope.resetTests = function() {
+                $scope.testResults = {};
+            }
+
             $scope.queryWrapper = function(schemaType) {
                 return Clotho.query({schema: schemaType}).then(function (result) {
                     return $filter('limitTo')(result, 10);
@@ -198,25 +202,13 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 }
             };
 
-            $scope.submitSchema = function (schema) {
-                //todo - wrapping at all?
-
-                console.log('creating:', schema);
-
-                Clotho.create(schema).then(function (data){
-                    console.log('created!', data);
-                    $scope.editMode = false;
-
-                    //todo - update schemas? Handled by client or server?
-
-                });
-            };
-
             $scope.newField = function() {
                 return {
-                    name: "NewField",
+                    name: "",
                     type: "",
-                    constraints: [],
+                    description: "",
+                    example: "",
+                    constraints: null,
                     access: "PUBLIC"
                 }
             };
@@ -226,6 +218,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.editable.fields.push($scope.newField());
             };
 
+            //note - constraints are processed in saveSchema (link function)
             $scope.newConstraint = function() {
                 return {
                     type: "",
@@ -234,7 +227,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             };
 
             $scope.addConstraint = function(index) {
-                if (angular.isEmpty($scope.editable.fields[index].constraints)) {$scope.editable.fields[index].constraints = [];}
+                if (angular.isEmpty($scope.editable.fields[index].constraints))
+                    $scope.editable.fields[index].constraints = [];
                 $scope.editable.fields[index].constraints.push($scope.newConstraint())
             };
 
@@ -404,6 +398,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                         scope.editMode = true;
                     };
 
+                    scope.createSchema = function(schema) {
+                        //create and set to edit mode, changing buttons
+
+                    };
+
                     scope.reset = function() {
                         scope.form.$setPristine();
                         Clotho.get(scope.uuid).then(function(result) {
@@ -414,6 +413,26 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     scope.save = function() {
                         Clotho.set(scope.editable);
                         scope.editMode = false;
+                    };
+
+                    scope.saveSchema = function () {
+                        //process constraints to object
+                        angular.forEach(scope.editable.fields, function(field) {
+                            console.log(field);
+                            if (field.constraints) {
+                                var constraintsArray = field.constraints;
+                                field.constraints = {};
+                                angular.forEach(constraintsArray, function(constraint) {
+                                    field.constraints[constraint.type] = constraint.value;
+                                });
+                            } else {
+                                field.constraints = null;
+                            }
+                        });
+                        
+                        console.log(scope.editable);
+
+                        scope.save();
                     };
 
                     scope.discard = function() {

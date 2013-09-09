@@ -9,39 +9,35 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
             oldsubmitZ = searchSubmit.css("z-index"),
             maxZ = $focus.maxZ;
 
-        //setup
-        searchInput.val('');
-        searchSubmit.css('position', 'relative');
 
         //add backdrop, highlight input
-        searchInput.css("z-index", maxZ + 2);
-        $focus.addBackdrop(maxZ+1);
-
-        $timeout(function() {
-            //start typing
-            searchInput.val("var result = clotho.run('revcomp', ['acagtgcca'])");
-        }, 500)
+        $focus.setZ(maxZ + 2, searchInput)
+        .then(function() {
+            return $focus.addBackdrop(maxZ+1)
+        })
+        .then(function() {
+            return $focus.typeOut(searchInput,
+                "clotho.run('revcomp', ['acagtgcca'])", 'display.query')
+        })
         .then(function() {
             return $timeout(function() {
                 //fade out search
-                searchInput.css("z-index", oldinputZ);
+                $focus.setZ(oldinputZ, searchInput);
             }, 500)
         })
         .then(function() {
             return $timeout(function() {
                 //focus submit
-                searchSubmit.css("z-index", maxZ + 2);
+                $focus.setZ(maxZ + 2, searchSubmit);
             }, 100)
         })
         .then(function() {
             return $timeout(function() {
                 //submit
-
-                //fixme
                 searchSubmit.click();
 
                 $focus.removeBackdrop();
-                searchSubmit.css("z-index", oldsubmitZ)
+                $focus.setZ(oldsubmitZ, searchSubmit);
             }, 500)
         });
     }

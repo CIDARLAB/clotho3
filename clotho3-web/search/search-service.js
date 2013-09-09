@@ -115,6 +115,7 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
     /***** functions *****/
 
     function receiveMessage (data) {
+        log.unread = (!!log.unread) ? log.unread + 1 : 1;
         log.entries.unshift(data);
         display.show('logSnippet');
         //todo - cancel if new request comes in
