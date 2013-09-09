@@ -113,7 +113,7 @@ public class Persistor{
         Set<ConstraintViolation<?>> violations = new HashSet<>();
         
         for (ObjBase o : getObjBaseSet(obj)){
-            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the current classes
+            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the constraints on currently instantiated classes
             for (ConstraintViolation violation : cvs){
                 log.info("Constraint violation: {}", violation.getMessage());
                 violations.add(violation);
@@ -139,8 +139,9 @@ public class Persistor{
     }
     
     public ObjectId save(ObjBase obj, boolean overwrite) {
-        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
         validate(obj);
+        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
+
         
         if (!overwrite){
             Set<ObjBase> modifiedObjects = new HashSet<>();
@@ -150,6 +151,7 @@ public class Persistor{
             if (modifiedObjects.size() > 0) throw new OverwriteConfirmationException(modifiedObjects);
         }
 
+        //recurse in persistor
         connection.saveAll(relevantObjects);
         return obj.getUUID();
     }
@@ -201,6 +203,7 @@ public class Persistor{
     
     
     //XXX: should return set of possible schemas, not child objects
+    // then should not be used as currently is in save
     private Set<ObjBase> getObjBaseSet(ObjBase obj){
         return getObjBaseSet(obj, new HashSet<ObjBase>());
     }

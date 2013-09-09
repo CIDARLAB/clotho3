@@ -24,10 +24,12 @@ import org.mozilla.javascript.NativeObject;
 //XXX: actually JavaScriptAPI
 public class ScriptAPI {
     ServerSideAPI api;
+    Mind mind;
     
     
     public ScriptAPI(Mind mind, Persistor persistor, String requestId){
         api = new ServerSideAPI(mind, persistor, requestId);
+        this.mind = mind;
     }
 
     public ObjectId create(Map<String, Object> obj) {
@@ -67,6 +69,11 @@ public class ScriptAPI {
         return api.run(data);
     }
  
+    public Object load(Object selector) throws ScriptException {
+        return mind.eval(api.get(selector).get("code").toString(), this);
+    }
+    
+    
     //XXX: augh, would be best if we had scriptengines that could treat maps as native objects
     //TODO: handle multiple languages
     //XXX: doesn't reach values hidden by non-Map/List fields

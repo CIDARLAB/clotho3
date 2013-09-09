@@ -20,4 +20,7 @@ public interface HackEngine {
     
     public Object invokeMethod(Object thiz, String name, Object... args)
         throws ScriptException, NoSuchMethodException; 
+    
+    public void setContext(ScriptContext context);
+    public ScriptContext getContext();
 }

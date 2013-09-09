@@ -48,10 +48,11 @@ public class MongoDBConnection
     }
     
     @Inject
-    public MongoDBConnection(@Named("dbport") int port, @Named("dbhost")String host, @Named("dbname") String dbName, Mapper mapper){
+    public MongoDBConnection(@Named("dbport") int port, @Named("dbhost")String host, @Named("dbname") String dbName, ClothoMapper mapper){
         this.host = host;
         this.port = port;
         this.dbName = dbName;
+        this.mapper = mapper;
         morphia = new Morphia(mapper);
     }
     
@@ -77,7 +78,7 @@ public class MongoDBConnection
     private DBCollection data;
     private DBCollection cred;
     private Datastore dataStore;
-    private Mapper mapper;
+    private ClothoMapper mapper;
 
     @Override
     public void connect() throws UnknownHostException {
@@ -87,7 +88,7 @@ public class MongoDBConnection
         data = db.getCollection(dataCollName);
         cred = db.getCollection(credCollName);
         dataStore = new DatastoreImpl(morphia, connection, dbName);
-        mapper = dataStore.getMapper();
+        mapper.setDb(db);
     }
 
     @Override

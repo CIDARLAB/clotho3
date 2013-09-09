@@ -10,6 +10,7 @@ import com.google.inject.name.Names;
 import java.security.KeyStore;
 import java.util.Properties;
 import org.clothocad.core.layers.communication.Router;
+import org.clothocad.core.persistence.IdUtils;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.security.SecurityModule;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -47,6 +48,7 @@ public class ClothoModule extends AbstractModule {
         //TODO: make router completely DI (?)
         requestInjection(Router.get());
         requestStaticInjection(Schema.class);
+        requestStaticInjection(IdUtils.class);
         
         //XXX: put this somewhere more reasonable
         ServletContextHandler sch = new ServletContextHandler();

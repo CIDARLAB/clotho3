@@ -14,6 +14,7 @@ import org.bson.types.ObjectId;
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
 import com.github.jmkgreen.morphia.annotations.Reference;
+import java.util.Arrays;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -69,12 +70,18 @@ public abstract class ObjBase {
             try {
                 f.setAccessible(true);
                 Object value = f.get(this);
+                if (value == null) continue;
                 //reference might be a collection of references
                 if (java.util.Collection.class.isInstance(value)) {
                     //TODO: not typesafe
                     children.addAll((java.util.Collection) value);
 
-                } else {
+                } 
+                else if (value.getClass().isArray()){
+                    List list = Arrays.asList((Object[])value);
+                    children.addAll(list);
+                }
+                else {
                     children.add((ObjBase) value);
                 }
             } catch (IllegalArgumentException | IllegalAccessException ex) {

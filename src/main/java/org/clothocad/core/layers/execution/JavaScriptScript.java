@@ -4,17 +4,21 @@
  */
 package org.clothocad.core.layers.execution;
 
-import com.github.jmkgreen.morphia.annotations.Transient;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import org.clothocad.core.datums.util.Language;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import lombok.Getter;
+import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.persistence.IdUtils;
 
 /**
  *
  * @author spaige
  */
-public class JavaScriptScript implements Script{
+public class JavaScriptScript implements Script {
     //needs arg names, function name
     
     //how well does one engine for all functions scale?
@@ -23,46 +27,46 @@ public class JavaScriptScript implements Script{
     //TODO: each script function needs to execute in its own scope
     //but
     //script functions should be cached somehow
-    public static ScriptEngine engine = ClothoScriptEngineManager.getEngineByLanguage(Language.JAVASCRIPT);
     
     public JavaScriptScript(){};
     
-    public JavaScriptScript(String name, String source){
+    public JavaScriptScript(String source){
         this.source = source;
-        this.name = name;
     }
     
+    @Getter
     private String source;
-    private String name;
-    
-    @Transient
-    private boolean loaded = false;
-    
-    private void load() throws ScriptException{
-        Object result = null;
-        try {
-            result = engine.get(name);
-        } catch(IllegalArgumentException e){
+
+    @Override
+    public Set<ObjectId> findDependencies() {
+       String strippedSource =  source.replaceAll("\\s+","");
+       Pattern pattern = Pattern.compile( "clotho\\.load\\(\"([0-9a-f]*)\"\\);");
+       Matcher matcher = pattern.matcher(source);
+       Set<ObjectId> output = new HashSet<>();
+       while (matcher.find()){
+           output.add(new ObjectId(matcher.group(1)));
+       }
+       
+       return output;
+    }
+
+    @Override
+    public String generateImports(Collection<ObjectId> imports) {
+        StringBuilder builder = new StringBuilder();
+        String format = "var %s = clotho.load(\"%s\");\n";
+        for (ObjectId id : imports){
+            ObjBase obj = IdUtils.get(id);
+            String name = obj.getName();
+            builder.append(String.format(format, name, id.toString()));
         }
-        if (result == null){
-            engine.eval(source);
-        }
-        
-        loaded = true;
+        builder.append("\n");
+        return builder.toString();
     }
     
-    public Object run(Object... args) throws ScriptException {
-        Invocable invocable = (Invocable) engine;
-        if (!loaded) load();
-        try {
-            Object function = engine.get(name);
-            return invocable.invokeFunction(name, args);
-        } catch (NoSuchMethodException ex) {
-            //should never happen, thanks to load?
-            return null;
-        }
+    @Override 
+    public String toString(){
+        return source;
     }
-    
 
     
 }

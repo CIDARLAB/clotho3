@@ -166,3 +166,18 @@ asyncTest("login/logout", function(){
     };
 });
 // TODO: add tests for listener dereg
+
+
+module("Functions and Modules")
+testThroughAsync("module scoping",
+        new Message("run", {id:"moduleTestFunction", args:[1]}),
+        function(data){
+            equal(data, 4);
+        });
+
+testThroughAsync("invoke module method",
+        new Message("run", {id:"testModule", "function":"moduleMethod", args:[]}),
+        function(data){
+            equal(data, 2);
+        });
+//TODO: test property invocation

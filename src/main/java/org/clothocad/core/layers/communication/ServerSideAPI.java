@@ -47,6 +47,7 @@ import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
@@ -148,23 +149,23 @@ public class ServerSideAPI {
             say("Welcome, " + username, Severity.SUCCESS);
             log.info("User {} logged in", username);
             return true;
-        } catch (AuthenticationException e){
-            logAndSayError("Authentication attempt failed for username "+ username, e);
+        } catch (AuthenticationException e) {
+            logAndSayError("Authentication attempt failed for username " + username, e);
             return false;
         }
     }
 
     public final boolean logout() {
-        if (SecurityUtils.getSubject().isAuthenticated()){
+        if (SecurityUtils.getSubject().isAuthenticated()) {
             String username = SecurityUtils.getSubject().getPrincipal().toString();
             mind.setUsername(username);
             persistor.save(mind);
-            SecurityUtils.getSubject().logout();           
+            SecurityUtils.getSubject().logout();
             say("Logged out", Severity.SUCCESS);
             log.info("User {} logged out", username);
             return true;
         }
-        
+
         say("You are not logged in", Severity.WARNING);
         return false;
     }
@@ -222,7 +223,7 @@ public class ServerSideAPI {
 
     }
 
-    private final void say(String message, Severity severity, String recipients, boolean isUser) {
+    protected void say(String message, Severity severity, String recipients, boolean isUser) {
 
         //Resolve the recipients
         //XXX: doesn't currently handle multiple recipients
@@ -270,7 +271,7 @@ public class ServerSideAPI {
 
 // </editor-fold> 
 // <editor-fold defaultstate="collapsed" desc="Data Manipulation"> 
-    private void send(Message message) {
+    protected void send(Message message) {
         router.sendMessage(mind.getConnection(), message);
     }
 
@@ -426,6 +427,16 @@ public class ServerSideAPI {
             //TODO: create sets author to current user
             ObjectId id = persistor.save(obj);
 
+            //TODO: create as java object and save to force validation and trigger post-create methods
+
+            try {
+                ObjBase realObject = persistor.get(ObjBase.class, id);
+                persistor.save(realObject);
+            } catch (Exception e) {
+                logAndSayError("could not validate object - possibly malformed data?", e);
+            }
+
+
 
             //TODO: Relay the data change to listening clients
             System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
@@ -444,7 +455,7 @@ public class ServerSideAPI {
         //}
     }
 
-    private void logAndSayError(String message, Exception e) {
+    protected void logAndSayError(String message, Exception e) {
         log.error(message, e);
         say(message, Severity.FAILURE);
     }
@@ -537,13 +548,25 @@ public class ServerSideAPI {
             Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    return mind.evalFunction(functionData.get("code").toString(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
+                    Function function = persistor.get(Function.class,  persistor.resolveSelector(data.get("id").toString(), true));
+                    
+                    return mind.evalFunction(functionData.get("code").toString(), function.getSetup(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown", e);
                     return Void.TYPE;
                 }
             }
-
+            //XXX: this whole function is still a mess
+            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")){
+                try {
+                    Function function = persistor.get(Module.class,  persistor.resolveSelector(data.get("id").toString(), true)).getFunction(data.get("function").toString());
+                    
+                    return mind.evalFunction(function.getCode(), function.getSetup(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
+                } catch (ScriptException e) {
+                    logAndSayError("Script Exception thrown", e);
+                    return Void.TYPE;
+                }
+            }
 
             //reflectively (ugh) run function of instance
             ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
@@ -577,9 +600,15 @@ public class ServerSideAPI {
         }
 
         Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
-        Map<String, Object> arguments = data.containsKey("arguments")
-                ? JSON.mappify(data.get("arguments"))
-                : null;
+        List arguments;
+        try {
+            arguments = data.containsKey("arguments")
+                    ? JSON.deserializeList(data.get("arguments").toString())
+                    : null;
+        } catch (JsonParseException ex) {
+            logAndSayError("malformed arguments", ex);
+            return Void.TYPE;
+        }
         Object result = run(function, arguments);
         if (!result.equals(Void.TYPE)) {
             //TODO: Map<String, Object> reply - we need to have a way to designate which request we are responding to
@@ -591,8 +620,10 @@ public class ServerSideAPI {
 
     }
 
-    public final Object run(Function function, Map<String, Object> args) throws ScriptException {
-        return function.execute(args);
+    public final Object run(Function function, List<Object> args) throws ScriptException {
+
+
+        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, requestId));
     }
 
     /**

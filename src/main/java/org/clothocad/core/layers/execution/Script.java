@@ -4,13 +4,19 @@
  */
 package org.clothocad.core.layers.execution;
 
-import javax.script.ScriptException;
+import java.util.Collection;
+import java.util.Set;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author spaige
  */
 public interface Script{
-    public Object run(Object... args) throws ScriptException;
+    public Set<ObjectId> findDependencies();
+    
+    public String getSource();
+
+    public String generateImports(Collection<ObjectId> listedButNotDeclared);
 
 }

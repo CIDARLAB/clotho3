@@ -10,6 +10,7 @@ import com.github.jmkgreen.morphia.annotations.PreLoad;
 import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
+import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.ScriptAPI;
 import org.mozilla.javascript.RhinoException;
@@ -91,8 +94,12 @@ public class MetaEngine {
     private HackEngine getEngine(Language language) {
         if (language == Language.JAVASCRIPT) return new JavaScriptEngine();
         
-        if (!engines.containsKey(language)) engines.put(language, ClothoScriptEngineManager.getEngineByLanguage(language));
-        if (engines.get(language) == null) throw new EngineNotFoundException();
+        if (!engines.containsKey(language)) {
+            engines.put(language, ClothoScriptEngineManager.getEngineByLanguage(language));
+            ScriptEngine engine = engines.get(language);
+            if (engine == null) throw new EngineNotFoundException();
+            engine.setContext(getContext(language));
+        }
         return new WrappedScriptEngine(engines.get(language));
     }
 
@@ -104,15 +111,38 @@ public class MetaEngine {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    
+    public Object invoke(String functionCode, String name, List args, ScriptAPI api) throws ScriptException {
+        return invoke(functionCode, "", name, args, api);
+    }
+    
     //XXX: de-js-ify this!
-    public Object invoke(String code, String name, List args) throws ScriptException {
+    public Object invoke(String functionCode, String setupCode, String name, List args, ScriptAPI api) throws ScriptException {
         try {
             HackEngine engine = getEngine(Language.JAVASCRIPT);
-            engine.eval("var " + name+ " = " + code);
+            ScriptContext context = engine.getContext();
+            injectAPI(api,context);
+            
+            //eval dependencies
+            //XXX: this is terrible terrible, change to module pattern that returns a function
+            engine.eval(setupCode);
+            
+            engine.eval("var " + name+ " = " + functionCode);
+            
+            
             return engine.invokeFunction(name, args.toArray());
+            
         } catch (NoSuchMethodException ex) {
             throw new ScriptException(ex);
         }
     }
     
+    protected String generateDependencies(Language language, Collection<ObjectId> dependencies){
+        switch (language){
+            case JAVASCRIPT:
+                return new JavaScriptScript().generateImports(dependencies);
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
 }

@@ -32,5 +32,20 @@
                 "output":{"value":"halb","type":"VALUE"}
             }
         ]
+    },
+    {
+        "name":"testModule",
+        "id":"522af4b4b22548ae323e4475",
+        "language":"JAVASCRIPT",
+        "schema":"Module",
+        "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
+    },
+    {
+        "name":"moduleTestFunction",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
+        "arguments":[],
+        "dependencies":["522af4b4b22548ae323e4475"]
     }
 ]

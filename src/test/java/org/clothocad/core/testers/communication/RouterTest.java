@@ -102,7 +102,7 @@ public class RouterTest {
         TestConnection connection = new TestConnection("createTest");
         Message message = new Message(Channel.createAll, new Map[]{newPart}, "2");
         sendMessage(message, connection);
-        Message returnMessage = connection.messages.get(1);
+        Message returnMessage = connection.messages.get(2);
         assertMatch(message, returnMessage);
         assertEquals(id.toString(), ((List)returnMessage.data).get(0).toString());
     }
@@ -189,7 +189,7 @@ public class RouterTest {
         
         sendMessage(new Message(Channel.submit, script, "6"), connection);
         
-        assertEquals("CCCAAA", connection.messages.get(1).data);
+        assertEquals("CCCAAA", connection.messages.get(2).data);
         
     }
 

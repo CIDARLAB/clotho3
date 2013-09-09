@@ -38,4 +38,16 @@ public class WrappedScriptEngine implements HackEngine {
     public Object eval(String script, ScriptContext context) throws ScriptException {
         return engine.eval(script, context);
     }
+    
+    @Override
+    public void setContext(ScriptContext context){
+        engine.setContext(context);
+    }
+
+    @Override
+    public ScriptContext getContext() {
+        return engine.getContext();
+    }
+    
+    
 }

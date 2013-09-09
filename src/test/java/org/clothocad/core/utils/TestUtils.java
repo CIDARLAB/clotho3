@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.security.ClothoRealm;
@@ -38,12 +39,13 @@ import org.clothocad.model.Person;
 public class TestUtils {
 
     private static void importTestJSON(Persistor persistor) {
+        ServerSideAPI api = new DummyAPI(persistor);
         ObjectReader reader = new ObjectMapper().reader(Map.class);
         for (File child : new File("src/test/resources/testData").listFiles()){
             try {
                 MappingIterator<Map> it = reader.readValues(child);
                 while (it.hasNext()){
-                    persistor.save(it.next());
+                    api.create(it.next());
                 }
             } catch (JsonProcessingException ex) {
                 log.warn("Could not process {} as JSON", child.getAbsolutePath());
