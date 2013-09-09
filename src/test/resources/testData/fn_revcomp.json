@@ -1,11 +1,11 @@
 {
-    "name" : "reverse",
+    "name" : "revcomp",
     "type" : "function",
     "schema" : "Function",
     "id" : "aa7f191e810c19729de86101",
-    "code" : "function reverse(string) { return string.split('').reverse().join('') }",
+    "code" : "function revcomp(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]});  }",
     "language" : "JAVASCRIPT",
-    "description" : "This function should reverse a string",
+    "description" : "This function should reverse complement a string",
     "precondition" : "",
     "dependencies" : [
         {

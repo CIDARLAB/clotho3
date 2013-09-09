@@ -1,22 +1,36 @@
 [
-{
-    "name":"uppercase",
-    "language":"JAVASCRIPT",
-    "schema":"Function",
-    "code":"function (str) {return str.toUpperCase();};",
-    "arguments":[{"name":"str", "type":"String"}]
-},
-{
-    "name":"lowercase",
-    "language":"JAVASCRIPT",
-    "schema":"Function",
-    "code":"function (str) {return str.toLowerCase();};",
-    "arguments":[{"name":"str", "type":"String"}]
-},
-{
-    "name":"spaceout",
-    "language":"JAVASCRIPT",
-    "schema":"Function",
-    "code":"function (str) {return str.split('').join(' ');};",
-    "arguments":[{"name":"str", "type":"String"}]
-}]
+    {
+        "name":"uppercase",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function (str) {return str.toUpperCase();};",
+        "args":[{"name":"str", "type":"String"}]
+    },
+    {
+        "name":"lowercase",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function (str) {return str.toLowerCase();};",
+        "args":[{"name":"str", "type":"String"}]
+    },
+    {
+        "name":"spaceout",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function (str) {return str.split('').join(' ');};",
+        "args":[{"name":"str", "type":"String"}]
+    },
+    {
+        "name":"reverse",
+        "language" : "JAVASCRIPT",
+        "schema":"Function",
+        "args":[{"type":"string","name":"str"}],
+        "code":"function(str) { return str.split('').reverse().join('') }",
+        "tests":[
+            {
+                "args":["blah"],
+                "output":{"value":"halb","type":"VALUE"}
+            }
+        ]
+    }
+]
