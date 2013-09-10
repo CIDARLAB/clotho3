@@ -1,9 +1,9 @@
 {
-    "id" : "bb99191e810c19729de860ff",
+    "id" : "bb99191e810c19729de860fe",
     "schema" : "Trail",
     "name" : "Learning Clotho",
     "author" : "UC Berkeley",
-    "description" : "<blockquote><p>This is what will ultimately be the demo trail. Let's put a video here or something.</p><p><small>Maxwell Bates</small></p></blockquote>",
+    "description" : "<blockquote><p>This is what will ultimately be the demo trail. Let's put a video here or something.</p><p>You can step through each <b>Paver</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
     "contents" : [
         {

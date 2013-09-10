@@ -25,28 +25,33 @@
             "pavers" : [
                 {
                     "paver" : "Trail",
+                    "controller" : "writingTrailsCtrl",
                     "intro" : "<p>The Trail Schema is the container for the entire trail.</p>",
-                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('Trail')\">{{ demoSchema | json }}</pre>"
+                    "outro" : "<pre ng-init=\"demoSchema = getSchema('Trail')\">{{ demoSchema | json }}</pre>"
                 },
                 {
                     "paver" : "TrailModule",
+                    "controller" : "writingTrailsCtrl",
                     "intro" : "<p>TrailModules are essentially containers for TrailTranscludes and Pavers. They break up content into meaningful blocks.</p>",
-                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('TrailModule')\">{{ demoSchema | json }}</pre>"
+                    "outro" : "<pre ng-init=\"demoSchema = getSchema('TrailModule')\">{{ demoSchema | json }}</pre>"
                 },
                 {
                     "paver" : "TrailTransclude",
+                    "controller" : "writingTrailsCtrl",
                     "intro" : "<p>TrailTranscludes are used to transclude the content of another Trail.</p>",
-                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('TrailTransclude')\">{{ demoSchema | json }}</pre>"
+                    "outro" : "<pre ng-init=\"demoSchema = getSchema('TrailTransclude')\">{{ demoSchema | json }}</pre>"
                 },
                 {
                     "paver" : "Paver",
+                    "controller" : "writingTrailsCtrl",
                     "intro" : "<p>Pavers are the primary unit of content in Trails. They can contain several fields, enumerated below.</p>",
-                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('Paver')\">{{ demoSchema | json }}</pre>"
+                    "outro" : "<pre ng-init=\"demoSchema = getSchema('Paver')\">{{ demoSchema | json }}</pre>"
                 },
                 {
                     "paver" : "Quiz",
+                    "controller" : "writingTrailsCtrl",
                     "intro" : "<p>Quizzes are part of pavers, generating questions dynamically and graded on the server.</p>",
-                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('Quiz')\">{{ demoSchema | json }}</pre>"
+                    "outro" : "<pre ng-init=\"demoSchema = getSchema('Quiz')\">{{ demoSchema | json }}</pre>"
                 }
 
             ]

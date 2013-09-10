@@ -1,8 +1,8 @@
 {
+    "id" : "cc2f87dec2e6d9c71a57af14",
     "schema": "ClothoSchema",
     "language": "JSONSCHEMA",
     "name": "Trail",
-    "superClass": "522e3584c2e6d7562ffb9174",
     "description": "Container for Trail. Trails consist primarily of modules, which contain either a transclude or list of pavers.",
     "fields": [
         {

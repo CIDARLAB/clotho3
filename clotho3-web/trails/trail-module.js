@@ -76,6 +76,8 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         //If pass by reference (depending on Clotho.get() ) need to copy to don't edit in dependencies
         //trail = angular.copy(trail);
 
+        //todo - better chaining
+
         var transcludes = trail.dependencies || null,
             deferred = $q.defer();
 
@@ -94,7 +96,9 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
 
         var mixins = (trail.mixin) ? Application.mixin(trail.mixin) : $q.when();
         mixins
-        .then(function() {return $q.all(promises)})
+        .then(function() {
+            return $q.all(promises)
+        })
         //after download all, pluck out the modules we need
         .then(function (downloads) {
 
@@ -106,9 +110,6 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
 
             //iterate through trail, pushing in modules
             angular.forEach(trail.contents, function (mod, ind) {
-
-                //testing
-                //console.log(trail.contents[ind]);
 
                 if (typeof mod.transclude == 'undefined') {
                     final_contents.push(mod);
@@ -172,7 +173,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', '$controller', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q, $controller) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.id = $route.current.params.id;
@@ -296,9 +297,15 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         .then(function(content) {
             console.log(loading, content);
 
-            var contentText = (content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "");
+            var contentText = angular.element((content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || ""));
 
-            //console.log(contentText);
+            //check for controller, must be already included (e.g. by mixin)
+            if (paver.controller) {
+                var locals = {};
+                locals.$scope = $scope;
+                var ctrl = $controller(paver.controller, locals);
+                contentText.data('ngControllerController', ctrl);
+            }
 
             $scope.content = $compile(contentText)($scope);
 
@@ -367,7 +374,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $scope.activate(newpos);
     };
 
-    $keypress.on('keydown', {'right' : 'next()', 'left' : 'prev()'}, $scope);
+    $keypress.on('keydown', {'alt-right' : 'next()', 'alt-left' : 'prev()'}, $scope);
 
     $scope.base64icon = base64icon;
 }]);
