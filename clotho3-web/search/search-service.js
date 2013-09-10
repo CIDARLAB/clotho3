@@ -4,7 +4,7 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
 
     /******* config ******/
     var options = {};
-    options.dateFilter = 'short';
+    options.dateFilter = 'mediumTime';
     options.timeFilter = 'timestamp';
 
     /******* data *******/

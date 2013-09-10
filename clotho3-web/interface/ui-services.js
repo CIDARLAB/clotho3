@@ -929,10 +929,11 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', function
     //this is gross and hacky
     var addBackdrop = function(zindex) {
 
-        backdrop.bind('click', function (e) {
+        /*backdrop.bind('click', function (e) {
             e.preventDefault();
             removeBackdrop();
-        });
+        });*/
+
         $document.find('body').append(backdrop.css("z-index", zindex || maxZ + 1));
         return $timeout(function() {backdrop.addClass('in')});
     };

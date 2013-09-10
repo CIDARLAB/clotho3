@@ -28,14 +28,15 @@
     </div>
 
     <h4>
-        Methods - not working yet
-        <button class="btn pull-right" type="button" ng-click="editable.methods.push({name: '', id : ''});" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+        Methods
     </h4>
-
-        {{ editable.methods | json }}
+    <div class="input-append">
+        <input type="text" id="newMethodText" ng-model="newMethodObj" ng-init="newMethodObj = newMethod()" ng-disabled="!editMode" typeahead="opt.id as opt.name for opt in clothoFunctions | filter:$viewValue" typeahead-min-length="0"/>
+        <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!editMode || !newMethodObj"><i class="icon-plus"></i></button>
+    </div>
 
     <div ng-repeat="method in editable.methods">
-        <input type="text" id="method{{ $index }}" ng-model="editable.methods[$index]" typeahead="opt.name for opt in clothoFunctions | filter:$viewValue" typeahead-min-length="0" />
+        {{ method | json }}
     </div>
 
     <h4>
@@ -49,7 +50,7 @@
             <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name as t.name group by t.category for t in paramTypes" ng-change="parseField(field)" required>
                 <option value="" disabled>Type</option>
             </select>
-            <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name (no spaces)" required>
+            <input class="span6" type="text" ng-model="field.name" ng-disabled="!editMode" placeholder="Field Name (no spaces)" restrict-input="findSpacesRegExp" required>
             <select ng-model="field.access" class="span3" ng-disabled="!editMode" ng-options="t.value as t.name for t in accessTypes">
                 <option value="" disabled>Access</option>
             </select>
@@ -58,7 +59,7 @@
             <div class="span6 pull-left">
                 <input class="span12" type="text" ng-model="field.description" ng-disabled="!editMode" placeholder="Field Description">
                 <input ng-if="!field.reference" class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example">
-                <input ng-if="field.reference" class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example" typeahead="opt for opt in queryWrapper(field.type) | filter:$viewValue" typeahead-min-length="0" />
+                <input ng-if="field.reference" class="span12" type="text" ng-model="field.example" ng-disabled="!editMode" placeholder="Field Example" typeahead="opt for opt in querySchemaWrapper(field.type) | filter:$viewValue" typeahead-min-length="0" />
             </div>
             <div class="span6 pull-right">
                 <div ng-show="!!field.constraints">

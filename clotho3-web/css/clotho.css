@@ -98,7 +98,7 @@ SEARCH BAR ONLY
 #clothoSearchbarLogSnippet {
     padding: 3px 12px 4px;
     margin: 5px 5px 0;
-    max-width: 278px;
+    max-width: 260px;
     max-height: 21px;
     overflow: hidden;
     text-overflow: ellipsis;

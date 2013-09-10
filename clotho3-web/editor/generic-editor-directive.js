@@ -101,7 +101,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.clothoFunctions = [];
             Clotho.query({schema: "Function"}).then(function(result) {
-                console.log(result);
                 $scope.clothoFunctions = result;
             });
 
@@ -154,9 +153,9 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.resetTests = function() {
                 $scope.testResults = {};
-            }
+            };
 
-            $scope.queryWrapper = function(schemaType) {
+            $scope.querySchemaWrapper = function(schemaType) {
                 return Clotho.query({schema: schemaType}).then(function (result) {
                     return $filter('limitTo')(result, 10);
                 })
@@ -191,6 +190,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 "array" : "java.utils.Arrays"
             };
 
+            $scope.findSpacesRegExp = /\s/ig;
+
             $scope.parseField = function(field) {
                 //only passed field.value so model maps onto options properly in html
                 if ($scope.simpleTypes[field.type]) {
@@ -200,6 +201,22 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
                     field.reference = true;
                 }
+            };
+
+            $scope.newMethod = function() {
+                return ""
+            };
+
+            $scope.addMethod = function(method) {
+                if (angular.isEmpty($scope.editable.methods)) {$scope.editable.methods = [];}
+                $scope.editable.methods.push(method);
+            };
+
+            $scope.addNewMethod = function() {
+                if (angular.isEmpty($scope.newMethodObj)) return;
+
+                $scope.addMethod($scope.newMethodObj);
+                $scope.newMethodObj = $scope.newMethod();
             };
 
             $scope.newField = function() {

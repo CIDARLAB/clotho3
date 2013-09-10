@@ -49,8 +49,11 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- construction files
+    - decide JSON format
+
 -modules
-    - test extending
+    - test extending (incl. outside of module definition)
 
 
 - upgrade to $modal from angular ui
@@ -59,11 +62,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - finish schema editor -- verify with stephanie
     - handle parameterized fields (e.g. array | module)
     - methods section
-        - typeahead with custom template for methods (show name, add id)
-            - http://stackoverflow.com/questions/18245834/
+        - custom template to show id?
         - way of adding tags (http://jsfiddle.net/joshdmiller/hAz5A/)
     - selecting parent should show parent fields (small and disabled)
-    - restrict input so no spaces
     - collect after issue query, save, update editor
 
 
@@ -100,8 +101,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - UI services
-    - help tips service (given object of tips, show appropriately, be able to step through)
- e.g. for methods section
+    - help tips service (as popoverService)
+        - given object of tips and selectors, show appropriately
+        - be able to step through
     - DNA etc.
         - digest cuts, not just ^ or | etc.
 
