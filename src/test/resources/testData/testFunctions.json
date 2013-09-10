@@ -45,7 +45,7 @@
         "language":"JAVASCRIPT",
         "schema":"Function",
         "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
-        "arguments":[],
+        "args":[{"type":"number","name":"i"}],
         "dependencies":["522af4b4b22548ae323e4475"]
     }
 ]

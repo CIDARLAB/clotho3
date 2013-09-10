@@ -49,8 +49,30 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- new schemas
+    - Usage
+        - e.g. for function, construction file, etc.
+    - Construction File
+        - Schemas for steps (digest, pcr, ligation, and all subclasses)
+
+
+- UI services
+    - help tips service (as popoverService)
+        - given object of tips and selectors, show appropriately
+        - be able to step through
+    - DNA etc.
+        - digest cuts, not just ^ or | etc.
+
+
+- quiz
+    - hints
+    - dynamic quesions
+        - parameters for question, answer, generated values
+
+
 - construction files
     - decide JSON format
+
 
 -modules
     - test extending (incl. outside of module definition)
@@ -90,28 +112,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - PCR
         - other pcr types
 
-
-- new schemas
-    - Usage
-        - e.g. for function, construction file, etc.
-    - Trail
-        - Modules, Pavers, <Foo>Paver, Quiz, <Foo>Quiz
-    - Construction File
-        - Schemas for steps (digest, pcr, ligation, and all subclasses)
-
-
-- UI services
-    - help tips service (as popoverService)
-        - given object of tips and selectors, show appropriately
-        - be able to step through
-    - DNA etc.
-        - digest cuts, not just ^ or | etc.
-
-
-- quiz
-    - hints
-    - dynamic quesions
-        - parameters for question, answer, generated values
 
 - anderson lab site
     - slideshow directive

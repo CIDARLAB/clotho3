@@ -35,7 +35,7 @@
                 {
                     "paver" : "Scripting in Clotho",
                     "icon" : "exercise",
-                    "intro" : "<p>Clotho commands can also be issued from the search bar.</p>",
+                    "intro" : "<p>Clotho commands can also be issued from the search bar. Click the button below for a walk-through on using the Search Bar.</p>",
                     "template" : "/partials/trails/clotho-intro/scriptingIntro.html",
                     "mixin" : "/partials/trails/clotho-intro/scriptingIntro.js"
                 }
