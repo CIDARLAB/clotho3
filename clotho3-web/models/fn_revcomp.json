@@ -21,9 +21,9 @@
     ],
     "tests" : [
         {
-            "args" : ["Reverse Me!"],
+            "args" : ["aaaacgt"],
             "output" : {
-                "value" : "!eM esreveR",
+                "value" : "acgtttt",
                 "type" : "VALUE"
             }
         },

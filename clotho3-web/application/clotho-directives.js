@@ -55,7 +55,6 @@ Application.Foundation.directive('clothoRun', ['Clotho', function(Clotho) {
             });
 
             //form array out of arguments if not an array
-            //todo - handle higher arity
             var parseInput = function(input) {
                 return angular.isArray(input) ? input : [input];
             };

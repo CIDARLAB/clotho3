@@ -739,7 +739,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     }
 }]);
 
-Application.Dna.directive('digestHighlight', ['Digest', '$filter', function(Digest, $filter) {
+Application.Dna.directive('digestMark', ['Digest', '$filter', function(Digest, $filter) {
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -758,4 +758,19 @@ Application.Dna.directive('digestHighlight', ['Digest', '$filter', function(Dige
             ngModel.$formatters.push(highlightSites);
         }
     }
+}]);
+
+//todo - highlight digest sites to make them look nice
+Application.Dna.directive('digestHighlight', ['Digest', function(Digest) {
+    return {
+        restrict: 'A',
+        priority: 1100,
+        require: 'ngModel',
+        link : function(scope, element, attrs, ngModel) {
+
+
+
+        }
+    }
+
 }]);

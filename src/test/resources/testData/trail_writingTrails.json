@@ -1,0 +1,55 @@
+{
+    "id" : "bb99191e810c19729de860cf",
+    "schema" : "Trail",
+    "name" : "Writing Trails",
+    "author" : "UC Berkeley",
+    "description" : "<blockquote><p>This trail will walk you through how to write a Trail.</p><p><small>Maxwell Bates</small></p></blockquote>",
+    "mixin" : "/partials/trails/writingTrails/writingTrails-controller.js",
+    "contents" : [
+        {
+            "module" : "Trail Overview",
+            "pavers" : [
+                {
+                    "paver" : "Introduction",
+                    "intro" : "<p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>TrailModule</b>s. <b>TrailModule</b>s contain either a set of <b>Paver</b>s or a <b>TrailTransclude</b>. <b>Paver</b>s are the primary composing unit of a trail, and contain text, templates, videos, quizzes, etc.</p>"
+                },
+                {
+                    "paver" : "Example Trail",
+                    "intro" : "<p>Below is an example trail, in JSON format</p>",
+                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoTrail = getTrail('Combined Trail')\">{{ demoTrail | json }}</pre>"
+                }
+            ]
+        },
+        {
+            "module" : "Trail Schemas",
+            "pavers" : [
+                {
+                    "paver" : "Trail",
+                    "intro" : "<p>The Trail Schema is the container for the entire trail.</p>",
+                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('Trail')\">{{ demoSchema | json }}</pre>"
+                },
+                {
+                    "paver" : "TrailModule",
+                    "intro" : "<p>TrailModules are essentially containers for TrailTranscludes and Pavers. They break up content into meaningful blocks.</p>",
+                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('TrailModule')\">{{ demoSchema | json }}</pre>"
+                },
+                {
+                    "paver" : "TrailTransclude",
+                    "intro" : "<p>TrailTranscludes are used to transclude the content of another Trail.</p>",
+                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('TrailTransclude')\">{{ demoSchema | json }}</pre>"
+                },
+                {
+                    "paver" : "Paver",
+                    "intro" : "<p>Pavers are the primary unit of content in Trails. They can contain several fields, enumerated below.</p>",
+                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('Paver')\">{{ demoSchema | json }}</pre>"
+                },
+                {
+                    "paver" : "Quiz",
+                    "intro" : "<p>Quizzes are part of pavers, generating questions dynamically and graded on the server.</p>",
+                    "outro" : "<pre ng-controller=\"writingTrailsCtrl\" ng-init=\"demoSchema = getSchema('Quiz')\">{{ demoSchema | json }}</pre>"
+                }
+
+            ]
+        }
+    ]
+}

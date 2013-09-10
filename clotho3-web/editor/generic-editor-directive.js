@@ -187,7 +187,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 "number" : "java.lang.Long",
                 "boolean" : "java.lang.Boolean",
                 "object" : "java.util.HashMap",
-                "array" : "java.utils.Arrays"
+                "array" : "java.util.List"
             };
 
             $scope.findSpacesRegExp = /\s/ig;

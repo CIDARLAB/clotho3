@@ -49,6 +49,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- trail Trail using new Schemas
+
 - new schemas
     - Usage
         - e.g. for function, construction file, etc.

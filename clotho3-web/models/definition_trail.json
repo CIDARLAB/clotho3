@@ -12,7 +12,7 @@
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
-            "javaType": "java.utils.Arrays",
+            "javaType": "java.util.List",
             "reference": false
         },
         {
@@ -26,13 +26,23 @@
             "reference": false
         },
         {
+            "name": "mixin",
+            "type": "string",
+            "description": "URL of Angular components to add, before the trail is compiled. Must be prefixed by Application.Extensions._____",
+            "example": "",
+            "constraints": null,
+            "access": "PUBLIC",
+            "javaType": "java.lang.String",
+            "reference": false
+        },
+        {
             "name": "contents",
             "type": "array",
             "description": "Array of Modules. The contents of the trail. Refer to Module and Paver schemas.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
-            "javaType": "java.utils.Arrays",
+            "javaType": "java.util.List",
             "reference": false
         }
     ]

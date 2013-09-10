@@ -79,8 +79,7 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         var transcludes = trail.dependencies || null,
             deferred = $q.defer();
 
-        //if no dependencies listed, don't need to compile
-        if (!transcludes) {
+        if (!transcludes && !trail.mixin) {
             deferred.resolve(trail);
             return deferred.promise;
         }
@@ -89,12 +88,15 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
             promises = [];
 
         //get the transcluded trails... will be fast if in collector already
-        angular.forEach(transcludes, function(id) {
+        (transcludes) && angular.forEach(transcludes, function(id) {
             promises.push(Clotho.get(id));
         });
 
+        var mixins = (trail.mixin) ? Application.mixin(trail.mixin) : $q.when();
+        mixins
+        .then(function() {return $q.all(promises)})
         //after download all, pluck out the modules we need
-        $q.all(promises).then(function (downloads) {
+        .then(function (downloads) {
 
             //reorganize transcludes so can reference by id
             transcludes = {};
@@ -178,6 +180,14 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     $scope.content = $scope.trail.description;
 
     var load = {};
+
+    load.hint = function loadHint(hint) {
+        if (!hint) return $q.when();
+
+        var hintDiv = '<button class="btn pull-right" popover="' + hint + '" popover-trigger="click"><i class="icon-info-sign"></i> Hint</button> ';
+
+        return $q.when(hintDiv);
+    };
 
     load.text = function loadText(text) {
         if (!text) return $q.when();
@@ -275,6 +285,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             }
 
             return $q.all({
+                hint : load.hint(paver.hint),
                 intro : load.text(paver.intro),
                 video : load.video(paver.video),
                 template : load.template(paver.template),
@@ -285,7 +296,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         .then(function(content) {
             console.log(loading, content);
 
-            var contentText = (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "");
+            var contentText = (content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "");
 
             //console.log(contentText);
 

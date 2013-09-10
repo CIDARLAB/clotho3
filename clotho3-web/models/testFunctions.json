@@ -1,0 +1,51 @@
+[
+    {
+        "name":"uppercase",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function (str) {return str.toUpperCase();};",
+        "args":[{"name":"str", "type":"String"}]
+    },
+    {
+        "name":"lowercase",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function (str) {return str.toLowerCase();};",
+        "args":[{"name":"str", "type":"String"}]
+    },
+    {
+        "name":"spaceout",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function (str) {return str.split('').join(' ');};",
+        "args":[{"name":"str", "type":"String"}]
+    },
+    {
+        "name":"reverse",
+        "language" : "JAVASCRIPT",
+        "schema":"Function",
+        "args":[{"type":"string","name":"str"}],
+        "code":"function(str) { return str.split('').reverse().join('') }",
+        "tests":[
+            {
+                "args":["blah"],
+                "output":{"value":"halb","type":"VALUE"}
+            }
+        ]
+    },
+    {
+        "name":"testModule",
+        "id":"522af4b4b22548ae323e4475",
+        "language":"JAVASCRIPT",
+        "schema":"Module",
+        "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
+    },
+    {
+        "name":"moduleTestFunction",
+        "language":"JAVASCRIPT",
+        "schema":"Function",
+        "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
+        "args":[{"type":"number","name":"i"}],
+        "dependencies":["522af4b4b22548ae323e4475"]
+    }
+]
