@@ -10,6 +10,7 @@ Application.Trails.directive('youtube', [function() {
             videoId : '@youtube',
             params : '=?',
             autoplay: '@?',
+            startMini: '@?',
             onComplete : '&?'
         },
         //template: '<iframe width="{{ params.width }}" height="{{ params.height }}" ng-src="https://www.youtube.com/embed/{{ params.videoId }}?enablejsapi=1&modestbranding=1&rel=0&version=3&playerapiid=trailPlayer&autoplay={{ params.autoplay }}&autohide={{ params.autohide }}&start={{ params.start }}&end={{ params.end }}" frameborder="0" allowfullscreen="1"></iframe>',
@@ -30,7 +31,7 @@ Application.Trails.directive('youtube', [function() {
                         height : 395,
                         videoId : scope.videoId,
                         playerVars : {
-                            autoplay : 1,
+                            autoplay : (!scope.autoplay && !scope.startMini) ? 0 : 1,
                             autohide : 1,
                             rel : 0
                         },
@@ -48,8 +49,22 @@ Application.Trails.directive('youtube', [function() {
                         }
                     };
 
+                    scope.convertToPlayer = function() {
+                        element.removeClass("btn btn-large btn-primary");
+                        createYoutubePlayer();
+                    };
 
-                    scope.player = new YT.Player(element[0], scope.params);
+                    if (!!scope.startMini) {
+                        element.addClass("btn btn-large btn-primary");
+                        element.text('Play Video');
+                        element.bind('click', scope.convertToPlayer);
+                    } else {
+                        createYoutubePlayer()
+                    }
+
+                    function createYoutubePlayer () {
+                        scope.player = new YT.Player(element[0], scope.params);
+                    }
                 }
             }
         }
@@ -230,7 +245,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         //note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
         //add this attr to move to next automatically on-complete="next()"
-        var template = '<div><div youtube-mini="' + videoId + '" params="videoParams"></div></div>';
+        var template = '<div><div youtube="' + videoId + '" params="videoParams" start-mini="'+ (obj.mini || true) +'" autoplay="'+ (obj.autoplay || true) +'"></div></div>';
 
         //todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
         return $timeout(function() {
