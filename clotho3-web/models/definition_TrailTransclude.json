@@ -3,7 +3,7 @@
     "schema": "ClothoSchema",
     "language": "JSONSCHEMA",
     "name": "TrailTransclude",
-    "description": "Alternative to Paver, transclude the modules of another Trail (whose id must be listed in Trail.dependencies)",
+    "description": "Alternative to Page, transclude the Chapters of another Trail (whose id must be listed in Trail.dependencies)",
     "fields": [
         {
             "name": "id",
@@ -16,9 +16,9 @@
             "reference": false
         },
         {
-            "name": "modules",
+            "name": "chapters",
             "type": "string",
-            "description": "Can take one of three forms: 'all' to transclude all modules, '#' to transclude a single module, or '#-#' to give a start and end module to transclude",
+            "description": "Can take one of three forms: 'all' to transclude all chapter, '#' to transclude a single chapter, or '#-#' to give a start and end chapter to transclude",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",

@@ -7,7 +7,7 @@
     "mixin" : "/partials/trails/writingTrails/writingTrails-controller.js",
     "contents" : [
         {
-            "module" : "Trail Overview",
+            "chapter" : "Trail Overview",
             "pavers" : [
                 {
                     "paver" : "Introduction",
@@ -23,7 +23,7 @@
             ]
         },
         {
-            "module" : "Trail Schemas",
+            "chapter" : "Trail Schemas",
             "pavers" : [
                 {
                     "paver" : "Trail",

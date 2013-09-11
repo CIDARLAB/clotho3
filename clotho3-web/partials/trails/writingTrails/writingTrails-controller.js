@@ -19,7 +19,7 @@ Application.Extensions.controller('writingTrailsCtrl', ['$compile', '$scope', 'C
 
     //temporary hack while Trail schema can't be imported
     $scope.getTrailHack = function() {
-        return $http.get('/partials/trails/writingTrails/definition_trail.json').then(function(data) {
+        return $http.get('/models/definition_trail.json').then(function(data) {
             return data.data;
         });
     }

@@ -3,12 +3,12 @@
     "schema": "ClothoSchema",
     "language": "JSONSCHEMA",
     "name": "Trail",
-    "description": "Container for Trail. Trails consist primarily of modules, which contain either a transclude or list of pavers.",
+    "description": "Container for Trail. Trails consist primarily of Chapters, which contain either a transclude or list of Pages.",
     "fields": [
         {
             "name": "dependencies",
             "type": "array",
-            "description": "Array of ID strings. Dependencies are downloaded at initial stage of Trail compilation, must be defined here if transcluding modules from other Trails",
+            "description": "Array of ID strings. Dependencies are downloaded at initial stage of Trail compilation, must be defined here if transcluding Chapters from other Trails",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -38,7 +38,7 @@
         {
             "name": "contents",
             "type": "array",
-            "description": "Array of Modules. The contents of the trail. Refer to Module and Paver schemas.",
+            "description": "Array of Chapters. The contents of the trail. Refer to Chapter and Page schemas.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",

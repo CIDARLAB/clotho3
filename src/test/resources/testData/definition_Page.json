@@ -2,13 +2,13 @@
     "id" : "cc2f87dec2e6d9c71a57af11",
     "schema": "ClothoSchema",
     "language": "JSONSCHEMA",
-    "name": "Paver",
-    "description": "Paver superclass. Defines the content for each unit of a Trail. Content fields are (from top to bottom of rendered page): intro, video, template, quiz, outro. Files can be added via (ordered by load time): mixin, css, script, <render content>, onload",
+    "name": "Page",
+    "description": "Defines the content for each unit of a Trail. Content fields are (from top to bottom of rendered page): intro, video, template, quiz, outro. Files can be added via (ordered by load time): mixin, css, script, <render content>, onload",
     "fields": [
         {
-            "name": "paver",
+            "name": "title",
             "type": "string",
-            "description": "Title of the Paver",
+            "description": "Title of the Page",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -28,7 +28,7 @@
         {
             "name": "intro",
             "type": "string",
-            "description": "HTML to display at top of Paver content",
+            "description": "HTML to display at top of Page content",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -68,7 +68,7 @@
         {
             "name": "outro",
             "type": "string",
-            "description": "HTML to display at bottom of Paver content",
+            "description": "HTML to display at bottom of Page content",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -88,7 +88,7 @@
         {
             "name": "controller",
             "type": "string",
-            "description": "Name of controller to apply for whole paver (all content components) - must already be included (e.g. via mixin())",
+            "description": "Name of controller to apply for whole Page (all content components) - must already be included (e.g. via mixin())",
             "example": "MyController",
             "constraints": null,
             "access": "PUBLIC",
@@ -98,7 +98,7 @@
         {
             "name": "mixin",
             "type": "string",
-            "description": "URL of javascript file containing script or Angular component to add (filter, controller, service, directive, factory, provider, etc.). Will only be downloaded once. Angular components must be prefixed Application.Extensions.___ .... Will be added to the stack before the paver and relevant controllers are instantiated.",
+            "description": "URL of javascript file containing script or Angular component to add (filter, controller, service, directive, factory, provider, etc.). Will only be downloaded once. Angular components must be prefixed Application.Extensions.___ .... Will be added to the stack before the Page and relevant controllers are instantiated.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -108,7 +108,7 @@
         {
             "name": "css",
             "type": "string",
-            "description": "URL of CSS to be downloaded, will only be downloaded one time and before paver is instantiated.",
+            "description": "URL of CSS to be downloaded, will only be downloaded one time and before Page is instantiated.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -118,7 +118,7 @@
         {
             "name": "script",
             "type": "string",
-            "description": "URL of javascript file containing a script to to execute before the paver loads. Will be executed every time the paver is loaded.",
+            "description": "URL of javascript file containing a script to to execute before the Page loads. Will be executed every time the Page is loaded.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -128,7 +128,7 @@
         {
             "name": "onload",
             "type": "string",
-            "description": "URL of javascript file to be executed after the paver has loaded and been inserted into the DOM.",
+            "description": "URL of javascript file to be executed after the Page has loaded and been inserted into the DOM.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",

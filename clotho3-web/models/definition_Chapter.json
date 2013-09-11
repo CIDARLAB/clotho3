@@ -2,13 +2,13 @@
     "id" : "cc2f87dec2e6d9c71a57af13",
     "schema": "ClothoSchema",
     "language": "JSONSCHEMA",
-    "name": "TrailModule",
-    "description": "Unit within Trails, containing pavers or a transclude (must define one)",
+    "name": "Chapter",
+    "description": "Unit within Trails, containing Pages or a TrailTransclude (you must define one, and only one)",
     "fields": [
         {
-            "name": "module",
+            "name": "chapter",
             "type": "string",
-            "description": "Title of Module",
+            "description": "Title of Chapter",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -16,9 +16,9 @@
             "reference": false
         },
         {
-            "name": "pavers",
+            "name": "pages",
             "type": "array",
-            "description": "Array of Pavers.",
+            "description": "Array of Pages.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -28,7 +28,7 @@
         {
             "name": "transclude",
             "type": "object",
-            "description": "see TrailTransclude schema. define 'id' and 'modules'",
+            "description": "see TrailTransclude schema. define 'id' and 'chapters'",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",

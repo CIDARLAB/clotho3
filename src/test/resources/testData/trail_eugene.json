@@ -7,10 +7,10 @@
 
     "contents" : [
         {
-            "module" : "Introduction to Eugene",
-            "pavers" : [
+            "chapter" : "Introduction to Eugene",
+            "pages" : [
                 {
-                    "paver" : "Introduction",
+                    "title" : "Introduction",
                     "icon" : "template",
                     "template" : "/partials/trails/boston/eugene.html"
                 }

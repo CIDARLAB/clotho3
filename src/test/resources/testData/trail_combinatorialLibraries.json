@@ -7,25 +7,25 @@
 
     "contents" : [
         {
-            "module" : "Combinatorial Libraries",
-            "pavers" : [
+            "chapter" : "Combinatorial Libraries",
+            "pages" : [
                 {
-                    "paver" : "Introduction",
+                    "title" : "Introduction",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/embed/8BDTS9NK7Zg"
                 },
                 {
-                    "paver" : "Diversity and Sampling",
+                    "title" : "Diversity and Sampling",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/embed/TcokQWySo4Y"
                 },
                 {
-                    "paver" : "Library Design",
+                    "title" : "Library Design",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/embed/rhguyAUGN6A"
                 },
                 {
-                    "paver" : "Selection Methods",
+                    "title" : "Selection Methods",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/embed/08MUBVp2RQ4"
                 }

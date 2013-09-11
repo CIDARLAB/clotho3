@@ -3,11 +3,11 @@
     "schema" : "Trail",
     "name" : "Biosafety Module",
     "author" : "UC Berkeley",
-    "description" : "<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>",
+    "description" : "<blockquote><p>This is a Trail on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
     "contents" : [
         {
-            "module" : "Clotho Directives",
+            "chapter" : "Clotho Directives",
             "pavers" : [
                 {
                     "paver" : "Basic Example",
@@ -36,7 +36,7 @@
             ]
         },
         {
-            "module" : "Demo Quizzes",
+            "chapter" : "Demo Quizzes",
             "pavers" : [
                 {
                     "paver" : "MC Question",

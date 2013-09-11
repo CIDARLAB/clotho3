@@ -7,16 +7,16 @@
 
     "contents" : [
         {
-            "module" : "Introducing Clotho",
-            "pavers" : [
+            "chapter" : "Introducing Clotho",
+            "pages" : [
                 {
-                    "paver" : "Intro to DNA",
+                    "title" : "Intro to DNA",
                     "icon" : "video",
                     "intro" : "<p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p>",
                     "video" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8"
                 },
                 {
-                    "paver" : "Reverse Complement",
+                    "title" : "Reverse Complement",
                     "icon" : "exercise",
                     "intro" : "<p>DNA is double stranded, but we represent it as a single strand for convenience.  Often you’ll need to know the sequence of the other strand (the reverse-complement).</p>",
                     "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
@@ -27,13 +27,13 @@
                     }
                 },
                 {
-                    "paver" : "Tools in Clotho",
+                    "title" : "Tools in Clotho",
                     "icon" : "exercise",
                     "intro" : "<p>Clotho can automate several common tasks, such as reverse complementing a sequence.</p>",
                     "template" : "/partials/trails/clotho-intro/toolsIntro.html"
                 },
                 {
-                    "paver" : "Scripting in Clotho",
+                    "title" : "Scripting in Clotho",
                     "icon" : "exercise",
                     "intro" : "<p>Clotho commands can also be issued from the search bar. Click the button below for a walk-through on using the Search Bar.</p>",
                     "template" : "/partials/trails/clotho-intro/scriptingIntro.html",
@@ -42,65 +42,65 @@
             ]
         },
         {
-            "module" : "Manipulating DNA",
-            "pavers" : [
+            "chapter" : "Manipulating DNA",
+            "pages" : [
                 {
-                    "paver" : "Restriction Digests",
+                    "title" : "Restriction Digests",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
                 },
                 {
-                    "paver" : "Ligation",
+                    "title" : "Ligation",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
                 },
                 {
-                    "paver" : "PCR",
+                    "title" : "PCR",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
                 }
             ]
         },
         {
-            "module" : "Construction Files",
-            "pavers" : [
+            "chapter" : "Construction Files",
+            "pages" : [
                 {
-                    "paver" : "Examining",
+                    "title" : "Examining",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
                 },
                 {
-                    "paver" : "Simulation",
+                    "title" : "Simulation",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
                 },
                 {
-                    "paver" : "Writing",
+                    "title" : "Writing",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
                 }
             ]
         },
         {
-            "module" : "Do it Yourself",
-            "pavers" : [
+            "chapter" : "Do it Yourself",
+            "pages" : [
                 {
-                    "paver" : "Choose a Sequence",
+                    "title" : "Choose a Sequence",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
                 },
                 {
-                    "paver" : "Design a PCR Product",
+                    "title" : "Design a PCR Product",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
                 },
                 {
-                    "paver" : "Write Construction File",
+                    "title" : "Write Construction File",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
                 },
                 {
-                    "paver" : "Simulation",
+                    "title" : "Simulation",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
                 }
