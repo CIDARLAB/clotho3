@@ -3,11 +3,11 @@
     "schema" : "Trail",
     "name" : "Biosafety Module",
     "author" : "UC Berkeley",
-    "description" : "<blockquote><p>This is a module on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>",
+    "description" : "<blockquote><p>This is a Trail on Biosafety. You'll learn about Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
     "contents" : [
         {
-            "module" : "Clotho Directives",
+            "chapter" : "Clotho Directives",
             "pavers" : [
                 {
                     "paver" : "Basic Example",
@@ -18,7 +18,11 @@
                 {
                     "paver" : "Exercise",
                     "icon" : "exercise",
-                    "intro" : "<p>This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size. Tools should be included in either the intro text or ending text.</p>",
+                    "intro" : "<p>This is an introductory paragraph about this exercise. It is just text, for security purposes down the line. You probably are going to want HTML. You can also include a template, as below. You can pass in Video parameters and ids, here the video is made half size. Tools should be included in either the intro text or ending text.</p><p>Just demoing some simple templating that you can do. dictionary is defined as a variable in the paver. Using angular interpolation to show this sequence {{ simpleTemplateValue }}</p>",
+                    "dictionary" : {
+                        "simpleTemplateValue" : "ACGTACGAT",
+                        "templateTemplateValue" : "<b>Interpolated from Dictionary</b>"
+                    },
                     "template" : "/partials/trails/trail_123/exercise1.html",
                     "video" : {
                         "id" : "efAUCG9oTb8",
@@ -32,7 +36,7 @@
             ]
         },
         {
-            "module" : "Demo Quizzes",
+            "chapter" : "Demo Quizzes",
             "pavers" : [
                 {
                     "paver" : "MC Question",

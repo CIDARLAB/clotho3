@@ -7,7 +7,7 @@
 
     "contents" : [
         {
-            "module" : "Automation Tools",
+            "chapter" : "Automation Tools",
             "pavers" : [
                 {
                     "paver" : "Introduction",

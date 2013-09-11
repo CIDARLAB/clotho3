@@ -398,6 +398,7 @@ function generateClothoAPI() {
             //todo
 
             //store models
+            //future - when not sending whole model, extend what exists
             angular.forEach(data, function(sharable) {
                 Collector.storeModel(sharable.id, sharable);
             })

@@ -35,14 +35,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - DOCS
 - API
 
-#### Notes
+#### Angular Notes
 - https://github.com/angular/angular.js/wiki/The-Nuances-of-Scope-Prototypal-Inheritance
 
 ### Personal notes
-
-#### Compatibility
-- avoid directive element names (type E) for IE compatibility, or use document.createElement (i.e. for non-native elements like <widget></widget>)
-    - see AngularUI ie-shiv
 
 
 ## TODOs, Future references, etc.
@@ -53,19 +49,84 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- rewrite trails
-    - todo
-        - tempalte / templateUrl
+- custom person object, add anderson lab
+
+
+-modules
+    - test extending (incl. outside of module definition)
+
+
+
+- DNA + demo trail
+    - PCR functions working
+    - UI directives
+        - digest highlight
+    - start construction files (JSON format)
+
+
+
+
+
+- new schemas
+    - Usage
+        - e.g. for function, construction file, etc.
+    - Construction File
+        - Schemas for steps (digest, pcr, ligation, and all subclasses)
+
+
+- UI services
+    - help tips service (as popoverService)
+        - given object of tips and selectors, show appropriately
+        - be able to step through
+
+
+- quiz
+    - hints
+    - dynamic quesions
+        - parameters for question, answer, generated values
+
+
+- upgrade to $modal from angular ui
+
+
+- finish schema editor -- verify with stephanie
+    - superClass not working on server currently
+    - handle parameterized fields (e.g. array | module)
+    - methods section
+        - custom template to show id?
+        - way of adding tags (http://jsfiddle.net/joshdmiller/hAz5A/)
+    - selecting parent should show parent fields (small and disabled)
+    - collect after issue query, save, update editor
+
+
+- DNA Functions
+    - decide data structure
+    - DNA
+        - required upstream
+            - species specific
+                - codon optimize
+                - silent sites
+        - parse: gb, fasta, embl
+        - BLAST breakout
+    - Digest
+        - import NEB enzymes, use same format
+            - broaden methylation categories: dam, dcm, cpg
+            - import
+                - formats: ftp://ftp.neb.com/pub/rebase/REBASE.DOC
+                - GCG format: ftp://ftp.neb.com/pub/rebase/gcg.txt
+                - also: star, homing, etc. etc. etc. -- write parsers
+        - dep on DNA service new functions
+            - swapout Digest site (need to know ORF) -- not demo
+        - import strider format (REBASE) / NEB format
+    - PCR
+        - other pcr types
+
 
 - anderson lab site
     - slideshow directive
     - people page with ng-repeat
 
-- finish schema editor -- verify with stephanie
-    - methods section
-        - typeahead with custom template for methods
-            - http://stackoverflow.com/questions/18245834/
-    - selecting parent should show parent fields (but they are disabled)
+
 
 - search bar rewrite
     - use typeahead with custom template??
@@ -77,25 +138,25 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - reduce template use
 
 
--typeahead with Clotho.query() promise as async match -- get working when not in controller
+-typeahead
+    - Clotho.query() promise as async match -- get working when not in controller
     - custom template: http://stackoverflow.com/questions/18245834/bootstrap-ui-typeahead-display-more-than-one-property-in-results-list/18251561#18251561
 
+
+
 - API
-    - Socket events in own layer (outside PubSub)
+    - collect queries
     - verify collector updates on set() and destroy() and get()
-        - collect queries
+    - Socket events in own layer (outside PubSub)
     - add-in $dialog for alert() and edit() but don't make dependency
         - remove from anderson_lab dependencies
 
 
 - Trails
-    - demo trail
-        - add explanation text, multiple components alongside
     - youtube directive
         - extract param for autoplay in attrs
         - slideout attribute (show only when request, don't autoplay)
         - listen for changes to id, recompile
-    - $focus service - use for search bar input, etc.
     - make quiz a directive
         - check gradeCallback
         - offering hints
@@ -107,7 +168,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - Trail schema writeup / Trail
     - Trail editor -- req. schema finalized
     - prettyprint directive
-    - start approaching construction files
     - Quizzes
         - answer -> color side nav
         - templates
@@ -123,34 +183,15 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - grunt / yeoman --- javascript project builder
 
 
-- DNA Functions
-    - decide data structure
-    - DNA
-        - required upstream
-            - species specific
-                - codon optimize
-                - silent sites
-        - parse: gb, fasta, embl
-        - BLAST breakout
-    - Digest
-        - import NEB enzymes, use same format
-            - import
-                - formats: ftp://ftp.neb.com/pub/rebase/REBASE.DOC
-                - GCG format: ftp://ftp.neb.com/pub/rebase/gcg.txt
-                - also: star, homing, etc. etc. etc. -- write parsers
-            - broaden methylation categories: dam, dcm, cpg
-        - dep on DNA service new functions
-            - swapout Digest site (need to know ORF) -- not demo
-        - import strider format (REBASE) / NEB format
-    - PCR
-        - other pcr types
+-
 
 
 - editor
-    - reset tests on changing id, editMode, etc.
+    - break up controllers in generic-editor-directive
+        - reset tests on changing id, editMode, etc. -- do once separate controllers
+    - start edit mode on createSchema
     - replace internal HTML, not whole thing (closeable directive)
     - use "ID" not "UUID"
-    - dependencies field should query other functions
     - use accordion for tests div
     - map BSON -> HTML5 data types
     - query for test args

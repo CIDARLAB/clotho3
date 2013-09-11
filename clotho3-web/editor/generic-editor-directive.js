@@ -3,7 +3,7 @@
 //todo - integrate ngFormController --- nested ngForms so validation works
 // then in template: ng-class="{error: myForm.name.$invalid}"
 
-Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', '$filter', function(Clotho, $compile, $parse, $http, $templateCache, $filter) {
+Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', '$filter', '$q', function(Clotho, $compile, $parse, $http, $templateCache, $filter, $q) {
 
     return {
         restrict: 'A',
@@ -101,7 +101,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.clothoFunctions = [];
             Clotho.query({schema: "Function"}).then(function(result) {
-                console.log(result);
                 $scope.clothoFunctions = result;
             });
 
@@ -152,7 +151,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 }
             };
 
-            $scope.queryWrapper = function(schemaType) {
+            $scope.resetTests = function() {
+                $scope.testResults = {};
+            };
+
+            $scope.querySchemaWrapper = function(schemaType) {
                 return Clotho.query({schema: schemaType}).then(function (result) {
                     return $filter('limitTo')(result, 10);
                 })
@@ -184,8 +187,10 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 "number" : "java.lang.Long",
                 "boolean" : "java.lang.Boolean",
                 "object" : "java.util.HashMap",
-                "array" : "java.utils.Arrays"
+                "array" : "java.util.List"
             };
+
+            $scope.findSpacesRegExp = /\s/ig;
 
             $scope.parseField = function(field) {
                 //only passed field.value so model maps onto options properly in html
@@ -198,25 +203,29 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 }
             };
 
-            $scope.submitSchema = function (schema) {
-                //todo - wrapping at all?
+            $scope.newMethod = function() {
+                return ""
+            };
 
-                console.log('creating:', schema);
+            $scope.addMethod = function(method) {
+                if (angular.isEmpty($scope.editable.methods)) {$scope.editable.methods = [];}
+                $scope.editable.methods.push(method);
+            };
 
-                Clotho.create(schema).then(function (data){
-                    console.log('created!', data);
-                    $scope.editMode = false;
+            $scope.addNewMethod = function() {
+                if (angular.isEmpty($scope.newMethodObj)) return;
 
-                    //todo - update schemas? Handled by client or server?
-
-                });
+                $scope.addMethod($scope.newMethodObj);
+                $scope.newMethodObj = $scope.newMethod();
             };
 
             $scope.newField = function() {
                 return {
-                    name: "NewField",
+                    name: "",
                     type: "",
-                    constraints: [],
+                    description: "",
+                    example: "",
+                    constraints: null,
                     access: "PUBLIC"
                 }
             };
@@ -226,6 +235,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 $scope.editable.fields.push($scope.newField());
             };
 
+            //note - constraints are processed in saveSchema (link function)
             $scope.newConstraint = function() {
                 return {
                     type: "",
@@ -234,7 +244,8 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             };
 
             $scope.addConstraint = function(index) {
-                if (angular.isEmpty($scope.editable.fields[index].constraints)) {$scope.editable.fields[index].constraints = [];}
+                if (angular.isEmpty($scope.editable.fields[index].constraints))
+                    $scope.editable.fields[index].constraints = [];
                 $scope.editable.fields[index].constraints.push($scope.newConstraint())
             };
 
@@ -366,11 +377,17 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     }
                     case 'schema' : {
 
-                        $http.get('/editor/schema-partial.html',  {cache: $templateCache})
-                            .success(function(data) {
-                                var el = $compile(data)($scope);
-                                $element.html(el);
-                            });
+                        var getSuperClass = ($scope.editable.superClass) ?
+                            Clotho.get($scope.editable.superClass).then(function(result) {$scope.superClassObj = result})
+                            : $q.when($scope.superClassObj = null);
+
+                        getSuperClass.then(function() {
+                            $http.get('/editor/schema-partial.html',  {cache: $templateCache})
+                                .success(function(data) {
+                                    var el = $compile(data)($scope);
+                                    $element.html(el);
+                                });
+                        });
 
                         break;
                     }
@@ -404,6 +421,11 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                         scope.editMode = true;
                     };
 
+                    scope.createSchema = function(schema) {
+                        //create and set to edit mode, changing buttons
+
+                    };
+
                     scope.reset = function() {
                         scope.form.$setPristine();
                         Clotho.get(scope.uuid).then(function(result) {
@@ -414,6 +436,26 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     scope.save = function() {
                         Clotho.set(scope.editable);
                         scope.editMode = false;
+                    };
+
+                    scope.saveSchema = function () {
+                        //process constraints to object
+                        angular.forEach(scope.editable.fields, function(field) {
+                            console.log(field);
+                            if (field.constraints) {
+                                var constraintsArray = field.constraints;
+                                field.constraints = {};
+                                angular.forEach(constraintsArray, function(constraint) {
+                                    field.constraints[constraint.type] = constraint.value;
+                                });
+                            } else {
+                                field.constraints = null;
+                            }
+                        });
+                        
+                        console.log(scope.editable);
+
+                        scope.save();
                     };
 
                     scope.discard = function() {

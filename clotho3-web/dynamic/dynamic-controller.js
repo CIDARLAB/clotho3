@@ -147,8 +147,8 @@ dynamicCtrl.resolve = function(Clotho, $q, $timeout) {
     var deferred = $q.defer();
 
     $q.all([
-        resolved.model = Clotho.get('sharable_person'),
-        resolved.template_url = '/models/show_template.html'
+        resolved.model = Clotho.get('OLD/sharable_person'),
+        resolved.template_url = '/dynamic/show_template.html'
 
         //testing
         //$timeout(function () {console.log('timeout')}, 1500)

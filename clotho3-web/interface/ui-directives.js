@@ -893,7 +893,7 @@ Application.Interface.provider( '$tooltip', function () {
                             if ( scope.tt_popupDelay ) {
                                 popupTimeout = $timeout( show, scope.tt_popupDelay );
                             } else {
-                                scope.$safeApply( show );
+                                scope.$apply( show );
                             }
                         }
 
@@ -1054,6 +1054,10 @@ Application.Interface.provider( '$tooltip', function () {
                             appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;
                         });
 
+                        //todo - add attr to show by default
+                        //CUSTOM
+
+
                         // if a tooltip is attached to <body> we need to remove it on
                         // location change as its parent scope will probably not be destroyed
                         // by the change.
@@ -1147,6 +1151,26 @@ Application.Interface.directive( 'popoverPopup', function () {
 Application.Interface.directive( 'popover', [ '$compile', '$timeout', '$parse', '$window', '$tooltip', function ( $compile, $timeout, $parse, $window, $tooltip ) {
         return $tooltip( 'popover', 'popover', 'click' );
     }]);
+
+
+
+
+Application.Interface.service('popoverService', [ '$compile', '$timeout', '$parse', '$window', '$tooltip',  function ( $compile, $timeout, $parse, $window, $tooltip ) {
+
+    //todo - hack to show by parameter
+
+    //given an object with popover content and elements to placement
+
+    //append a popover to the DOM
+
+    //add custom options
+
+    //step through each popover in passed object
+
+    //or show them all at once
+
+
+}]);
 
 
 

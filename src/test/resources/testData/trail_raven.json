@@ -7,10 +7,10 @@
 
     "contents" : [
         {
-            "module" : "Intro to Raven",
-            "pavers" : [
+            "chapter" : "Intro to Raven",
+            "pages" : [
                 {
-                    "paver" : "Introduction",
+                    "title" : "Introduction",
                     "type" : "template",
                     "template" : "/partials/trails/boston/raven.html"
                 }

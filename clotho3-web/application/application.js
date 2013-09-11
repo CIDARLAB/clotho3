@@ -77,6 +77,9 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/', {
                 templateUrl:'home/home-partial.html'
             }).
+            when('/about', {
+                templateUrl:'about/about-partial.html'
+            }).
             when('/trails', {
                 templateUrl:'trails/trail_browser-partial.html'
             }).

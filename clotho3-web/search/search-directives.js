@@ -105,11 +105,14 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             };
 
             $scope.showMeHow = function() {
-                console.log("tutorial");
+                Clotho.query({name: 'Learning Clotho'}).then(function (result) {
+                    $location.path('/trails/' + result[0].id);
+                });
             };
 
             $scope.aboutClotho = function() {
-                console.log("about clotho");
+                //$window.open('http://www.clothocad.org/index.php/background/', 'aboutClotho');
+                $location.path('/about')
             };
 
             $scope.toggleTooltips = function() {

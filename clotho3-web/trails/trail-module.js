@@ -1,7 +1,7 @@
 'use strict';
 
 //note - requires youtube iFrame API be present
-Application.Trails.directive('youtube', [function() {
+Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, $compile) {
 
     return {
         restrict : 'EA',
@@ -9,6 +9,8 @@ Application.Trails.directive('youtube', [function() {
         scope: {
             videoId : '@youtube',
             params : '=?',
+            autoplay: '@?',
+            startMini: '@?',
             onComplete : '&?'
         },
         //template: '<iframe width="{{ params.width }}" height="{{ params.height }}" ng-src="https://www.youtube.com/embed/{{ params.videoId }}?enablejsapi=1&modestbranding=1&rel=0&version=3&playerapiid=trailPlayer&autoplay={{ params.autoplay }}&autohide={{ params.autohide }}&start={{ params.start }}&end={{ params.end }}" frameborder="0" allowfullscreen="1"></iframe>',
@@ -21,6 +23,8 @@ Application.Trails.directive('youtube', [function() {
 
                     if (!scope.videoId) return;
 
+                    var videoInfo = Trails.youtubeInfo(scope.videoId);
+
                     //todo - center if width < 700
 
                     //defaults
@@ -29,7 +33,7 @@ Application.Trails.directive('youtube', [function() {
                         height : 395,
                         videoId : scope.videoId,
                         playerVars : {
-                            autoplay : 1,
+                            autoplay : (!scope.autoplay && !scope.startMini) ? 0 : 1,
                             autohide : 1,
                             rel : 0
                         },
@@ -47,15 +51,43 @@ Application.Trails.directive('youtube', [function() {
                         }
                     };
 
+                    scope.convertToPlayer = function() {
+                        createYoutubePlayer();
+                    };
 
-                    scope.player = new YT.Player(element[0], scope.params);
+                    if (!!scope.startMini && scope.startMini != 'false') {
+                        scope.miniThumb = Trails.youtubeThumbnail(scope.videoId, 'mqdefault');
+
+                        videoInfo.then(function(json) {
+                            scope.miniInfo = json.data;
+                            scope.miniInfo.durationFormatted = (Math.floor(scope.miniInfo.duration/60) + ":" + ((scope.miniInfo.duration%60 < 10) ? '0' : '') + (scope.miniInfo.duration%60));
+                        });
+
+                        var thumbnailHTML = '<div class="row-fluid thumbnail" style="position:relative;">' +
+                            '<img class="span5" ng-src="{{miniThumb}}">' +
+                            '<div class="span7 caption">' +
+                            '<h5>{{ miniInfo.title }}</h5>' +
+                            '<p style="overflow:hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 4.5em">{{ miniInfo.description | limitTo:300 }}</p>' +
+                            '<a class="btn btn-primary" ng-click="convertToPlayer()">Watch Video {{ "(" + miniInfo.durationFormatted +")" }}</a>' +
+                            '</div>' +
+                            '</div>';
+
+                        element.html($compile(thumbnailHTML)(scope));
+                    } else {
+                        createYoutubePlayer()
+                    }
+
+                    function createYoutubePlayer () {
+                        scope.player = new YT.Player(element[0], scope.params);
+                    }
                 }
             }
         }
     }
 }]);
 
-Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho, $q, $dialog) {
+
+Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', '$http', function(Clotho, $q, $dialog, $http) {
 
     /**
      * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work.
@@ -70,17 +102,33 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
         return (url.match(regex) || url.match(/((\w|-){11})/)) ? RegExp.$1 : false;
     };
 
+    //can use youtube names (default, hqdefault, mqdefault, 0, 1, 2, 3)
+    //defaults to default (120 x 90)
+    var youtubeThumbnail = function(videoId, size) {
+        size = size || "default";
+
+        return "https://img.youtube.com/vi/"+ videoId + "/" + size + ".jpg";
+    };
+
+    var youtubeInfo = function(videoId) {
+        return $http.get('https://gdata.youtube.com/feeds/api/videos/'+videoId+'?v=2&prettyprint=true&alt=jsonc')
+            .then(function (data) {
+            return data.data
+        })
+    };
+
 
     var compile = function (trail) {
 
         //If pass by reference (depending on Clotho.get() ) need to copy to don't edit in dependencies
         //trail = angular.copy(trail);
 
+        //todo - better chaining
+
         var transcludes = trail.dependencies || null,
             deferred = $q.defer();
 
-        //if no dependencies listed, don't need to compile
-        if (!transcludes) {
+        if (!transcludes && !trail.mixin) {
             deferred.resolve(trail);
             return deferred.promise;
         }
@@ -89,12 +137,17 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
             promises = [];
 
         //get the transcluded trails... will be fast if in collector already
-        angular.forEach(transcludes, function(id) {
+        (transcludes) && angular.forEach(transcludes, function(id) {
             promises.push(Clotho.get(id));
         });
 
-        //after download all, pluck out the modules we need
-        $q.all(promises).then(function (downloads) {
+        var mixins = (trail.mixin) ? Application.mixin(trail.mixin) : $q.when();
+        mixins
+        .then(function() {
+            return $q.all(promises)
+        })
+        //after download all, pluck out the chapters we need
+        .then(function (downloads) {
 
             //reorganize transcludes so can reference by id
             transcludes = {};
@@ -102,33 +155,30 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
                 transcludes[transclude.id] = transclude;
             });
 
-            //iterate through trail, pushing in modules
-            angular.forEach(trail.contents, function (mod, ind) {
+            //iterate through trail, pushing in chapters
+            angular.forEach(trail.contents, function (chapter, ind) {
 
-                //testing
-                //console.log(trail.contents[ind]);
-
-                if (typeof mod.transclude == 'undefined') {
-                    final_contents.push(mod);
+                if (typeof chapter.transclude == 'undefined') {
+                    final_contents.push(chapter);
                 } else {
-                    //modules to include :
-                    var modUUID = mod.transclude.id,
-                        modNum = mod.transclude.modules;
+                    //chapters to include :
+                    var chapterID = chapter.transclude.id,
+                        chapterNum = chapter.transclude.chapters;
 
-                    if ((modNum == "all") || (typeof modNum == 'undefined')) {
-                        for (var i = 0; i < transcludes[modUUID]['contents'].length; i++) {
-                            final_contents.push(transcludes[modUUID]['contents'][i]);
+                    if ((chapterNum == "all") || (typeof chapterNum == 'undefined')) {
+                        for (var i = 0; i < transcludes[chapterID]['contents'].length; i++) {
+                            final_contents.push(transcludes[chapterID]['contents'][i]);
                         }
                     } else {
-                        var startStop = modNum.split("-");
+                        var startStop = chapterNum.split("-");
                         if (startStop.length == 1) {
-                            final_contents.push(transcludes[modUUID]['contents'][startStop[0]]);
+                            final_contents.push(transcludes[chapterID]['contents'][startStop[0]]);
                         } else {
                             if (startStop[0] > startStop[1])
                                 return "wrong format - start must be smaller than end";
 
                             for (var i = startStop[0]; i <= startStop[1]; i++) {
-                                final_contents.push(transcludes[modUUID]['contents'][i])
+                                final_contents.push(transcludes[chapterID]['contents'][i])
                             }
                         }
                     }
@@ -151,6 +201,8 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', function(Clotho
 
     return {
         extract_youtube : extract_youtube,
+        youtubeThumbnail : youtubeThumbnail,
+        youtubeInfo : youtubeInfo,
         compile : compile,
         share : Clotho.share,
         favorite : favorite,
@@ -170,7 +222,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', '$controller', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q, $controller) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.id = $route.current.params.id;
@@ -178,6 +230,14 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     $scope.content = $scope.trail.description;
 
     var load = {};
+
+    load.hint = function loadHint(hint) {
+        if (!hint) return $q.when();
+
+        var hintDiv = '<button class="btn pull-right" popover="' + hint + '" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button> ';
+
+        return $q.when(hintDiv);
+    };
 
     load.text = function loadText(text) {
         if (!text) return $q.when();
@@ -192,9 +252,12 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         var videoId = Trails.extract_youtube( (angular.isString(obj) ? obj : obj.id) );
         $scope.videoParams = (!!obj.params) ? obj.params : {};
+        
+        console.log(obj, obj.autoplay === true, ((obj.autoplay === true) ? 'false' : (obj.mini || true)));
 
         //note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
-        var template = '<div style="background-color: #efefef"><div youtube="' + videoId + '" params="videoParams" on-complete="next()"></div></div>';
+        //add this attr to move to next automatically on-complete="next()"
+        var template = '<div><div youtube="' + videoId + '" params="videoParams" start-mini="'+ ((obj.autoplay === true) ? false : (obj.mini || true)) +'" autoplay="'+ (obj.autoplay || true) +'"></div></div>';
 
         //todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
         return $timeout(function() {
@@ -228,7 +291,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     load.error = function loadError(error) {
-        return '<h4>Something didn&apos;t work - that type of paver wasn&apos;t recognized</h4>';
+        return '<h4>Something didn&apos;t work - that type of Page wasn&apos;t recognized</h4>';
     };
 
 
@@ -241,52 +304,65 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         //don't activate already active one
         if ($scope.current == indices) return;
 
-        console.log('1 - activating paver');
+        console.log('1 - activating Page');
 
         $scope.current = indices;
         $scope.content = "";
-        //in form <module>-<paver>
+        //in form <Chapter>-<Page>
         var pos = indices.split("-");
-        var paver = $scope.trail.contents[pos[0]]['pavers'][pos[1]];
+        var page = $scope.trail.contents[pos[0]]['pages'][pos[1]];
 
         //future in ng-1.2.x, use notify callbacks for updates
         //todo - error callbacks
 
+        console.log(page.intro, page.template, page.video, page.text);
+
         var loading = $q.defer();
-        $scope.content = '<div class="alert alert-info"><p>Loading content...</p></div>';
+        //$scope.content = '<div class="alert alert-info"><p>Loading content...</p></div>';
 
         loading.promise = $q.all({
-            css : Application.css(paver.css),
-            mixin: Application.mixin(paver.mixin)
+            css : Application.css(page.css),
+            mixin: Application.mixin(page.mixin)
         })
         .then(function() {
             //console.log('loading script');
 
-            return Application.script(paver.script)
+            return Application.script(page.script)
 
         })
         .then(function (){
             //console.log('loading content');
 
+            if (!!page.dictionary) {
+                angular.extend($scope, page.dictionary);
+            }
+
             return $q.all({
-                intro : load.text(paver.intro),
-                video : load.video(paver.video),
-                template : load.template(paver.template),
-                quiz : load.quiz(paver.quiz),
-                outro : load.text(paver.outro)
+                hint : load.hint(page.hint),
+                intro : load.text(page.intro),
+                video : load.video(page.video),
+                template : load.template(page.template),
+                quiz : load.quiz(page.quiz),
+                outro : load.text(page.outro)
             });
         })
         .then(function(content) {
-            //console.log(loading, content);
+            console.log(loading, content);
 
-            var contentText = (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "");
+            var contentText = angular.element((content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || ""));
 
-            //console.log(contentText);
+            //check for controller, must be already included (e.g. by mixin)
+            if (page.controller) {
+                var locals = {};
+                locals.$scope = $scope;
+                var ctrl = $controller(page.controller, locals);
+                contentText.data('ngControllerController', ctrl);
+            }
 
             $scope.content = $compile(contentText)($scope);
 
             console.log('loading onload script');
-            return Application.script(paver.onload);
+            return Application.script(page.onload);
 
         }, function(error) {
             //content loading error
@@ -315,9 +391,9 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, -1],
             newpos;
 
-        if (typeof $scope.trail.contents[oldpos[0]]['pavers'][+oldpos[1] + 1] != 'undefined')
+        if (typeof $scope.trail.contents[oldpos[0]]['pages'][+oldpos[1] + 1] != 'undefined')
             newpos = oldpos[0] + '-' + (+oldpos[1] + 1);
-        else if (typeof $scope.trail.contents[+oldpos[0] + 1]['pavers'] != 'undefined')
+        else if (typeof $scope.trail.contents[+oldpos[0] + 1]['pages'] != 'undefined')
             newpos = (+oldpos[0] + 1) + '-' + 0;
         else {
             $scope.current = undefined;
@@ -337,10 +413,10 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, 1],
             newpos;
 
-        if (typeof $scope.trail.contents[oldpos[0]]['pavers'][+oldpos[1] - 1] != 'undefined')
+        if (typeof $scope.trail.contents[oldpos[0]]['pages'][+oldpos[1] - 1] != 'undefined')
             newpos = oldpos[0] + '-' + (+oldpos[1] - 1);
-        else if (typeof $scope.trail.contents[+oldpos[0] - 1]['pavers'])
-            newpos = (+oldpos[0] - 1) + '-' + ($scope.trail.contents[+oldpos[0] - 1]['pavers'].length - 1);
+        else if (typeof $scope.trail.contents[+oldpos[0] - 1]['pages'])
+            newpos = (+oldpos[0] - 1) + '-' + ($scope.trail.contents[+oldpos[0] - 1]['pages'].length - 1);
         else {
             $scope.current = undefined;
             return;
@@ -350,7 +426,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $scope.activate(newpos);
     };
 
-    $keypress.on('keydown', {'right' : 'next()', 'left' : 'prev()'}, $scope);
+    $keypress.on('keydown', {'alt-right' : 'next()', 'alt-left' : 'prev()'}, $scope);
 
     $scope.base64icon = base64icon;
 }]);
