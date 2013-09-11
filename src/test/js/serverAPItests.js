@@ -180,4 +180,15 @@ testThroughAsync("invoke module method",
         function(data){
             equal(data, 2);
         });
-//TODO: test property invocation
+
+testThroughAsync("module depends on module",
+        new Message("run", {id:"testModule2","function":"moduleMethod", args:[]}),
+        function(data){
+            equal(data,2);
+        });
+
+testThroughAsync("function depends on function",
+        new Message("run", {id:"moduleTestFunction", args:[1]}),
+        function(data){
+            equal(data,4);
+        });

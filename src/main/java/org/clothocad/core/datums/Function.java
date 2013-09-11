@@ -54,9 +54,12 @@ public class Function extends Module {
     private Script precondition;
     
     //TODO: convert to dict-style
+    @Override
+    public String getCodeToLoad() {
+        return code.encapsulateModule(code.modularizeFunction(code.getSource()), getSetup());
+    }
 
-
-
+    
     public static class FunctionTest {
         private  List<Object> args;
         private  Object value;

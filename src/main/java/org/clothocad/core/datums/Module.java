@@ -102,6 +102,10 @@ public class Module extends ObjBase {
         return code.getSource();
     }
     
+    public String getCodeToLoad() {
+        return code.encapsulateModule(code.getSource(), getSetup());
+    }
+    
     public String getSetup(){
         return this.code.generateImports(getDependencySet(dependencies));
     }

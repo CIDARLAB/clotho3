@@ -25,6 +25,7 @@ package org.clothocad.core.layers.communication.mind;
 
 import com.github.jmkgreen.morphia.annotations.NotSaved;
 import com.github.jmkgreen.morphia.annotations.PostLoad;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,7 @@ import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 
 import org.clothocad.core.datums.ObjBase;
@@ -201,5 +203,14 @@ public final class Mind
 
     public Object evalFunction(String code, String setup, String name, List args, ScriptAPI api) throws ScriptException {
         return getEngine().invoke(code, setup, name, args, api);
+    }
+    
+    
+    public Object invoke(Function f, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException {
+        return getEngine().invoke(f, args, api);
+    }
+    
+    public Object invokeMethod(Module m, String methodName, List args, ScriptAPI api) throws NoSuchMethodException, ScriptException{
+        return getEngine().invoke(m, methodName, lastCommands, api);
     }
 }

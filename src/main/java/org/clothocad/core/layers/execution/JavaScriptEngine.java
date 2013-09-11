@@ -10,6 +10,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import javax.script.AbstractScriptEngine;
 import javax.script.Bindings;
+import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
@@ -20,7 +21,7 @@ import org.mozilla.javascript.*;
  *
  * @author spaige
  */
-class JavaScriptEngine extends AbstractScriptEngine implements HackEngine {
+class JavaScriptEngine extends AbstractScriptEngine implements HackEngine, Invocable {
 
     private final HashMap<Object, Object> indexedProps;
     private final ScriptableObject stdObjects;
@@ -161,5 +162,15 @@ class JavaScriptEngine extends AbstractScriptEngine implements HackEngine {
     @Override
     public Object eval(String script, ScriptContext context) throws ScriptException {
         return eval(new StringReader(script), context);
+    }
+
+    @Override
+    public <T> T getInterface(Class<T> clasz) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public <T> T getInterface(Object thiz, Class<T> clasz) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

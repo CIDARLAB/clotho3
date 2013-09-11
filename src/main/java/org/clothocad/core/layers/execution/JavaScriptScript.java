@@ -68,5 +68,22 @@ public class JavaScriptScript implements Script {
         return source;
     }
 
+    @Override
+    public String modularizeFunction(String code) {
+        String format = "(function() {"
+                + "var f = %s"
+                + "return f"
+                + "}());";
+        return String.format(format, code);
+    }
+
     
+    @Override
+    public String encapsulateModule(String code, String setupcode) {
+        String format = "(function() {"
+                + "%s"
+                + "return %s"
+                + "}());";
+        return String.format(format, setupcode, code);
+    }
 }

@@ -38,6 +38,8 @@ public class ClothoScriptEngineManager {
     }
         
     public static ScriptEngine getEngineByLanguage(Language language){
+        if (language == Language.JAVASCRIPT) return new JavaScriptEngine();
+
         ScriptEngineFactory factory = getFactoryByLanguage(language);
         boolean threadSafe = (factory.getParameter("THREADING") != null);
         if (threadSafe && enginesByLanguage.containsKey(language)){

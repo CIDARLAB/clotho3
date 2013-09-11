@@ -550,20 +550,26 @@ public class ServerSideAPI {
                 try {
                     Function function = persistor.get(Function.class,  persistor.resolveSelector(data.get("id").toString(), true));
                     
-                    return mind.evalFunction(functionData.get("code").toString(), function.getSetup(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
+                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown", e);
+                    return Void.TYPE;
+                } catch (NoSuchMethodException ex) {
+                    logAndSayError("No such function found", ex);
                     return Void.TYPE;
                 }
             }
             //XXX: this whole function is still a mess
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")){
                 try {
-                    Function function = persistor.get(Module.class,  persistor.resolveSelector(data.get("id").toString(), true)).getFunction(data.get("function").toString());
+                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
                     
-                    return mind.evalFunction(function.getCode(), function.getSetup(), "f" + functionData.get("id").toString(), args, new ScriptAPI(mind, persistor, requestId));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown", e);
+                    return Void.TYPE;
+                } catch (NoSuchMethodException ex) {
+                    logAndSayError("No such method found", ex);
                     return Void.TYPE;
                 }
             }

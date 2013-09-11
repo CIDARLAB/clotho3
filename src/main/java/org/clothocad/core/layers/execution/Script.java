@@ -18,5 +18,9 @@ public interface Script{
     public String getSource();
 
     public String generateImports(Collection<ObjectId> listedButNotDeclared);
-
+    
+    public String modularizeFunction(String code);
+    
+    public String encapsulateModule(String code, String setupCode);
+    
 }

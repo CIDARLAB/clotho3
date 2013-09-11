@@ -21,6 +21,7 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.ScriptAPI;
@@ -92,7 +93,6 @@ public class MetaEngine {
     }
 
     private HackEngine getEngine(Language language) {
-        if (language == Language.JAVASCRIPT) return new JavaScriptEngine();
         
         if (!engines.containsKey(language)) {
             engines.put(language, ClothoScriptEngineManager.getEngineByLanguage(language));
@@ -114,6 +114,37 @@ public class MetaEngine {
     
     public Object invoke(String functionCode, String name, List args, ScriptAPI api) throws ScriptException {
         return invoke(functionCode, "", name, args, api);
+    }
+    public static String idToName(ObjectId id){
+        return "f"+id.toString();
+    }
+    
+    public void loadAsGlobal(Module module, ScriptAPI api) throws ScriptException{
+        String name = "f"+module.getUUID().toString();
+        if (getEngine(module.getLanguage()).getContext().getBindings(ScriptContext.ENGINE_SCOPE).containsKey(name)){
+            return;
+        }
+        HackEngine engine = getEngine(module.getLanguage());
+        
+        engine.eval("var " + name + " = " +module.getCodeToLoad());
+    }
+    
+    public Object invoke(Function module, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException{
+       HackEngine engine = getEngine(module.getLanguage());
+       injectAPI(api, engine.getContext());
+       loadAsGlobal(module, api);
+       
+       return engine.invokeFunction(idToName(module.getUUID()), args.toArray());
+    }
+    
+    
+    public Object invoke(Module module, String methodName, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException{
+       HackEngine engine = getEngine(module.getLanguage());
+       injectAPI(api, engine.getContext());
+       loadAsGlobal(module, api);
+    
+       Object thiz = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).get(idToName(module.getUUID()));
+       return engine.invokeMethod(thiz, methodName, args);
     }
     
     //XXX: de-js-ify this!

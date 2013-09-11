@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import javax.script.ScriptException;
 import org.bson.types.ObjectId;
+import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.Module;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.mozilla.javascript.NativeArray;
@@ -25,11 +28,13 @@ import org.mozilla.javascript.NativeObject;
 public class ScriptAPI {
     ServerSideAPI api;
     Mind mind;
+    Persistor persistor;
     
     
     public ScriptAPI(Mind mind, Persistor persistor, String requestId){
         api = new ServerSideAPI(mind, persistor, requestId);
         this.mind = mind;
+        this.persistor = persistor;
     }
 
     public ObjectId create(Map<String, Object> obj) {
@@ -68,9 +73,20 @@ public class ScriptAPI {
         data.put("args", args);
         return api.run(data);
     }
- 
+    
     public Object load(Object selector) throws ScriptException {
-        return mind.eval(api.get(selector).get("code").toString(), this);
+        boolean isFunction;
+        //this, like all the other schema hacks around, needs to be replaced w/ a more sophisticated type-tracking system
+        isFunction = api.get(selector).get("schema").toString().endsWith("Function");
+        Module module;
+        if (isFunction){
+            module = persistor.get(Function.class, persistor.resolveSelector(selector.toString(), Function.class, true));
+        } else {
+            module = persistor.get(Module.class, persistor.resolveSelector(selector.toString(), Module.class, true));
+        }
+        
+        //some kind of circular dependency detection would be good
+        return mind.getEngine().eval(module.getCodeToLoad(), module.getLanguage(), this);
     }
     
     

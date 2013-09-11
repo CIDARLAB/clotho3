@@ -29,11 +29,28 @@
 },
 {
     "name":"moduleTestFunction",
+    "id":"522f58729f915de6a1023298",
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
     "arguments":[],
     "dependencies":["522af4b4b22548ae323e4475"]
+},
+{
+    "name":"testModule2",
+    "id":"522f4b5c9f915de6a1023297",
+    "language":"JAVASCRIPT",
+    "schema":"Module",
+    "dependencies":["522af4b4b22548ae323e4475"],
+    "code":"(function f() {var my = {}; my.moduleMethod = testModule.moduleMethod; return my;}());"
+},
+{
+    "name":"moduleTestFunction2",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "dependencies":["522f58729f915de6a1023298"],
+    "code":"function(i) {return moduleTestFunction(i);};",
+    "arguments":[]
 }
 ]
 

@@ -178,7 +178,7 @@ public class RouterTest {
                   "var data = {};\n"
                 + "data.name = \"reverse1\";\n"
                 + "data.language = \"JAVASCRIPT\";\n"
-                + "data.schema = \"JavaScriptFunction\";\n"
+                + "data.schema = \"Function\";\n"
                 + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
                 + "data.arguments = [{name:'sequence', type:'String'}];\n"
                 + "\n"
@@ -189,7 +189,7 @@ public class RouterTest {
         
         sendMessage(new Message(Channel.submit, script, "6"), connection);
         
-        assertEquals("CCCAAA", connection.messages.get(2).data);
+        assertEquals("CCCAAA", connection.messages.get(1).data);
         
     }
 
