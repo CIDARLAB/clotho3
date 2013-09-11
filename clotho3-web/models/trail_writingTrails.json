@@ -11,7 +11,8 @@
             "pavers" : [
                 {
                     "paver" : "Introduction",
-                    "intro" : "<p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>TrailModule</b>s.</p><p><b>TrailModule</b>s contain either a set of <b>Paver</b>s or a <b>TrailTransclude</b>.</p><p><b>Paver</b>s are the primary composing unit of a trail, and contain text, templates, videos, <b>Quiz</b>s, etc.</p><hr><p>So a <b>Trail</b> might look like this (focusing only on layout, not content or description fields):<ul><li>Normal <b>TrailModule</b><ul><li>Simple <b>Paver</b></li><li><b>Paver</b><ul><li><b>Quiz</b></li></ul></ul></li></ul></li><li>Transclusion <b>TrailModule</b><ul><li><b>TrailTransclude</b></li></ul></li></ul></p>"
+                    "intro" : "<p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>TrailModule</b>s.</p><p><b>TrailModule</b>s contain either a set of <b>Paver</b>s or a <b>TrailTransclude</b>.</p><p><b>Paver</b>s are the primary composing unit of a trail, and contain text, templates, videos, <b>Quiz</b>s, etc.</p><hr><p>So a <b>Trail</b> might look like this (focusing only on layout, not content or description fields):<ul><li>Normal <b>TrailModule</b><ul><li>Simple <b>Paver</b></li><li><b>Paver</b><ul><li><b>Quiz</b></li></ul></ul></li></ul></li><li>Transclusion <b>TrailModule</b><ul><li><b>TrailTransclude</b></li></ul></li></ul></p>",
+                    "hint" : "You can also have hints within a paver. They can have <code>HTML</code> inside them."
                 },
                 {
                     "paver" : "Example Trail",

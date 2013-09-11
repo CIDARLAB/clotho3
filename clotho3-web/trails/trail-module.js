@@ -224,7 +224,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     load.hint = function loadHint(hint) {
         if (!hint) return $q.when();
 
-        var hintDiv = '<button class="btn pull-right" popover="' + hint + '" popover-trigger="click"><i class="icon-info-sign"></i> Hint</button> ';
+        var hintDiv = '<button class="btn pull-right" popover="' + hint + '" popover-trigger="click" popover-placement="left"><i class="icon-info-sign"></i> Hint</button> ';
 
         return $q.when(hintDiv);
     };

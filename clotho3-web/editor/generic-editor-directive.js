@@ -3,7 +3,7 @@
 //todo - integrate ngFormController --- nested ngForms so validation works
 // then in template: ng-class="{error: myForm.name.$invalid}"
 
-Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', '$filter', function(Clotho, $compile, $parse, $http, $templateCache, $filter) {
+Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$http', '$templateCache', '$filter', '$q', function(Clotho, $compile, $parse, $http, $templateCache, $filter, $q) {
 
     return {
         restrict: 'A',
@@ -377,11 +377,17 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     }
                     case 'schema' : {
 
-                        $http.get('/editor/schema-partial.html',  {cache: $templateCache})
-                            .success(function(data) {
-                                var el = $compile(data)($scope);
-                                $element.html(el);
-                            });
+                        var getSuperClass = ($scope.editable.superClass) ?
+                            Clotho.get($scope.editable.superClass).then(function(result) {$scope.superClassObj = result})
+                            : $q.when($scope.superClassObj = null);
+
+                        getSuperClass.then(function() {
+                            $http.get('/editor/schema-partial.html',  {cache: $templateCache})
+                                .success(function(data) {
+                                    var el = $compile(data)($scope);
+                                    $element.html(el);
+                                });
+                        });
 
                         break;
                     }

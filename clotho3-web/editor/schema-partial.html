@@ -1,13 +1,11 @@
 <legend>Schema Editor</legend>
 
-{{ editable | json }}
-
 <div class="ng-cloak">
 
     <div class="control-group">
         <label class="control-label" for="schemaName">Name</label>
         <div class="controls">
-            <input type="text" id="schemaName" ng-model="editable.name" ng-disabled="!editMode" required>
+            <input type="text" id="schemaName" ng-model="editable.name" ng-disabled="!editMode" required restrict-input="findSpacesRegExp">
         </div>
     </div>
 
@@ -35,15 +33,26 @@
         <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!editMode || !newMethodObj"><i class="icon-plus"></i></button>
     </div>
 
-    <div ng-repeat="method in editable.methods">
-        {{ method | json }}
-    </div>
+    {{ editable.methods | json }}
 
-    <h4>
+    <h3>
         Fields
-    </h4>
+    </h3>
 
-    {{ editable | json }}
+    <div ng-if="editable.superClass">
+        <h4>Inherited Fields</h4>
+
+        <div ng-repeat="field in superClassObj.fields">
+            <div class="row-fluid">
+                <input type="text" ng-model="field.type" class="span3" disabled />
+                <input class="span6" type="text" ng-model="field.name" disabled />
+                <input type="text" ng-model="field.access" class="span3" disabled />
+            </div>
+        </div>
+
+        <h4>This Object's fields</h4>
+
+    </div>
 
     <div ng-repeat="field in editable.fields">
         <div class="row-fluid">
@@ -84,8 +93,6 @@
     <button class="btn" type="button" ng-click="addField()" ng-disabled="!editMode"><i class="icon-plus"></i> New Field</button>
 
 
-
-
     <div class="form-actions" ng-hide="editMode">
         <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
         <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
@@ -97,5 +104,8 @@
         <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
         <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
     </div>
+
+    {{ editable | json }}
+
 
 </div>

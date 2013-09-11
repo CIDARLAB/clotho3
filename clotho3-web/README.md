@@ -95,6 +95,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - finish schema editor -- verify with stephanie
+    - superClass not working on server currently
     - handle parameterized fields (e.g. array | module)
     - methods section
         - custom template to show id?

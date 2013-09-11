@@ -76,6 +76,16 @@
             "reference": false
         },
         {
+            "name": "hint",
+            "type": "string",
+            "description": "HTML (will be wrapped in &lt;p&gt; tags) to display as a hint ",
+            "example": "Your <b>hint</b> might have some <code>code</code> in it",
+            "constraints": null,
+            "access": "PUBLIC",
+            "javaType": "java.lang.String",
+            "reference": false
+        },
+        {
             "name": "controller",
             "type": "string",
             "description": "Name of controller to apply for whole paver (all content components) - must already be included (e.g. via mixin())",
