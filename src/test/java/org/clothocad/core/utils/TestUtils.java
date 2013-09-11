@@ -42,6 +42,7 @@ public class TestUtils {
         ServerSideAPI api = new DummyAPI(persistor);
         ObjectReader reader = new ObjectMapper().reader(Map.class);
         for (File child : new File("src/test/resources/testData").listFiles()){
+            if (!child.getName().endsWith(".json")) continue;
             try {
                 MappingIterator<Map> it = reader.readValues(child);
                 while (it.hasNext()){
