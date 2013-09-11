@@ -49,7 +49,28 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- trail Trail using new Schemas
+- custom person object, add anderson lab
+
+
+-modules
+    - test extending (incl. outside of module definition)
+
+
+
+- DNA + demo trail
+    - youtube
+        - start as button with thumbnail, click to add element at full size
+            - thumb : http://stackoverflow.com/questions/2068344/
+            - JS http://jsfiddle.net/BinaryMuse/5BKYZ/4/
+            - CSS http://stackoverflow.com/questions/5123489/
+    - PCR functions working
+    - UI directives
+        - digest highlight
+    - start construction files (JSON format)
+
+
+
+
 
 - new schemas
     - Usage
@@ -62,22 +83,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - help tips service (as popoverService)
         - given object of tips and selectors, show appropriately
         - be able to step through
-    - DNA etc.
-        - digest cuts, not just ^ or | etc.
 
 
 - quiz
     - hints
     - dynamic quesions
         - parameters for question, answer, generated values
-
-
-- construction files
-    - decide JSON format
-
-
--modules
-    - test extending (incl. outside of module definition)
 
 
 - upgrade to $modal from angular ui

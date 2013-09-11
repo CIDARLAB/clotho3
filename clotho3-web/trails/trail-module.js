@@ -9,6 +9,7 @@ Application.Trails.directive('youtube', [function() {
         scope: {
             videoId : '@youtube',
             params : '=?',
+            autoplay: '@?',
             onComplete : '&?'
         },
         //template: '<iframe width="{{ params.width }}" height="{{ params.height }}" ng-src="https://www.youtube.com/embed/{{ params.videoId }}?enablejsapi=1&modestbranding=1&rel=0&version=3&playerapiid=trailPlayer&autoplay={{ params.autoplay }}&autohide={{ params.autohide }}&start={{ params.start }}&end={{ params.end }}" frameborder="0" allowfullscreen="1"></iframe>',
@@ -51,6 +52,29 @@ Application.Trails.directive('youtube', [function() {
                     scope.player = new YT.Player(element[0], scope.params);
                 }
             }
+        }
+    }
+}]);
+
+Application.Trails.directive('youtubeMini', ['$compile', function($compile) {
+    return {
+        restrict: 'CA',
+        replace: true,
+        template: '<button class="btn btn-large btn-primary" ng-click="convertToPlayer()">Play Youtube</button>',
+        link : function(scope, element, attrs) {
+
+            //todo - param to autoplay, if true then in pre-compile make youtube
+
+            scope.convertToPlayer = function() {
+                element.removeClass('btn btn-large btn-primary');
+                var videoId = attrs['youtubeMini'];
+                element[0].removeAttribute('youtube-mini');
+                attrs.$set('youtube', videoId);
+                $compile(element)(scope);
+
+                //element.html($compile('<div youtube="' + videoId + '"></div>')(scope))
+            }
+
         }
     }
 }]);
@@ -205,7 +229,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         $scope.videoParams = (!!obj.params) ? obj.params : {};
 
         //note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
-        var template = '<div style="background-color: #efefef"><div youtube="' + videoId + '" params="videoParams" on-complete="next()"></div></div>';
+        //add this attr to move to next automatically on-complete="next()"
+        var template = '<div><div youtube-mini="' + videoId + '" params="videoParams"></div></div>';
 
         //todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
         return $timeout(function() {
