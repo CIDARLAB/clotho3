@@ -13,7 +13,10 @@
                     "title" : "Intro to DNA",
                     "icon" : "video",
                     "intro" : "<p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p>",
-                    "video" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8"
+                    "video" : {
+                        "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
+                        "autoplay" : true
+                    }
                 },
                 {
                     "title" : "Reverse Complement",

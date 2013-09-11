@@ -58,11 +58,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - DNA + demo trail
-    - youtube
-        - start as button with thumbnail, click to add element at full size
-            - thumb : http://stackoverflow.com/questions/2068344/
-            - JS http://jsfiddle.net/BinaryMuse/5BKYZ/4/
-            - CSS http://stackoverflow.com/questions/5123489/
     - PCR functions working
     - UI directives
         - digest highlight

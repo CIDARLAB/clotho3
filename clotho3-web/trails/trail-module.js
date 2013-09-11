@@ -55,7 +55,7 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                         createYoutubePlayer();
                     };
 
-                    if (!!scope.startMini) {
+                    if (!!scope.startMini && scope.startMini != 'false') {
                         scope.miniThumb = Trails.youtubeThumbnail(scope.videoId, 'mqdefault');
 
                         videoInfo.then(function(json) {
@@ -252,10 +252,12 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         var videoId = Trails.extract_youtube( (angular.isString(obj) ? obj : obj.id) );
         $scope.videoParams = (!!obj.params) ? obj.params : {};
+        
+        console.log(obj, obj.autoplay === true, ((obj.autoplay === true) ? 'false' : (obj.mini || true)));
 
         //note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
         //add this attr to move to next automatically on-complete="next()"
-        var template = '<div><div youtube="' + videoId + '" params="videoParams" start-mini="'+ (obj.mini || true) +'" autoplay="'+ (obj.autoplay || true) +'"></div></div>';
+        var template = '<div><div youtube="' + videoId + '" params="videoParams" start-mini="'+ ((obj.autoplay === true) ? false : (obj.mini || true)) +'" autoplay="'+ (obj.autoplay || true) +'"></div></div>';
 
         //todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
         return $timeout(function() {

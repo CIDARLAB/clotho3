@@ -8,14 +8,14 @@
     "contents" : [
         {
             "chapter" : "Trail Overview",
-            "pavers" : [
+            "pages" : [
                 {
-                    "paver" : "Introduction",
+                    "title" : "Introduction",
                     "intro" : "<p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>TrailModule</b>s.</p><p><b>TrailModule</b>s contain either a set of <b>Paver</b>s or a <b>TrailTransclude</b>.</p><p><b>Paver</b>s are the primary composing unit of a trail, and contain text, templates, videos, <b>Quiz</b>s, etc.</p><hr><p>So a <b>Trail</b> might look like this (focusing only on layout, not content or description fields):<ul><li>Normal <b>TrailModule</b><ul><li>Simple <b>Paver</b></li><li><b>Paver</b><ul><li><b>Quiz</b></li></ul></ul></li></ul></li><li>Transclusion <b>TrailModule</b><ul><li><b>TrailTransclude</b></li></ul></li></ul></p>",
-                    "hint" : "You can also have hints within a paver. They can have <code>HTML</code> inside them."
+                    "hint" : "You can also have hints within a Page. They can have <code>HTML</code> inside them."
                 },
                 {
-                    "paver" : "Example Trail",
+                    "title" : "Example Trail",
                     "controller" : "writingTrailsCtrl",
                     "intro" : "<p>Below is an example trail, in JSON format</p>",
                     "outro" : "<pre ng-init=\"demoTrail = getTrail('Combined Trail')\">{{ demoTrail | json }}</pre>"
@@ -24,35 +24,35 @@
         },
         {
             "chapter" : "Trail Schemas",
-            "pavers" : [
+            "pages" : [
                 {
-                    "paver" : "Trail",
+                    "title" : "Trail",
                     "controller" : "writingTrailsCtrl",
                     "intro" : "<p ng-init=\"demoSchema = getTrailHack()\">The Trail Schema is the container for the entire trail.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
-                    "paver" : "TrailModule",
+                    "title" : "TrailModule",
                     "controller" : "writingTrailsCtrl",
                     "intro" : "<p ng-init=\"demoSchema = getSchema('TrailModule')\">TrailModules are essentially containers for TrailTranscludes and Pavers. They break up content into meaningful blocks.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
-                    "paver" : "TrailTransclude",
+                    "title" : "TrailTransclude",
                     "controller" : "writingTrailsCtrl",
                     "intro" : "<p ng-init=\"demoSchema = getSchema('TrailTransclude')\">TrailTranscludes are used to transclude the content of another Trail.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
-                    "paver" : "Paver",
+                    "title" : "Paver",
                     "controller" : "writingTrailsCtrl",
                     "intro" : "<p ng-init=\"demoSchema = getSchema('Paver')\">Pavers are the primary unit of content in Trails. They can contain several fields, enumerated below.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
-                    "paver" : "Quiz",
+                    "title" : "Quiz",
                     "controller" : "writingTrailsCtrl",
-                    "intro" : "<p ng-init=\"demoSchema = getSchema('Quiz')\">Quizzes are part of pavers, generating questions dynamically and graded on the server. Currently Quizzes are in a state of flux, so below is described the SuperClass, pending its finalization and more importantly the finalization of dynamic content generation.</p>",
+                    "intro" : "<p ng-init=\"demoSchema = getSchema('Quiz')\">Quizzes are part of pages, generating questions dynamically and graded on the server. Currently Quizzes are in a state of flux, so below is described the SuperClass, pending its finalization and more importantly the finalization of dynamic content generation.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 }
 
