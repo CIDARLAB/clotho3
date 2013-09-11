@@ -424,7 +424,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         //future - move to fuzzy search
 
         while ((cur = reg.exec(extendSequence(sequence, match.length-1))) != null) {
-            matches[cur.index] = match[0];
+            console.log(match);
+            matches[cur.index] = match;
         }
 
         return matches;
@@ -491,6 +492,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
 
         //todo - multiple enzymes
     var markSites = function (sequence, enzyme) {
+
+        if (!enzyme) return sequence;
 
         sequence = DNA.dnaOnly(sequence);
 
@@ -739,15 +742,20 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     }
 }]);
 
-Application.Dna.directive('digestMark', ['Digest', '$filter', function(Digest, $filter) {
+Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function(Digest, $filter, $parse) {
     return {
         restrict: 'A',
         require: 'ngModel',
         link : function(scope, element, attrs, ngModel) {
 
+            var enz;
+            attrs.$observe('digestMark', function (val) {
+                enz = $parse(val)(scope)
+            });
+
             var highlightSites = function (input) {
                 //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
-                return Digest.markSites(input, Digest.enzymes.BsmbI)
+                return Digest.markSites(input, enz)
             };
 
             var unhighlightSites = function (input) {
@@ -760,17 +768,63 @@ Application.Dna.directive('digestMark', ['Digest', '$filter', function(Digest, $
     }
 }]);
 
-//todo - highlight digest sites to make them look nice
-Application.Dna.directive('digestHighlight', ['Digest', function(Digest) {
+//todo - migrate Plasmid directive into this module
+Application.Dna.directive('digestHighlight', ['Digest', '$parse', '$compile', function(Digest, $parse, $compile) {
     return {
         restrict: 'A',
-        priority: 1100,
         require: 'ngModel',
+
         link : function(scope, element, attrs, ngModel) {
 
+            attrs.$observe('digestHighlight', function (val) {
+                scope.highlightEnz = $parse(val)(scope);
+            });
 
+            scope.$watch(function() {
+                return ngModel.$modelValue
+            }, function(newval, oldval) {
+                var seqSites = Digest.markSites(newval, scope.highlightEnz);
+
+                var findMatch = /\((.+?)\)/gi;
+
+                var addedAnnotations = seqSites.replace(findMatch, '<digest-annotation>$1</digest-annotation>');
+
+                element.html($compile('<div>' + addedAnnotations + '</div>')(scope))
+
+
+            });
+            
+
+            
+
+            //todo - show cut marks
 
         }
     }
 
 }]);
+
+Application.Dna.directive('digestAnnotation', ['$tooltip', function($tooltip) {
+
+    return {
+        restrict : 'EA',
+        replace: false,
+        transclude:true,
+        template: '<span tooltip="{{ highlightEnz.name }}" tooltip-placement="mouse" tooltip-animation="false" tooltip-append-to-body="true" ng-transclude></span>',
+        compile: function compile(tElement, tAttrs, transclude) {
+        return {
+            pre: function preLink(scope, element, attrs, controller) {
+
+            },
+            post: function(scope, element, attrs, ctrl) {
+                console.log(scope.highlightEnz);
+
+                element.css({backgroundColor: '#fcc'});
+
+            }
+        }
+    }
+}
+
+
+}])

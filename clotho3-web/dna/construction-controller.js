@@ -19,6 +19,7 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
 
     //Digest
     $scope.digestSeq = 'acaacgtctcacggatccagtcgtacatgcatcgatcgacggatccagatcgactagc';
+    $scope.digestEnz = Digest.enzymes.EcoRI;
 
 
     //PCR predict

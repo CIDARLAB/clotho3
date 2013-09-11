@@ -893,7 +893,7 @@ Application.Interface.provider( '$tooltip', function () {
                             if ( scope.tt_popupDelay ) {
                                 popupTimeout = $timeout( show, scope.tt_popupDelay );
                             } else {
-                                scope.$safeApply( show );
+                                scope.$apply( show );
                             }
                         }
 
