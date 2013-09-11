@@ -4,21 +4,21 @@
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.toUpperCase();};",
-    "arguments":[{"name":"str", "type":"String"}]
+    "args":[{"name":"str", "type":"String"}]
 },
 {
     "name":"lowercase",
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.toLowerCase();};",
-    "arguments":[{"name":"str", "type":"String"}]
+    "args":[{"name":"str", "type":"String"}]
 },
 {
     "name":"spaceout",
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.split('').join(' ');};",
-    "arguments":[{"name":"str", "type":"String"}]
+    "args":[{"name":"str", "type":"String"}]
 },
 {
     "name":"reverse",
@@ -45,7 +45,7 @@
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
-    "arguments":[],
+    "args":[],
     "dependencies":["522af4b4b22548ae323e4475"]
 },
 {
@@ -62,7 +62,7 @@
     "schema":"Function",
     "dependencies":["522f58729f915de6a1023298"],
     "code":"function(i) {return moduleTestFunction(i);};",
-    "arguments":[]
+    "args":[]
 }
 ]
 
