@@ -749,8 +749,9 @@ Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function
         link : function(scope, element, attrs, ngModel) {
 
             var enz;
-            attrs.$observe('digestMark', function (val) {
-                enz = $parse(val)(scope)
+            scope.$watch(attrs['digestMark'], function (val) {
+                enz = val;
+                ngModel.$render(); //fixme doens't work
             });
 
             var highlightSites = function (input) {
@@ -776,28 +777,27 @@ Application.Dna.directive('digestHighlight', ['Digest', '$parse', '$compile', fu
 
         link : function(scope, element, attrs, ngModel) {
 
-            attrs.$observe('digestHighlight', function (val) {
-                scope.highlightEnz = $parse(val)(scope);
+            scope.$watch(attrs['digestHighlight'], function (val) {
+                console.log(val);
+                scope.highlightEnz = val;
+                reprocess();
             });
 
             scope.$watch(function() {
                 return ngModel.$modelValue
             }, function(newval, oldval) {
-                var seqSites = Digest.markSites(newval, scope.highlightEnz);
-
-                var findMatch = /\((.+?)\)/gi;
-
-                var addedAnnotations = seqSites.replace(findMatch, '<digest-annotation>$1</digest-annotation>');
-
-                element.html($compile('<div>' + addedAnnotations + '</div>')(scope))
-
-
+                reprocess()
             });
             
-
+            function reprocess() {
+                var seqSites = Digest.markSites(ngModel.$modelValue, scope.highlightEnz);
+                var findMatch = /\((.+?)\)/gi;
+                var addedAnnotations = seqSites.replace(findMatch, '<digest-annotation>$1</digest-annotation>');
+                element.html($compile('<div>' + addedAnnotations + '</div>')(scope))
+            }
             
 
-            //todo - show cut marks
+            //todo - show cut marks nicer
 
         }
     }

@@ -117,7 +117,7 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
  * HTML5 EXTENSIONS
 ***********************/
 
-// todo - handle val() if present, default to text()
+// todo - handle val() if present, default to text() --- has been done in another directive
 
 Application.Interface.directive('contenteditable', [function() {
 
@@ -918,8 +918,6 @@ Application.Interface.provider( '$tooltip', function () {
                             if ( ! scope.tt_content ) {
                                 return;
                             }
-                            
-                            console.log('hit 1');
 
                             // If there is a pending remove transition, we must cancel it, lest the
                             // tooltip be mysteriously removed.
@@ -929,10 +927,6 @@ Application.Interface.provider( '$tooltip', function () {
 
                             // Set the initial positioning.
                             tooltip.css({ top: 0, left: 0, display: 'block' });
-
-
-                            console.log('hit 2');
-
 
                             // Now we add it to the DOM because need some info about it. But it's not
                             // visible yet anyway.
@@ -952,8 +946,6 @@ Application.Interface.provider( '$tooltip', function () {
                                 console.log('using element position: '+ elementPosition);
                                position = elementPosition
                             }
-
-                            console.log('hit 3');
 
                             // Get the height and width of the tooltip so we can center it.
                             ttWidth = tooltip.prop( 'offsetWidth' );
@@ -1003,10 +995,6 @@ Application.Interface.provider( '$tooltip', function () {
 
                             //CUSTOM
                             tooltip.addClass('noPointerEvents');
-
-                            console.log('hit 4');
-
-                            console.log(tooltip);
 
                             // And show the tooltip.
                             scope.tt_isOpen = true;
@@ -1077,11 +1065,13 @@ Application.Interface.provider( '$tooltip', function () {
                             appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;
                         });
 
+                        /*
+
                         //todo - make work
                         //CUSTOM
                         attrs.$observe(prefix+'ShowBypass', function (val) {
                             console.log('show bypass observe : ' + val);
-                            scope.tt_showBypass = (val !== false);
+                            scope.tt_showBypass = (!!val && val !== false);
                         });
 
                         scope.$watch('tt_showBypass', function (val) {
@@ -1098,6 +1088,8 @@ Application.Interface.provider( '$tooltip', function () {
                             var el = $(scope.tt_elementPosition);
                             elementPosition = $position.offset(el);
                         });
+
+                        */
 
 
                         // if a tooltip is attached to <body> we need to remove it on

@@ -25,7 +25,6 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             $scope.formDirty = false;
             $scope.logScope = function() { console.log($scope); };
 
-
             /** model **/
 
             //if editable is defined, ignore passed id
@@ -416,6 +415,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                     /* config */
 
                     scope.form = $parse(iAttrs.name)(scope);
+                    scope.resetTests();
 
                     scope.edit = function() {
                         scope.editMode = true;

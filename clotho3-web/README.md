@@ -49,10 +49,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- make youtube API local
 
-
-- custom person object, add anderson lab
+- custom person object, add anderson lab people
 
 
 -modules
