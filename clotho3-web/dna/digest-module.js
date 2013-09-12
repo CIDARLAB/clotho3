@@ -793,38 +793,49 @@ Application.Dna.directive('digestHighlight', ['Digest', '$parse', '$compile', fu
                 var seqSites = Digest.markSites(ngModel.$modelValue, scope.highlightEnz);
                 var findMatch = /\((.+?)\)/gi;
                 var addedAnnotations = seqSites.replace(findMatch, '<digest-annotation>$1</digest-annotation>');
+                addedAnnotations = addedAnnotations.replace(/\^/gi, '<digest-cut-top>&#8595;</digest-cut-top>');
+                addedAnnotations = addedAnnotations.replace(/_/gi, '<digest-cut-bottom>&#8593;</digest-cut-bottom>');
                 element.html($compile('<div>' + addedAnnotations + '</div>')(scope))
             }
-            
-
-            //todo - show cut marks nicer
-
         }
     }
 
 }]);
 
 Application.Dna.directive('digestAnnotation', ['$tooltip', function($tooltip) {
-
     return {
         restrict : 'EA',
         replace: false,
         transclude:true,
         template: '<span tooltip="{{ highlightEnz.name }}" tooltip-placement="mouse" tooltip-animation="false" tooltip-append-to-body="true" ng-transclude></span>',
         compile: function compile(tElement, tAttrs, transclude) {
-        return {
-            pre: function preLink(scope, element, attrs, controller) {
+            return {
+                pre: function preLink(scope, element, attrs, controller) {
 
-            },
-            post: function(scope, element, attrs, ctrl) {
-                console.log(scope.highlightEnz);
+                },
+                post: function(scope, element, attrs, ctrl) {
+                    console.log(scope.highlightEnz);
 
-                element.css({backgroundColor: '#fcc'});
+                    element.css({backgroundColor: '#fcc'});
 
+                }
             }
         }
     }
-}
-
-
-}])
+}]);
+Application.Dna.directive('digestCutTop', [function() {
+    return {
+        restrict : 'EA',
+        link: function (scope, element, attrs) {
+            element.css('color', '#f00');
+        }
+    }
+}]);
+Application.Dna.directive('digestCutBottom', [function() {
+    return {
+        restrict : 'EA',
+        link: function (scope, element, attrs) {
+            element.css('color', '#00f');
+        }
+    }
+}]);
