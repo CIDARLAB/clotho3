@@ -49,7 +49,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- custom person object, add anderson lab
+
+- custom person object, add anderson lab people
 
 
 -modules
@@ -64,6 +65,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - start construction files (JSON format)
 
 
+
+- $focus
+    - get popover to display by default
 
 
 
@@ -129,6 +133,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - search bar rewrite
+    - note -- inherit some UI stuff from menuController so not in searchbar
     - use typeahead with custom template??
         - want to reduce bootstrap reliance, but well-written. maybe move to core
     - add login functionality (not showing for demo)

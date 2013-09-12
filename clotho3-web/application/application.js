@@ -97,7 +97,7 @@ angular.module('clothoRoot', ['clothoPackage']).
                         return deferred.promise;
                     },
                     deps : function() {
-                        return Application.mixin('https://www.youtube.com/iframe_api');
+                        return Application.mixin('/lib/youtubeAPI.js');
                     }
                 }
             }).

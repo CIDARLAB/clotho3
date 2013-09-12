@@ -149,28 +149,39 @@
         </form>
     </div>
 
-
+    <hr>
 
     <div class="row">
         <form name="digestPlayground" class="form-horizontal">
+
+
             <div class="control-group">
+                <label class="control-label" for="enzSelect">Enzyme Name</label>
+                <div class="controls">
+                    <select id="enzSelect" ng-options="enz as enz.name for (name, enz) in Digest.enzymes" ng-model="digestEnz"></select>
+                </div>
+            </div>
+
+
+            <!--<div class="control-group">
                 <label class="control-label" for="digSites">{{ digestEnz.name }} Sites</label>
                 <div class="controls">
                     <input type="text" class="input-xxlarge" id="digSites" placeholder="Predicted Sequence" ng-model="digestSeq" digest-mark="digestEnz"/>
-                    <pre ng-model="digestSeq" digest-mark="digestEnz" contenteditable></pre>
+                    <pre ng-model="digestSeq" digest-mark="digestEnz" contenteditable="false"></pre> <!--use content editable to bind, set to false so can't actually change--><!--
                 </div>
-            </div>
+            </div>-->
 
             <div class="control-group">
                 <label class="control-label" for="digSites">{{ digestEnz.name }} Sites</label>
                 <div class="controls">
-                    <pre ng-model="digestSeq" digest-highlight="digestEnz" contenteditable></pre>
+                    <pre id="digSites" ng-model="digestSeq" digest-highlight="digestEnz"></pre>
                 </div>
             </div>
 
         </form>
     </div>
 
+    <hr>
 
     <div class="row">
         <form name="pcrPlayground" class="form-horizontal">

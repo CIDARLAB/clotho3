@@ -58,5 +58,10 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
         .then(function() {
             searchInput.val('').focus();
         });
+    };
+
+    $scope.showHelpTips = function() {
+        $focus.elementPopover('#searchBarInput', "whats up");
     }
+
 }]);

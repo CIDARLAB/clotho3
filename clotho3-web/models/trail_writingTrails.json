@@ -11,8 +11,8 @@
             "pages" : [
                 {
                     "title" : "Introduction",
-                    "intro" : "<p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>TrailModule</b>s.</p><p><b>TrailModule</b>s contain either a set of <b>Paver</b>s or a <b>TrailTransclude</b>.</p><p><b>Paver</b>s are the primary composing unit of a trail, and contain text, templates, videos, <b>Quiz</b>s, etc.</p><hr><p>So a <b>Trail</b> might look like this (focusing only on layout, not content or description fields):<ul><li>Normal <b>TrailModule</b><ul><li>Simple <b>Paver</b></li><li><b>Paver</b><ul><li><b>Quiz</b></li></ul></ul></li></ul></li><li>Transclusion <b>TrailModule</b><ul><li><b>TrailTransclude</b></li></ul></li></ul></p>",
-                    "hint" : "You can also have hints within a Page. They can have <code>HTML</code> inside them."
+                    "intro" : "<p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>Chapter</b>s.</p><p><b>Chapter</b>s contain either a set of <b>Page</b>s or a <b>TrailTransclude</b>.</p><p><b>Page</b>s are the primary composing unit of a trail, and contain text, templates, videos, <b>Quiz</b>s, etc.</p><hr><p>So a <b>Trail</b> might look like this (focusing only on layout, not content or description fields):<ul><li>Normal <b>Chapter</b><ul><li>Simple <b>Page</b></li><li><b>Page</b><ul><li><b>Quiz</b></li></ul></ul></li></ul></li><li>Transclusion <b>Chapter</b><ul><li><b>TrailTransclude</b></li></ul></li></ul></p>",
+                    "hint" : "You can also have hints within a Page. They are currently limited to text (no HTML)."
                 },
                 {
                     "title" : "Example Trail",
@@ -32,9 +32,9 @@
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
-                    "title" : "TrailModule",
+                    "title" : "Chapter",
                     "controller" : "writingTrailsCtrl",
-                    "intro" : "<p ng-init=\"demoSchema = getSchema('TrailModule')\">TrailModules are essentially containers for TrailTranscludes and Pavers. They break up content into meaningful blocks.</p>",
+                    "intro" : "<p ng-init=\"demoSchema = getSchema('Chapter')\">Chapter are essentially containers for TrailTranscludes and Pages. They break up content into meaningful blocks.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
@@ -44,9 +44,9 @@
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
-                    "title" : "Paver",
+                    "title" : "Page",
                     "controller" : "writingTrailsCtrl",
-                    "intro" : "<p ng-init=\"demoSchema = getSchema('Paver')\">Pavers are the primary unit of content in Trails. They can contain several fields, enumerated below.</p>",
+                    "intro" : "<p ng-init=\"demoSchema = getSchema('Page')\">Pages are the primary unit of content in Trails. They can contain several fields, enumerated below.</p>",
                     "template" : "/partials/trails/writingTrails/fieldEnumeration.html"
                 },
                 {
