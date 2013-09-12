@@ -30,6 +30,10 @@ class JavaScriptEngine extends AbstractScriptEngine implements HackEngine, Invoc
         indexedProps = new HashMap<>();
         Context cx = Context.enter();
         stdObjects = cx.initStandardObjects();
+
+        FunctionObject f = new JSLoader(this).getLoadFunction();
+        stdObjects.put("load", stdObjects, f);
+
         Context.exit();
     }
 

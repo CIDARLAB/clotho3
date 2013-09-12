@@ -192,3 +192,14 @@ testThroughAsync("function depends on function",
         function(data){
             equal(data,4);
         });
+
+testThroughAsync("importing external library",
+        new Message("submit", "load(\"lodash.js\")"),
+        function (data) {
+            equal(data, null);
+        });
+testThroughAsync("use lodash",
+        new Message("run", {id: "useLodash", args:[]}),
+        function(data){
+            deepEqual(data, [2,3,4]);
+        });

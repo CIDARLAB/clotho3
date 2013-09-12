@@ -63,6 +63,12 @@
     "dependencies":["522f58729f915de6a1023298"],
     "code":"function(i) {return moduleTestFunction(i);};",
     "args":[]
+},
+{
+    "name":"useLodash",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function() {load(\"lodash.js\"); return _.map([1,2,3],function(i){return i+1;});};"
 }
 ]
 
