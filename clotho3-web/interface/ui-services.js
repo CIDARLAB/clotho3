@@ -860,7 +860,7 @@ Application.Interface.service('$caret', ['$log', function($log) {
 
 //note - jQuery reliance
 //todo - rewrite to use $modal service (esp. for backdrop)
-Application.Interface.service('$focus', ['$document', '$timeout', '$q', function($document, $timeout, $q) {
+Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compile', '$rootScope', function($document, $timeout, $q, $compile, $rootScope) {
     var maxZ = Math.max.apply(null,
         $.map($('body *'), function(e,n) {
             if ($(e).css('position') != 'static')
@@ -953,6 +953,16 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', function
 
     };
 
+    var elementPopover = function(el, popover) {
+        //append popover to body, hide on click
+        
+        console.log('attempting to append popover');
+
+        var html = '<div popover="'+popover+'" popover-element-position="'+el+'" popover-show-default></div>';
+
+        $compile(html)($rootScope.$new());
+        $document.find('body').append(html);
+    };
 
 
 
@@ -963,6 +973,7 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', function
         typeOut : typeOut,
         addBackdrop : addBackdrop,
         removeBackdrop : removeBackdrop,
-        highlightElement : highlightElement
+        highlightElement : highlightElement,
+        elementPopover : elementPopover
     }
 }]);

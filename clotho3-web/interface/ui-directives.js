@@ -859,6 +859,8 @@ Application.Interface.provider( '$tooltip', function () {
                         'title="'+startSym+'tt_title'+endSym+'" '+
                         'content="'+startSym+'tt_content'+endSym+'" '+
                         'placement="'+startSym+'tt_placement'+endSym+'" '+
+                        'element-position="'+startSym+'tt_elementPosition'+endSym+'" '+
+                        'show-bypass="'+startSym+'tt_showBypass'+endSym+'" '+
                         'animation="tt_animation()" '+
                         'is-open="tt_isOpen"'+
                         '>'+
@@ -868,6 +870,7 @@ Application.Interface.provider( '$tooltip', function () {
                     restrict: 'EA',
                     scope: true,
                     link: function link ( scope, element, attrs ) {
+                        console.log(scope);
                         var tooltip = $compile( template )( scope );
                         var transitionTimeout;
                         var popupTimeout;
@@ -875,6 +878,7 @@ Application.Interface.provider( '$tooltip', function () {
                         var appendToBody = angular.isDefined( options.appendToBody ) ? options.appendToBody : false;
                         var triggers = getTriggers( undefined );
                         var hasRegisteredTriggers = false;
+                        var elementPosition; //CUSTOM
 
                         // By default, the tooltip is not open.
                         // TODO add ability to start tooltip opened
@@ -914,6 +918,8 @@ Application.Interface.provider( '$tooltip', function () {
                             if ( ! scope.tt_content ) {
                                 return;
                             }
+                            
+                            console.log('hit 1');
 
                             // If there is a pending remove transition, we must cancel it, lest the
                             // tooltip be mysteriously removed.
@@ -923,6 +929,10 @@ Application.Interface.provider( '$tooltip', function () {
 
                             // Set the initial positioning.
                             tooltip.css({ top: 0, left: 0, display: 'block' });
+
+
+                            console.log('hit 2');
+
 
                             // Now we add it to the DOM because need some info about it. But it's not
                             // visible yet anyway.
@@ -935,6 +945,15 @@ Application.Interface.provider( '$tooltip', function () {
 
                             // Get the position of the directive element.
                             position = appendToBody ? $position.offset( element ) : $position.position( element );
+
+                            //CUSTOM
+                            //if pass in custom element, find it's position
+                            if (elementPosition) {
+                                console.log('using element position: '+ elementPosition);
+                               position = elementPosition
+                            }
+
+                            console.log('hit 3');
 
                             // Get the height and width of the tooltip so we can center it.
                             ttWidth = tooltip.prop( 'offsetWidth' );
@@ -984,6 +1003,10 @@ Application.Interface.provider( '$tooltip', function () {
 
                             //CUSTOM
                             tooltip.addClass('noPointerEvents');
+
+                            console.log('hit 4');
+
+                            console.log(tooltip);
 
                             // And show the tooltip.
                             scope.tt_isOpen = true;
@@ -1054,8 +1077,27 @@ Application.Interface.provider( '$tooltip', function () {
                             appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;
                         });
 
-                        //todo - add attr to show by default
+                        //todo - make work
                         //CUSTOM
+                        attrs.$observe(prefix+'ShowBypass', function (val) {
+                            console.log('show bypass observe : ' + val);
+                            scope.tt_showBypass = (val !== false);
+                        });
+
+                        scope.$watch('tt_showBypass', function (val) {
+                            console.log('tt_showBypass val : ' + val);
+                            !!val && $timeout(function() {show()});
+                        });
+
+                        //todo - make work
+                        //CUSTOM
+                        //attr to append to a specific element (e.g. if render on body)
+                        attrs.$observe( prefix+'ElementPosition', function (val) {
+                            scope.tt_elementPosition = angular.isDefined(val) ? val : null;
+                            if (!scope.tt_elementPosition) return;
+                            var el = $(scope.tt_elementPosition);
+                            elementPosition = $position.offset(el);
+                        });
 
 
                         // if a tooltip is attached to <body> we need to remove it on
