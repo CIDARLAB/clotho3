@@ -33,6 +33,16 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
             return $dialog.messageBox('Submit', 'You can submit your command by either hitting the enter key, or pressing the submit button', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
         })
         .then(function() {
+            return $timeout(function() {
+                $focus.removeBackdrop();
+                $focus.setZ(oldsubmitZ, searchSubmit);
+            })
+        });
+
+        /*.then(function() {
+            return $dialog.messageBox('Submit', 'You can submit your command by either hitting the enter key, or pressing the submit button', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+        })
+        .then(function() {
             //focus submit
             return $focus.setZ(maxZ + 2, searchSubmit);
         })
@@ -57,8 +67,9 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
         })
         .then(function() {
             searchInput.val('').focus();
-        });
+        });*/
     };
+
 
     $scope.showHelpTips = function() {
         $focus.elementPopover('#searchBarInput', "whats up");

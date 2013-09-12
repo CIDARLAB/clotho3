@@ -49,6 +49,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- Trail launch goes to first paver
+- biosafety module - add in videos, rename
+
 
 - custom person object, add anderson lab people
 
@@ -88,6 +91,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - hints
     - dynamic quesions
         - parameters for question, answer, generated values
+
+
+- $timeout API requests e.g. get, query, after interval
 
 
 - upgrade to $modal from angular ui

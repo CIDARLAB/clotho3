@@ -50,17 +50,23 @@
                 {
                     "title" : "Restriction Digests",
                     "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
+                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg",
+                    "template" : "/partials/trails/clotho-intro/RestrictionDigests.html",
+                    "mixin" : "/partials/trails/clotho-intro/RestrictionDigests.js"
                 },
                 {
                     "title" : "Ligation",
                     "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
+                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4",
+                    "template" : "/partials/trails/clotho-intro/Ligation.html",
+                    "mixin" : "/partials/trails/clotho-intro/Ligation.js"
                 },
                 {
                     "title" : "PCR",
                     "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU",
+                    "template" : "/partials/trails/clotho-intro/PCR.html",
+                    "mixin" : "/partials/trails/clotho-intro/PCR.js"
                 }
             ]
         },
