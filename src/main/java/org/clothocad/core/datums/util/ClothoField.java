@@ -95,6 +95,7 @@ public class ClothoField {
 
     private String name;
     
+    //TODO: let replace reference another class
     @Replace(encoder="jsonifyFieldType", decoder="decodeFieldType")
     private Class<?> type;
     private Type subtype;

@@ -169,6 +169,11 @@ asyncTest("login/logout", function(){
 
 
 module("Functions and Modules")
+testThroughAsync("functions with arguments",
+        new Message("submit", "clotho.run('lowercase', ['HEY'])"),
+        function(data){
+            equal(data, "hey");
+        });
 testThroughAsync("module scoping",
         new Message("run", {id:"moduleTestFunction", args:[1]}),
         function(data){

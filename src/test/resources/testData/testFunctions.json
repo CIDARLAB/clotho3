@@ -4,21 +4,21 @@
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.toUpperCase();};",
-    "args":[{"name":"str", "type":"String"}]
+    "args":[{"name":"str", "type":"string"}]
 },
 {
     "name":"lowercase",
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.toLowerCase();};",
-    "args":[{"name":"str", "type":"String"}]
+    "args":[{"name":"str", "type":"string"}]
 },
 {
     "name":"spaceout",
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.split('').join(' ');};",
-    "args":[{"name":"str", "type":"String"}]
+    "args":[{"name":"str", "type":"string"}]
 },
 {
     "name":"reverse",
@@ -62,7 +62,7 @@
     "schema":"Function",
     "dependencies":["522f58729f915de6a1023298"],
     "code":"function(i) {return moduleTestFunction(i);};",
-    "args":[]
+    "args":[{"type":"number", "name":"i"}]
 },
 {
     "name":"useLodash",

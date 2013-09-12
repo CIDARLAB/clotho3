@@ -71,6 +71,10 @@ public abstract class Schema extends SharableObjBase {
         return BASE_PACKAGE_BINARY + "C"+ this.getUUID();
     }
     
+    public static String getBinaryName(ObjectId id){
+          return BASE_PACKAGE_BINARY + "C"+ id;      
+    }
+    
     public String getInternalName(){
         return getBinaryName().replace('.', '/');
     }
