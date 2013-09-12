@@ -8,49 +8,49 @@
     "contents" : [
         {
             "chapter" : "Automation Tools",
-            "pavers" : [
+            "pages" : [
                 {
-                    "paver" : "Introduction",
+                    "title" : "Introduction",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=QtJOb2wucQo"
                 },
                 {
-                    "paver" : "Robotics",
+                    "title" : "Robotics",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=T9kuB37tG0s"
                 },
                 {
-                    "paver" : "Software Tools",
+                    "title" : "Software Tools",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=_macHtlNRp8"
                 },
                 {
-                    "paver" : "Technical Design tools",
+                    "title" : "Technical Design tools",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=LWO8wBrlgTs"
                 },
                 {
-                    "paver" : "Data Management Platforms",
+                    "title" : "Data Management Platforms",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=8bYAQgaspmI"
                 },
                 {
-                    "paver" : "Automated Compositional Design",
+                    "title" : "Automated Compositional Design",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=bv186MrHQg0"
                 },
                 {
-                    "paver" : "Automated Assembly",
+                    "title" : "Automated Assembly",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=X0eemsxBtlI"
                 },
                 {
-                    "paver" : "Kinetic Models and Simulation",
+                    "title" : "Kinetic Models and Simulation",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=Ny9ZlkM2rzo"
                 },
                 {
-                    "paver" : "Automated Compositional Design",
+                    "title" : "Automated Compositional Design",
                     "icon" : "video",
                     "video" : "http://www.youtube.com/watch?v=bv186MrHQg0"
                 }

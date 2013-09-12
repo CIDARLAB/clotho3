@@ -343,34 +343,106 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      Construction - move to own module
      **************/
 
-
+    //todo - currently only handles fragments with terminal marks
+    // note really hacky
     var ligate = function ligate(fragments) {
+        console.log(fragments);
 
         var overhangs = [],
-            blunts = [];
+            blunts = [],
+            ligateProducts = [];
 
         for (var i = 0; i < fragments.length; i++) {
             var frag = fragments[i],
                 ends = Digest.findOverhangs(frag);
 
             for (var j = 0; j < ends.length; j++) {
-                if (ends[i].isBlunt) {
-                    blunts.push({fragment : frag, ends : ends})
+                //todo - handle non-terminal marks, maybe by cutting?
+                if (!ends[j].terminal) {}
+
+                if (ends[j].isBlunt) {
+                    blunts.push({fragment : frag, end : ends[j], overhang : "|"})
                 } else {
-                    overhangs.push({fragment : frag, ends : ends})
+                    overhangs.push({fragment : frag, end : ends[j], overhang : ends[j][3]})
+                }
+            }
+        }
+
+        console.log(overhangs);
+        console.log(blunts);
+
+        //note - only two, pass in whole object as made above
+        function joinFragments (frags) {
+            var frag1 = frags[0],
+                frag2 = frags[1],
+                product;
+
+
+            console.log(frag1, frag2);
+            console.log(frag1.end.index, frag2.end.index);
+
+
+
+            //orient so frag1 comes first
+            //todo - fix overhang
+            if (frag1.end.index == 0) {
+                frag1.fragment = DNA.revcomp(frag1.fragment);
+            }
+            if (frag2.end.index != 0) {
+                frag2.fragment = DNA.revcomp(frag2.fragment);
+            }
+            
+            console.log(frag1, frag2);
+
+            //join
+            if (frag1.overhang == "|" && frag2.overhang == "|") {
+
+                product = ""; //todo
+            } else {
+
+                product = Digest.removeMarks(frag1.fragment);
+                //todo - move into function to remove sticky end
+                product = product + Digest.removeOverhangs(frag2.fragment);
+            }
+
+            return product;
+        }
+
+        if (blunts.length && blunts.length > 1) {
+            if (blunts.length > 2) {
+                //random products
+                console.log('multiple blunt ends, products will be mixed');
+            }
+            if (blunts.length == 2) {
+                //todo - account for multiple directions
+                var product = joinFragments(blunts);
+                ligateProducts.push(product)
+            }
+        }
+
+        if (overhangs.length && overhangs.length > 1) {
+            if (overhangs.length == 2) {
+                if (overhangs[0].overhang == DNA.revcomp(overhangs[1].overhang)) {
+                    var product = joinFragments(overhangs);
+                    ligateProducts.push(product);
                 }
             }
 
         }
 
-        //todo
-        //note - blunt ends can ligate in multiple directions
+        return ligateProducts;
 
     };
 
 
     return {
-        predict : predict
+        predict : predict,
+
+        exonuclease35 : exonuclease35,
+        exonuclease53 : exonuclease53,
+        polymerase53 : polymerase53,
+
+        ligate : ligate
 
     }
 }]);

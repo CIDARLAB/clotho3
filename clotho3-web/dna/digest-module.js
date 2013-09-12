@@ -228,10 +228,22 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         enzymesReverse[enz.cut] = name;
     });
 
-    var cuts = {
-        'blunt' : '|',
-        'main'  : '^',
-        'comp'  : '_'
+    var cutMarks = {
+        'blunt' : {
+            mark: '|',
+            type: 'Blunt',
+            description: 'A cut that results in no "sticky" ends, or overhangs. '
+        },
+        'main' : {
+            mark: '^',
+            type: 'Main Strand',
+            description: 'Denotes a cut on the 5\' -> 3\' (primary) strand, usually visualized as the "top" strand.'
+        },
+        'comp' : {
+            mark: '_',
+            type: 'Complementary Strand',
+            description: 'Denotes a cut on the 3\' -> 5\' (complementary) strand, usually visualized as the "bottom" strand.'
+        }
     };
 
     var regexps = {};
@@ -596,7 +608,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     /**
      * @description
      * @param sequence
-     * @returns {object} key is index of match, value is array...
+     * @returns {array} array of objects:
      * Some keys:
      *      0-4 : <matches from regex>
      *      index: index of match
@@ -605,9 +617,11 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      *      length: length of match
      *      match: matched overhang sequence, including marks
      *      rev : true for 3' overhang (e.g. nnn_nnnn^nnn)
+     *      terminal : true if cut mark is on either end of fragment passed in
+     *
      *
      * @example "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
-     4: Array[5]
+     0: Array[5]
          0: "^ct_"
          1: undefined
          2: "^"
@@ -619,7 +633,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
          length: 4
          match: "^ct_"
          rev: false
-     19: Array[5]
+         terminal : false
+     1: Array[5]
          0: "|"
          1: "|"
          2: undefined
@@ -631,7 +646,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
          length: 1
          match: "|"
          rev: null
-     31: Array[5]
+         terminal : false
+     2: Array[5]
          0: "_cgta^"
          1: undefined
          2: "_"
@@ -643,24 +659,30 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
          length: 6
          match: "_cgta^"
          rev: true
+         terminal : false
      */
     var findOverhangs = function (sequence) {
         var regCut = regexps.findCut,
             match,
-            matches = {};
+            matches = [];
 
         //testing
         //sequence = "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga";
 
-        while ((match = (regCut).exec(extendSequence(sequence, match.length-1))) != null) {
+        while ((match = (regCut).exec(sequence)) != null) {
             match.match = match[0];
             match.isBlunt = (match.match == '|');
             match.rev = match.isBlunt ? null : (match[2] == '^');
             match.length = match.match.length;
-            matches[match.index] = match;
+            match.terminal = (match.index == 0 || (match.index + (match.isBlunt ? 1 : match[3]) )) ? true : false;
+            matches.push(match);
         }
 
         return matches;
+    };
+
+    var removeOverhangs = function (sequence) {
+        return sequence.replace(/(_.+?\^)|(\^.+?_)/ig, '');
     };
 
     /**
@@ -713,6 +735,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     return {
         //config
         enzymes : enzymes,
+        cutMarks : cutMarks,
 
         //utility
         extendSequence : extendSequence,
@@ -733,6 +756,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         removeMatches : removeMatches,
         removeMarks : removeMarks,
         findOverhangs : findOverhangs,
+        removeOverhangs : removeOverhangs,
 
         //manipulation
         makeCuts : makeCuts,

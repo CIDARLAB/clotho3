@@ -1,0 +1,55 @@
+<div ng-controller="clothoIntro_LigationCtrl">
+
+
+    <table class="table table-bordered table-striped code-table">
+        <thead>
+        <tr><th>Cut Mark</th><th>Type</th><th>Description</th></tr>
+        </thead>
+        <tbody ng-repeat="mark in Digest.cutMarks">
+        <tr>
+            <td><b>{{ mark.mark }}</b></td>
+            <td>{{ mark.type }}</td>
+            <td>
+                <p>{{ mark.description }}</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>todo - less ugly, explain</h2>
+
+
+    <div class="row-fluid">
+        <form name="ligation" class="form-horizontal">
+            <div class="control-group">
+                <div class="pull-left">
+                    <label class="control-label" for="frag1">Fragment 1</label>
+                    <div class="controls">
+                        <input type="text" id="frag1" placeholder="Fragment 1" ng-model="fragments[0]" />
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="pull-left">
+                    <label class="control-label" for="frag2">Fragment 2</label>
+                    <div class="controls">
+                        <input type="text" id="frag2" placeholder="Fragment 2" ng-model="fragments[1]"  />
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="ligationProd">Ligation Product</label>
+                <div class="controls">
+                    <pre id="ligationProd" placeholder="Ligated Sequence" ng-model="ligated" contenteditable="false"></pre>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+    <h2>todo - how to use search bar</h2>
+
+
+</div>
