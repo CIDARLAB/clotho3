@@ -51,9 +51,25 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - Stephanie - write file name when causes problem
 - Stephanie - reloadModules
-- update functions with semicolon
 - function: dependencies is array of strings
-- write quiz grade function
+
+
+TRAILS
+    - use gradeQuiz
+        - fix controller function
+        - fold in dictionary
+        -
+    - finish basic content
+    - finish pcr function
+    - start construction files
+
+
+
+- look into including Raven + Eugene
+    - Raven: jenhan's login
+
+
+- Eugene and Raven logos
 
 
 
@@ -61,26 +77,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - test extending (incl. outside of module definition)
 
 
-
-- DNA + demo trail
-    - PCR functions working
-    - start construction files (JSON format)
-
-
-
-
-- searchbar toggle tips button - remove
-
-
 - custom person object, add anderson lab people
     - start testing andersonLab site with that (ninaEmami ? )
-
-
-
-
-- $focus
-    - get popover to display by default
-
 
 
 - new schemas
@@ -91,6 +89,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 - UI services
+    - $focus
+        - get popover to display by default
     - help tips service (as popoverService)
         - given object of tips and selectors, show appropriately
         - be able to step through

@@ -21,12 +21,20 @@
                 {
                     "title" : "Reverse Complement",
                     "icon" : "exercise",
+                    "dictionary" : {
+                        "outerDictVal" : "Tester"
+                    },
                     "intro" : "<p>DNA is double stranded, but we represent it as a single strand for convenience.  Often you’ll need to know the sequence of the other strand (the reverse-complement).</p>",
                     "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
+                    "template" : "/partials/trails/clotho-intro/reverseComplement.html",
                     "quiz" : {
                         "title" : "Reverse Complement",
                         "type" : "fillin",
-                        "question" : "What is the reverse complement of the sequence <code>ACCTAGT</code>?"
+                        "question" : "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
+                        "dictionary" : {
+                            "questionValue" : "ACGTACG",
+                            "answerGenerator" : "aa7f191e810c19729de86101"
+                        }
                     }
                 },
                 {

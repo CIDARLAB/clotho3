@@ -80,6 +80,7 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                     }
 
                     function createYoutubePlayer () {
+                        console.log(YT);
                         scope.player = new YT.Player(element[0], scope.params);
                     }
                 }
@@ -273,8 +274,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     load.template = function loadTemplate (url) {
         if (!url) return $q.when();
 
-        //todo - check for url vs. simple template inline
-
         return $http.get(url, {cache:$templateCache}).then(function (success) {
             return success.data;
         }, function(error) {
@@ -287,6 +286,15 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         if (!content) return $q.when();
 
         $scope.quiz = content;
+
+        //extend the scope with Page.quiz.dictionary (separate from Page.dictionary)
+        if (content.dictionary) {
+            var dict = angular.copy(content.dictionary);
+            //deletes reference too, i.e. scope.quiz.dictioary
+            delete content.dictionary;
+            angular.extend($scope.quiz, dict);
+        }
+
         $scope.gradeCallback = function(data) {
             console.log(data);
         };
@@ -320,8 +328,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         //future in ng-1.2.x, use notify callbacks for updates
         //todo - error callbacks
 
-        console.log(page.intro, page.template, page.video, page.text);
-
         var loading = $q.defer();
         //$scope.content = '<div class="alert alert-info"><p>Loading content...</p></div>';
 
@@ -352,7 +358,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             });
         })
         .then(function(content) {
-            console.log(loading, content);
+                
+                console.log($scope);
 
             var contentText = angular.element((content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || ""));
 
@@ -451,14 +458,17 @@ Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($sc
     };
 
     $scope.submitQuestion = function(quiz) {
-        Clotho.gradeQuiz(quiz).then(function (data) {
+        console.log(quiz);
+        Clotho.run('gradeQuiz', [quiz.questionValue, quiz.answer, quiz.answerGenerator]).then(function (data) {
             $scope.quiz.submitted = true;
-            $scope.quiz.response = data;
+            $scope.quiz.response = {};
+            $scope.quiz.response.result = data;
+            $scope.gradeCallback(data);
         });
     }
 }]);
 
-Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile', 'Clotho', function($http, $templateCache, $compile, Clotho) {
+Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile', 'Clotho', '$interpolate', function($http, $templateCache, $compile, Clotho, $interpolate) {
     return {
         restrict: "EA",
         require: 'ngModel',
@@ -471,6 +481,9 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs) {
+
+                    //can't $compile, need to just $interpolate
+                    scope.quiz.question = $interpolate(scope.quiz.question)(scope.quiz);
 
                     $http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
                         .success(function (data) {
@@ -496,9 +509,10 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
                     };
 
                     scope.submitQuestion = function(quiz) {
-                        Clotho.gradeQuiz(quiz).then(function (data) {
+                        Clotho.run('gradeQuiz', [quiz.questionValue, quiz.answer, quiz.answerGenerator]).then(function (data) {
                             scope.quiz.submitted = true;
-                            scope.quiz.response = data;
+                            scope.quiz.response = {};
+                            scope.quiz.response.result = data;
                             scope.gradeCallback(data);
                         });
                     };

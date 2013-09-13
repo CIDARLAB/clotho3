@@ -96,8 +96,9 @@ angular.module('clothoRoot', ['clothoPackage']).
                         });
                         return deferred.promise;
                     },
-                    deps : function() {
-                        return Application.mixin('/lib/youtubeAPI.js');
+                    deps : function($q) {
+                        //todo - use onPlayerReady() (whatever it's called) to ensure loaded
+                        return Application.mixin('/lib/youtubeAPI.js')
                     }
                 }
             }).

@@ -36,6 +36,16 @@
             "reference": false
         },
         {
+            "name": "dictionary",
+            "type": "object",
+            "description": "Object used to extend $scope.quiz (Page.quiz.dictionary is specific to the quiz, and acts differently than Page.dictionary, in that it is only visible in the scope of the quiz). Define fields questionValue and answerGenerator appropriately for the question, will be submitted to the function gradeQuiz",
+            "example": "",
+            "constraints": null,
+            "access": "PUBLIC",
+            "javaType": "java.lang.String",
+            "reference": false
+        },
+        {
             "name": "hint",
             "type": "string",
             "description": "Any information that may help in achieving the correct answer",

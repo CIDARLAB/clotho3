@@ -1,9 +1,5 @@
 'use strict';
 
-Application.Interface.directive.code = function() {
-    return { restrict:'E', terminal: true };
-};
-
 /***********************
  CLICKS / COMMON BROWSER EVENTS
  ***********************/
