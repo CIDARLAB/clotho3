@@ -49,10 +49,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- searchbar toggle tips button
+- update functions with semicolon
+- function: dependencies is array of strings
+- write quiz grade function
 
-- custom person object, add anderson lab people
-    - start testing with that (ninaEmami ? )
 
 
 - modules
@@ -63,6 +63,16 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - DNA + demo trail
     - PCR functions working
     - start construction files (JSON format)
+
+
+
+
+- searchbar toggle tips button - remove
+
+
+- custom person object, add anderson lab people
+    - start testing andersonLab site with that (ninaEmami ? )
+
 
 
 

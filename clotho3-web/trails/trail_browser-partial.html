@@ -16,7 +16,7 @@
         <div class="span4" id="trail_list">
             <input type="text" class="span4" placeholder="Filter Text" ng-model="searchText">
 
-            <article class="well clearfix" style="padding: 0 " ng-repeat="trail in trails | filter:{name:searchText} | limitTo:8">
+            <article class="well clearfix" style="padding: 0 " ng-repeat="trail in trails | filter:{name:searchText} | limitTo:10">
                 <a class="pull-left" ng-href="#/trails/{{trail.id}}" style="padding-right: 10px;">
                     <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" ng-src="{{base64icon}}">
                 </a>

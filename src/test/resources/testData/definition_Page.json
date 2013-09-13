@@ -58,7 +58,7 @@
         {
             "name": "quiz",
             "type": "object",
-            "description": "",
+            "description": "See the Quiz schema",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
@@ -78,8 +78,8 @@
         {
             "name": "hint",
             "type": "string",
-            "description": "HTML (will be wrapped in &lt;p&gt; tags) to display as a hint ",
-            "example": "Your <b>hint</b> might have some <code>code</code> in it",
+            "description": "text to display as a hint ",
+            "example": "Your hint shouldn't have HTML (yet)",
             "constraints": null,
             "access": "PUBLIC",
             "javaType": "java.lang.String",

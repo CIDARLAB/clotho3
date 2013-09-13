@@ -10,7 +10,15 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
             maxZ = $focus.maxZ;
 
 
-        //add backdrop, highlight input
+        $dialog.messageBox('Entering Commands', 'The search bar executes commands in JavaScript. You can run Clotho API commands, and functions within Clotho. For example, to reverse complement a sequence, you would call the function <code>revcomp</code> and pass your sequence in the array of arguments like so: <code>["acagtgcca"]</code>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+        .then(function() {
+            return $focus.typeOutSearch("clotho.run('revcomp', ['acagtgcca'])")
+        })
+        .then(function() {
+            return $dialog.messageBox('Submit', 'You can submit your command by either hitting the enter key, or pressing the submit button', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+        });
+
+        /*//add backdrop, highlight input
         $focus.addBackdrop(maxZ+1)
         .then(function() {
             return $dialog.messageBox('Entering Commands', 'The search bar executes commands in JavaScript. You can run Clotho API commands, and functions within Clotho. For example, to reverse complement a sequence, you would call the function <code>revcomp</code> and pass your sequence in the array of arguments like so: <code>["acagtgcca"]</code>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
@@ -22,7 +30,6 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
             return $focus.typeOut(searchInput,
                 "clotho.run('revcomp', ['acagtgcca'])", 'display.query')
         })
-
         .then(function() {
             return $timeout(function() {
                 //fade out search
@@ -38,8 +45,7 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
                 $focus.setZ(oldsubmitZ, searchSubmit);
             })
         });
-
-        /*.then(function() {
+        .then(function() {
             return $dialog.messageBox('Submit', 'You can submit your command by either hitting the enter key, or pressing the submit button', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
         })
         .then(function() {
@@ -73,6 +79,7 @@ Application.Extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '
 
     $scope.showHelpTips = function() {
         $focus.elementPopover('#searchBarInput', "whats up");
-    }
+    };
+
 
 }]);

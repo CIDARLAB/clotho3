@@ -408,7 +408,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
             return product;
         }
 
-        if (blunts.length && blunts.length > 1) {
+        if (blunts.length > 1) {
             if (blunts.length > 2) {
                 //random products
                 console.log('multiple blunt ends, products will be mixed');
@@ -420,7 +420,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
             }
         }
 
-        if (overhangs.length && overhangs.length > 1) {
+        if (overhangs.length > 1) {
             if (overhangs.length == 2) {
                 if (overhangs[0].overhang == DNA.revcomp(overhangs[1].overhang)) {
                     var product = joinFragments(overhangs);

@@ -3,16 +3,11 @@
     "type" : "function",
     "schema" : "Function",
     "id" : "aa7f191e810c19729de86101",
-    "code" : "function revcomp(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]});  }",
+    "code" : "function revcomp(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]}); };",
     "language" : "JAVASCRIPT",
     "description" : "This function should reverse complement a string",
     "precondition" : "",
-    "dependencies" : [
-        {
-            "id" : "128719827591295",
-            "name" : "Example Function"
-        }
-    ],
+    "dependencies" : [ "128719827591295" ],
     "args" : [
         {
             "type" : "String",
