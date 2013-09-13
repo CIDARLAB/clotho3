@@ -121,9 +121,10 @@ public class MetaEngine {
     
     public void loadAsGlobal(Module module, ScriptAPI api) throws ScriptException{
         String name = "f"+module.getUUID().toString();
-        if (getEngine(module.getLanguage()).getContext().getBindings(ScriptContext.ENGINE_SCOPE).containsKey(name)){
-            return;
-        }
+        //TODO: check last saved date
+        //if (getEngine(module.getLanguage()).getContext().getBindings(ScriptContext.ENGINE_SCOPE).containsKey(name)){
+        //    return;
+        //}
         HackEngine engine = getEngine(module.getLanguage());
         
         engine.eval("var " + name + " = " +module.getCodeToLoad());
