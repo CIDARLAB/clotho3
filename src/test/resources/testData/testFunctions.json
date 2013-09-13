@@ -1,6 +1,7 @@
 [
 {
     "name":"uppercase",
+    "id":"5232a9e95ce620f042e5825f",
     "language":"JAVASCRIPT",
     "schema":"Function",
     "code":"function (str) {return str.toUpperCase();};",

@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.clothocad.core.persistence.IdUtils;
 import org.clothocad.core.persistence.Replace;
 import org.clothocad.core.persistence.mongodb.ClothoMappedField;
 import org.clothocad.core.schema.Schema;
@@ -99,10 +100,18 @@ public class Argument {
         if (c != null){
             type = c;
             return;
+        }   
+        ObjectId id;
+        if (ObjectId.isValid(s)){
+        id = new ObjectId(s);            
+        } else {
+            id = IdUtils.resolveSelector(s, true);
         }
         
+
         try {
-            type = Class.forName(Schema.getBinaryName(new ObjectId(s)), true, Schema.cl);
+            
+            type = IdUtils.getClass(id);
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException("Could not find schema: "+ s, ex);
         }

@@ -4,9 +4,12 @@
  */
 package org.clothocad.core.persistence;
 
+import java.util.Map;
 import javax.inject.Inject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.schema.BuiltInSchema;
+import org.clothocad.core.schema.Schema;
 
 /**
  * lame hack to handle the need to look up various ids in the data layer
@@ -19,5 +22,20 @@ public class IdUtils {
     
     public static ObjBase get(ObjectId id){
         return persistor.get(ObjBase.class, id);
+    }
+    
+    public static ObjectId resolveSelector(String selector, boolean strict){
+        return persistor.resolveSelector(selector, strict);
+    }
+    
+    public static Class getClass(ObjectId schemaId) throws ClassNotFoundException{
+        Map<String,Object> schemaData = persistor.getAsJSON(schemaId);
+        if (schemaData.get("schema").toString().equals("BuiltInSchema")){
+            BuiltInSchema schema = persistor.get(BuiltInSchema.class, schemaId);
+            return schema.getClass();
+        }
+        else {
+            return Class.forName(Schema.getBinaryName(schemaId), true, Schema.cl);
+        }
     }
 }

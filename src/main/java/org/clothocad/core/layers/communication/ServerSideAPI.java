@@ -533,23 +533,13 @@ public class ServerSideAPI {
             return null;
         }
 
-
-        for (int i = 0; i < args.size(); i++) {
-            try {
-                ObjectId id = new ObjectId(args.get(i).toString());
-                args.set(i, persistor.get(ObjBase.class, id));
-            } catch (IllegalArgumentException e) {
-            }
-        }
-
-
         if (data.containsKey("id")) {
             //XXX:(ugh ugh) end-run if *Function
             Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    Function function = persistor.get(Function.class,  persistor.resolveSelector(data.get("id").toString(), true));
-                    
+                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+
                     return mind.invoke(function, args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown", e);
@@ -560,10 +550,10 @@ public class ServerSideAPI {
                 }
             }
             //XXX: this whole function is still a mess
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")){
+            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
                     Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
-                    
+
                     return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown", e);
@@ -574,6 +564,13 @@ public class ServerSideAPI {
                 }
             }
 
+            for (int i = 0; i < args.size(); i++) {
+                try {
+                    ObjectId id = new ObjectId(args.get(i).toString());
+                    args.set(i, persistor.get(ObjBase.class, id));
+                } catch (IllegalArgumentException e) {
+                }
+            }
             //reflectively (ugh) run function of instance
             ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
 
