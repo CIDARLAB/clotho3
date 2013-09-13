@@ -22,10 +22,11 @@
 },
 {
     "name":"reverse",
+    "id":"5232624a7054e77e5d370961",
     "language" : "JAVASCRIPT",
     "schema":"Function",
     "args":[{"type":"string","name":"str"}],
-    "code":"function(str) { return str.split('').reverse().join('') }",
+    "code":"function(str) { return str.split('').reverse().join('') };",
     "tests":[
     {
         "args":["blah"],

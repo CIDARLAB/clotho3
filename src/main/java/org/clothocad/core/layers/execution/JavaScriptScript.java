@@ -72,7 +72,7 @@ public class JavaScriptScript implements Script {
     public String modularizeFunction(String code) {
         String format = "(function() {"
                 + "var f = %s"
-                + "return f"
+                + "return f;"
                 + "}());";
         return String.format(format, code);
     }

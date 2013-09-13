@@ -4,14 +4,8 @@
  */
 package org.clothocad.core.datums;
 
-import com.github.jmkgreen.morphia.annotations.PostLoad;
-import com.github.jmkgreen.morphia.annotations.PreLoad;
-import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.github.jmkgreen.morphia.annotations.Reference;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
@@ -51,13 +45,16 @@ public class Module extends ObjBase {
     }
     
     protected void setCode(String code, Language language){
+        this.code = generateScript(code,language);
+    }
+    
+    public static Script generateScript(String code, Language language){
         switch (language){
             case JAVASCRIPT:
-                this.code = new JavaScriptScript(code);
-                break;
+                return new JavaScriptScript(code);
             default:
                 throw new UnsupportedOperationException("unsupported language");
-        }        
+        }          
     }
     
     public void decodeScript(Map obj){

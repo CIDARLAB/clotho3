@@ -6,10 +6,12 @@ package org.clothocad.core.datums;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.List;
+import java.util.Map;
 import javax.script.ScriptException;
 import lombok.Getter;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.execution.Script;
+import org.clothocad.core.persistence.Replace;
 import org.clothocad.model.Person;
 
 /**
@@ -51,6 +53,8 @@ public class Function extends Module {
     //XXX: all our target languages have single return value, so multiple return value is undefined
         //XXX: python has automatic tuple unpacking, is that what is intended?
     
+    //TODO: make replace more modular
+    @Replace(encoder="encodePrecondition", decoder="decodePrecondition")
     private Script precondition;
     
     //TODO: convert to dict-style
@@ -72,5 +76,15 @@ public class Function extends Module {
         public FunctionTest(){};
     }
     
+    public String encodePrecondition(){
+        if (precondition == null) return null;
+        return precondition.toString();
+    }
+    
+    public void decodePrecondition(Map obj){
+        if (!obj.containsKey("precondition")) return;
+        String source = obj.get("precondition").toString();
+        precondition = Module.generateScript(source, Language.valueOf(obj.get("language").toString()));
+    }
     
 }
