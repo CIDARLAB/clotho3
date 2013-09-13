@@ -1,0 +1,62 @@
+<div>
+
+    <h2>Clotho Run Wrapper</h2>
+
+    <p>This is a directive wrapper you can use for running functions on the server. use the attribute ng-model to define the input, and clotho-run to define your function. Single arity models will be wrapped in an array. Otherwise your model should be an array for higher arity functions.</p>
+
+    <form name="dnaPlayground" class="span12 form-horizontal">
+
+        <div class="control-group">
+            <label class="control-label" for="seq">Sequence</label>
+            <div class="controls">
+                <input type="text" id="seq" placeholder="Sequence" ng-model="sequence" ng-init="sequence = 'acgtaACGTACatca'">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="clothorun">Clotho.run (choose below)</label>
+            <div class="controls">
+                <input type="text" id="clothorun" placeholder="remote Reverse" ng-model="sequence" clotho-run="{{ chooseFunction }}" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="clothofn">Choose Clotho Function</label>
+            <div class="controls">
+                <input type="text" id="clothofn" placeholder="Choose a function to Run" ng-model="chooseFunction" ng-init="chooseFunction = 'lowercase'" typeahead="fn.name for fn in clothoFunctions">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="clothorunpre">Clotho.run 'reverse'</label>
+            <div class="controls">
+                <pre id="clothorunpre" placeholder="Remote reverse" ng-model="sequence" clotho-run="reverse"></pre>
+            </div>
+        </div>
+
+    </form>
+
+    <hr>
+
+    <h2>Specific UI elements (in flux)</h2>
+
+    <p>Some of this logic will be moving to the server. I may forget to update it here.</p>
+
+    <form name="digestPlayground" class="form-horizontal">
+
+        <div class="control-group">
+            <label class="control-label" for="enzSelect">Enzyme Name</label>
+            <div class="controls">
+                <select id="enzSelect" ng-options="enz as enz.name for (name, enz) in Digest.enzymes" ng-model="digestEnz"></select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="digSites">{{ digestEnz.name }} Sites</label>
+            <div class="controls">
+                <pre id="digSites" ng-model="digestSeq" digest-highlight="digestEnz"></pre>
+            </div>
+        </div>
+
+    </form>
+</div>

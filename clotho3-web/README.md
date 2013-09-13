@@ -49,6 +49,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- Stephanie - write file name when causes problem
+- Stephanie - reloadModules
 - update functions with semicolon
 - function: dependencies is array of strings
 - write quiz grade function

@@ -1,51 +1,76 @@
 [
+{
+    "name":"uppercase",
+    "id":"5232a9e95ce620f042e5825f",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function (str) {return str.toUpperCase();};",
+    "args":[{"name":"str", "type":"string"}]
+},
+{
+    "name":"lowercase",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function (str) {return str.toLowerCase();};",
+    "args":[{"name":"str", "type":"string"}]
+},
+{
+    "name":"spaceout",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function (str) {return str.split('').join(' ');};",
+    "args":[{"name":"str", "type":"string"}]
+},
+{
+    "name":"reverse",
+    "id":"5232624a7054e77e5d370961",
+    "language" : "JAVASCRIPT",
+    "schema":"Function",
+    "args":[{"type":"string","name":"str"}],
+    "code":"function(str) { return str.split('').reverse().join('') };",
+    "tests":[
     {
-        "name":"uppercase",
-        "language":"JAVASCRIPT",
-        "schema":"Function",
-        "code":"function (str) {return str.toUpperCase();};",
-        "args":[{"name":"str", "type":"String"}]
-    },
-    {
-        "name":"lowercase",
-        "language":"JAVASCRIPT",
-        "schema":"Function",
-        "code":"function (str) {return str.toLowerCase();};",
-        "args":[{"name":"str", "type":"String"}]
-    },
-    {
-        "name":"spaceout",
-        "language":"JAVASCRIPT",
-        "schema":"Function",
-        "code":"function (str) {return str.split('').join(' ');};",
-        "args":[{"name":"str", "type":"String"}]
-    },
-    {
-        "name":"reverse",
-        "language" : "JAVASCRIPT",
-        "schema":"Function",
-        "args":[{"type":"string","name":"str"}],
-        "code":"function(str) { return str.split('').reverse().join('') }",
-        "tests":[
-            {
-                "args":["blah"],
-                "output":{"value":"halb","type":"VALUE"}
-            }
-        ]
-    },
-    {
-        "name":"testModule",
-        "id":"522af4b4b22548ae323e4475",
-        "language":"JAVASCRIPT",
-        "schema":"Module",
-        "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
-    },
-    {
-        "name":"moduleTestFunction",
-        "language":"JAVASCRIPT",
-        "schema":"Function",
-        "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
-        "args":[{"type":"number","name":"i"}],
-        "dependencies":["522af4b4b22548ae323e4475"]
+        "args":["blah"],
+        "output":{"value":"halb","type":"VALUE"}
     }
+    ]
+},
+{
+    "name":"testModule",
+    "id":"522af4b4b22548ae323e4475",
+    "language":"JAVASCRIPT",
+    "schema":"Module",
+    "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
+},
+{
+    "name":"moduleTestFunction",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
+    "args":[],
+    "dependencies":["522af4b4b22548ae323e4475"]
+},
+{
+    "name":"testModule2",
+    "id":"522f4b5c9f915de6a1023297",
+    "language":"JAVASCRIPT",
+    "schema":"Module",
+    "dependencies":["522af4b4b22548ae323e4475"],
+    "code":"(function f() {var my = {}; my.moduleMethod = testModule.moduleMethod; return my;}());"
+},
+{
+    "name":"moduleTestFunction2",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "dependencies":["522f58729f915de6a1023298"],
+    "code":"function(i) {return moduleTestFunction(i);};",
+    "args":[{"type":"number", "name":"i"}]
+},
+{
+    "name":"useLodash",
+    "language":"JAVASCRIPT",
+    "schema":"Function",
+    "code":"function() {return _.map([1,2,3],function(i){return i+1;});};"
+}
 ]
+
