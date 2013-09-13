@@ -229,7 +229,10 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.id = $route.current.params.id;
     $scope.trail = $route.current.locals.trail;
-    $scope.content = $scope.trail.description;
+
+    //kickoff
+    //$scope.content = $scope.trail.description
+    $timeout(function() { $scope.activate('0-0') });
 
     var load = {};
 

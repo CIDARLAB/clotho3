@@ -307,7 +307,9 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             //wrapper function
             $scope.compileEditor = function() {
-                Clotho.get($scope.uuid).then(function(result) {
+                var getObj = ($scope.uuid == 'id') ? $q.when() : Clotho.get($scope.uuid);
+
+                getObj.then(function(result) {
                     $scope.editable = result;
 
                     $scope.type = $scope.determineType(result);
