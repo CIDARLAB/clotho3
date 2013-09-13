@@ -296,7 +296,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
         }
 
         $scope.gradeCallback = function(data) {
-            console.log(data);
+            console.log('quiz grade callback result: ' + data);
         };
 
         var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback()"></div>';
@@ -460,6 +460,7 @@ Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($sc
     $scope.submitQuestion = function(quiz) {
         console.log(quiz);
         Clotho.run('gradeQuiz', [quiz.questionValue, quiz.answer, quiz.answerGenerator]).then(function (data) {
+            console.log('gradeQuiz result: ' + data);
             $scope.quiz.submitted = true;
             $scope.quiz.response = {};
             $scope.quiz.response.result = data;
@@ -487,7 +488,7 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
 
                     $http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
                         .success(function (data) {
-                            element.html($compile(data)(scope));
+                            element.html($compile('<div class="well">' + data + '</div>')(scope));
                         })
                         .error(function(data, status, headers, config) {
                             element.html('<p>Template could not be found...</p>' + JSON.stringify(scope.quiz));

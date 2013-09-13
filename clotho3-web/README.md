@@ -53,6 +53,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - Stephanie - reloadModules
 - function: dependencies is array of strings
 
+- test import trail schema
 
 TRAILS
     - use gradeQuiz
@@ -62,6 +63,7 @@ TRAILS
     - finish basic content
     - finish pcr function
     - start construction files
+    - youtubeonReady API - handle first page load problem
 
 
 
