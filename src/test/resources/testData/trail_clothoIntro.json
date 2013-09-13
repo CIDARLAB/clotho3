@@ -3,7 +3,7 @@
     "schema" : "Trail",
     "name" : "Learning Clotho",
     "author" : "UC Berkeley",
-    "description" : "<blockquote><p>This is what will ultimately be the demo trail. Let's put a video here or something.</p><p>You can step through each <b>Paver</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</p><p><small>Maxwell Bates</small></p></blockquote>",
+    "description" : "<blockquote><p>This is what will ultimately be the demo trail. Let's put a video here or something.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
     "contents" : [
         {
@@ -12,7 +12,7 @@
                 {
                     "title" : "Intro to DNA",
                     "icon" : "video",
-                    "intro" : "<p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p>",
+                    "intro" : "<blockquote><p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p><p>You can step through each <b>Paver</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</p></blockquote>",
                     "video" : {
                         "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
                         "autoplay" : true

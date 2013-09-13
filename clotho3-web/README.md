@@ -49,22 +49,19 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- Trail launch goes to first paver
-- biosafety module - add in videos, rename
-
+- searchbar toggle tips button
 
 - custom person object, add anderson lab people
+    - start testing with that (ninaEmami ? )
 
 
--modules
+- modules
     - test extending (incl. outside of module definition)
 
 
 
 - DNA + demo trail
     - PCR functions working
-    - UI directives
-        - digest highlight
     - start construction files (JSON format)
 
 
