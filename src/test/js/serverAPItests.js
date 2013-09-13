@@ -169,6 +169,28 @@ asyncTest("login/logout", function(){
 
 
 module("Functions and Modules")
+
+asyncTest("changing function", function(){
+    var f1 = {"schema":"Function","language":"JAVASCRIPT", "code":"function(){return 1;};"};
+    var f2 = {schema:"Function",language:"JAVASCRIPT", "code":"function(){return 2;};"};
+
+    var socket = getSocket(clothosocket);
+    socket.onopen = function () {
+        socket.send(new Message("create", f1), function(id){
+            socket.send(new Message("run", {"id":id, "args":[]}), function(result){
+                equal(result, 1);
+                f2.id = id;
+                socket.send(new Message("set", f2), function(data){
+                    socket.send(new Message("run", {id:id, args:[]}), function(result){
+                        equal(result,2);
+                        start();
+                    });
+                });
+            });
+        });
+    };
+});
+
 testThroughAsync("functions with arguments",
         new Message("submit", "clotho.run('lowercase', ['HEY'])"),
         function(data){
@@ -208,3 +230,4 @@ testThroughAsync("use lodash",
         function(data){
             deepEqual(data, [2,3,4]);
         });
+
