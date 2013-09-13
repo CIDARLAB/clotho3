@@ -17,9 +17,9 @@ import org.clothocad.core.datums.SharableObjBase;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class Trail extends SharableObjBase {
+public class ServerTrailDeprecated extends SharableObjBase {
     
-    public Trail(String name, String description, List<Module> contents){
+    public ServerTrailDeprecated(String name, String description, List<Module> contents){
         super(name, null, description);
         this.contents = contents;
     }

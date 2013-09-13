@@ -179,9 +179,18 @@ public class Persistor{
             String resolvedSchemaName;
             try{
                 resolvedSchemaName = get(BuiltInSchema.class,resolveSelector(schema.toString(), true)).getBinaryName();
+                if (resolvedSchemaName == null){
+                    throw new EntityNotFoundException();
+                }
             }
             catch (EntityNotFoundException e){
-                resolvedSchemaName = schema.toString();
+                try{
+                    Map<String,Object> schemaData = getAsJSON(resolveSelector(schema.toString(), false));
+                    resolvedSchemaName = schemaData.get("name").toString();
+                }
+                catch (EntityNotFoundException ex){
+                    resolvedSchemaName = schema.toString();
+                }
             }
             data.remove("schema");
             data.put("className", resolvedSchemaName);

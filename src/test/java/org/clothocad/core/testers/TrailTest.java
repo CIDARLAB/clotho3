@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.utils.TestUtils;
-import org.clothocad.model.Trail;
+import org.clothocad.model.ServerTrailDeprecated;
 import org.junit.After;
 
 public class TrailTest {
@@ -39,14 +39,14 @@ public class TrailTest {
         contents.add(module);
         
         //Make the trail and confirm it is populated
-        Trail trail = new Trail("First Biosafety Module", "This is a trail test", contents);
+        ServerTrailDeprecated trail = new ServerTrailDeprecated("First Biosafety Module", "This is a trail test", contents);
         assert(trail.getContents().get(0).getPavers().get(0).getType().equals("template"));
         
         
         //Save then re-retrieve the trail
         persistor.save(trail);
         ObjectId uuid = trail.getUUID();
-        Trail result = persistor.get(Trail.class, uuid);
+        ServerTrailDeprecated result = persistor.get(ServerTrailDeprecated.class, uuid);
         assert(result.getName().equals("First Biosafety Module"));
         
         //var trails = clotho.query({"className":"org.clothocad.model.Trail"});

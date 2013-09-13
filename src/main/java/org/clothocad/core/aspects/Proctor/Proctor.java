@@ -33,7 +33,7 @@ import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.datums.Doo;
 import org.clothocad.core.layers.communication.mind.PageMode;
 import org.clothocad.model.Person;
-import org.clothocad.model.Trail;
+import org.clothocad.model.ServerTrailDeprecated;
 
 /**
  * @author John Christopher Anderson
@@ -50,7 +50,7 @@ public class Proctor implements Aspect {
      * @param quiz
      * @param parentDoo 
      */
-    public void initiateTrail(Person student, Trail trail, Doo parentDoo) throws Exception {
+    public void initiateTrail(Person student, ServerTrailDeprecated trail, Doo parentDoo) throws Exception {
         //Create a QuizDoo to manage the task
         ProctorDoo doo = new ProctorDoo(parentDoo);
         doo.trailId = trail.getId();

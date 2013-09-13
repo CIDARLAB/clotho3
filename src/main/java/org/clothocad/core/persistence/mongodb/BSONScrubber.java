@@ -129,7 +129,7 @@ public class BSONScrubber {
 
     protected Set<MappedClass> getClassSet(Map<String, Object> input) {
         Set<MappedClass> output = new HashSet<>();
-        if (input.containsKey("className")) {
+        if (input.get("className") != null) {
             Map<String, MappedClass> mappedClasses = mapper.getMCMap();
             if (mappedClasses.containsKey((String) input.get("className"))) {
                 output.add(mappedClasses.get((String) input.get("className")));
