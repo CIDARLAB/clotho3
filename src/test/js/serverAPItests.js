@@ -199,7 +199,7 @@ testThroughAsync("function depends on function",
         });
 
 testThroughAsync("importing external library",
-        new Message("submit", "load(\"lodash.js\")"),
+        new Message("submit", "load(\"yepnope.js\")"),
         function (data) {
             equal(data, null);
         });

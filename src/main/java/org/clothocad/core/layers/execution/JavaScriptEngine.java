@@ -4,6 +4,8 @@
  */
 package org.clothocad.core.layers.execution;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -33,8 +35,17 @@ class JavaScriptEngine extends AbstractScriptEngine implements HackEngine, Invoc
 
         FunctionObject f = new JSLoader(this).getLoadFunction();
         stdObjects.put("load", stdObjects, f);
-
-        Context.exit();
+        try {
+            cx.evaluateReader(stdObjects, new FileReader("clotho3-web/lib/lodash.js"), "lodash.js", 1, null);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("couldn't find lodash", ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("couldn't open lodash.js", ex);
+        } finally{
+            Context.exit();
+        }
+        
     }
 
     @Override

@@ -69,7 +69,7 @@
     "name":"useLodash",
     "language":"JAVASCRIPT",
     "schema":"Function",
-    "code":"function() {load(\"lodash.js\"); return _.map([1,2,3],function(i){return i+1;});};"
+    "code":"function() {return _.map([1,2,3],function(i){return i+1;});};"
 }
 ]
 
