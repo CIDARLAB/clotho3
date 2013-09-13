@@ -861,19 +861,21 @@ Application.Interface.service('$caret', ['$log', function($log) {
 //note - jQuery reliance
 //todo - rewrite to use $modal service (esp. for backdrop)
 Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compile', '$rootScope', function($document, $timeout, $q, $compile, $rootScope) {
-    var maxZ = Math.max.apply(null,
-        $.map($('body *'), function(e,n) {
-            if ($(e).css('position') != 'static')
-                return parseInt($(e).css('z-index')) || 1;
-        })
-    );
+    var maxZ = function() {
+        return Math.max.apply(null,
+            $.map($('body *'), function(e,n) {
+                if ($(e).css('position') != 'static')
+                    return parseInt($(e).css('z-index')) || 1;
+            })
+        );
+    };
 
     var setZ = function(zindex, element) {
         return $q.when(element.css({"z-index": zindex, 'position' : 'relative'}));
     };
 
     var bringToFront = function(element) {
-        var newZ = maxZ + 1;
+        var newZ = maxZ() + 1;
         setZ(newZ, element);
         return $q.when(newZ);
     };
@@ -895,7 +897,6 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         }
 
         function typeIt() {
-            console.log('executing', valType, charInd);
             timeOut = $timeout(function() {
                 charInd++;
                 element[valType](string.substring(0, charInd) + '|');
@@ -923,6 +924,20 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         return deferred.promise;
     };
 
+    var typeOutSearch = function(string) {
+        var searchBarInput = ($('#searchBarInput'));
+
+        return highlightElement(searchBarInput)
+        .then(function(unhighlight) {
+            return typeOut(searchBarInput, string, 'display.query').then(function() {
+                return unhighlight;
+            });
+        })
+        .then(function(unhighlight) {
+            return $timeout(function() {unhighlight()}, 500);
+        });
+    };
+
 
     var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
 
@@ -934,25 +949,35 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
             removeBackdrop();
         });*/
 
-        $document.find('body').append(backdrop.css("z-index", zindex || maxZ + 1));
+        $document.find('body').append(backdrop.css("z-index", zindex || maxZ() + 1));
         return $timeout(function() {backdrop.addClass('in')});
     };
 
     var removeBackdrop = function() {
         return $q.when(backdrop.removeClass('in'))
-        .then($timeout(function() {
-            console.log('remove');
-            backdrop.remove()
-        }, 150));
+        .then(function() {
+            return $timeout(function() {
+                backdrop.remove()
+            }, 150)
+        });
     };
 
 
 
     //return function to un-highlight
     var highlightElement = function(el) {
+        var oldZ = el.css('z-index');
 
+        addBackdrop();
+        setZ(maxZ() + 1, el);
+
+        return $q.when(function() {
+            setZ(oldZ, el);
+            removeBackdrop();
+        });
     };
 
+    //todo
     var elementPopover = function(el, popover) {
         //append popover to body, hide on click
         
@@ -971,6 +996,7 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         setZ : setZ,
         bringToFront : bringToFront,
         typeOut : typeOut,
+        typeOutSearch : typeOutSearch,
         addBackdrop : addBackdrop,
         removeBackdrop : removeBackdrop,
         highlightElement : highlightElement,

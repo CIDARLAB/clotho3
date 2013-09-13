@@ -12,7 +12,7 @@
                 {
                     "title" : "Intro to DNA",
                     "icon" : "video",
-                    "intro" : "<blockquote><p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p><p>You can step through each <b>Paver</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</p></blockquote>",
+                    "intro" : "<blockquote><p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p></blockquote><div class=\"alert alert-info\">You can step through each <b>Paver</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</div>",
                     "video" : {
                         "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
                         "autoplay" : true

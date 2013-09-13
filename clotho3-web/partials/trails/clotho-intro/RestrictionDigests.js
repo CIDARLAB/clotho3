@@ -5,5 +5,10 @@ Application.Extensions.controller('clothoIntro_RestrictionDigestsCtrl', ['$scope
 
     $scope.demo = {};
     $scope.demo.digestEnz = Digest.enzymes.EcoRI;
-    $scope.demo.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc'
+    $scope.demo.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc';
+
+
+    $scope.showMeHow = function () {
+        $focus.typeOutSearch('clotho.run("digest", [<sequence>, <enzyme>])');
+    }
 }]);

@@ -133,8 +133,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
                 }
 
                 Clotho.run(data.id, data.args).then(function (result){
-                    console.log(result);
-                    console.log(result == $scope.editable.tests[index].output.value);
+                    console.log(result, $scope.editable.tests[index].output.value, result == $scope.editable.tests[index].output.value);
                     $scope.testResults[index] = (result == $scope.editable.tests[index].output.value);
                    /* if (result == angular.fromJson($scope.editable.testResult)) {
                         ClientAPI.say({text:"test success!"});
