@@ -66,12 +66,15 @@ TRAILS
     - start construction files
 
 
+- simple hint directive, use in trail hints
+
+
 - $focus
     - fn: show activity log
     - type series of commands with break
 
--searchbar
-    - submit clears
+-searchbar updates
+    - submit clears input
     - up key for command history
     - fix old up and down (selectAutoNext etc. -- handle empty list)
 

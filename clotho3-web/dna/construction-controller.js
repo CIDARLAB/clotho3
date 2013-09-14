@@ -23,8 +23,34 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
 
 
     //PCR predict
-    $scope.primers = ['tatcgatcgta', 'gatcgatcgat'];
-    $scope.backbone = 'cccccccccccagctacgatcgataaaaaaaaaaattttttttttttgatcgatcgatagctaggggggggggggg';
+
+
+    $scope.pcr_demoSets = [
+        {
+            primers : ['tatcgatcgta', 'gatcgatcgat'],
+            backbone : 'cccccccccccagctacgatcgataaaaaaaaaaattttttttttttgatcgatcgatagctaggggggggggggg'
+        },
+        {
+            primers : ['CGGATCGATCGATCGT', 'GATCGATCGATAC'],
+            backbone : 'tttttttttttttttttACGATCGATCGATCCGggggggggggggggggggcccccccccccccccGATCGATCGATACaaaaaaaaaaaaaa'
+        },
+        {
+            primers : ['GTAGTAGTAGTAGTA', 'TCGATCGATCGATCGAA'],
+            backbone : 'ttttttttttttttttttttttttttttttttttttttTACTACTACTACTACgggggggggggggggggggggggggggggggccccccccccccccccccccccccccccccTCGATCGATCGATCGAaaaaaaaaaaaaaaaaaaaaa'
+        },
+        {
+            primers : ['GTAGTAGTAA', 'TCGATCGAAA'],
+            backbone : 'ttttttttttttttttttttttttttttttttttttttTACTACTACTACTACgggggggggggggggggggggggggggggggccccccccccccccccccccccccccccccTCGATCGATCGATCGAaaaaaaaaaaaaaaaaaaaaa'
+        }
+    ];
+
+    $scope.setPCR = function(pcrSetInd) {
+        var pcrSet = $scope.pcr_demoSets[pcrSetInd];
+        $scope.primers = pcrSet.primers;
+        $scope.backbone = pcrSet.backbone;
+    };
+
+    $scope.setPCR(2);
 
     $scope.clothoFunctions = [];
     Clotho.query({schema: "Function"}).then(function(result) {

@@ -85,7 +85,7 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
             }
             // don't know what to do, so publish to PubSub
             else {
-                console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
+                //console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
                 //fixme - temporary hack - will move to separate service soon
                 PubSub.trigger(channel+':'+requestId, data);
             }

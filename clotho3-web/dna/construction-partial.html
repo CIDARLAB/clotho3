@@ -185,7 +185,15 @@
 
     <div class="row">
         <form name="pcrPlayground" class="form-horizontal">
+
             <div class="control-group">
+            <label class="control-label" for="choosePrimers">Primer Set:</label>
+            <div class="controls btn-group" id="choosePrimers" >
+                <button ng-repeat="set in pcr_demoSets" class="btn" ng-click="setPCR($index)">Set {{ $index + 1}}</button>
+            </div>
+            </div>
+
+            <div class="control-group row">
                 <div class="span6 pull-left">
                     <label class="control-label" for="primer1">Primer 1</label>
                     <div class="controls">
@@ -203,7 +211,14 @@
             <div class="control-group">
                 <label class="control-label" for="backbone">Backbone</label>
                 <div class="controls">
-                    <input type="text" class="input-xxlarge" id="backbone" placeholder="Backbone" ng-model="backbone"  restrict-input="DNA.regexps.strip.dna" />
+                    <input type="text" class="input-xxlarge" id="backbone" placeholder="Backbone" ng-model="backbone" restrict-input="DNA.regexps.strip.dna" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="pcr_align">Alignment</label>
+                <div class="controls">
+                    <pre id="pcr_align" placeholder="Primer Alignment" pcr-align ng-model="backbone" primers="primers"></pre>
                 </div>
             </div>
 

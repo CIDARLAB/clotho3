@@ -260,7 +260,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      * @returns {string} Extended sequence
      */
     var extendSequence = function (sequence, lookahead) {
-        return (sequence + sequence.substr(lookahead));
+        return (sequence + sequence.substr(0, lookahead));
     };
 
     /**
@@ -436,7 +436,6 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         //future - move to fuzzy search
 
         while ((cur = reg.exec(extendSequence(sequence, match.length-1))) != null) {
-            console.log(match);
             matches[cur.index] = match;
         }
 

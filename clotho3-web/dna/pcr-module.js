@@ -132,6 +132,10 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      */
     var verifyPrimers = function verifyPrimers(sequence, primer1, primer2) {
 
+        if (angular.isEmpty(primer1) || angular.isEmpty(primer2)) {
+            return "a primer is not defined"
+        }
+
         var p1 = findAnnealFull(sequence, primer1),
             p2 = findAnnealFull(sequence, primer2);
 
@@ -190,18 +194,15 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         /** orient primers **/
         //todo - break out
 
-        var p1F = !!p1.forward.length;
-        var p2F = !!p2.forward.length;
-        var p1pos = p1F ? +p1.forward[0] : +p1.reverse[0];
-        var p2pos = p2F ? +p2.forward[0] : +p2.reverse[0];
+        var p1pos = (!!p1.forward.length) ? +p1.forward[0] : +p1.reverse[0];
+        var p2pos = (!!p2.forward.length) ? +p2.forward[0] : +p2.reverse[0];
 
 
 
         //pass to protocol
 
-
         //p1 forward, p2 reverse
-        if (p1F) {
+        if (!!p1.forward.length) {
             //normal
             if (p1pos < p2pos) {
                 return PCR(sequence, p1pos, (p2pos + primer2.length));
@@ -330,6 +331,43 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     /**************
      Alignment
      **************/
+    //todo - fold into PCR function
+    //todo - handle multiple lines
+    var primerAlign = function(sequence, primers) {
+        if (primers.length != 2)
+            return "Can only handle having two primers right now";
+
+        var primer1 = primers[0],
+            primer2 = primers[1];
+
+        var verify = verifyPrimers(sequence, primer1, primer2);
+        if (verify !== true)
+            return verify;
+
+
+        //future - not DRY
+        var p1 = findAnnealFull(sequence, primer1),
+            p2 = findAnnealFull(sequence, primer2);
+
+
+        /** orient primers **/
+        //todo - break out
+
+        var p1pos = (!!p1.forward.length) ? +p1.forward[0] : +p1.reverse[0];
+        var p2pos = (!!p2.forward.length) ? +p2.forward[0] : +p2.reverse[0];
+
+        console.log(p1pos, p2pos, sequence, primers[0], primers[1]);
+
+        //todo - don't assume p1 first
+
+        var line1 = DNA.createRun(' ', p1pos + 1);
+            line1 += (!!p1.forward.length) ? primers[0] : DNA.revcomp(primers[0]);
+            line1 += DNA.createRun(' ', (p2pos - p1pos - primers[0].length + 1));
+            line1 += (!!p2.forward.length) ? primers[1] : DNA.revcomp(primers[1]);
+
+        //note - handle line breaks outside function
+        return (line1);
+    };
 
 
     /**************
@@ -438,6 +476,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     return {
         predict : predict,
 
+        primerAlign : primerAlign,
+
         exonuclease35 : exonuclease35,
         exonuclease53 : exonuclease53,
         polymerase53 : polymerase53,
@@ -447,9 +487,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     }
 }]);
 
-'use strict';
-
-Application.Dna.directive('pcrPredict', ['PCR', function(PCR) {
+Application.Dna.directive('pcrPredict', ['PCR', 'Digest', 'DNA', function(PCR, Digest, DNA) {
 
     return {
         restrict: 'A',
@@ -463,8 +501,10 @@ Application.Dna.directive('pcrPredict', ['PCR', function(PCR) {
                 process();
             };
 
-            element.bind('blur keyup change', function() {
-                scope.$apply(process());
+            scope.$watch(function() {
+                return scope.primers[0] + scope.primers[1]
+            }, function() {
+                process();
             });
 
             function process () {
@@ -472,4 +512,60 @@ Application.Dna.directive('pcrPredict', ['PCR', function(PCR) {
             }
         }
     };
+}]);
+
+Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', function(PCR, Digest, DNA) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+            backbone: '=ngModel',
+            primers: '='
+        },
+        link: function pcrPredictLink(scope, element, attr, ngModel) {
+            ngModel.$render = function() {
+                process();
+            };
+
+            scope.$watch(function() {
+                return scope.primers[0] + scope.primers[1]
+            }, function() {
+                process();
+            });
+
+            function process () {
+                var alignment = PCR.primerAlign(scope.backbone, scope.primers);
+
+                console.log(alignment);
+
+                //line breaks
+                //todo - move out
+                function breakLines (string, charNum) {
+                    var finalStr = [];
+                        finalStr.push(string.slice(0, charNum));
+                    while (string = string.substr(charNum)) {
+                        finalStr.push(string);
+                    }
+                    return finalStr;
+                }
+
+                alignment = breakLines(alignment, 80);
+
+                var backboneText = breakLines(scope.backbone, 80);
+
+                console.log(alignment, backboneText);
+
+                var finalText = "";
+                for (var i = 0; i < alignment.length; i++) {
+                    finalText += alignment[i] + "\n" + backboneText[i] + "\n";
+                }
+
+                console.log(finalText);
+                element.html(finalText)
+            }
+
+
+
+        }
+    }
 }]);
