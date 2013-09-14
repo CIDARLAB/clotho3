@@ -12,7 +12,7 @@
                 {
                     "title" : "Intro to DNA",
                     "icon" : "video",
-                    "intro" : "<blockquote><p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p></blockquote><div class=\"alert alert-info\">You can step through each <b>Paver</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</div>",
+                    "intro" : "<blockquote><p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p></blockquote><div class=\"alert\">You can step through each <b>Page</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</div>",
                     "video" : {
                         "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
                         "autoplay" : true
@@ -21,6 +21,9 @@
                 {
                     "title" : "Reverse Complement",
                     "icon" : "exercise",
+                    "dictionary" : {
+                        "outerDictVal" : "Tester"
+                    },
                     "intro" : "<p>DNA is double stranded, but we represent it as a single strand for convenience.  Often you’ll need to know the sequence of the other strand (the reverse-complement).</p>",
                     "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
                     "template" : "/partials/trails/clotho-intro/reverseComplement.html",
@@ -38,7 +41,8 @@
                     "title" : "Tools in Clotho",
                     "icon" : "exercise",
                     "intro" : "<p>Clotho can automate several common tasks, such as reverse complementing a sequence.</p>",
-                    "template" : "/partials/trails/clotho-intro/toolsIntro.html"
+                    "template" : "/partials/trails/clotho-intro/toolsIntro.html",
+                    "mixin" : "/partials/trails/clotho-intro/toolsIntro.js"
                 },
                 {
                     "title" : "Scripting in Clotho",

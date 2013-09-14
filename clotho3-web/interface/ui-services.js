@@ -934,7 +934,7 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
             });
         })
         .then(function(unhighlight) {
-            return $timeout(function() {unhighlight()}, 500);
+            return $timeout(function() {unhighlight()}, 700);
         });
     };
 

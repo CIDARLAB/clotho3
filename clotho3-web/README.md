@@ -51,20 +51,29 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - Stephanie - write file name when causes problem
 - Stephanie - reloadModules
+
 - function: dependencies is array of strings
 
-- test import trail schema
+- test import trail schema (but also can query over inferred schema)
 
 TRAILS
-    - use gradeQuiz
-        - fix controller function
-        - fold in dictionary
-        -
-    - finish basic content
-    - finish pcr function
-    - start construction files
     - youtubeonReady API - handle first page load problem
+    - fix ligate function, esp blunt
+    - finish pcr function
+    - finish basic content
+        - quiz for each section
+        - show how to use in search bar
+    - start construction files
 
+
+- $focus
+    - fn: show activity log
+    - type series of commands with break
+
+-searchbar
+    - submit clears
+    - up key for command history
+    - fix old up and down (selectAutoNext etc. -- handle empty list)
 
 
 - look into including Raven + Eugene

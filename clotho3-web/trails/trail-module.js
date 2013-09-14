@@ -444,6 +444,8 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 }]);
 
 Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
+    
+    console.log('quiz controller instantiated');
 
     $scope.createEmptyAnswer = function(quiz, value) {
         value = (typeof value != 'undefined') ? value : false;
@@ -459,7 +461,7 @@ Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($sc
 
     $scope.submitQuestion = function(quiz) {
         console.log(quiz);
-        Clotho.run('gradeQuiz', [quiz.questionValue, quiz.answer, quiz.answerGenerator]).then(function (data) {
+        Clotho.gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (data) {
             console.log('gradeQuiz result: ' + data);
             $scope.quiz.submitted = true;
             $scope.quiz.response = {};
@@ -488,7 +490,7 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
 
                     $http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
                         .success(function (data) {
-                            element.html($compile('<div class="well">' + data + '</div>')(scope));
+                            element.html($compile('<div class="alert alert-info">' + data + '</div>')(scope));
                         })
                         .error(function(data, status, headers, config) {
                             element.html('<p>Template could not be found...</p>' + JSON.stringify(scope.quiz));
@@ -510,13 +512,14 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
                     };
 
                     scope.submitQuestion = function(quiz) {
-                        Clotho.run('gradeQuiz', [quiz.questionValue, quiz.answer, quiz.answerGenerator]).then(function (data) {
+                        Clotho.gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (data) {
+                            console.log('gradeQuiz result: ' + data);
                             scope.quiz.submitted = true;
                             scope.quiz.response = {};
                             scope.quiz.response.result = data;
                             scope.gradeCallback(data);
                         });
-                    };
+                    }
 
                 }
             }

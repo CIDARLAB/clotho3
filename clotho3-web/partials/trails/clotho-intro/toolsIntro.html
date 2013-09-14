@@ -1,20 +1,34 @@
-<div class="alert alert-info">
-
-    <div class="control-group clearfix">
-        <div class="span6 pull-left">
-            <label class="control-label" for="seq">Enter your sequence</label>
-            <div class="controls">
-                <input type="text" id="seq" placeholder="DNA Sequence" ng-model="sequence" ng-init="sequence = 'actacgta'">
+<div ng-controller="clothoIntro_toolsIntroCtrl">
+    <div class="well">
+        <div class="control-group clearfix">
+            <div class="span6 pull-left">
+                <label class="control-label" for="seq">Enter your sequence</label>
+                <div class="controls">
+                    <input type="text" id="seq" placeholder="DNA Sequence" ng-model="sequence" ng-init="sequence = 'actacgta'">
+                </div>
             </div>
-        </div>
-        <div class="span6 pull-right">
-            <label class="control-label" for="clothorun">Reverse Complement</label>
-            <div class="controls">
-                <input type="text" id="clothorun" placeholder="Reverse Complement" ng-model="sequence" clotho-run="revcomp" disabled>
+            <div class="span6 pull-right">
+                <label class="control-label" for="clothorun">Reverse Complement</label>
+                <div class="controls">
+                    <input type="text" id="clothorun" placeholder="Reverse Complement" ng-model="sequence" clotho-run="revcomp" disabled>
+                </div>
             </div>
         </div>
     </div>
 
-    <h2>todo - have them enter their own, use $focus to type a demo</h2>
+    <!-- note this isn't the normal way of writing a quiz, this is putting the template inline for a unique format-->
+    <div class="alert alert-info">
+        <h3>Revcomp with a Tool</h3>
+        <p>Find the reverse complement of <code>{{ randomSequence }}</code>, using the tool above.</p>
+        <div class="control-group" ng-class="{'success' : response.result, 'error' : response.result == false}">
+            <div class="input-append">
+                <input type="text" class="input-xlarge" ng-model="quizAnswer"/>
+                <button class="btn" ng-click="gradeSimpleQuiz()" ng-disabled="!quizAnswer || submitted" ng-class="{'btn-success' : response.result, 'btn-danger' : response.result == false}">Submit Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-large btn-info" ng-click="showMeHow()"><i class="icon-white icon-eye-open"></i> Show Me How</button>
+
 
 </div>

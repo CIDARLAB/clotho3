@@ -801,14 +801,16 @@ function generateClothoAPI() {
     /**
      * @name Clotho.gradeQuiz
      *
-     * @param {object} quiz
+     * @param {*} questionValue
+     * @param {*} input
+     * @param {string} answerGen ID of function to run to generate answer
      *
      * @description
-     * Pass results of a quiz to the server to be graded
+     * wrapper for grade quiz funciton on server (easier to change in one place)
      *
      */
-    var gradeQuiz = function clothoAPI_gradeQuiz(quiz) {
-        return fn.emitSubOnce('gradeQuiz', quiz);
+    var gradeQuiz = function clothoAPI_gradeQuiz(questionValue, input, answerGen) {
+        return run('gradeQuiz', [questionValue, input, answerGen]);
     };
 
 
