@@ -75,13 +75,16 @@ angular.module('clothoRoot', ['clothoPackage']).
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/', {
-                templateUrl:'home/home-partial.html'
+                templateUrl:'home/home-partial.html',
+                title : 'Home'
             }).
             when('/about', {
-                templateUrl:'about/about-partial.html'
+                templateUrl:'about/about-partial.html',
+                title : 'About'
             }).
             when('/trails', {
-                templateUrl:'trails/trail_browser-partial.html'
+                templateUrl:'trails/trail_browser-partial.html',
+                title : 'Trails'
             }).
             when('/trails/:id', {
                 templateUrl:'trails/trail-partial.html',
@@ -91,6 +94,7 @@ angular.module('clothoRoot', ['clothoPackage']).
                         //todo - add timeout
                         Clotho.get($route.current.params.id).then(function(result) {
                             Trails.compile(result).then(function (compiled) {
+                                $route.current.$$route.title = result.name;
                                 deferred.resolve(compiled);
                             });
                         });
@@ -103,7 +107,8 @@ angular.module('clothoRoot', ['clothoPackage']).
                 }
             }).
             when('/editor', {
-                templateUrl:'editor/editor-partial.html'
+                templateUrl:'editor/editor-partial.html',
+                title : 'Editor'
             }).
             when('/editor/:id', {
                 templateUrl:'editor/editor-partial.html'
@@ -112,7 +117,8 @@ angular.module('clothoRoot', ['clothoPackage']).
                 //resolve: []
             }).
             when('/browser', {
-                templateUrl:'browser/browser-partial.html'
+                templateUrl:'browser/browser-partial.html',
+                title : 'Browser'
             }).
             when('/plasmid', {
                 templateUrl:'plasmid/plasmid-partial.html'
@@ -121,7 +127,8 @@ angular.module('clothoRoot', ['clothoPackage']).
                 templateUrl:'plasmid/plasmid-partial.html'
             }).
             when('/construction', {
-                templateUrl:'dna/construction-partial.html'
+                templateUrl:'dna/construction-partial.html',
+                title : 'Construction'
             }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'
@@ -147,6 +154,7 @@ angular.module('clothoRoot', ['clothoPackage']).
             }).
             when('/terminal', {
                 templateUrl:'search/terminal-partial.html',
+                title : 'Terminal',
                 resolve : {
                     deps : function() {
                         return Application.mixin('search/terminal-controller.js')
@@ -157,15 +165,18 @@ angular.module('clothoRoot', ['clothoPackage']).
                 redirectTo:'/'
             });
     }])
-    .run(['$rootScope', function($rootScope) {
+    .run(['$rootScope', '$route', '$window', function($rootScope, $route, $window) {
 
     /**************
        CONFIG
     **************/
 
-    //testing
-    //$rootScope.$on('$destroy', console.log("\n\ndestroyed"));
-    //todo - extend native $destroy() to unhook listeners (or emit event?)
+    $rootScope.$on('$routeChangeSuccess', function() {
+        var title = $route.current.$$route.title;
+        //can't use interpolation in document title because ng-app is within body
+        $window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
+    });
+
 
     /**************
      TESTING

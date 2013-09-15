@@ -52,6 +52,21 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
 
     $scope.setPCR(2);
 
+
+    //ligation
+    $scope.fragments = [
+        'aaaaaaaaaaaa^cccc_',
+        '_gggg^tttttttttttt'
+    ];
+
+    $scope.$watch(function() {
+        return $scope.fragments[0] + $scope.fragments[1]
+    }, function (newval, oldval) {
+        console.log(newval);
+        $scope.ligated = PCR.ligate($scope.fragments);
+    });
+
+
     $scope.clothoFunctions = [];
     Clotho.query({schema: "Function"}).then(function(result) {
         console.log(result);

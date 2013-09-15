@@ -225,7 +225,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', '$controller', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q, $controller) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', '$controller', '$window', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q, $controller, $window) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.id = $route.current.params.id;
@@ -240,7 +240,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     load.hint = function loadHint(hint) {
         if (!hint) return $q.when();
 
-        var hintDiv = '<button class="btn pull-right" popover="' + hint + '" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button> ';
+        var hintDiv = '<div hint-button="'+hint+'"></div>';
 
         return $q.when(hintDiv);
     };
