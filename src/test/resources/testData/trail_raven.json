@@ -13,6 +13,21 @@
                     "title" : "Introduction",
                     "type" : "template",
                     "template" : "/partials/trails/boston/raven.html"
+                },
+                {
+                    "title" : "Importing Clotho Parts into RavenCAD",
+                    "type" : "template",
+                    "template" : "/partials/trails/boston/raven_import.html"
+                },
+                {
+                    "title" : "Running Raven",
+                    "type" : "template",
+                    "template" : "/partials/trails/boston/raven_run.html"
+                },
+                {
+                    "title" : "Saving Raven Parts in Clotho",
+                    "type" : "template",
+                    "template" : "/partials/trails/boston/raven_save.html"
                 }
             ]
         }

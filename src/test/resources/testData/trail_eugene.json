@@ -13,6 +13,26 @@
                     "title" : "Introduction",
                     "icon" : "template",
                     "template" : "/partials/trails/boston/eugene.html"
+                },
+                {
+                    "title":"Using EugeneCAD",
+                    "icon":"template",
+                    "template":"/partials/trails/boston/eugene_use.html"
+                },
+                {
+                    "title":"Importing Parts",
+                    "icon":"template",
+                    "template":"/partials/trails/boston/eugene_import.html"
+                },
+                {
+                    "title":"Adding Clotho Parts to a Eugene File",
+                    "icon":"template",
+                    "template":"/partials/trails/boston/eugene_addclotho.html"
+                },
+                {
+                    "title":"Saving Eugene Parts to Clotho",
+                    "icon":"template",
+                    "template":"/partials/trails/boston/eugene_save.html"
                 }
             ]
         }
