@@ -360,35 +360,89 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
         //todo - don't assume p1 first
 
-        var line1 = DNA.createRun(' ', p1pos + 1);
+        var line1 = DNA.createRun(' ', p1pos);
             line1 += (!!p1.forward.length) ? primers[0] : DNA.revcomp(primers[0]);
-            line1 += DNA.createRun(' ', (p2pos - p1pos - primers[0].length + 1));
+            line1 += DNA.createRun(' ', (p2pos - p1pos - primers[0].length));
             line1 += (!!p2.forward.length) ? primers[1] : DNA.revcomp(primers[1]);
+            line1 += DNA.createRun(' ', (sequence.length - line1.length));
 
         //note - handle line breaks outside function
         return (line1);
     };
 
 
+
+
+    /**
+     * @description Ligates two fragments. Optionally, shows alignment of ligation
+     * @param fragments {Array} NOTE Currently only two
+     * @param align {boolean} Whether to show alignment (both strands)
+     * @param showHTML {boolean} Include HTML tags marking original fragments and complementarity region. Recommended when displaying as HTML. Default false.
+     * @param showMarks {boolean} maintain cut marks. Not relevant if showHTML. Default false.
+     * @returns {string}
+     */
+    var ligate = function(fragments, align, showHTML, showMarks) {
+        var ends = parseFragmentEnds(fragments),
+            blunts = ends.blunts,
+            overhangs = ends.overhangs,
+            fragPair;
+        
+        if (blunts.length > 1) {
+            if (blunts.length == 2) {
+                fragPair = orientFragmentsForJoin(blunts[0], blunts[1]);
+            }
+        }
+
+        if (overhangs.length > 1) {
+            if (overhangs.length == 2) {
+                fragPair = orientFragmentsForJoin(overhangs[0], overhangs[1]);
+            }
+        }
+
+        console.log(fragPair);
+
+        if (!fragPair)
+            return 'primers not defined';
+
+        if (fragPair[0].overhang != DNA.revcomp(fragPair[1].overhang))
+            return 'overhangs not complimentary (5\' orientation): ' + fragPair[0].overhang + ' /// ' + fragPair[1].overhang;
+
+
+        var matchType = (fragPair[0].end.isBlunt) ? 'bluntmatch' : 'stickymatch';
+
+        var finalText = '<ligate-frag>' + (fragPair[0].fragment).substring(0, fragPair[0].end.index) + '</ligate-frag>' +
+            '<ligate-'+matchType+'>' + fragPair[0].end.match + '</ligate-'+matchType+'>' +
+            (fragPair[1].fragment).substring(fragPair[1].end.index + fragPair[1].end.match.length);
+
+
+        if (!!align) {
+            var line2 = DNA.complement((fragPair[0].fragment).substring(0, fragPair[0].end.index)) +
+                '<ligate-'+matchType+'>' + fragPair[1].end.match + '</ligate-'+matchType+'>' +
+                '<ligate-frag>' + DNA.complement((fragPair[1].fragment).substring(fragPair[1].end.index + fragPair[1].end.match.length)) + '</ligate-frag>';
+
+           finalText += "\n" + line2;
+        }
+
+        if (!showHTML) {
+            finalText = finalText.replace(/(<([^>]+)>)/ig, '');
+        }
+
+        if (!showMarks) {
+            finalText = Digest.removeMarks(finalText);
+        }
+
+        return finalText
+
+    };
+
+
     /**************
-     Prediction
+     ligation
      **************/
 
-
-
-
-    /**************
-     Construction - move to own module
-     **************/
-
-    //todo - currently only handles fragments with terminal marks
-    // note really hacky
-    var ligate = function ligate(fragments) {
-        console.log(fragments);
-
+    var parseFragmentEnds = function PCR_parseFragmentEnds (fragments) {
         var overhangs = [],
-            blunts = [],
-            ligateProducts = [];
+            blunts = [];
 
         for (var i = 0; i < fragments.length; i++) {
             var frag = fragments[i],
@@ -406,77 +460,68 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
             }
         }
 
-        console.log(overhangs);
-        console.log(blunts);
-
-        //note - only two, pass in whole object as made above
-        function joinFragments (frags) {
-            var frag1 = frags[0],
-                frag2 = frags[1],
-                product;
-
-
-            console.log(frag1, frag2);
-            console.log(frag1.end.index, frag2.end.index);
-
-
-
-            //orient so frag1 comes first
-            //todo - fix overhang
-            if (frag1.end.index == 0) {
-                frag1.fragment = DNA.revcomp(frag1.fragment);
-            }
-            if (frag2.end.index != 0) {
-                frag2.fragment = DNA.revcomp(frag2.fragment);
-            }
-            
-            console.log(frag1, frag2);
-
-            //join
-            if (frag1.overhang == "|" && frag2.overhang == "|") {
-
-                product = ""; //todo
-            } else {
-
-                product = Digest.removeMarks(frag1.fragment);
-                //todo - move into function to remove sticky end
-                product = product + Digest.removeOverhangs(frag2.fragment);
-            }
-
-            return product;
-        }
-
-        if (blunts.length > 1) {
-            if (blunts.length > 2) {
-                //random products
-                console.log('multiple blunt ends, products will be mixed');
-            }
-            if (blunts.length == 2) {
-                //todo - account for multiple directions
-                var product = joinFragments(blunts);
-                ligateProducts.push(product)
-            }
-        }
-
-        if (overhangs.length > 1) {
-            if (overhangs.length == 2) {
-                if (overhangs[0].overhang == DNA.revcomp(overhangs[1].overhang)) {
-                    var product = joinFragments(overhangs);
-                    ligateProducts.push(product);
-                }
-            }
-
-        }
-
-        return ligateProducts;
-
+        return {blunts: blunts, overhangs : overhangs};
     };
+
+
+    var reverseFragment = function (frag) {
+        frag.fragment = DNA.revcomp(frag.fragment);
+        frag.end = Digest.findOverhangs(frag.fragment)[0]; // assumes only 1 end
+        if (!frag.end.isBlunt) frag.overhang = frag.end[3];
+        return frag;
+    };
+
+    // orients all fragments
+    // fiveprime - default true: so showing 5' overhang (...^...._...)
+    var orientFragments = function (fragments, fiveprime) {
+        fiveprime = fiveprime || true;
+        for (var i = 0; i < fragments.length; i++) {
+            if (fragments[i].end.is3prime == fiveprime)
+                fragments[i] = reverseFragment(fragments[i]);
+        }
+        return fragments;
+    };
+
+    //orient so frag1 comes first (i.e., frag1 end is at end) and have same direction overhang
+    //todo - handle non-terminal ends
+    var orientFragmentsForJoin = function (frag1, frag2) {
+        //first process frag1
+        if (frag1.end.index == 0 || frag1.end.index < (frag1.fragment.length/2)) {
+            frag1 = reverseFragment(frag1);
+        }
+        //first, orient so longer section to right
+        if (frag2.end.index > frag2.fragment.length/2) {
+            frag2 = reverseFragment(frag2);
+        }
+        //???????
+        if (frag2.overhang != DNA.revcomp(frag1.overhang)) {
+            frag2 = reverseFragment(frag2);
+        }
+
+        return [frag1, frag2];
+    };
+
+    /**************
+     Prediction
+     **************/
+
+
+
+
+    /**************
+     Construction - own module
+     **************/
 
 
     return {
         predict : predict,
 
         primerAlign : primerAlign,
+
+        parseFragmentEnds : parseFragmentEnds,
+        reverseFragment : reverseFragment,
+        orientFragments : orientFragments,
+        orientFragmentsForJoin : orientFragmentsForJoin,
 
         exonuclease35 : exonuclease35,
         exonuclease53 : exonuclease53,
@@ -514,9 +559,9 @@ Application.Dna.directive('pcrPredict', ['PCR', 'Digest', 'DNA', function(PCR, D
     };
 }]);
 
-Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', function(PCR, Digest, DNA) {
+Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', '$filter', function(PCR, Digest, DNA, $filter) {
     return {
-        restrict: 'A',
+            restrict: 'A',
         require: 'ngModel',
         scope: {
             backbone: '=ngModel',
@@ -527,36 +572,21 @@ Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', function(PCR, Dig
                 process();
             };
 
-            scope.$watch(function() {
-                return scope.primers[0] + scope.primers[1]
-            }, function() {
-                process();
-            });
+            scope.$watch('primers', process, true);
 
             function process () {
                 var alignment = PCR.primerAlign(scope.backbone, scope.primers);
 
                 console.log(alignment);
 
-                //line breaks
-                //todo - move out
-                function breakLines (string, charNum) {
-                    var finalStr = [];
-                        finalStr.push(string.slice(0, charNum));
-                    while (string = string.substr(charNum)) {
-                        finalStr.push(string);
-                    }
-                    return finalStr;
-                }
+                alignment = $filter('breakLines')(alignment, 80, "*").split('*');
 
-                alignment = breakLines(alignment, 80);
-
-                var backboneText = breakLines(scope.backbone, 80);
+                var backboneText = $filter('breakLines')(scope.backbone, 80, "*").split('*');
 
                 console.log(alignment, backboneText);
 
                 var finalText = "";
-                for (var i = 0; i < alignment.length; i++) {
+                for (var i = 0; i < backboneText.length; i++) {
                     finalText += alignment[i] + "\n" + backboneText[i] + "\n";
                 }
 
@@ -569,3 +599,68 @@ Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', function(PCR, Dig
         }
     }
 }]);
+
+Application.Dna.directive('ligateAlign', ['PCR', 'Digest', 'DNA', '$compile', '$filter', function(PCR, Digest, DNA, $compile, $filter) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+            fragments: '=ngModel'
+        },
+        link: function pcrPredictLink(scope, element, attr, ngModel) {
+            ngModel.$render = function() {
+                process();
+            };
+
+            scope.$watch('fragments', function() {
+                process();
+            }, true);
+
+            function process () {
+                var alignment = PCR.ligate(scope.fragments, true, true);
+                console.log(alignment);
+
+                alignment = $filter('DigestCuts')(alignment, true);
+
+                element.html($compile('<span>' + alignment + '</span>')(scope))
+            }
+
+        }
+    }
+}]);
+
+Application.Dna.directive('ligateFrag', function() {
+    return {
+        restrict: 'EA',
+        replace: false,
+        transclude:true,
+        template: '<span tooltip="Initial Fragment" tooltip-placement="mouse" tooltip-animation="false" tooltip-append-to-body="true" ng-transclude></span>',
+        link: function(scope, element, attrs) {
+            element.css('color', '#faa');
+        }
+    }
+});
+
+Application.Dna.directive('ligateStickymatch', function() {
+    return {
+        restrict: 'EA',
+        replace: false,
+        transclude:true,
+        template: '<span tooltip="Sticky-end Complementary Region" tooltip-placement="mouse" tooltip-animation="false" tooltip-append-to-body="true" ng-transclude></span>',
+        link: function(scope, element, attrs) {
+            element.css('color', '#6b6');
+        }
+    }
+});
+
+Application.Dna.directive('ligateBluntmatch', function() {
+    return {
+        restrict: 'EA',
+        replace: false,
+        transclude:true,
+        template: '<span tooltip="Note! Blunt ends will only yield this product 50% of the time (fragment direction is random)" tooltip-placement="mouse" tooltip-animation="false" tooltip-append-to-body="true" ng-transclude></span>',
+        link: function(scope, element, attrs) {
+            element.css('color', '#6b6');
+        }
+    }
+});

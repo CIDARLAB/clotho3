@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, DNA, $filter) {
+Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
     var enzymes = {
         "BsaI" : {
@@ -607,7 +607,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
     /**
      * @description
      * @param sequence
-     * @returns {array} array of objects:
+     * @returns {Array} array of objects:
      * Some keys:
      *      0-4 : <matches from regex>
      *      index: index of match
@@ -615,7 +615,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      *      isBlunt: if blunt cut (i.e. "|")
      *      length: length of match
      *      match: matched overhang sequence, including marks
-     *      rev : true for 3' overhang (e.g. nnn_nnnn^nnn)
+     *      is3prime : true for 3' overhang (e.g. nnn_nnnn^nnn)
      *      terminal : true if cut mark is on either end of fragment passed in
      *
      *
@@ -631,7 +631,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
          isBlunt: false
          length: 4
          match: "^ct_"
-         rev: false
+         is3prime: false
          terminal : false
      1: Array[5]
          0: "|"
@@ -644,7 +644,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
          isBlunt: true
          length: 1
          match: "|"
-         rev: null
+        is3prime: null
          terminal : false
      2: Array[5]
          0: "_cgta^"
@@ -657,7 +657,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
          isBlunt: false
          length: 6
          match: "_cgta^"
-         rev: true
+         is3prime: true
          terminal : false
      */
     var findOverhangs = function (sequence) {
@@ -671,7 +671,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
         while ((match = (regCut).exec(sequence)) != null) {
             match.match = match[0];
             match.isBlunt = (match.match == '|');
-            match.rev = match.isBlunt ? null : (match[2] == '^');
+            match.is3prime = match.isBlunt ? null : (match[2] == '_');
             match.length = match.match.length;
             match.terminal = (match.index == 0 || (match.index + (match.isBlunt ? 1 : match[3]) )) ? true : false;
             matches.push(match);
@@ -693,6 +693,12 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', '$filter', function(Clotho, 
      */
 
         /*
+        Given ( X -> Y, V -> W as complements, with ' denoting reverse order)
+
+        XacatgtV    __\ Xa^catg_ = ^catg_tY' and ^catg_tV = W'a^catg_
+        YtgtacaW      /
+
+
         nnnn^nn_nnnn -> [nnnn^nn_, ^nn_nnnn]
         nnn|nnn -> [nnn, nnn]
          */
@@ -793,7 +799,7 @@ Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function
 }]);
 
 //todo - migrate Plasmid directive into this module
-Application.Dna.directive('digestHighlight', ['Digest', '$parse', '$compile', function(Digest, $parse, $compile) {
+Application.Dna.directive('digestHighlight', ['Digest', '$parse', '$compile', '$filter', function(Digest, $parse, $compile, $filter) {
     return {
         restrict: 'A',
         require: 'ngModel',
@@ -816,8 +822,9 @@ Application.Dna.directive('digestHighlight', ['Digest', '$parse', '$compile', fu
                 var seqSites = Digest.markSites(ngModel.$modelValue, scope.highlightEnz);
                 var findMatch = /\((.+?)\)/gi;
                 var addedAnnotations = seqSites.replace(findMatch, '<digest-annotation>$1</digest-annotation>');
-                addedAnnotations = addedAnnotations.replace(/\^/gi, '<digest-cut-top>&#8595;</digest-cut-top>');
-                addedAnnotations = addedAnnotations.replace(/_/gi, '<digest-cut-bottom>&#8593;</digest-cut-bottom>');
+
+                addedAnnotations = $filter('DigestCuts')(addedAnnotations);
+
                 element.html($compile('<div>' + addedAnnotations + '</div>')(scope))
             }
         }
@@ -837,8 +844,6 @@ Application.Dna.directive('digestAnnotation', ['$tooltip', function($tooltip) {
 
                 },
                 post: function(scope, element, attrs, ctrl) {
-                    console.log(scope.highlightEnz);
-
                     element.css({backgroundColor: '#fcc'});
 
                 }
@@ -850,6 +855,7 @@ Application.Dna.directive('digestCutTop', [function() {
     return {
         restrict : 'EA',
         link: function (scope, element, attrs) {
+            element.html('&#8595;');
             element.css('color', '#f00');
         }
     }
@@ -858,7 +864,18 @@ Application.Dna.directive('digestCutBottom', [function() {
     return {
         restrict : 'EA',
         link: function (scope, element, attrs) {
+            element.html('&#8593;');
             element.css('color', '#00f');
         }
     }
 }]);
+
+//todo - move more stuff in here
+Application.Dna.filter('DigestCuts', function() {
+    return function(input, remove) {
+        var parsed = input.replace(/\^/gi, (!!remove) ? '' : '<digest-cut-top></digest-cut-top>');
+        parsed = parsed.replace(/_/gi, (!!remove) ? '' : '<digest-cut-bottom></digest-cut-bottom>');
+
+        return parsed;
+    }
+});

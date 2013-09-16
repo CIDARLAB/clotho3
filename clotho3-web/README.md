@@ -64,27 +64,31 @@ TRAILS
         - quiz for each section
         - show how to use in search bar
     - start construction files
-
-
-- simple hint directive, use in trail hints
+    - gradeQuiz - ignore case
 
 
 - $focus
-    - fn: show activity log
+    - move search typeout to search service?
+    - fn: show activity log (use searchbar service)
     - type series of commands with break
 
+
 -searchbar updates
+    - submit posts to activity log (if not done on server)
+    - don't add to counter if activity log open
     - submit clears input
     - up key for command history
     - fix old up and down (selectAutoNext etc. -- handle empty list)
+
+
+- about page - join mailing list
 
 
 - look into including Raven + Eugene
     - Raven: jenhan's login
 
 
-- Eugene and Raven logos
-
+- raven logo
 
 
 - modules
@@ -108,6 +112,8 @@ TRAILS
     - help tips service (as popoverService)
         - given object of tips and selectors, show appropriately
         - be able to step through
+    - nice dropdown for filtering
+          http://jsfiddle.net/TahmidTanzim/N9Vqk/
 
 
 - quiz

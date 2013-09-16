@@ -206,10 +206,10 @@
                 </div>
             </div>
 
-            <div class="control-group">
+            <div class="control-group row-fluid">
                 <label class="control-label" for="backbone">Backbone</label>
                 <div class="controls">
-                    <input type="text" class="input-xxlarge" id="backbone" placeholder="Backbone" ng-model="backbone" restrict-input="DNA.regexps.strip.dna" />
+                    <textarea class="span12" id="backbone" placeholder="Backbone" ng-model="backbone" restrict-input="DNA.regexps.strip.dna"></textarea>
                 </div>
             </div>
 
@@ -230,6 +230,13 @@
             <hr>
 
             <div class="control-group">
+                <label class="control-label" for="chooseLigation">Ligation Set:</label>
+                <div class="controls btn-group" id="chooseLigation" >
+                    <button ng-repeat="set in ligate_demoSets" class="btn" ng-click="setLigate($index)">Set {{ $index + 1}}</button>
+                </div>
+            </div>
+
+            <div class="control-group">
                 <div class="pull-left">
                     <label class="control-label" for="frag1">Fragment 1</label>
                     <div class="controls">
@@ -243,6 +250,13 @@
                     <div class="controls">
                         <input type="text" id="frag2" placeholder="Fragment 2" ng-model="fragments[1]"  />
                     </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="ligationAlign">Ligation Alignment</label>
+                <div class="controls">
+                    <pre id="ligationAlign" placeholder="Ligation Alignment" ng-model="fragments" ligate-align></pre>
                 </div>
             </div>
 

@@ -621,7 +621,7 @@ Application.Interface.directive('hintButton', function() {
         scope: {
             hint : '@hintButton'
         },
-        template : '<button class="btn pull-right" popover="{{ hint }}" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button>',
+        template : '<button class="btn" popover="{{ hint }}" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button>',
         link: function(scope, element, attrs) {}
     }
 
@@ -878,7 +878,6 @@ Application.Interface.provider( '$tooltip', function () {
                     restrict: 'EA',
                     scope: true,
                     link: function link ( scope, element, attrs ) {
-                        console.log(scope);
                         var tooltip = $compile( template )( scope );
                         var transitionTimeout;
                         var popupTimeout;

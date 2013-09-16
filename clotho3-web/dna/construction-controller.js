@@ -36,7 +36,7 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
         },
         {
             primers : ['GTAGTAGTAGTAGTA', 'TCGATCGATCGATCGAA'],
-            backbone : 'ttttttttttttttttttttttttttttttttttttttTACTACTACTACTACgggggggggggggggggggggggggggggggccccccccccccccccccccccccccccccTCGATCGATCGATCGAaaaaaaaaaaaaaaaaaaaaa'
+            backbone : 'ttttttttttttttttttttttttttttttttttttttTACTACTACTACTACgggggggggggggggggggggggggggggggggggggggggggggggggggggggggccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccTCGATCGATCGATCGAaaaaaaaaaaaaaaaaaaaaa'
         },
         {
             primers : ['GTAGTAGTAA', 'TCGATCGAAA'],
@@ -44,8 +44,8 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
         }
     ];
 
-    $scope.setPCR = function(pcrSetInd) {
-        var pcrSet = $scope.pcr_demoSets[pcrSetInd];
+    $scope.setPCR = function(setInd) {
+        var pcrSet = $scope.pcr_demoSets[setInd];
         $scope.primers = pcrSet.primers;
         $scope.backbone = pcrSet.backbone;
     };
@@ -54,17 +54,30 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
 
 
     //ligation
-    $scope.fragments = [
-        'aaaaaaaaaaaa^cccc_',
-        '_gggg^tttttttttttt'
+
+    //first 4 should all be the same
+    $scope.ligate_demoSets = [
+        ['aaaaaaaaaaA^CATG_', '^CATG_Tttggttggttgg'],
+        ['aaaaaaaaaaA^CATG_', 'ccaaccaaccaaA^CATG_'],
+        ['^CATG_Ttttttttttt', '^CATG_Tttggttggttgg'],
+        ['^CATG_Ttttttttttt', 'ccaaccaaccaaA^CATG_'],
+        ['aaaaaaaaaaA^CATG_', 'ggggggA^CATG_'],
+        ['aaaaaaaaaaA^CATG_', 'gtcatcgatcagt_GTAC^'],
+        ['aaaaaaaaaaA^CATG_T', 'A^CATG_Tacgatagcattaagcgt'],
+        ['_gggg^tttttttttttt', 'aaaaa^cccc_'],
+        ['aaaaaaaaaaaaaa|', '|ttggttggttgg']
     ];
 
-    $scope.$watch(function() {
-        return $scope.fragments[0] + $scope.fragments[1]
-    }, function (newval, oldval) {
-        console.log(newval);
+    $scope.setLigate = function(setInd) {
+        $scope.fragments = $scope.ligate_demoSets[setInd];
+    };
+
+    $scope.setLigate(0);
+
+
+    $scope.$watch('fragments', function () {
         $scope.ligated = PCR.ligate($scope.fragments);
-    });
+    }, true);
 
 
     $scope.clothoFunctions = [];
