@@ -6,6 +6,7 @@ package org.clothocad.core.layers.communication;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 import lombok.NoArgsConstructor;
 
 /**
@@ -19,16 +20,25 @@ public class Message {
         this(channel, data, null);
     }
     
-    @JsonCreator
+
     public Message(@JsonProperty("channel") Channel channel, 
     @JsonProperty("data") Object data, @JsonProperty("requestId") String requestId){
         this.channel = channel;
         this.data = data;
         this.requestId = requestId;
     }
+
+    @JsonCreator
+    public Message(Map<String,Object> props){
+        this.channel = Channel.valueOf(props.get("channel").toString());
+        this.data = props.get("data");
+        this.options = (Map) props.get("options");
+        this.requestId = props.get("requestId").toString();
+    }
     
     public Channel channel;
     public Object data;
+    public Map<String,String> options;
     public String requestId;
 
     

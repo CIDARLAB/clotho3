@@ -489,13 +489,19 @@ public class ServerSideAPI {
 
     public List<Map<String, Object>> query(Map<String, Object> spec) {
         List<Map<String, Object>> objs;
+        //in case we are handed an immutable map, make a copy
+        spec = new HashMap(spec);
 
         //XXX: demo hack to resolve schema smartly
         if (spec.containsKey("schema")) {
             //figure out what the schema actually is
             try {
                 Map<String, Object> schema = persistor.getAsJSON(persistor.resolveSelector(spec.get("schema").toString(), false));
-                String schemaName = schema.get("binaryName").toString(); //try and fallback to name name?
+                String schemaName = (String) schema.get("binaryName"); //try and fallback to name name?
+                if (schemaName == null){
+                    schemaName = schema.get("name").toString();
+                }
+                
                 spec.remove("schema");
                 spec.put("className", schemaName);
             } catch (EntityNotFoundException e) {
