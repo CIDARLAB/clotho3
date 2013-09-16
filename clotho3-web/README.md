@@ -49,6 +49,23 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- UI Stuff
+    - clothoIntro
+        - new page (introducing trails)
+        - scripting in Clotho
+                - add new Page --- introducing search bar
+                - focus whole search bar
+    - quiz (general)
+        - more prominent
+        - question bigger
+        - no title
+        - CSS:after to denote quiz
+    - Trails
+        - better intro text
+        - videos as explanations for quiz
+
+
+
 - Stephanie - write file name when causes problem
 - Stephanie - reloadModules
 
@@ -58,11 +75,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 TRAILS
     - youtubeonReady API - handle first page load problem
-    - fix ligate function, esp blunt
-    - finish pcr function
-    - finish basic content
-        - quiz for each section
-        - show how to use in search bar
     - start construction files
     - gradeQuiz - ignore case
 

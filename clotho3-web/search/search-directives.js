@@ -110,6 +110,10 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                 });
             };
 
+            $scope.goHome = function() {
+                $location.path('/');
+            };
+
             $scope.aboutClotho = function() {
                 //$window.open('http://www.clothocad.org/index.php/background/', 'aboutClotho');
                 $location.path('/about')

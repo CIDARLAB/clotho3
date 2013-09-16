@@ -1,0 +1,25 @@
+{
+    "chapter" : "Do it Yourself",
+    "pages" : [
+        {
+            "title" : "Choose a Sequence",
+            "icon" : "video",
+            "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
+        },
+        {
+            "title" : "Design a PCR Product",
+            "icon" : "video",
+            "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
+        },
+        {
+            "title" : "Write Construction File",
+            "icon" : "video",
+            "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+        },
+        {
+            "title" : "Simulation",
+            "icon" : "video",
+            "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+        }
+    ]
+}

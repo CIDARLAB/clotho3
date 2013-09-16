@@ -245,6 +245,10 @@ Application.Interface.factory('keypressHelper', ['$parse', '$document', function
 
 
 
+
+
+
+
 Application.Interface.provider("$dialog", function(){
 
     // The default options for all dialogs.
@@ -925,7 +929,7 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
     };
 
     //todo - move to search service
-    var typeOutSearch = function(string) {
+    var typeOutSearch = function(string, submit) {
         var searchBarInput = ($('#searchBarInput'));
 
         return $q.when(searchBarInput.focus())
@@ -933,7 +937,14 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
             return highlightElement(searchBarInput)
         })
         .then(function(unhighlight) {
-            return typeOut(searchBarInput, string, 'display.query').then(function() {
+
+                //todo - handle array of strings to input
+
+            return typeOut(searchBarInput, string, 'display.query')
+            .then(function() {
+                if (submit) {
+                    Clotho.submit(string);
+                }
                 return unhighlight;
             });
         })

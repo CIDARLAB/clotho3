@@ -12,6 +12,7 @@
                 <li ng-repeat="page in chapter.pages" ng-class="{active: ('{{$parent.$index + '-' + $index}}' == current)}">
                     <a ng-click="activate('{{$parent.$index + '-' + $index}}')" ng-disabled="!page.type">
                         <i ng-class="{'icon-pencil' : {{ page.icon == 'quiz' }},
+                        'icon-list-alt' : {{ page.icon == 'list' }},
                         'icon-film' : {{ page.icon == 'video' }},
                         'icon-book' : {{ page.icon == 'template' }},
                         'icon-edit' : {{ page.icon == 'exercise' }},
@@ -21,7 +22,7 @@
                 </li>
             </ul>
 
-            <div class="btn-toolbar pagination-centered">
+            <!--<div class="btn-toolbar pagination-centered">
 
                 <div class="btn-group">
                     <button ng-click="home()" class="btn" ng-disabled="content == trail.description"><i class="icon-info-sign"></i></button>
@@ -33,7 +34,7 @@
                     <button ng-click="prev()" class="btn"><i class="icon-arrow-left"></i></button>
                     <button ng-click="next()" class="btn"><i class="icon-arrow-right"></i></button>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <div class="span9" id="trail_view">

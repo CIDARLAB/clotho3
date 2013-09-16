@@ -76,6 +76,7 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
 
                         element.html($compile(thumbnailHTML)(scope));
                     } else {
+                        element.html('<img src="/images/ajax-loader.gif" />');
                         createYoutubePlayer()
                     }
 
@@ -84,14 +85,15 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                             scope.player = new YT.Player(element[0], scope.params);
                         }
                         else {
-                            //should get called
-                            //onYouTubePlayerReady.apply();
+                            scope.$watch(function() {
+                                return YT.loaded == 1
+                            }, function(newval, oldval) {
+                                if (!!newval) {
+                                    console.log('youtube player API ready - setting video');
+                                    scope.player = new YT.Player(element[0], scope.params);
+                                }
+                            })
                         }
-                    }
-                    //todo - verify implemented properly
-                    function onYouTubePlayerReady () {
-                        console.log('youtube player API ready - setting video');
-                        scope.player = new YT.Player(element[0], scope.params);
                     }
                 }
             }
@@ -472,7 +474,7 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
 
                     $http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
                         .success(function (data) {
-                            element.html($compile('<div class="alert alert-info">' + data + '</div>')(scope));
+                            element.html($compile('<div class="quiz">' + data + '</div>')(scope));
                         })
                         .error(function(data, status, headers, config) {
                             element.html('<p>Template could not be found...</p>' + JSON.stringify(scope.quiz));

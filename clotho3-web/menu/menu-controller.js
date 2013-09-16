@@ -1,15 +1,14 @@
 'use strict';
 
-Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', '$dialog', function($scope, $location, $timeout, Collector, PubSub, $dialog ) {
+Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', '$dialog', '$keypress', function($scope, $location, $timeout, Collector, PubSub, $dialog, $keypress ) {
 
-    $scope.modes = {"items": [
+    $scope.modes = [
         {"name" : "Editor", "path" : "/editor"},
         {"name" : "Trails", "path" : "/trails"},
         {"name" : "Browser", "path" : "/browser"},
         {"name" : "Plasmid", "path" : "/plasmid"},
-        {"name" : "Construction", "path" : "/construction"},
-        {"name" : "Schemas", "path":"/schemas"}
-    ]};
+        {"name" : "Construction", "path" : "/construction"}
+    ];
 
 
     $scope.$watch(function () {
@@ -60,5 +59,13 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
         });
 
     };
+
+    $scope.hideNavBar = true;
+    $scope.showMenu = function() {
+        console.log('showing');
+        $scope.hideNavBar = !$scope.hideNavBar;
+    };
+
+    $keypress.on('keydown', {'alt-ctrl-comma' : 'showMenu()'}, $scope)
 
 }]);
