@@ -7,6 +7,7 @@ package org.clothocad.model;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.InferredSchema;
@@ -38,7 +39,7 @@ public class BasicPartConverter extends Converter<BasicPart> {
 
     public static BasicPart convertEugenePartToBasicPart(Map<String, Object> eugenePart) {
         BasicPart part = new BasicPart(eugenePart.get("Name").toString(), null, eugenePart.get("Sequence").toString(), new FreeForm(), null);
-
+        if (eugenePart.containsKey("_id")) part.setUUID(new ObjectId(eugenePart.get("_id").toString()));
         try {
             Part.PartFunction function = Part.PartFunction.valueOf(eugenePart.get("PartType").toString().toUpperCase());
             part.setType(function);

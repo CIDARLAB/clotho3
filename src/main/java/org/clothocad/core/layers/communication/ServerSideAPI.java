@@ -51,6 +51,7 @@ import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.layers.communication.mind.Widget;
+import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
@@ -497,13 +498,29 @@ public class ServerSideAPI {
             //figure out what the schema actually is
             try {
                 Map<String, Object> schema = persistor.getAsJSON(persistor.resolveSelector(spec.get("schema").toString(), false));
-                String schemaName = (String) schema.get("binaryName"); //try and fallback to name name?
-                if (schemaName == null){
-                    schemaName = schema.get("name").toString();
-                }
+                String binaryName = (String) schema.get("binaryName"); //try and fallback to name name?
+                //if (schemaName == null || ){ 
+                //    schemaName = schema.get("name").toString();
+                //}
+                String textName = (String) schema.get("name");
+                
+                if (!(schema instanceof BuiltInSchema)) textName = (String) schema.get("name");
                 
                 spec.remove("schema");
-                spec.put("className", schemaName);
+                if (binaryName != null && textName != null){
+                    Map<String,Object> query = new HashMap();
+                    List<String> names = new ArrayList<>();
+                    names.add(textName);
+                    names.add(binaryName);
+                    query.put("$in", names);
+                    spec.put("className", query);
+                } else if (binaryName != null){
+                    spec.put("className", binaryName);
+                } else if (textName != null){
+                    spec.put("className", textName);
+                } else {
+                    spec.put("className", ((ObjBase) schema).getUUID());
+                }
             } catch (EntityNotFoundException e) {
                 //maybe already full name?
                 logAndSayError(String.format("No schema found for selector %s", spec.get("schema").toString()), e);

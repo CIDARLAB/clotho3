@@ -363,10 +363,24 @@ public class Persistor{
     
     private Map<String, Object> modifyQueryForSchemaSearch(Map<String, Object> query) {
         //if searching for schema
+        //XXX: needs to be fixed to handle complex schema queries less clunkily
         if (query.containsKey("className")) {
-            String originalSchema = query.get("className").toString();
+            Object originalSchema = query.get("className");
             Map<String, Object> schemaQuery = new HashMap();
-            List<String> relatedSchemas = getRelatedSchemas(originalSchema);
+            List<String> schemaNames = new ArrayList<>();
+            if (originalSchema instanceof Map && ((Map) originalSchema).containsKey("$in")){
+                for (Object entry : (List) ((Map) originalSchema).get("$in")){
+                    schemaNames.add(entry.toString());
+                }
+            } else {
+                schemaNames.add(originalSchema.toString());
+            }
+            
+            List<String> relatedSchemas = new ArrayList<>();
+            
+            for (String name : schemaNames) {
+                relatedSchemas.addAll(getRelatedSchemas(name));
+            }
 
             if (relatedSchemas.size() > 1) {
                 schemaQuery.put("$in", relatedSchemas);
@@ -431,8 +445,20 @@ public class Persistor{
                 //TODO: filtering so things are unique
             }
         }
-        
-        return out;
+        return filterById(out);
+    }
+    
+    private List<Map<String,Object>> filterById(List<Map<String,Object>> objects){
+        List<Map<String,Object>> filteredObjects = new ArrayList<>();
+        Set<String> ids = new HashSet<>();
+        for (Map<String,Object> object : objects){
+            if (ids.contains(object.get("id").toString())) continue;
+            else {
+                ids.add(object.get("id").toString());
+                filteredObjects.add(object);
+            }
+        }
+        return filteredObjects;
     }
     
     private List<Map<String,Object>> filterDataByQuery(List<Map<String,Object>> convertedData,Map<String, Object> spec){
