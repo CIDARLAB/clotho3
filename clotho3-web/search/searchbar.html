@@ -51,9 +51,13 @@
                 <div class="arrow"></div>
                 <h3 class="popover-title">
                     Activity Log
-                    <button class="btn dropdown-toggle pull-right" ng-click="fullPageLog()" ng-disabled="pathIsTerminal()" style="margin-top: -6px">
+                    <!--<button class="btn dropdown-toggle pull-right" ng-click="fullPageLog()" ng-disabled="pathIsTerminal()" style="margin-top: -6px">
                         <i class="icon-fullscreen"></i>
+                    </button>-->
+                    <button class="btn dropdown-toggle pull-right" ng-click="display.log = false" style="margin-top: -6px">
+                        <i class="icon-remove"></i>
                     </button>
+
                 </h3>
 
                 <div class="scrollable popover-content" style="max-height: 400px;">
@@ -81,7 +85,8 @@
     <!--help buttons-->
     <div class="pull-right inline btn-group">
         <button class="btn" ng-click="newPage()" alt="New Page"><i class="icon-file"></i></button>
-        <button class="btn" ng-click="newWorkspace()" alt="New Workspace"><i class="icon-plus"></i></button>
+        <!--<button class="btn" ng-click="newWorkspace()" alt="New Workspace"><i class="icon-plus"></i></button>-->
+        <button class="btn" ng-click="goHome()"><i class="icon-home"></i></button>
         <a class="btn dropdown dropdown-toggle" style="padding-left: 12px; padding-right: 12px;" id="searchbar_helpbutton"><i class="icon-question-sign"></i></a>
         <ul class="dropdown-menu">
             <li><a ng-click="showMeHow()" tabindex="-1"><i class="icon-eye-open"></i> Show me how</a></li>

@@ -427,7 +427,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
             finalText = finalText.replace(/(<([^>]+)>)/ig, '');
         }
 
-        if (!showMarks) {
+        if (!showMarks && !showHTML) {
             finalText = Digest.removeMarks(finalText);
         }
 
@@ -579,9 +579,12 @@ Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', '$filter', functi
 
                 console.log(alignment);
 
-                alignment = $filter('breakLines')(alignment, 80, "*").split('*');
+                //todo -- pass in width of element to breaklines
+                var charNum = 57;
 
-                var backboneText = $filter('breakLines')(scope.backbone, 80, "*").split('*');
+                alignment = $filter('breakLines')(alignment, charNum, "*").split('*');
+
+                var backboneText = $filter('breakLines')(scope.backbone, charNum, "*").split('*');
 
                 console.log(alignment, backboneText);
 

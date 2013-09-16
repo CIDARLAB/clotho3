@@ -97,10 +97,10 @@
 <ng-app-clothoRoot>
     <div class="container">
         <div class="navbar" ng-controller="MenuCtrl">
-            <div class="navbar-inner">
+            <div class="navbar-inner" ng-cloak ng-hide="hideNavBar">
                 <a class="brand" href="#">Clotho Demo</a>
                 <ul class="nav">
-                    <li class="ng-cloak" ng-repeat="item in modes.items" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
+                    <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
                 </ul>
 
                 <div class="btn-group pull-right">

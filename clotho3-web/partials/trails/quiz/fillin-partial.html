@@ -1,13 +1,17 @@
 <div>
 
-    <h3>{{quiz.title}}</h3>
-    <p ng-bind-html-unsafe="quiz.question"></p>
+    <h5 ng-bind-html-unsafe="quiz.question"></h5>
 
     <!--todo -- add multiple conditions in ng-class so can add error class-->
     <div class="control-group" ng-class="{'success' : quiz.response.result, 'error' : quiz.response.result == false}">
         <div class="input-append">
             <input type="text" class="input-xlarge" ng-model="quiz.answer"/>
             <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="answerUndefined(quiz) || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
+
+            <div ng-if="quiz.response">
+                <div ng-show="quiz.response.result"><i class="icon-ok"></i> Correct!</div>
+                <div ng-show="!quiz.response.result"><i class="icon-remove"></i> Wrong :(</div>
+            </div>
         </div>
     </div>
 </div>

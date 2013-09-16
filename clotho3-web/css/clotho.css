@@ -130,6 +130,42 @@ SEARCH BAR ONLY
     background-color: #d9edf7;
 }
 
+/***********
+quiz
+************/
+
+/* Base class */
+.quiz {
+    position: relative;
+    padding: 8px 14px;
+    margin: 15px 0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    color: #3a87ad;
+    border: 1px solid #bce8f1;
+    background-color: #d9edf7;
+    border-radius: 4px
+}
+
+.quiz:after {
+    content: "Quiz";
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    padding: 4px 15px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #ffffff;
+    border: 1px solid #d9edf7;
+    color: #9da0a4;
+    -webkit-border-radius: 0 4px 0 7px;
+    -moz-border-radius: 0 4px 0 7px;
+    border-radius: 0 4px 0 7px;
+}
+
+
+
+
+
 
 /*******
 img highlights
@@ -142,9 +178,19 @@ img highlights
     -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
     box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    margin: 10px 0;
+}
+
+.shadowBox.hover:hover {
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.2) inset;
+    transition: opacity 0.15s linear;
+}
+
+.shadowBox.background {
     margin: 20px 0;
 }
-.shadowBox:before, .shadowBox:after
+
+.shadowBox.background:before, .shadowBox.background:after
 {
     content:"";
     position:absolute;
@@ -159,7 +205,7 @@ img highlights
     -moz-border-radius:100px / 10px;
     border-radius:100px / 10px;
 }
-.shadowBox:after
+.shadowBox.background:after
 {
     right:10px;
     left:auto;

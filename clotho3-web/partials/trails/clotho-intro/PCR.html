@@ -1,3 +1,55 @@
 <div ng-controller="clothoIntro_PCRCtrl">
 
+    <div class="well">
+        <form class="form-horizontal row-fluid">
+            <div class="control-group">
+                <label class="control-label" for="choosePrimers">Primer Set:</label>
+
+                <div class="controls btn-group" id="choosePrimers">
+                    <button ng-repeat="set in pcr_demoSets" class="btn" ng-click="setPCR($index)">Set {{ $index + 1}}
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Primers</label>
+
+                <div class="controls">
+                    <input type="text" id="primer1" placeholder="Primer 1" ng-model="primers[0]"
+                           restrict-input="DNA.regexps.strip.dna"/>
+                    <input type="text" id="primer2" placeholder="Primer 2" ng-model="primers[1]"
+                           restrict-input="DNA.regexps.strip.dna"/>
+                </div>
+            </div>
+
+            <div class="control-group row-fluid">
+                <label class="control-label" for="backbone">Backbone</label>
+
+                <div class="controls">
+                    <textarea class="span12" id="backbone" placeholder="Backbone" ng-model="backbone"
+                              restrict-input="DNA.regexps.strip.dna"></textarea>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="pcr_align">Alignment</label>
+
+                <div class="controls">
+                    <pre id="pcr_align" placeholder="Primer Alignment" pcr-align ng-model="backbone"
+                         primers="primers"></pre>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="pcr_prod">PCR Product</label>
+
+                <div class="controls">
+                    <pre id="pcr_prod" placeholder="Predicted Sequence" pcr-predict ng-model="backbone"
+                         primers="primers"></pre>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <button class="btn btn-info btn-large" ng-click="showMeHow()"><i class="icon-white icon-eye-open"></i> Show me how</button>
 </div>
