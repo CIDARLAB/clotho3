@@ -860,7 +860,7 @@ Application.Interface.service('$caret', ['$log', function($log) {
 
 //note - jQuery reliance
 //todo - rewrite to use $modal service (esp. for backdrop)
-Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compile', '$rootScope', function($document, $timeout, $q, $compile, $rootScope) {
+Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compile', '$rootScope', 'Clotho', function($document, $timeout, $q, $compile, $rootScope, Clotho) {
     var maxZ = function() {
         return Math.max.apply(null,
             $.map($('body *'), function(e,n) {
@@ -924,18 +924,28 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         return deferred.promise;
     };
 
+    //todo - move to search service
     var typeOutSearch = function(string) {
         var searchBarInput = ($('#searchBarInput'));
 
-        return highlightElement(searchBarInput)
+        return $q.when(searchBarInput.focus())
+        .then(function() {
+            return highlightElement(searchBarInput)
+        })
         .then(function(unhighlight) {
             return typeOut(searchBarInput, string, 'display.query').then(function() {
                 return unhighlight;
             });
         })
         .then(function(unhighlight) {
-            return $timeout(function() {unhighlight()}, 700);
+            return $timeout(function() {unhighlight()}, 600);
         });
+
+    };
+
+    //todo - move to search service
+    var submitSearch = function(string) {
+        return Clotho.submit(string)
     };
 
 
@@ -997,6 +1007,7 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         bringToFront : bringToFront,
         typeOut : typeOut,
         typeOutSearch : typeOutSearch,
+        submitSearch : submitSearch,
         addBackdrop : addBackdrop,
         removeBackdrop : removeBackdrop,
         highlightElement : highlightElement,

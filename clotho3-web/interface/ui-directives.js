@@ -616,6 +616,18 @@ Application.Interface.directive('btnCheckbox', function() {
     };
 });
 
+Application.Interface.directive('hintButton', function() {
+    return {
+        scope: {
+            hint : '@hintButton'
+        },
+        template : '<button class="btn" popover="{{ hint }}" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button>',
+        link: function(scope, element, attrs) {}
+    }
+
+});
+
+
 
 /***********************
  KEYSTROKES
@@ -866,7 +878,6 @@ Application.Interface.provider( '$tooltip', function () {
                     restrict: 'EA',
                     scope: true,
                     link: function link ( scope, element, attrs ) {
-                        console.log(scope);
                         var tooltip = $compile( template )( scope );
                         var transitionTimeout;
                         var popupTimeout;

@@ -776,7 +776,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
      * @returns {string}
      */
     var createRun = function(unit, repeat) {
-        return new Array(repeat).join(unit);
+        return new Array(+repeat + 1).join(unit);
     };
 
     /**

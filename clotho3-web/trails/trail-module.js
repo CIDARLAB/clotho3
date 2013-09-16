@@ -80,7 +80,17 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                     }
 
                     function createYoutubePlayer () {
-                        console.log(YT);
+                        if (YT.loaded == 1) {
+                            scope.player = new YT.Player(element[0], scope.params);
+                        }
+                        else {
+                            //should get called
+                            //onYouTubePlayerReady.apply();
+                        }
+                    }
+                    //todo - verify implemented properly
+                    function onYouTubePlayerReady () {
+                        console.log('youtube player API ready - setting video');
                         scope.player = new YT.Player(element[0], scope.params);
                     }
                 }
@@ -225,7 +235,7 @@ Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($sc
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', '$controller', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q, $controller) {
+Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 'Trails', '$http', '$timeout', '$templateCache', '$compile', '$keypress', '$q', '$controller', '$window', function($scope, $route, Clotho, Trails, $http, $timeout, $templateCache, $compile, $keypress, $q, $controller, $window) {
 
     //inherited from $routeProvider.resolve clause in application.js
     $scope.id = $route.current.params.id;
@@ -240,7 +250,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     load.hint = function loadHint(hint) {
         if (!hint) return $q.when();
 
-        var hintDiv = '<button class="btn pull-right" popover="' + hint + '" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button> ';
+        var hintDiv = '<div class="pull-right" hint-button="'+hint+'"></div>';
 
         return $q.when(hintDiv);
     };
@@ -299,7 +309,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             console.log('quiz grade callback result: ' + data);
         };
 
-        var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback()"></div>';
+        var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback"></div>';
         return $q.when(template);
     };
 
@@ -443,34 +453,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.controller('TrailQuizCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
-    
-    console.log('quiz controller instantiated');
-
-    $scope.createEmptyAnswer = function(quiz, value) {
-        value = (typeof value != 'undefined') ? value : false;
-        $scope.quiz.answer = new Array(quiz.options.length);
-        for (var i = 0; i < $scope.quiz.answer.length; i++) {
-            $scope.quiz.answer[i] = value;
-        }
-    };
-
-    $scope.answerUndefined = function(quiz) {
-        return (typeof quiz.answer == 'undefined' || quiz.answer === '');
-    };
-
-    $scope.submitQuestion = function(quiz) {
-        console.log(quiz);
-        Clotho.gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (data) {
-            console.log('gradeQuiz result: ' + data);
-            $scope.quiz.submitted = true;
-            $scope.quiz.response = {};
-            $scope.quiz.response.result = data;
-            $scope.gradeCallback(data);
-        });
-    }
-}]);
-
 Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile', 'Clotho', '$interpolate', function($http, $templateCache, $compile, Clotho, $interpolate) {
     return {
         restrict: "EA",
@@ -478,7 +460,7 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
         //could assume function onGrade (or variant) will be present on scope, but I think more maintainable to explicitly declare as attr
         scope: {
             quiz: '=ngModel',
-            gradeCallback : '&'
+            gradeCallback : '=?'
         },
 
         compile: function compile(tElement, tAttrs, transclude) {
@@ -517,6 +499,7 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
                             scope.quiz.submitted = true;
                             scope.quiz.response = {};
                             scope.quiz.response.result = data;
+                            console.log(scope.gradeCallback);
                             scope.gradeCallback(data);
                         });
                     }

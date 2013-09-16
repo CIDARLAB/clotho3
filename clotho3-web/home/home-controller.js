@@ -3,7 +3,7 @@
 Application.Primary.controller('HomeCtrl', ['$scope', '$location', function($scope, $location) {
 
     $scope.enterClotho = function() {
-        $location.path('/trails/bb7f191e810c19729de860bb');
+        $location.path('/trails/bb99191e810c19729de860fe');
     };
 
     $scope.enterEugene = function() {

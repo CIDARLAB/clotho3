@@ -82,48 +82,6 @@ Application.Interface.filter('highlight', function () {
     };
 });
 
-
-/**
- * @name format
- *
- * @description
- * A replacement utility for internationalization very similar to sprintf.
- *
- * @param replace {mixed} The tokens to replace depends on type
- *  string: all instances of $0 will be replaced
- *  array: each instance of $0, $1, $2 etc. will be placed with each array item in corresponding order
- *  object: all attributes will be iterated through, with :key being replaced with its corresponding value
- * @return string
- *
- * @example: 'Hello :name, how are you :day'.format({ name:'John', day:'Today' })
- * @example: 'Records $0 to $1 out of $2 total'.format(['10', '20', '3000'])
- * @example: '$0 agrees to all mentions $0 makes in the event that $0 hits a tree while $0 is driving drunk'.format('Bob')
- */
-Application.Interface.filter('format', function(){
-    return function(value, replace) {
-        var target = value;
-        if (angular.isString(target) && replace !== undefined) {
-            if (!angular.isArray(replace) && !angular.isObject(replace)) {
-                replace = [replace];
-            }
-            if (angular.isArray(replace)) {
-                var rlen = replace.length;
-                var rfx = function (str, i) {
-                    i = parseInt(i, 10);
-                    return (i>=0 && i<rlen) ? replace[i] : str;
-                };
-                target = target.replace(/\$([0-9]+)/g, rfx);
-            }
-            else {
-                angular.forEach(replace, function(value, key){
-                    target = target.split(':'+key).join(value);
-                });
-            }
-        }
-        return target;
-    };
-});
-
 /**
  * @name shuffle
  *
@@ -187,3 +145,18 @@ Application.Interface.filter('categorize', ['$parse', function($parse) {
         return items;
     }
 }]);
+
+Application.Interface.filter('breakLines', function() {
+    return function(input, charCount, joiner) {
+        //todo - ignore HTML
+        return (input.match(new RegExp('.{1,'+charCount+'}', 'gi')) || []).join(joiner || '\n');
+    }
+});
+
+Application.Interface.filter('plainText', function() {
+    // note -- not perfect, but much faster than jQuery.text()
+    // http://jsperf.com/regex-replace-vs-jquery-text
+    return function(input, filterOn) {
+        return (filterOn) ? input.replace(/(<([^>]+)>)/ig, '') : input;
+    }
+});
