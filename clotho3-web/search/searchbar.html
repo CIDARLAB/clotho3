@@ -3,7 +3,7 @@
 
         <!--input-->
         <div class="input-append">
-            <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
+            <input id="searchBarInput" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext()','up':'selectAutoPrev()','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
             <button class="btn" id="searchBarSubmit" ng-click="submit(display.query)">Submit</button>
         </div>
 

@@ -112,7 +112,7 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
             $scope.addDep = function() {
                 if (angular.isEmpty($scope.editable.dependencies)) {$scope.editable.dependencies = [];}
-                $scope.editable.dependencies.push({"id" : "", "name" : ""});
+                $scope.editable.dependencies.push("");
             };
 
             $scope.addTest = function() {

@@ -49,6 +49,12 @@
                     "mixin" : "/partials/trails/clotho-intro/toolsIntro.js"
                 },
                 {
+                    "title" : "The Search Bar",
+                    "icon" : "eye",
+                    "template" : "/partials/trails/clotho-intro/searchbarIntro.html",
+                    "mixin" : "/partials/trails/clotho-intro/searchbarIntro.js"
+                },
+                {
                     "title" : "Scripting in Clotho",
                     "icon" : "exercise",
                     "intro" : "<p>Clotho commands can also be issued from the search bar. Click the button below for a walk-through on using the Search Bar.</p>",

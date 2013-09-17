@@ -55,15 +55,23 @@ Clotho 3.0 Front-end Playground: Functionalities for:
         - scripting in Clotho
                 - add new Page --- introducing search bar
                 - focus whole search bar
-    - quiz (general)
-        - more prominent
-        - question bigger
-        - no title
-        - CSS:after to denote quiz
+                - highlight submit button (create $focus.pulse())
+    - quizzes
+        - add hint param to quiz
+        - move inline quizzes to quiz object, fix templates
+        - show correct / wrong feedback
+        - show hint next to quiz decal
+
     - Trails
         - better intro text
         - videos as explanations for quiz
+    - video
+        - pass in dimensions (in directive if mini??)
 
+
+- about page - subscribe to clotho-users
+
+- team page?
 
 
 - Stephanie - write file name when causes problem
@@ -71,10 +79,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - function: dependencies is array of strings
 
-- test import trail schema (but also can query over inferred schema)
 
 TRAILS
-    - youtubeonReady API - handle first page load problem
+    - !!!!!!youtubeonReady API - handle first page load problem ($apply()
     - start construction files
     - gradeQuiz - ignore case
 

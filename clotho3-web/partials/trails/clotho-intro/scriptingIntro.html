@@ -8,7 +8,7 @@
         <div class="control-group" ng-class="{'success' : response.result, 'error' : response.result == false}">
             <div class="input-append">
                 <input type="text" class="input-xlarge" ng-model="quizAnswer"/>
-                <button class="btn" ng-click="gradeSimpleQuiz()" ng-disabled="!quizAnswer || submitted" ng-class="{'btn-success' : response.result, 'btn-danger' : response.result == false}">Submit Answer</button>
+                <button class="btn" ng-click="gradeSimpleQuiz()" ng-disabled="!quizAnswer || submitted" ng-class="{'btn-success' : response.result, 'btn-danger' : response.result == false}">Grade Quiz</button>
             </div>
         </div>
     </div>

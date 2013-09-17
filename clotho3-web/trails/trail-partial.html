@@ -13,6 +13,7 @@
                     <a ng-click="activate('{{$parent.$index + '-' + $index}}')" ng-disabled="!page.type">
                         <i ng-class="{'icon-pencil' : {{ page.icon == 'quiz' }},
                         'icon-list-alt' : {{ page.icon == 'list' }},
+                        'icon-eye-open' : {{ page.icon == 'eye' }},
                         'icon-film' : {{ page.icon == 'video' }},
                         'icon-book' : {{ page.icon == 'template' }},
                         'icon-edit' : {{ page.icon == 'exercise' }},
