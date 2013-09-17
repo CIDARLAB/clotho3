@@ -41,7 +41,7 @@
             <div class="controls">
                 <div ng-repeat="param in editable.dependencies" class="pull-left">
                     <div class="input-append">
-                        <input type="text" class="input-xlarge" ng-model="param.name" ng-disabled="!editMode">
+                        <input type="text" class="input-xlarge" ng-model="param" ng-disabled="!editMode">
                         <button class="btn" ng-click="editable.dependencies.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     </div>
 

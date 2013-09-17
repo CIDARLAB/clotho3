@@ -8,10 +8,6 @@
             <input type="text" class="input-xlarge" ng-model="quiz.answer"/>
             <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="answerUndefined(quiz) || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
 
-            <div ng-if="quiz.response">
-                <div ng-show="quiz.response.result"><i class="icon-ok"></i> Correct!</div>
-                <div ng-show="!quiz.response.result"><i class="icon-remove"></i> Wrong :(</div>
-            </div>
         </div>
     </div>
 </div>

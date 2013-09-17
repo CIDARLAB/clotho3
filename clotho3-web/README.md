@@ -49,40 +49,24 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- finish ligate and PCR functions
+
+- write modules
+
+
+
+
 - UI Stuff
-    - clothoIntro
-        - new page (introducing trails)
-        - scripting in Clotho
-                - add new Page --- introducing search bar
-                - focus whole search bar
-    - quiz (general)
-        - more prominent
-        - question bigger
-        - no title
-        - CSS:after to denote quiz
-    - Trails
-        - better intro text
-        - videos as explanations for quiz
-
-
-
-- Stephanie - write file name when causes problem
-- Stephanie - reloadModules
-
-- function: dependencies is array of strings
-
-- test import trail schema (but also can query over inferred schema)
-
-TRAILS
-    - youtubeonReady API - handle first page load problem
-    - start construction files
-    - gradeQuiz - ignore case
-
-
-- $focus
-    - move search typeout to search service?
-    - fn: show activity log (use searchbar service)
-    - type series of commands with break
+    - clothoIntro Trail
+        - intro to trails -- write text
+    - quizzes
+        - add hint param to quiz
+        - move inline quizzes to quiz object, fix templates
+        - show correct / wrong feedback
+        - show hint next to quiz decal
+        - retrying quizzes
+    - video
+        - pass in dimensions (in directive via youtube API info if mini??)
 
 
 -searchbar updates
@@ -93,18 +77,35 @@ TRAILS
     - fix old up and down (selectAutoNext etc. -- handle empty list)
 
 
-- about page - join mailing list
+
+- about page
+    - subscribe to clotho-users --- need server script
+
+- team page?
+
+
+- Stephanie - write file name when causes problem
+- Stephanie - reloadModules
+
+
+TRAILS
+    - !!!!!!youtubeonReady API - handle first page load problem ($apply()
+    - start construction files
+    - gradeQuiz - ignore case
+
+
+- $focus
+    - $dialog with custom top spacing
+    - pulse submit button
+    - move search typeout to search service?
+    - fn: show activity log (use searchbar service)
+    - type series of commands with break
+
 
 
 - look into including Raven + Eugene
     - Raven: jenhan's login
 
-
-- raven logo
-
-
-- modules
-    - test extending (incl. outside of module definition)
 
 
 - custom person object, add anderson lab people
@@ -127,11 +128,6 @@ TRAILS
     - nice dropdown for filtering
           http://jsfiddle.net/TahmidTanzim/N9Vqk/
 
-
-- quiz
-    - hints
-    - dynamic quesions
-        - parameters for question, answer, generated values
 
 
 - $timeout API requests e.g. get, query, after interval

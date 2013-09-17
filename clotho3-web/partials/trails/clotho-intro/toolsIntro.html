@@ -1,5 +1,17 @@
 <div ng-controller="clothoIntro_toolsIntroCtrl">
-    <div class="well">
+
+    <!-- note this isn't the normal way of writing a quiz, this is putting the template inline for a unique format-->
+    <div class="quiz">
+        <h5>Find the reverse complement of <code>{{ randomSequence }}</code> using the tool provided.</h5>
+        <div class="control-group" ng-class="{'success' : response.result, 'error' : response.result == false}">
+            <div class="input-append">
+                <input type="text" class="input-xlarge" ng-model="quizAnswer"/>
+                <button class="btn" ng-click="gradeSimpleQuiz()" ng-disabled="!quizAnswer || submitted" ng-class="{'btn-success' : response.result, 'btn-danger' : response.result == false}">Grade Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="well" id="demoTool">
         <div class="control-group clearfix">
             <div class="span6 pull-left">
                 <label class="control-label" for="seq">Enter your sequence</label>
@@ -16,18 +28,7 @@
         </div>
     </div>
 
-    <!-- note this isn't the normal way of writing a quiz, this is putting the template inline for a unique format-->
-    <div class="quiz">
-        <h5>Find the reverse complement of <code>{{ randomSequence }}</code> using the tool above.</h5>
-        <div class="control-group" ng-class="{'success' : response.result, 'error' : response.result == false}">
-            <div class="input-append">
-                <input type="text" class="input-xlarge" ng-model="quizAnswer"/>
-                <button class="btn" ng-click="gradeSimpleQuiz()" ng-disabled="!quizAnswer || submitted" ng-class="{'btn-success' : response.result, 'btn-danger' : response.result == false}">Grade Quiz</button>
-            </div>
-        </div>
-    </div>
-
-    <button class="btn btn-large btn-info" ng-click="showMeHow()"><i class="icon-white icon-eye-open"></i> Show Me How</button>
+    <button class="btn btn-large btn-info" id="showMeHow" ng-click="showMeHow()"><i class="icon-white icon-eye-open"></i> Show Me How</button>
 
 
 </div>
