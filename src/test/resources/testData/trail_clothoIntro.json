@@ -10,9 +10,14 @@
             "chapter" : "Introducing Clotho",
             "pages" : [
                 {
+                    "title" : "Introducing Trails",
+                    "icon" : "list",
+                    "template" : "/partials/trails/clotho-intro/introTrails.html"
+                },
+                {
                     "title" : "Intro to DNA",
                     "icon" : "video",
-                    "intro" : "<blockquote><p>In this Trail you'll learn how to design a simple cloning experiment. Videos are available when you need to learn a bit more about a topic.</p></blockquote><div class=\"alert\">You can step through each <b>Page</b> within the <b>Trail</b> by pressing the left or right arrow keys while holding the alt (option) key.</div>",
+                    "intro" : "<p>This video will give you a brief introduction to DNA and Synthetic Biology. Feel free to skip ahead if this isn't new to you.</p>",
                     "video" : {
                         "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
                         "autoplay" : true
@@ -24,9 +29,9 @@
                     "dictionary" : {
                         "outerDictVal" : "Tester"
                     },
-                    "intro" : "<p>DNA is double stranded, but we represent it as a single strand for convenience.  Often you’ll need to know the sequence of the other strand (the reverse-complement).</p>",
                     "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
                     "template" : "/partials/trails/clotho-intro/reverseComplement.html",
+                    "mixin" : "/partials/trails/clotho-intro/reverseComplement.js",
                     "quiz" : {
                         "title" : "Reverse Complement",
                         "type" : "fillin",
@@ -45,9 +50,14 @@
                     "mixin" : "/partials/trails/clotho-intro/toolsIntro.js"
                 },
                 {
+                    "title" : "The Search Bar",
+                    "icon" : "eye",
+                    "template" : "/partials/trails/clotho-intro/searchbarIntro.html",
+                    "mixin" : "/partials/trails/clotho-intro/searchbarIntro.js"
+                },
+                {
                     "title" : "Scripting in Clotho",
                     "icon" : "exercise",
-                    "intro" : "<p>Clotho commands can also be issued from the search bar. Click the button below for a walk-through on using the Search Bar.</p>",
                     "template" : "/partials/trails/clotho-intro/scriptingIntro.html",
                     "mixin" : "/partials/trails/clotho-intro/scriptingIntro.js"
                 }
@@ -94,31 +104,6 @@
                 },
                 {
                     "title" : "Writing",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
-                }
-            ]
-        },
-        {
-            "chapter" : "Do it Yourself",
-            "pages" : [
-                {
-                    "title" : "Choose a Sequence",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
-                },
-                {
-                    "title" : "Design a PCR Product",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
-                },
-                {
-                    "title" : "Write Construction File",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
-                },
-                {
-                    "title" : "Simulation",
                     "icon" : "video",
                     "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
                 }

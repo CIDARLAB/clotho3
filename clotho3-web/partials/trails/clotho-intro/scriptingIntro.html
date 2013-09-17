@@ -1,9 +1,11 @@
 <div ng-controller="clothoIntro_scriptingIntroCtrl">
-
+    <div class="pull-right" hint-button="Be sure to enclose your sequence in quotes like this: '{{ randomSequence }}'"></div>
+    <p>To run functions from the Clotho Search Bar, issue commands in the form</p>
+    <p><code>clotho.run('myFuntion', [myArguments])</code></p>
+    <p>and here, <code>myFunction</code> is <code>revcomp</code></p>
 
     <!-- note this isn't the normal way of writing a quiz, this is putting the template inline for a unique format-->
     <div class="quiz">
-        <div class="pull-right" ng-show="showHint" style="margin-top: 1em; margin-right: -15px;"><div hint-button="Click the Activity Log icon (just right of the Search Bar text) to see your previously submitted commands"></div></div>
         <h5>Find the reverse complement of <code>{{ randomSequence }}</code> using the Search Bar</h5>
         <div class="control-group" ng-class="{'success' : response.result, 'error' : response.result == false}">
             <div class="input-append">

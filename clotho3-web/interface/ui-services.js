@@ -879,9 +879,10 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
     };
 
     var bringToFront = function(element) {
+        var oldZ = element.css('z-index');
         var newZ = maxZ() + 1;
         setZ(newZ, element);
-        return $q.when(newZ);
+        return $q.when(oldZ);
     };
 
 
@@ -996,6 +997,18 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
             setZ(oldZ, el);
             removeBackdrop();
         });
+    };
+
+    //future- move to angular animation
+    var pulseElement = function(el) {
+        var deferred = $q.defer();
+        el
+            .animate( { backgroundColor: "ffff99" }, 300 )
+            .animate( { backgroundColor: "transparent" }, 300, function() {
+                deferred.resolve();
+            });
+
+        return deferred.promise;
     };
 
     //todo
