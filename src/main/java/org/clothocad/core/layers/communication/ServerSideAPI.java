@@ -120,7 +120,7 @@ public class ServerSideAPI {
             return returnValue;
         } catch (ScriptException ex) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up
-            logAndSayError("Error while executing script", ex);
+            logAndSayError("Error while executing script: " + ex.getMessage(), ex);
             return Void.TYPE;
         }
     }
@@ -565,7 +565,7 @@ public class ServerSideAPI {
 
                     return mind.invoke(function, args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown", e);
+                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
                 } catch (NoSuchMethodException ex) {
                     logAndSayError("No such function found", ex);
@@ -579,7 +579,7 @@ public class ServerSideAPI {
 
                     return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, requestId));
                 } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown", e);
+                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
                 } catch (NoSuchMethodException ex) {
                     logAndSayError("No such method found", ex);
