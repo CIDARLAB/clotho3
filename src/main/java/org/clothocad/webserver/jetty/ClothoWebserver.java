@@ -8,13 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
@@ -31,20 +38,37 @@ public class ClothoWebserver {
             KeyStore keystore, @Named("containerServletContext") ServletContextHandler servletHandler)
             throws Exception {
 
+        int confidentialPort = 8443; //TODO: make configurable
+        
         server = new Server(nPort);
 
         //Connectors
 
-       // SelectChannelConnector connector0 = new SelectChannelConnector();
-       // connector0.setPort(nPort);
-       // connector0.setMaxIdleTime(30000);
-       // connector0.setRequestHeaderSize(8192);
+        SelectChannelConnector connector0 = new SelectChannelConnector();
+        connector0.setPort(nPort);
+        connector0.setMaxIdleTime(3600000);
+        connector0.setRequestHeaderSize(8192);
+        connector0.setConfidentialPort(confidentialPort);
 
         SslSelectChannelConnector ssl_connector = new SslSelectChannelConnector();
-        ssl_connector.setPort(8443); //TODO: make configurable
+        ssl_connector.setPort(confidentialPort); 
+        ssl_connector.setMaxIdleTime(3600000);
         SslContextFactory cf = ssl_connector.getSslContextFactory();
         cf.setKeyStore(keystore);
         server.setConnectors(new Connector[]{ssl_connector});
+        
+        
+        //Connection constraints
+        
+        Constraint constraint = new Constraint();
+        constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
+
+        ConstraintMapping cm = new ConstraintMapping();
+        cm.setConstraint(constraint);
+        cm.setPathSpec("/*");
+
+        ConstraintSecurityHandler constraintHandler = new ConstraintSecurityHandler();
+        constraintHandler.setConstraintMappings(new ConstraintMapping[]{cm});
         
         //Websocket
 
@@ -56,12 +80,14 @@ public class ClothoWebserver {
             }
             
         };
-        
+                
         //Static resources
         
         DefaultServlet staticServlet = new DefaultServlet();
         
         //Handler stack
+        
+        
         
         servletHandler.setContextPath("/");
         servletHandler.setResourceBase("./clotho3-web/"); 
@@ -70,8 +96,12 @@ public class ClothoWebserver {
         servletHandler.addFilter(GuiceFilter.class, "/*", null);
         servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
         servletHandler.addServlet(new ServletHolder(wsServlet), "/websocket");
+                
+        HandlerList handlers = new HandlerList();
+        handlers.addHandler(constraintHandler);
+        handlers.addHandler(servletHandler);
         
-        server.setHandler(servletHandler);
+        server.setHandler(handlers);
 
     }
     
