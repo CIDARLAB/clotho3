@@ -20,31 +20,32 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             //functions
             //todo - implement functionality of typeahead directive, but don't rely (don't make angular UI a dependency)
             $scope.$watch('display.query', function(newValue, oldValue) {
+                /*
+                //future - reactivate when autocomplete is working (and will need to show autocomplete -- ng-hide)
                 $scope.display.autocomplete = !!newValue;
                 if (!!newValue) {
                     Clotho.autocomplete($scope.display.query).then(function(data) {
                         $scope.autocomplete.autocompletions = data;
                     });
                 }
-            });
-
-            /**** click-outside watcher ***/
-
-            //todo - namespace clickOutside
-            $scope.$watch('display.autocomplete', function(newValue, oldValue) {
-                if (!!newValue) {
-                    //console.log('inactivating autocomplete clickOutside');
-                    $scope.$broadcast('clickOutside:$active', $scope.$id)
-                } else {
-                    //console.log('inactivating autocomplete clickOutside');
-                    $scope.$broadcast('clickOutside:$inactive', $scope.$id);
-                }
+                */
             });
 
             //todo - fix ugly jQuery hacks
             $scope.currentSelected = 1; //assumes that a.close is present and is first child
+            $scope.prevSubmittedCommand = false;
             $scope.selectAutoNext = function() {
-                if (!$scope.display.autocomplete && $scope.display.query) {
+
+                //temporary - next submitted command
+
+                //todo - more robust (doens't really work)
+
+                $scope.prevSubmittedCommand = (!$scope.prevSubmittedCommand) ? 0 : ($scope.prevSubmittedCommand < $scope.display.queryHistory.length - 1) ? $scope.prevSubmittedCommand + 1 : $scope.display.queryHistory.length - 1;
+
+                Searchbar.setQuery($scope.display.queryHistory[$scope.prevSubmittedCommand]);
+
+
+                /*if (!$scope.display.autocomplete && $scope.display.query) {
                     $scope.display.show('autocomplete');
                     $scope.currentSelected = 1;
                 }
@@ -64,10 +65,19 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                     Searchbar.setQuery(current.scope().item);
                     $scope.display.detail(current.scope().item.uuid);
                     current.addClass('active');
-                }
+                }*/
             };
             $scope.selectAutoPrev = function() {
-                if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
+
+                //temporary -- previous submitted command
+
+                $scope.prevSubmittedCommand = (!$scope.prevSubmittedCommand) ? $scope.display.queryHistory.length - 1 : $scope.prevSubmittedCommand - 1 ;
+
+                Searchbar.setQuery($scope.display.queryHistory[$scope.prevSubmittedCommand]);
+
+
+
+                /*if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
                     console.log($scope.currentSelected);
 
                     $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
@@ -80,7 +90,7 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                     Searchbar.setQuery(current.scope().item);
                     $scope.display.detail(current.scope().item.uuid);
                     current.addClass('active');
-                }
+                }*/
             };
 
             $scope.fullPageLog = function() {

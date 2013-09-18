@@ -29,43 +29,50 @@ Application.Extensions.controller('writingTrailsCtrl', ['$compile', '$scope', 'C
 
 Application.Extensions.controller('writingTrailsUICtrl', ['Clotho', '$scope', '$focus', '$dialog', function(Clotho, $scope, $focus, $dialog) {
     $scope.videoDemo = {
-            id : '<11 char videoID>',
-            params : '<youtubeParamsObj or URL>',
-            autoplay : 'true|false',
-            mini : 'true|false'
-        };
+        id : '<11 char videoID>',
+        params : '<youtubeParamsObj or URL>',
+        autoplay : 'true|false',
+        mini : 'true|false'
+    };
 
-        $scope.showSearchTypeOut = function () {
-            $focus.typeOutSearch('Demo search text');
-        };
+    $scope.demoSize = {
+        "params" : {
+            "height" : 394,
+            "width" : 700
+        }
+    };
 
-        $scope.showDialog = function() {
-            $dialog.messageBox('Demo Dialog', 'This is some simple text. It can contain <code>HTML</code>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
-                .then(function() {
-                    return $dialog.messageBox('Chaining', 'The $dialog and $focus services return promises so you can chain together UI elements based on their completion / response', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
-                })
-                .then(function() {
-                    return $focus.typeOutSearch("$focus demo")
-                })
+    $scope.showSearchTypeOut = function () {
+        $focus.typeOutSearch('Demo search text');
+    };
 
-        };
+    $scope.showDialog = function() {
+        $dialog.messageBox('Demo Dialog', 'This is some simple text. It can contain <code>HTML</code>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+            .then(function() {
+                return $dialog.messageBox('Chaining', 'The $dialog and $focus services return promises so you can chain together UI elements based on their completion / response', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+            })
+            .then(function() {
+                return $focus.typeOutSearch("$focus demo")
+            })
 
-        //demo video modal
-        $scope.openVideo = function() {
-            $dialog.video('ivif214cQLE', {}).open();
-        };
+    };
 
-        $scope.schemas = [];
-        Clotho.query({"schema": "Schema"}).then(function(data) {
-            $scope.schemas = data;
-        });
+    //demo video modal
+    $scope.openVideo = function() {
+        $dialog.video('ivif214cQLE', {}).open();
+    };
+
+    $scope.schemas = [];
+    Clotho.query({"schema": "Schema"}).then(function(data) {
+        $scope.schemas = data;
+    });
 
 
-        $scope.dropdownItems = [
-            "The first choice!",
-            "And another choice for you.",
-            "but wait! A third!"
-        ];
+    $scope.dropdownItems = [
+        "The first choice!",
+        "And another choice for you.",
+        "but wait! A third!"
+    ];
 
 
 }]);

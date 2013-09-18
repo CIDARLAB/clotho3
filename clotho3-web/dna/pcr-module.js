@@ -402,7 +402,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         console.log(fragPair);
 
         if (!fragPair)
-            return 'primers not defined';
+            return 'cut marks not defined';
 
         if (fragPair[0].overhang != DNA.revcomp(fragPair[1].overhang))
             return 'overhangs not complimentary (5\' orientation): ' + fragPair[0].overhang + ' /// ' + fragPair[1].overhang;

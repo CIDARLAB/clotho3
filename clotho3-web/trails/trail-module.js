@@ -1,7 +1,7 @@
 'use strict';
 
 //note - requires youtube iFrame API be present
-Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, $compile) {
+Application.Trails.directive('youtube', ['Trails', '$compile', '$timeout', function(Trails, $compile, $timeout) {
 
     return {
         restrict : 'EA',
@@ -18,6 +18,8 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
             return {
                 pre: function preLink(scope, element, attrs) {
 
+                    console.log(element);
+
                 },
                 post: function postLink(scope, element, attrs) {
 
@@ -30,7 +32,8 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                     //defaults
                     var defaults = {
                         width : 700,
-                        height : 395,
+                        height : 525,
+                        border: 0,
                         videoId : scope.videoId,
                         playerVars : {
                             autoplay : (!scope.autoplay && !scope.startMini) ? 0 : 1,
@@ -77,12 +80,12 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                         element.html($compile(thumbnailHTML)(scope));
                     } else {
                         element.html('<img src="/images/ajax-loader.gif" />');
-                        createYoutubePlayer()
+                        InitialLoadCreateYoutubePlayer()
                     }
 
-                    function createYoutubePlayer () {
+                    function InitialLoadCreateYoutubePlayer () {
                         if (YT.loaded == 1) {
-                            scope.player = new YT.Player(element[0], scope.params);
+                            createYoutubePlayer();
                         }
                         else {
                             scope.$watch(function() {
@@ -90,10 +93,21 @@ Application.Trails.directive('youtube', ['Trails', '$compile', function(Trails, 
                             }, function(newval, oldval) {
                                 if (!!newval) {
                                     console.log('youtube player API ready - setting video');
-                                    scope.player = new YT.Player(element[0], scope.params);
+                                    createYoutubePlayer();
                                 }
-                            })
+                            });
+
+                            $timeout(function() {
+                                console.log('hopefully youtube is loaded now...');
+                                scope.$safeApply();
+                            }, 500);
+
                         }
+                    }
+
+                    function createYoutubePlayer() {
+                        scope.player = new YT.Player(element[0], scope.params);
+                        $(scope.player.a).css({'box-sizing' : 'border-box', 'box-shadow' : '0px 0px 8px rgba(0, 0, 0, 0.25)'})
                     }
                 }
             }
@@ -373,7 +387,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
                 
                 console.log($scope);
 
-            var contentText = angular.element((content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || ""));
+            var contentText = angular.element('<div>' + (content.hint || "") + (content.intro || "") + (content.video || "") + (content.template || "") + (content.quiz || "") + (content.outro || "") + '</div>');
 
             //check for controller, must be already included (e.g. by mixin)
             if (page.controller) {
@@ -385,7 +399,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
             $scope.content = $compile(contentText)($scope);
 
-            console.log('loading onload script');
+            (!!page.onload) && console.log('loading onload script');
             return Application.script(page.onload);
 
         }, function(error) {

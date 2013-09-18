@@ -142,7 +142,7 @@
                               
                 
                 /**
-                 * search bar specific help pane
+                 * Command Bar specific help pane
                  */
                  
                 if(showHelpPane) { 

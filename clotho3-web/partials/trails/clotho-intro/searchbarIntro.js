@@ -9,8 +9,8 @@ Application.Extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '
         resolve:
         {model: function() {
             return {
-                title: 'The Clotho Search Bar',
-                message: 'All of Clotho\'s tools rely on lower-level functions, which you can run through the search bar if you need more control (or need to do things a little faster). Clotho\'s Search Bar is a powerful tool, able to do far more than search, and useable anywhere on the site. For example, you could create or edit your data, run commands, or, yes, even search.',
+                title: 'The Clotho Command Bar',
+                message: 'You can run all of Clotho\'s tools through the Command Bar. The Command Bar is capable of creating and editing your data, running commands, or searching. Type it in, and hit enter or the Submit Button.',
                 buttons: [{label: "OK", cssClass: "btn-primary", result: true}]
             };
         }}
@@ -58,6 +58,7 @@ Application.Extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '
     })
     .then(function(oldZ) {
         $focus.setZ(oldZ, $('#clothoSearchbar'));
+    /*
         return $focus.bringToFront($('#searchBarInput').parent())
     })
     .then(function(oldZ) {
@@ -68,6 +69,7 @@ Application.Extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '
     })
     .then(function(oldZ) {
         $focus.setZ(oldZ, $('#searchBarInput').parent());
+    */
         return $focus.bringToFront($('#searchbar_logbutton'))
     })
     .then(function(oldZ) {

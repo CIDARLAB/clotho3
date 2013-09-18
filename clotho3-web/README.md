@@ -49,30 +49,42 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- add people for team page, query over them
+
 - finish ligate and PCR functions
+    - better examples (backbone lowercase, match uppercase)
+    - ligate multiple fragments
+        - hash table - needs to have 2 fragments per sticky end
+        - while loop
+    - Digest
+        - gelPurify() - -- give array and index (or length)
+        - needs digest function that does everything, returns array
+    - PCR
+        - handle overhangs
+
+
 
 - write modules
 
+
+- construction files
 
 
 
 - UI Stuff
     - clothoIntro Trail
-        - intro to trails -- write text
+        - Command Bar demos
     - quizzes
         - add hint param to quiz
+        - show hint next to quiz decal
         - move inline quizzes to quiz object, fix templates
         - show correct / wrong feedback
-        - show hint next to quiz decal
         - retrying quizzes
     - video
         - pass in dimensions (in directive via youtube API info if mini??)
 
 
 -searchbar updates
-    - submit posts to activity log (if not done on server)
-    - don't add to counter if activity log open
-    - submit clears input
     - up key for command history
     - fix old up and down (selectAutoNext etc. -- handle empty list)
 
@@ -84,12 +96,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - team page?
 
 
-- Stephanie - write file name when causes problem
-- Stephanie - reloadModules
-
 
 TRAILS
-    - !!!!!!youtubeonReady API - handle first page load problem ($apply()
     - start construction files
     - gradeQuiz - ignore case
 
@@ -137,7 +145,6 @@ TRAILS
 
 
 - finish schema editor -- verify with stephanie
-    - superClass not working on server currently
     - handle parameterized fields (e.g. array | module)
     - methods section
         - custom template to show id?
@@ -175,7 +182,7 @@ TRAILS
 
 
 
-- search bar rewrite
+- Command Bar rewrite
     - note -- inherit some UI stuff from menuController so not in searchbar
     - use typeahead with custom template??
         - want to reduce bootstrap reliance, but well-written. maybe move to core
@@ -300,7 +307,7 @@ TRAILS
 
 
 
-- $keypress.suspend() e.g. in trail mode when using search bar -- need to be namespaced
+- $keypress.suspend() e.g. in trail mode when using Command Bar -- need to be namespaced
 
 
 - favorite() API method - and unfavorite() and dislike()

@@ -55,7 +55,7 @@ CUSTOM
 }
 
 /**************
-SEARCH BAR ONLY
+Command Bar ONLY
 **************/
 
 #clothoSearchbarAutocomplete {
@@ -90,8 +90,8 @@ SEARCH BAR ONLY
 /* todo - viewport container to hide scrollbar */
 #clothoSearchbarLog {
     z-index:999;
-    max-width: 320px;
-    width: 320px;
+    max-width: 400px;
+    width: 400px;
     display: block; /*override bootstrap*/
 }
 
@@ -105,7 +105,7 @@ SEARCH BAR ONLY
 }
 
 #clothoSearchbarLog .logEntry {
-    max-width: 300px;
+    max-width: 360px;
 }
 
 
