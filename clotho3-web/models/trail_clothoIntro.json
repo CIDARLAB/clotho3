@@ -40,6 +40,9 @@
                         "dictionary" : {
                             "questionValue" : "ACGTACG",
                             "answerGenerator" : "aa7f191e810c19729de86101"
+                        },
+                        "retry" : {
+                            "questionValue" : "clotho.run('randomSequence', ['7'])"
                         }
                     }
                 },

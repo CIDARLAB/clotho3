@@ -32,17 +32,26 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
             });
 
             //todo - fix ugly jQuery hacks
-            $scope.currentSelected = 1; //assumes that a.close is present and is first child
-            $scope.prevSubmittedCommand = false;
-            $scope.selectAutoNext = function() {
-
+            //$scope.currentSelected = 1; //assumes that a.close is present and is first child
+            $scope.prevSubmittedIndex = false;
+            $scope.selectAutoNext = function($event) {
                 //temporary - next submitted command
+                $event.preventDefault();
 
                 //todo - more robust (doens't really work)
 
-                $scope.prevSubmittedCommand = (!$scope.prevSubmittedCommand) ? 0 : ($scope.prevSubmittedCommand < $scope.display.queryHistory.length - 1) ? $scope.prevSubmittedCommand + 1 : $scope.display.queryHistory.length - 1;
+                $scope.prevSubmittedIndex =
+                    (!$scope.prevSubmittedIndex) ?
+                        0 :
+                        (   ($scope.prevSubmittedIndex < $scope.display.queryHistory.length -1) ?
+                            $scope.prevSubmittedIndex + 1 :
+                            $scope.display.queryHistory.length - 1
+                        );
 
-                Searchbar.setQuery($scope.display.queryHistory[$scope.prevSubmittedCommand]);
+                console.log($scope.prevSubmittedIndex);
+
+
+                Searchbar.setQuery($scope.display.queryHistory[$scope.prevSubmittedIndex]);
 
 
                 /*if (!$scope.display.autocomplete && $scope.display.query) {
@@ -67,13 +76,25 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                     current.addClass('active');
                 }*/
             };
-            $scope.selectAutoPrev = function() {
+            $scope.selectAutoPrev = function($event) {
 
                 //temporary -- previous submitted command
+                $event.preventDefault();
 
-                $scope.prevSubmittedCommand = (!$scope.prevSubmittedCommand) ? $scope.display.queryHistory.length - 1 : $scope.prevSubmittedCommand - 1 ;
+                $scope.prevSubmittedIndex =
+                    (!!$scope.prevSubmittedIndex) ?
+                        (   ($scope.prevSubmittedIndex > 0) ?
+                            $scope.prevSubmittedIndex - 1 :
+                            0
+                        ) :
+                        (   ($scope.display.queryHistory.length) ?
+                            $scope.display.queryHistory.length - 1 :
+                            0
+                        );
 
-                Searchbar.setQuery($scope.display.queryHistory[$scope.prevSubmittedCommand]);
+                console.log($scope.prevSubmittedIndex);
+
+                Searchbar.setQuery($scope.display.queryHistory[$scope.prevSubmittedIndex]);
 
 
 

@@ -590,6 +590,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      * @returns {string} Sequence with marked restriction sites
      */
     var markMatches = function (sequence, enzyme) {
+        //todo - shouldn't get rid of cuts already there
         return removeCuts(markSites(sequence, enzyme))
     };
 
@@ -601,6 +602,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      * @returns {string}
      */
     var markCuts = function (sequence, enzyme) {
+        //todo - shouldn't get rid of matches already there
         return removeMatches(markSites(sequence, enzyme))
     };
 
@@ -686,8 +688,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
     /**
      * @description Determine fragments for a sequence cut by a single enzyme
-     * @param {string} sequence
-     * @param {object=} enzymes If none passed, assume sequence is marked
+     * @param {string} sequence WITH cut marks already
+     * @param {object=} enzyme If none passed, assume sequence is marked
      * @param {boolean=} circular Whether fragments should be circularized. Default: true
      * @returns {Array} Array of strings representing cut fragments
      */
@@ -702,10 +704,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         nnnn^nn_nnnn -> [nnnn^nn_, ^nn_nnnn]
         nnn|nnn -> [nnn, nnn]
          */
-    var makeCuts = function (sequence, enzymes, circular) {
-
-        if (!!enzymes)
-            sequence = markCuts(sequence, enzymes);
+    var makeCuts = function (sequence, enzyme, circular) {
 
         var lastIndex = 0,
             lastMark = "",
@@ -725,15 +724,36 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         for (var i = 0; i < keys.length; i++) {
             var mark = overhangs[keys[i]],
                 newMark = (mark.isBlunt) ? '' : mark.match,
-                frag = lastMark + sequence.substring(lastIndex, mark.index) + newMark;
+                frag = sequence.substring(lastIndex, mark.index) + newMark;
 
             fragments.push(frag);
 
             lastIndex = mark.index;
             lastMark = newMark;
         }
+        
+        //last fragment
+        fragments.push(sequence.substring(lastIndex));
 
         return (circular === false) ? fragments : circularize(fragments);
+    };
+
+    var digest = function(sequence, enzyme, circularize) {
+        if (!enzyme)
+            return 'no enzyme provided';
+
+        sequence = markCuts(sequence, enzyme);
+
+        return makeCuts(sequence, enzyme, circularize);
+    };
+
+
+    var sortFragments = function(fragments) {
+        return _.sortBy(fragments, function(f) { return -f.length });
+    };
+
+    var gelPurify = function(fragments, targetLength) {
+        return _.sortBy(fragments, function (f) { return Math.abs(f.length - targetLength)})[0]
     };
 
 
@@ -766,7 +786,14 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         //manipulation
         makeCuts : makeCuts,
         addRestrictionSite : addRestrictionSite,
-        swapoutSites : swapoutSites
+        swapoutSites : swapoutSites,
+
+        //quantification / sorting
+        sortFragments : sortFragments,
+        gelPurify : gelPurify,
+
+        //high-level
+        digest : digest
 
     }
 }]);

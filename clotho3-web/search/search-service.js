@@ -136,20 +136,24 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
         if (!query)
             query = display.query;
 
-        console.log(query);
-
+        //console.log(query);
 
         if (!!query) {
-            var submission = {class : 'info', from : 'client', text: query};
+            var submission = {class : 'info', from : 'client', text: query, timestamp : Date.now()};
             display.queryHistory.push(submission);
-            ClientAPI.say(submission);
             Clotho.submit(query).then(function(result){
+                ClientAPI.say(submission);
                 display.query = '';
                 ClientAPI.say({text: result || 'Command received'});
+
+                console.log(log.entries);
             });
             //display.autocomplete = false;
             display.undetail();
         }
+
+        console.log(display.queryHistory);
+        console.log(log.entries)
     };
 
     /****** listeners *****/
@@ -168,6 +172,8 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
             /*if (item.type != 'command') {
                 display.undetail();
             }*/
+            if (!item) return;
+
             display.query = !!item.value ? item.value : item.text;
         },
         autocomplete : autocomplete,

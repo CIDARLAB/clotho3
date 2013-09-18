@@ -162,7 +162,11 @@ quiz
     border-radius: 0 4px 0 7px;
 }
 
-
+.quizResult {
+    margin: 0 0 0 5px;
+    padding: 4px 12px;
+    vertical-align: top;
+}
 
 
 
