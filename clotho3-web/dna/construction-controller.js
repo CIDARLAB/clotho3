@@ -1,9 +1,22 @@
 'use strict';
 
-Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Digest', 'PCR', function($scope, Clotho, DNA, Digest, PCR) {
+Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'DNA', 'Digest', 'PCR', 'Construction', '$http', function($scope, $parse, Clotho, DNA, Digest, PCR, Construction, $http) {
     $scope.DNA = DNA;
     $scope.PCR = PCR;
     $scope.Digest = Digest;
+    $scope.Construction = Construction;
+
+
+    //testing
+    $scope.x = {};
+    $scope.x.obj = {};
+    $scope.x.obj.y = "hey";
+    //works
+    console.log($scope.$eval('x.obj.y'));
+    //works
+    console.log($parse('x.obj.y')($scope));
+
+
 
     //todo - if possible, assign these directly from DOM using a directive...
     $scope.$watch('sequence', function(newval, oldval) {
@@ -93,6 +106,18 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
         console.log(result);
         $scope.clothoFunctions = result;
     });
+
+
+    //Construction Files
+
+    $scope.constructionFile = $http.get('/models/construction_demo.json').then(function(data) { return data.data });
+
+    $scope.$watch('constructionFile', function (newval) {
+        if (!newval) return;
+        $scope.constructionProduct = Construction.process(newval)
+    });
+
+
 
 
 }]);

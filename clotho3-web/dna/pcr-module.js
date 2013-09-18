@@ -185,7 +185,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     //wrapper function, currently only handles PCR and EIPCR
     var predict = function predict(sequence, primers) {
 
-        //console.log(sequence, primers);
+        console.log(sequence, primers);
 
         if (primers.length != 2)
             return "Can only handle having two primers right now";
@@ -576,7 +576,7 @@ Application.Dna.directive('pcrPredict', ['PCR', 'Digest', 'DNA', function(PCR, D
 
 Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', '$filter', function(PCR, Digest, DNA, $filter) {
     return {
-            restrict: 'A',
+        restrict: 'A',
         require: 'ngModel',
         scope: {
             backbone: '=ngModel',
