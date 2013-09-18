@@ -28,7 +28,7 @@
         {
             "reaction" : "PCR.ligate",
             "id" : "",
-            "inputs" : ["fragments"],
+            "inputs" : [["fragments[0]", "'^aatt_TAGTGCTACGATCGATCGATCAGC'"]],
             "output" : "final"
         }
     ]
