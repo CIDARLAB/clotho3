@@ -99,7 +99,6 @@ Application.Trails.directive('youtube', ['Trails', '$compile', '$timeout', funct
 
                             $timeout(function() {
                                 console.log('hopefully youtube is loaded now...');
-                                scope.$safeApply();
                             }, 500);
 
                         }
@@ -469,7 +468,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     $scope.base64icon = base64icon;
 }]);
 
-Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile', 'Clotho', '$interpolate', function($http, $templateCache, $compile, Clotho, $interpolate) {
+Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile', 'Clotho', '$interpolate', '$q', function($http, $templateCache, $compile, Clotho, $interpolate, $q) {
     return {
         restrict: "EA",
         require: 'ngModel',
@@ -483,8 +482,14 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
             return {
                 pre: function preLink(scope, element, attrs) {
 
-                    //can't $compile, need to just $interpolate
-                    scope.quiz.question = $interpolate(scope.quiz.question)(scope.quiz);
+                    //todo -- don't want to extend scope with quiz (works but ugly)
+                    angular.extend(scope, scope.quiz);
+                    //can't use $interpolate - need to maintain bindings
+                    //can't compile with scope.quiz - not a scope object - and can't create isolate because bindings not maintained
+                    // note - see also grade and retry functions, and load.quiz
+                    scope.quiz.question = $compile('<h5>' + scope.quiz.question + '</h5>')(scope);
+
+                    //console.log(scope.quiz.question);
 
                     $http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
                         .success(function (data) {
@@ -515,9 +520,39 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
                             scope.quiz.submitted = true;
                             scope.quiz.response = {};
                             scope.quiz.response.result = data;
-                            console.log(scope.gradeCallback);
+                            //console.log(scope.gradeCallback);
                             scope.gradeCallback(data);
                         });
+                    };
+
+                    scope.resetQuiz = function () {
+                        scope.quiz.submitted = false;
+                        scope.quiz.response = null;
+                        scope.quiz.answer = null;
+                    };
+
+                    scope.retryQuiz = function () {
+                        if (!scope.quiz.retry) return;
+
+                        var promises = {},
+                            deferred = $q.defer();
+
+                        angular.forEach(scope.quiz.retry, function(value, key) {
+                            promises[key] = Clotho.submit(value).then(function (result) {
+                                return result;
+                            });
+                        });
+
+                        $q.all(promises).then(function(completed) {
+                            //todo - ugly -- get everything into quiz object
+                            angular.extend(scope.quiz, completed);
+                            angular.extend(scope, scope.quiz);
+                            scope.resetQuiz();
+                            console.log(scope);
+                            deferred.resolve();
+                        });
+
+                        return deferred.promise;
                     }
 
                 }

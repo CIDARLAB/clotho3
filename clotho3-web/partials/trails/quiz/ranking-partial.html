@@ -1,7 +1,6 @@
 <div ng-init="quiz.answer = quiz.options">
 
-    <h3>{{quiz.title}}</h3>
-    <p>{{quiz.question}}</p>
+    <h5 ng-bind-html-unsafe="quiz.question"></h5>
 
     <ol jq-sortable="sortableParams" ng-model="quiz.options">
         <li ng-repeat="choice in quiz.options">
@@ -9,8 +8,12 @@
         </li>
     </ol>
 
-    <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="!quiz.answer || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
+    <div class="input-append">
+        <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="answerUndefined(quiz) || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
+        <button class="btn" ng-click="retryQuiz()" ng-if="quiz.submitted && !quiz.response.result" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Retry</button>
+    </div>
 
-    <h3 ng-if="quiz.response" ng-class="{'text-success' : quiz.response.result, 'text-error' : !quiz.response.result}">{{quiz.response.result}}</h3>
+    <span class="alert alert-success help-inline quizResult" ng-if="quiz.response.result"><i class="icon-ok"></i> Correct!</span>
+    <span class="alert alert-danger help-inline quizResult" ng-if="quiz.response && !quiz.response.result"><i class="icon-remove"></i> Nope...</span>
 
 </div>

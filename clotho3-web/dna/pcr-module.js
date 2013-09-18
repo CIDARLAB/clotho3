@@ -37,7 +37,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      * @param primer
      * @returns {Object} In form {forward: Array, reverse: Array}} where each array is indices the primer anneals, empty if no matches.
      */
-    var findAnnealFull = function findAnnealFull(sequence, primer) {
+    var findAnnealAllExact = function findAnnealAllExact(sequence, primer) {
 
         //future - move to fuzzy search, account for tail on primer
 
@@ -52,41 +52,53 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         //todo
     };
 
+    //todo - return array of objects, each with index and if forward and has overhang
     var findAnnealSimple = function(template, primer) {
         //start from 3', go back until have unique match
-        var searchFrag, searchReg, matches = {}, result;
+        var searchFrag, searchReg, result = null;
 
         for(var initialBack = 8,
-                start = primer.length - initialBack;
-            searchFrag = primer.substring(start),
+                start = primer.length - initialBack,
+                matches = {};
+            start > 0,
+                searchFrag = primer.substring(start),
                 searchReg = Digest.createRegex(searchFrag);
-            start++)
+            --start)
         {
+            console.log(start);
 
             //check forward
-            matches.forward = template.match(searchReg);
+            matches.forward = template.match(searchReg) || [];
             //check revcomp
-            matches.reverse = DNA.revcomp(template).match(searchReg);
+            matches.reverse = DNA.revcomp(template).match(searchReg) || [];
 
-            if (!(matches.forward.length || matches.reverse.length)) {
+            console.log(matches, matches.forward.length, matches.reverse.length, matches.forward.length + matches.reverse.length);
+
+            if (!matches.forward.length && !matches.reverse.length) {
                 console.log('no *exact* matches found for length ' + start + ' from 3 prime end');
+                //todo - step back one, check for single match
                 result = false;
                 break;
             } else if ((matches.forward.length + matches.reverse.length) == 1) {
+                console.log('one match' );
+                //todo - go back as far as possible
                 //return index of single match
-                //todo - store forward or reverse?
                 result = matches.forward.length ? template.search(searchReg) : DNA.revcomp(template).search(searchReg);
                 break;
+            } else {
+                console.log('else');
             }
         }
 
         return result;
     };
 
-    var anneal = function (template, primer) {
-        var method = findAnnealSimple;
+    //wrapper function...
+    var anneal = function (template, primer, fuzzy) {
+        fuzzy = !!fuzzy || true;
 
-        //todo
+        //future - once write fuzzy, implement here
+        return (fuzzy) ? findAnnealSimple(template, primer) : findAnnealSimple(template, primer);
 
     };
 
@@ -136,8 +148,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
             return "a primer is not defined"
         }
 
-        var p1 = findAnnealFull(sequence, primer1),
-            p2 = findAnnealFull(sequence, primer2);
+        var p1 = findAnnealAllExact(sequence, primer1),
+            p2 = findAnnealAllExact(sequence, primer2);
 
         /** check zero matches **/
 
@@ -187,8 +199,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
 
         //future - not DRY
-        var p1 = findAnnealFull(sequence, primer1),
-            p2 = findAnnealFull(sequence, primer2);
+        var p1 = findAnnealAllExact(sequence, primer1),
+            p2 = findAnnealAllExact(sequence, primer2);
 
 
         /** orient primers **/
@@ -346,8 +358,8 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
 
         //future - not DRY
-        var p1 = findAnnealFull(sequence, primer1),
-            p2 = findAnnealFull(sequence, primer2);
+        var p1 = findAnnealAllExact(sequence, primer1),
+            p2 = findAnnealAllExact(sequence, primer2);
 
 
         /** orient primers **/
@@ -356,7 +368,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         var p1pos = (!!p1.forward.length) ? +p1.forward[0] : +p1.reverse[0];
         var p2pos = (!!p2.forward.length) ? +p2.forward[0] : +p2.reverse[0];
 
-        console.log(p1pos, p2pos, sequence, primers[0], primers[1]);
+        //console.log(p1pos, p2pos, sequence, primers[0], primers[1]);
 
         //todo - don't assume p1 first
 
@@ -516,6 +528,9 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     return {
         predict : predict,
 
+        anneal : anneal,
+        findAnnealSimple : findAnnealSimple,
+
         primerAlign : primerAlign,
 
         parseFragmentEnds : parseFragmentEnds,
@@ -577,7 +592,7 @@ Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', '$filter', functi
             function process () {
                 var alignment = PCR.primerAlign(scope.backbone, scope.primers);
 
-                console.log(alignment);
+                //console.log(alignment);
 
                 //todo -- pass in width of element to breaklines
                 var charNum = 57;
@@ -586,14 +601,14 @@ Application.Dna.directive('pcrAlign', ['PCR', 'Digest', 'DNA', '$filter', functi
 
                 var backboneText = $filter('breakLines')(scope.backbone, charNum, "*").split('*');
 
-                console.log(alignment, backboneText);
+                //console.log(alignment, backboneText);
 
                 var finalText = "";
                 for (var i = 0; i < backboneText.length; i++) {
                     finalText += alignment[i] + "\n" + backboneText[i] + "\n";
                 }
 
-                console.log(finalText);
+                //console.log(finalText);
                 element.html(finalText)
             }
 

@@ -20,10 +20,14 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
     //Digest
     $scope.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc';
     $scope.digestEnz = Digest.enzymes.EcoRI;
+    $scope.digestFrags = Digest.digest($scope.digestSeq, $scope.digestEnz, false);
+
+    $scope.$watch('digestEnz', function() {
+        $scope.digestFrags = Digest.digest($scope.digestSeq, $scope.digestEnz, false);
+    });
 
 
     //PCR predict
-
 
     $scope.pcr_demoSets = [
         {
@@ -51,6 +55,10 @@ Application.Dna.controller('constructionCtrl', ['$scope', 'Clotho', 'DNA', 'Dige
     };
 
     $scope.setPCR(2);
+    
+    
+    
+    console.log(PCR.findAnnealSimple($scope.backbone, $scope.primers[0]));
 
 
     //ligation

@@ -42,7 +42,17 @@
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
-            "javaType": "java.lang.String",
+            "javaType": "java.lang.HashMap",
+            "reference": false
+        },
+        {
+            "name": "retry",
+            "type": "object",
+            "description": "Object defining new values to retry a quiz. Keys are parameters to update (e.g. questionValue), and values are strings which will be run via Clotho.submit() (e.g. \"clotho.run('randomSequence', ['7'])\" )... Will be accessed if the user gets the question wrong. Retries will be disabled if not declared or set to false.",
+            "example": "",
+            "constraints": null,
+            "access": "PUBLIC",
+            "javaType": "java.lang.HashMap",
             "reference": false
         },
         {

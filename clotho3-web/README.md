@@ -51,20 +51,19 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - add people for team page, query over them
 
+
 - finish ligate and PCR functions
-    - better examples (backbone lowercase, match uppercase)
     - ligate multiple fragments
         - hash table - needs to have 2 fragments per sticky end
         - while loop
-    - Digest
-        - gelPurify() - -- give array and index (or length)
-        - needs digest function that does everything, returns array
     - PCR
-        - handle overhangs
+        - better examples (backbone lowercase, match uppercase)
+        - anneal function
+            - handle overhangs
 
 
 
-- write modules
+- write modules on server
 
 
 - construction files
@@ -73,28 +72,32 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - UI Stuff
     - clothoIntro Trail
-        - Command Bar demos
+        - Command Bar demos --- define variable, query
     - quizzes
-        - add hint param to quiz
-        - show hint next to quiz decal
+        - make dictionary more dynamic (at least on client)
         - move inline quizzes to quiz object, fix templates
-        - show correct / wrong feedback
+        - show correct / wrong feedback (all templates)
         - retrying quizzes
-    - video
-        - pass in dimensions (in directive via youtube API info if mini??)
+        - add hint param to quiz
+            - show hint next to quiz decal
+
 
 
 -searchbar updates
-    - up key for command history
-    - fix old up and down (selectAutoNext etc. -- handle empty list)
+    - fix command history / query discrepancy (using up arrow)
 
 
 
 - about page
     - subscribe to clotho-users --- need server script
 
+
 - team page?
 
+
+
+- code mirror in function editor
+    - http://angular-ui.github.io/ui-codemirror/
 
 
 TRAILS
