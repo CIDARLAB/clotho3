@@ -12,7 +12,7 @@
                 {
                     "title" : "Intro to DNA",
                     "icon" : "video",
-                    "intro" : " <blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you brush up. This one will give you a brief introduction to DNA and Synthetic Biology. Feel free to skip ahead if this isn't new to you.</p>",
+                    "intro" : " <div><blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you get up to speed. This one will give you a brief introduction to DNA and Synthetic Biology. <b>Feel free to skip ahead if this isn't new to you.</b></p></div>",
                     "video" : {
                         "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
                         "autoplay" : true
@@ -24,7 +24,13 @@
                     "dictionary" : {
                         "outerDictVal" : "Tester"
                     },
-                    "video" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
+                    "video" : {
+                        "id" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
+                        "params" : {
+                            "height" : 394,
+                            "width" : 700
+                        }
+                    },
                     "template" : "/partials/trails/clotho-intro/reverseComplement.html",
                     "mixin" : "/partials/trails/clotho-intro/reverseComplement.js",
                     "quiz" : {
@@ -45,7 +51,7 @@
                     "mixin" : "/partials/trails/clotho-intro/toolsIntro.js"
                 },
                 {
-                    "title" : "The Search Bar",
+                    "title" : "The Command Bar",
                     "icon" : "eye",
                     "template" : "/partials/trails/clotho-intro/searchbarIntro.html",
                     "mixin" : "/partials/trails/clotho-intro/searchbarIntro.js"
@@ -71,14 +77,20 @@
                 {
                     "title" : "Ligation",
                     "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4",
+                    "video" : {
+                        "id" : "https://www.youtube.com/watch?v=ytHETbIjBV4",
+                        "params" : {
+                            "height" : 394,
+                            "width" : 700
+                        }
+                    },
                     "template" : "/partials/trails/clotho-intro/Ligation.html",
                     "mixin" : "/partials/trails/clotho-intro/Ligation.js"
                 },
                 {
                     "title" : "PCR",
                     "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU",
+                    "video" : "http://www.youtube.com/watch?v=20a-mp4YXRQ",
                     "template" : "/partials/trails/clotho-intro/PCR.html",
                     "mixin" : "/partials/trails/clotho-intro/PCR.js"
                 }

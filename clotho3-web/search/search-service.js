@@ -31,6 +31,7 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
     /****** display ******/
     var display = {};
     display.query = '';
+    display.queryHistory = [];
     display.autocomplete = false; // autocomplete list
     display.autocompleteDetail = false; //pane to left of autocomplete
     display.autocompleteDetailInfo = false; // e.g. command or author
@@ -42,7 +43,7 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
     display.genLogPos = function() {
         var target = document.getElementById('searchbar_logbutton');
         display.logpos = {
-            left : (target.offsetLeft + (target.scrollWidth / 2) - 160) + "px",
+            left : (target.offsetLeft + (target.scrollWidth / 2) - 200) + "px",
             top : (target.offsetTop + target.scrollHeight)  + "px"
         };
     };
@@ -115,7 +116,7 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
     /***** functions *****/
 
     function receiveMessage (data) {
-        log.unread = (!!log.unread) ? log.unread + 1 : 1;
+        log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
         log.entries.unshift(data);
         display.show('logSnippet');
         //todo - cancel if new request comes in
@@ -137,9 +138,14 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
 
         console.log(query);
 
+
         if (!!query) {
+            var submission = {class : 'info', from : 'client', text: query};
+            display.queryHistory.push(submission);
+            ClientAPI.say(submission);
             Clotho.submit(query).then(function(result){
-                ClientAPI.say({text:"Return value: " + result});
+                display.query = '';
+                ClientAPI.say({text: result || 'Command received'});
             });
             //display.autocomplete = false;
             display.undetail();
@@ -159,9 +165,9 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
         setQuery : function(item, $event) {
             if (typeof $event != 'undefined')
                 $event.preventDefault();
-            if (item.type != 'command') {
+            /*if (item.type != 'command') {
                 display.undetail();
-            }
+            }*/
             display.query = !!item.value ? item.value : item.text;
         },
         autocomplete : autocomplete,

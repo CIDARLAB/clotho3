@@ -35,7 +35,8 @@ Application.Interface.directive('uiEvent', ['$parse',
         };
     }]);
 
-//todo - add activate attr, deregister listener based on it
+// todo - add activate attr, deregister listener based on it
+// note - use click-outside-active attr
 // note - requires jQuery has()
 // future - to make more universal, see:
 // https://raw.github.com/cowboy/jquery-outside-events/v1.1/jquery.ba-outside-events.js

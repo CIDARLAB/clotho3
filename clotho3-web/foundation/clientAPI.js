@@ -212,7 +212,6 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      *
      */
     var say = function clientAPISay(data) {
-        console.log('Hit say');
         PubSub.trigger("activityLog", data);
     };
 

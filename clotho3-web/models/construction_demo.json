@@ -1,0 +1,32 @@
+{
+    "name" : "Construction File Demo",
+    "id" : "ee2f87dec2e6d9c71a57aa11",
+    "schema" : "ConstructionFile",
+    "description" : "The Construction File automates the process of building custom DNAs. 'steps' are sequential functions that will be run. The 'dictionary' is a hash of variables that will be used throughout the reaction. Each function will return it's normal return, which will be assigned to the 'output' field and added to the 'dictionary'. ",
+    "dictionary" : {
+        "primer1" : "",
+        "primer2" : "",
+        "template" : "",
+        "enzyme" : ""
+    },
+    "steps" : [
+        {
+            "reaction" : "PCR",
+            "id" : "",
+            "inputs" : ["template", "primer1", "primer2"],
+            "output" : "pcr_product"
+        },
+        {
+            "reaction" : "digest",
+            "id" : "",
+            "inputs" : ["pcr_product"],
+            "output" : "fragments"
+        },
+        {
+            "reaction" : "ligate",
+            "id" : "",
+            "inputs" : ["fragments"],
+            "output" : "final"
+        }
+    ]
+}
