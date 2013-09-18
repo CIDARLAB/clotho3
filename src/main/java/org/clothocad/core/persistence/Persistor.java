@@ -535,7 +535,7 @@ public class Persistor{
             }
             
 
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | RuntimeException ex) {
         }
         out.add(originalSchemaName);
         return out;
