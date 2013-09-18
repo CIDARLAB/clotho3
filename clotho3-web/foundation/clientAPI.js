@@ -212,6 +212,10 @@ Application.Foundation.service('ClientAPI', ['PubSub', 'Collector', '$q', '$temp
      *
      */
     var say = function clientAPISay(data) {
+        data.timestamp = (!!data.timestamp) ? data.timestamp : Date.now();
+        data.from = (!!data.from) ? data.from : 'server';
+
+
         PubSub.trigger("activityLog", data);
     };
 
