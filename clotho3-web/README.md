@@ -84,9 +84,8 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 -searchbar updates
-    - fix command history / query discrepancy (using up arrow)
     - $timeout of logSnippet
-
+    - say() for run(), other commands
 
 
 - about page

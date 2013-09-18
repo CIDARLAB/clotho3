@@ -690,7 +690,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      * @description Determine fragments for a sequence cut by a single enzyme
      * @param {string} sequence WITH cut marks already
      * @param {object=} enzyme If none passed, assume sequence is marked
-     * @param {boolean=} circular Whether fragments should be circularized. Default: true
+     * @param {boolean=} circular Whether fragments should be circularized. Default: false
      * @returns {Array} Array of strings representing cut fragments
      */
 
@@ -735,7 +735,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         //last fragment
         fragments.push(sequence.substring(lastIndex));
 
-        return (circular === false) ? fragments : circularize(fragments);
+        return (!!circular) ? circularize(fragments) : fragments;
     };
 
     var digest = function(sequence, enzyme, circularize) {
