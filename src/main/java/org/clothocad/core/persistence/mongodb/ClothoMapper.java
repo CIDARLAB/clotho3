@@ -11,14 +11,13 @@ import com.github.jmkgreen.morphia.mapping.MappedField;
 import com.github.jmkgreen.morphia.mapping.MapperOptions;
 import com.github.jmkgreen.morphia.mapping.cache.EntityCache;
 import com.github.jmkgreen.morphia.mapping.lazy.proxy.ProxyHelper;
-import com.mongodb.BasicDBList;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
@@ -36,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.clothocad.core.aspects.JSONSerializer;
 import org.clothocad.core.persistence.Adds;
 import org.clothocad.core.persistence.DBClassLoader;
+import org.clothocad.core.persistence.IdUtils;
 
 public class ClothoMapper extends DefaultMapper implements JSONSerializer {
 
@@ -92,16 +92,23 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
             //massage any String references to DbRefs
             //TODO: Make this work with proxies
             if (mf.hasAnnotation(Reference.class)){
+                Object fieldValue = dbObject.get(mf.getNameToStore());
                 if (mf.isMultipleValues()){
-                    Object fieldValue = dbObject.get(mf.getNameToStore());
                     //XXX: that second check shouldn't do anything
-                    if (fieldValue != null && !(fieldValue instanceof DBRef)){
+                    if (fieldValue != null){
                         List values = (List) fieldValue;
                         for (int i=0; i<values.size(); i++){
                             Object value = values.get(i);
                             if (value instanceof String){
-                                values.set(i, new DBRef(db, "data", new ObjectId(value.toString())));
+                                values.set(i, convertToDBRef(value.toString()));
                             }
+                        }
+                    }
+                }
+                else {
+                    if (!(fieldValue instanceof DBRef) && fieldValue != null){
+                        if (fieldValue instanceof String){
+                            dbObject.put(mf.getNameToStore(), convertToDBRef(fieldValue.toString()));
                         }
                     }
                 }
@@ -111,6 +118,18 @@ public class ClothoMapper extends DefaultMapper implements JSONSerializer {
         }
     }
 
+    protected DBRef convertToDBRef(String ref){
+        try {
+            return new DBRef(db, "data", new ObjectId(ref));
+        } catch (IllegalArgumentException e){
+            ObjectId id = IdUtils.resolveSelector(ref, false);
+            if (id == null){
+                throw new EntityNotFoundException("Could not find schema for selector "+ ref);
+            }
+            return new DBRef(db, "data", id);
+        }
+    }
+    
     @Override
     public Map<String, Object> toJSON(ObjBase obj) {
         return toJSON(toDBObject(obj).toMap());

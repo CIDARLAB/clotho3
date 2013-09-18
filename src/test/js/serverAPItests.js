@@ -120,6 +120,12 @@ asyncTest("create with schema", function () {
     };
 });
 
+testThroughAsync("create LabPerson", 
+        new Message("create", {"schema":"52310822c2e67bf02c9c21f1"}),
+        function (){
+            expect(0);
+        });
+
 asyncTest("set", function (){
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
