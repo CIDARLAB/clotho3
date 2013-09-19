@@ -622,7 +622,6 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
 
         parseFragmentEnds : parseFragmentEnds,
         reverseFragment : reverseFragment,
-        orientFragments : orientFragments,
         orientFragmentsForJoin : orientFragmentsForJoin,
 
         exonuclease35 : exonuclease35,
