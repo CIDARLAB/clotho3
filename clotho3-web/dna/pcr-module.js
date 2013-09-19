@@ -394,20 +394,96 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      * @returns {string}
      */
     var ligate = function(fragments, align, showHTML, showMarks) {
+
         var ends = parseFragmentEnds(fragments),
             blunts = ends.blunts,
             overhangs = ends.overhangs,
             fragPair;
-        
+
         if (blunts.length > 1) {
             if (blunts.length == 2) {
+                console.log('2 blunt ends -- expect random products, just showing one');
                 fragPair = orientFragmentsForJoin(blunts[0], blunts[1]);
+            }
+            else {
+                //several weird products
+                return 'multiple blunt end fragments -- random products'
             }
         }
 
         if (overhangs.length > 1) {
             if (overhangs.length == 2) {
                 fragPair = orientFragmentsForJoin(overhangs[0], overhangs[1]);
+            } else {
+                //multiple pairs
+                console.log('more than 2 overhangs', overhangs);
+
+
+                /*
+                rearchitecture:
+                - create list of pointers for fragments by overhang
+                    - create within fragment object
+                    - ensuring no duplicates (e.g. 0 -> 3 and 3-> 0)
+                        - but only for same overhang!!
+                    - account for 3-way joins etc. (e.g. 0 -> 3 -> 5)
+                - check all have length one
+                - collect, iterate through chains
+                - new joinFragments() function -- look for compatible overlap, return new fragment
+
+
+                aaaaA^AGGT_Tgggg = ccccT^TCCA_Atttt
+
+
+                 */
+
+
+
+
+
+
+
+
+
+                //todo - make better. should learn some math
+                //todo - check for uniqueness, not same fragment??
+                var matches = {};
+
+                _.each(overhangs, function(overhang, outerIndex) {
+                    var curHang = overhangs[outerIndex].end.match;
+                    _.each(overhangs, function(overhang, InnerIndex) {
+                        console.log('overhang ' + outerIndex + ' match ' + InnerIndex, curHang == overhang.end.match, curHang == DNA.revcomp(overhang.end.match), overhangs[outerIndex] !== overhang);
+                        if ((curHang == overhang.end.match || curHang == DNA.revcomp(overhang.end.match)) && overhangs[outerIndex] !== overhang) {
+                            matches[outerIndex] = !!matches[outerIndex] ? matches[outerIndex].push(InnerIndex) : [InnerIndex];
+                        }
+                    });
+                });
+
+                //console.log(matches);
+
+                //check for arrays.length > 1
+                if (_.filter(matches, function(matchArr, key) { return matchArr.length != 1; }).length)
+                    return 'more than one match for some overhangs';
+
+                if (!matches.length) {
+                    //if only two, just do the fragPair thing
+                    if (_.keys(matches).length == 2) {
+                        console.log('only one set of matching overhangs');
+                        
+                        if (overhangs.length > _.keys(matches).length) 
+                            console.log('some fragments ends did not match and will be ignored');
+                        
+                        //just pull one
+                        var key = _.keys(matches)[0],
+                            match = matches[key][0];
+                        fragPair = orientFragmentsForJoin(overhangs[key], overhangs[match]);
+                    }
+                    else {
+                        return 'multiple (' + _.keys(matches).length + ') sets of matches -- currently can only handle 2 matching overhangs';
+
+                    }
+                } else {
+                    return 'no matching overhangs'
+                }
             }
         }
 
@@ -461,42 +537,53 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
                 ends = Digest.findOverhangs(frag);
 
             for (var j = 0; j < ends.length; j++) {
+
+                console.log(ends, ends[j]);
+
                 //todo - handle non-terminal marks, maybe by cutting?
                 if (!ends[j].terminal) {}
 
                 if (ends[j].isBlunt) {
                     blunts.push({fragment : frag, end : ends[j], overhang : "|"})
                 } else {
-                    overhangs.push({fragment : frag, end : ends[j], overhang : ends[j][3]})
+                    overhangs.push({fragment : frag, end : ends[j], overhang : ends[j][3], is3prime : ends[j]['is3prime']})
                 }
             }
         }
+
+        console.log(overhangs);
 
         return {blunts: blunts, overhangs : overhangs};
     };
 
 
     var reverseFragment = function (frag) {
-        frag.fragment = DNA.revcomp(frag.fragment);
-        frag.end = Digest.findOverhangs(frag.fragment)[0]; // assumes only 1 end
-        if (!frag.end.isBlunt) frag.overhang = frag.end[3];
-        return frag;
-    };
 
-    // orients all fragments
-    // fiveprime - default true: so showing 5' overhang (...^...._...)
-    var orientFragments = function (fragments, fiveprime) {
-        fiveprime = fiveprime || true;
-        for (var i = 0; i < fragments.length; i++) {
-            if (fragments[i].end.is3prime == fiveprime)
-                fragments[i] = reverseFragment(fragments[i]);
+        frag.fragment = DNA.revcomp(frag.fragment);
+
+        //check overhang
+        var oldEnd = frag.end;
+        var newEnds = Digest.findOverhangs(frag.fragment);
+        if (newEnds.length > 1) {
+            var newEnd = _.filter(newEnds, function(end) {
+                return end.match == DNA.revcomp(oldEnd.match)
+            });
+            frag.end = newEnd[0];
+        } else {
+            frag.end = Digest.findOverhangs(frag.fragment)[0]; // assumes only 1 end
         }
-        return fragments;
+
+        if (!frag.end.isBlunt) {
+            frag.overhang = frag.end[3];
+            frag.is3prime = frag.end['is3prime'];
+        }
+        return frag;
     };
 
     //orient so frag1 comes first (i.e., frag1 end is at end) and have same direction overhang
     //todo - handle non-terminal ends
     var orientFragmentsForJoin = function (frag1, frag2) {
+
         //first process frag1
         if (frag1.end.index == 0 || frag1.end.index < (frag1.fragment.length/2)) {
             frag1 = reverseFragment(frag1);

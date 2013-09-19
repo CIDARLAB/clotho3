@@ -506,16 +506,19 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
         if (!enzyme) return sequence;
 
-        sequence = DNA.dnaOnly(sequence);
+        //sequence = DNA.dnaOnly(sequence);
+
+        console.log(sequence);
 
         var nonLocalCuts = (/\((\d+)\/(\d+)\)/ig).exec(enzyme.cut);
 
         if (nonLocalCuts) {
+            //todo - handle undegenerize for nonLocalCuts
 
             //matches to extract (for constructing regexp) - backreferences
             var brs = {};
-            brs.enz = '(' + enzyme.match + ')';
-            brs.rev = '(' + DNA.revcomp(enzyme.match) + ')';
+            brs.enz = '(' + DNA.undegenerize(enzyme.match) + ')';
+            brs.rev = '(' + DNA.undegenerize(DNA.revcomp(enzyme.match)) + ')';
 
             var cut53 = ['^', '_'],
                 cut35 = ['_', '^'];
@@ -741,6 +744,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
     var digest = function(sequence, enzyme, circularize) {
         if (!enzyme)
             return 'no enzyme provided';
+
+        //todo - check for cuts already present, ignore them
 
         sequence = markCuts(sequence, enzyme);
 

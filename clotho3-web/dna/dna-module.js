@@ -347,7 +347,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
     var dnaOnly = function (sequence, strict) {
-        var filter = strict ? regexps.dna : regexps.nucleotide_degenerate;
+        var filter = strict ? regexps.strip.dna : regexps.strip.nucleotide_degenerate;
         return sequence.replace(filter, '');
     };
 
@@ -359,7 +359,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     //given a sequence (e.g. ACNT), return RegExp friendly version using given map (e.g. AC[ACGTU]T)
     //note currently only nucleotides
     var undegenerize = function(sequence, map) {
-        map = map ? map : maps.nucleotide_degenerate;
+        map = !!map ? map : maps.nucleotide_degenerate;
         return sequence.replace(regexps.nucleotide_degenerate, function(m) {return map[angular.uppercase(m)]});
     };
 

@@ -6,29 +6,46 @@
     "dictionary" : {
         "primer1" : "tatcgatcgta",
         "primer2" : "gatcgatcgat",
-        "template" : "cccccccccccagctacgatcgataaaaaaaaatttttttttttgatcgatcgatagctagggggggggggggGAATTCgggg",
-        "enzyme" : {
+        "template" : "ccccccccccccccccccccCGTCTCccccccagctacgatcgataaaaaaaaatttttttttttgatcgatcgatagctaggGAATTCgggggggggggggggggggggggggggggg",
+        "EcoRI" : {
             "Clotho" : true,
             "value" : "Digest.enzymes.EcoRI"
-        }
+        },
+        "BsmbI" : {
+            "Clotho" : true,
+            "value" : "Digest.enzymes.BsmbI"
+        },
+        "backbone" : "^cccc_atcgatcgatcgactagctacgacgatcgatcgatcgatcgatcgatcgatcgatcagcatcgactagctacgactgc^aatt_"
     },
     "steps" : [
         {
             "reaction" : "PCR.predict",
-            "id" : "",
             "inputs" : ["template", ["primer1", "primer2"]],
             "output" : "pcr_product"
         },
         {
             "reaction" : "Digest.digest",
-            "id" : "",
-            "inputs" : ["pcr_product", "enzyme"],
+            "inputs" : ["pcr_product", "EcoRI"],
             "output" : "fragments"
         },
         {
+            "reaction" : "Digest.gelPurify",
+            "inputs" : ["fragments", "70"],
+            "output" : "targetFrag"
+        },
+        {
+            "reaction" : "Digest.digest",
+            "inputs" : ["targetFrag", "BsmbI"],
+            "output" : "fragments2"
+        },
+        {
+            "reaction" : "Digest.gelPurify",
+            "inputs" : ["fragments2", "70"],
+            "output" : "targetFrag2"
+        },
+        {
             "reaction" : "PCR.ligate",
-            "id" : "",
-            "inputs" : [["fragments[0]", "'^aatt_TAGTGCTACGATCGATCGATCAGC'"]],
+            "inputs" : [["targetFrag2", "backbone"]],
             "output" : "final"
         }
     ]

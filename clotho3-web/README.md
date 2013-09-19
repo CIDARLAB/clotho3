@@ -88,6 +88,9 @@ Clotho 3.0 Front-end Playground: Functionalities for:
     - say() for run(), other commands
 
 
+- socket close alert ( socket.onclose() )
+
+
 - about page
     - subscribe to clotho-users --- need server script
 
