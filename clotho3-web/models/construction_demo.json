@@ -15,7 +15,7 @@
             "Clotho" : true,
             "value" : "Digest.enzymes.BsmbI"
         },
-        "backbone" : "^gccc_atcgatcgatcgactagctacgacgatcgatcgatcgatcgatcgatcgatcgatcagcatcgactagctacgactgc^aatt_"
+        "backbone" : "^cccc_atcgatcgatcgactagctacgacgatcgatcgatcgatcgatcgatcgatcgatcagcatcgactagctacgactgc^aatt_"
     },
     "steps" : [
         {

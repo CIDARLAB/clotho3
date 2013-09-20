@@ -8,6 +8,13 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
 
 
     //testing
+    var seq = '^acct_acactacgactatcgtagcatgc^ttgg_';
+    console.log(DNA.complement(seq));
+    console.log(DNA.revcomp(seq));
+
+
+
+    //testing
     $scope.x = {};
     $scope.x.obj = {};
     $scope.x.obj.y = "hey";

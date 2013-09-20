@@ -55,7 +55,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
                 console.log('running ' + step.reaction + ' with inputs:', inputs);
 
-                //later run in clotho
+                //future -  run in clotho
                 /*
                 Clotho.run(step.reaction, inputs).then(function(result) {
                     dict[step.output] = result;
@@ -64,6 +64,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                 });
                 */
 
+                //note - for now running client side
                 //use apply to match format on server
                 var result = $parse(step.reaction)(dnaModules).apply(null, inputs);
                 console.log('result of '+step.reaction+':', result);

@@ -49,31 +49,29 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- add people for team page, query over them
+- try reloadModules
+- try LabPerson schema
 
 
-- finish ligate and PCR functions
-    - ligate multiple fragments
-        - hash table - needs to have 2 fragments per sticky end
-        - while loop
-    - PCR
-        - better examples (backbone lowercase, match uppercase)
-        - anneal function
+CONSTRUCTION FILES
+    - Functions
+        - Digest
+        - PCR
+        - Fragments
+            - create class
+        - Anneal
             - handle overhangs
+        - Ligate
+            - multiple fragments
+            - parse non-terminal ends - cut and reprocess
+        - Construction
 
-
-
-- write modules on server
-
-
-- construction files
-
-
-
-- UI Stuff
-    - clothoIntro Trail
+TRAILS
+    - ClothoIntro Pages
+        - PCR --- better examples
         - Command Bar demos --- define variable, query
-    - quizzes
+    - Quiz
+        - gradeQuiz -- ignore case
         - make dictionary more dynamic (at least on client)
         - move inline quizzes to quiz object, fix templates
         - show correct / wrong feedback (all templates)
@@ -83,29 +81,32 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 
+- write modules on server
+
+
+
 -searchbar updates
     - $timeout of logSnippet
-    - say() for run(), other commands
+    - call say() for run(), other commands
+        - check isString in say and wrap
 
 
-- socket close alert ( socket.onclose() )
 
 
 - about page
     - subscribe to clotho-users --- need server script
 
 
-- team page?
-
+- team page
+    - new schema for Clotho people
+    - add people for team page, query over them in Search Demo
 
 
 - code mirror in function editor
     - http://angular-ui.github.io/ui-codemirror/
 
 
-TRAILS
-    - start construction files
-    - gradeQuiz - ignore case
+- socket close alert ( socket.onclose() )
 
 
 - $focus

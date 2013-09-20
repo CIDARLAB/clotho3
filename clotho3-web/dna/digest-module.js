@@ -1,5 +1,32 @@
 'use strict';
 
+Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function(Digest, $filter, $parse) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link : function(scope, element, attrs, ngModel) {
+
+            var enz;
+            scope.$watch(attrs['digestMark'], function (val) {
+                enz = val;
+                ngModel.$render(); //fixme doens't work
+            });
+
+            var highlightSites = function (input) {
+                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
+                return Digest.markSites(input, enz)
+            };
+
+            var unhighlightSites = function (input) {
+                return Digest.removeMarks(input);
+            };
+
+            ngModel.$parsers.unshift(unhighlightSites);
+            ngModel.$formatters.push(highlightSites);
+        }
+    }
+}]);
+
 Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
     var enzymes = {
@@ -398,16 +425,16 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
 
             /*
-            offset 1
-            acgtacgtATGCATacgtacgt
+             offset 1
+             acgtacgtATGCATacgtacgt
 
-            index 8
+             index 8
 
-            -> codons @ 7-8-9 (tAT), 10-11-12 (GCA), 13-14-15 (Tac)
-                start = index - (index % 3) + offset = 7
-                numCodons = Math.ceil((match.length + (index - start)) % 3)
+             -> codons @ 7-8-9 (tAT), 10-11-12 (GCA), 13-14-15 (Tac)
+             start = index - (index % 3) + offset = 7
+             numCodons = Math.ceil((match.length + (index - start)) % 3)
 
-            ->
+             ->
 
 
 
@@ -499,9 +526,9 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      * NNNatgcatNNNNNNNNNN -> NNN(atgcat)N^NNNN_NNNNN
      */
 
-        //future - handle cuts on both sides (e.g. Bsp24I (8/13)GACNNNNNNTGG(12/7) and one on either side
+    //future - handle cuts on both sides (e.g. Bsp24I (8/13)GACNNNNNNTGG(12/7) and one on either side
 
-        //todo - multiple enzymes
+    //todo - multiple enzymes
     var markSites = function (sequence, enzyme) {
 
         if (!enzyme) return sequence;
@@ -559,7 +586,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
                 sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
                     return [ cut[1] + $1 + cut[0] + $2 + '(' + $3 + ')']
                 });
-                
+
                 console.log(sequence);
             }
 
@@ -626,88 +653,87 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      *
      * @example "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
      0: Array[5]
-         0: "^ct_"
-         1: undefined
-         2: "^"
-         3: "ct"
-         4: "_"
-         index: 4
-         input: "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
-         isBlunt: false
-         length: 4
-         match: "^ct_"
-         is3prime: false
-         terminal : false
+     0: "^ct_"
+     1: undefined
+     2: "^"
+     3: "ct"
+     4: "_"
+     index: 4
+     input: "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
+     isBlunt: false
+     length: 4
+     match: "^ct_"
+     is3prime: false
+     terminal : false
      1: Array[5]
-         0: "|"
-         1: "|"
-         2: undefined
-         3: undefined
-         4: undefined
-         index: 19
-         input: "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
-         isBlunt: true
-         length: 1
-         match: "|"
-        is3prime: null
-         terminal : false
+     0: "|"
+     1: "|"
+     2: undefined
+     3: undefined
+     4: undefined
+     index: 19
+     input: "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
+     isBlunt: true
+     length: 1
+     match: "|"
+     is3prime: null
+     terminal : false
      2: Array[5]
-         0: "_cgta^"
-         1: undefined
-         2: "_"
-         3: "cgta"
-         4: "^"
-         index: 31
-         input: "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
-         isBlunt: false
-         length: 6
-         match: "_cgta^"
-         is3prime: true
-         terminal : false
+     0: "_cgta^"
+     1: undefined
+     2: "_"
+     3: "cgta"
+     4: "^"
+     index: 31
+     input: "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga"
+     isBlunt: false
+     length: 6
+     match: "_cgta^"
+     is3prime: true
+     terminal : false
      */
-    var findOverhangs = function (sequence) {
+    var findOverhangs = function (sequence, nonterminalOnly) {
         var regCut = regexps.findCut,
             match,
             matches = [];
-
-        //testing
-        //sequence = "acgt^ct_acagctagcta|gctagctagct_cgta^agagctacga";
 
         while ((match = (regCut).exec(sequence)) != null) {
             match.match = match[0];
             match.isBlunt = (match.match == '|');
             match.is3prime = match.isBlunt ? null : (match[2] == '_');
             match.length = match.match.length;
-            match.terminal = (match.index == 0 || (match.index + (match.isBlunt ? 1 : match[3]) )) ? true : false;
-            matches.push(match);
+            match.terminal = !!(( match.index == 0 ||
+               (match.index + (match.isBlunt ? 1 : match.length) == sequence.length )
+            ));
+
+            if (nonterminalOnly) {
+                !match.terminal && matches.push(match);
+            } else {
+                matches.push(match);
+            }
         }
 
         return matches;
     };
 
-    var removeOverhangs = function (sequence) {
-        return sequence.replace(/(_.+?\^)|(\^.+?_)/ig, '');
-    };
-
     /**
      * @description Determine fragments for a sequence cut by a single enzyme
      * @param {string} sequence WITH cut marks already
-     * @param {object=} enzyme If none passed, assume sequence is marked
      * @param {boolean=} circular Whether fragments should be circularized. Default: false
      * @returns {Array} Array of strings representing cut fragments
      */
 
-        /*
-        Given ( X -> Y, V -> W as complements, with ' denoting reverse order)
+    /*
+     Given ( X -> Y, V -> W as complements, with ' denoting reverse order)
 
-        XacatgtV    __\ Xa^catg_ = ^catg_tY' and ^catg_tV = W'a^catg_
-        YtgtacaW      /
+     XacatgtV    __\ Xa^catg_ = ^catg_tY' and ^catg_tV = W'a^catg_
+     YtgtacaW      /
 
 
-        nnnn^nn_nnnn -> [nnnn^nn_, ^nn_nnnn]
-        nnn|nnn -> [nnn, nnn]
-         */
-    var makeCuts = function (sequence, enzyme, circular) {
+     nnnn^nn_nnnn -> [nnnn^nn_, ^nn_nnnn]
+     nnn|nnn -> [nnn, nnn]
+     */
+    var makeCuts = function (sequence, circular) {
 
         var lastIndex = 0,
             lastMark = "",
@@ -734,22 +760,11 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
             lastIndex = mark.index;
             lastMark = newMark;
         }
-        
+
         //last fragment
         fragments.push(sequence.substring(lastIndex));
 
         return (!!circular) ? circularize(fragments) : fragments;
-    };
-
-    var digest = function(sequence, enzyme, circularize) {
-        if (!enzyme)
-            return 'no enzyme provided';
-
-        //todo - check for cuts already present, ignore them
-
-        sequence = markCuts(sequence, enzyme);
-
-        return makeCuts(sequence, enzyme, circularize);
     };
 
 
@@ -760,6 +775,111 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
     var gelPurify = function(fragments, targetLength) {
         return _.sortBy(fragments, function (f) { return Math.abs(f.length - targetLength)})[0]
     };
+
+
+    /*************
+     End Pruning
+     *************/
+
+    /**
+     * @description Removes any sequence contained within an overhang
+     * @param sequence
+     * @returns {string}
+     */
+    var removeOverhangs = function (sequence) {
+        return sequence.replace(/(_.+?\^)|(\^.+?_)|(\|)/ig, '');
+    };
+
+    //note - currently only handles one internal cut
+    var trimPastInternal = function (sequence, keepLongest) {
+        var firstInternal = _.find(findOverhangs(sequence), function (overhang) {
+                console.log(overhang);
+                return !overhang.terminal;
+            });
+
+        //if keepLongest and second fragment longer than first
+        if (keepLongest && (firstInternal.index < sequence.length - firstInternal.index - firstInternal.length)) {
+            return sequence.substring(firstInternal.index)
+        } else {
+            return sequence.substring(0, firstInternal.index + firstInternal.length);
+        }
+
+    };
+
+    /**
+     * @description
+     * @param sequence
+     *
+     * @example nnnnnn -> nnnnnn
+     * @example nn_nnnn^ -> nn
+     * @example nnnn_nnnnnnn -> nnnn
+     * todo - handle beyond only sticky ends
+     */
+    var exonuclease35 = function(sequence) {
+
+        if (sequence.indexOf('_') < 0)
+            return sequence;
+
+        var regex = /(.*?)(_.+?\^?.*)/gi,
+            matches = regex.exec(sequence),
+            removed = matches[2],
+            remaining = matches[1];
+
+        return remaining;
+    };
+
+    /**
+     * @description
+     * @param sequence
+     *
+     * @example
+     * note - also handle beyond only sticky ends
+     */
+    var exonuclease53 = function(sequence) {
+        //todo
+
+    };
+
+    /**
+     * @description
+     * @param sequence
+     *
+     * @example nnnnnn -> nnnnnn
+     * @example nn^nnnn -> ___________
+     * @example nn^nnnn_ -> nnnnnn
+     * @example nn_nnnn^nn -> ______________ exonuclease activity?
+     *
+     * todo - determine above, also handle beyond only sticky ends
+     */
+    var polymerase53 = function(sequence) {
+
+    };
+
+
+    /*************
+     High Level
+     *************/
+
+    /**
+     *
+     * @param {string} sequence with or without marks already
+     * @param {Enzyme} enzyme
+     * @param {boolean} removeMarks default false
+     * @param {boolean} circularize default false (defined in makeCuts)
+     * @returns {*}
+     */
+    var digest = function(sequence, enzyme, removeMarks, circularize) {
+        if (!enzyme)
+            return 'no enzyme provided';
+
+        if (removeMarks)
+            sequence = removeMarks(sequence);
+
+        sequence = markCuts(sequence, enzyme);
+
+        return makeCuts(sequence, circularize);
+    };
+
 
 
     return {
@@ -786,7 +906,6 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         removeMatches : removeMatches,
         removeMarks : removeMarks,
         findOverhangs : findOverhangs,
-        removeOverhangs : removeOverhangs,
 
         //manipulation
         makeCuts : makeCuts,
@@ -797,36 +916,16 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         sortFragments : sortFragments,
         gelPurify : gelPurify,
 
+        //end pruning
+        removeOverhangs : removeOverhangs,
+        trimPastInternal : trimPastInternal,
+        exonuclease35 : exonuclease35,
+        exonuclease53 : exonuclease53,
+        polymerase53 : polymerase53,
+
         //high-level
         digest : digest
 
-    }
-}]);
-
-Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function(Digest, $filter, $parse) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link : function(scope, element, attrs, ngModel) {
-
-            var enz;
-            scope.$watch(attrs['digestMark'], function (val) {
-                enz = val;
-                ngModel.$render(); //fixme doens't work
-            });
-
-            var highlightSites = function (input) {
-                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
-                return Digest.markSites(input, enz)
-            };
-
-            var unhighlightSites = function (input) {
-                return Digest.removeMarks(input);
-            };
-
-            ngModel.$parsers.unshift(unhighlightSites);
-            ngModel.$formatters.push(highlightSites);
-        }
     }
 }]);
 

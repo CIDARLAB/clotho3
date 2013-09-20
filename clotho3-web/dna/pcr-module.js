@@ -1,4 +1,231 @@
+"use strict";
+
 Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA, Digest) {
+
+    /*************
+     Classes
+     ************/
+
+    //note - assumes only terminal ends -- run through parse first
+    function Fragment (markedSeq) {
+        /* checks */
+        //already a fragment - just pull the sequence and reprocess
+        if (markedSeq instanceof Fragment) {
+            markedSeq = markedSeq.sequence;
+        }
+        //nonterminal marks --- shouldn't be passed in...
+        if ((Digest.findOverhangs(markedSeq, true)).length) {
+            //future - how to handle?
+        }
+
+        this.sequence = markedSeq;
+        this.process();
+    }
+
+    Fragment.prototype = {
+
+        /**** prototype ****/
+
+        process : function(newSequence) {
+            if (!!newSequence)
+                this.sequence = newSequence;
+            this.ends = Digest.findOverhangs(this.sequence);
+            this.endMatches = _.pluck(this.ends, 'match');
+        },
+        reverse : function() {
+            this.sequence = DNA.revcomp(this.sequence);
+            this.process()
+        },
+        circularize : function() {
+            if (this.endMatches.length == 2 && this.endsMatch(this.endMatches[0], this.endMatches[1])) {
+                //todo - should only remove end marks -- do string replacement using end indices
+                //todo - should remove one of the overhangs
+                this.sequence = Digest.removeMarks(this.sequence);
+                this.process();
+            }
+        },
+
+        /**** basic matching ****/
+
+        //check that ends are complementary
+        endsMatch : function(match1, match2) {
+            return (match1 == match2 || match1 == DNA.revcomp(match2))
+        },
+        //only checks revcomp match
+        endsMatchRevcomp : function (match1, match2) {
+            return match1 == DNA.revcomp(match2)
+        },
+
+        /************
+        matching
+        ***********/
+
+        /***** match string ****/
+
+        //given match, returns array of ends in this that match
+        findMatchingEnds : function(match) {
+            return _.filter(this.ends, function(end, index) {
+                return this.endsMatch(end.match, match);
+            }, this);
+        },
+        //given match, returns array of indices of ends in this that match
+        findMatchingEndIndices : function(match) {
+            var endsMatching = this.findMatchingEnds(match);
+
+            switch (endsMatching.length) {
+                case 0 : {
+                    return false;
+                }
+                case 1 : {
+                    return [_.indexOf(this.ends, endsMatching[0])]
+                }
+                default : {
+                    //because assume <= 2 ends per fragment
+                    return [0,1];
+                }
+            }
+        },
+        //given match, whether fragment has a matching end in this fragment
+        //can also pass in fragment, defers to canMatchFrag
+        canMatch : function (match) {
+            if (match instanceof Fragment) {
+                return this.canMatchFrag(match)
+            } else {
+                return !!(this.findMatchingEnds(match)).length;
+            }
+        },
+
+        /**** match fragment ****/
+
+        canMatchFrag : function (otherFrag) {
+            return !!(_.find(otherFrag.endMatches, function (otherMatch) {
+                return !!(this.findMatchingEnds(otherMatch)).length;
+            }, this) || []).length;
+        },
+
+        //return object of ends which match: keys = this.ends index, values = otherFrag
+        matchMap : function (otherFrag) {
+            var connections = {};
+            _.each(this.endMatches, function (thisMatch, thisInd) {
+                _.each(otherFrag.endMatches, function (otherMatch, otherInd) {
+                    if (this.endsMatch(thisMatch, otherMatch)) {
+                        if (!connections[thisInd])
+                            connections[thisInd] = otherInd;
+                        else {
+                            //points to two fragments
+                            //future - handle this
+                            console.log('pointing to two fragments');
+                        }
+                    }
+                }, this)
+            }, this);
+
+            if (!_.keys(connections).length) return undefined;
+            return connections
+        },
+
+        /*** match array of fragments***/
+
+        matchMapArray : function(otherFrags) {
+
+            //don't introduce return inconsistency
+            /*
+            if (otherFrags.length == 1) {
+                return this.matchMap(otherFrags[0])
+            } else if (otherFrags instanceof Fragment) {
+                return this.matchMap(otherFrags)
+            }
+            */
+
+            var matchMap = {};
+            _.each(otherFrags, function(frag, index) {
+                if (this !== frag)
+                    matchMap[index] = this.matchMap(frag);
+            }, this);
+            return matchMap;
+        },
+        findFirstMatch : function (otherFrags) {
+            return _.find(otherFrags, function(otherFrag, index) {
+                return ((this !== otherFrag) && (this.canMatch(otherFrag)))
+            }, this)
+        },
+        findFirstMatchIndex : function (otherFrags) {
+            return _.indexOf(otherFrags, this.findFirstMatch(otherFrags));
+        },
+        canMatchArray : function (otherFrags) {
+            return !!this.findFirstMatch(otherFrags)
+        },
+
+        /*** joining ***/
+
+        joinFragment : function(otherFrag) {
+            if (_.isString(otherFrag))
+                otherFrag = new Fragment(otherFrag);
+
+            var connections = this.matchMap(otherFrag);
+
+            if (!_.keys(connections).length)
+                return false;
+
+            //find connection
+            //for now just pull the first connection
+            //future - check for unique matches
+            var firstConnection = _.pairs(connections)[0],
+                thisEndInd = firstConnection[0],
+                otherEndInd = firstConnection[1],
+                thisEnd = this.ends[thisEndInd],
+                otherEnd = otherFrag.ends[otherEndInd];
+            
+            console.log('joinFragment - this end and other end:', thisEnd, otherEnd);
+
+            console.log('before orienting', thisEndInd, otherEndInd);
+
+
+            //todo - own function, standard return to avoid all these variables
+            //orient fragments
+            //can assume terminal, so just need to make sure one is zero
+            if (thisEnd.index == 0) {
+                if (otherEnd.index == 0) {
+                    otherEndInd = (!!otherEndInd || otherFrag.ends.length == 1) ? 0 : 1;
+                    otherFrag.reverse();
+                    otherEnd = otherFrag.ends[otherEndInd];
+                }
+            } else {
+                if (otherEnd.index != 0) {
+                    otherEndInd = (!!otherEndInd || otherFrag.ends.length == 1) ? 0 : 1;
+                    otherFrag.reverse();
+                    otherEnd = otherFrag.ends[otherEndInd];
+                }
+            }
+
+            console.log('after orienting', thisEndInd, otherEndInd);
+
+            var firstFrag = (thisEnd.index == 0) ? otherFrag : this,
+                firstEnd = (thisEnd.index == 0) ? otherEnd : thisEnd,
+                secondFrag = (firstFrag === this) ? otherFrag : this,
+                secondEnd = (firstEnd === thisEnd) ? otherEnd : thisEnd;
+
+            console.log('first frag', firstFrag, 'first end', firstEnd, 'second frag', secondFrag, 'second end', secondEnd);
+
+            //join
+            //todo - options for html and cut marks etc.
+
+            var joined = firstFrag.sequence.substring(0, firstEnd.index) +
+                Digest.removeMarks(firstEnd.match) +
+                secondFrag.sequence.substring(secondEnd.index + secondEnd.match.length);
+
+            console.log(joined);
+
+
+            //note - can't leave in cut marks and process -- just use directive tags
+            this.process(joined);
+            return true
+        },
+        alignFragment : function (otherFrag) {
+
+        }
+    };
+
 
     /**************
      Primer Design
@@ -185,7 +412,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     //wrapper function, currently only handles PCR and EIPCR
     var predict = function predict(sequence, primers) {
 
-        console.log(sequence, primers);
+        //console.log(sequence, primers);
 
         if (primers.length != 2)
             return "Can only handle having two primers right now";
@@ -285,58 +512,6 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
     };
 
 
-    /*************
-     Simple Enzyme Functions
-     *************/
-
-    /**
-     * @description
-     * @param sequence
-     *
-     * @example nnnnnn -> nnnnnn
-     * @example nn_nnnn^ -> nn
-     * @example nnnn_nnnnnnn -> nnnn
-     * todo - handle beyond only sticky ends
-     */
-    var exonuclease35 = function(sequence) {
-
-        if (sequence.indexOf('_') < 0)
-            return sequence;
-
-        var regex = /(.*?)(_.+?\^?.*)/gi,
-            matches = regex.exec(sequence),
-            removed = matches[2],
-            remaining = matches[1];
-
-        return remaining;
-    };
-
-    /**
-     * @description
-     * @param sequence
-     *
-     * @example
-     * note - also handle beyond only sticky ends
-     */
-    var exonuclease53 = function(sequence) {
-
-    };
-
-    /**
-     * @description
-     * @param sequence
-     *
-     * @example nnnnnn -> nnnnnn
-     * @example nn^nnnn -> ___________
-     * @example nn^nnnn_ -> nnnnnn
-     * @example nn_nnnn^nn -> ______________ exonuclease activity?
-     *
-     * todo - determine above, also handle beyond only sticky ends
-     */
-    var polymerase53 = function(sequence) {
-
-    };
-
 
 
 
@@ -373,10 +548,10 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         //todo - don't assume p1 first
 
         var line1 = DNA.createRun(' ', p1pos);
-            line1 += (!!p1.forward.length) ? primers[0] : DNA.revcomp(primers[0]);
-            line1 += DNA.createRun(' ', (p2pos - p1pos - primers[0].length));
-            line1 += (!!p2.forward.length) ? primers[1] : DNA.revcomp(primers[1]);
-            line1 += DNA.createRun(' ', (sequence.length - line1.length));
+        line1 += (!!p1.forward.length) ? primers[0] : DNA.revcomp(primers[0]);
+        line1 += DNA.createRun(' ', (p2pos - p1pos - primers[0].length));
+        line1 += (!!p2.forward.length) ? primers[1] : DNA.revcomp(primers[1]);
+        line1 += DNA.createRun(' ', (sequence.length - line1.length));
 
         //note - handle line breaks outside function
         return (line1);
@@ -393,11 +568,11 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      * @param showMarks {boolean} maintain cut marks. Not relevant if showHTML. Default false.
      * @returns {string}
      */
-    var ligate = function(fragments, align, showHTML, showMarks) {
+    var ligateOld = function(fragments, align, showHTML, showMarks) {
 
-        var ends = parseFragmentEnds(fragments),
-            blunts = ends.blunts,
-            overhangs = ends.overhangs,
+        var fragments = parseFragments(fragments),
+            blunts,
+            overhangs,
             fragPair;
 
         if (blunts.length > 1) {
@@ -414,221 +589,292 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         if (overhangs.length > 1) {
             if (overhangs.length == 2) {
                 fragPair = orientFragmentsForJoin(overhangs[0], overhangs[1]);
+                return joinTwoFragments(fragPair, align, showHTML, showMarks);
             } else {
                 //multiple pairs
                 console.log('more than 2 overhangs', overhangs);
+            }
+        }
 
 
-                /*
-                rearchitecture:
-                - create list of pointers for fragments by overhang
-                    - create within fragment object
-                    - ensuring no duplicates (e.g. 0 -> 3 and 3-> 0)
-                        - but only for same overhang!!
-                    - account for 3-way joins etc. (e.g. 0 -> 3 -> 5)
-                - check all have length one
-                - collect, iterate through chains
-                - new joinFragments() function -- look for compatible overlap, return new fragment
+
+                /* rearchitecture:
+
+                 todo - non-terminal ends should be cut before go through
+
+                 todo ---- each fragment should maintain both of its ends, organize pointers by fragment -> end -> pointer ----- don't separate into separate fragments
 
 
-                aaaaA^AGGT_Tgggg = ccccT^TCCA_Atttt
+                 note - aaaaA^AGGT_Tgggg = ccccT^TCCA_Atttt
 
 
                  */
 
 
 
+                function findConnections(overhangs) {
+                    var pointers = {};
 
+                    _.each(overhangs, function(currentHang, indout) {
+                        _.each(overhangs, function(otherHang, indin) {
+                            if (indout != indin) {
+                                var curEnd = currentHang.end.match,
+                                    otherEnd = otherHang.end.match;
 
-
-
-
-
-                //todo - make better. should learn some math
-                //todo - check for uniqueness, not same fragment??
-                var matches = {};
-
-                _.each(overhangs, function(overhang, outerIndex) {
-                    var curHang = overhangs[outerIndex].end.match;
-                    _.each(overhangs, function(overhang, InnerIndex) {
-                        console.log('overhang ' + outerIndex + ' match ' + InnerIndex, curHang == overhang.end.match, curHang == DNA.revcomp(overhang.end.match), overhangs[outerIndex] !== overhang);
-                        if ((curHang == overhang.end.match || curHang == DNA.revcomp(overhang.end.match)) && overhangs[outerIndex] !== overhang) {
-                            matches[outerIndex] = !!matches[outerIndex] ? matches[outerIndex].push(InnerIndex) : [InnerIndex];
-                        }
+                                //if ends are complimentary
+                                if (curEnd == otherEnd || curEnd == DNA.revcomp(otherEnd)) {
+                                    //first, check don't have the other way mapped
+                                    if (!pointers[indin] || pointers[indin] != indout) {
+                                        if (!pointers[indout]) {
+                                            pointers[indout] = indin;
+                                        } else {
+                                            //points to two fragments
+                                            return 'fragment ' + indout + ' has multiple complementary fragments: ' + indin + ' and ' + pointers[indout];
+                                        }
+                                    }
+                                }
+                            }
+                        })
                     });
-                });
 
-                //console.log(matches);
+                    //can assume at this point all pointers are unique and one way
+                    console.log(pointers);
 
-                //check for arrays.length > 1
-                if (_.filter(matches, function(matchArr, key) { return matchArr.length != 1; }).length)
-                    return 'more than one match for some overhangs';
+                    if (!_.keys(pointers).length) return false;
 
-                if (!matches.length) {
-                    //if only two, just do the fragPair thing
-                    if (_.keys(matches).length == 2) {
-                        console.log('only one set of matching overhangs');
-                        
-                        if (overhangs.length > _.keys(matches).length) 
-                            console.log('some fragments ends did not match and will be ignored');
-                        
-                        //just pull one
-                        var key = _.keys(matches)[0],
-                            match = matches[key][0];
-                        fragPair = orientFragmentsForJoin(overhangs[key], overhangs[match]);
-                    }
-                    else {
-                        return 'multiple (' + _.keys(matches).length + ') sets of matches -- currently can only handle 2 matching overhangs';
-
-                    }
-                } else {
-                    return 'no matching overhangs'
+                    return pointers;
                 }
+
+                function makeConnections(pointers) {
+                    var products = [];
+                    //todo - handle 3+ way binds (i.e. check next for partner)
+                    _.each(pointers, function (value, key) {
+                        fragPair = orientFragmentsForJoin(overhangs[key], overhangs[value]);
+                        products.push(joinTwoFragments(fragPair, align, showHTML, showMarks))
+                    });
+
+
+                    console.log(products);
+
+                    return products;
+                }
+
+                //fixme -- need to process ends again
+                var inputFrags = overhangs,
+                    pointers,
+                    products;
+                while (!!(pointers = findConnections(inputFrags)) ) {
+                    products = makeConnections(pointers);
+                    inputFrags = products;
+                }
+
+
+
+                return products;
+
+
+
+
+
+                 /*var matches = {};
+
+                 _.each(overhangs, function(overhang, outerIndex) {
+                 var curHang = overhangs[outerIndex].end.match;
+                 _.each(overhangs, function(overhang, InnerIndex) {
+                 console.log('overhang ' + outerIndex + ' match ' + InnerIndex, curHang == overhang.end.match, curHang == DNA.revcomp(overhang.end.match), overhangs[outerIndex] !== overhang);
+                 if ((curHang == overhang.end.match || curHang == DNA.revcomp(overhang.end.match)) && overhangs[outerIndex] !== overhang) {
+                 matches[outerIndex] = !!matches[outerIndex] ? matches[outerIndex].push(InnerIndex) : [InnerIndex];
+                 }
+                 });
+                 });
+
+                 //console.log(matches);
+
+                 //check for arrays.length > 1
+                 if (_.filter(matches, function(matchArr, key) { return matchArr.length != 1; }).length)
+                 return 'more than one match for some overhangs';
+
+                 if (!matches.length) {
+                 //if only two, just do the fragPair thing
+                 if (_.keys(matches).length == 2) {
+                 console.log('only one set of matching overhangs');
+
+                 if (overhangs.length > _.keys(matches).length)
+                 console.log('some fragments ends did not match and will be ignored');
+
+                 //just pull one
+                 var key = _.keys(matches)[0],
+                 match = matches[key][0];
+                 fragPair = orientFragmentsForJoin(overhangs[key], overhangs[match]);
+                 }
+                 else {
+                 return 'multiple (' + _.keys(matches).length + ') sets of matches -- currently can only handle 2 matching overhangs';
+
+                 }
+                 } else {
+                 return 'no matching overhangs'
+                 }
             }
         }
+        */
+    };
 
-        console.log(fragPair);
+
+    //todo - incorporate into Fragment.joinFragment
+
+    var joinTwoFragments = function (fragPair, align, showHTML, showMarks) {
 
         if (!fragPair)
             return 'cut marks not defined';
 
-        if (fragPair[0].overhang != DNA.revcomp(fragPair[1].overhang))
-            return 'overhangs not complimentary (5\' orientation): ' + fragPair[0].overhang + ' /// ' + fragPair[1].overhang;
+        //todo - why is this here?
+        if (fragPair[0].end.match != DNA.revcomp(fragPair[1].end.match))
+            return 'overhangs not complimentary (5\' orientation): ' + fragPair[0].end.match + ' : ' + fragPair[1].end.match;
 
 
         var matchType = (fragPair[0].end.isBlunt) ? 'bluntmatch' : 'stickymatch';
 
         var finalText = '<ligate-frag>' + (fragPair[0].fragment).substring(0, fragPair[0].end.index) + '</ligate-frag>' +
-            '<ligate-'+matchType+'>' + fragPair[0].end.match + '</ligate-'+matchType+'>' +
+            '<ligate-'+matchType+'>' +
+            (showMarks ? fragPair[0].end.match : Digest.removeMarks(fragPair[0].end.match ))+
+            '</ligate-'+matchType+'>' +
             (fragPair[1].fragment).substring(fragPair[1].end.index + fragPair[1].end.match.length);
 
 
         if (!!align) {
             var line2 = DNA.complement((fragPair[0].fragment).substring(0, fragPair[0].end.index)) +
-                '<ligate-'+matchType+'>' + fragPair[1].end.match + '</ligate-'+matchType+'>' +
+                '<ligate-'+matchType+'>' +
+                (showMarks ? fragPair[1].end.match : Digest.removeMarks(fragPair[1].end.match ))+
+                '</ligate-'+matchType+'>' +
                 '<ligate-frag>' + DNA.complement((fragPair[1].fragment).substring(fragPair[1].end.index + fragPair[1].end.match.length)) + '</ligate-frag>';
 
-           finalText += "\n" + line2;
+            finalText += "\n" + line2;
         }
 
         if (!showHTML) {
             finalText = finalText.replace(/(<([^>]+)>)/ig, '');
         }
 
-        if (!showMarks && !showHTML) {
-            finalText = Digest.removeMarks(finalText);
-        }
+        //fixme - handle differently -- shouldn't remove marks outside of ligation
+        /*if (!showMarks && !showHTML) {
+         finalText = Digest.removeMarks(finalText);
+         }*/
 
         return finalText
-
     };
+    /**
+     *
+     * @param {Array} fragments Array of Strings WITH cut marks
+     */
+    //todo - add options -- HTML & alignment
+    var ligate = function(fragments) {
+        fragments = parseFragments(fragments, true);
+        console.log('ligate starting -- fragments:', fragments);
+
+        _.each(fragments, function(outerFrag, outerInd) {
+
+            var toJoinIndex = outerFrag.findFirstMatchIndex(fragments);
+
+            if (toJoinIndex >= 0) {
+                //testing
+                console.log('outer frag at index ' + outerInd, outerFrag);
+                console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
+
+                outerFrag.joinFragment(fragments[toJoinIndex]);
+
+                console.log('outer frag is now:', outerFrag);
+                fragments.splice(toJoinIndex, 1)
+            }
+        });
+
+        _.each(fragments, function(fragment) {
+            fragment.circularize();
+        });
+
+        console.log('LIGATE FINAL:', fragments);
+
+        if (fragments.length == 1)
+            return fragments[0].sequence;
+        else
+            return _.pluck(fragments, 'sequence');
+    };
+
 
 
     /**************
      ligation
      **************/
 
-    var parseFragmentEnds = function PCR_parseFragmentEnds (fragments) {
-        var overhangs = [],
-            blunts = [];
+    //given strings, creates fragments with terminal ends
+    //shouldTrim --- for internal cuts,
+    //  true = sequence past overhang removed,
+    //  false = split into fragments
+    var parseFragments = function PCR_parseFragments (fragments, shouldTrim) {
 
-        for (var i = 0; i < fragments.length; i++) {
-            var frag = fragments[i],
-                ends = Digest.findOverhangs(frag);
+        var parsedFrags = [];
+        _.each(fragments, function(frag, indout) {
 
-            for (var j = 0; j < ends.length; j++) {
+            //nonterminal marks
+            if ((Digest.findOverhangs(frag, true)).length) {
+                if (shouldTrim) {
+                    var trimmed = Digest.trimPastInternal(frag, true);
+                    parsedFrags.push(new Fragment(trimmed))
 
-                console.log(ends, ends[j]);
-
-                //todo - handle non-terminal marks, maybe by cutting?
-                if (!ends[j].terminal) {}
-
-                if (ends[j].isBlunt) {
-                    blunts.push({fragment : frag, end : ends[j], overhang : "|"})
                 } else {
-                    overhangs.push({fragment : frag, end : ends[j], overhang : ends[j][3], is3prime : ends[j]['is3prime']})
+                    _.each(Digest.makeCuts(frag), function (cutFrag) {
+                        parsedFrags.push(new Fragment(cutFrag));
+                    });
                 }
             }
-        }
+            else {
+                parsedFrags.push(new Fragment(frag));
+            }
+        });
 
-        console.log(overhangs);
+        return parsedFrags;
 
-        return {blunts: blunts, overhangs : overhangs};
+        /*
+        DEPRECATED OLD WAY
+        for (var i = 0; i < fragments.length; i++) {
+         var frag = fragments[i],
+         ends = Digest.findOverhangs(frag);
+
+         console.log(ends);
+
+
+         for (var j = 0; j < ends.length; j++) {
+
+         console.log(ends, ends[j]);
+
+
+         if (!ends[j].terminal) {}
+
+         if (ends[j].isBlunt) {
+         blunts.push({fragment : frag, end : ends[j], overhang : "|"})
+         } else {
+         overhangs.push({fragment : frag, end : ends[j], overhang : ends[j][3], is3prime : ends[j]['is3prime']})
+         }
+         }
+         }
+
+         return {blunts: blunts, overhangs : overhangs};*/
     };
-
-
-    var reverseFragment = function (frag) {
-
-        frag.fragment = DNA.revcomp(frag.fragment);
-
-        //check overhang
-        var oldEnd = frag.end;
-        var newEnds = Digest.findOverhangs(frag.fragment);
-        if (newEnds.length > 1) {
-            var newEnd = _.filter(newEnds, function(end) {
-                return end.match == DNA.revcomp(oldEnd.match)
-            });
-            frag.end = newEnd[0];
-        } else {
-            frag.end = Digest.findOverhangs(frag.fragment)[0]; // assumes only 1 end
-        }
-
-        if (!frag.end.isBlunt) {
-            frag.overhang = frag.end[3];
-            frag.is3prime = frag.end['is3prime'];
-        }
-        return frag;
-    };
-
-    //orient so frag1 comes first (i.e., frag1 end is at end) and have same direction overhang
-    //todo - handle non-terminal ends
-    var orientFragmentsForJoin = function (frag1, frag2) {
-
-        //first process frag1
-        if (frag1.end.index == 0 || frag1.end.index < (frag1.fragment.length/2)) {
-            frag1 = reverseFragment(frag1);
-        }
-        //first, orient so longer section to right
-        if (frag2.end.index > frag2.fragment.length/2) {
-            frag2 = reverseFragment(frag2);
-        }
-        //???????
-        if (frag2.overhang != DNA.revcomp(frag1.overhang)) {
-            frag2 = reverseFragment(frag2);
-        }
-
-        return [frag1, frag2];
-    };
-
-    /**************
-     Prediction
-     **************/
-
-
-
-
-    /**************
-     Construction - own module
-     **************/
-
 
     return {
+        //PCR
         predict : predict,
 
+        //Annealing
         anneal : anneal,
         findAnnealSimple : findAnnealSimple,
 
+        //Alignment
         primerAlign : primerAlign,
 
-        parseFragmentEnds : parseFragmentEnds,
-        reverseFragment : reverseFragment,
-        orientFragmentsForJoin : orientFragmentsForJoin,
-
-        exonuclease35 : exonuclease35,
-        exonuclease53 : exonuclease53,
-        polymerase53 : polymerase53,
-
+        //Ligate
+        parseFragments : parseFragments,
         ligate : ligate
+
 
     }
 }]);
@@ -724,11 +970,14 @@ Application.Dna.directive('ligateAlign', ['PCR', 'Digest', 'DNA', '$compile', '$
                 var alignment = PCR.ligate(scope.fragments, true, true);
                 console.log(alignment);
 
-                alignment = $filter('DigestCuts')(alignment, true);
+                if (_.isArray(alignment)) {
+                    alignment = "did not ligate to completion : " + JSON.stringify(alignment);
+                } else {
+                    alignment = $filter('DigestCuts')(alignment, true);
+                }
 
                 element.html($compile('<span>' + alignment + '</span>')(scope))
             }
-
         }
     }
 }]);

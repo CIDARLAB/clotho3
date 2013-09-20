@@ -146,6 +146,7 @@ Application.Interface.filter('categorize', ['$parse', function($parse) {
     }
 }]);
 
+//returns a string joined by 'joiner' after 'charCount' characters
 Application.Interface.filter('breakLines', function() {
     return function(input, charCount, joiner) {
         //todo - ignore HTML
@@ -153,6 +154,7 @@ Application.Interface.filter('breakLines', function() {
     }
 });
 
+//basic regex to remove HTML tags
 Application.Interface.filter('plainText', function() {
     // note -- not perfect, but much faster than jQuery.text()
     // http://jsperf.com/regex-replace-vs-jquery-text

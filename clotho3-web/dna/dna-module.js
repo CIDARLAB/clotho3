@@ -36,7 +36,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     regexps.nucleotide = /[gautcGAUTC]/g;
     regexps.dna = /[gatcGATC]/g;
     regexps.rna = /[gaucGAUC]/g;
-    regexps.nucleotide_degnerate = /[gatucryswkmbdhvnxGATUCRYSWKMBDHVNX]/g;
+    regexps.nucleotide_degnerate = /[gatucryswkmbdhvnxGATUCRYSWKMBDHVNX\^_]/g;
     regexps.protein = /[ACDEFGHIKLMNPQRSTVWYZacdefghiklmnpqrstvwyz\*]/g;
     regexps.protein_degenerate = /[ABCDEFGHIKLMNPQRSTVWYXZabcdefghiklmnpqrstvwyxz\*]/g;
 
@@ -155,9 +155,10 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         'H' : 'D',
         'n' : 'n',
         'N' : 'N',
-        '^' : '|',
-        '|' : '^'
+        '^' : '_',
+        '_' : '^'
     };
+
     complements.rna = {
         'a': 'u',
         'c': 'g',
@@ -184,7 +185,9 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         'D' : 'H',
         'H' : 'D',
         'n' : 'n',
-        'N' : 'N'
+        'N' : 'N',
+        '^' : '_',
+        '_' : '^'
     };
     complements.transcribe = {
         'a': 'u',
@@ -373,7 +376,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
     var complement = function(sequence) {
-        return sequence.replace(regexps.dna, function(m) { return complements.dna[m] });
+        return sequence.replace(regexps.nucleotide_degnerate, function(m) {return complements.dna[m] } );
     };
 
     var rna_to_dna = function (sequence) {
