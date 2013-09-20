@@ -14,7 +14,6 @@ import javax.script.ScriptException;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
-import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.mozilla.javascript.NativeArray;
@@ -31,8 +30,8 @@ public class ScriptAPI {
     Persistor persistor;
     
     
-    public ScriptAPI(Mind mind, Persistor persistor, String requestId){
-        api = new ServerSideAPI(mind, persistor, requestId);
+    public ScriptAPI(Mind mind, Persistor persistor, Router router, String requestId){
+        api = new ServerSideAPI(mind, persistor, router, requestId);
         this.mind = mind;
         this.persistor = persistor;
     }

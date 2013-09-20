@@ -6,6 +6,7 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.ScriptAPI;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,25 +35,26 @@ public void testScript() throws ScriptException {
         mind.setConnection(connection);
         Injector injector = TestUtils.getDefaultTestInjector();
         Persistor persistor = injector.getInstance(Persistor.class);
+        Router router = injector.getInstance(Router.class);
         persistor.deleteAll();
         String script = "var newobjid = clotho.create( {\"name\":\"UCM\",\"state\":\"MA\",\"schema\":\"Institution\",\"country\":\"United States of America\",\"city\":\"Baltizam\"} );\n" +
                         "var result = clotho.get(newobjid);\n" +
                         "if(result.name != \"UCM\") {\n" +
                         "    throw \"wrong name: \" + result.name;\n" +
                         "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
         script = "result = clotho.get('UCM');\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
         script = "wrapper = [];\n" +
                  "wrapper[0] = newobjid;\n" +
                  "result = clotho.get(wrapper);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
         
         script = "var listy = clotho.query({\"city\" : \"Baltizam\"});\n" +
                  "if (listy.length != 1) {\n" +
@@ -62,7 +64,7 @@ public void testScript() throws ScriptException {
                  "if(existing.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + existing.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
         
         script = "var args = {};\n" +
                  "args.id = newobjid;\n" +
@@ -71,7 +73,7 @@ public void testScript() throws ScriptException {
                  "if(result.city != \"Paris\") {\n" +
                  "    throw \"wrong city: \" + result.city;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
         
         script = "existing.name = \"Shamoo University\"; \n" +
                  "existing.city = \"Whaletown\"; \n" +
@@ -83,20 +85,20 @@ public void testScript() throws ScriptException {
                  "if(result.state != \"NR\") {\n" +
                  "    throw \"wrong state: \" + result.state;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
         
         script = "var finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=1) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
         
         script = "clotho.destroy(newobjid);\n" +
                  "finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=0) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
     }
     
     @Test

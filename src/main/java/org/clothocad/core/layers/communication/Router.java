@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.bson.types.ObjectId;
-import org.clothocad.core.datums.Doo;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.layers.communication.Channel.autocompleteDetail;
@@ -28,35 +25,16 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.JSON;
 
 @Slf4j
+@Singleton
 public class Router {
 
-	/** DOUBLE-CHECKED LOCKING **/
-	private static volatile Router router;
-
-    public static Router get() {
-    	Router result = router;
-		if(result == null) {
-			synchronized(Router.class) {
-				result = router;
-				if(result == null) {
-					router = result = new Router();
-				}
-			}
-		}
-		return result;
-    }
-    
-    private ExecutorService pool;
-    
-    @Inject
     @Getter
-    private Persistor persistor;
+    protected Persistor persistor;
    
-    public Router() {
-
-        // create the thread-pool of ssAPI objects
-        this.pool = Executors.newFixedThreadPool(100);
+    @Inject
+    public Router(Persistor persistor) {
         minds = new HashMap<>();
+        this.persistor = persistor;
     }
 
     // send message    
@@ -77,7 +55,7 @@ public class Router {
         } else {
             mind = getMind(connection);
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, request.requestId);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.requestId);
 
 
         Object data = request.data;

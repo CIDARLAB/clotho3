@@ -47,7 +47,7 @@ public class RouterTest {
     @BeforeClass
     public static void setUpClass() {
         injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
-        router = Router.get();
+        router = injector.getInstance(Router.class);
         SecurityUtils.setSecurityManager(new DefaultSecurityManager());
     }
 

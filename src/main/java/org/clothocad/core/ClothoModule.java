@@ -45,8 +45,6 @@ public class ClothoModule extends AbstractModule {
     @Override
     protected void configure() {
         Names.bindProperties(binder(), properties);
-        //TODO: make router completely DI (?)
-        requestInjection(Router.get());
         requestStaticInjection(Schema.class);
         requestStaticInjection(IdUtils.class);
         

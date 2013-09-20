@@ -78,15 +78,16 @@ import org.clothocad.model.Person;
 public class ServerSideAPI {
 
     private static final AutoComplete completer = new AutoComplete();
-    private static final Router router = Router.get();
+    private final Router router;
     private final Persistor persistor;
     private final String requestId;
     private final Mind mind;
 
-    public ServerSideAPI(Mind mind, Persistor persistor, String requestId) {
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
+        this.router = router;
     }
 
 // <editor-fold defaultstate="collapsed" desc="Human Interaction">      
@@ -114,7 +115,7 @@ public class ServerSideAPI {
         //Resolve the arguments to a command string
         //say(command, Severity.MUTED, null, true);
         try {
-            Object returnValue = mind.runCommand(command, new ScriptAPI(mind, persistor, requestId));
+            Object returnValue = mind.runCommand(command, new ScriptAPI(mind, persistor, router, requestId));
             //If the command successfully executed, it gets retained
             mind.addLastCommand(Channel.submit, command);
             return returnValue;
@@ -563,7 +564,7 @@ public class ServerSideAPI {
                 try {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, requestId));
+                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -577,7 +578,7 @@ public class ServerSideAPI {
                 try {
                     Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, requestId));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -649,7 +650,7 @@ public class ServerSideAPI {
     public final Object run(Function function, List<Object> args) throws ScriptException {
 
 
-        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, requestId));
+        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
     }
 
     /**

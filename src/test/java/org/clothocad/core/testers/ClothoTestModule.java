@@ -18,6 +18,8 @@ import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 import org.clothocad.core.ClothoModule;
+import org.clothocad.core.layers.communication.Router;
+import org.clothocad.core.utils.TestRouter;
 
 /**
  *
@@ -33,6 +35,14 @@ public class ClothoTestModule extends ClothoModule {
     public ClothoTestModule() {
         this(null);
     }
+
+    @Override
+    protected void configure() {
+        super.configure(); //To change body of generated methods, choose Tools | Templates.
+        bind(Router.class).to(TestRouter.class);
+    }
+    
+    
 
     @Override
     protected KeyStore provideKeyStore() throws Exception {

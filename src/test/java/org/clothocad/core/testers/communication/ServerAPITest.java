@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bson.types.ObjectId;
+import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.ServerSideAPI;
 import org.clothocad.core.layers.communication.mind.Mind;
 import org.clothocad.core.persistence.Persistor;
@@ -38,6 +39,7 @@ public class ServerAPITest {
     private static Persistor persistor;
     private static List<ObjectId> ids;
     private static Mind mind;
+    private static Router router;
 
     public ServerAPITest() {
     }
@@ -46,8 +48,9 @@ public class ServerAPITest {
     public static void setUpClass() {
         Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         persistor = injector.getInstance(Persistor.class);
+        router = injector.getInstance(Router.class);
         mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, null);
+        api = new ServerSideAPI(mind, persistor, router, null);
         persistor.connect();
         mind.setConnection(new TestConnection("test"));
     }

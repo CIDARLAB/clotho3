@@ -10,6 +10,8 @@ import com.github.jmkgreen.morphia.mapping.DefaultCreator;
 import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
 import java.lang.reflect.Modifier;
+import org.clothocad.core.persistence.IdUtils;
+import org.clothocad.core.schema.Schema;
 
 /**
  *
@@ -36,8 +38,15 @@ public class PolymorphicObjectFactory extends DefaultCreator {
             try {
                 c = Class.forName(className, true, getClassLoaderForClass(className, dbObj));
             } catch (ClassNotFoundException e) {
-                if (log.isWarningEnabled())
-                    log.warning("Class not found defined in dbObj: ", e);
+                //maybe it's just a schema name, try converting it
+                try {
+                    String convertedClassName = Schema.getBinaryName(IdUtils.resolveSelector(className, false));
+                    //XXX: is still crashing, try getting a trail or something
+                    c = Class.forName(convertedClassName, true, Schema.cl);
+                } catch (ClassNotFoundException ex) {
+                    if (log.isWarningEnabled())
+                    log.warning("Class not found defined in dbObj: ", e);                   
+                }
             }
         }
         return c;

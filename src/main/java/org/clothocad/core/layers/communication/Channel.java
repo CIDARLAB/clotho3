@@ -41,4 +41,7 @@ public enum Channel {
     run, //run this Function
     listen, //Listen for events, and in response do this execution statement
     unlisten, //Remove a listener for an event
+    
+//OTHER
+    reloadModels, //convenience function for reloading test data
 }

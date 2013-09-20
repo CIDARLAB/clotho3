@@ -6,14 +6,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import org.clothocad.core.layers.communication.Router;
 
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -35,7 +34,9 @@ public class ClothoWebserver {
     
     @Inject
     public ClothoWebserver(@Named("port") int nPort,
-            KeyStore keystore, @Named("containerServletContext") ServletContextHandler servletHandler)
+            KeyStore keystore, 
+            @Named("containerServletContext") ServletContextHandler servletHandler,
+            final Router router)
             throws Exception {
 
         int confidentialPort = 8443; //TODO: make configurable
@@ -76,7 +77,7 @@ public class ClothoWebserver {
 
             @Override
             public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
-                return new ClothoWebSocket(request.getSession().getId()); //todo - can inject router here w/ guice
+                return new ClothoWebSocket(request.getSession().getId(), router); 
             }
             
         };

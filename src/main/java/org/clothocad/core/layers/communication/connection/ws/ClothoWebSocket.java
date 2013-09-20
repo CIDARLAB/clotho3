@@ -25,6 +25,7 @@ public class ClothoWebSocket
 	private WebSocket.Connection connection;
         
             private Subject subject;
+    private final Router router;
 
     private class CallRouter implements Callable {
         private final Message message;
@@ -36,14 +37,15 @@ public class ClothoWebSocket
 
         @Override
         public Object call() throws Exception {
-            Router.get().receiveMessage(connection, message);
+            router.receiveMessage(connection, message);
             return null;
         }
         
     }
 	
-	public ClothoWebSocket(String id) {
+	public ClothoWebSocket(String id, Router router) {
 		super(id);
+                this.router = router;
 	}
 	
 	@Override

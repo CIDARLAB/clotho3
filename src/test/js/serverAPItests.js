@@ -173,6 +173,20 @@ asyncTest("login/logout", function(){
 });
 // TODO: add tests for listener dereg
 
+asyncTest("reload models", function(){
+    var socket = getSocket(clothosocket);
+    socket.onopen = function () {
+        socket.send(new Message("get", "ClothoSchema"), function(data){
+            id = data.id;
+            socket.send(new Message("reloadModels", {}), function (response) {
+                socket.send(new Message("get", "ClothoSchema"), function(data){
+                    equal(data.id, id);
+                    start();
+                });
+            });
+        });
+    };
+});
 
 module("Functions and Modules")
 

@@ -16,7 +16,7 @@ import org.clothocad.core.persistence.Persistor;
 public class DummyAPI extends ServerSideAPI {
 
     public DummyAPI(Persistor persistor) {
-        super(null, persistor, null);
+        super(null, persistor, null, null);
     }
 
     @Override
