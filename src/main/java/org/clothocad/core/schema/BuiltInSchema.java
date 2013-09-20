@@ -69,7 +69,7 @@ public class BuiltInSchema extends JavaSchema {
     
     private Set<ClothoField> extractFields(Class c) {
         Set<ClothoField> fields = new HashSet<>();
-        for (Field field : ReflectionUtils.getDeclaredAndInheritedFields(c, true)) {
+        for (Field field : c.getDeclaredFields()) {
             if (fieldHasAnnotation(field, DBOnly.class)) continue;
             //TODO: do not store transient fields
             fields.add(new ClothoField(field));
