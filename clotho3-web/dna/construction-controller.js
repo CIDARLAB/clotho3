@@ -125,6 +125,14 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
     });
 
 
+    $scope.constructionGFP = $http.get('/models/construction_gfp.json').then(function(data) { return data.data });
+
+    $scope.$watch('constructionGFP', function (newval) {
+        if (!newval) return;
+        $scope.constructionGFPProduct = Construction.process(newval)
+    });
+
+
 
 
 }]);
