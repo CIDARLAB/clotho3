@@ -117,6 +117,9 @@ TRAILS
     - type series of commands with break
 
 
+- look at Application.mixin of controllers
+
+
 
 - look into including Raven + Eugene
     - Raven: jenhan's login
