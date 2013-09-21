@@ -150,6 +150,10 @@ Application.Search.directive('clothoSearchbar', ['Clotho', 'Searchbar', '$locati
                 $location.path('/about')
             };
 
+            $scope.teamClotho = function() {
+                $location.path('/team');
+            };
+
             $scope.toggleTooltips = function() {
                 console.log("tooltips");
             };

@@ -1,0 +1,53 @@
+[
+    {
+        "schema": "LabPerson",
+        "id": "523ca94ac2e647abe23c1fa0",
+        "title": "Web App Programmer",
+        "isManagement": "",
+        "nickName": "Max",
+        "snailMailAddress": "",
+        "description": "Front-end programmer for the Clotho Web App",
+        "name": "Maxwell Bates",
+        "current": "true",
+        "surName": "Bates",
+        "emailAddress": "maxbates@gmail.com",
+        "givenName": "Maxwell",
+        "currentLocation": "Berkeley"
+    },
+    {
+        "schema": "LabPerson",
+        "id": "523cb83ac2e647abe23c1fa1",
+        "title": "Server Programmer",
+        "isManagement": "",
+        "description": "Primary developer for the Clotho Server",
+        "name": "Stephanie Paige",
+        "surName": "Paige",
+        "givenName": "Stephanie",
+        "currentLocation": "Boston University"
+    },
+    {
+        "schema": "LabPerson",
+        "id": "523cbb72c2e647abe23c1fa2",
+        "icon": "/images/people/DougDensmore.png",
+        "title": "Project Leader",
+        "isManagement": "true",
+        "nickName": "Doug",
+        "description": "Doug was the original creator of Clotho when he was a UC Chancellor’s post doctoral fellow at UC Berkeley. He also served as the research advisor for the 2008, 2009, and 2011 Clotho iGEM teams. He is now the Richard and Minda Reidy Family Career Development Assistant Professor at Boston University in the Department of Electrical and Computer Engineering. He is the leader of the Cross-disciplinary Integration of Design Automation Research (CIDAR) group and a member of the Center of Synthetic Biology (CoSBi). His interests span both traditional electronic design automation as well as the emerging field of bio-design automation.",
+        "name": "Douglas Densmore",
+        "surName": "Densmore",
+        "givenName": "Douglas",
+        "currentLocation": "Boston University"
+    },
+    {
+        "schema": "LabPerson",
+        "id": "523cbba6c2e647abe23c1fa3",
+        "icon": "/images/people/ChrisAnderson.jpg",
+        "title": "Project Leader",
+        "isManagement": "true",
+        "nickName": "Chris",
+        "name": "Christopher J. Anderson",
+        "surName": "Anderson",
+        "givenName": "Christopher J.",
+        "currentLocation": "Berkeley"
+    }
+]

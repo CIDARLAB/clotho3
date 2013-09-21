@@ -41,7 +41,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                     //future - handle 2+ layers deep
                     //for now, go one layer deep
                     if (!angular.isString(input)) {
-                        //assume array or object for now
+                        //assume array or object
                         var parsedInput = (angular.isArray(input)) ? [] : {};
                         angular.forEach(input, function(child) {
                             //todo - handle object scenario
@@ -76,7 +76,6 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
         //kickoff
         $q.all(dictPromises).then(function(processedDict) {
-            console.log(processedDict);
             angular.extend(dict, processedDict);
             stepsChain.resolve();
         });

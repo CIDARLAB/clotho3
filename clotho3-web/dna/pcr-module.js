@@ -38,9 +38,12 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         },
         circularize : function() {
             if (this.endMatches.length == 2 && this.endsMatch(this.endMatches[0], this.endMatches[1])) {
-                //todo - should only remove end marks -- do string replacement using end indices
-                //todo - should remove one of the overhangs
-                this.sequence = Digest.removeMarks(this.sequence);
+                //remove end marks -- remove last overhang to circularize, and remove cut marks in first terminal cut
+
+                //remove last overhang
+                this.sequence = this.sequence.substring(0, this.sequence.length - this.endMatches[1].length);
+                //remove first cut marks, don't remove in whole sequence
+                this.sequence = this.ends[0].overhang + this.sequence.substring(this.endMatches[0].length);
                 this.process();
             }
         },

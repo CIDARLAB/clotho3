@@ -320,13 +320,13 @@ function generateClothoAPI() {
      * @name Clotho.emit
      *
      * @param {string} channel
-     * @param {object} args
+     * @param {object} args Sends {} if null
      *
      * @description
      * Emit an object on a custom channel message to the server
      */
     var emit = function clothoAPI_emit(channel, args) {
-        fn.api.emit(channel, args);
+        fn.api.emit(channel, args || {});
     };
 
     /**

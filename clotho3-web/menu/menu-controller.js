@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', '$dialog', '$keypress', function($scope, $location, $timeout, Collector, PubSub, $dialog, $keypress ) {
+Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', 'Collector', 'PubSub', '$dialog', '$keypress', 'Clotho', function($scope, $location, $timeout, Collector, PubSub, $dialog, $keypress, Clotho) {
 
     $scope.modes = [
         {"name" : "Editor", "path" : "/editor"},
@@ -46,6 +46,9 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
     $scope.clearStorage = function() {Collector.clearStorage()};
     $scope.logListeners = function() {PubSub.logListeners()};
 
+    $scope.reloadModules = function() {
+        Clotho.emit('reloadModels');
+    };
 
 
     $scope.loggedIn = false;

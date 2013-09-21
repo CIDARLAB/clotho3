@@ -261,7 +261,20 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
             function generateDynamicForm () {
                 var fulltext = "";
 
+                //todo
+                /*
+                string -> test vs. textarea
+                when use select?
+                what to do for objects?
+                id not editable
+                 */
+                var typeMap = {
+                    'string' : 'text',
+                    'boolean' : 'checkbox'
+                };
+
                 angular.forEach($scope.schema.fields, function(field) {
+
 
                     var type = field.type || 'text';
                     if (type == '?') field.type == 'text';

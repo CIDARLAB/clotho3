@@ -528,87 +528,90 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
     //future - handle cuts on both sides (e.g. Bsp24I (8/13)GACNNNNNNTGG(12/7) and one on either side
 
-    //todo - multiple enzymes
-    var markSites = function (sequence, enzyme) {
+    //todo - multiple enzymes --- ignore cutMarks in recognition if already digested
 
-        if (!enzyme) return sequence;
+    var markSites = function (sequence, enzymes) {
+
+        if (!enzymes) return sequence;
 
         //sequence = DNA.dnaOnly(sequence);
 
-        console.log(sequence);
+        //todo - write function to call in loop instead of this hack
+        enzymes = _.isArray(enzymes) ? enzymes : [enzymes];
 
-        var nonLocalCuts = (/\((\d+)\/(\d+)\)/ig).exec(enzyme.cut);
-
-        if (nonLocalCuts) {
-            //todo - handle undegenerize for nonLocalCuts
-
-            //matches to extract (for constructing regexp) - backreferences
-            var brs = {};
-            brs.enz = '(' + DNA.undegenerize(enzyme.match) + ')';
-            brs.rev = '(' + DNA.undegenerize(DNA.revcomp(enzyme.match)) + ')';
-
-            var cut53 = ['^', '_'],
-                cut35 = ['_', '^'];
-
-            // whether first cut is parent or complimentary strand (^..._ vs _...^)
-            // i.e. 3' or 5' overhang
-            var cut = (nonLocalCuts[1] < nonLocalCuts[2]) ? cut53 : cut35;
-
-            //cuts before recognition sequence (e.g. AGTACT (-5/-1)
-            if (nonLocalCuts[1] < 0) {
-
-                brs.gap1 = '(.{'+Math.abs(nonLocalCuts[1]-nonLocalCuts[2])+'})';
-                brs.gap2 = '(.{'+Math.abs(nonLocalCuts[2])+'})';
-
-                //forward
-                var cutFor = new RegExp(brs.gap2 + brs.gap1 + brs.enz, 'ig');
-                sequence = sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
-                    return [ cut[0] + $1 + cut[1] + $2 + '(' + $3 + ')']
-                });
-                //reverse
-                var cutRev = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
-                sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
-                    return [ '(' + $1 + ')' + $2 + cut[1] + $3 + cut[0]]
-                });
-
-            }
-            else {
-                brs.gap1 = '(.{'+nonLocalCuts[1]+'})';
-                brs.gap2 = '(.{'+(nonLocalCuts[2]-nonLocalCuts[1])+'})';
-
-                //forward
-                var cutFor = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
-                sequence = sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
-                    return [ '(' + $1 + ')' + $2 + cut[0] + $3 + cut[1]]
-                });
-                //reverse
-                var cutRev = new RegExp(brs.gap2 + brs.gap1 + brs.rev, 'ig');
-                sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
-                    return [ cut[1] + $1 + cut[0] + $2 + '(' + $3 + ')']
-                });
-
-                console.log(sequence);
-            }
-
-        } else {
-            //note - already account for cut marks being reverse complimented
-            sequence = sequence.replace(createRegex(enzyme.match), '(' + enzyme.cut + ')');
-            sequence = sequence.replace(createRegex(DNA.revcomp(enzyme.match)), '(' + DNA.revcomp(enzyme.cut) + ')');
-        }
-
-
-        //handle lookahead
-        var wrap = sequence.substring(sequence.length - enzyme.match.length) + sequence.substr(enzyme.match.length-1);
-        if (createRegex(enzyme.match).exec(wrap)) {
-
-            //todo - handle, including nonLocal
+        _.each(enzymes, function (enzyme) {
+            var nonLocalCuts = (/\((\d+)\/(\d+)\)/ig).exec(enzyme.cut);
 
             if (nonLocalCuts) {
 
-            } else {
+                //matches to extract (for constructing regexp) - backreferences
+                var brs = {};
+                brs.enz = '(' + DNA.undegenerize(enzyme.match) + ')';
+                brs.rev = '(' + DNA.undegenerize(DNA.revcomp(enzyme.match)) + ')';
 
+                var cut53 = ['^', '_'],
+                    cut35 = ['_', '^'];
+
+                // whether first cut is parent or complimentary strand (^..._ vs _...^)
+                // i.e. 3' or 5' overhang
+                var cut = (nonLocalCuts[1] < nonLocalCuts[2]) ? cut53 : cut35;
+
+                //cuts before recognition sequence (e.g. AGTACT (-5/-1)
+                if (nonLocalCuts[1] < 0) {
+
+                    brs.gap1 = '(.{'+Math.abs(nonLocalCuts[1]-nonLocalCuts[2])+'})';
+                    brs.gap2 = '(.{'+Math.abs(nonLocalCuts[2])+'})';
+
+                    //forward
+                    var cutFor = new RegExp(brs.gap2 + brs.gap1 + brs.enz, 'ig');
+                    sequence = sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
+                        return [ cut[0] + $1 + cut[1] + $2 + '(' + $3 + ')']
+                    });
+                    //reverse
+                    var cutRev = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
+                    sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
+                        return [ '(' + $1 + ')' + $2 + cut[1] + $3 + cut[0]]
+                    });
+
+                }
+                else {
+                    brs.gap1 = '(.{'+nonLocalCuts[1]+'})';
+                    brs.gap2 = '(.{'+(nonLocalCuts[2]-nonLocalCuts[1])+'})';
+
+                    //forward
+                    var cutFor = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
+                    sequence = sequence.replace(cutFor, function(match, $1, $2, $3, off, orig) {
+                        return [ '(' + $1 + ')' + $2 + cut[0] + $3 + cut[1]]
+                    });
+                    //reverse
+                    var cutRev = new RegExp(brs.gap2 + brs.gap1 + brs.rev, 'ig');
+                    sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
+                        return [ cut[1] + $1 + cut[0] + $2 + '(' + $3 + ')']
+                    });
+
+                    console.log(sequence);
+                }
+
+            } else {
+                //note - already account for cut marks being reverse complimented
+                sequence = sequence.replace(createRegex(enzyme.match), '(' + enzyme.cut + ')');
+                sequence = sequence.replace(createRegex(DNA.revcomp(enzyme.match)), '(' + DNA.revcomp(enzyme.cut) + ')');
             }
-        }
+
+
+            //todo handle lookahead
+            var wrap = sequence.substring(sequence.length - enzyme.match.length) + sequence.substr(enzyme.match.length-1);
+            if (createRegex(enzyme.match).exec(wrap)) {
+
+                // including nonLocal
+
+                if (nonLocalCuts) {
+
+                } else {
+
+                }
+            }
+        });
 
         return sequence;
     };
@@ -647,6 +650,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      *      isBlunt: if blunt cut (i.e. "|")
      *      length: length of match
      *      match: matched overhang sequence, including marks
+     *      overhang : overhang without cut marks, nothing if blunt
      *      is3prime : true for 3' overhang (e.g. nnn_nnnn^nnn)
      *      terminal : true if cut mark is on either end of fragment passed in
      *
@@ -701,6 +705,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
             match.match = match[0];
             match.isBlunt = (match.match == '|');
             match.is3prime = match.isBlunt ? null : (match[2] == '_');
+            match.overhang = match.isBlunt ? '' : match[3];
             match.length = match.match.length;
             match.terminal = !!(( match.index == 0 ||
                (match.index + (match.isBlunt ? 1 : match.length) == sequence.length )
@@ -772,8 +777,17 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         return _.sortBy(fragments, function(f) { return -f.length });
     };
 
+    //if leave out targetLength, get longest
     var gelPurify = function(fragments, targetLength) {
-        return _.sortBy(fragments, function (f) { return Math.abs(f.length - targetLength)})[0]
+        //todo - better logic
+        var index;
+        if (_.isUndefined(targetLength)) {
+            targetLength = 0;
+            index = fragments.length - 1;
+        } else {
+            index = 0;
+        }
+        return _.sortBy(fragments, function (f) { return Math.abs(f.length - targetLength)})[index]
     };
 
 
@@ -864,11 +878,11 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      *
      * @param {string} sequence with or without marks already
      * @param {Enzyme} enzyme
-     * @param {boolean} removeMarks default false
      * @param {boolean} circularize default false (defined in makeCuts)
+     * @param {boolean} removeMarks default false
      * @returns {*}
      */
-    var digest = function(sequence, enzyme, removeMarks, circularize) {
+    var digest = function(sequence, enzyme, circularize, removeMarks) {
         if (!enzyme)
             return 'no enzyme provided';
 

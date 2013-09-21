@@ -82,6 +82,10 @@ angular.module('clothoRoot', ['clothoPackage']).
                 templateUrl:'about/about-partial.html',
                 title : 'About'
             }).
+            when('/team', {
+                templateUrl:'about/team-partial.html',
+                title : 'The Clotho Team'
+            }).
             when('/trails', {
                 templateUrl:'trails/trail_browser-partial.html',
                 title : 'Trails'
@@ -100,7 +104,7 @@ angular.module('clothoRoot', ['clothoPackage']).
                         });
                         return deferred.promise;
                     },
-                    deps : function($q) {
+                    deps : function() {
                         //return Application.mixin('https://www.youtube.com/player_api');
                         return Application.mixin('/lib/youtubeAPI.js');
                     }
