@@ -33,7 +33,7 @@ public class Message {
         this.channel = Channel.valueOf(props.get("channel").toString());
         this.data = props.get("data");
         this.options = (Map) props.get("options");
-        this.requestId = props.get("requestId").toString();
+        this.requestId = props.containsKey("requestId")? props.get("requestId").toString() : null;
     }
     
     public Channel channel;
