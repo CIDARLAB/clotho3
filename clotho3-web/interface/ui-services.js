@@ -763,6 +763,8 @@ Application.Interface.service('$caret', ['$log', function($log) {
 
 
     //works
+    //future - get cursor location, and reset to there rather than end
+    //note - expects DOM element, not jQuery
     functions.setEndOfContenteditable = function(contentEditableElement)
     {
         var range,selection;

@@ -62,8 +62,9 @@ CONSTRUCTION FILES
         - Anneal
             - handle overhangs
         - Ligate
+            - html options
+            - alignment option
             - multiple fragments
-            - parse non-terminal ends - cut and reprocess
         - Construction
 
 TRAILS
@@ -74,8 +75,6 @@ TRAILS
         - gradeQuiz -- ignore case
         - make dictionary more dynamic (at least on client)
         - move inline quizzes to quiz object, fix templates
-        - show correct / wrong feedback (all templates)
-        - retrying quizzes
         - add hint param to quiz
             - show hint next to quiz decal
 
@@ -89,6 +88,7 @@ TRAILS
     - $timeout of logSnippet
     - call say() for run(), other commands
         - check isString in say and wrap
+    - if get response on say() for a submit() don't post Command Received
 
 
 

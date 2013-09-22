@@ -118,71 +118,40 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
 
 Application.Interface.directive('contenteditable', [function() {
 
-    //moves cursor to end of contenteditable element -- not textarea (but those should be automatic)
-    //kinda a hack, but gives same behavior as input
-    //todo - move to $caret service
-    //future - get cursor location, and reset to there rather than end
-    //note - expects DOM element, not jQuery
-    function setEndOfContenteditable(contentEditableElement)
-    {
-        var range,selection;
-        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
-        {
-            range = document.createRange();
-            range.selectNodeContents(contentEditableElement);
-            range.collapse(false);
-            selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-        else if(document.selection)//IE 8 and lower
-        {
-            range = document.body.createTextRange();
-            range.moveToElementText(contentEditableElement);
-            range.collapse(false);
-            range.select();
-        }
-    }
-
     return {
         require: '?ngModel',
-        link: function(scope, elm, attrs, ngModel) {
-            if(!ngModel) return;
+        link: function(scope, element, attrs, ngModel) {
+            if(!ngModel) return; // do nothing if no ng-model
 
-            // view -> model
-            elm.bind('keyup', function(event) {
-                var key = event.keyCode;
-                if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) return;
-
-                var value = elm.html();
-
-                if (ngModel.$modelValue !== value) {
-                    scope.$apply(function() {
-                        ngModel.$setViewValue(value);     //normal way of doing this
-                        //ngModel.$modelValue = value;        // (doesn't work) force through parsers
-                    });
-                    //ngModel.$render();
-                    //elm.text(ngModel.$viewValue);   //messes up cursor position
-                }
-
-                console.log(value + '\n\n' + ngModel.$modelValue + '\n\n' + ngModel.$viewValue);
-            });
-
-            //model changes -> view
-            //messes up cursor position
-            /*
+            //listen to model changes
             scope.$watch(function() {
                 return ngModel.$modelValue
-            }, function(newval, oldval) {
-                elm.html(newval);
-                setEndOfContenteditable(elm[0]);
+            }, function() {
+                console.log('render called: ', ngModel, ngModel.$modelValue,  ngModel.$viewValue);
+                ngModel.$render();
             });
-            */
 
-            // initial model -> view
+            // Specify how UI should be updated
             ngModel.$render = function() {
-                elm.html(ngModel.$viewValue);
+                element.html(ngModel.$viewValue || '');
             };
+
+            // Listen for change events to enable binding
+            element.on('blur keyup change', function() {
+                scope.$apply(read);
+            });
+            read(); // initialize
+
+            // Write data to the model
+            function read() {
+                var html = element.html();
+                // When we clear the content editable the browser leaves a <br> behind
+                // Unless no-strip-br attribute is provided then we strip this out
+                if( !attrs.noStripBr && html == '<br>' ) {
+                    html = '';
+                }
+                ngModel.$setViewValue(html);
+            }
         }
     };
 }]);

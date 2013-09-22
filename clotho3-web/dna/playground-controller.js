@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'DNA', 'Digest', 'PCR', 'Construction', '$http', function($scope, $parse, Clotho, DNA, Digest, PCR, Construction, $http) {
+Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'DNA', 'Digest', 'PCR', 'Construction', '$http', '$compile', function($scope, $parse, Clotho, DNA, Digest, PCR, Construction, $http, $compile) {
     $scope.DNA = DNA;
     $scope.PCR = PCR;
     $scope.Digest = Digest;
@@ -117,22 +117,19 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
 
     //Construction Files
 
-    $scope.constructionFile = $http.get('/models/construction_demo.json').then(function(data) { return data.data });
+    $scope.constructionFileDemo = $http.get('/models/construction_demo.json').then(function(data) { return data.data });
+
+    $scope.$watch('constructionFileDemo', function (newval) {
+        if (!newval) return;
+        $scope.constructionProductDemo = Construction.process(newval)
+    });
+
+
+    $scope.constructionFile = $http.get('/models/construction_gfp.json').then(function(data) { return data.data });
 
     $scope.$watch('constructionFile', function (newval) {
         if (!newval) return;
-        $scope.constructionProduct = Construction.process(newval)
+        $scope.constructionFileProduct = Construction.process(newval)
     });
-
-
-    $scope.constructionGFP = $http.get('/models/construction_gfp.json').then(function(data) { return data.data });
-
-    $scope.$watch('constructionGFP', function (newval) {
-        if (!newval) return;
-        $scope.constructionGFPProduct = Construction.process(newval)
-    });
-
-
-
 
 }]);

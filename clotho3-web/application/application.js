@@ -130,9 +130,9 @@ angular.module('clothoRoot', ['clothoPackage']).
             when('/plasmid/:id', {
                 templateUrl:'plasmid/plasmid-partial.html'
             }).
-            when('/construction', {
-                templateUrl:'dna/construction-partial.html',
-                title : 'Construction'
+            when('/dnaPlayground', {
+                templateUrl:'dna/playground-partial.html',
+                title : 'DNA Playground'
             }).
             when('/chat', {
                 templateUrl:'chat/chat-partial.html'

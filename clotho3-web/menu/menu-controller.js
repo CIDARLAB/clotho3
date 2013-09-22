@@ -7,7 +7,7 @@ Application.Primary.controller('MenuCtrl', ['$scope', '$location', '$timeout', '
         {"name" : "Trails", "path" : "/trails"},
         {"name" : "Browser", "path" : "/browser"},
         {"name" : "Plasmid", "path" : "/plasmid"},
-        {"name" : "Construction", "path" : "/construction"}
+        {"name" : "DNA Playground", "path" : "/dnaPlayground"}
     ];
 
 

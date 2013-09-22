@@ -2,11 +2,11 @@
     {
         "schema": "LabPerson",
         "id": "523ca94ac2e647abe23c1fa0",
-        "title": "Web App Programmer",
+        "title": "Web App Developer",
         "isManagement": "",
         "nickName": "Max",
+        "description" : "Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.",
         "snailMailAddress": "",
-        "description": "Front-end programmer for the Clotho Web App",
         "name": "Maxwell Bates",
         "current": "true",
         "surName": "Bates",
@@ -17,7 +17,7 @@
     {
         "schema": "LabPerson",
         "id": "523cb83ac2e647abe23c1fa1",
-        "title": "Server Programmer",
+        "title": "Server Developer",
         "isManagement": "",
         "description": "Primary developer for the Clotho Server",
         "name": "Stephanie Paige",
@@ -47,6 +47,7 @@
         "nickName": "Chris",
         "name": "Christopher J. Anderson",
         "surName": "Anderson",
+        "description" : "Chris is an Assistant Professor at UC Berkeley in the Department of Bioengineering at UC Berkeley and LBNL, and a principal investigator of the Synthetic Biology Engineering Research Center. With broad research interests in applications and foundational technologies for synthetic biology, the Anderson lab works on both wetlab and computational projects. Chris has been the faculty advisor for the Berkeley iGEM program for the past 5 years including Clotho’s winning 2008 and 2009 teams. Chris became an active programmer and project manager for Clotho beginning in 2010.",
         "givenName": "Christopher J.",
         "currentLocation": "Berkeley"
     }

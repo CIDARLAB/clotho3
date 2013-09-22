@@ -1,0 +1,16 @@
+<div class="well well-small clearfix">
+    <h4>PCR.predict</h4>
+
+    <div construction-field="Template" ng-model="step.input[0]" construction-dictionary="constructionFile.dictionary"></div>
+
+    <div construction-field="Primer 1" ng-model="step.input[1][0]" construction-dictionary="constructionFile.dictionary"></div>
+
+    <div construction-field="Primer 2" ng-model="step.input[1][1]" construction-dictionary="constructionFile.dictionary"></div>
+
+    <hr>
+
+
+
+</div>
+
+<div construction-step="step.fields" ng-model="step" construction-dictionary="constructionFile.dictionary"></div>

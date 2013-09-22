@@ -20,32 +20,32 @@
     "steps" : [
         {
             "reaction" : "PCR.predict",
-            "inputs" : ["template", ["primer1", "primer2"]],
+            "input" : ["template", ["primer1", "primer2"]],
             "output" : "pcr_product"
         },
         {
             "reaction" : "Digest.digest",
-            "inputs" : ["pcr_product", "EcoRI"],
+            "input" : ["pcr_product", "EcoRI"],
             "output" : "fragments"
         },
         {
             "reaction" : "Digest.gelPurify",
-            "inputs" : ["fragments", "70"],
+            "input" : ["fragments", "70"],
             "output" : "targetFrag"
         },
         {
             "reaction" : "Digest.digest",
-            "inputs" : ["targetFrag", "BsmbI"],
+            "input" : ["targetFrag", "BsmbI"],
             "output" : "fragments2"
         },
         {
             "reaction" : "Digest.gelPurify",
-            "inputs" : ["fragments2", "70"],
+            "input" : ["fragments2", "70"],
             "output" : "targetFrag2"
         },
         {
             "reaction" : "PCR.ligate",
-            "inputs" : [["targetFrag2", "backbone"]],
+            "input" : [["targetFrag2", "backbone"]],
             "output" : "final"
         }
     ]

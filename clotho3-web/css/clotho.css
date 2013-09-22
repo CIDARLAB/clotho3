@@ -157,8 +157,6 @@ quiz
     background-color: #ffffff;
     border: 1px solid #d9edf7;
     color: #AFB2B6;
-    -webkit-border-radius: 0 4px 0 7px;
-    -moz-border-radius: 0 4px 0 7px;
     border-radius: 0 4px 0 7px;
 }
 
@@ -166,6 +164,75 @@ quiz
     margin: 0 0 0 5px;
     padding: 4px 12px;
     vertical-align: top;
+}
+
+
+
+/******************
+construction
+****************/
+
+.constructionStep {
+    position: relative;
+    margin: 0 0 8px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    color: #3a87ad;
+    border: 3px solid #bce8f1;
+    background-color: #d9edf7;
+    border-radius: 8px;
+}
+
+
+.constructionStep .arrow,
+.constructionStep .arrow:after
+{
+    position: absolute;
+    pointer-events: none;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.constructionStep .arrow {
+    border-width: 11px;
+    top: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-bottom-color: #bce8f1;
+    border-top-width: 0;
+}
+
+.constructionStep .arrow:after {
+    border-width: 7px;
+    content: "";
+    top: 4px;
+    margin-left: -7px;
+    border-bottom-color: #ffffff;
+    border-top-width: 0;
+}
+
+.constructionStep .reaction {
+    padding: 7px 35px 7px 17px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #8D9094;
+    background: #ffffff;
+    border-radius: 8px 8px 0 0 ;
+}
+
+.constructionStep .steps {
+    padding: 15px;
+}
+
+.constructionStep .output {
+    padding: 7px 35px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #8D9094;
+    background: #ffffff;
+    border-radius: 0 0 8px 8px;
 }
 
 

@@ -1,4 +1,23 @@
 <div class="container" ng-controller="constructionCtrl">
+
+    <div class="row">
+
+
+        <div class="span12">
+            <div construction-dictionary-view ng-model="constructionFile.dictionary"></div>
+        </div>
+
+        <pre class="pre-scrollable span12">{{ constructionFile | json }}</pre>
+
+        <form name="constructionUI" class="offset1 span10">
+            <div class="row-fluid">
+                <div ng-repeat="step in constructionFile.steps" class="row-fluid">
+                    <div construction-step="step.fields" ng-model="step" construction-dictionary="constructionFile.dictionary"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="row">
         <form name="dnaPlayground" class="span12 form-horizontal">
 
@@ -282,10 +301,10 @@
     <div class="row">
         <form name="ConstructionPlayground" class="form-horizontal">
 
-            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionFile | json}}</pre>
+            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionFileDemo | json}}</pre>
             </div>
 
-            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionProduct}}</pre>
+            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionProductDemo}}</pre>
             </div>
         </form>
     </div>
@@ -296,10 +315,10 @@
         <form name="ConstructionGFP" class="form-horizontal">
 
 
-            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionGFP | json}}</pre>
+            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionFile | json}}</pre>
             </div>
 
-            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionGFPProduct}}</pre>
+            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionFileProduct}}</pre>
             </div>
 
         </form>
