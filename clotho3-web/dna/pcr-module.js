@@ -1,6 +1,6 @@
 "use strict";
 
-Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA, Digest) {
+Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
     /*************
      Classes
@@ -374,7 +374,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
      */
     var verifyPrimers = function verifyPrimers(sequence, primer1, primer2) {
 
-        if (angular.isEmpty(primer1) || angular.isEmpty(primer2)) {
+        if (_.isEmpty(primer1) || _.isEmpty(primer2)) {
             return "a primer is not defined"
         }
 
@@ -835,32 +835,6 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         });
 
         return parsedFrags;
-
-        /*
-        DEPRECATED OLD WAY
-        for (var i = 0; i < fragments.length; i++) {
-         var frag = fragments[i],
-         ends = Digest.findOverhangs(frag);
-
-         console.log(ends);
-
-
-         for (var j = 0; j < ends.length; j++) {
-
-         console.log(ends, ends[j]);
-
-
-         if (!ends[j].terminal) {}
-
-         if (ends[j].isBlunt) {
-         blunts.push({fragment : frag, end : ends[j], overhang : "|"})
-         } else {
-         overhangs.push({fragment : frag, end : ends[j], overhang : ends[j][3], is3prime : ends[j]['is3prime']})
-         }
-         }
-         }
-
-         return {blunts: blunts, overhangs : overhangs};*/
     };
 
     return {
@@ -879,7 +853,7 @@ Application.Dna.service('PCR', ['Clotho', 'DNA', 'Digest', function(Clotho, DNA,
         ligate : ligate
 
 
-    }
+    };
 }]);
 
 Application.Dna.directive('pcrPredict', ['PCR', 'Digest', 'DNA', function(PCR, Digest, DNA) {

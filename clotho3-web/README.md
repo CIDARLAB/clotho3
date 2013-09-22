@@ -52,6 +52,12 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - try reloadModules
 - try LabPerson schema
 
+QUIZZES
+    - gradeQuiz
+        - case insensitive
+        - JSON stringify results
+        - use for function testing for equality
+
 
 CONSTRUCTION FILES
     - Functions

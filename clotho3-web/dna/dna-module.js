@@ -11,7 +11,7 @@
 // pcr products - annealing etc.
 // fuzzy search
 
-Application.Dna.service('DNA', ['$filter', function($filter) {
+Application.Dna.service('DNA', [function() {
 
     /*
      iupac_nucleotides =
@@ -363,7 +363,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     //note currently only nucleotides
     var undegenerize = function(sequence, map) {
         map = !!map ? map : maps.nucleotide_degenerate;
-        return sequence.replace(regexps.nucleotide_degenerate, function(m) {return map[angular.uppercase(m)]});
+        return sequence.replace(regexps.nucleotide_degenerate, function(m) {return map[m.toUpperCase()]});
     };
 
 
@@ -389,13 +389,13 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
     var amino_one_to_three = function (sequence) {
         var protein = [];
-        angular.forEach(sequence.split(''), function (amino, ind) {protein.push( maps.amino_one_to_three[amino])});
+        _.forEach(sequence.split(''), function (amino, ind) {protein.push( maps.amino_one_to_three[amino])});
         return protein.join(' ');
     };
 
     var amino_one_to_full = function (sequence) {
         var protein = [];
-        angular.forEach(sequence.split(''), function (amino, ind) {protein.push (maps.amino_one_to_full[amino])});
+        _.forEach(sequence.split(''), function (amino, ind) {protein.push (maps.amino_one_to_full[amino])});
         return protein.join(' ');
     };
 
@@ -422,7 +422,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     };
 
     var shuffleSequence = function (sequence) {
-        return ($filter('shuffle')(sequence.split(''))).join('');
+        return _.shuffle(sequence.split('')).join('');
     };
 
     //adds a space every three characters
@@ -456,7 +456,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         }
         var seqlen = sequence.length;
         if (seqlen < 3) return '';
-        sequence = angular.lowercase(sequence);
+        sequence = sequence.toLowerCase();
 
 
         var offset = (!!forceOffset) ? forceOffset : probableORF(sequence),
@@ -477,7 +477,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     var reverseTranslate = function (sequence, codonFreq) {
         if (!sequence) return;
 
-        var dumb = (!codonFreq || angular.isUndefined(codonFreq) || codonFreq == null) ? true : false;
+        var dumb = (!codonFreq || _.isUndefined(codonFreq) || codonFreq == null) ? true : false;
         var rna = '';
 
         for(var seq = sequence.split(''), i = 0; i < seq.length; i++) {
@@ -594,7 +594,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
     var monomer_count = function (sequence, units) {
         units = (typeof units != 'undefined' ? units : monomers.all);
         var counts = {};
-        angular.forEach(units, function(unit) {
+        _.forEach(units, function(unit) {
             counts[unit] = occuranceCount(sequence, unit);
         });
         return counts;
@@ -612,8 +612,8 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
         units = (typeof units != 'undefined') ? units : monomers.dna;
         minCount = (typeof minCount != 'undefined') ? minCount : 0;
         var counts = {};
-        angular.forEach(units, function (u1) {
-            angular.forEach(units, function (u2) {
+        _.forEach(units, function (u1) {
+            _.forEach(units, function (u2) {
                 var combo = u1 + u2,
                     count = occuranceCount(sequence, combo);
                 if (count >= minCount)
@@ -694,7 +694,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
             return;
         }
 
-        sequence = angular.lowercase(sequence);
+        sequence = sequence.toLowerCase();
 
         conc = typeof conc != 'undefined' ? conc : {};
         conc.dna = typeof conc.dna != 'undefined' ? conc.dna : 0.0000002;   // Molar (200nM)
@@ -716,7 +716,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
 
         //nearest neighbors
         var neighbors = neighbor_count(sequence);
-        angular.forEach(neighbors, function (num, pair) {
+        _.forEach(neighbors, function (num, pair) {
             ds = ds + (entropies.ds[pair] * num);
             dh = dh + (entropies.dh[pair] * num);
         });
@@ -734,7 +734,7 @@ Application.Dna.service('DNA', ['$filter', function($filter) {
             weight = 0,
             counts = monomer_count(sequence, nucs);
 
-        angular.forEach(nucs, function(nuc) {
+        _.forEach(nucs, function(nuc) {
             weight = weight + (weights[type][nuc] * counts[nuc]);
         });
 

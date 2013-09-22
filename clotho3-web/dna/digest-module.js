@@ -1,33 +1,6 @@
 'use strict';
 
-Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function(Digest, $filter, $parse) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link : function(scope, element, attrs, ngModel) {
-
-            var enz;
-            scope.$watch(attrs['digestMark'], function (val) {
-                enz = val;
-                ngModel.$render(); //fixme doens't work
-            });
-
-            var highlightSites = function (input) {
-                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
-                return Digest.markSites(input, enz)
-            };
-
-            var unhighlightSites = function (input) {
-                return Digest.removeMarks(input);
-            };
-
-            ngModel.$parsers.unshift(unhighlightSites);
-            ngModel.$formatters.push(highlightSites);
-        }
-    }
-}]);
-
-Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
+Application.Dna.service('Digest', ['DNA', function(DNA) {
 
     var enzymes = {
         "BsaI" : {
@@ -250,7 +223,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
 
     //calculated on the fly, reverse lookup by match or cut sequence
     var enzymesReverse = {};
-    angular.forEach(enzymes, function (enz, name) {
+    _.forEach(enzymes, function (enz, name) {
         enzymesReverse[enz.match] = name;
         enzymesReverse[enz.cut] = name;
     });
@@ -346,7 +319,7 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
      * @param {boolean} oppStrand Whether site is on opposite strand (should be reverse complemented)
      */
     var addRestrictionSite = function (sequence, enzyme, gap, fivePrime, oppStrand) {
-        gap = angular.isDefined(gap) ? gap : 3;
+        gap = _.isUndefined(gap) ? 3 : gap;
 
         var adding = DNA.randomSequence(gap) +
             (oppStrand ? DNA.revcomp(enzyme.match) : enzyme.match) +
@@ -708,8 +681,8 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
             match.overhang = match.isBlunt ? '' : match[3];
             match.length = match.match.length;
             match.terminal = !!(( match.index == 0 ||
-               (match.index + (match.isBlunt ? 1 : match.length) == sequence.length )
-            ));
+                (match.index + (match.isBlunt ? 1 : match.length) == sequence.length )
+                ));
 
             if (nonterminalOnly) {
                 !match.terminal && matches.push(match);
@@ -807,9 +780,9 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
     //note - currently only handles one internal cut
     var trimPastInternal = function (sequence, keepLongest) {
         var firstInternal = _.find(findOverhangs(sequence), function (overhang) {
-                console.log(overhang);
-                return !overhang.terminal;
-            });
+            console.log(overhang);
+            return !overhang.terminal;
+        });
 
         //if keepLongest and second fragment longer than first
         if (keepLongest && (firstInternal.index < sequence.length - firstInternal.index - firstInternal.length)) {
@@ -940,6 +913,33 @@ Application.Dna.service('Digest', ['Clotho', 'DNA', function(Clotho, DNA) {
         //high-level
         digest : digest
 
+    };
+}]);
+
+Application.Dna.directive('digestMark', ['Digest', '$filter', '$parse', function(Digest, $filter, $parse) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link : function(scope, element, attrs, ngModel) {
+
+            var enz;
+            scope.$watch(attrs['digestMark'], function (val) {
+                enz = val;
+                ngModel.$render(); //fixme doens't work
+            });
+
+            var highlightSites = function (input) {
+                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
+                return Digest.markSites(input, enz)
+            };
+
+            var unhighlightSites = function (input) {
+                return Digest.removeMarks(input);
+            };
+
+            ngModel.$parsers.unshift(unhighlightSites);
+            ngModel.$formatters.push(highlightSites);
+        }
     }
 }]);
 
