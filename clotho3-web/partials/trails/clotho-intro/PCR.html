@@ -5,8 +5,8 @@
             <div class="control-group">
                 <label class="control-label" for="choosePrimers">Primer Set:</label>
 
-                <div class=" btn-group" id="choosePrimers">
-                    <button ng-repeat="set in pcr_demoSets" class="btn" ng-click="setPCR($index)">Set {{ $index + 1}}
+                <div style="display: block;" class="controls btn-group" id="choosePrimers">
+                    <button ng-repeat="set in pcr_demoSets" class="btn" ng-click="setPCR($index)" ng-disabled="primers == pcr_demoSets[$index].primers">Set {{ $index + 1}}
                     </button>
                 </div>
             </div>

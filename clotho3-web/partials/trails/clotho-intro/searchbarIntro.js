@@ -83,8 +83,22 @@ Application.Extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '
     })
     .then(function() {
         return $timeout(function() {$focus.removeBackdrop()}, 200);
-    })
+    });
 
 
+    $scope.defineVariable = function() {
+        var str = 'var sequence = "acgatcgatcgat"';
+        $focus.typeOutSearch(str, true);
+    };
+
+    $scope.runFunction = function() {
+        var str = 'clotho.run("uppercase", ["i will be ALL caps"])';
+        $focus.typeOutSearch(str, true);
+    };
+
+    $scope.queryClothoTeam = function () {
+        var str = 'clotho.query({schema : "ClothoTeam"})';
+        $focus.typeOutSearch(str, true);
+    };
 
 }]);

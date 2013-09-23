@@ -49,9 +49,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- try reloadModules
-- try LabPerson schema
-
 QUIZZES
     - gradeQuiz
         - case insensitive
@@ -63,8 +60,6 @@ CONSTRUCTION FILES
     - Functions
         - Digest
         - PCR
-        - Fragments
-            - create class
         - Anneal
             - handle overhangs
         - Ligate
@@ -72,6 +67,8 @@ CONSTRUCTION FILES
             - alignment option
             - multiple fragments
         - Construction
+    - Templates
+        - construction file -> protocol template
 
 TRAILS
     - ClothoIntro Pages
@@ -104,7 +101,6 @@ TRAILS
 
 
 - team page
-    - new schema for Clotho people
     - add people for team page, query over them in Search Demo
 
 

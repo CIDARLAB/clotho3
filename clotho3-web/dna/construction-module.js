@@ -10,16 +10,21 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
     var process = function(file) {
         //don't alter the construction file's dictionary
-        var dict = angular.copy(file.dictionary);
+        var dict = file.dictionary;
 
-        //process the dictionary
+        //process the dictionary, make all objects
         var dictPromises = {};
         angular.forEach(dict, function(value, key) {
-            if (!!value.Clotho) {
-                //dictPromises[key] = Clotho.submit(value.value);
+            if (angular.isString(value)) {
+                dict[key] = {computed : false, value : value};
+            }
 
+            if (!!value.Clotho) {
                 //testing clientSide for now
-                dictPromises[key] = $parse(value.value)(dnaModules);
+                var parsed = $parse(value.value)(dnaModules);
+                dictPromises[key] = {Clotho : true, computed : false, value : parsed};
+
+                //future - dictPromises[key] = Clotho.submit(value.value);
             }
         });
 
@@ -38,6 +43,9 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                 //todo - handle Clotho specifics after parse (e.g. enzyme)
                 var inputs = [];
                 angular.forEach(step.input, function(input){
+                    
+                    console.log('\n\n\n\ninput:', input);
+                    
                     //future - handle 2+ layers deep
                     //for now, go one layer deep
                     if (!angular.isString(input)) {
@@ -45,11 +53,14 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                         var parsedInput = (angular.isArray(input)) ? [] : {};
                         angular.forEach(input, function(child) {
                             //todo - handle object scenario
-                            parsedInput.push($parse(child)(dict));
+                            parsedInput.push(($parse(child)(dict)).value);
                         });
+                        console.log(parsedInput);
                         inputs.push(parsedInput);
                     } else {
-                        inputs.push($parse(input)(dict));
+                        parsedInput = ($parse(input)(dict)).value;
+                        console.log(parsedInput);
+                        inputs.push(parsedInput);
                     }
                 });
 
@@ -68,7 +79,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                 //use apply to match format on server
                 var result = $parse(step.reaction)(dnaModules).apply(null, inputs);
                 console.log('result of '+step.reaction+':', result);
-                dict[step.output] = result;
+                dict[step.output] = {computed : true, value : result};
 
                 return stepDeferred.promise;
             });
@@ -83,7 +94,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
         //at the end
         return stepsChain.promise.then(function() {
             console.log('final: ' + dict.final, dict);
-            return dict.final
+            return dict.final.value
         });
 
 
@@ -106,9 +117,9 @@ Application.Dna.directive('constructionDictionaryView', [function() {
         template : '<table class="table table-bordered table-striped table-condensed">' +
             '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
             '<tbody>' +
-                '<tr ng-repeat="(key, value) in dict">' +
-                '<td> <code contenteditable ng-model="key"></code> </td>' +
-                '<td contenteditable ng-model="value"></td>' +
+                '<tr ng-repeat="(key, value) in dict" ng-class="{\'info\' : value.computed}">' +
+                '<td> <code ng-bind="key"></code> </td>' +
+                '<td ng-bind="(value.value) | json"></td>' +
                 '</tr>' +
                 '<tr><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
             '</tbody>' +
@@ -169,13 +180,18 @@ Application.Dna.directive('constructionFieldString', ['$parse', function($parse)
             fieldName : '@constructionFieldString',
             model : '=ngModel'
         },
-        template: '<div class="control-group span4">' +
+        template: '<div class="control-group span4" ng-class="{\'warning\' : hasInvalidItem }">' +
             '<label class="control-label">{{ fieldName }}</label>' +
             '<div class="controls">' +
-            '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" disabled/>' +
+            '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" disabled/>' +
             '</div>' +
             '</div>',
-        link : function(scope, element, attrs) {}
+        link : function(scope, element, attrs) {
+            scope.hasInvalidItem = false;
+            scope.checkInput = function() {
+                scope.hasInvalidItem = !!scope.dict[scope.model];
+            };
+        }
     }
 }]);
 
@@ -235,7 +251,7 @@ Application.Dna.directive('constructionFieldArray', ['$parse', function($parse) 
     }
 }]);
 
-Application.Dna.directive('constructionStep', ['$parse', '$compile', function($parse, $compile) {
+Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', function($parse, $compile, $http) {
     return {
         restrict : "EA",
         require: "ngModel",
@@ -256,53 +272,75 @@ Application.Dna.directive('constructionStep', ['$parse', '$compile', function($p
                         '<stepFields class="row-fluid clearfix"></stepFields>' +
                         //'{{ step }}'+
                         '</div>' +
-                        '<div class="output" tooltip="{{ dict[step.output] }}" tooltip-append-to-body="true">Output: <code>{{ step.output }}</code></div>' +
+                        '<div class="output">Output: <code>{{ step.output }}</code></div>' +
                         '</div>' +
                         '<div class="arrow">' +
                         '</div>');
 
-                    angular.forEach(scope.fields, function(field) {
-                        field.model = 'step.' + field.model;
 
-                        console.log(field.type);
-
-                        var html;
-
-                        switch(angular.lowercase(field.type)) {
+                    function generateConstructionField (type, name, model) {
+                        switch(angular.lowercase(type)) {
                             case 'value' : {
-                                html = '<div construction-field-string="'+field.name+'" ng-model="'+field.model+'"></div>';
-                            break;
+                                return '<div construction-field-string="'+name+'" ng-model="'+model+'"></div>';
                             }
                             case 'boolean' : {
-                                html = '<div construction-field-boolean="'+field.name+'" ng-model="'+field.model+'"></div>';
-                            break;
+                                return '<div construction-field-boolean="'+name+'" ng-model="'+model+'"></div>';
                             }
                             case 'array' : {
-                                html = '<div construction-field-array="'+field.name+'" ng-model="'+field.model+'" construction-dictionary="dict"></div>';
-                            break;
+                                return '<div construction-field-array="'+name+'" ng-model="'+model+'" construction-dictionary="dict"></div>';
                             }
                             default : {
-                                html = '<div construction-field="'+field.name+'" ng-model="'+field.model+'" construction-dictionary="dict"></div>';
+                                return '<div construction-field="'+name+'" ng-model="'+model+'" construction-dictionary="dict"></div>';
                             }
                         }
+                    }
 
-                        template.find('stepFields').append(html)
-                    });
+                    //if pass in scope.fields, assume want to overrun templates
+                    if (angular.isDefined(scope.fields)) {
+                        angular.forEach(scope.fields, function(field) {
+                            field.model = 'step.' + field.model;
+
+                            var html = generateConstructionField(field.type, field.name, field.model);
+                            template.find('stepFields').append(html)
+                        });
+                    }
+                    else {
+                    //try to get the template for the reaction
+                        $http.get('/dna/construction/steps/' + scope.step.reaction + '.html')
+                        .then(function(data) {
+                            //works - great
+                            console.log(data.data);
+                            console.log(scope);
+                            var fieldsTemplate = $compile(data.data)(scope);
+                            template.find('stepFields').append(fieldsTemplate);
+
+                        }, function(data) {
+                            //didn't  work - try to parse input fields
+                            console.log('template not found');
+
+                            angular.forEach(scope.step.input, function(input, index) {
+                                var html;
+
+                                if (angular.isArray(input)) {
+                                    html = generateConstructionField('array', '', 'step.input['+index+']');
+                                }
+                                else if (input == "true" || input == "false") {
+                                    html = generateConstructionField('boolean', '', 'step.input['+index+']');
+                                }
+                                else {
+                                    html = generateConstructionField('value', '', 'step.input['+index+']');
+                                }
+
+                                template.find('stepFields').append(html)
+                            });
+                        });
+                    }
 
                     element.html($compile(template)(scope))
                 },
                 post: function postLink(scope, element, attrs, ngModel) {
 
-                    //extend dictionary with output term
-                    var dictAddition = {};
-                    dictAddition[scope.step.output] = {
-                        "generated" : true,
-                        "value" : scope.step.output
-                    };
-                    angular.extend(scope.dict, dictAddition);
-
                     scope.showReaction = true;
-
                     scope.toggleReaction = function() {
                         scope.showReaction = !scope.showReaction;
                     }

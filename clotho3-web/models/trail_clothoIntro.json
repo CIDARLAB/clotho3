@@ -2,7 +2,6 @@
     "id" : "bb99191e810c19729de860fe",
     "schema" : "Trail",
     "name" : "Learning Clotho",
-    "author" : "Clotho",
     "description" : "<blockquote><p>This is what will ultimately be the demo trail. Let's put a video here or something.</p><p><small>Maxwell Bates</small></p></blockquote>",
 
     "contents" : [
@@ -72,14 +71,14 @@
             "pages" : [
                 {
                     "title" : "Restriction Digests",
-                    "icon" : "video",
+                    "icon" : "exercise",
                     "video" : "https://www.youtube.com/watch?v=JruotWQmZxg",
                     "template" : "/partials/trails/clotho-intro/RestrictionDigests.html",
                     "mixin" : "/partials/trails/clotho-intro/RestrictionDigests.js"
                 },
                 {
                     "title" : "Ligation",
-                    "icon" : "video",
+                    "icon" : "exercise",
                     "video" : {
                         "id" : "https://www.youtube.com/watch?v=ytHETbIjBV4",
                         "params" : {
@@ -92,7 +91,7 @@
                 },
                 {
                     "title" : "PCR",
-                    "icon" : "video",
+                    "icon" : "exercise",
                     "video" : "http://www.youtube.com/watch?v=20a-mp4YXRQ",
                     "template" : "/partials/trails/clotho-intro/PCR.html",
                     "mixin" : "/partials/trails/clotho-intro/PCR.js"
@@ -104,18 +103,15 @@
             "pages" : [
                 {
                     "title" : "Examining",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=JruotWQmZxg"
+                    "icon" : "eye",
+                    "template" : "/partials/trails/clotho-intro/examining.html",
+                    "mixin" : "/partials/trails/clotho-intro/examining.js"
                 },
                 {
                     "title" : "Simulation",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=ytHETbIjBV4"
-                },
-                {
-                    "title" : "Writing",
-                    "icon" : "video",
-                    "video" : "https://www.youtube.com/watch?v=2KoLnIwoZKU"
+                    "icon" : "eye",
+                    "template" : "/partials/trails/clotho-intro/simulation.html",
+                    "mixin" : "/partials/trails/clotho-intro/simulation.js"
                 }
             ]
         }

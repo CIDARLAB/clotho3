@@ -439,7 +439,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
         console.log('next is: ' + newpos);
 
-        //todo - force this to run
         $scope.activate(newpos);
     };
 
@@ -459,7 +458,6 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             return;
         }
 
-        //todo - force this to run - as in next()
         $scope.activate(newpos);
     };
 

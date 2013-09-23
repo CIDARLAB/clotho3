@@ -136,24 +136,28 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
         if (!query)
             query = display.query;
 
-        //console.log(query);
+        /*
+        console.log(query);
+         console.log(display.queryHistory);
+         console.log(log.entries)
+         */
 
         if (!!query) {
             var submission = {class : 'info', from : 'client', text: query, timestamp : Date.now()};
             display.queryHistory.push(submission);
-            Clotho.submit(query).then(function(result){
+
+            //display.autocomplete = false;
+            display.undetail();
+
+            return Clotho.submit(query).then(function(result){
                 ClientAPI.say(submission);
                 display.query = '';
                 ClientAPI.say({text: result || 'Command received'});
 
                 console.log(log.entries);
             });
-            //display.autocomplete = false;
-            display.undetail();
-        }
 
-        console.log(display.queryHistory);
-        console.log(log.entries)
+        }
     };
 
     /****** listeners *****/

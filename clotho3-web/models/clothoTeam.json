@@ -1,6 +1,6 @@
 [
     {
-        "schema": "LabPerson",
+        "schema": "ClothoTeam",
         "id": "523ca94ac2e647abe23c1fa0",
         "title": "Web App Developer",
         "isManagement": "",
@@ -15,7 +15,7 @@
         "currentLocation": "Berkeley"
     },
     {
-        "schema": "LabPerson",
+        "schema": "ClothoTeam",
         "id": "523cb83ac2e647abe23c1fa1",
         "title": "Server Developer",
         "isManagement": "",
@@ -26,7 +26,7 @@
         "currentLocation": "Boston University"
     },
     {
-        "schema": "LabPerson",
+        "schema": "ClothoTeam",
         "id": "523cbb72c2e647abe23c1fa2",
         "icon": "/images/people/DougDensmore.png",
         "title": "Project Leader",
@@ -39,7 +39,7 @@
         "currentLocation": "Boston University"
     },
     {
-        "schema": "LabPerson",
+        "schema": "ClothoTeam",
         "id": "523cbba6c2e647abe23c1fa3",
         "icon": "/images/people/ChrisAnderson.jpg",
         "title": "Project Leader",

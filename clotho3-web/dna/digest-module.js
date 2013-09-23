@@ -3,6 +3,24 @@
 Application.Dna.service('Digest', ['DNA', function(DNA) {
 
     var enzymes = {
+        "BglII" : {
+            "name" : "BglII",
+            "match" : "agatct",
+            "cut" : "a^gatc_t",
+            "strand" : "",
+            "methylation" : false,
+            "overhang" : 4,
+            "type" : "II",
+            "subtype" : "S",
+            "notes" : {},
+            "buffer" : "",
+            "star activity" : false,
+            "comment" : "",
+            "rebase" : "http://rebase.neb.com/rebase/enz/BglII.html",
+            "personal" : {},
+            "citations" : {},
+            "ordering" : {}
+        },
         "BsaI" : {
             "name" : "BasI",
             "match" : "ccannnnntgg",

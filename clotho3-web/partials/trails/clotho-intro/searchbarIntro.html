@@ -1,11 +1,22 @@
 <div ng-controller="clothoIntro_searchbarIntroCtrl">
 
-    <p>Introducing the Command Bar</p>
+    <h3>Example Commands</h3>
 
-    <p>lets put some demo commands here, and how to form commands</p>
+    <p>You can declare variables in Javascript syntax: <code>var foo = 'bar'</code></p>
 
-    define a variable
+    <button class="btn btn-info btn-large" ng-click="defineVariable()"><i class=" icon-white icon-eye-open"></i> Define a Variable</button>
 
-    query over people
+    <hr>
+
+    <p>We'll go into running Clotho functions in more depth on the next page...</p>
+
+    <button class="btn btn-info btn-large" ng-click="runFunction()"><i class="icon-white icon-eye-open"></i> Run a Function</button>
+
+
+    <hr>
+
+    <p>You can run complex queries over all objects in your database, using <code>clotho.query(myParams)</code>, where <code>myParams</code> is an object with key-value filters</p>
+
+    <button class="btn btn-info btn-large" ng-click="queryClothoTeam()"><i class="icon-white icon-eye-open"></i> Query for Clotho Developers</button>
 
 </div>

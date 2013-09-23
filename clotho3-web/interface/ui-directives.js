@@ -115,6 +115,7 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
 ***********************/
 
 // todo - handle val() if present, default to text() --- has been done in another directive
+//note - can just use ng-bind when not editing
 
 Application.Interface.directive('contenteditable', [function() {
 
@@ -123,13 +124,14 @@ Application.Interface.directive('contenteditable', [function() {
         link: function(scope, element, attrs, ngModel) {
             if(!ngModel) return; // do nothing if no ng-model
 
+            /*
             //listen to model changes
             scope.$watch(function() {
                 return ngModel.$modelValue
             }, function() {
-                console.log('render called: ', ngModel, ngModel.$modelValue,  ngModel.$viewValue);
                 ngModel.$render();
             });
+             */
 
             // Specify how UI should be updated
             ngModel.$render = function() {
