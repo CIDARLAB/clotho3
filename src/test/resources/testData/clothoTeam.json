@@ -2,6 +2,7 @@
     {
         "schema": "LabPerson",
         "id": "523ca94ac2e647abe23c1fa0",
+        "icon": "/images/people/MaxwellBates.png",
         "title": "Web App Developer",
         "isManagement": "",
         "nickName": "Max",

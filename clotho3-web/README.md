@@ -53,7 +53,7 @@ QUIZZES
     - gradeQuiz
         - case insensitive
         - JSON stringify results
-        - use for function testing for equality
+        - use for function tests
 
 
 CONSTRUCTION FILES

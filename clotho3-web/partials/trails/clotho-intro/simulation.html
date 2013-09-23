@@ -1,0 +1,16 @@
+<div ng-controller="clothoIntro_SimulationCtrl">
+    <blockquote><p>Now, let's simulate running the Construction File.</p></blockquote>
+
+    <p>Fields generated dynamically by the construction file are in blue in the table:</p>
+
+    <div construction-dictionary-view ng-model="constructionFile.dictionary"></div>
+
+    <div class="row-fluid">
+        <div ng-repeat="step in constructionFile.steps" class="row-fluid">
+            <div construction-step="step.fields" ng-model="step"
+                 construction-dictionary="constructionFile.dictionary"></div>
+        </div>
+    </div>
+
+
+</div>

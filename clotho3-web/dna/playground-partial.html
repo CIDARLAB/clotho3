@@ -3,12 +3,14 @@
     <div class="row">
 
         <div class="span12">
-            <div construction-dictionary-view ng-model="constructionFile.dictionary"></div>
+
         </div>
 
         <pre class="pre-scrollable span12">{{ constructionFile | json }}</pre>
 
         <form name="constructionUI" class="offset1 span10">
+            <div construction-dictionary-view ng-model="constructionFile.dictionary"></div>
+
             <div class="row-fluid">
                 <div ng-repeat="step in constructionFile.steps" class="row-fluid">
                     <div construction-step="step.fields" ng-model="step" construction-dictionary="constructionFile.dictionary"></div>

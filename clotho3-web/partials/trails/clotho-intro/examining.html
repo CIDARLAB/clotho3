@@ -1,0 +1,17 @@
+<div ng-controller="clothoIntro_ExaminingCtrl">
+    <blockquote><p>Construction Files define a series of steps which constitute a basic cloning experiment.</p>
+    </blockquote>
+
+    <p>A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.</p>
+
+    <p>Let's go through the process described above, ligating GFP into a backbone called pUC19.</p>
+
+    <hr>
+
+    <div class="row-fluid">
+        <div ng-repeat="step in constructionFile.steps" class="row-fluid">
+            <div construction-step="step.fields" ng-model="step"
+                 construction-dictionary="constructionFile.dictionary"></div>
+        </div>
+    </div>
+</div>

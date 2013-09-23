@@ -114,16 +114,18 @@ Application.Dna.directive('constructionDictionaryView', [function() {
         scope : {
             dict : '=ngModel'
         },
-        template : '<table class="table table-bordered table-striped table-condensed">' +
+        template : '<div style="overflow: scroll">' +
+            '<table class="table table-bordered table-condensed constructionDictionary">' +
             '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
             '<tbody>' +
-                '<tr ng-repeat="(key, value) in dict" ng-class="{\'info\' : value.computed}">' +
+                '<tr ng-repeat="(key, value) in dict" ng-class="{\'computed\' : value.computed}">' +
                 '<td> <code ng-bind="key"></code> </td>' +
-                '<td ng-bind="(value.value) | json"></td>' +
+                '<td ng-bind="(value.value) | json" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></td>' +
                 '</tr>' +
-                '<tr><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
+                //'<tr><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
             '</tbody>' +
-            '</table>',
+            '</table>' +
+            '</div>',
         link : function(scope, element, attrs, ngModel) {
 
             scope.$watch('dict', function(newval) {
