@@ -176,8 +176,8 @@ construction
     margin: 0 0 8px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     color: #3a87ad;
-    border: 3px solid #bce8f1;
-    background-color: #d9edf7;
+    border: 3px solid #d9edf7;
+    background-color: #fff;
     border-radius: 8px;
 }
 
@@ -198,7 +198,7 @@ construction
     top: -11px;
     left: 50%;
     margin-left: -11px;
-    border-bottom-color: #bce8f1;
+    border-bottom-color: #d9edf7;
     border-top-width: 0;
 }
 
@@ -216,12 +216,11 @@ construction
     font-size: 14px;
     font-weight: bold;
     color: #8D9094;
-    background: #ffffff;
-    border-radius: 8px 8px 0 0 ;
 }
 
 .constructionStep .steps {
     padding: 10px 15px 0;
+    background: #d9edf7;
 }
 
 .constructionStep .output {
@@ -229,8 +228,6 @@ construction
     font-size: 14px;
     font-weight: bold;
     color: #8D9094;
-    background: #ffffff;
-    border-radius: 0 0 8px 8px;
 }
 
 

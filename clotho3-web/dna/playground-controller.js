@@ -125,7 +125,7 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
     });
 
 
-    $scope.constructionFile = $http.get('/models/construction_gfp.json').then(function(data) { return data.data });
+    $scope.constructionFile = $http.get('/models/construction_vio.json').then(function(data) { return data.data });
 
     $scope.$watch('constructionFile', function (newval) {
         if (!newval) return;

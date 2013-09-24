@@ -1,0 +1,7 @@
+{
+    "schema": "Function",
+    "id": "5240fcccc2e6fa3eccdcf944",
+    "name": "clothoLoadTest",
+    "code": "function() {\nclotho.load('DNA');\nreturn DNA.revcomp('acgtacg');\n};",
+    "tests":[{"args":[],"output":{"value":"cgtacgt","type":""}}]
+}

@@ -30,7 +30,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
 
         var stepsChain = $q.defer();
-        angular.forEach(file.steps, function(step) {
+        angular.forEach(file.steps, function(step, stepIndex) {
 
             //run function next in chain (so dict populated)
             stepsChain.promise.then(function() {
@@ -53,12 +53,21 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                         var parsedInput = (angular.isArray(input)) ? [] : {};
                         angular.forEach(input, function(child) {
                             //todo - handle object scenario
-                            parsedInput.push(($parse(child)(dict)).value);
+
+
+                            var parsed = $parse(child)(dict);
+                            //for non-dictionary values, or object defined
+                            //e.g. blah.value[0]
+                            //todo - should define as blah[0], omit 'value'
+                            parsed = parsed.value || parsed;
+                            parsedInput.push(parsed);
                         });
                         console.log(parsedInput);
                         inputs.push(parsedInput);
                     } else {
-                        parsedInput = ($parse(input)(dict)).value;
+                        parsedInput = $parse(input)(dict);
+                        //for non-dictionary values e.g. a boolean or number
+                        parsedInput = parsedInput.value || parsedInput;
                         console.log(parsedInput);
                         inputs.push(parsedInput);
                     }
@@ -79,7 +88,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                 //use apply to match format on server
                 var result = $parse(step.reaction)(dnaModules).apply(null, inputs);
                 console.log('result of '+step.reaction+':', result);
-                dict[step.output] = {computed : true, value : result};
+                dict[step.output] = {computed : true, stepNum: stepIndex, value : result};
 
                 return stepDeferred.promise;
             });
@@ -107,6 +116,16 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
 }]);
 
+//todo - returns array, need to maintain keys
+//future - extend to any type of object
+Application.Dna.filter('orderDictionary', function() {
+    return function(dictionary, valueProp) {
+        return _.sortBy(dictionary, function(value, key) {
+            return value.valueProp;
+        })
+    }
+});
+
 Application.Dna.directive('constructionDictionaryView', [function() {
     return {
         restrict : 'EA',
@@ -119,19 +138,14 @@ Application.Dna.directive('constructionDictionaryView', [function() {
             '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
             '<tbody>' +
                 '<tr ng-repeat="(key, value) in dict" ng-class="{\'computed\' : value.computed}">' +
-                '<td> <code ng-bind="key"></code> </td>' +
-                '<td ng-bind="(value.value) | json" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></td>' +
+                '<td> <code ng-bind="key | json"></code> </td>' +
+                '<td ng-bind="(value) | json" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></td>' +
                 '</tr>' +
                 //'<tr><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
             '</tbody>' +
             '</table>' +
             '</div>',
         link : function(scope, element, attrs, ngModel) {
-
-            scope.$watch('dict', function(newval) {
-                console.log(newval);
-                ngModel.$render()
-            }, true);
 
             scope.addTerm = function() {
                 angular.extend(scope.dict, {"" : ""});
@@ -253,7 +267,7 @@ Application.Dna.directive('constructionFieldArray', ['$parse', function($parse) 
     }
 }]);
 
-Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', function($parse, $compile, $http) {
+Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', '$templateCache', function($parse, $compile, $http, $templateCache) {
     return {
         restrict : "EA",
         require: "ngModel",
@@ -308,11 +322,12 @@ Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', fu
                     }
                     else {
                     //try to get the template for the reaction
-                        $http.get('/dna/construction/steps/' + scope.step.reaction + '.html')
+                        $http.get('/dna/construction/steps/' + scope.step.reaction + '.html', {cache : $templateCache})
                         .then(function(data) {
                             //works - great
-                            console.log(data.data);
-                            console.log(scope);
+                            //console.log('got template for ' + scope.step.reaction + '\n', data.data)
+                            //console.log(data.data);
+                            //console.log(scope);
                             var fieldsTemplate = $compile(data.data)(scope);
                             template.find('stepFields').append(fieldsTemplate);
 

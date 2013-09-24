@@ -1,0 +1,6 @@
+{   "schema": "Function",
+    "id": "5240f6a0c2e6fa3eccdcf943",
+    "name": "consoleTest",
+    "code": "function() { console.log('log testing'); return 'This worked!' };",
+    "tests":[{"args":[],"output":{"value":"This worked!","type":"VALUE"}}]
+}

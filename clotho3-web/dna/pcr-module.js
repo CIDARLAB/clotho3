@@ -68,6 +68,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         //given match, returns array of ends in this that match
         findMatchingEnds : function(match) {
             return _.filter(this.ends, function(end, index) {
+                console.log(end.match, match, this.endsMatch(end.match, match));
                 return this.endsMatch(end.match, match);
             }, this);
         },
@@ -102,7 +103,8 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
         canMatchFrag : function (otherFrag) {
             return !!(_.find(otherFrag.endMatches, function (otherMatch) {
-                return !!(this.findMatchingEnds(otherMatch)).length;
+                console.log(otherMatch, this.canMatch(otherMatch));
+                return this.canMatch(otherMatch);
             }, this) || []).length;
         },
 
@@ -149,6 +151,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         },
         findFirstMatch : function (otherFrags) {
             return _.find(otherFrags, function(otherFrag, index) {
+                this !== otherFrag && console.log(this, otherFrag); //testing
                 return ((this !== otherFrag) && (this.canMatch(otherFrag)))
             }, this)
         },
@@ -179,9 +182,9 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
                 thisEnd = this.ends[thisEndInd],
                 otherEnd = otherFrag.ends[otherEndInd];
             
-            console.log('joinFragment - this end and other end:', thisEnd, otherEnd);
+            //console.log('joinFragment - this end and other end:', thisEnd, otherEnd);
 
-            console.log('before orienting', thisEndInd, otherEndInd);
+            //console.log('before orienting', thisEndInd, otherEndInd);
 
 
             //todo - own function, standard return to avoid all these variables
@@ -201,7 +204,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
                 }
             }
 
-            console.log('after orienting', thisEndInd, otherEndInd);
+            //console.log('after orienting', thisEndInd, otherEndInd);
 
             var firstFrag = (thisEnd.index == 0) ? otherFrag : this,
                 firstEnd = (thisEnd.index == 0) ? otherEnd : thisEnd,
@@ -563,6 +566,12 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
 
 
+    /**************
+     ligation
+     **************/
+
+
+
     /**
      * @description Ligates two fragments. Optionally, shows alignment of ligation
      * @param fragments {Array} NOTE Currently only two
@@ -723,8 +732,9 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
     };
 
 
-    //todo - incorporate into Fragment.joinFragment
 
+    //DEPRECATED
+    //todo - incorporate into Fragment.joinFragment
     var joinTwoFragments = function (fragPair, align, showHTML, showMarks) {
 
         if (!fragPair)
@@ -765,48 +775,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
         return finalText
     };
-    /**
-     *
-     * @param {Array} fragments Array of Strings WITH cut marks
-     */
-    //todo - add options -- HTML & alignment
-    var ligate = function(fragments) {
-        fragments = parseFragments(fragments, true);
-        console.log('ligate starting -- fragments:', fragments);
 
-        _.each(fragments, function(outerFrag, outerInd) {
-
-            var toJoinIndex = outerFrag.findFirstMatchIndex(fragments);
-
-            if (toJoinIndex >= 0) {
-                //testing
-                console.log('outer frag at index ' + outerInd, outerFrag);
-                console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
-
-                outerFrag.joinFragment(fragments[toJoinIndex]);
-
-                console.log('outer frag is now:', outerFrag);
-                fragments.splice(toJoinIndex, 1)
-            }
-        });
-
-        _.each(fragments, function(fragment) {
-            fragment.circularize();
-        });
-
-        console.log('LIGATE FINAL:', fragments);
-
-        if (fragments.length == 1)
-            return fragments[0].sequence;
-        else
-            return _.pluck(fragments, 'sequence');
-    };
-
-
-
-    /**************
-     ligation
-     **************/
 
     //given strings, creates fragments with terminal ends
     //shouldTrim --- for internal cuts,
@@ -816,6 +785,10 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
         var parsedFrags = [];
         _.each(fragments, function(frag, indout) {
+
+            //e.g. if pass in digest array directly, assume sorted and take first
+            if (_.isArray(frag))
+                frag = frag[0];
 
             //nonterminal marks
             if ((Digest.findOverhangs(frag, true)).length) {
@@ -835,6 +808,44 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         });
 
         return parsedFrags;
+    };
+
+
+    /**
+     *
+     * @param {Array} fragments Array of Strings WITH cut marks
+     */
+    //todo - add options -- HTML & alignment
+    var ligate = function(fragments) {
+        fragments = parseFragments(fragments, true);
+        console.log('ligate starting -- fragments:', fragments);
+
+        _.each(fragments, function(outerFrag, outerInd) {
+
+            var toJoinIndex = outerFrag.findFirstMatchIndex(fragments);
+
+            //testing
+            console.log('outer frag at index ' + outerInd, outerFrag);
+            console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
+
+            if (toJoinIndex >= 0) {
+                outerFrag.joinFragment(fragments[toJoinIndex]);
+
+                console.log('outer frag is now:', outerFrag, "\n\n\n\n\n");
+                fragments.splice(toJoinIndex, 1)
+            }
+        });
+
+        _.each(fragments, function(fragment) {
+            fragment.circularize();
+        });
+
+        console.log('LIGATE FINAL:', fragments);
+
+        if (fragments.length == 1)
+            return fragments[0].sequence;
+        else
+            return _.pluck(fragments, 'sequence');
     };
 
     return {
