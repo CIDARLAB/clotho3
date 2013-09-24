@@ -53,7 +53,7 @@
         },
         {
             "reaction" : "PCR.ligate",
-            "input" : [["VioAdig", "VioBdig", "VioEdig", "VioDdig", "VioCdig", "filler", "vectordig"]],
+            "input" : [["VioAdig", "VioBdig", "VioEdig.value[2]", "VioDdig", "VioCdig", "filler", "vectordig"]],
             "output" : "final"
         }
     ]

@@ -68,7 +68,6 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         //given match, returns array of ends in this that match
         findMatchingEnds : function(match) {
             return _.filter(this.ends, function(end, index) {
-                console.log(end.match, match, this.endsMatch(end.match, match));
                 return this.endsMatch(end.match, match);
             }, this);
         },
@@ -103,7 +102,6 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
         canMatchFrag : function (otherFrag) {
             return !!(_.find(otherFrag.endMatches, function (otherMatch) {
-                console.log(otherMatch, this.canMatch(otherMatch));
                 return this.canMatch(otherMatch);
             }, this) || []).length;
         },
@@ -820,21 +818,24 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         fragments = parseFragments(fragments, true);
         console.log('ligate starting -- fragments:', fragments);
 
-        _.each(fragments, function(outerFrag, outerInd) {
+        //use for loop so can decrement counter
+        for (var outerInd = 0; outerInd < fragments.length; outerInd++) {
+            var outerFrag = fragments[outerInd];
 
             var toJoinIndex = outerFrag.findFirstMatchIndex(fragments);
 
-            //testing
-            console.log('outer frag at index ' + outerInd, outerFrag);
-            console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
-
             if (toJoinIndex >= 0) {
+                //testing
+                console.log('outer frag at index ' + outerInd, outerFrag);
+                console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
+
                 outerFrag.joinFragment(fragments[toJoinIndex]);
 
                 console.log('outer frag is now:', outerFrag, "\n\n\n\n\n");
-                fragments.splice(toJoinIndex, 1)
+                fragments.splice(toJoinIndex, 1);
+                outerInd--;
             }
-        });
+        }
 
         _.each(fragments, function(fragment) {
             fragment.circularize();
