@@ -8,9 +8,9 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
     dnaModules.Digest = Digest;
     dnaModules.PCR = PCR;
 
-    var process = function(file) {
+    var process = function(file, returnDictionary) {
         //don't alter the construction file's dictionary
-        var dict = file.dictionary;
+        var dict = angular.copy(file.dictionary);
 
         //process the dictionary, make all objects
         var dictPromises = {};
@@ -102,8 +102,8 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
         //at the end
         return stepsChain.promise.then(function() {
-            console.log('final: ' + dict.final, dict);
-            return dict.final.value
+            console.log('final result: ' + dict.final, dict);
+            return (!!returnDictionary) ? dict : dict.final.value;
         });
 
 
@@ -126,20 +126,32 @@ Application.Dna.filter('orderDictionary', function() {
     }
 });
 
+//todo - need to pass in index, filter so only show options up to that step
+Application.Dna.filter('stepCheck', function() {
+    return function(input, index) {
+        /*return _.pick(input, function(value, key) {
+            console.log(key, index, value);
+            return value.computed == false || value.stepNum <= index;
+        });*/
+        return input
+    }
+});
+
 Application.Dna.directive('constructionDictionaryView', [function() {
     return {
         restrict : 'EA',
         require : 'ngModel',
         scope : {
-            dict : '=ngModel'
+            dict : '=ngModel',
+            editable : '=constructionEditable'
         },
         template : '<div style="overflow: scroll">' +
             '<table class="table table-bordered table-condensed constructionDictionary">' +
             '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
             '<tbody>' +
                 '<tr ng-repeat="(key, value) in dict" ng-class="{\'computed\' : value.computed}">' +
-                '<td> <code ng-bind="key | json"></code> </td>' +
-                '<td ng-bind="(value) | json" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></td>' +
+                '<td> <code contenteditable="{{ !!editable }}" ng-bind="key"></code> </td>' +
+                '<td contenteditable="{{ !!editable && !value.computed}}" ng-bind="value.value | json" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></td>' +
                 '</tr>' +
                 //'<tr><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
             '</tbody>' +
@@ -149,117 +161,81 @@ Application.Dna.directive('constructionDictionaryView', [function() {
 
             scope.addTerm = function() {
                 angular.extend(scope.dict, {"" : ""});
-            }
+            };
+
+            //deep watch
+            scope.$watch('dict', function() {
+                console.log('change to dictionary');
+                ngModel.$render();
+            }, true)
         }
     }
 }]);
 
-Application.Dna.directive('constructionField', ['$parse', function($parse) {
+Application.Dna.directive('constructionField', ['$compile', '$filter', function($compile, $filter) {
     return {
         restrict : "EA",
         require: "ngModel",
-        replace: true,
         scope: {
             fieldName : '@constructionField',
             model : '=ngModel',
-            dict : '=constructionDictionary'
+            dict : '=?constructionDictionary',
+            options : '=constructionOptions',
+            type : '@constructionType'
         },
-        template: '<div class="control-group span4">' +
-            '<label class="control-label">{{ fieldName }}</label>' +
-                '<div class="controls">' +
-                    '<select class="span12" placeholder="{{fieldName}}" ng-model="model" ng-options="key as key for (key,val) in dict" disabled></select>' +
-                '</div>' +
-            '</div>',
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, ngModel) {
-                    /*
-                    console.log(scope);
-                    console.log('model before: ' + scope.model);
-                    scope.model= $parse('step.' + scope.model)(scope);
-                    console.log('model :' + scope.model);
-                    */
-                },
-                post: function postLink(scope, element, attrs, ngModel) {
-                }
-            }
-        }
-    }
-}]);
 
-Application.Dna.directive('constructionFieldString', ['$parse', function($parse) {
-    return {
-        restrict : "EA",
-        require: "ngModel",
-        replace: true,
-        scope: {
-            fieldName : '@constructionFieldString',
-            model : '=ngModel'
-        },
-        template: '<div class="control-group span4" ng-class="{\'warning\' : hasInvalidItem }">' +
-            '<label class="control-label">{{ fieldName }}</label>' +
-            '<div class="controls">' +
-            '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" disabled/>' +
-            '</div>' +
-            '</div>',
-        link : function(scope, element, attrs) {
-            scope.hasInvalidItem = false;
-            scope.checkInput = function() {
-                scope.hasInvalidItem = !!scope.dict[scope.model];
-            };
-        }
-    }
-}]);
+                    var template = angular.element('<div class="control-group">' +
+                        '<label class="control-label">{{ fieldName }}</label>' +
+                        '<div class="controls">' +
+                        '<constructionFieldInput></constructionFieldInput>' +
+                        '</div>' +
+                        '</div>');
 
-Application.Dna.directive('constructionFieldBoolean', ['$parse', function($parse) {
-    return {
-        restrict : "EA",
-        require: "ngModel",
-        replace: true,
-        scope: {
-            fieldName : '@constructionFieldBoolean',
-            model : '=ngModel'
-        },
-        template: '<div class="control-group span4">' +
-            '<label class="control-label">{{ fieldName }}</label>' +
-            '<div class="controls">' +
-            '<input class="span12" type="checkbox" ng-model="model" ng-true-value="true" ng-false-value="false" disabled/>' +
-            '</div>' +
-            '</div>',
-        link : function(scope, element, attrs) {}
-    }
-}]);
+                    template.find('constructionFieldInput').html(selectTemplate(scope.type));
 
-Application.Dna.directive('constructionFieldArray', ['$parse', function($parse) {
-    return {
-        restrict : "EA",
-        require: "ngModel",
-        replace: true,
-        scope: {
-            fieldName : '@constructionFieldArray',
-            model : '=ngModel',
-            dict : '=constructionDictionary'
-        },
-        template: '<div class="control-group span4" ng-class="{\'error\' : hasInvalidItem }">' +
-            '<label class="control-label">{{ fieldName }}</label>' +
-            '<div class="controls">' +
-            '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-list ng-change="checkInput()" disabled/>' +
-            '</div>' +
-            '</div>',
-        compile: function compile(tElement, tAttrs, transclude) {
-            return {
-                pre: function preLink(scope, element, attrs, ngModel) {
+                    function selectTemplate(type) {
+                        switch (angular.lowercase(type)) {
+                            case 'value' : {
+                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" ng-disabled="!options.editable"/>';
+                            }
+                            case 'boolean' : {
+                                return '<input class="span12" type="checkbox" ng-model="model" ng-true-value="true" ng-false-value="false" ng-disabled="!options.editable"/>';
+                            }
+                            case 'array' : {
+                                if (angular.isString(scope.model))
+                                    scope.model = [scope.model];
+                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-list ng-change="checkInput()" ng-disabled="!options.editable"/>';
+                            }
+                            default : {
+                                return '<select class="span12" placeholder="{{fieldName}}" ng-model="model" ng-options="key as key for (key,val) in dict | stepCheck:options.stepIndex" ng-disabled="!options.editable"></select>'
+                            }
+                        }
+                    }
+
+                    element.html($compile(template)(scope));
+
                 },
                 post: function postLink(scope, element, attrs, ngModel) {
                     scope.hasInvalidItem = false;
                     scope.checkInput = function() {
-                        var checkArrayRound = false;
-                        angular.forEach(scope.model, function(item) {
-                            if (!scope.dict[item]) {
-                                checkArrayRound = true;
-                            }
-                        });
-                        scope.hasInvalidItem = !!(checkArrayRound);
+                        
+                        var dictOptions = $filter('stepCheck')(scope.dict, scope.options.stepIndex);
+                        console.log(dictOptions);
+                        
+                        if (scope.type == 'array') {
+                            var checkArrayRound = false;
+                            angular.forEach(scope.model, function(item) {
+                                if (!scope.dict[item]) {
+                                    checkArrayRound = true;
+                                }
+                            });
+                            scope.hasInvalidItem = !!(checkArrayRound);
+                        } else {
+                            scope.hasInvalidItem = !!scope.dict[scope.model];
+                        }
                     };
                 }
             }
@@ -274,11 +250,18 @@ Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', '$
         scope: {
             step : '=ngModel',
             dict : '=constructionDictionary',
+            index : '=constructionIndex',
+            editable : '@constructionEditable',
             fields : '=constructionStep'
         },
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, ngModel) {
+
+                    scope.options = {
+                        "editable" : scope.editable,
+                        "stepIndex" : scope.index
+                    };
 
                     var template = angular.element('<div class="constructionStep clearfix">'+
                         '<div class="reaction"><i ng-class="{\'icon-resize-full\' : !showReaction, \'icon-resize-small\' : showReaction }" ng-click="toggleReaction()"></i> {{ step.reaction }}</div>'+
@@ -295,20 +278,8 @@ Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', '$
 
 
                     function generateConstructionField (type, name, model) {
-                        switch(angular.lowercase(type)) {
-                            case 'value' : {
-                                return '<div construction-field-string="'+name+'" ng-model="'+model+'"></div>';
-                            }
-                            case 'boolean' : {
-                                return '<div construction-field-boolean="'+name+'" ng-model="'+model+'"></div>';
-                            }
-                            case 'array' : {
-                                return '<div construction-field-array="'+name+'" ng-model="'+model+'" construction-dictionary="dict"></div>';
-                            }
-                            default : {
-                                return '<div construction-field="'+name+'" ng-model="'+model+'" construction-dictionary="dict"></div>';
-                            }
-                        }
+
+                        return '<div class="span4" construction-field="'+name+'" construction-type="'+type+'" construction-options="options" construction-dictionary="dict" ng-model="'+model+'" ></div>';
                     }
 
                     //if pass in scope.fields, assume want to overrun templates

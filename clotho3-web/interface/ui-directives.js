@@ -114,6 +114,7 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
  * HTML5 EXTENSIONS
 ***********************/
 
+//rewrite to be like ng-bind but editable
 // todo - handle val() if present, default to text() --- has been done in another directive
 //note - can just use ng-bind when not editing
 
@@ -124,18 +125,19 @@ Application.Interface.directive('contenteditable', [function() {
         link: function(scope, element, attrs, ngModel) {
             if(!ngModel) return; // do nothing if no ng-model
 
-            /*
+
             //listen to model changes
             scope.$watch(function() {
                 return ngModel.$modelValue
             }, function() {
                 ngModel.$render();
             });
-             */
+
 
             // Specify how UI should be updated
             ngModel.$render = function() {
-                element.html(ngModel.$viewValue || '');
+                console.log(ngModel);
+                element.html(ngModel.$modelValue || '');
             };
 
             // Listen for change events to enable binding
