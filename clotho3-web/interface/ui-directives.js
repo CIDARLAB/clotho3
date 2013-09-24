@@ -118,47 +118,81 @@ Application.Interface.directive('ngBlur', ['$parse', function($parse) {
 // todo - handle val() if present, default to text() --- has been done in another directive
 //note - can just use ng-bind when not editing
 
-Application.Interface.directive('contenteditable', [function() {
+Application.Interface.directive('contenteditable', ['$timeout', function($timeout) {
 
     return {
         require: '?ngModel',
         link: function(scope, element, attrs, ngModel) {
+
+            //NGMODEL VERSION
             if(!ngModel) return; // do nothing if no ng-model
-
-
-            //listen to model changes
-            scope.$watch(function() {
-                return ngModel.$modelValue
-            }, function() {
-                ngModel.$render();
-            });
-
 
             // Specify how UI should be updated
             ngModel.$render = function() {
-                console.log(ngModel);
-                element.html(ngModel.$modelValue || '');
+                //console.log(ngModel);
+                var toShow = ngModel.$modelValue || '';
+                if (angular.isObject(toShow)) {
+                    toShow = JSON.stringify(toShow)
+                }
+                element.html(toShow);
             };
 
+
+             // Write data to the model
+             function read() {
+                 var text = element.text();
+                 // When we clear the content editable the browser leaves a <br> behind
+                 // Unless no-strip-br attribute is provided then we strip this out
+                 if( !attrs.noStripBr && text == '<br>' ) {
+                 text = '';
+                 }
+                 if (text != ngModel.$modelValue) {
+                    //console.log('new text: ', text);
+                    ngModel.$setViewValue(text);
+                 }
+                 if (text === '') {
+                     // the cursor disappears if the contents is empty so refocus
+                     $timeout(function(){
+                         element.blur();
+                         element.focus();
+                     })
+                 }
+             }
+
+
+
+/*
+
+            //NGBIND VERSION
+
+            //taken from ngBind
+            element.addClass('ng-binding').data('$binding', attrs.ngBind);
+            scope.$watch(attrs.ngBind, function ngBindWatchAction(value) {
+                console.log(value);
+                element.text(value == undefined ? '' : value);
+            });
+
+            function read() {
+                //element.data('$binding', element.text());
+                //attrs.$set('ngBind', element.text());
+                console.log(element.data());
+                console.log(attrs.ngBind);
+            }
+
+*/
+
+
             // Listen for change events to enable binding
-            element.on('blur keyup change', function() {
+            element.on('input', function() {
                 scope.$apply(read);
             });
-            read(); // initialize
 
-            // Write data to the model
-            function read() {
-                var html = element.html();
-                // When we clear the content editable the browser leaves a <br> behind
-                // Unless no-strip-br attribute is provided then we strip this out
-                if( !attrs.noStripBr && html == '<br>' ) {
-                    html = '';
-                }
-                ngModel.$setViewValue(html);
-            }
+            //read(); // initialize
+
         }
     };
 }]);
+
 
 
 /***********************
@@ -278,7 +312,6 @@ Application.Interface.directive('jqSortable', [function() {
         }
     }
 }]);
-
 
 
 Application.Interface.service('jqDragDrop', ['$timeout', '$parse', function($timeout, $parse) {

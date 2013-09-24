@@ -49,14 +49,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-- WRITE CODE TO STEPHANIE
-
-- get GG cloning to work
-
-
-
-
-NEED
+NEED FROM STEPHANIE
 
 - clotho feedback - class muted
 - console object - log = noop
@@ -66,14 +59,14 @@ NEED
 
 
 
+CHANGES TO MAKE
 
 - make construction file editable
 - angular filter to make long string like "asdasdsadn\n.....\nasdasdasdad"
     - use in tooltip
-- construciton -- make directives dynamic i.e. array if is array, etc.
 - step through using steps
 - tool quiz ---- show hint
-- move all quizzes to directive (tools, scripting)
+- move all quizzes to directive (clotho intro: tools, scripting)
 - activity log clickOutside
 
 

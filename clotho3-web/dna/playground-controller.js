@@ -125,12 +125,27 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
     });
 
 
-    $scope.constructionFile = $http.get('/models/construction_gfp.json').then(function(data) { return data.data });
+    $http.get('/models/construction_vio.json').then(function(data) {
+        $scope.constructionFile = data.data
+    });
 
-    $scope.$watch('constructionFile', function (newval) {
+    $scope.$watch('constructionFile', function (newval, oldval) {
         if (!newval) return;
-        $scope.constructionFileProductDict = Construction.process(newval, true);
-        $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
+        Construction.process(newval, true).then(function(result) {
+            $scope.constructionFileProductDict = result
+            $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
+        });
     }, true);
+
+    $scope.reprocess = function(dictionary) {
+        console.log(dictionary);
+        $scope.constructionFile.dictionary = dictionary;
+        console.log($scope.constructionFile);
+
+        Construction.process($scope.constructionFile, true).then(function(result) {
+            $scope.constructionFileProductDict = result
+            $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
+        });
+    }
 
 }]);

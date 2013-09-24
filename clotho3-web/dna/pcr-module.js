@@ -149,7 +149,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         },
         findFirstMatch : function (otherFrags) {
             return _.find(otherFrags, function(otherFrag, index) {
-                this !== otherFrag && console.log(this, otherFrag); //testing
+                //this !== otherFrag && console.log(this, otherFrag); //testing
                 return ((this !== otherFrag) && (this.canMatch(otherFrag)))
             }, this)
         },
@@ -209,7 +209,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
                 secondFrag = (firstFrag === this) ? otherFrag : this,
                 secondEnd = (firstEnd === thisEnd) ? otherEnd : thisEnd;
 
-            console.log('first frag', firstFrag, 'first end', firstEnd, 'second frag', secondFrag, 'second end', secondEnd);
+            //console.log('first frag', firstFrag, 'first end', firstEnd, 'second frag', secondFrag, 'second end', secondEnd);
 
             //join
             //todo - options for html and cut marks etc.
@@ -218,7 +218,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
                 Digest.removeMarks(firstEnd.match) +
                 secondFrag.sequence.substring(secondEnd.index + secondEnd.match.length);
 
-            console.log(joined);
+            //console.log(joined);
 
 
             //note - can't leave in cut marks and process -- just use directive tags
@@ -816,7 +816,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
     //todo - add options -- HTML & alignment
     var ligate = function(fragments) {
         fragments = parseFragments(fragments, true);
-        console.log('ligate starting -- fragments:', fragments);
+        //console.log('ligate starting -- fragments:', fragments);
 
         //use for loop so can decrement counter
         for (var outerInd = 0; outerInd < fragments.length; outerInd++) {
@@ -826,12 +826,12 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
 
             if (toJoinIndex >= 0) {
                 //testing
-                console.log('outer frag at index ' + outerInd, outerFrag);
-                console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
+                //console.log('outer frag at index ' + outerInd, outerFrag);
+                //console.log('first match at index ' + toJoinIndex, fragments[toJoinIndex]);
 
                 outerFrag.joinFragment(fragments[toJoinIndex]);
 
-                console.log('outer frag is now:', outerFrag, "\n\n\n\n\n");
+                //console.log('outer frag is now:', outerFrag, "\n\n\n\n\n");
                 fragments.splice(toJoinIndex, 1);
                 outerInd--;
             }
@@ -841,7 +841,7 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
             fragment.circularize();
         });
 
-        console.log('LIGATE FINAL:', fragments);
+        //console.log('LIGATE FINAL:', fragments);
 
         if (fragments.length == 1)
             return fragments[0].sequence;

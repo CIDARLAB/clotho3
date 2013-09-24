@@ -724,6 +724,7 @@ Application.Interface.controller('VideoDialogController', ['$scope', 'dialog', '
  - see framework in references folder
 
  inspiration:
+ - https://github.com/akatov/angular-contenteditable/blob/master/angular-contenteditable.js
  - https://github.com/DrPheltRight/jquery-caret/blob/master/jquery.caret.js
  - http://plugins.jquery.com/caret/
  - https://code.google.com/p/rangyinputs/
