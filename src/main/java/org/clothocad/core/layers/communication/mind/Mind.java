@@ -211,6 +211,6 @@ public final class Mind
     }
     
     public Object invokeMethod(Module m, String methodName, List args, ScriptAPI api) throws NoSuchMethodException, ScriptException{
-        return getEngine().invoke(m, methodName, lastCommands, api);
+        return getEngine().invoke(m, methodName, args, api);
     }
 }

@@ -251,3 +251,46 @@ testThroughAsync("use lodash",
             deepEqual(data, [2,3,4]);
         });
 
+module("SynBERC demo issues - all through submit channel")
+
+testThroughAsync("console.log",
+        new Message("submit", "clotho.run('consoleTest',[])"),
+        function(data){
+            equal(data, 'This worked!');
+        });
+
+testThroughAsync("running module functions - revcomp",
+        new Message("submit", "clotho.run('DNA', 'revcomp', ['acgtac'])"),
+        function(data){
+            equal(data, 'gtacgt');
+        });
+
+testThroughAsync("running module functions - ligate",
+        new Message("submit", "clotho.run('PCR', 'ligate', ['aaaaaaaaaaA^CATG_', '^CATG_Tttggttggttgg'])"),
+        function(data){
+            equal(data, "aaaaaaaaaaACATGTttggttggttgg");
+        });
+
+testThroughAsync("loading functions - submit", 
+        new Message("submit", "var DNA = clotho.load('DNA'); DNA.revcomp('acgtacg')"),
+        function (data){
+            equal(data, "cgtacgt");
+        });
+
+testThroughAsync("loading functions - load in function", 
+        new Message("submit", "clotho.run('clothoLoadTest', [])"),
+        function (data){
+            equal(data, 'cgtacgt');
+        });
+
+testThroughAsync("loading functions - global load through function",
+        new Message("submit", "clotho.run('clientSetup', []); DNA.revcomp('ttttacccggg');"),
+        function (data) {
+            equal(data, 'cccgggtaaaa');
+        });
+
+testThroughAsync("functions on objects",
+        new Message("submit", "var myObj = {}; myObj.myFunc = function(str) { return 'hey ' + str; }; myObj.myFunc('Bob')"),
+        function (data) {
+            equal(data, 'hey Bob');
+        });

@@ -67,11 +67,18 @@ public class ScriptAPI {
     }
     
     
-    //TODO: accomodate 3-ary call
     public Object run(Object selector, List<Object> args) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         Map<String, Object> data = new HashMap<>();
         data.put("id", selector);
         data.put("args", args);
+        return api.run(data);
+    }
+    
+    public Object run(Object selector, String methodName, List<Object> args) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", selector);
+        data.put("args", args);
+        data.put("function", methodName);
         return api.run(data);
     }
     

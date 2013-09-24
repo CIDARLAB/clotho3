@@ -145,7 +145,7 @@ public class MetaEngine {
        loadAsGlobal(module, api);
     
        Object thiz = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).get(idToName(module.getUUID()));
-       return engine.invokeMethod(thiz, methodName, args);
+       return engine.invokeMethod(thiz, methodName, args.toArray());
     }
     
     //XXX: de-js-ify this!
