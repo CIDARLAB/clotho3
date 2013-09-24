@@ -22,9 +22,9 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
             "ordering" : {}
         },
         "BsaI" : {
-            "name" : "BasI",
-            "match" : "ccannnnntgg",
-            "cut" : "ccan_nnn^ntgg",
+            "name" : "BsaI",
+            "match" : "ggtctc",
+            "cut" : "ggtctc (1/5)",
             "strand" : "",
             "methylation" : false,
             "overhang" : 3,
@@ -561,7 +561,7 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
                     //reverse
                     var cutRev = new RegExp(brs.enz + brs.gap1 + brs.gap2, 'ig');
                     sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
-                        return [ '(' + $1 + ')' + $2 + cut[1] + $3 + cut[0]]
+                        return [ '(' + $1 + ')' + $2 + cut[0] + $3 + cut[1]]
                     });
 
                 }
@@ -577,10 +577,8 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
                     //reverse
                     var cutRev = new RegExp(brs.gap2 + brs.gap1 + brs.rev, 'ig');
                     sequence = sequence.replace(cutRev, function(match, $1, $2, $3, off, orig) {
-                        return [ cut[1] + $1 + cut[0] + $2 + '(' + $3 + ')']
+                        return [ cut[0] + $1 + cut[1] + $2 + '(' + $3 + ')']
                     });
-
-                    console.log(sequence);
                 }
 
             } else {
@@ -770,7 +768,7 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
 
     //if leave out targetLength, get longest
     var gelPurify = function(fragments, targetLength) {
-        //todo - better logic
+        //todo - clean up logic
         var index;
         if (_.isUndefined(targetLength)) {
             targetLength = 0;
@@ -866,7 +864,7 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
      *************/
 
     /**
-     *
+     * @description performs digest given a marked or unmarked sequence and a single or array of enzyme, return fragments array ordered by length
      * @param {string} sequence with or without marks already
      * @param {Enzyme} enzyme
      * @param {boolean} circularize default false (defined in makeCuts)
@@ -882,7 +880,9 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
 
         sequence = markCuts(sequence, enzyme);
 
-        return makeCuts(sequence, circularize);
+        var fragments =  makeCuts(sequence, circularize);
+
+        return _.sortBy(fragments, function(frag) {return -frag.length});
     };
 
 

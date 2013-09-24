@@ -8,7 +8,7 @@ Application.Extensions.controller('clothoIntro_RestrictionDigestsCtrl', ['$scope
     $scope.demo.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc';
 
 
-    $dialog.messageBox('On to the Next Chapter...', '<p>Moving forward, we\'ll focus on using Clotho tools in sequence manipulation and other synthetic biology applications.</p> <p><b>We\'ll show you the tools, and click \"Show Me How\" to see how to use them in the Command Bar.</b></p>', [{label: "Stop Bothering Me!", cssClass: "btn-primary", result: true}]).open();
+    $dialog.messageBox('On to the Next Chapter...', '<p>Moving forward, we\'ll focus on using Clotho tools in sequence manipulation and other synthetic biology applications.</p> <p><b>We\'ll show you the tools, and click \"Show Me How\" to see how to use them in the Command Bar.</b></p>', [{label: "OK", cssClass: "btn-primary", result: true}]).open();
 
 
     $scope.showMeHow = function () {

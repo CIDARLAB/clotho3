@@ -49,9 +49,39 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
+- WRITE CODE TO STEPHANIE
+
+- get GG cloning to work
+
+
+
+
+NEED
+
+- clotho feedback - class muted
+- console object - log = noop
+- clotho.load()
+- load modules in search bar by default
+- can't run modules in search bar with clotho.run
+
+
+
+
+- make construction file editable
+- angular filter to make long string like "asdasdsadn\n.....\nasdasdasdad"
+    - use in tooltip
+- construciton -- make directives dynamic i.e. array if is array, etc.
+- step through using steps
+- tool quiz ---- show hint
+- move all quizzes to directive (tools, scripting)
+- activity log clickOutside
+
+
+- trail: unread check for each Page, change style, affects dialogs
+
+
 QUIZZES
     - gradeQuiz
-        - case insensitive
         - JSON stringify results
         - use for function tests
 
