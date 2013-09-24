@@ -6,8 +6,14 @@ package org.clothocad.core.layers.communication;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.NoArgsConstructor;
+import org.clothocad.core.util.JSON;
 
 /**
  *
@@ -41,6 +47,20 @@ public class Message {
     public Map<String,String> options;
     public String requestId;
 
+    
+    public String serialize(){
+        try{
+            StringWriter writer = new StringWriter();
+            JSON.mapper.writeValue(writer, this);
+            return writer.toString();
+        } catch(JsonMappingException ex) {
+            data = "<unserializable object>";
+            return JSON.serialize(this);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+    }
     
     /*//assumes String describes JSONObject with keys "channel","data", and "requestId"
     public Message(String messageString) {
