@@ -1,6 +1,0 @@
-{
-    "schema": "Function",
-    "id": "5241015ac2e6fa3eccdcf945",
-    "name": "clientSetup",
-    "code": "function() {\nclotho.load('DNA');\nclotho.load('Digest');\nclotho.load('PCR');\n};"
-}
