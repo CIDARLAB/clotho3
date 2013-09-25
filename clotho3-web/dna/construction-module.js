@@ -220,6 +220,8 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
                 pre: function preLink(scope, element, attrs, ngModel) {
 
                     scope.dictFiltered = $filter('stepCheck')(scope.dict, scope.options.stepIndex);
+                    
+                    console.log(scope.required == 'false');
 
                     var template = angular.element('<div class="control-group" ng-class="{\'error\' : hasInvalidItem}">' +
                         '<label class="control-label">{{ fieldName }}</label>' +
@@ -233,7 +235,7 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
                     function selectTemplate(type) {
                         switch (angular.lowercase(type)) {
                             case 'value' : {
-                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" ng-disabled="!options.editable" ng-required="required"/>';
+                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" ng-disabled="!options.editable" ng-required="required != \'false\'"/>';
                             }
                             case 'boolean' : {
                                 return '<button btn-checkbox class="btn" ng-class="{\'btn-success\' : !!model}"  ng-model="model" ng-disabled="!options.editable"><i ng-class="{\'icon-white icon-ok-circle\' : !!model, \'icon-ban-circle\' : !model}"></i></button>';

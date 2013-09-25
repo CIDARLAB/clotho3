@@ -68,6 +68,7 @@ CHANGES TO MAKE
 - tool quiz ---- show hint
 - move all quizzes to directive (clotho intro: tools, scripting)
 - activity log clickOutside
+- z index of activity log /// reverting after focus e.g. show me how in tools
 
 
 - trail: unread check for each Page, change style, affects dialogs
