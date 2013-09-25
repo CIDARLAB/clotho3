@@ -38,7 +38,7 @@ class JavaScriptEngine extends AbstractScriptEngine implements HackEngine, Invoc
         cx.evaluateString(stdObjects, "var window = {};", "window hack", 1, null);
         cx.evaluateString(stdObjects, "var console = {}; console.log = function(){};", "console polyfill", 1, null);
         try {
-            cx.evaluateReader(stdObjects, new FileReader("clotho3-web/lib/lodash.js"), "lodash.js", 1, null);
+            cx.evaluateReader(stdObjects, new FileReader("src/main/js/lib/lodash.js"), "lodash.js", 1, null);
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             throw new RuntimeException("couldn't find lodash", ex);
