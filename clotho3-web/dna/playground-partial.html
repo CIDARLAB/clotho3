@@ -7,9 +7,9 @@
         </div>
 
         <form name="constructionUI" class="offset1 span10">
-            <div construction-dictionary-view construction-editable="true" ng-model="constructionFileProductDict" construction-onchange="reprocess(newDict)"></div>
+            <div construction-dictionary-view construction-editable="true" ng-model="constructionFileProductDict"><!-- construction-onchange="reprocess(newDict)" --> </div>
 
-            <div class="row-fluid">
+            <div class="row-fluid" jq-sortable ng-model="constructionFile.steps">
                 <div ng-repeat="step in constructionFile.steps" class="row-fluid">
                     <div construction-step="step.fields" ng-model="step" construction-dictionary="constructionFileProductDict" construction-index="$index" construction-editable="true"></div>
                 </div>

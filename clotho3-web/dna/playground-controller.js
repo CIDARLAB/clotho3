@@ -132,7 +132,8 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
     $scope.$watch('constructionFile', function (newval, oldval) {
         if (!newval) return;
         Construction.process(newval, true).then(function(result) {
-            $scope.constructionFileProductDict = result
+            console.log('finalResult', result);
+            $scope.constructionFileProductDict = result;
             $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
         });
     }, true);
@@ -143,7 +144,8 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
         console.log($scope.constructionFile);
 
         Construction.process($scope.constructionFile, true).then(function(result) {
-            $scope.constructionFileProductDict = result
+            console.log('reprocess finalResult', result);
+            $scope.constructionFileProductDict = result;
             $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
         });
     }
