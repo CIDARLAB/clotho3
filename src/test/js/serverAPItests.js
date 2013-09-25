@@ -266,7 +266,7 @@ testThroughAsync("running module functions - revcomp",
         });
 
 testThroughAsync("running module functions - ligate",
-        new Message("submit", "clotho.run('PCR', 'ligate', ['aaaaaaaaaaA^CATG_', '^CATG_Tttggttggttgg'])"),
+        new Message("submit", "clotho.run('PCR', 'ligate', [['aaaaaaaaaaA^CATG_', '^CATG_Tttggttggttgg']])"),
         function(data){
             equal(data, "aaaaaaaaaaACATGTttggttggttgg");
         });
