@@ -66,12 +66,33 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                 dict[key] = {key : key, computed : false, value : value};
             }
 
-            if (!!value.Clotho && !(value.retrieved === true)) {
-                //testing clientSide for now
-                var parsed = $parse(value.value)(dnaModules);
-                dictPromises[key] = {key: key, Clotho : true, retrieved : true, computed : false, value : parsed};
 
-                //future - dictPromises[key] = Clotho.submit(value.value);
+            // if requires clotho processing, process if:
+            // (1) not retrieved, (2) processed value does not equal current value
+            if (!!value.Clotho) {
+                if (!!value.preprocess && (!value.retrieved || value.process != value.preprocess))
+                {
+                    //testing clientSide for now
+                    var parsed = $parse(value.preprocess)(dnaModules);
+
+                    //todo check parsed, go to clotho if undefined
+                    // *** add to promises properly
+                    if (angular.isUndefined(parsed)) {
+                        
+                    }
+
+                    //note - extend object so don't lose focus on proprocess changing
+                    dictPromises[key] = angular.extend(value, {key : key, processed : value.preprocess, retrieved : true, computed : false, value : parsed});
+
+
+                    //future - dictPromises[key] = Clotho.submit(value.value);
+                }
+            } else {
+                //todo - this is a hack to handle editing Clotho-parsed objects
+                if (!!value.preprocess) {
+                    console.log(value.value);
+                    value.value = angular.isObject(value.value) ? value.value : JSON.parse(value.value);
+                }
             }
         });
 
@@ -213,20 +234,7 @@ Application.Dna.directive('constructionDictionaryView', [function() {
             uptostep : '=constructionUptostep',
             processto : '=constructionProcessto'
         },
-        template : '<div style="overflow: scroll">' +
-            //'<pre class="pre-scrollable" ng-bind="dictionary | json"></pre>' +
-            '<table class="table table-bordered table-condensed constructionDictionary">' +
-            '<thead><tr><th>Variable</th><th>Value</th></tr></thead>' +
-            '<tbody>' +
-                '<tr ng-repeat="item in dictionary | orderByProp:\'stepNum\' | filter:uptofilter" ng-class="{\'computed\' : item.computed}">' +
-                '<td><code contenteditable="{{ !!editable && !item.computed}}" ng-model="item.key" tooltip="{{ !!editable && item.computed ? \'Edit computed keys in the workflow\' : \'\' }}"></code></td>' +
-                //'<td>{{item}}</td>' +
-                '<td contenteditable="{{ !!editable && !item.computed && !item.retrieved}}" tooltip="{{ !!editable && item.computed ? \'You cannot edit a dynamically generated value\' : \'\' }}" tooltip-placement="mouse" ng-model="item.value" style="overflow: hidden; text-overflow: ellipsis;"></td>' +
-                '</tr>' +
-                '<tr ng-if="!!editable"><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
-            '</tbody>' +
-            '</table>' +
-            '</div>',
+        templateUrl : '/dna/construction/dictionary.html',
         link : function(scope, element, attrs, ngModel) {
 
             scope.uptofilter = function(item) {
