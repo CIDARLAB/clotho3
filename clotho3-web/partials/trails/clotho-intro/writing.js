@@ -7,7 +7,8 @@ Application.Extensions.controller('clothoIntro_WritingCtrl', ['$scope', '$focus'
         var files = [
             '/models/construction_demo.json',
             '/models/construction_gfp.json',
-            '/models/construction_vio.json'
+            '/models/construction_vio.json',
+            '/models/construction_skeleton.json'
         ];
 
         $http.get(files[selection]).then(function(data) {
