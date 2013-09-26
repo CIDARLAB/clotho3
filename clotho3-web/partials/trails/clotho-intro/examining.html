@@ -2,16 +2,22 @@
     <blockquote><p>Construction Files define a series of unit operations which constitute a cloning experiment.</p>
     </blockquote>
 
-    <p>A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.</p>
+    <!--<p>A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.</p>-->
 
-    <p>Let's go through the process described above, ligating GFP into a backbone called pUC19.</p>
+    <p>Let's go through the process of ligating GFP into a backbone called pUC19.</p>
 
-    <hr>
-
-    <div class="row-fluid">
-        <div ng-repeat="step in constructionFile.steps" class="row-fluid">
-            <div construction-step="step.fields" ng-model="step"
-                 construction-dictionary="constructionFile.dictionary"></div>
-        </div>
+    <div class="pagination pagination-large pagination-centered">
+        <ul>
+            <li ng-repeat="step in constructionFile.steps" ng-class="{'disabled' : hideOpts.uptostep == $index + 1}">
+                <a ng-click="hideOpts.uptostep = $index + 1" popover="{{reactions[step.reaction].readable}}" popover-trigger="mouseenter">Step {{ $index + 1 }}</a>
+            </li>
+        </ul>
     </div>
+
+    <div class="alert alert-info" ng-if="hideOpts.uptostep == 0">
+        <h4>Navigating the Construction File</h4>
+        <p>Iterate through each reaction by going through the steps above, revealing each reaction in the workflow below.</p>
+    </div>
+
+    <form construction-full ng-model="constructionFile" construction-editable="false" construction-hideopts="hideOpts"></form>
 </div>

@@ -115,16 +115,25 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
 
     /***** functions *****/
 
+    log.timeout = null;
     function receiveMessage (data) {
         log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
         log.entries.unshift(data);
         display.show('logSnippet');
-        //todo - cancel if new request comes in
-        $timeout( function() {
-            display.hide('logSnippet');
-        }, 5000);
-
+        log.startLogTimeout();
     }
+
+    log.startLogTimeout = function() {
+        log.cancelLogTimeout();
+
+        log.timeout = $timeout( function() {
+            display.hide('logSnippet');
+        }, 10000);
+    };
+
+    log.cancelLogTimeout = function() {
+        $timeout.cancel(log.timeout);
+    };
 
     var execute = function (command) {
         console.log("this would be run: " + command);

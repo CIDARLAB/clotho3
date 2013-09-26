@@ -487,14 +487,12 @@ Application.Dna.directive('constructionFull', ['Construction', function(Construc
             file : '=ngModel',
             editable : '=constructionEditable',
             onChange : '&?constructionOnchange',
-            hideopts : '=constructionHideopts'
+            hideopts : '=?constructionHideopts'
         },
         templateUrl : "/dna/construction/full.html",
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, controllers) {
-
-
 
                 },
                 post: function postLink(scope, element, attrs, controllers) {

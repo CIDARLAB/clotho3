@@ -1,16 +1,8 @@
 <div ng-controller="clothoIntro_SimulationCtrl">
     <blockquote><p>Now, let's simulate running the Construction File.</p></blockquote>
 
-    <p>Fields generated dynamically by the construction file are in blue in the table:</p>
+    <p>The construction file defines its variables in a dictionary, which it expands after each reaction. Fields generated dynamically by the construction file are in blue in the table, and sorted by the order in which they are generated:</p>
 
-    <div construction-dictionary-view ng-model="constructionFile.dictionary"></div>
-
-    <div class="row-fluid">
-        <div ng-repeat="step in constructionFile.steps" class="row-fluid">
-            <div construction-step="step.fields" ng-model="step"
-                 construction-dictionary="constructionFile.dictionary"></div>
-        </div>
-    </div>
-
+    <form construction-full ng-model="constructionFile" construction-editable="false"></form>
 
 </div>

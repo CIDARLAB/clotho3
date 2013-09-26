@@ -10,7 +10,7 @@ Application.Extensions.controller('clothoIntro_reverseComplementCtrl', ['$scope'
         {model: function() {
             return {
                 title: 'Quizzes',
-                message: 'Boxes like the one below are quizzes. This Trail will ask you to answer questions about DNA manipulation. Watch the videos if you need to brush up on your knowledge, but make sure you understand them before moving forward. ',
+                message: 'Boxes like the one below are quizzes. This Trail will ask you to answer questions about DNA manipulation. Watch the videos on each page if you need to brush up on your knowledge (click OK and peek behind this window), but make sure you understand each quiz before moving forward.',
                 buttons: [{label: "OK", cssClass: "btn-primary", result: true}]
             };
         }}

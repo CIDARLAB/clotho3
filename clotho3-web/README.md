@@ -61,10 +61,14 @@ NEED FROM STEPHANIE
 
 CHANGES TO MAKE
 
+
+
+TRAIL
 - construction file - create from scratch
     - convert dictionary to array, pull keys where needed
-    - can add clotho parseable term to dictionary
-    - carotenoid construction
+    - can add clotho parse-able term to dictionary
+    ? carotenoid construction
+- construction file video -- picture converts to video
 
 
 
@@ -76,7 +80,6 @@ CHANGES TO MAKE
 
 
 -searchbar updates
-    - $timeout of logSnippet
     - call say() for run(), other commands
         - check isString in say and wrap
     - if get response on say() for a submit() don't post Command Received
