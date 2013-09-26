@@ -818,8 +818,12 @@ Application.Dna.service('PCR', ['DNA', 'Digest', function(DNA, Digest) {
         fragments = parseFragments(fragments, true);
         //console.log('ligate starting -- fragments:', fragments);
 
+
+
         //use for loop so can decrement counter
         for (var outerInd = 0; outerInd < fragments.length; outerInd++) {
+            if (fragments.length == 1) break;
+
             var outerFrag = fragments[outerInd];
 
             var toJoinIndex = outerFrag.findFirstMatchIndex(fragments);

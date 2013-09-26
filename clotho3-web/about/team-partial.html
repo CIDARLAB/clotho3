@@ -8,7 +8,7 @@
     <h2>The Clotho Team</h2>
 
     <div class="row">
-         <div ng-repeat="person in ClothoTeam | orderBy:['isManagement', 'surName']" class="span12">
+         <div ng-repeat="person in ClothoTeam | orderBy:'surName'" class="span12">
              <div class="shadowBox" style="padding: 12px 24px">
                  <div class="row-fluid">
                      <div class="span3" ng-class="{'pull-right' : $index%2}">

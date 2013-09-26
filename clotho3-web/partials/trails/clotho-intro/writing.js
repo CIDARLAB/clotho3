@@ -16,7 +16,11 @@ Application.Extensions.controller('clothoIntro_WritingCtrl', ['$scope', '$focus'
         });
     };
 
-    $scope.getConstructionFile(2);
+    $scope.reactionIndex = 1;
+
+    $scope.$watch('reactionIndex', function() {
+        $scope.getConstructionFile($scope.reactionIndex);
+    });
 
     $scope.reactions = Construction.reactions;
 

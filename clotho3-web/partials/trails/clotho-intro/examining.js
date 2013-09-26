@@ -11,7 +11,16 @@ Application.Extensions.controller('clothoIntro_ExaminingCtrl', ['$scope', '$focu
     $scope.hideOpts = {
         dictionary : true,
         addStep: true,
-        uptostep : 0
+        uptostep : 0,
+        processto: 0
+    };
+
+    $scope.revealVideo = function () {
+        $scope.showVideo = true;
+    };
+
+    $scope.hideVideo = function() {
+        $scope.showVideo = false;
     };
 
 }]);

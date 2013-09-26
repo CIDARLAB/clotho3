@@ -324,7 +324,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
             console.log('quiz grade callback result: ' + data);
         };
 
-        var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback"></div>';
+        var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback" advance="next()"></div>';
         return $q.when(template);
     };
 
@@ -473,7 +473,8 @@ Application.Trails.directive('trailQuiz', ['$http', '$templateCache', '$compile'
         //could assume function onGrade (or variant) will be present on scope, but I think more maintainable to explicitly declare as attr
         scope: {
             quiz: '=ngModel',
-            gradeCallback : '=?'
+            gradeCallback : '=?',
+            advance : '&?'
         },
 
         compile: function compile(tElement, tAttrs, transclude) {

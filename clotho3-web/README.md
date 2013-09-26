@@ -49,68 +49,50 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-NEED FROM STEPHANIE
-
-- clotho feedback - class muted
-- console object - log = noop
-- clotho.load()
-- load modules in search bar by default
-- can't run modules in search bar with clotho.run
-
-
-
-CHANGES TO MAKE
-
-
-
-TRAIL
-- construction file - create from scratch
-    - convert dictionary to array, pull keys where needed
-    - can add clotho parse-able term to dictionary
-    ? carotenoid construction
-- construction file video -- picture converts to video
-
-
+NECESSARY
 
 - update modules
+    - make sure key functions work
+- TRAIL
+    - construction file changes
+        - dictionary
+            - parseable terms
+            - dictionary -> array, keys as field
+- mail solution
 
-- $focus.typeOutSearch to accept array, use in Ligation
-
-- clotho.run directive to handle module namespacing, or use submit
 
 
--searchbar updates
+IF TIME
+
+- searchbar updates
     - call say() for run(), other commands
         - check isString in say and wrap
     - if get response on say() for a submit() don't post Command Received
 
+- clotho.run directive to handle module namespacing, or use submit
+
+- DIY construction file
 
 
-- mail solution for about page
+
+- gradeQuiz
+    - JSON stringify results
+    - use for function tests
+
+DNA functions
+    - ligation alignment, HTML
+    - handle overhangs in anneal
+
+- carotenoid construction file
+
 
 - trail: unread check for each Page, change style, affects dialogs
 
 
-QUIZZES
-    - hints like fillin in other quizzes
-    - gradeQuiz
-        - JSON stringify results
-        - use for function tests
+- $focus.typeOutSearch to accept array, use in Ligation
 
+- construction file -> protocol
 
-CONSTRUCTION FILES
-    - Functions
-        - Digest
-        - PCR
-        - Anneal
-            - handle overhangs
-        - Ligate
-            - html options
-            - alignment option
-            - multiple fragments
-        - Construction
-    - Templates
-        - construction file -> protocol template
 
 
 
@@ -230,9 +212,6 @@ CONSTRUCTION FILES
         - extract param for autoplay in attrs
         - slideout attribute (show only when request, don't autoplay)
         - listen for changes to id, recompile
-    - make quiz a directive
-        - check gradeCallback
-        - offering hints
     - tool -- how to load?
         - clotho-run is easy...
         - widgets?

@@ -4,7 +4,16 @@
 
     <!--<p>A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.</p>-->
 
-    <p>Let's go through the process of ligating GFP into a backbone called pUC19.</p>
+    <p ng-init="showVideo = false" >Let's go through the process of ligating GFP into a backbone called pUC19. <a ng-if="showVideo == false" ng-click="revealVideo()">Show me the Video!</a></p>
+
+    <div ng-if="!!showVideo">
+        <div youtube="U4qrf9MhSxE" on-complete="hideVideo()" autoplay="true"></div>
+    </div>
+
+    <div ng-if="!showVideo" class="thumbnail" style="padding: 15px; box-sizing: border-box">
+        <img src="/images/trails/clothoIntro/pUC-GFP.png">
+    </div>
+
 
     <div class="pagination pagination-large pagination-centered">
         <ul>
@@ -20,4 +29,12 @@
     </div>
 
     <form construction-full ng-model="constructionFile" construction-editable="false" construction-hideopts="hideOpts"></form>
+
+    <div ng-if="hideOpts.uptostep == constructionFile.steps.length">
+        <ul class="pager">
+            <li class="next">
+                <a ng-click="next()">Now let's process it &rarr;</a>
+            </li>
+        </ul>
+    </div>
 </div>

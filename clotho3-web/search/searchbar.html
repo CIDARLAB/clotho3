@@ -74,7 +74,7 @@
     </div>
 
     <!--log snippet-->
-    <div id="clothoSearchbarLogSnippet" class="pull-left inline alert alert-{{log.entries[0].class}}" ng-show="display.logSnippet" ng-mouseenter="log.cancelLogTimeout" ng-mouseleave="log.startLogTimeout">
+    <div id="clothoSearchbarLogSnippet" class="pull-left inline alert alert-{{log.entries[0].class}}" ng-show="display.logSnippet" ng-mouseenter="log.cancelLogTimeout()" ng-mouseleave="log.startLogTimeout()">
         <small>{{log.entries[0].text}}</small>
     </div>
 

@@ -210,12 +210,13 @@ Application.Dna.directive('constructionDictionaryView', [function() {
         scope : {
             dictionary : '=ngModel',
             editable : '=constructionEditable',
-            uptostep : '=constructionUptostep'
+            uptostep : '=constructionUptostep',
+            processto : '=constructionProcessto'
         },
         template : '<div style="overflow: scroll">' +
             //'<pre class="pre-scrollable" ng-bind="dictionary | json"></pre>' +
             '<table class="table table-bordered table-condensed constructionDictionary">' +
-            '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
+            '<thead><tr><th>Variable</th><th>Value</th></tr></thead>' +
             '<tbody>' +
                 '<tr ng-repeat="item in dictionary | orderByProp:\'stepNum\' | filter:uptofilter" ng-class="{\'computed\' : item.computed}">' +
                 '<td><code contenteditable="{{ !!editable && !item.computed}}" ng-model="item.key" tooltip="{{ !!editable && item.computed ? \'Edit computed keys in the workflow\' : \'\' }}"></code></td>' +
@@ -229,7 +230,7 @@ Application.Dna.directive('constructionDictionaryView', [function() {
         link : function(scope, element, attrs, ngModel) {
 
             scope.uptofilter = function(item) {
-                return !item.computed || item.stepNum < scope.uptostep
+                return !item.computed || (item.stepNum < scope.uptostep && item.stepNum < scope.processto)
             };
 
             scope.addTerm = function() {
@@ -353,7 +354,8 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
             index : '=constructionIndex',
             editable : '=constructionEditable',
             fields : '=constructionStep',
-            removeStep : '&constructionRemove'
+            removeStep : '&constructionRemove',
+            processto : '=constructionProcessto'
         },
         compile: function compile(tElement, tAttrs, transclude) {
             return {
@@ -386,7 +388,7 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
                             '<stepFields class="row-fluid clearfix"></stepFields>' +
                             //'{{ step }}'+
                             '</div>' +
-                            '<div class="output" ng-class="{\'errorBackground\' : !dictionary[step.output], \'warningBackground\' : !dictionary[step.output].value}" tooltip="{{ dictionary[step.output].value | stringEnds }}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
+                            '<div class="output" ng-class="{\'errorBackground\' : !dictionary[step.output], \'warningBackground\' : !dictionary[step.output].value}" tooltip="{{ index < processto ? (dictionary[step.output].value | stringEnds) : \'<unprocessed>\' }}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
                             '</div>');
 
 
@@ -501,7 +503,8 @@ Application.Dna.directive('constructionFull', ['Construction', function(Construc
                         dictionary : false,
                         steps : false,
                         addStep : false,
-                        uptostep : 99
+                        uptostep : 99,
+                        processto : 99
                     };
                     scope.hideopts = angular.extend(hideOptsDef, scope.hideopts);
 

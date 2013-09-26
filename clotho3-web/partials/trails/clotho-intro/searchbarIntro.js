@@ -91,18 +91,30 @@ Application.Extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '
         $focus.typeOutSearch(str, true);
     };
 
-    $scope.runFunction = function() {
-        var str = 'clotho.run("uppercase", ["i will be ALL caps"])';
+    $scope.getObject = function() {
+        var str = 'clotho.get(\'GFPmut3\')';
+        $focus.typeOutSearch(str, true);
+    };
+
+    $scope.runQuery = function () {
+        var str = 'clotho.query({"name":"GFPmut3"})';
         $focus.typeOutSearch(str, true);
     };
 
     $scope.runDNA = function() {
-        var str = 'DNA.shuffleSequence("aaaacccccgggggtttttt")';
+        var str = 'DNA.complement("acgttgca")';
         $focus.typeOutSearch(str, true);
     };
 
+    //killing:
+
     $scope.queryClothoTeam = function () {
         var str = 'clotho.query({schema : "ClothoTeam"})';
+        $focus.typeOutSearch(str, true);
+    };
+
+    $scope.runFunction = function() {
+        var str = 'clotho.run("uppercase", ["i will be ALL caps"])';
         $focus.typeOutSearch(str, true);
     };
 
