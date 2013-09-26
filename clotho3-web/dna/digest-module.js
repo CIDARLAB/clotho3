@@ -768,6 +768,8 @@ Application.Dna.service('Digest', ['DNA', function(DNA) {
 
     //if leave out targetLength, get longest
     var gelPurify = function(fragments, targetLength) {
+        if (_.isString(fragments)) return fragments;
+
         //todo - clean up logic
         var index;
         if (_.isUndefined(targetLength)) {

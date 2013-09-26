@@ -129,25 +129,11 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
         $scope.constructionFile = data.data
     });
 
-    $scope.$watch('constructionFile', function (newval, oldval) {
-        if (!newval) return;
-        Construction.process(newval, true).then(function(result) {
-            console.log('finalResult', result);
-            $scope.constructionFileProductDict = result;
-            $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
-        });
-    }, true);
+    $scope.reprocess = function(file) {
+        console.log('REPROCESS!');
+        console.log(file);
+    };
 
-    $scope.reprocess = function(dictionary) {
-        console.log(dictionary);
-        $scope.constructionFile.dictionary = dictionary;
-        console.log($scope.constructionFile);
-
-        Construction.process($scope.constructionFile, true).then(function(result) {
-            console.log('reprocess finalResult', result);
-            $scope.constructionFileProductDict = result;
-            $scope.constructionFileProduct = $scope.constructionFileProductDict.final.value;
-        });
-    }
+    $scope.hideOpts = {};
 
 }]);

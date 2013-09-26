@@ -61,15 +61,21 @@ NEED FROM STEPHANIE
 
 CHANGES TO MAKE
 
-- make construction file editable
+- construction file - create from scratch
+    - can add clotho parseable term to dictionary
+
+
 - angular filter to make long string like "asdasdsadn\n.....\nasdasdasdad"
     - use in tooltip
-- step through using steps
 - tool quiz ---- show hint
+    - prepend to input as ? with popover
 - move all quizzes to directive (clotho intro: tools, scripting)
 - activity log clickOutside
-- z index of activity log /// reverting after focus e.g. show me how in tools
+- command returns false -> show in log
 
+- rewrite search bar functions to omit clotho.run syntax
+
+- mail solution
 
 - trail: unread check for each Page, change style, affects dialogs
 

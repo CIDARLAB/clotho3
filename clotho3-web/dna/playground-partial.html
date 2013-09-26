@@ -1,20 +1,12 @@
 <div class="container" ng-controller="constructionCtrl">
 
     <div class="row">
-
-        <div class="span12">
-
+        <div class="offset3 span6">
+            <input type="number" ng-model="hideOpts.uptostep" min="0" max="{{ constructionFile.steps.length }}"/>
+            <button class="btn" ng-click="constEditable = !constEditable" ng-init="constEditable = false;">Toggle Editable</button>
         </div>
+        <form class="offset1 span10" construction-full ng-model="constructionFile" construction-editable="constEditable" construction-onchange="reprocess(file)" construction-hideopts="hideOpts"></form>
 
-        <form name="constructionUI" class="offset1 span10">
-            <div construction-dictionary-view construction-editable="true" ng-model="constructionFileProductDict"><!-- construction-onchange="reprocess(newDict)" --> </div>
-
-            <div class="row-fluid" jq-sortable ng-model="constructionFile.steps">
-                <div ng-repeat="step in constructionFile.steps" class="row-fluid">
-                    <div construction-step="step.fields" ng-model="step" construction-dictionary="constructionFileProductDict" construction-index="$index" construction-editable="true"></div>
-                </div>
-            </div>
-        </form>
     </div>
 
     <div class="row">

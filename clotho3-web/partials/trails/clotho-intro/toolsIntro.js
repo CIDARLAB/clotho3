@@ -49,13 +49,14 @@ Application.Extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$foc
     .then(function(oldZ) {
         return $timeout(function() {
             $focus.setZ(oldZ, $('#demoTool'));
-            $focus.bringToFront($('#showMeHow'));
+            return $focus.bringToFront($('#showMeHow'));
         }, 200);
     })
-    .then(function() {
-        return $dialog.dialog(dialog2Opts).open();
+    .then(function(oldZ) {
+        return $dialog.dialog(dialog2Opts).open().then(function() {return oldZ});
     })
-    .then(function() {
+    .then(function(oldZ) {
+        $focus.setZ(oldZ, $('#showMeHow'));
         return $focus.removeBackdrop();
     });
 

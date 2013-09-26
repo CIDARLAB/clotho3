@@ -174,11 +174,10 @@ construction
 .constructionStep {
     position: relative;
     margin: 0 0 8px;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-    color: #3a87ad;
     border: 3px solid #d9edf7;
     background-color: #fff;
     border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .constructionStep .arrow,
@@ -211,16 +210,28 @@ construction
     border-top-width: 0;
 }
 
+.constructionStep .errorBackground {
+    background-color: #f2dede;
+}
+
+.constructionStep .warningBackground {
+    background-color: #fcf8e3;
+}
+
 .constructionStep .reaction {
-    padding: 4px 35px 4px 17px;
+    padding: 4px 17px;
     font-size: 14px;
     font-weight: bold;
     color: #8D9094;
+    border-radius: 4px 4px 0 0;
+
 }
 
-.constructionStep .steps {
+.constructionStep .fields {
     padding: 10px 15px 0;
     background: #d9edf7;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    color: #3a87ad;
 }
 
 .constructionStep .output {
@@ -228,6 +239,7 @@ construction
     font-size: 14px;
     font-weight: bold;
     color: #8D9094;
+    border-radius:  0 0 4px 4px;
 }
 
 

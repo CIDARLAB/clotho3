@@ -8,6 +8,31 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
     dnaModules.Digest = Digest;
     dnaModules.PCR = PCR;
 
+    //reactions with templates, useable for generating new construction files
+    var reactions = {
+        "PCR.predict" : {
+            reaction : "PCR.predict",
+            input : ["", []],
+            readable : "PCR"
+        },
+        "PCR.ligate" : {
+            reaction : "PCR.ligate",
+            input : [[]],
+            readable : "Ligation"
+        },
+        "Digest.digest" : {
+            reaction : "Digest.digest",
+            input : ["", []],
+            readable : "Restriction Digest"
+        },
+        "Digest.gelPurify" : {
+            reaction : "Digest.gelPurify",
+            input : [],
+            readable : "Gel Purify"
+        }
+    };
+
+
     var process = function(file, returnDictionary) {
         //don't alter the construction file's dictionary
         var dict = file.dictionary;
@@ -47,7 +72,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
         .then(function(processedDict) {
             angular.extend(dict, processedDict);
 
-            console.log(dict);
+            //console.log(dict);
 
             var stepsChain = $q.when();
 
@@ -133,6 +158,8 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
     };
 
     return {
+        reactions : reactions,
+
         process : process
     }
 
@@ -143,14 +170,8 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 Application.Dna.filter('orderByProp', function() {
     return function(obj, prop) {
 
-        //todo - necessary??
-        var array = [];
-        _.each(obj, function (value) {
-            array.push(value);
-        });
-
-        return _.sortBy(array, function (obj) {
-            return obj.prop
+        return _.sortBy(obj, function (inner) {
+            return inner.prop
         });
     }
 });
@@ -176,16 +197,16 @@ Application.Dna.directive('constructionDictionaryView', [function() {
         restrict : 'EA',
         require : 'ngModel',
         scope : {
-            dict : '=ngModel',
+            dictionary : '=ngModel',
             editable : '=constructionEditable',
-            onChange : '&?constructionOnchange'
+            uptostep : '=constructionUptostep'
         },
         template : '<div style="overflow: scroll">' +
-            '<pre class="pre-scrollable" ng-bind="dict | json"></pre>' +
+            //'<pre class="pre-scrollable" ng-bind="dictionary | json"></pre>' +
             '<table class="table table-bordered table-condensed constructionDictionary">' +
             '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
             '<tbody>' +
-                '<tr ng-repeat="item in dict | orderByProp:\'computed\'" ng-class="{\'computed\' : item.computed}">' +
+                '<tr ng-repeat="item in dictionary | orderByProp:\'computed\' | filter:uptofilter" ng-class="{\'computed\' : item.computed}">' +
                 '<td> <code contenteditable="{{ !!editable }}" ng-model="item.key"></code> </td>' +
                 //'<td>{{item}}</td>' +
                 '<td contenteditable="{{ !!editable && !item.computed && !item.retrieved}}" ng-model="item.value" style="overflow: hidden; text-overflow: ellipsis;"></td>' +
@@ -196,21 +217,22 @@ Application.Dna.directive('constructionDictionaryView', [function() {
             '</div>',
         link : function(scope, element, attrs, ngModel) {
 
+            scope.uptofilter = function(item) {
+                return !item.computed || item.stepNum < scope.uptostep
+            };
+
             scope.addTerm = function() {
                 //custom fields will be added in on process
                 //todo -- add ability to clotho parse
-                angular.extend(scope.dict, {"" : ""});
+                angular.extend(scope.dictionary, {"" : ""});
             };
 
+            /*
             //deep watch
-            scope.$watch('dict', function(newval, oldval) {
-                console.log(newval, oldval);
+            scope.$watch('dictionary', function(newval, oldval) {
                 if (!newval || !oldval) return;
-
-                console.log('change to dictionary, running callback');
-
-                angular.isDefined(scope.dict) && scope.onChange({newDict : scope.dict});
             }, true)
+            */
         }
     }
 }]);
@@ -224,6 +246,8 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
             model : '=ngModel',
             dict : '=?constructionDictionary',
             options : '=constructionOptions',
+            editable : '=constructionEditable',
+            stepIndex : '=constructionStepindex',
             required : '@constructionRequired',
             type : '@constructionType'
         },
@@ -231,7 +255,7 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
             return {
                 pre: function preLink(scope, element, attrs, ngModel) {
 
-                    var template = angular.element('<div class="control-group" ng-class="{\'error\' : hasInvalidItem}">' +
+                    var template = angular.element('<div class="control-group" ng-class="{\'error\' : hasInvalidItem || hasFutureItem}">' +
                         '<label class="control-label">{{ fieldName }}</label>' +
                         '<div class="controls">' +
                         '<constructionFieldInput></constructionFieldInput>' +
@@ -243,18 +267,18 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
                     function selectTemplate(type) {
                         switch (angular.lowercase(type)) {
                             case 'value' : {
-                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" ng-disabled="!options.editable" ng-required="required"/>';
+                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" ng-disabled="!editable" ng-required="required"/>';
                             }
                             case 'boolean' : {
-                                return '<button btn-checkbox class="btn" ng-class="{\'btn-success\' : !!model}"  ng-model="model" ng-disabled="!options.editable"><i ng-class="{\'icon-white icon-ok-circle\' : !!model, \'icon-ban-circle\' : !model}"></i></button>';
+                                return '<button btn-checkbox class="btn" ng-class="{\'btn-success\' : !!model}"  ng-model="model" ng-disabled="!editable"><i ng-class="{\'icon-white icon-ok-circle\' : !!model, \'icon-ban-circle\' : !model}"></i></button>';
                             }
                             case 'array' : {
                                 if (angular.isString(scope.model))
                                     scope.model = [scope.model];
-                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-list ng-change="checkInput()" ng-disabled="!options.editable" ng-required="required"/>';
+                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-list ng-change="checkInput()" ng-disabled="!editable" ng-required="required"/>';
                             }
                             default : {
-                                return '<select class="span12" placeholder="{{fieldName}}" ng-model="model" ng-options="key as key for (key,val) in dictFiltered" ng-disabled="!options.editable"  ng-required="required"></select>'
+                                return '<select class="span12" placeholder="{{fieldName}}" ng-model="model" ng-options="key as key for (key,val) in dict" ng-disabled="!editable" ng-change="checkInput()" ng-required="required"></select>'
                             }
                         }
                     }
@@ -264,34 +288,29 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
                 },
                 post: function postLink(scope, element, attrs, ngModel) {
 
-
-                    //console.log(scope.options, scope.dict);
-                    if (!!scope.dict) {
-                        console.log(scope.options.stepIndex, scope.model);
-                        _.each(scope.dict, function(val, key) {
-                            console.log(key, val.stepNum);
-                        });
-
-                        scope.dictFiltered = $filter('stepCheck')(scope.dict, scope.options.stepIndex);
-                        console.log('now filtered to:', _.keys(scope.dictFiltered));
-                    }
+                    //console.log(scope.required);
+                    //console.log(scope.fieldName, 'is target lenght', (scope.fieldName == "Target Length"));
+                    scope.required = (scope.required != 'false') ? "true" : "false";
+                    //console.log(scope.required, !!scope.required);
 
 
-                    scope.required = (scope.required == 'false');
-
-                    scope.hasInvalidItem = false;
                     scope.checkInput = function() {
+                        scope.hasInvalidItem = false;
+                        scope.hasFutureItem = false;
+
+                        function checkItem (model) {
+                            if (!scope.dict[model])
+                                scope.hasInvalidItem = true;
+                            else if (scope.dict[model].stepNum >= scope.stepIndex)
+                                scope.hasFutureItem = true;
+                        }
 
                         if (scope.type == 'array') {
-                            var checkArrayRound = false;
                             angular.forEach(scope.model, function(item) {
-                                if (!scope.dictFiltered[item]) {
-                                    checkArrayRound = true;
-                                }
+                                checkItem(item);
                             });
-                            scope.hasInvalidItem = !!(checkArrayRound);
                         } else {
-                            scope.hasInvalidItem = !!scope.dictFiltered[scope.model];
+                            checkItem(scope.model)
                         }
                     };
                 }
@@ -300,45 +319,55 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
     }
 }]);
 
-Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', '$templateCache', '$filter', '$timeout', function($parse, $compile, $http, $templateCache, $filter, $timeout) {
+Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compile', '$http', '$templateCache', '$filter', '$timeout', '$dialog', function(Construction, $parse, $compile, $http, $templateCache, $filter, $timeout, $dialog) {
     return {
         restrict : "EA",
         require: "ngModel",
         scope: {
             step : '=ngModel',
-            dict : '=constructionDictionary',
+            dictionary : '=constructionDictionary',
             index : '=constructionIndex',
-            editable : '@constructionEditable',
-            fields : '=constructionStep'
+            editable : '=constructionEditable',
+            fields : '=constructionStep',
+            removeStep : '&constructionRemove'
         },
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, ngModel) {
 
+                    scope.reactions = Construction.reactions;
+                    scope.reactionsArray = _.toArray(scope.reactions);
+
+                    //note - can't recompile step or lose focus every keystroke dictionary model changes if force recompile in dictionary watch, so pull out into process step
+                    scope.processStep = function processStep() {
+                        scope.dict = $filter('stepCheck')(scope.dictionary, scope.index);
+                    };
+
                     scope.compileStep = function compileStep() {
 
-                        scope.options = {
-                            "editable" : scope.editable,
-                            "stepIndex" : scope.index
-                        };
+                        scope.processStep();
 
                         var template = angular.element('<div class="constructionStep clearfix">'+
-                            '<div class="reaction"><i ng-class="{\'icon-resize-full\' : !showReaction, \'icon-resize-small\' : showReaction }" ng-click="toggleReaction()"></i> {{ step.reaction }}</div>'+
+                            '<div class="arrow"></div>' +
+                            '<div class="reaction" ng-class="{\'errorBackground\' : !reactions[step.reaction]}">' +
+                            '<i ng-class="{\'icon-resize-full\' : !showReaction, \'icon-resize-small\' : showReaction}" style="cursor : pointer;" ng-click="toggleReaction()"></i> ' +
+                            '{{ reactions[step.reaction].readable || step.reaction }}'+
+                            //'<input type="text" class="reactionName" typeahead="r.reaction as r.readable for r in reactionsArray" ng-model="step.reaction" style="margin-bottom: 0px; padding: 3px 5px;" />' +
+                            '<i ng-if="editable" class="pull-right icon-remove" ng-click="confirmRemoveStep()" style="cursor : pointer; margin-top: 3px"></i> ' +
+                            '</div>'+
                             '<div ng-show="showReaction">' +
                             //'{{fields}}' +
-                            '<div class="steps">' +
+                            '<div class="fields" ng-style="{cursor : (editable ? \'move\' : \'inherit\')}">' +
                             '<stepFields class="row-fluid clearfix"></stepFields>' +
                             //'{{ step }}'+
                             '</div>' +
-                            '<div class="output">Output: <code>{{ step.output }}</code></div>' +
-                            '</div>' +
-                            '<div class="arrow">' +
+                            '<div class="output" ng-class="{\'errorBackground\' : !dictionary[step.output], \'warningBackground\' : !dictionary[step.output].value}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
                             '</div>');
 
 
                         function generateConstructionField (type, name, model) {
 
-                            return '<div class="span4" construction-field="'+name+'" construction-type="'+type+'" construction-options="options" construction-dictionary="dict" ng-model="'+model+'" ></div>';
+                            return '<div class="span4" construction-field="'+name+'" construction-type="'+type+'" construction-editable="editable" construction-stepindex="index" construction-dictionary="dict" ng-model="'+model+'" ></div>';
                         }
 
                         //if pass in scope.fields, assume want to overrun templates
@@ -391,24 +420,101 @@ Application.Dna.directive('constructionStep', ['$parse', '$compile', '$http', '$
                 },
                 post: function postLink(scope, element, attrs, ngModel) {
 
-                    //todo -- filter dictionary for step -- apparently need to timeout, may be problematic if run on server and async
-                    //scope.dict = $filter('stepCheck')(scope.dict, scope.options.stepIndex);
-                    //todo --- watch on index and dictionary in step, pass down trimmed to fields.... OR don't trim dictionary, error class when not in trimmed dictionary OR just check stepNum in ng-class (but set up watch on stepnum, since updates later apparently i.e. after process
-                    //alternatively, filter to disable select options
+                    //future - alternatively, filter to disable select options
                         // http://jsfiddle.net/alalonde/dZDLg/9/
 
+                    //watch dictionary so runs after process
+                    scope.$watch('dictionary', function (newval, oldval) {
+                        scope.processStep();
+
+                        /*testing
+                        _.each(newval, function(item){
+                           console.log(scope.index, item.key, item.computed, item.stepNum);
+                        });
+                        */
+                    });
 
                     scope.showReaction = true;
                     scope.toggleReaction = function() {
                         scope.showReaction = !scope.showReaction;
                     };
 
-                    scope.$watch('index', function(newind, oldind) {
-                        console.log('compiling step ' + newind + ' from ' + oldind);
-                        scope.compileStep();
-                    })
+                    scope.confirmRemoveStep = function() {
+                        var d = $dialog.messageBox('Confirm Remove', 'Are you sure you want to remove this reaction?', [{label: "Cancel", cssClass: "", result: false}, {label: "Remove", cssClass: "btn-danger", result: true}]);
+                        d.open().then(function (result) {
+                            if (result) {
+                                scope.removeStep();
+                            }
+                        });
+                    }
                 }
             }
         }
     }
 }]);
+
+Application.Dna.directive('constructionFull', ['Construction', function(Construction) {
+    return {
+        restrict : 'A',
+        require : 'ngModel',
+        replace : true,
+        scope : {
+            file : '=ngModel',
+            editable : '=constructionEditable',
+            onChange : '&?constructionOnchange',
+            hideopts : '=constructionHideopts'
+        },
+        templateUrl : "/dna/construction/full.html",
+        compile: function compile(tElement, tAttrs, transclude) {
+            return {
+                pre: function preLink(scope, element, attrs, controllers) {
+
+
+
+                },
+                post: function postLink(scope, element, attrs, controllers) {
+
+                    var hideOptsDef = {
+                        dictionary : false,
+                        steps : false,
+                        addStep : false,
+                        uptostep : 99
+                    };
+                    scope.hideopts = angular.extend(hideOptsDef, scope.hideopts);
+
+                    scope.$watch('file', function(newval, oldval) {
+                        if (!newval) return;
+                        Construction.process(newval, true).then(function(result) {
+                            console.log('finalResult', result);
+                            scope.file.dictionary = result;
+                            scope.product = scope.file.dictionary.final.value;
+
+                            scope.onChange({file : scope.file});
+                        });
+                    }, true);
+
+                    scope.reactions = Construction.reactions;
+                    scope.reactionsArray = _.toArray(scope.reactions);
+
+                    scope.newStep = {
+                        reaction : "",
+                        input : [],
+                        output : ""
+                    };
+                    scope.stepValid = function() {
+                        return !!Construction.reactions[scope.newStep.reaction]
+                    };
+                    scope.addStep = function() {
+                        if (scope.stepValid(scope.newStep)) {
+                            scope.newStep.input = Construction.reactions[scope.newStep.reaction].input;
+                            scope.file.steps.push(scope.newStep);
+                            scope.newStep = {};
+                            scope.hideopts.uptostep = scope.file.steps.length;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}])
