@@ -96,6 +96,11 @@ Application.Extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '
         $focus.typeOutSearch(str, true);
     };
 
+    $scope.runDNA = function() {
+        var str = 'DNA.shuffleSequence("aaaacccccgggggtttttt")';
+        $focus.typeOutSearch(str, true);
+    };
+
     $scope.queryClothoTeam = function () {
         var str = 'clotho.query({schema : "ClothoTeam"})';
         $focus.typeOutSearch(str, true);

@@ -39,7 +39,7 @@
         </div>
 
         <!--log-->
-        <div class="inline-block" style="position:relative;" ng-init="display.genLogPos()">
+        <div class="inline-block" style="position:relative;" ng-init="display.genLogPos()" click-outside="display.hide('log');" click-outside-active="display.log">
             <div class="btn-group">
                 <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log'); log.unread = null">
                     <i class="icon-tasks"></i>
@@ -47,7 +47,7 @@
                 </button>
             </div>
 
-            <div id="clothoSearchbarLog" class="popover bottom" style="position: absolute;" ng-show="display.log" ng-style="display.logpos">
+            <div id="clothoSearchbarLog" class="popover bottom" style="position: absolute;" ng-show="display.log" ng-style="display.logpos" >
                 <div class="arrow"></div>
                 <h3 class="popover-title">
                     Activity Log

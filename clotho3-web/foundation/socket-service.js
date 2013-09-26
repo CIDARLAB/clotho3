@@ -11,6 +11,10 @@ Application.Foundation.service('Socket', ['PubSub', 'ClientAPI', function(PubSub
         //created in index.html
         var socket = window['$clotho']['socket'];
 
+        socket.onclose = function(evt) {
+            ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"})
+        };
+
         //external use - use in other apps, or for custom events
         var customChannels = {};
 

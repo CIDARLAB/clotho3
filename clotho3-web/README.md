@@ -62,25 +62,34 @@ NEED FROM STEPHANIE
 CHANGES TO MAKE
 
 - construction file - create from scratch
+    - convert dictionary to array, pull keys where needed
     - can add clotho parseable term to dictionary
+    - carotenoid construction
 
 
-- angular filter to make long string like "asdasdsadn\n.....\nasdasdasdad"
-    - use in tooltip
-- tool quiz ---- show hint
-    - prepend to input as ? with popover
-- move all quizzes to directive (clotho intro: tools, scripting)
-- activity log clickOutside
-- command returns false -> show in log
 
-- rewrite search bar functions to omit clotho.run syntax
+- update modules
 
-- mail solution
+- $focus.typeOutSearch to accept array, use in Ligation
+
+- clotho.run directive to handle module namespacing, or use submit
+
+
+-searchbar updates
+    - $timeout of logSnippet
+    - call say() for run(), other commands
+        - check isString in say and wrap
+    - if get response on say() for a submit() don't post Command Received
+
+
+
+- mail solution for about page
 
 - trail: unread check for each Page, change style, affects dialogs
 
 
 QUIZZES
+    - hints like fillin in other quizzes
     - gradeQuiz
         - JSON stringify results
         - use for function tests
@@ -100,45 +109,13 @@ CONSTRUCTION FILES
     - Templates
         - construction file -> protocol template
 
-TRAILS
-    - ClothoIntro Pages
-        - PCR --- better examples
-        - Command Bar demos --- define variable, query
-    - Quiz
-        - gradeQuiz -- ignore case
-        - make dictionary more dynamic (at least on client)
-        - move inline quizzes to quiz object, fix templates
-        - add hint param to quiz
-            - show hint next to quiz decal
 
 
-
-- write modules on server
-
-
-
--searchbar updates
-    - $timeout of logSnippet
-    - call say() for run(), other commands
-        - check isString in say and wrap
-    - if get response on say() for a submit() don't post Command Received
-
-
-
-
-- about page
-    - subscribe to clotho-users --- need server script
-
-
-- team page
-    - add people for team page, query over them in Search Demo
+-------------------------
 
 
 - code mirror in function editor
     - http://angular-ui.github.io/ui-codemirror/
-
-
-- socket close alert ( socket.onclose() )
 
 
 - $focus
@@ -147,10 +124,6 @@ TRAILS
     - move search typeout to search service?
     - fn: show activity log (use searchbar service)
     - type series of commands with break
-
-
-- look at Application.mixin of controllers
-
 
 
 - look into including Raven + Eugene

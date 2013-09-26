@@ -124,14 +124,23 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
         $scope.constructionProductDemo = Construction.process(newval)
     });
 
+    $scope.getConstructionFile = function(selection) {
 
-    $http.get('/models/construction_vio.json').then(function(data) {
-        $scope.constructionFile = data.data
-    });
+        var files = [
+            '/models/construction_demo.json',
+            '/models/construction_gfp.json',
+            '/models/construction_vio.json'
+        ];
+
+        $http.get(files[selection]).then(function(data) {
+            $scope.constructionFile = data.data
+        });
+    };
+
+    $scope.getConstructionFile(2);
 
     $scope.reprocess = function(file) {
-        console.log('REPROCESS!');
-        console.log(file);
+        console.log('reprocess callback!');
     };
 
     $scope.hideOpts = {};

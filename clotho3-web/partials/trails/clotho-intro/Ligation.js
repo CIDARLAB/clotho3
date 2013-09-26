@@ -10,10 +10,10 @@ Application.Extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus
         ['aaaaaaaaaaA^CATG_', 'ccaaccaaccaaA^CATG_'],
         ['^CATG_Ttttttttttt', '^CATG_Tttggttggttgg'],
         ['^CATG_Ttttttttttt', 'ccaaccaaccaaA^CATG_'],
-        ['aaaaaaaaaaA^CATG_', 'ggggggA^CATG_'],
-        ['aaaaaaaaaaA^CATG_', 'gtcatcgatcagt_GTAC^'],
-        ['aaaaaaaaaaA^CATG_T', 'A^CATG_Tacgatagcattaagcgt'],
-        ['aaaaaaaaaaaaaa|', '|ttggttggttgg']
+        ['aactgatcgaA^CATG_', 'acgactaA^CATG_'],
+        ['gctgctagcA^CATG_', 'gatcgatacc_GTAC^'],
+        ['acgttgcA^CATG_T', 'A^CATG_Tcagctgatgcgtcgac'],
+        ['ggttccggttcc|', '|tagtagtagtagtag']
     ];
 
     $scope.setLigate = function(setInd) {
@@ -36,7 +36,7 @@ Application.Extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus
 
         $dialog.messageBox('Defining Variables', 'This time we\'ll define the variables as part of the process. First we need to define our two fragments, <code>frag1</code> and <code>frag2</code>. Then we\'ll join them in an array <code>fragments</code>, which we pass to the function <code>ligate</code>. <b>Remember we must pass our arguments in an array!</b>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
             .then(function() {
-                var str = 'var frag1 = "aaaaaaaaaaA^CATG_";';
+                var str = 'var frag1 = "aaatttcccgggA^CATG_";';
                 return $focus.typeOutSearch(str, true)
             })
             .then(function() {
@@ -48,7 +48,7 @@ Application.Extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus
                 return $focus.typeOutSearch(str, true)
             })
             .then(function() {
-                return $focus.typeOutSearch('clotho.run("ligate", [fragments])');
+                return $focus.typeOutSearch('PCR.ligate([fragments])');
             })
             .then(function() {
                 $('#searchBarInput').focus()

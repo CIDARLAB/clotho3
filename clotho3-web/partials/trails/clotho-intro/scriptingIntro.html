@@ -1,19 +1,10 @@
 <div ng-controller="clothoIntro_scriptingIntroCtrl">
-    <div class="pull-right" hint-button="Be sure to enclose your sequence in quotes like this: '{{ randomSequence }}'"></div>
-    <p>To run functions from the Clotho Command Bar, issue commands in the form</p>
-    <p><code>clotho.run('myFuntion', [myArguments])</code></p>
-    <p>and here, <code>myFunction</code> is <code>revcomp</code></p>
+    <div class="pull-right" hint-button="Be sure to enclose your sequence in quotes like this: '{{ quiz.questionValue }}'"></div>
+    <p>It's easy to run several sequence manipulation functions, using this syntax:</p>
+    <p><code>myFunction(myArguments)</code></p>
+    <p>and here, <code>myFunction</code> is <code>DNA.revcomp</code></p>
 
-    <!-- note this isn't the normal way of writing a quiz, this is putting the template inline for a unique format-->
-    <div class="quiz">
-        <h5>Find the reverse complement of <code>{{ randomSequence }}</code> using the Command Bar</h5>
-        <div class="control-group" ng-class="{'success' : response.result, 'error' : response.result == false}">
-            <div class="input-append">
-                <input type="text" class="input-xlarge" ng-model="quizAnswer"/>
-                <button class="btn" ng-click="gradeSimpleQuiz()" ng-disabled="!quizAnswer || submitted" ng-class="{'btn-success' : response.result, 'btn-danger' : response.result == false}">Grade Quiz</button>
-            </div>
-        </div>
-    </div>
+    <div trail-quiz ng-model="quiz"></div>
 
     <button class="btn btn-info btn-large" ng-click="showMeHow()"><i class="icon-white icon-eye-open"></i> Show me how</button>
 

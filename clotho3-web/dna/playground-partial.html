@@ -4,6 +4,12 @@
         <div class="offset3 span6">
             <input type="number" ng-model="hideOpts.uptostep" min="0" max="{{ constructionFile.steps.length }}"/>
             <button class="btn" ng-click="constEditable = !constEditable" ng-init="constEditable = false;">Toggle Editable</button>
+
+            <div class="btn-group">
+                <button class="btn" ng-click="getConstructionFile(0)">Choose Simple</button>
+                <button class="btn" ng-click="getConstructionFile(1)">Choose GFP</button>
+                <button class="btn" ng-click="getConstructionFile(2)">Choose Vio</button>
+            </div>
         </div>
         <form class="offset1 span10" construction-full ng-model="constructionFile" construction-editable="constEditable" construction-onchange="reprocess(file)" construction-hideopts="hideOpts"></form>
 
@@ -300,18 +306,4 @@
         </form>
     </div>
 
-    <hr>
-
-    <div class="row">
-        <form name="ConstructionGFP" class="form-horizontal">
-
-
-            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionFile | json}}</pre>
-            </div>
-
-            <div class="span6 pull-right"> <pre class="pre-scrollable">{{ constructionFileProduct}}</pre>
-            </div>
-
-        </form>
-    </div>
 </div>

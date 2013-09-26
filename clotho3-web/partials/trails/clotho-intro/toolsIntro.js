@@ -62,8 +62,19 @@ Application.Extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$foc
 
 
 
+    $scope.quiz = {
+        "type" : "fillin",
+        "hint" : "Copy-paste the sequence into the tool below",
+        "question" : "Find the reverse complement of the sequence <code>{{ questionValue }}</code> using the tool.",
+        "questionValue" : "ACGTACATCGCGAT",
+        "answerGenerator" : "aa7f191e810c19729de86101",
+        "retry" : {
+            "questionValue" : "clotho.run('randomSequence', ['13'])"
+        }
+    };
+
     $scope.showMeHow = function() {
-        $focus.typeOut($('#seq'), $scope.randomSequence, 'sequence')
+        $focus.typeOut($('#seq'), $scope.quiz.questionValue, 'sequence')
         .then(function() {
             return $focus.highlightElement($('#clothorun'))
         })
@@ -71,16 +82,4 @@ Application.Extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$foc
             return $timeout(function() {unhighlight() }, 1000);
         })
     };
-
-    $scope.randomSequence = 'ACGTACATCGCGAT'; //todo - random
-
-    $scope.gradeSimpleQuiz = function() {
-        Clotho.gradeQuiz($scope.randomSequence, $scope.quizAnswer, 'aa7f191e810c19729de86101').then(function (r) {
-            console.log(r);
-            $scope.submitted = true;
-            $scope.response = {};
-            $scope.response.result = r;
-        })
-    };
-
 }]);

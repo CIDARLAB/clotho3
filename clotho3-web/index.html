@@ -90,7 +90,9 @@
             angular.bootstrap(
                     angular.element(document).find($clotho.appRoot),
                     ['clothoRoot']);
-        }
+        };
+
+        $clotho.socket.onclose = angular.noop;
     });
     </script>
 </head>

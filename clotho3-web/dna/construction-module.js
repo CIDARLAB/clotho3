@@ -48,6 +48,17 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
         //console.log(_.keys(dict));
 
 
+        // fixme - need to update keys, since dictionary ng-repeat requires conversion to array
+        /*
+        _.each(dict, function(item, oldKey) {
+            if (item.key && item.key != oldKey) {
+                dict[item.key] = angular.copy(item);
+                delete dict[oldKey]
+            }
+        });
+        */
+
+
         //process the dictionary, make all objects
         var dictPromises = {};
         angular.forEach(dict, function(value, key) {
@@ -206,10 +217,10 @@ Application.Dna.directive('constructionDictionaryView', [function() {
             '<table class="table table-bordered table-condensed constructionDictionary">' +
             '<thead><tr><th>Key</th> <th>Value</th></tr></thead>' +
             '<tbody>' +
-                '<tr ng-repeat="item in dictionary | orderByProp:\'computed\' | filter:uptofilter" ng-class="{\'computed\' : item.computed}">' +
-                '<td> <code contenteditable="{{ !!editable }}" ng-model="item.key"></code> </td>' +
+                '<tr ng-repeat="item in dictionary | orderByProp:\'stepNum\' | filter:uptofilter" ng-class="{\'computed\' : item.computed}">' +
+                '<td><code contenteditable="{{ !!editable && !item.computed}}" ng-model="item.key" tooltip="{{ !!editable && item.computed ? \'Edit computed keys in the workflow\' : \'\' }}"></code></td>' +
                 //'<td>{{item}}</td>' +
-                '<td contenteditable="{{ !!editable && !item.computed && !item.retrieved}}" ng-model="item.value" style="overflow: hidden; text-overflow: ellipsis;"></td>' +
+                '<td contenteditable="{{ !!editable && !item.computed && !item.retrieved}}" tooltip="{{ !!editable && item.computed ? \'You cannot edit a dynamically generated value\' : \'\' }}" tooltip-placement="mouse" ng-model="item.value" style="overflow: hidden; text-overflow: ellipsis;"></td>' +
                 '</tr>' +
                 '<tr ng-if="!!editable"><td colspan="2"><button class="btn" ng-click="addTerm()">Add new Key</button></td></tr>' +
             '</tbody>' +
@@ -244,7 +255,7 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
         scope: {
             fieldName : '@constructionField',
             model : '=ngModel',
-            dict : '=?constructionDictionary',
+            dictionary : '=?constructionDictionary',
             options : '=constructionOptions',
             editable : '=constructionEditable',
             stepIndex : '=constructionStepindex',
@@ -267,7 +278,7 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
                     function selectTemplate(type) {
                         switch (angular.lowercase(type)) {
                             case 'value' : {
-                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-change="checkInput()" ng-disabled="!editable" ng-required="required"/>';
+                                return '<input class="span12" type="text" placeholder="{{fieldName}}" ng-model="model" ng-disabled="!editable" ng-required="required"/>';
                             }
                             case 'boolean' : {
                                 return '<button btn-checkbox class="btn" ng-class="{\'btn-success\' : !!model}"  ng-model="model" ng-disabled="!editable"><i ng-class="{\'icon-white icon-ok-circle\' : !!model, \'icon-ban-circle\' : !model}"></i></button>';
@@ -293,8 +304,21 @@ Application.Dna.directive('constructionField', ['$compile', '$filter', function(
                     scope.required = (scope.required != 'false') ? "true" : "false";
                     //console.log(scope.required, !!scope.required);
 
+                    scope.$watch('dictionary', function(newval, oldval) {
+                        //console.log(newval);
+                        scope.dict = $filter('stepCheck')(scope.dictionary, scope.stepIndex);
+                        //console.log(scope.dict);
+                    });
+
+                    scope.$watch('dict', function() {scope.checkInput()}, true);
 
                     scope.checkInput = function() {
+
+                        //too early
+                        if (!scope.model) return;
+
+                        if (scope.type == 'boolean' || scope.type == 'value') return;
+
                         scope.hasInvalidItem = false;
                         scope.hasFutureItem = false;
 
@@ -340,7 +364,8 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
 
                     //note - can't recompile step or lose focus every keystroke dictionary model changes if force recompile in dictionary watch, so pull out into process step
                     scope.processStep = function processStep() {
-                        scope.dict = $filter('stepCheck')(scope.dictionary, scope.index);
+                        //scope.dict = $filter('stepCheck')(scope.dictionary, scope.index);
+                        scope.dict = scope.dictionary;
                     };
 
                     scope.compileStep = function compileStep() {
@@ -361,7 +386,7 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
                             '<stepFields class="row-fluid clearfix"></stepFields>' +
                             //'{{ step }}'+
                             '</div>' +
-                            '<div class="output" ng-class="{\'errorBackground\' : !dictionary[step.output], \'warningBackground\' : !dictionary[step.output].value}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
+                            '<div class="output" ng-class="{\'errorBackground\' : !dictionary[step.output], \'warningBackground\' : !dictionary[step.output].value}" tooltip="{{ dictionary[step.output].value | stringEnds }}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
                             '</div>');
 
 
@@ -486,6 +511,8 @@ Application.Dna.directive('constructionFull', ['Construction', function(Construc
                         if (!newval) return;
                         Construction.process(newval, true).then(function(result) {
                             console.log('finalResult', result);
+
+                            //need to update dictionary since refernece not maintained in processing, forces another digest
                             scope.file.dictionary = result;
                             scope.product = scope.file.dictionary.final.value;
 

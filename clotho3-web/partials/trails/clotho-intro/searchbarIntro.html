@@ -8,15 +8,22 @@
 
     <hr>
 
-    <p>We'll go into running Clotho functions in more depth on the next page...</p>
-
-    <button class="btn btn-info btn-large" ng-click="runFunction()"><i class="icon-white icon-eye-open"></i> Run a Function</button>
-
-
-    <hr>
-
     <p>You can run complex queries over all objects in your database, using <code>clotho.query(myParams)</code>, where <code>myParams</code> is an object with key-value filters</p>
 
     <button class="btn btn-info btn-large" ng-click="queryClothoTeam()"><i class="icon-white icon-eye-open"></i> Query for Clotho Developers</button>
+
+    <hr>
+
+    <p>Basic DNA manipulation functions can be directly accessed, for example: <code>DNA.complement('acgttgca')</code></p>
+
+    <p>For this demo, we'll be sticking to the easier syntax.</p>
+
+    <button class="btn btn-info btn-large" ng-click="runDNA()"><i class="icon-white icon-eye-open"></i> Run a DNA Function</button>
+
+    <hr>
+
+    <p>Other functions can be run by calling <code>clotho.run</code>. </p>
+
+    <button class="btn btn-info btn-large" ng-click="runFunction()"><i class="icon-white icon-eye-open"></i> Run a Function</button>
 
 </div>

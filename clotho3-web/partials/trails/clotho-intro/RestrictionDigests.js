@@ -12,15 +12,16 @@ Application.Extensions.controller('clothoIntro_RestrictionDigestsCtrl', ['$scope
 
 
     $scope.showMeHow = function () {
-        $dialog.messageBox('Variables', '<p>You can create variables in the Command Bar that Clotho will remember.</p><p>For example: <code>var mySeq = "acgatcgaatatACAGTGacgtactgatcga"</code></p><p>We\'ll go ahead and declare <code>MySeq</code> and <code>MyEnz</code> for you behind the scenes.</p>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+        $dialog.messageBox('Variables', '<p>You can create variables in the Command Bar that Clotho will remember.</p><p>For example: <code>var mySeq = "acgatcgaatatGAATTCacgtactgatcga"</code></p><p>And using a Clotho-defined enzyme: <code>var myEnz = Digest.enzymes.EcoRI</code></p><p>We\'ll go ahead and declare <code>MySeq</code> and <code>MyEnz</code> for you behind the scenes.</p>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
         .then(function() {
-            var backgroundVars = $q.all([
-                Clotho.submit('var mySeq = "acgatcgaatatACAGTGacgtactgatcga"'),
-                //todo - update
-                Clotho.submit('var myEnz = {match: "ACAGTG"}')
+            return $q.all([
+                Clotho.submit('var mySeq = "acgatcgaatatGAATTCacgtactgatcga"'),
+                Clotho.submit('var myEnz = Digest.enzymes.EcoRI'),
+                $focus.typeOutSearch('Digest.digest(mySeq, myEnz)')
             ]);
-            return $focus.typeOutSearch('clotho.run("digest", [mySeq, myEnz])')
         })
-        .then();
+        .then(function() {
+            $focus.focusSearch();
+        });
     }
 }]);

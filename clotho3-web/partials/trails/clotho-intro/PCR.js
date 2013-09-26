@@ -41,7 +41,7 @@ Application.Extensions.controller('clothoIntro_PCRCtrl', ['$scope', '$focus', '$
 
                 $dialog.messageBox('ಠ_ಠ', '<p>We\'re creating <code>myBackbone</code> and <code>myPrimers</code> as we speak!</p>', [{label: "Efficiency is intelligent laziness!", cssClass: "btn-primary", result: true}]).open()
                 .then(function() {
-                    var str = 'clotho.run("PCR", [myBackbone, myPrimers])';
+                    var str = 'PCR.predict(myBackbone, myPrimers)';
                     $focus.typeOutSearch(str);
                     $('#searchBarInput').focus();
                 })

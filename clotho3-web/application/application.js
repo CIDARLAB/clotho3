@@ -31,12 +31,6 @@ Application.Functions = angular.module('clotho.functions',[]);
 Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
 
-        //extend scope with Clotho API. Don't need to do this in each controller.
-        $rootScope.Clotho = Clotho;
-    }]);
-
-angular.module('clotho.ng-additions', [])
-    .run(['$rootScope', function($rootScope) {
         /**
          @name $rootScope.$safeApply
          @note Each app needs to insert this into its own run() clause
@@ -54,6 +48,19 @@ angular.module('clotho.ng-additions', [])
             if($rootScope.$$phase) { fn(); }
             else { $rootScope.$apply(fn); }
         };
+
+        //extend scope with Clotho API. Don't need to do this in each controller.
+        $rootScope.Clotho = Clotho;
+
+
+        //future - may want to remove this --- for the demo
+        Clotho.submit("clotho.run('clientSetup', [])");
+
+    }]);
+
+angular.module('clotho.ng-additions', [])
+    .config([function() {
+
 
         //angular function extensions
         var ext = {};
@@ -197,5 +204,6 @@ angular.module('clothoRoot', ['clothoPackage']).
     /**************
      Functions
      **************/
+
 
 }]);

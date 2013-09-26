@@ -868,6 +868,9 @@ Application.Interface.service('$caret', ['$log', function($log) {
 //note - jQuery reliance
 //todo - rewrite to use $modal service (esp. for backdrop)
 Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compile', '$rootScope', 'Clotho', 'Searchbar', function($document, $timeout, $q, $compile, $rootScope, Clotho, Searchbar) {
+
+    var searchBarInput = ($('#searchBarInput'));
+
     var maxZ = function() {
         return Math.max.apply(null,
             $.map($('body *'), function(e,n) {
@@ -933,7 +936,6 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
     };
 
     var typeOutSearch = function(string, submit) {
-        var searchBarInput = ($('#searchBarInput'));
 
         return $q.when(searchBarInput.focus())
         .then(function() {
@@ -951,19 +953,23 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         .then(function(unhighlight) {
             return $timeout(function() {unhighlight()}, 600).then(function() {
                 if (submit) {
-                    Searchbar.submit(string);
                     Searchbar.display.log = true;
+                    return Searchbar.submit(string);
+                } else {
+                    return focusSearch();
                 }
             });
         });
 
     };
 
-    //todo - move to search service
     var submitSearch = function(string) {
         return Clotho.submit(string)
     };
 
+    var focusSearch = function() {
+        return $q.when(searchBarInput.focus())
+    };
 
     var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
 
@@ -1035,6 +1041,7 @@ Application.Interface.service('$focus', ['$document', '$timeout', '$q', '$compil
         bringToFront : bringToFront,
         typeOut : typeOut,
         typeOutSearch : typeOutSearch,
+        focusSearch : focusSearch,
         submitSearch : submitSearch,
         addBackdrop : addBackdrop,
         removeBackdrop : removeBackdrop,

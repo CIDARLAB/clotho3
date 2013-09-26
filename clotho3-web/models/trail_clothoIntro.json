@@ -112,6 +112,12 @@
                     "icon" : "eye",
                     "template" : "/partials/trails/clotho-intro/simulation.html",
                     "mixin" : "/partials/trails/clotho-intro/simulation.js"
+                },
+                {
+                    "title" : "Writing",
+                    "icon" : "exercise",
+                    "template" : "/partials/trails/clotho-intro/writing.html",
+                    "mixin" : "/partials/trails/clotho-intro/writing.js"
                 }
             ]
         }

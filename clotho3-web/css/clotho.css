@@ -106,6 +106,12 @@ Command Bar ONLY
 
 #clothoSearchbarLog .logEntry {
     max-width: 360px;
+    overflow-y: hidden;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    max-height: 80px;
 }
 
 
