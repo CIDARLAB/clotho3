@@ -911,7 +911,7 @@ Application.Dna.service('DNA', [function() {
         verifyRepeats : verifyRepeats,
         verifyRuns : verifyRuns,
         verifyMeltingTemps : verifyMeltingTemps
-    }
+    };
 }]);
 
 Application.Dna.directive('dnaShuffle', ['DNA', function(DNA) {

@@ -51,8 +51,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 NECESSARY
 
-- update modules
-    - make sure key functions work
 - TRAIL
     - construction file changes
         - dictionary
@@ -67,7 +65,6 @@ IF TIME
 - searchbar updates
     - call say() for run(), other commands
         - check isString in say and wrap
-    - if get response on say() for a submit() don't post Command Received
 
 - clotho.run directive to handle module namespacing, or use submit
 

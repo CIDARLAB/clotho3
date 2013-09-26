@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Extensions.controller('clothoIntro_PCRCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', 'Clotho', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR, Clotho) {
+Application.Extensions.controller('clothoIntro_PCRCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', 'Clotho', 'Searchbar', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR, Clotho, Searchbar) {
 
     $scope.pcr_demoSets = [
         {
@@ -36,8 +36,8 @@ Application.Extensions.controller('clothoIntro_PCRCtrl', ['$scope', '$focus', '$
             if (result)
                 $('#searchBarInput').focus();
             else {
-                Clotho.submit('var myBackbone = "cccccccccccagctacgatcgataaaaaaaaaaatttttttttttgatcgatcgatagctaggggggggggggg"');
-                Clotho.submit("var myPrimers = ['tatcgatcgta', 'gatcgatcgat']");
+                Searchbar.submit('var myBackbone = "cccccccccccagctacgatcgataaaaaaaaaaatttttttttttgatcgatcgatagctaggggggggggggg"');
+                Searchbar.submit("var myPrimers = ['tatcgatcgta', 'gatcgatcgat']");
 
                 $dialog.messageBox('ಠ_ಠ', '<p>We\'re creating <code>myBackbone</code> and <code>myPrimers</code> as we speak!</p>', [{label: "Efficiency is intelligent laziness!", cssClass: "btn-primary", result: true}]).open()
                 .then(function() {

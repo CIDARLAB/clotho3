@@ -161,9 +161,8 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
             return Clotho.submit(query).then(function(result){
                 ClientAPI.say(submission);
                 display.query = '';
-                ClientAPI.say({text: result || 'Command received'});
-
-                console.log(log.entries);
+                //todo - if server calls say() then don't post anything
+                !!result && ClientAPI.say({text: result});
             });
 
         }
