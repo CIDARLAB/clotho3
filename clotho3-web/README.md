@@ -51,13 +51,7 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 NECESSARY
 
-- TRAIL
-    - construction file changes
-        - dictionary -> array, keys as field
-
-
 - mail solution
-
 
 
 IF TIME

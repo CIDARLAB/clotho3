@@ -16,6 +16,16 @@ Application.Extensions.controller('clothoIntro_reverseComplementCtrl', ['$scope'
         }}
     };
 
+    //hacks to hide dialog
+    var dialog;
+    var oldNext = $scope.next;
+    $scope.$parent.next = function() {
+        console.log('called it');
+        console.log(dialog);
+        dialog.close();
+        oldNext();
+    };
+
     //allow tide for quiz to render
     $timeout(angular.noop,200)
     .then(function() {
@@ -26,7 +36,8 @@ Application.Extensions.controller('clothoIntro_reverseComplementCtrl', ['$scope'
         return $timeout(function() {  }, 500 );
     })
     .then(function() {
-        return $dialog.dialog(dialogOpts).open()
+        dialog = $dialog.dialog(dialogOpts);
+        return dialog.open()
     })
     .then(function() {
         return $focus.removeBackdrop();

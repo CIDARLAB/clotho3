@@ -64,7 +64,7 @@ Application.Extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$foc
 
     $scope.quiz = {
         "type" : "fillin",
-        "hint" : "Copy-paste the sequence into the tool below",
+        "hint" : "Copy-paste the sequence into the tool below, or click Show Me How",
         "question" : "Find the reverse complement of the sequence <code>{{ questionValue }}</code> using the tool.",
         "questionValue" : "ACGTACATCGCGAT",
         "answerGenerator" : "aa7f191e810c19729de86101",
