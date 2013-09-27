@@ -207,10 +207,18 @@ public final class Mind
     
     
     public Object invoke(Function f, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException {
-        return getEngine().invoke(f, args, api);
+        return getEngine().invoke(f, convertArgs(args), api);
     }
     
     public Object invokeMethod(Module m, String methodName, List args, ScriptAPI api) throws NoSuchMethodException, ScriptException{
-        return getEngine().invoke(m, methodName, args, api);
+        return getEngine().invoke(m, methodName, convertArgs(args), api);
+    }
+    
+    private static List convertArgs(List args){
+        List out = new ArrayList();
+        for (Object o : args){
+            out.add(ScriptAPI.convertToNative(o));
+        }
+        return out;
     }
 }

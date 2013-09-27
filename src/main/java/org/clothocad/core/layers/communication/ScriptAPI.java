@@ -101,7 +101,7 @@ public class ScriptAPI {
     //XXX: augh, would be best if we had scriptengines that could treat maps as native objects
     //TODO: handle multiple languages
     //XXX: doesn't reach values hidden by non-Map/List fields
-    private Map<String,Object> convertToNative(Map<String,Object> obj){
+    private static Map<String,Object> convertToNative(Map<String,Object> obj){
         NativeObject nobj = new NativeObject();
         for (Map.Entry<String, Object> entry : obj.entrySet()) {
             //nobj.defineProperty(entry.getKey(), convertToNative(entry.getValue()), NativeObject.READONLY);
@@ -111,13 +111,15 @@ public class ScriptAPI {
         return nobj;
     }
     
-    private Object convertToNative(Object object){
+    public static Object convertToNative(Object object){
+        //XXX: assumes contents of native objects are clean
+        if (object instanceof NativeArray || object instanceof NativeObject) return object;
         if (object instanceof Map) return convertToNative((Map) object);
         if (object instanceof List) return convertToNative((List) object);
         return object;
     }
     
-    private List convertToNative(List list){
+    private static List convertToNative(List list){
         List convertedObjects = new ArrayList();
         for (Object o : list){
             convertedObjects.add(convertToNative(o));

@@ -638,7 +638,6 @@ public class ServerSideAPI {
         }
         Object result = run(function, arguments);
         if (!result.equals(Void.TYPE)) {
-            //TODO: Map<String, Object> reply - we need to have a way to designate which request we are responding to
             Message message = new Message(Channel.run, result, requestId);
             send(message);
         }
