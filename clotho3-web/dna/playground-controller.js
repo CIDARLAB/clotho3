@@ -24,6 +24,7 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
     console.log($parse('x.obj.y')($scope));
 
 
+    $scope.sequence = 'aaatttgggcccatgcta';
 
     //todo - if possible, assign these directly from DOM using a directive...
     $scope.$watch('sequence', function(newval, oldval) {
@@ -33,9 +34,6 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
     $scope.$watch('rna', function (newval, oldval) {
         $scope.protein = DNA.translate(newval);
     });
-
-    $scope.sequence = 'aaatttgggcccatgcta';
-
 
     //Digest
     $scope.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc';
@@ -137,10 +135,10 @@ Application.Dna.controller('constructionCtrl', ['$scope', '$parse', 'Clotho', 'D
         });
     };
 
-    $scope.getConstructionFile(2);
+    $scope.getConstructionFile(1);
 
     $scope.reprocess = function(file) {
-        console.log('reprocess callback!');
+        console.log('reprocess callback from controller!');
     };
 
     $scope.hideOpts = {};

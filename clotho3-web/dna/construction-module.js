@@ -37,10 +37,20 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
         //don't alter the construction file's dictionary
         var dict = file.dictionary;
 
+        //wait for it to be populated in case didn't check in watch to trigger process
+        if (angular.isEmpty(dict)) return returnDictionary ? [] : '';
+
+        console.log(dict);
+
+        //maintain references, index by key
+        file.dictionaryObject = {};
+        var dictObject = {};
+
         console.log('PROCESSING CONSTRUCTION FILE', file);
 
-        dict = _.pick(dict, function(value, key) {
-            return !value.computed
+        //note - returns removed values, don't assign
+        _.remove(dict, function(value) {
+            return !!value.computed
         });
 
         //console.log(file);
@@ -60,38 +70,41 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
 
         //process the dictionary, make all objects
-        var dictPromises = {};
-        angular.forEach(dict, function(value, key) {
-            if (angular.isString(value)) {
-                dict[key] = {key : key, computed : false, value : value};
+        var dictPromises = [];
+        angular.forEach(dict, function(item, index) {
+            if (angular.isString(item.value)) {
+                //dict[key] = {key : key, computed : false, value : value};
+                angular.extend(item, {computed : false})
             }
 
 
             // if requires clotho processing, process if:
             // (1) not retrieved, (2) processed value does not equal current value
-            if (!!value.Clotho) {
-                if (!!value.preprocess && (!value.retrieved || value.process != value.preprocess))
+            if (!!item.Clotho) {
+                if (!!item.preprocess && (!item.retrieved || item.process != item.preprocess))
                 {
-                    //testing clientSide for now
-                    var parsed = $parse(value.preprocess)(dnaModules);
+                    //note clientSide for now
+                    var parsed = $parse(item.preprocess)(dnaModules);
 
                     //todo check parsed, go to clotho if undefined
                     // *** add to promises properly
                     if (angular.isUndefined(parsed)) {
-                        
+
                     }
 
                     //note - extend object so don't lose focus on proprocess changing
-                    dictPromises[key] = angular.extend(value, {key : key, processed : value.preprocess, retrieved : true, computed : false, value : parsed});
+                    dictPromises.push = angular.extend(item, {processed : item.preprocess, retrieved : true, computed : false, value : parsed});
 
 
                     //future - dictPromises[key] = Clotho.submit(value.value);
                 }
             } else {
-                //todo - this is a hack to handle editing Clotho-parsed objects
-                if (!!value.preprocess) {
-                    console.log(value.value);
-                    value.value = angular.isObject(value.value) ? value.value : JSON.parse(value.value);
+                //todo - this is a hack to handle editing Clotho-parsed objects -- probably won't handle strings
+                if (!!item.preprocess) {
+                    console.log(item.value);
+                    item.value = angular.isObject(item.value) ?
+                        item.value :
+                        JSON.parse(JSON.stringify(item.value));
                 }
             }
         });
@@ -102,9 +115,17 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
         $q.all(dictPromises)
         .then(function(processedDict) {
-            angular.extend(dict, processedDict);
-
+            //angular.extend(dict, processedDict);
             //console.log(dict);
+            console.log(processedDict);
+
+            console.log(dict);
+
+            _.each(dict, function(item) {
+                dictObject[item.key] = item;
+            });
+
+            console.log(dictObject);
 
             var stepsChain = $q.when();
 
@@ -133,7 +154,7 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                             var parsedInput = (angular.isArray(input)) ? [] : {};
                             angular.forEach(input, function(child) {
 
-                                var parsed = $parse(child)(dict) || {};
+                                var parsed = $parse(child)(dictObject) || {};
                                 //console.log(child, parsed, dict[child]);
 
                                 //todo - handle object scenario (don't push)
@@ -148,13 +169,17 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                             //console.log(parsedInput);
                             inputs.push(parsedInput);
                         } else {
-                            parsedInput = $parse(input)(dict) || '';
+                            parsedInput = $parse(input)(dictObject) || '';
                             //for non-dictionary values e.g. a boolean or number
                             parsedInput = parsedInput.value || parsedInput;
                             //console.log(parsedInput);
                             inputs.push(parsedInput);
                         }
+
                     });
+
+                    //console.log(dictObject);
+                    //console.log(inputs);
 
                     //console.log('running ' + step.reaction + ' with inputs:', inputs);
 
@@ -171,7 +196,9 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
                     //use apply to match format on server
                     var result = $parse(step.reaction)(dnaModules).apply(null, inputs);
                     //console.log('result of '+step.reaction+' (#'+stepIndex+') with inputs:', inputs, result);
-                    dict[step.output] = {key : step.output, computed : true, stepNum: stepIndex, value : result};
+                    var newItem = {key : step.output, computed : true, stepNum: stepIndex, value : result};
+                    dict.push(newItem);
+                    dictObject[newItem.key] = newItem;
                     stepDeferred.resolve();
 
                     return stepDeferred.promise;
@@ -181,6 +208,8 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
             return stepsChain;
         })
         .then(function() {
+
+            file.dictionaryObject = dictObject;
 
             //console.log('final result: ', dict.final.value, dict);
             fullDeferred.resolve((!!returnDictionary) ? dict : dict.final.value);
@@ -198,10 +227,9 @@ Application.Dna.service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$par
 
 }]);
 
-//todo - returns array, need to maintain object references
+//note - returns array, need to maintain object references
 Application.Dna.filter('orderByProp', function() {
     return function(obj, prop) {
-
         return _.sortBy(obj, function (inner) {
             return inner.prop
         });
@@ -243,8 +271,9 @@ Application.Dna.directive('constructionDictionaryView', [function() {
 
             scope.addTerm = function() {
                 //custom fields will be added in on process
-                //todo -- add ability to clotho parse
-                angular.extend(scope.dictionary, {"" : ""});
+                //todo - ensure proper form
+                console.log(scope.dictionary);
+                scope.dictionary.push({key : "", value :""});
             };
 
             /*
@@ -359,6 +388,7 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
         scope: {
             step : '=ngModel',
             dictionary : '=constructionDictionary',
+            dictionaryObject : '=constructionDictionaryObject',
             index : '=constructionIndex',
             editable : '=constructionEditable',
             fields : '=constructionStep',
@@ -368,14 +398,14 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
         compile: function compile(tElement, tAttrs, transclude) {
             return {
                 pre: function preLink(scope, element, attrs, ngModel) {
-
+                    
                     scope.reactions = Construction.reactions;
                     scope.reactionsArray = _.toArray(scope.reactions);
 
                     //note - can't recompile step or lose focus every keystroke dictionary model changes if force recompile in dictionary watch, so pull out into process step
                     scope.processStep = function processStep() {
                         //scope.dict = $filter('stepCheck')(scope.dictionary, scope.index);
-                        scope.dict = scope.dictionary;
+                        scope.dict = scope.dictionaryObject;
                     };
 
                     scope.compileStep = function compileStep() {
@@ -396,7 +426,7 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
                             '<stepFields class="row-fluid clearfix"></stepFields>' +
                             //'{{ step }}'+
                             '</div>' +
-                            '<div class="output" ng-class="{\'errorBackground\' : !dictionary[step.output], \'warningBackground\' : !dictionary[step.output].value}" tooltip="{{ index < processto ? (dictionary[step.output].value | stringEnds) : \'<unprocessed>\' }}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
+                            '<div class="output" ng-class="{\'errorBackground\' : !dictionaryObject[step.output], \'warningBackground\' : !dictionaryObject[step.output].value}" tooltip="{{ index < processto ? (dictionaryObject[step.output].value | stringEnds) : \'<unprocessed>\' }}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +
                             '</div>');
 
 
@@ -459,14 +489,11 @@ Application.Dna.directive('constructionStep', ['Construction', '$parse', '$compi
                         // http://jsfiddle.net/alalonde/dZDLg/9/
 
                     //watch dictionary so runs after process
-                    scope.$watch('dictionary', function (newval, oldval) {
+                    /*scope.$watch('dictionary', function (newval, oldval) {
                         scope.processStep();
-
-                        /*testing
-                        _.each(newval, function(item){
-                           console.log(scope.index, item.key, item.computed, item.stepNum);
-                        });
-                        */
+                    });*/
+                    scope.$watch('dictionaryObject', function (newval, oldval) {
+                        scope.processStep();
                     });
 
                     scope.showReaction = true;
@@ -523,7 +550,7 @@ Application.Dna.directive('constructionFull', ['Construction', function(Construc
 
                             //need to update dictionary since refernece not maintained in processing, forces another digest
                             scope.file.dictionary = result;
-                            scope.product = scope.file.dictionary.final.value;
+                            //scope.product = scope.file.dictionary.final.value;
 
                             scope.onChange({file : scope.file});
                         });

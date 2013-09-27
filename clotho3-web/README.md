@@ -53,9 +53,9 @@ NECESSARY
 
 - TRAIL
     - construction file changes
-        - dictionary
-            - parseable terms
-            - dictionary -> array, keys as field
+        - dictionary -> array, keys as field
+
+
 - mail solution
 
 

@@ -3,7 +3,7 @@
 
     <div ng-if="!hideopts.steps" class="row-fluid" jq-sortable="{handle : '.fields', disabled : !editable }" ng-model="file.steps">
         <div ng-repeat="step in file.steps | limitTo:hideopts.uptostep" class="row-fluid">
-            <div construction-step="step.fields" ng-model="step" construction-dictionary="file.dictionary" construction-index="$index" construction-editable="editable" construction-remove="file.steps.splice($index, 1)" construction-processto="hideopts.processto"></div>
+            <div construction-step="step.fields" ng-model="step" construction-dictionary="file.dictionary" construction-index="$index" construction-editable="editable" construction-remove="file.steps.splice($index, 1)" construction-processto="hideopts.processto" construction-dictionary-object="file.dictionaryObject"></div>
         </div>
     </div>
 
