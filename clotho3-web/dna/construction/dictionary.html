@@ -4,7 +4,7 @@
         <thead>
         <tr>
             <th>Variable</th>
-            <th ng-if="!!editable">Clotho Process</th>
+            <th ng-if="!!editable">Compute</th>
             <th>Value</th>
         </tr>
         </thead>
@@ -14,7 +14,7 @@
             <td>
                 <code contenteditable="{{ !!editable && !item.computed}}" ng-model="item.key" tooltip="{{ !!editable && item.computed ? 'Edit computed keys in the workflow' : '' }}"></code>
             </td>
-            <td ng-if="!!editable" style="text-align : center;"><button class="btn btn-mini" btn-checkbox ng-model="item.Clotho" ng-true-value="true" ng-false-value="false" tooltip="Should this value be processed by Clotho?" tooltip-append-to-body="true"><i ng-class="{'icon-ok' : !!item.Clotho, 'icon-fake' : !item.Clotho}"></i></button></td>
+            <td ng-if="!!editable" style="text-align : center;"><button class="btn btn-mini" btn-checkbox ng-model="item.Clotho" ng-true-value="true" ng-false-value="false" tooltip="Should this value be processed by Clotho?" tooltip-append-to-body="true" ng-disabled="!!item.computed"><i ng-class="{'icon-ok' : !!item.Clotho, 'icon-fake' : !item.Clotho}" ></i></button></td>
             <!--<td>{{item}}</td>-->
             <td ng-if="item.Clotho && editable" contenteditable="{{ !!editable }}" ng-model="item.preprocess" style="overflow: hidden; text-overflow: ellipsis;"></td>
             <td ng-if="!item.Clotho || !editable" contenteditable="{{ !!editable && !item.computed }}" tooltip="{{ !!editable && item.computed ? 'You cannot edit a dynamically generated value' : '' }}" tooltip-placement="mouse" ng-model="item.value" style="overflow: hidden; text-overflow: ellipsis;"></td>

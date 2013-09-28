@@ -580,4 +580,4 @@ Application.Dna.directive('constructionFull', ['Construction', function(Construc
             }
         }
     }
-}])
+}]);

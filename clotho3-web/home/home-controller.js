@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Primary.controller('HomeCtrl', ['$scope', '$location', function($scope, $location) {
+Application.Primary.controller('HomeCtrl', ['$scope', '$location', 'Collector', function($scope, $location, Collector) {
 
     $scope.enterClotho = function() {
         $location.path('/trails/bb99191e810c19729de860fe');
@@ -16,8 +16,8 @@ Application.Primary.controller('HomeCtrl', ['$scope', '$location', function($sco
 
     //About page
     $scope.joinMailingList = function(from) {
-        var to = "clotho-users+subscribe@googlegroups.com";
-
+        Collector.silentAddModel('email_' + Date.now(), from);
+        $scope.emailToAdd = null;
     }
 
 
