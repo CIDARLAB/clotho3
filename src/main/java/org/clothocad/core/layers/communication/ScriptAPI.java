@@ -97,6 +97,10 @@ public class ScriptAPI {
         return mind.getEngine().eval(module.getCodeToLoad(), module.getLanguage(), this);
     }
     
+    public void say(String text){
+        api.say(text);
+    }
+    
     
     //XXX: augh, would be best if we had scriptengines that could treat maps as native objects
     //TODO: handle multiple languages
