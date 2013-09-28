@@ -108,7 +108,7 @@
 
                 <div class="btn-group pull-right">
                     <button class="btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="icon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
-                    <button class="btn btn-warning btn-small" ng-click="clearStorage()"><i class="icon-trash"></i></button>
+                    <button class="btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="icon-trash"></i></button>
                     <button class="btn btn-warning btn-small" ng-click="reloadModules()"><i class="icon-refresh"></i></button>
                 </div>
             </div>
