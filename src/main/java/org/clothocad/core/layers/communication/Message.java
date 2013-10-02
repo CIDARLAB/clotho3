@@ -54,7 +54,8 @@ public class Message {
             JSON.mapper.writeValue(writer, this);
             return writer.toString();
         } catch(JsonMappingException ex) {
-            data = "<unserializable object>";
+            //we can safely assume that data is the unserializable component
+            data = data.toString();
             return JSON.serialize(this);
         } catch (IOException ex) {
             ex.printStackTrace();

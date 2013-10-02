@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.layers.execution;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Member;
@@ -43,6 +44,7 @@ public class JSLoader extends ScriptableObject {
         }
     }
     
+    @JsonIgnore
     public FunctionObject getLoadFunction(){
         try {
             return new InstanceBoundFunctionObject("load", JSLoader.class.getDeclaredMethod("load", String.class), this);
@@ -56,6 +58,7 @@ public class JSLoader extends ScriptableObject {
     
     
     //http://stackoverflow.com/questions/3441947/how-do-i-call-a-method-of-a-java-instance-from-javascript
+    
     private static class InstanceBoundFunctionObject extends FunctionObject {
 
         private InstanceBoundFunctionObject(String name, Member methodOrConstructor, Scriptable parentScope) {
