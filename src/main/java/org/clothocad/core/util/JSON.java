@@ -4,11 +4,15 @@
  */
 package org.clothocad.core.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
@@ -21,6 +25,9 @@ import java.util.Map;
 public class JSON {
     
     public final static ObjectMapper mapper = new ObjectMapper();
+    static {
+        mapper.registerModule(new ClothoJacksonModule());
+    }
     private final static TypeReference<Map<String, Object>>  stringToObject = new TypeReference<Map<String, Object>>(){};
     
     public static String serializeJSONMap(Map object){
@@ -77,5 +84,25 @@ public class JSON {
         
         return null;
     }
+    
+    
+    static class ClothoJacksonModule extends SimpleModule {
+        public ClothoJacksonModule(){
+            //TODO: why is this deprecated?
+            super("ClothoModule", new Version(0,0,1,null,"org.clothocad","clotho"));
+            
+        }
+
+        @Override
+        public void setupModule(SetupContext context) {
+            context.setMixInAnnotations(Object.class, DisableGetters.class);
+        }
+        
+    }
+    
+    @JsonAutoDetect(getterVisibility=Visibility.NONE)
+    static abstract class DisableGetters {
+        
+    } 
     
 }
