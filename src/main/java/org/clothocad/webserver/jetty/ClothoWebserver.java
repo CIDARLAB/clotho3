@@ -11,7 +11,6 @@ import org.clothocad.core.layers.communication.Router;
 import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
@@ -41,7 +40,7 @@ public class ClothoWebserver {
 
         int confidentialPort = 8443; //TODO: make configurable
         
-        server = new Server(nPort);
+        server = new Server();
 
         //Connectors
 
@@ -50,13 +49,14 @@ public class ClothoWebserver {
         connector0.setMaxIdleTime(3600000);
         connector0.setRequestHeaderSize(8192);
         connector0.setConfidentialPort(confidentialPort);
-
+        server.addConnector(connector0);
+        
         SslSelectChannelConnector ssl_connector = new SslSelectChannelConnector();
         ssl_connector.setPort(confidentialPort); 
         ssl_connector.setMaxIdleTime(3600000);
         SslContextFactory cf = ssl_connector.getSslContextFactory();
         cf.setKeyStore(keystore);
-        server.setConnectors(new Connector[]{ssl_connector});
+        server.addConnector(ssl_connector);
         
         
         //Connection constraints
@@ -67,7 +67,7 @@ public class ClothoWebserver {
         ConstraintMapping cm = new ConstraintMapping();
         cm.setConstraint(constraint);
         cm.setPathSpec("/*");
-
+        
         ConstraintSecurityHandler constraintHandler = new ConstraintSecurityHandler();
         constraintHandler.setConstraintMappings(new ConstraintMapping[]{cm});
         
@@ -100,8 +100,7 @@ public class ClothoWebserver {
                 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(constraintHandler);
-        handlers.addHandler(servletHandler);
-        
+        constraintHandler.setHandler(servletHandler);        
         server.setHandler(handlers);
 
     }
