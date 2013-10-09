@@ -17,7 +17,7 @@ public class ClothoStarter
         implements Daemon {
 
     private static final Logger logger = LoggerFactory.getLogger(ClothoStarter.class);
-    private static ClothoWebserver server;
+    protected static ClothoWebserver server;
 
     public static void main(String[] args)
             throws Exception {
@@ -32,11 +32,11 @@ public class ClothoStarter
 
         Injector injector = Guice.createInjector(new ClothoModule(properties), new MongoDBModule());
 
-        ClothoWebserver server = injector.getInstance(ClothoWebserver.class);
+        server = injector.getInstance(ClothoWebserver.class);
         
         server.start();
     }
-    private DaemonContext context;
+    protected DaemonContext context;
 
     @Override
     public void init(DaemonContext dc) {
