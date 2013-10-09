@@ -30,8 +30,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import lombok.extern.slf4j.Slf4j;
 
-import org.clothocad.core.layers.communication.ServerSideAPI;
-import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.execution.Mind;
 
 /* This one deals with passing json:
  * http://stackoverflow.com/questions/1078419/java-scriptengine-using-value-on-java-side

@@ -7,9 +7,9 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.layers.communication.ClothoConstants;
+import org.clothocad.core.communication.apollo.ClothoConstants;
 
-import org.clothocad.core.layers.communication.apollo.ClothoMessageConsumer;
+import org.clothocad.core.communication.apollo.ClothoMessageConsumer;
 import org.fusesource.stomp.jms.StompJmsConnectionFactory;
 import org.fusesource.stomp.jms.StompJmsDestination;
 

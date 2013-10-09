@@ -1,6 +1,6 @@
 package org.clothocad.core.testers.publisher;
 
-import org.clothocad.core.layers.communication.apollo.ClothoPublisher;
+import org.clothocad.core.communication.apollo.ClothoPublisher;
 
 import java.util.HashMap;
 import java.util.Map;

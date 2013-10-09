@@ -9,8 +9,8 @@ import org.clothocad.core.aspects.Proctor.Paver;
 import org.clothocad.core.aspects.Proctor.TemplatePaver;
 import org.junit.Before;
 import org.junit.Test;
-import org.clothocad.core.layers.communication.mind.Mind;
-import org.clothocad.core.utils.TestUtils;
+import org.clothocad.core.execution.Mind;
+import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.ServerTrailDeprecated;
 import org.junit.After;
 

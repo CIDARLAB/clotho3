@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.layers.communication.imports.IceImporter;
+import org.clothocad.core.communication.imports.IceImporter;
 
 /**
  *

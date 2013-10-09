@@ -6,9 +6,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
-import org.clothocad.core.layers.communication.Router;
+import org.clothocad.core.communication.Router;
 
-import org.clothocad.core.layers.communication.connection.ws.ClothoWebSocket;
+import org.clothocad.core.communication.ws.ClothoWebSocket;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Server;

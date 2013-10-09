@@ -13,8 +13,8 @@ import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
-import org.clothocad.core.layers.execution.JavaScriptScript;
-import org.clothocad.core.layers.execution.Script;
+import org.clothocad.core.execution.JavaScriptScript;
+import org.clothocad.core.execution.Script;
 import org.clothocad.core.persistence.Replace;
 
 /**

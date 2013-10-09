@@ -6,14 +6,14 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.clothocad.core.layers.communication.Router;
-import org.clothocad.core.layers.communication.ScriptAPI;
+import org.clothocad.core.communication.Router;
+import org.clothocad.core.communication.ScriptAPI;
 import org.junit.Before;
 import org.junit.Test;
-import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.testers.communication.TestConnection;
-import org.clothocad.core.utils.TestUtils;
+import org.clothocad.core.communication.TestConnection;
+import org.clothocad.core.util.TestUtils;
 import org.junit.After;
 
 public class MindTest {

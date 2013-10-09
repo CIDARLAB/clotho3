@@ -31,7 +31,7 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Aspect;
 import org.clothocad.core.aspects.Hopper;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.layers.communication.mind.PageMode;
+import org.clothocad.core.communication.mind.PageMode;
 import org.clothocad.model.Person;
 import org.clothocad.model.ServerTrailDeprecated;
 

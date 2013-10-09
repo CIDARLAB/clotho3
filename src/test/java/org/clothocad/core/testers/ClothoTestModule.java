@@ -18,8 +18,8 @@ import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 import org.clothocad.core.ClothoModule;
-import org.clothocad.core.layers.communication.Router;
-import org.clothocad.core.utils.TestRouter;
+import org.clothocad.core.communication.Router;
+import org.clothocad.core.util.TestRouter;
 
 /**
  *

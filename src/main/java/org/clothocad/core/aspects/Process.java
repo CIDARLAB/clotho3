@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.clothocad.core.layers.communication.Callback;
+import org.clothocad.core.communication.Callback;
 
 /**
  * @author John Christopher Anderson

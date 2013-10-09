@@ -6,7 +6,7 @@ package org.clothocad.core.aspects.Proctor;
 
 import java.util.Map;
 import org.clothocad.core.datums.Doo;
-import org.clothocad.core.layers.communication.mind.Mind;
+import org.clothocad.core.execution.Mind;
 
 /**
  *
