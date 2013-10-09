@@ -4,9 +4,16 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.util.Arrays;
 import java.util.Properties;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
+import org.apache.commons.cli.PosixParser;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.clothocad.core.ClothoModule;
+import org.clothocad.core.ConfigOption;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.webserver.jetty.ClothoWebserver;
 import org.slf4j.Logger;
@@ -22,19 +29,26 @@ public class ClothoStarter
     public static void main(String[] args)
             throws Exception {
 
-        Integer nPort = 8080;
-        if (args.length > 1) {
-            nPort = Integer.parseInt(args[0]);
-        }
+        Options options = ConfigOption.getOptions();
+        CommandLineParser parser = new PosixParser();
+        
+        CommandLine cmd = parser.parse(options, args);
+        
 
-        Properties properties = new Properties();
-        properties.setProperty("port", nPort.toString());
-
-        Injector injector = Guice.createInjector(new ClothoModule(properties), new MongoDBModule());
+        Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
 
         server = injector.getInstance(ClothoWebserver.class);
         
         server.start();
+    }
+
+    private static Properties commandToProperties(CommandLine cmd) {
+        Properties properties = new Properties();
+        for (ConfigOption configOption : ConfigOption.values()){
+            if (cmd.hasOption(configOption.abbreviation))
+                properties.setProperty(configOption.abbreviation, cmd.getOptionValue(null));
+        }
+        return properties;
     }
     protected DaemonContext context;
 
