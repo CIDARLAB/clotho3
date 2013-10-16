@@ -1,4 +1,4 @@
-package org.clothocad;
+package org.clothocad.core;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -6,14 +6,11 @@ import java.util.Arrays;
 import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.Parser;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
-import org.clothocad.core.ClothoModule;
-import org.clothocad.core.ConfigOption;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.webserver.jetty.ClothoWebserver;
 import org.slf4j.Logger;
@@ -29,11 +26,7 @@ public class ClothoStarter
     public static void main(String[] args)
             throws Exception {
 
-        Options options = ConfigOption.getOptions();
-        CommandLineParser parser = new PosixParser();
-        
-        CommandLine cmd = parser.parse(options, args);
-        
+        CommandLine cmd = parseArgs(args);
 
         Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
 
@@ -41,12 +34,19 @@ public class ClothoStarter
         
         server.start();
     }
+    
+    protected static CommandLine parseArgs(String[] args) throws ParseException{
+        Options options = ConfigOption.getOptions();
+        CommandLineParser parser = new PosixParser();
+        
+        return parser.parse(options, args);
+    }
 
-    private static Properties commandToProperties(CommandLine cmd) {
+    protected static Properties commandToProperties(CommandLine cmd) {
         Properties properties = new Properties();
         for (ConfigOption configOption : ConfigOption.values()){
             if (cmd.hasOption(configOption.abbreviation))
-                properties.setProperty(configOption.abbreviation, cmd.getOptionValue(null));
+                properties.setProperty(configOption.name(), cmd.getOptionValue(configOption.abbreviation));
         }
         return properties;
     }

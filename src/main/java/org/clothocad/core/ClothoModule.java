@@ -23,6 +23,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 public class ClothoModule extends AbstractModule {
     public ClothoModule(Properties properties){
         defaults.put("port", "8080");
+        defaults.put("confidentialport", "8443");
         defaults.put("dbname", "clotho");
         defaults.put("dbhost", "localhost");
         defaults.put("dbport", "27017");
