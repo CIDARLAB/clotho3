@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -31,8 +32,12 @@ public class JSON {
     private final static TypeReference<Map<String, Object>>  stringToObject = new TypeReference<Map<String, Object>>(){};
     
     public static String serializeJSONMap(Map object){
+        return serializeJSONMap(object, false);
+    }
+    
+    public static String serializeJSONMap(Map object, boolean pretty){
         StringWriter writer = new StringWriter();
-
+        if (pretty) mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
             mapper.writeValue(writer, object);
                             return writer.toString();
@@ -40,6 +45,7 @@ public class JSON {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
         }
+        if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
         return null;
     }
     

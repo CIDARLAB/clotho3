@@ -98,18 +98,26 @@ public class Persistor{
     
     @Inject
     public Persistor(final ClothoConnection connection, JSONSerializer serializer){
+        this(connection, serializer, true);
+    }
+    
+    public Persistor(final ClothoConnection connection, JSONSerializer serializer, boolean initializeBuiltins){
         this.connection = connection;
         connect();
         this.serializer = serializer;
         
-        initializeBuiltInSchemas();
+        if (initializeBuiltins) initializeBuiltInSchemas();
         
-        //XXX: demo hack
+        
         converters = new Converters();
-        converters.addConverter(new BasicPartConverter(this));
+        //XXX: demo hack
+        if (initializeBuiltins){
+            converters.addConverter(new BasicPartConverter(this));           
+        }
+       
     }
     
-    private void validate(ObjBase obj){
+    protected void validate(ObjBase obj){
         Set<ConstraintViolation<?>> violations = new HashSet<>();
         
         for (ObjBase o : getObjBaseSet(obj)){
@@ -213,7 +221,7 @@ public class Persistor{
     
     //XXX: should return set of possible schemas, not child objects
     // then should not be used as currently is in save
-    private Set<ObjBase> getObjBaseSet(ObjBase obj){
+    protected Set<ObjBase> getObjBaseSet(ObjBase obj){
         return getObjBaseSet(obj, new HashSet<ObjBase>());
     }
         
@@ -480,22 +488,28 @@ public class Persistor{
         initializeBuiltInSchemas();
    }
 
-    private void initializeBuiltInSchemas() {
+    //TODO: write test for idempotence
+    protected void initializeBuiltInSchemas() {
         //XXX: just built-in models for now
         Reflections models = new Reflections("org.clothocad");
 
         for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
+            //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
+            //not sure if this is a problem
+            
             if (c.getSuperclass() == ObjBase.class){
                 makeBuiltIns(c, null, models);
             }
         }
-        
-        
     }
     
     private void makeBuiltIns(Class<? extends ObjBase> c, Schema superSchema, Reflections ref){
         Schema builtIn = new BuiltInSchema(c, superSchema);
-        save(builtIn);
+        try{
+            resolveSelector(builtIn.getName(), BuiltInSchema.class, false);
+        } catch (EntityNotFoundException e){
+            save(builtIn);           
+        }
         for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){
             if (subClass.getSuperclass() == c){
                 makeBuiltIns(subClass, builtIn, ref);                
@@ -596,6 +610,7 @@ public class Persistor{
         }
 
         //complain about ambiguity
+        log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
     }
 }

@@ -6,6 +6,8 @@ package org.clothocad.core.persistence;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 import org.clothocad.model.FreeForm;
 import org.bson.types.ObjectId;
@@ -189,6 +191,24 @@ public class PersistorTest {
         Class c = o.getClass();
         o = null;
         persistor.get(c, id);
+    }
+    
+    @Test
+    public void initBuiltInsIdempotent(){
+        int size = 0;
+        Iterator it = persistor.find(new HashMap()).iterator();
+        while (it.hasNext()){
+            size ++;
+            it.next();
+        }
+        persistor.initializeBuiltInSchemas();
+        int newSize = 0;
+         it = persistor.find(new HashMap()).iterator();
+        while (it.hasNext()){
+            newSize ++;
+            it.next();
+        }
+        assertEquals(size, newSize);
     }
     
     //TODO: verify results are in appropriate style (id instead of _id), (schema instead of ClassName), etc
