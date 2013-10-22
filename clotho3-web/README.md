@@ -5,12 +5,7 @@
 Clotho 3.0 Front-end Playground: Functionalities for:
 - Sharable Editor
 - Trails Browser
-- Chat (socket implementation)
-
-## To Run
-
-- set current directory to this one, then run `node scripts/web-server-socket.js` and go to localhost:8080/app/index.html
-- note: socket.io must be installed locally. See http://socket.io/#how-to-use
+- Chat (socket implementation) 
 
 ## Prerequisites
 
@@ -48,11 +43,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 
 ### Current Tasks
-
-NECESSARY
-
-- mail solution
-
 
 IF TIME
 
@@ -100,11 +90,6 @@ DNA functions
     - move search typeout to search service?
     - fn: show activity log (use searchbar service)
     - type series of commands with break
-
-
-- look into including Raven + Eugene
-    - Raven: jenhan's login
-
 
 
 - custom person object, add anderson lab people

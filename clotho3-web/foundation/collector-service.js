@@ -158,6 +158,7 @@ Application.Foundation.service('Collector', ['$window', '$document', 'PubSub',fu
         //passes update message - usual way of adding model to collector
         //pass true for 'force' to force collect even if obj identical and broadcast of update
         var storeModel = function(uuid, obj, force) {
+	          //todo - ensure that what is in collector also matches localStorage
             if (force || !angular.equals(collector[uuid], obj)) {
                 //testing console.log("COLLECTOR\t" + uuid + " is being saved");
                 silentAddModel(uuid, obj);
