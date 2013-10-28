@@ -185,6 +185,7 @@ public class Persistor{
         if (data.containsKey("schema")){
             Object schema = data.get("schema");
             String resolvedSchemaName;
+            
             try{
                 resolvedSchemaName = get(BuiltInSchema.class,resolveSelector(schema.toString(), true)).getBinaryName();
                 if (resolvedSchemaName == null){
@@ -488,7 +489,6 @@ public class Persistor{
         initializeBuiltInSchemas();
    }
 
-    //TODO: write test for idempotence
     protected void initializeBuiltInSchemas() {
         //XXX: just built-in models for now
         Reflections models = new Reflections("org.clothocad");

@@ -50,11 +50,18 @@ public class JSON {
     }
     
     public static String serialize(Object o){
+        return serialize(o, false);
+    }
+    
+    public static String serialize(Object o, boolean pretty){
         StringWriter writer = new StringWriter();
+        if (pretty) mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
             mapper.writeValue(writer, o);
+            //if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
             return writer.toString();
         } catch (IOException ex) {
+           // if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
             throw new RuntimeException(ex);
         }
     }

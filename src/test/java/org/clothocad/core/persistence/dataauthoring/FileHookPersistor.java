@@ -42,7 +42,11 @@ public class FileHookPersistor extends Persistor{
         super(connection, serializer, false);
         this.storageFolder = storageFolder;
         if (!Files.exists(storageFolder)) Files.createDirectories(storageFolder);
-        initializeBuiltInSchemas();
+    }
+    
+    @Override
+    public void initializeBuiltInSchemas(){
+        super.initializeBuiltInSchemas();
     }
     
     public void writeToFile(Collection<ObjBase> objs){

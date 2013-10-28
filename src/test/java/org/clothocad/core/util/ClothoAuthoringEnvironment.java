@@ -6,11 +6,17 @@ package org.clothocad.core.util;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.ClothoStarter;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.persistence.dataauthoring.FileHookPersistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.security.ClothoRealm;
 import static org.clothocad.core.util.ClothoTestEnvironment.main;
@@ -42,9 +48,15 @@ public class ClothoAuthoringEnvironment extends ClothoStarter {
 
         //test-specific setup
 
-        Persistor persistor = injector.getInstance(Persistor.class);
+        FileHookPersistor persistor = injector.getInstance(FileHookPersistor.class);
         ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-        //persistor.deleteAll();
+        Path storageFolder = injector.getInstance(Key.get(Path.class, Names.named("storagefolder")));
+        if (!Files.exists(storageFolder) || !Files.newDirectoryStream(storageFolder).iterator().hasNext()){
+            persistor.initializeBuiltInSchemas();
+        }
+        
+        TestUtils.importTestJSON(Paths.get("src","test","resources").toString(), persistor, false);
+        TestUtils.importTestJSON(storageFolder.toString(), persistor, true);
         TestUtils.importTestJSON(persistor);
         TestUtils.setupTestUsers(realm);
 

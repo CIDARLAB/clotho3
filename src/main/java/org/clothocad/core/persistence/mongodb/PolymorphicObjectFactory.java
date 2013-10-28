@@ -11,6 +11,7 @@ import com.github.jmkgreen.morphia.mapping.Mapper;
 import com.mongodb.DBObject;
 import java.lang.reflect.Modifier;
 import org.clothocad.core.persistence.IdUtils;
+import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.Schema;
 
 /**
@@ -18,7 +19,7 @@ import org.clothocad.core.schema.Schema;
  * @author spaige
  */
 public class PolymorphicObjectFactory extends DefaultCreator {
-    private static final Logr log = MorphiaLoggerFactory.get(DefaultCreator.class);
+    private static final Logr log = MorphiaLoggerFactory.get(PolymorphicObjectFactory.class);
     
     @Override 
     public Object createInstance(Class clazz, DBObject dbObj) {
@@ -29,8 +30,21 @@ public class PolymorphicObjectFactory extends DefaultCreator {
     }
     
     private Class getClass(DBObject dbObj) {
+
+               
         // see if there is a className value
         String className = (String) dbObj.get(Mapper.CLASS_NAME_FIELDNAME);
+        
+        //is this describing a builtin?
+        if (className.equals("BuiltInSchema")){
+            /*try {
+                return Class.forName(dbObj.get("c").toString());
+            } catch (ClassNotFoundException ex) {
+                log.warning("Built in class described by DB object not found: {}", dbObj.toString());
+            }*/
+            return BuiltInSchema.class;
+        }
+        
         Class c = null;
         if (className != null) {
             // try to Class.forName(className) as defined in the dbObject first,

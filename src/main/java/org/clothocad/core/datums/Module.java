@@ -58,7 +58,7 @@ public class Module extends ObjBase {
     }
     
     public void decodeScript(Map obj){
-        setCode(obj.get("code").toString(), Language.valueOf(obj.get("language").toString()));
+        setCode((String) obj.get("code"), Language.valueOf((String) obj.get("language")));
     }
     
 //    @PrePersist

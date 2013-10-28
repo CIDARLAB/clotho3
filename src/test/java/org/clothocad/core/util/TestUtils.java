@@ -12,6 +12,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,8 @@ public class TestUtils {
     public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {
         ServerSideAPI api = new DummyAPI(persistor);
         ObjectReader reader = new ObjectMapper().reader(Map.class);
+        
+        List<Map> objects = new ArrayList<>();
         for (File child : new File(path).listFiles()) {
             if (!child.getName().endsWith(".json")) {
                 continue;
@@ -53,26 +56,48 @@ public class TestUtils {
             try {
                 MappingIterator<Map> it = reader.readValues(child);
                 while (it.hasNext()) {
-                    Map next = it.next();
-                    if (!overwrite){
-                        try{
-                            persistor.resolveSelector(next.get("name").toString(), false);
-                            continue;
-
-                        } catch (EntityNotFoundException e){
-                        }
-                    }
-                    ObjectId result = api.create(next);
-                    
-                    if (overwrite && result == null) {
-                        api.set(next);
-                    }
+                    objects.add(it.next());
                 }
+                
             } catch (JsonProcessingException ex) {
                 log.warn("Could not process {} as JSON", child.getAbsolutePath());
             } catch (IOException ex) {
                 log.warn("Could not open {}", child.getAbsolutePath());
             }
+        }
+        
+        while (objects.size() > 0) {
+            int prevSize = objects.size();
+            List<Map> newObjects = new ArrayList();
+
+            for (Map obj : objects) {
+                if (!overwrite) {
+                    try {
+                        persistor.resolveSelector(obj.get("name").toString(), false);
+                        continue;
+
+                    } catch (EntityNotFoundException e) {
+                    }
+                }
+                try {
+                    ObjectId result = api.create(obj);
+
+                    if (overwrite && result == null) {
+                        api.set(obj);
+                    }
+                } catch (RuntimeException e) {
+                    newObjects.add(obj);
+                } catch (ClassCircularityError e){
+                    e.getMessage();
+                }
+            }
+
+            objects = newObjects;
+            if (objects.size() >= prevSize) {
+                log.error("Could not load some files: {}", objects.toString());
+                return;
+            }
+
         }
     }
     //not sure if this should be static 
