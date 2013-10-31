@@ -17,9 +17,11 @@ import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Arrays;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.persistence.DBOnly;
 import org.clothocad.core.persistence.Rename;
+import org.clothocad.core.security.Visibility;
 
 /**
  *
@@ -48,6 +50,10 @@ public abstract class ObjBase {
     private Date dateCreated;
     @DBOnly
     private Date lastModified, lastAccessed;
+    
+    @Getter
+    @Setter
+    private Visibility visibility;
 
     public void onUpdate() {
 
