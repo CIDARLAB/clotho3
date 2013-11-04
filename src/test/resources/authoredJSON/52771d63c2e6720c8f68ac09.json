@@ -1,0 +1,15 @@
+{
+  "id" : "52771d63c2e6720c8f68ac09",
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d63c2e6720c8f68ac07",
+  "binaryName" : "org.clothocad.core.schema.JavaSchema",
+  "c" : "org.clothocad.core.schema.JavaSchema",
+  "name" : "JavaSchema",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "[[B",
+    "name" : "innerClasses",
+    "type" : "array",
+    "reference" : false
+  } ]
+}

@@ -1,0 +1,11 @@
+{
+  "id" : "5232a9e95ce620f042e5825f",
+  "schema" : "Function",
+  "args" : [ {
+    "name" : "str",
+    "type" : "string"
+  } ],
+  "name" : "uppercase",
+  "code" : "function (str) {return str.toUpperCase();};",
+  "language" : "JAVASCRIPT"
+}

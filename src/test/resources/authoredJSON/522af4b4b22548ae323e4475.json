@@ -1,0 +1,7 @@
+{
+  "id" : "522af4b4b22548ae323e4475",
+  "schema" : "Module",
+  "name" : "testModule",
+  "code" : "(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());",
+  "language" : "JAVASCRIPT"
+}

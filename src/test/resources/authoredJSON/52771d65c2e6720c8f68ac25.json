@@ -1,0 +1,11 @@
+{
+  "id" : "52771d65c2e6720c8f68ac25",
+  "schema" : "Function",
+  "args" : [ {
+    "name" : "str",
+    "type" : "string"
+  } ],
+  "name" : "spaceout",
+  "code" : "function (str) {return str.split('').join(' ');};",
+  "language" : "JAVASCRIPT"
+}

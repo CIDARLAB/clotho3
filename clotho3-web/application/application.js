@@ -12,7 +12,7 @@
 var Application = Application || {};
 
 Application.Primary = angular.module('clotho.primary', []);
-Application.Interface = angular.module('clotho.interface', []);
+Application.Interface = angular.module('clotho.interface', ['ui.codemirror']);
 Application.Extensions = angular.module('clotho.extensions', []);
 Application.Widgets = angular.module('clotho.widgets', []);
 
@@ -119,10 +119,24 @@ angular.module('clothoRoot', ['clothoPackage']).
             }).
             when('/editor', {
                 templateUrl:'editor/editor-partial.html',
-                title : 'Editor'
+                title : 'Editor',
+				        resolve : {
+					        deps : function($q) {
+						        //todo  - lazyload in directive, not all at once
+						        return Application.mixin('/lib/codemirror-3.19/lib/codemirror.js').then(function() {
+							        $q.all([
+								        Application.css('/lib/codemirror-3.19/lib/codemirror.css'),
+								        Application.mixin('/lib/codemirror-3.19/mode/javascript/javascript.js'),
+								        Application.mixin('/lib/codemirror-3.19/mode/python/python.js'),
+								        Application.mixin('/lib/codemirror-3.19/mode/groovy/groovy.js'),
+								        Application.mixin('/lib/codemirror-3.19/mode/clike/clike.js')
+							        ]);
+						        })
+					        }
+				        }
             }).
             when('/editor/:id', {
-                templateUrl:'editor/editor-partial.html'
+                templateUrl:'editor/editor-partial.html',
                 //todo - get this working, instead of doing it in the link of directive
                 //use search param and set reloadOnSearch to false
                 //resolve: []

@@ -1,0 +1,25 @@
+{
+  "id" : "52771d63c2e6720c8f68ac0a",
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d63c2e6720c8f68ac09",
+  "binaryName" : "org.clothocad.core.schema.BuiltInSchema",
+  "c" : "org.clothocad.core.schema.BuiltInSchema",
+  "name" : "BuiltInSchema",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "binaryName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Class",
+    "name" : "c",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.slf4j.Logger",
+    "name" : "log",
+    "type" : "object",
+    "reference" : false
+  } ]
+}

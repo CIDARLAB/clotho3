@@ -18,7 +18,7 @@
         <div class="control-group">
             <label class="control-label" for="functionLang">Language</label>
             <div class="controls">
-                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
+                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required ng-change="modeChanged()"></select>
             </div>
         </div>
 
@@ -70,12 +70,8 @@
             </div>
         </div>
 
-        <div class="control-group">
-            <label class="control-label" for="functionCode">Code</label>
-            <div class="controls">
-                <textarea type="text" id="functionCode" class="input-large" ng-model="editable.code" style="width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
-            </div>
-        </div>
+                <textarea ui-codemirror="codemirrorEditorOptions" type="text" id="functionCode" ng-model="editable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
+
 
         <h3 class="text-center">
             Tests

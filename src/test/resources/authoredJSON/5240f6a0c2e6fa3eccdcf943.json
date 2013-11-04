@@ -1,0 +1,8 @@
+{
+  "id" : "5240f6a0c2e6fa3eccdcf943",
+  "schema" : "Function",
+  "tests" : [ { } ],
+  "name" : "consoleTest",
+  "code" : "function() { console.log('log testing'); return 'This worked!' };",
+  "language" : "JAVASCRIPT"
+}

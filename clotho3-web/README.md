@@ -48,8 +48,6 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 	- searchbar posts all say()s
 
 - Editor
-	- code mirror in function editor
-    		- http://angular-ui.github.io/ui-codemirror/
 	- editor parent, with children for specifics (function, schema, trail, etc.)
 	- make trail editor template
 	- better dynamic editor    
@@ -61,7 +59,10 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 - Trail Content
 	- easier to edit, organize
 
-
+- App organization
+    - get rid of Application prefixing of angular modules
+    - break up ui components
+    - add grunt, bower, yeoman support
 
 
 
