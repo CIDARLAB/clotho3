@@ -44,7 +44,27 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 ### Current Tasks
 
-IF TIME
+- Fixes
+	- searchbar posts all say()s
+
+- Editor
+	- code mirror in function editor
+    		- http://angular-ui.github.io/ui-codemirror/
+	- editor parent, with children for specifics (function, schema, trail, etc.)
+	- make trail editor template
+	- better dynamic editor    
+	- function editor tests reset
+	- gradeQuiz
+    		- JSON stringify results
+    		- use for function tests
+
+- Trail Content
+	- easier to edit, organize
+
+
+
+
+
 
 - searchbar updates
     - call say() for run(), other commands
@@ -55,20 +75,12 @@ IF TIME
 - DIY construction file
 
 
-
-- gradeQuiz
-    - JSON stringify results
-    - use for function tests
-
 DNA functions
     - ligation alignment, HTML
     - handle overhangs in anneal
 
-- carotenoid construction file
-
 
 - trail: unread check for each Page, change style, affects dialogs
-
 
 - $focus.typeOutSearch to accept array, use in Ligation
 
@@ -78,10 +90,6 @@ DNA functions
 
 
 -------------------------
-
-
-- code mirror in function editor
-    - http://angular-ui.github.io/ui-codemirror/
 
 
 - $focus
