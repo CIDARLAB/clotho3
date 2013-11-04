@@ -4,6 +4,7 @@
  */
 package org.clothocad.core;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ArgsTest {
         ClothoModule clothoModule = moduleFromArgs(new String[]{});
         Properties properties = clothoModule.properties;
         for (ConfigOption configOption : ConfigOption.values()) {
+            if (configOption.equals(ConfigOption.propfile)) continue;
             Assert.assertEquals(configOption.defaultValue, clothoModule.properties.getProperty(configOption.name()));
         }
     }
@@ -53,5 +55,14 @@ public class ArgsTest {
         for (String key : values.keySet()){
             Assert.assertEquals(values.get(key), clothoModule.properties.getProperty(key));
         }
+    }
+    
+    @Test
+    public void testPropFile() throws ParseException {
+        List<String> args = new ArrayList<>();
+        args.add("--propfile");
+        args.add(Paths.get("src", "test", "resources", "testproperties.properties").toString());
+        ClothoModule clothoModule = moduleFromArgs(args.toArray(new String[0]));
+        Assert.assertEquals("loaded from property file", clothoModule.properties.getProperty("dbname"));
     }
 }
