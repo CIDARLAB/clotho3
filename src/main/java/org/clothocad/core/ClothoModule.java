@@ -15,6 +15,7 @@ import org.clothocad.core.persistence.IdUtils;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.security.SecurityModule;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.security.Password;
 
 /**
  *
@@ -60,7 +61,9 @@ public class ClothoModule extends AbstractModule {
     protected KeyStore provideKeyStore() throws Exception {
         //loads keystore from provided parameters
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        char[] password = properties.getProperty("keystorepass").toCharArray();
+        String passwordString = properties.getProperty("keystorepass");
+        passwordString = Password.deobfuscate(passwordString);
+        char[] password = passwordString.toCharArray();
         keystore.load(new FileInputStream(properties.getProperty("keystorepath")), password);
         return keystore;
     }
