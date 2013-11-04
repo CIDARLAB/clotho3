@@ -162,19 +162,22 @@ Application.Editor.directive('clothoEditor', ['Clotho', '$compile', '$parse', '$
 
 	          // code mirror
 
+	          $scope.$watch('editMode', function(newval) {
+		          $scope.codemirrorEditorOptions.readOnly = (newval) ? false : 'nocursor';
+	          });
 
 		        $scope.codemirrorEditorOptions = {
 			        lineWrapping : true,
 			        lineNumbers: true,
 			        onLoad : function(_cm){
 					        // HACK to have the codemirror instance in the scope...
-					        $scope.modeChanged = function(){
-						          // HACK to catch java case
-						          var mode = $scope.editable.language.toLowerCase();
-						          mode = (mode == 'java') ? 'text/x-java' : mode;
+			          $scope.$watch('editable.language', function(newlang) {
+				          // HACK to catch java case
+				          var mode = $scope.editable.language.toLowerCase();
+				          mode = (mode == 'java') ? 'text/x-java' : mode;
 
-						          _cm.setOption("mode", mode);
-					        };
+				          _cm.setOption("mode", mode);
+			          });
 
 					        // example Events
 					        _cm.on("beforeChange", function(){});
