@@ -1,0 +1,14 @@
+{
+  "id" : "5239d733c2e6c7521ab9b254",
+  "schema" : "Function",
+  "tests" : [ {
+    "args" : [ "5" ]
+  } ],
+  "args" : [ {
+    "name" : "length",
+    "type" : "number"
+  } ],
+  "name" : "randomSequence",
+  "code" : "function randomSequence (length) { \nvar units = 'acgt'.split('');\nvar seq = \"\";\nfor (var i = 0; i < +length; i++) {\nseq += units[_.random(3)];\n}\nreturn seq;\n};",
+  "language" : "JAVASCRIPT"
+}

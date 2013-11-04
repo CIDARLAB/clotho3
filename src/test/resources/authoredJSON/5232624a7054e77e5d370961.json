@@ -1,0 +1,14 @@
+{
+  "id" : "5232624a7054e77e5d370961",
+  "schema" : "Function",
+  "tests" : [ {
+    "args" : [ "blah" ]
+  } ],
+  "args" : [ {
+    "name" : "str",
+    "type" : "string"
+  } ],
+  "name" : "reverse",
+  "code" : "function(str) { return str.split('').reverse().join('') };",
+  "language" : "JAVASCRIPT"
+}

@@ -1,0 +1,19 @@
+{
+  "schema" : "Function",
+  "id" : "523e3b4cc2e6967acacb1722",
+  "dependencies" : [ "523e36e1c2e647abe23c1fa5" ],
+  "args" : [ {
+    "type" : "string",
+    "name" : "sequence"
+  } ],
+  "name" : "DigestModuleTest",
+  "code" : "function(seq) { return Digest.digest(seq, Digest.enzymes.EcoRI); };",
+  "language" : "JAVASCRIPT",
+  "tests" : [ {
+    "args" : [ "ccagtcggaattctacat" ],
+    "output" : {
+      "value" : "ccagtcgg^aatt_ctacat",
+      "type" : ""
+    }
+  } ]
+}

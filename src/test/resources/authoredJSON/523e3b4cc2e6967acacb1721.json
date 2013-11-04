@@ -1,0 +1,19 @@
+{
+  "schema" : "Function",
+  "id" : "523e3b4cc2e6967acacb1721",
+  "dependencies" : [ "523e36e1c2e647abe23c1fa4" ],
+  "args" : [ {
+    "type" : "string",
+    "name" : "sequence"
+  } ],
+  "name" : "DnaModuleTest",
+  "code" : "function(seq) { return DNA.revcomp(seq); };",
+  "language" : "JAVASCRIPT",
+  "tests" : [ {
+    "args" : [ "acgatcgatcg" ],
+    "output" : {
+      "value" : "cgatcgatcgt",
+      "type" : ""
+    }
+  } ]
+}

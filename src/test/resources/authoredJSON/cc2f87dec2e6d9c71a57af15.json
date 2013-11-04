@@ -1,0 +1,81 @@
+{
+  "id" : "cc2f87dec2e6d9c71a57af15",
+  "schema" : "ClothoSchema",
+  "binaryName" : "org.clothocad.loadedschemas.Ccc2f87dec2e6d9c71a57af15",
+  "description" : "Quiz superclass",
+  "name" : "Quiz",
+  "language" : "JSONSCHEMA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "description" : "Title of Quiz",
+    "name" : "title",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.HashMap",
+    "description" : "Object defining new values to retry a quiz. Keys are parameters to update (e.g. questionValue), and values are strings which will be run via Clotho.submit() (e.g. \"clotho.run('randomSequence', ['7'])\" )... Will be accessed if the user gets the question wrong. Retries will be disabled if not declared or set to false.",
+    "name" : "retry",
+    "example" : "",
+    "type" : "object",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "description" : "Required for 'matching'",
+    "name" : "matches",
+    "example" : "",
+    "type" : "array",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "The Question for the Quiz",
+    "name" : "question",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "Any information that may help in achieving the correct answer",
+    "name" : "hint",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.HashMap",
+    "description" : "Object used to extend $scope.quiz (Page.quiz.dictionary is specific to the quiz, and acts differently than Page.dictionary, in that it is only visible in the scope of the quiz). Define fields questionValue and answerGenerator appropriately for the question, will be submitted to the function gradeQuiz",
+    "name" : "dictionary",
+    "example" : "",
+    "type" : "object",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "Quiz type. Determines templates and fields.",
+    "name" : "type",
+    "example" : "Options include: 'mc' (Multiple Choice), 'multipic' (Multi-Picture), 'fillin' (Fill in the Blank), 'essay' (Essay), 'dragdrop' (Drag and Drop Categories), 'multicheck' (Multiple Check), 'ranking' (Ranking), 'match' (Matching), 'assert' (Reason & Assertion)",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "description" : "Required for 'dragdrop'",
+    "name" : "categories",
+    "example" : "",
+    "type" : "array",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "description" : "Required for most quiz types, exceptions are: 'truefalse', 'fillin', 'essay'. Generally an array of strings, currently exceptions are: 'multipic', 'dragdrop'",
+    "name" : "options",
+    "example" : "",
+    "type" : "array",
+    "access" : "PUBLIC",
+    "reference" : false
+  } ]
+}

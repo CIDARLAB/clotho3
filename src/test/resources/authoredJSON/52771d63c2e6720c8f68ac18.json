@@ -1,0 +1,24 @@
+{
+  "id" : "52771d63c2e6720c8f68ac18",
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.core.datums.util.ClientScript",
+  "c" : "org.clothocad.core.datums.util.ClientScript",
+  "name" : "ClientScript",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.core.datums.util.Language",
+    "name" : "language",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "onShowScript",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "graphicsCode",
+    "type" : "string",
+    "reference" : false
+  } ]
+}

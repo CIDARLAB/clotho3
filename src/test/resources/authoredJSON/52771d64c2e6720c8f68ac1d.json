@@ -1,0 +1,84 @@
+{
+  "id" : "52771d64c2e6720c8f68ac1d",
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.model.NucSeq",
+  "c" : "org.clothocad.model.NucSeq",
+  "name" : "NucSeq",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.Boolean",
+    "name" : "initiating",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "featuresInitiated",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isDegenerate",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isSingleStranded",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "com.google.common.collect.ImmutableMap",
+    "name" : "translation",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Set",
+    "name" : "annotations",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "sequence",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Map",
+    "name" : "featureTable",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isCircular",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "com.google.common.collect.ImmutableList",
+    "name" : "START_CODONS",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "com.google.common.collect.ImmutableList",
+    "name" : "STOP_CODONS",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isRNA",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "[Z",
+    "name" : "lowerArray",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isLinear",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isLocked",
+    "type" : "boolean",
+    "reference" : false
+  } ]
+}

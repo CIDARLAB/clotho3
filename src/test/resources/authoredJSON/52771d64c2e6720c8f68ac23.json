@@ -1,0 +1,34 @@
+{
+  "id" : "52771d64c2e6720c8f68ac23",
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.core.datums.User",
+  "c" : "org.clothocad.core.datums.User",
+  "name" : "User",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "passwordHash",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Set",
+    "name" : "personUUIDs",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "authKey",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isLoggedIn",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Set",
+    "name" : "clients",
+    "type" : "array",
+    "reference" : false
+  } ]
+}

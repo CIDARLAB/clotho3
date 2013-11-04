@@ -1,0 +1,151 @@
+{
+  "id" : "52310822c2e67bf02c9c21f1",
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d63c2e6720c8f68ac06",
+  "description" : "Anderson Lab Personnel schema. Needs to be changed so a subclass of Person.",
+  "name" : "LabPerson",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "description" : "",
+    "name" : "currentLocation",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Long",
+    "description" : "",
+    "name" : "startDate",
+    "example" : "",
+    "type" : "number",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "icon",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "givenName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.HashMap",
+    "description" : "values are urls. keys include: twitter, facebook, linkedin, googleplus",
+    "name" : "social",
+    "example" : "",
+    "type" : "object",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Long",
+    "description" : "",
+    "name" : "endDate",
+    "example" : "",
+    "type" : "number",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "org.bson.types.ObjectId",
+    "name" : "id",
+    "type" : "id",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "description" : "",
+    "name" : "current",
+    "example" : "",
+    "type" : "boolean",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "nickName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "name",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "description" : "",
+    "name" : "isManagement",
+    "example" : "",
+    "type" : "boolean",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "snailMailAddress",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "description",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Date",
+    "name" : "dateCreated",
+    "type" : "date",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Collection",
+    "name" : "myCollection",
+    "type" : "Collection",
+    "reference" : true
+  }, {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "author",
+    "type" : "Person",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "Must be HTML",
+    "name" : "about",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Lab",
+    "name" : "lab",
+    "type" : "Lab",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "emailAddress",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "",
+    "name" : "title",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "",
+    "name" : "imgUrl",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "registryName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "surName",
+    "type" : "string",
+    "reference" : false
+  } ]
+}
