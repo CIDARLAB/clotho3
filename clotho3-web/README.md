@@ -58,12 +58,17 @@ Clotho 3.0 Front-end Playground: Functionalities for:
 
 - Trail Content
 	- easier to edit, organize
+    - look at coursera, edx etc. for format
+    - start partial for trail editing
+    - set trail definition to array of objects, so define order + multiples of each type
+    - document custom directives
 
 - App organization
     - get rid of Application prefixing of angular modules
-    - break up ui components
+    - break up ui components, document
     - add grunt, bower, yeoman support
 
+- upgrade to Angular 1.2
 
 
 

@@ -158,13 +158,15 @@ Application.Search.service('Searchbar', ['Clotho', 'ClientAPI', '$timeout', '$q'
             //display.autocomplete = false;
             display.undetail();
 
+	          ClientAPI.say(submission);
+
             return Clotho.submit(query).then(function(result){
-                ClientAPI.say(submission);
                 display.query = '';
-                //todo - if server calls say() then don't post anything
                 !!result && ClientAPI.say({text: result});
             });
-
+        }
+	      else {
+	        return $q.when(false);
         }
     };
 
