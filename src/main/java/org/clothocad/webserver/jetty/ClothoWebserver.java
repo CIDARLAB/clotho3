@@ -1,7 +1,6 @@
 package org.clothocad.webserver.jetty;
 
 import com.google.inject.servlet.GuiceFilter;
-import java.security.KeyStore;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -14,16 +13,16 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ssl.SslConnector;
 import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
 //TODO: convert config to guice module
+//TODO: make easy to switch ssl requirement on/off for deploy testing
 public class ClothoWebserver {
 
     @Getter
@@ -33,13 +32,12 @@ public class ClothoWebserver {
     
     @Inject
     public ClothoWebserver(@Named("port") int nPort,
-            KeyStore keystore, 
+            @Named("confidentialport") int confidentialPort,
+            SslConnector sslConnector,
             @Named("containerServletContext") ServletContextHandler servletHandler,
             final Router router)
             throws Exception {
 
-        int confidentialPort = 8443; //TODO: make configurable
-        
         server = new Server();
 
         //Connectors
@@ -50,14 +48,9 @@ public class ClothoWebserver {
         connector0.setRequestHeaderSize(8192);
         connector0.setConfidentialPort(confidentialPort);
         server.addConnector(connector0);
-        
-        SslSelectChannelConnector ssl_connector = new SslSelectChannelConnector();
-        ssl_connector.setPort(confidentialPort); 
-        ssl_connector.setMaxIdleTime(3600000);
-        SslContextFactory cf = ssl_connector.getSslContextFactory();
-        cf.setKeyStore(keystore);
-        server.addConnector(ssl_connector);
-        
+
+        sslConnector.setPort(confidentialPort);
+        server.addConnector(sslConnector);
         
         //Connection constraints
         
