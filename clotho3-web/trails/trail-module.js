@@ -260,6 +260,9 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     //$scope.content = $scope.trail.description
     $timeout(function() { $scope.activate('0-0') });
 
+
+		//todo - loading should be handled in trail service
+
     var load = {};
 
     load.hint = function loadHint(hint) {
@@ -272,11 +275,13 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
     load.text = function loadText(text) {
         if (!text) return $q.when();
-
-        //todo - ensure html, if not then surround with tag
-
-        return $q.when(text);
+        return $q.when('<div>' + text + '</div>');
     };
+
+		load.markdown = function loadMarkdown (text) {
+			if (!text) return $q.when();
+			return $q.when('<ui-markdown>' + text + '</ui-markdown>');
+		};
 
     load.video = function loadVideo(obj) {
         if (!obj) return $q.when();
@@ -415,7 +420,7 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
     };
 
     $scope.favorite = function() {
-        //todo - better checking, do initial check
+        //future - better checking, do initial check
         $scope.favorited = !$scope.favorited;
         Trails.favorite($scope.id);
     };

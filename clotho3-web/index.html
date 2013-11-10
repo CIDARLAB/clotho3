@@ -34,6 +34,7 @@
      $script("lib/jquery-1.9.1.js", "jquery", function() {
          $script("lib/jquery-ui-1.10.3.drag-sort.js", "jquery-ui");
      });
+     $script("lib/showdown.min.js", "showdown");
 
      //todo - better jquery handling... just need to be ready before DOM content ready
      $script.ready(["jquery", "lodash"], function() {
@@ -69,6 +70,7 @@
                      "interface/ui-filters.js",
                      "interface/ui-services.js",
                      "interface/ui-codemirror.js",
+                     "interface/ui-markdown.js",
                      "plasmid/plasmid-module.js",
                      "dna/dna-module.js",
                      "dna/digest-module.js",
