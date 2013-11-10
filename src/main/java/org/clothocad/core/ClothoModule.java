@@ -8,14 +8,14 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 import java.io.File;
-import java.io.FileInputStream;
-import java.security.KeyStore;
 import java.util.Properties;
 import org.clothocad.core.persistence.IdUtils;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.security.SecurityModule;
+import org.eclipse.jetty.server.ssl.SslConnector;
+import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.security.Password;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 /**
  *
@@ -57,15 +57,13 @@ public class ClothoModule extends AbstractModule {
         binder().install(new SecurityModule(sch));
     }
     
-    @Provides
-    protected KeyStore provideKeyStore() throws Exception {
-        //loads keystore from provided parameters
-        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        String passwordString = properties.getProperty("keystorepass");
-        passwordString = Password.deobfuscate(passwordString);
-        char[] password = passwordString.toCharArray();
-        keystore.load(new FileInputStream(properties.getProperty("keystorepath")), password);
-        return keystore;
+    @Provides 
+    protected SslConnector provideSslConnector() throws Exception {
+        SslContextFactory cf = new SslContextFactory();
+        cf.setKeyStorePath(properties.getProperty("keystorepath"));
+        cf.setKeyStorePassword(properties.getProperty("keystorepass"));
+        SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);                
+        return sslConnector;
     }
     
 }

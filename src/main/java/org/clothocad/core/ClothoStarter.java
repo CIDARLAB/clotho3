@@ -2,8 +2,12 @@ package org.clothocad.core;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
@@ -17,10 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //Start then navigate to:  http://localhost:8080/#/
+@Slf4j
 public class ClothoStarter
         implements Daemon {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClothoStarter.class);
     protected static ClothoWebserver server;
 
     public static void main(String[] args)
@@ -44,7 +48,19 @@ public class ClothoStarter
 
     protected static Properties commandToProperties(CommandLine cmd) {
         Properties properties = new Properties();
+        
+        //properties in properties file are overwritten by command-line arguments
+        if (cmd.hasOption(ConfigOption.propfile.abbreviation)){
+            String path = cmd.getOptionValue(ConfigOption.propfile.abbreviation);
+            try {
+                properties.load(Files.newInputStream(Paths.get(path)));
+            } catch (IOException ex) {
+                log.warn("Could not load properties file at {}", path);
+            }
+        }
+        
         for (ConfigOption configOption : ConfigOption.values()){
+            if (configOption.equals(ConfigOption.propfile)) continue;
             if (cmd.hasOption(configOption.abbreviation))
                 properties.setProperty(configOption.name(), cmd.getOptionValue(configOption.abbreviation));
         }

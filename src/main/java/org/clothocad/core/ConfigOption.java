@@ -13,7 +13,6 @@ import org.apache.commons.cli.Options;
  * @author spaige
  */
 public enum ConfigOption {
-    
     port("port", "the port the Clotho accepts connections on", "8080"),
     confidentialport("cport", "the port Clotho accepts ssl connections on", "8443"),
     dbname("dbn", "the name of the mongodb database to use", "clotho"),
@@ -22,7 +21,8 @@ public enum ConfigOption {
     //loglevel,
     keystorepath("ks", "path to the keystore", System.getProperty("java.home") + "/lib/security/cacerts".replace('/', File.separatorChar)),
     keystorepass("kspass", "keystore password", ""),
-    keymanagerpass("ksmpass", "keymanager password", "");
+    keymanagerpass("ksmpass", "keymanager password", ""),
+    propfile("p", "path to properties file", "");
     
     public final String abbreviation;
     public final String description;
