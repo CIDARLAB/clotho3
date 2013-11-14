@@ -77,7 +77,6 @@ public class UnauthPrivateTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             api.get(newObj);
@@ -95,7 +94,6 @@ public class UnauthPrivateTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             api.set(newObj);
@@ -113,7 +111,6 @@ public class UnauthPrivateTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             api.destroy(newObj);
@@ -131,7 +128,6 @@ public class UnauthPrivateTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             /*

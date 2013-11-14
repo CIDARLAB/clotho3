@@ -76,7 +76,6 @@ public class OwnPermissionTest {
             
             UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("unauth", "unauth");
             api.get(newObj);
@@ -97,7 +96,6 @@ public class OwnPermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("unauth", "unauth");
             api.set(newObj);
@@ -118,7 +116,6 @@ public class OwnPermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("unauth", "unauth");
             api.destroy(newObj);
@@ -139,7 +136,6 @@ public class OwnPermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("unauth", "unauth");
             /*

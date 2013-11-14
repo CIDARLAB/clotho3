@@ -74,12 +74,9 @@ public class UnauthPublicTest {
         Map<String, Object> newObj = initObj();
 
         try {
-            //SecurityManager securityManager = SecurityUtils.getSecurityManager();
-            //Subject currentUser = new Subject.Builder(securityManager).buildSubject();
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             api.get(newObj);
@@ -97,7 +94,6 @@ public class UnauthPublicTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             api.set(newObj);
@@ -115,7 +111,6 @@ public class UnauthPublicTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             api.destroy(newObj);
@@ -133,7 +128,6 @@ public class UnauthPublicTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("none", "none");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("none"));
             token.setRememberMe(true);
             api.login("none", "none");
             /*

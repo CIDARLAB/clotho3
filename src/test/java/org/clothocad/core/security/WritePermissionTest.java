@@ -82,7 +82,6 @@ public class WritePermissionTest {
              */
             UsernamePasswordToken token = new UsernamePasswordToken("write", "write");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("write", "write");
             api.get(newObj);
@@ -103,7 +102,6 @@ public class WritePermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("write", "write");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("write", "write");
             api.set(newObj);
@@ -121,7 +119,6 @@ public class WritePermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("write", "write");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("write", "write");
             api.destroy(newObj);
@@ -139,7 +136,6 @@ public class WritePermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("write", "write");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("write"));
             token.setRememberMe(true);
             api.login("write", "write");
             /*

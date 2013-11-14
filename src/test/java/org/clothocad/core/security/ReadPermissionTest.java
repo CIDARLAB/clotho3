@@ -79,7 +79,6 @@ public class ReadPermissionTest {
            
             UsernamePasswordToken token = new UsernamePasswordToken("read", "read");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("read"));
             token.setRememberMe(true);
             api.login("read", "read");
             api.get(newObj);
@@ -97,7 +96,6 @@ public class ReadPermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("read", "read");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("read"));
             token.setRememberMe(true);
             api.login("read", "read");
             api.set(newObj);
@@ -115,7 +113,6 @@ public class ReadPermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("read", "read");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("read"));
             token.setRememberMe(true);
             api.login("read", "read");
             api.destroy(newObj);
@@ -133,7 +130,6 @@ public class ReadPermissionTest {
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
             currentUser.login(token);
-            currentUser.checkPermission(util.credentials.get("read"));
             token.setRememberMe(true);
             api.login("unauth", "unauth");
             /*
