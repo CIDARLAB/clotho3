@@ -15,7 +15,6 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
-import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -23,25 +22,31 @@ import org.clothocad.core.util.SecurityTestUtils;
 import org.junit.Test;
 
 /**
+ * test case of user with 'owner' permission test actions of read, edit, delete
+ * and edit permission on a private object
  *
  * @author yu
+ * @version 1.0
  */
 public class OwnPermissionTest {
 
-    /**
-     *
-     */
     private Router router;
     private Persistor persistor;
-    private String requestId;
-    private Mind mind;
     private Injector injector;
     private ServerSideAPI api;
     private SecurityTestUtils util;
 
+    /**
+     * constructor
+     */
     public OwnPermissionTest() {
     }
 
+    /**
+     * create a new instance of ServerSideAPI
+     *
+     * @param id String format id of ServerSideAPI
+     */
     public void initAPI(String id) {
         injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         persistor = injector.getInstance(Persistor.class);
@@ -49,12 +54,17 @@ public class OwnPermissionTest {
         api = new ServerSideAPI(null, persistor, null, id);
     }
 
+    /**
+     * create a new instance of ServerSideAPI
+     *
+     * @return returns the default object in ServerSideAPI
+     */
     public Map<String, Object> initObj() {
         Map<String, Object> defObj = new HashMap<>();
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.checkPermission(util.credentials.get("owner"));
         defObj.put("private", util.objects.get("private"));
-        
+
         UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
         currentUser.login(token);
         api.login("owner", "owner");
@@ -62,9 +72,11 @@ public class OwnPermissionTest {
         api.logout();
         return defObj;
     }
-    
-    /*
-     * no exception expected
+
+    /**
+     * test read action
+     *
+     * @exception no exception expected
      */
     @Test
     public void testRead() {
@@ -73,19 +85,21 @@ public class OwnPermissionTest {
 
         try {
             Subject currentUser = SecurityUtils.getSubject();
-            
-            UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
+
+            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
             currentUser.login(token);
             token.setRememberMe(true);
-            api.login("unauth", "unauth");
+            api.login("owner", "owner");
             api.get(newObj);
         } catch (UnavailableSecurityManagerException e) {
         }
 
     }
 
-    /*
-     * no exception expected
+    /**
+     * test edit action
+     *
+     * @exception no exception expected
      */
     @Test
     public void testEdit() {
@@ -94,18 +108,20 @@ public class OwnPermissionTest {
 
         try {
             Subject currentUser = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
+            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
             currentUser.login(token);
             token.setRememberMe(true);
-            api.login("unauth", "unauth");
+            api.login("owner", "owner");
             api.set(newObj);
         } catch (UnavailableSecurityManagerException e) {
         }
 
     }
 
-    /*
-     * no exception expected
+    /**
+     * test delete action
+     *
+     * @exception no exception expected
      */
     @Test
     public void testDelete() {
@@ -114,18 +130,20 @@ public class OwnPermissionTest {
 
         try {
             Subject currentUser = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
+            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
             currentUser.login(token);
             token.setRememberMe(true);
-            api.login("unauth", "unauth");
+            api.login("owner", "owner");
             api.destroy(newObj);
         } catch (UnavailableSecurityManagerException e) {
         }
 
     }
 
-    /*
-     * no exception expected
+    /**
+     * test edit permission
+     *
+     * @exception UnauthorizedException expected
      */
     @Test
     public void testEditPermission() {
@@ -134,10 +152,10 @@ public class OwnPermissionTest {
 
         try {
             Subject currentUser = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken("unauth", "unauth");
+            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
             currentUser.login(token);
             token.setRememberMe(true);
-            api.login("unauth", "unauth");
+            api.login("owner", "owner");
             /*
              *code here to edit permission 
              */

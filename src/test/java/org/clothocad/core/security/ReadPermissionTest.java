@@ -16,7 +16,6 @@ import org.apache.shiro.authz.*;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
-import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -24,50 +23,61 @@ import org.clothocad.core.util.SecurityTestUtils;
 import org.junit.Test;
 
 /**
+ * test case of user with 'read' permission test actions of read, edit, delete
+ * and edit permission
  *
  * @author yu
+ * @version 1.0
  */
 public class ReadPermissionTest {
 
-    /**
-     *
-     */
     private Router router;
     private Persistor persistor;
-    private String requestId;
-    private Mind mind;
     private Injector injector;
     private ServerSideAPI api;
     private SecurityTestUtils util;
 
+    /**
+     * constructor
+     */
     public ReadPermissionTest() {
     }
 
+    /**
+     * create a new instance of ServerSideAPI
+     *
+     * @param id String format id of ServerSideAPI
+     */
     public void initAPI(String id) {
         injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
         persistor = injector.getInstance(Persistor.class);
         //ServerSideAPI api = new DummyAPI(persistor);
         api = new ServerSideAPI(null, persistor, null, id);
-        util=new SecurityTestUtils(persistor);
+        util = new SecurityTestUtils(persistor);
     }
 
+    /**
+     * create a private object in ServerSideAPI
+     *
+     * @return returns the default object in ServerSideAPI
+     */
     public Map<String, Object> initObj() {
         Map<String, Object> defObj = new HashMap<>();
         Subject currentUser = SecurityUtils.getSubject();
-        //not sure if this is right way
-        currentUser.checkPermission(util.credentials.get("owner"));
+        //set object as private
         defObj.put("private", util.objects.get("private"));
-        
         UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
         currentUser.login(token);
+        //log into ServerSideAPI to create an object
         api.login("owner", "owner");
         api.create(defObj);
         api.logout();
         return defObj;
     }
 
-    /*
-     * no exception expected
+    /**
+     * test read permission
+     * @exception no exception expected
      */
     @Test
     public void testRead() {
@@ -76,7 +86,7 @@ public class ReadPermissionTest {
 
         try {
             Subject currentUser = SecurityUtils.getSubject();
-           
+
             UsernamePasswordToken token = new UsernamePasswordToken("read", "read");
             currentUser.login(token);
             token.setRememberMe(true);
@@ -87,6 +97,11 @@ public class ReadPermissionTest {
 
     }
 
+    /**
+     * test edit permission, expecting UnauthorizedException
+     *
+     * @exception UnauthorizedException expected
+     */
     @Test(expected = UnauthorizedException.class)
     public void testEdit() {
         initAPI("0001");
@@ -104,23 +119,36 @@ public class ReadPermissionTest {
 
     }
 
+    /**
+     * test delete permission, expecting UnauthorizedException
+     *
+     * @exception UnauthorizedException expected
+     */
     @Test(expected = UnauthorizedException.class)
     public void testDelete() {
         initAPI("0002");
         Map<String, Object> newObj = initObj();
 
         try {
+            //new user
             Subject currentUser = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken("read", "read");
             currentUser.login(token);
             token.setRememberMe(true);
+            //log in
             api.login("read", "read");
+            //delete
             api.destroy(newObj);
         } catch (UnavailableSecurityManagerException e) {
         }
 
     }
 
+    /**
+     * test editing other user's permission, expecting UnauthorizedException
+     *
+     * @exception UnauthorizedException expected
+     */
     @Test(expected = UnauthorizedException.class)
     public void testEditPermission() {
         initAPI("0003");
