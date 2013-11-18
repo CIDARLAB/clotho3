@@ -8,21 +8,32 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
+import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.persistence.Persistor;
 
 /**
  *
  * @author spaige
  */
+@Slf4j
 public class JSON {
     
     public final static ObjectMapper mapper = new ObjectMapper();
@@ -117,5 +128,62 @@ public class JSON {
     static abstract class DisableGetters {
         
     } 
+    
+    public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {
+        ServerSideAPI api = new DummyAPI(persistor);
+        ObjectReader reader = new ObjectMapper().reader(Map.class);
+        
+        List<Map> objects = new ArrayList<>();
+        for (File child : new File(path).listFiles()) {
+            if (!child.getName().endsWith(".json")) {
+                continue;
+            }
+            try {
+                MappingIterator<Map> it = reader.readValues(child);
+                while (it.hasNext()) {
+                    objects.add(it.next());
+                }
+                
+            } catch (JsonProcessingException ex) {
+                log.warn("Could not process {} as JSON", child.getAbsolutePath());
+            } catch (IOException ex) {
+                log.warn("Could not open {}", child.getAbsolutePath());
+            }
+        }
+        
+        while (objects.size() > 0) {
+            int prevSize = objects.size();
+            List<Map> newObjects = new ArrayList();
+
+            for (Map obj : objects) {
+                if (!overwrite) {
+                    try {
+                        persistor.resolveSelector(obj.get("name").toString(), false);
+                        continue;
+
+                    } catch (EntityNotFoundException e) {
+                    }
+                }
+                try {
+                    ObjectId result = api.create(obj);
+
+                    if (overwrite && result == null) {
+                        api.set(obj);
+                    }
+                } catch (RuntimeException e) {
+                    newObjects.add(obj);
+                } catch (ClassCircularityError e){
+                    e.getMessage();
+                }
+            }
+
+            objects = newObjects;
+            if (objects.size() >= prevSize) {
+                log.error("Could not load some files: {}", objects.toString());
+                return;
+            }
+
+        }
+    }
     
 }

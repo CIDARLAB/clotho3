@@ -26,7 +26,4 @@ public class DummyAPI extends ServerSideAPI {
     @Override
     protected void send(Message message) {
     }
-
-    
-    
 }
