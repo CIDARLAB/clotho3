@@ -63,9 +63,12 @@ public class ClothoStarter
             String path = cmd.getOptionValue(ConfigOption.propfile.abbreviation);
             try {
                 properties.load(Files.newInputStream(Paths.get(path)));
+                log.info("Properties loaded from file at {}", path);
             } catch (IOException ex) {
                 log.warn("Could not load properties file at {}", path);
             }
+        } else {
+            log.debug("No property file specified.");
         }
         
         for (ConfigOption configOption : ConfigOption.values()){
