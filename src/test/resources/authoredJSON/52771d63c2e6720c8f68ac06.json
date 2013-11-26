@@ -7,33 +7,13 @@
   "name" : "Person",
   "language" : "JAVA",
   "fields" : [ {
-    "javaType" : "org.clothocad.model.Collection",
-    "name" : "myCollection",
-    "type" : "Collection",
-    "reference" : true
-  }, {
     "javaType" : "java.lang.String",
-    "name" : "snailMailAddress",
+    "name" : "registryName",
     "type" : "string",
     "reference" : false
   }, {
     "javaType" : "java.lang.String",
     "name" : "surName",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "nickName",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.Lab",
-    "name" : "lab",
-    "type" : "Lab",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "registryName",
     "type" : "string",
     "reference" : false
   }, {
@@ -46,5 +26,25 @@
     "name" : "emailAddress",
     "type" : "string",
     "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "nickName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "snailMailAddress",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Lab",
+    "name" : "lab",
+    "type" : "Lab",
+    "reference" : true
+  }, {
+    "javaType" : "org.clothocad.model.Collection",
+    "name" : "myCollection",
+    "type" : "Collection",
+    "reference" : true
   } ]
 }

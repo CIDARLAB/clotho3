@@ -6,14 +6,6 @@
   "name" : "Chapter",
   "language" : "JSONSCHEMA",
   "fields" : [ {
-    "javaType" : "java.util.HashMap",
-    "description" : "see TrailTransclude schema. define 'id' and 'chapters'",
-    "name" : "transclude",
-    "example" : "",
-    "type" : "object",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
     "javaType" : "java.util.List",
     "description" : "Array of Pages.",
     "name" : "pages",
@@ -27,6 +19,14 @@
     "name" : "chapter",
     "example" : "",
     "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.HashMap",
+    "description" : "see TrailTransclude schema. define 'id' and 'chapters'",
+    "name" : "transclude",
+    "example" : "",
+    "type" : "object",
     "access" : "PUBLIC",
     "reference" : false
   } ]

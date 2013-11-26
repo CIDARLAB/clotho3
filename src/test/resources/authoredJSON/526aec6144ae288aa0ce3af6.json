@@ -1,0 +1,55 @@
+{
+  "id" : "526aec6144ae288aa0ce3af6",
+  "schema" : "BuiltInSchema",
+  "superClass" : "526aec6144ae288aa0ce3af0",
+  "binaryName" : "org.clothocad.model.Feature",
+  "c" : "org.clothocad.model.Feature",
+  "name" : "Feature",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.model.NucSeq",
+    "name" : "sequence",
+    "type" : "NucSeq",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "PDBId",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.awt.Color",
+    "name" : "reverseColor",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.awt.Color",
+    "name" : "forwardColor",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "author",
+    "type" : "Person",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.Short",
+    "name" : "riskGroup",
+    "type" : "number",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "swissProtId",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "isCDS",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "genbankId",
+    "type" : "string",
+    "reference" : false
+  } ]
+}

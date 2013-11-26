@@ -1,0 +1,24 @@
+{
+  "id" : "526aec6144ae288aa0ce3ae8",
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.model.DataSource",
+  "c" : "org.clothocad.model.DataSource",
+  "name" : "DataSource",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.Boolean",
+    "name" : "canImport",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "canExport",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "url",
+    "type" : "string",
+    "reference" : false
+  } ]
+}

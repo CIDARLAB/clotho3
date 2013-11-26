@@ -6,33 +6,8 @@
   "name" : "Annotation",
   "language" : "JAVA",
   "fields" : [ {
-    "javaType" : "org.clothocad.model.Person",
-    "name" : "author",
-    "type" : "Person",
-    "reference" : true
-  }, {
-    "javaType" : "org.clothocad.model.Feature",
-    "name" : "feature",
-    "type" : "Feature",
-    "reference" : true
-  }, {
-    "javaType" : "org.clothocad.model.NucSeq",
-    "name" : "sequence",
-    "type" : "NucSeq",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "symbol",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "java.awt.Color",
-    "name" : "forwardColor",
-    "type" : "object",
-    "reference" : false
-  }, {
     "javaType" : "java.lang.Integer",
-    "name" : "start",
+    "name" : "end",
     "type" : "number",
     "reference" : false
   }, {
@@ -41,8 +16,23 @@
     "type" : "object",
     "reference" : false
   }, {
+    "javaType" : "java.awt.Color",
+    "name" : "forwardColor",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "symbol",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "author",
+    "type" : "Person",
+    "reference" : true
+  }, {
     "javaType" : "java.lang.Integer",
-    "name" : "end",
+    "name" : "start",
     "type" : "number",
     "reference" : false
   }, {
@@ -50,5 +40,15 @@
     "name" : "isForwardStrand",
     "type" : "boolean",
     "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.NucSeq",
+    "name" : "sequence",
+    "type" : "NucSeq",
+    "reference" : true
+  }, {
+    "javaType" : "org.clothocad.model.Feature",
+    "name" : "feature",
+    "type" : "Feature",
+    "reference" : true
   } ]
 }

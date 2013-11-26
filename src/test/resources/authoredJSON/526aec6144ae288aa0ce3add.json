@@ -1,0 +1,30 @@
+{
+  "id" : "526aec6144ae288aa0ce3add",
+  "schema" : "BuiltInSchema",
+  "superClass" : "526aec6144ae288aa0ce3adc",
+  "binaryName" : "org.clothocad.core.aspects.Proctor.Proctor.ProctorDoo",
+  "c" : "org.clothocad.core.aspects.Proctor.Proctor$ProctorDoo",
+  "name" : "ProctorDoo",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.bson.types.ObjectId",
+    "name" : "quizId",
+    "type" : "id",
+    "reference" : false
+  }, {
+    "javaType" : "org.bson.types.ObjectId",
+    "name" : "trailId",
+    "type" : "id",
+    "reference" : false
+  }, {
+    "javaType" : "org.bson.types.ObjectId",
+    "name" : "studentId",
+    "type" : "id",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.core.aspects.Proctor.Proctor",
+    "name" : "this$0",
+    "type" : "object",
+    "reference" : false
+  } ]
+}

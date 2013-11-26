@@ -6,34 +6,9 @@
   "name" : "Mind",
   "language" : "JAVA",
   "fields" : [ {
-    "javaType" : "java.util.List",
-    "name" : "lastCommands",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "name" : "lastSharables",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "org.slf4j.Logger",
-    "name" : "logger",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.core.execution.MetaEngine",
-    "name" : "engine",
-    "type" : "object",
-    "reference" : false
-  }, {
     "javaType" : "java.lang.String",
     "name" : "username",
     "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.core.communication.ClientConnection",
-    "name" : "connection",
-    "type" : "object",
     "reference" : false
   }, {
     "javaType" : "org.clothocad.model.Person",
@@ -41,13 +16,38 @@
     "type" : "Person",
     "reference" : false
   }, {
+    "javaType" : "org.slf4j.Logger",
+    "name" : "logger",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "name" : "lastSharables",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "name" : "lastCommands",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Map",
+    "name" : "commandHistory",
+    "type" : "object",
+    "reference" : false
+  }, {
     "javaType" : "java.lang.Integer",
     "name" : "MAX_SIZE_LAST_SHARABLES",
     "type" : "number",
     "reference" : false
   }, {
-    "javaType" : "java.util.Map",
-    "name" : "commandHistory",
+    "javaType" : "org.clothocad.core.communication.ClientConnection",
+    "name" : "connection",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.core.execution.MetaEngine",
+    "name" : "engine",
     "type" : "object",
     "reference" : false
   } ]

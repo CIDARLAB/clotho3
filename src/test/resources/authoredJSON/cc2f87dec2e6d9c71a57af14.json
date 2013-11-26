@@ -6,6 +6,14 @@
   "name" : "Trail",
   "language" : "JSONSCHEMA",
   "fields" : [ {
+    "javaType" : "java.lang.String",
+    "description" : "HTML that is used as a splash when the trail is selected, providing some information about the trail.",
+    "name" : "description",
+    "example" : "",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
     "javaType" : "java.util.List",
     "description" : "Array of Chapters. The contents of the trail. Refer to Chapter and Page schemas.",
     "name" : "contents",
@@ -17,14 +25,6 @@
     "javaType" : "java.lang.String",
     "description" : "URL of Angular components to add, before the trail is compiled. Must be prefixed by Application.Extensions._____",
     "name" : "mixin",
-    "example" : "",
-    "type" : "string",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
-    "description" : "HTML that is used as a splash when the trail is selected, providing some information about the trail.",
-    "name" : "description",
     "example" : "",
     "type" : "string",
     "access" : "PUBLIC",

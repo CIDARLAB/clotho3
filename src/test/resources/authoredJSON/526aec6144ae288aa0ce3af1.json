@@ -1,0 +1,25 @@
+{
+  "id" : "526aec6144ae288aa0ce3af1",
+  "schema" : "BuiltInSchema",
+  "superClass" : "526aec6144ae288aa0ce3af0",
+  "binaryName" : "org.clothocad.model.Institution",
+  "c" : "org.clothocad.model.Institution",
+  "name" : "Institution",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "country",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "state",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "city",
+    "type" : "string",
+    "reference" : false
+  } ]
+}

@@ -11,50 +11,71 @@
 
 var Application = Application || {};
 
-Application.Primary = angular.module('clotho.primary', []);
-Application.Interface = angular.module('clotho.interface', ['ui.codemirror']);
-Application.Extensions = angular.module('clotho.extensions', []);
-Application.Widgets = angular.module('clotho.widgets', []);
+Application.Primary     = angular.module('clotho.primary', []);
+Application.Interface   = angular.module('clotho.interface', ['ui.codemirror']);
+Application.Extensions  = angular.module('clotho.extensions', []);
+Application.Widgets     = angular.module('clotho.widgets', []);
 
-Application.Dna = angular.module('clotho.dna', []);
+Application.Dna         = angular.module('clotho.dna', []);
 
-Application.Browser = angular.module('clotho.browser', []);
-Application.Chat = angular.module('clotho.chat', []);
-Application.Dynamic = angular.module('clotho.dynamic', []);
-Application.Editor = angular.module('clotho.editor', []);
-Application.Plasmid = angular.module('clotho.plasmid', []);
-Application.Search = angular.module('clotho.search', []);
-Application.Trails = angular.module('clotho.trails', []);
-Application.Schemas = angular.module('clotho.schemas',[]);
-Application.Functions = angular.module('clotho.functions',[]);
+Application.Browser     = angular.module('clotho.browser', []);
+Application.Chat        = angular.module('clotho.chat', []);
+Application.Dynamic     = angular.module('clotho.dynamic', []);
+Application.Editor      = angular.module('clotho.editor', []);
+Application.Plasmid     = angular.module('clotho.plasmid', []);
+Application.Search      = angular.module('clotho.search', []);
+Application.Trails      = angular.module('clotho.trails', []);
+Application.Schemas     = angular.module('clotho.schemas',[]);
+Application.Functions   = angular.module('clotho.functions',[]);
 
 Application.Foundation = angular.module('clotho.setup', [])
     .run(['$rootScope', 'Clotho', function ($rootScope, Clotho) {
 
-        /**
-         @name $rootScope.$safeApply
-         @note Each app needs to insert this into its own run() clause
-         @description Particularly for 3rd party apps, when need to force digest or apply safely.
+		/**
+		 @name $rootScope.$safeApply
+		 @attribution https://github.com/yearofmoo/AngularJS-Scope.SafeApply
+		 @note Just load this module and these functions will all be run
+		 @description Particularly for 3rd party apps, when need to force digest or apply safely. Alternative is $timeout, but can cause flicker.
 
-         You can run it like so:
-         $scope.$safeApply(function() {
-//this function is run once the apply process is running or has just finished
-});
+		 Can run as:
+		 $scope.$safeApply();
+		 $rootScope.$safeApply($scope);
+		 $scope.$safeApply(<function>);
+		 $rootScope.$safeApply($scope, <function>, <force>);
+		 */
+		$rootScope.$safeApply = function() {
+			var $scope, fn, force = false;
+			if(arguments.length == 1) {
+				var arg = arguments[0];
+				if(typeof arg == 'function') {
+					fn = arg;
+				}
+				else {
+					$scope = arg;
+				}
+			}
+			else {
+				$scope = arguments[0];
+				fn = arguments[1];
+				if(arguments.length == 3) {
+					force = !!arguments[2];
+				}
+			}
+			$scope = $scope || this;
+			fn = fn || function() { };
+			if(force || !$scope.$$phase) {
+				$scope.$apply ? $scope.$apply(fn) : $scope.apply(fn);
+			}
+			else {
+				fn();
+			}
+		};
 
-         An alternative is to use $timeout(function() {}), which will run after the previous $digest is complete. However, this may cause UI flicker, as it will not run until the previous digest cycle is complete.
-         */
-        $rootScope.$safeApply = function(fn) {
-            fn = fn || function() {};
-            if($rootScope.$$phase) { fn(); }
-            else { $rootScope.$apply(fn); }
-        };
+		//extend scope with Clotho API so don't need to do this in each controller.
+		$rootScope.Clotho = Clotho;
 
-        //extend scope with Clotho API. Don't need to do this in each controller.
-        $rootScope.Clotho = Clotho;
-
-
-        //future - may want to remove this --- for the demo
-        Clotho.submit("clotho.run('clientSetup', [])");
+		//sort of init() function with server (assumes WebSocket is set up)
+		Clotho.submit("clotho.run('clientSetup', [])");
 
     }]);
 
@@ -122,7 +143,8 @@ angular.module('clothoRoot', ['clothoPackage']).
                 title : 'Editor',
 				        resolve : {
 					        deps : function($q) {
-						        //todo  - lazyload in directive, not all at once, test if can load library lazily
+						        //todo - lazyload in directive, not all at once
+						        //todo - test if can load library lazily
 						        return Application.mixin('/lib/codemirror-3.19/lib/codemirror.js').then(function() {
 							        $q.all([
 								        Application.css('/lib/codemirror-3.19/lib/codemirror.css'),

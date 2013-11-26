@@ -1,0 +1,50 @@
+{
+  "id" : "526aec6144ae288aa0ce3af3",
+  "schema" : "BuiltInSchema",
+  "superClass" : "526aec6144ae288aa0ce3af0",
+  "binaryName" : "org.clothocad.model.Person",
+  "c" : "org.clothocad.model.Person",
+  "name" : "Person",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "givenName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "nickName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Lab",
+    "name" : "lab",
+    "type" : "Lab",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "registryName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Collection",
+    "name" : "myCollection",
+    "type" : "Collection",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "surName",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "emailAddress",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "snailMailAddress",
+    "type" : "string",
+    "reference" : false
+  } ]
+}

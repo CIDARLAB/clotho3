@@ -11,14 +11,14 @@
     "type" : "string",
     "reference" : false
   }, {
-    "javaType" : "java.lang.String",
-    "name" : "icon",
-    "type" : "string",
-    "reference" : false
-  }, {
     "javaType" : "org.clothocad.model.Person",
     "name" : "author",
     "type" : "Person",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "icon",
+    "type" : "string",
     "reference" : false
   } ]
 }

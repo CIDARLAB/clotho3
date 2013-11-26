@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/partials/trails/trail_super/revcomp1.html" mnemonic="6" />
+  </component>
+  <component name="ChangeListManager">
+    <list id="66773b87-c612-4f07-9b6e-66c1a6a54885" name="Default" comment="" />
+    <list id="d7747a55-03e1-4e53-b031-1d07fdab04f0" name="- $focus service, scripting Intro&#10;- schema editor updates&#10;- dna, digest updates&#10;- models rename" comment="" />
+    <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
+    <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
+    <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)" />
+    <ignored path="clotho3-web.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="clotho3-web" />
+  </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.43672013">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="trail-module2.js" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="29" column="22" selection-start="907" selection-end="907" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="9375">
+                  <folding>
+                    <marker date="1384736271000" expanded="false" signature="16770:16789" placeholder="..." />
+                    <marker date="1384736271000" expanded="false" signature="16951:16965" placeholder="..." />
+                    <marker date="1384736271000" expanded="false" signature="17014:17123" placeholder="..." />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="trail-module.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/trails/trail-module.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="192" column="58" selection-start="8093" selection-end="8093" vertical-scroll-proportion="0.0" vertical-offset="2880" max-vertical-offset="8595">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="trail-module2.js" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="299" column="0" selection-start="8659" selection-end="8659" vertical-scroll-proportion="0.4560811" vertical-offset="4080" max-vertical-offset="9375">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/home/home-controller.js" />
+        <option value="$PROJECT_DIR$/interface/ui-codemirror.js" />
+        <option value="$PROJECT_DIR$/editor/generic-editor-directive.js" />
+        <option value="$PROJECT_DIR$/editor/function-partial.html" />
+        <option value="$PROJECT_DIR$/search/search-service.js" />
+        <option value="$PROJECT_DIR$/trails/README.md" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/interface/ui-markdown.js" />
+        <option value="$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki/parsemw.js" />
+        <option value="$PROJECT_DIR$/application/application.js" />
+        <option value="$PROJECT_DIR$/search/search-directives.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/search/terminal-controller.js" />
+        <option value="$PROJECT_DIR$/trails/trail-module.js" />
+        <option value="$PROJECT_DIR$/trails/youtube-directive.js" />
+        <option value="$PROJECT_DIR$/trails/trail-module2.js" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="22" />
+    <option name="width" value="1680" />
+    <option name="height" value="1024" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>JavaScript</id>
+          </State>
+          <State>
+            <id>Potentially confusing code constructsJavaScript</id>
+          </State>
+          <State>
+            <id>Probable bugsJavaScript</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>GeneralJavaScript</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="2" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents ProjectPane="true" />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trails" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="search" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clotho3-web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="203" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="205" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="205" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="216" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1004" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="1003" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="211" />
+    <property name="JavaScriptPreferStrict" value="true" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="207" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FullScreen" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="options.lastSelected" value="preferences.toDoOptions" />
+    <property name="JavaScriptLanguageLevel" value="ES5" />
+    <property name="DefaultHtmlFileTemplate" value="Html5" />
+    <property name="options.searchVisible" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/partials/trails/writingTrails" />
+      <recent name="$PROJECT_DIR$/anderson_lab/application" />
+      <recent name="$PROJECT_DIR$/models" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki" />
+      <recent name="$PROJECT_DIR$/lib" />
+      <recent name="$PROJECT_DIR$/dna/construction" />
+      <recent name="$PROJECT_DIR$/dna/construction/steps" />
+      <recent name="$PROJECT_DIR$/dynamic" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="name" value="Dart" />
+      <option name="saveOutputToFile" value="false" />
+      <option name="showConsoleOnStdErr" value="false" />
+      <option name="showConsoleOnStdOut" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="">
+      <browser start="false" url="" with-js-debugger="false" />
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="sslv3">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="TaskManager">
+    <task id="Default" summary="Default task">
+      <changelist id="66773b87-c612-4f07-9b6e-66c1a6a54885" name="Default" comment="" />
+      <created>1373228751119</created>
+      <updated>1378174346058</updated>
+    </task>
+    <task id="LOCAL-00001" summary="trails">
+      <created>1373228783326</created>
+      <updated>1374048336264</updated>
+    </task>
+    <task id="LOCAL-00002" summary="trail splash">
+      <created>1373229801007</created>
+      <updated>1373229801008</updated>
+    </task>
+    <task id="LOCAL-00003" summary="readme updates">
+      <created>1373237533347</created>
+      <updated>1373237533348</updated>
+    </task>
+    <task id="LOCAL-00004" summary="start draggable directive">
+      <created>1373242711497</created>
+      <updated>1373242711497</updated>
+    </task>
+    <task id="LOCAL-00005" summary="keypress in searchbar, some changes to draggable directive">
+      <created>1373272345470</created>
+      <updated>1373272345470</updated>
+    </task>
+    <task id="LOCAL-00006" summary="searchbar keypress updates, clothoAPI autocompleteDetail&#10;">
+      <created>1373272801247</created>
+      <updated>1373272801247</updated>
+    </task>
+    <task id="LOCAL-00007" summary="trail partial cosmetics">
+      <created>1373273100040</created>
+      <updated>1373273100040</updated>
+    </task>
+    <task id="LOCAL-00008" summary="plasmid">
+      <created>1373273325165</created>
+      <updated>1373500211158</updated>
+    </task>
+    <task id="LOCAL-00009" summary="plasmid editor checks for revcomps">
+      <created>1373274816107</created>
+      <updated>1373274816107</updated>
+    </task>
+    <task id="LOCAL-00010" summary="plasmid - annotate only available when sequence highlighted">
+      <created>1373275315345</created>
+      <updated>1373275315345</updated>
+    </task>
+    <task id="LOCAL-00011" summary="don't collect on set()">
+      <created>1373275706117</created>
+      <updated>1373275706117</updated>
+    </task>
+    <task id="LOCAL-00013" summary="dna service @ index.html#/dna (basic dna transformation)">
+      <created>1373680667731</created>
+      <updated>1373680667731</updated>
+    </task>
+    <task id="LOCAL-00014" summary="dna service additions, @ index.html#/dna/">
+      <created>1373932654271</created>
+      <updated>1373932654272</updated>
+    </task>
+    <task id="LOCAL-00016" summary="share in api">
+      <created>1374013066304</created>
+      <updated>1375310703239</updated>
+    </task>
+    <task id="LOCAL-00017" summary="- trail &quot;combined&quot; demos adding components&#10;- mixin(), script(), bootstrap()&#10;- social media upgrades">
+      <created>1374108026905</created>
+      <updated>1374108026905</updated>
+    </task>
+    <task id="LOCAL-00018" summary="- dynamically adding components updates">
+      <created>1374112714286</created>
+      <updated>1374112714286</updated>
+    </task>
+    <task id="LOCAL-00019" summary="clotho.share, partial reorganization, css additions">
+      <created>1374440699043</created>
+      <updated>1374440699044</updated>
+    </task>
+    <task id="LOCAL-00020" summary="bootstrap / mixin explanations">
+      <created>1374442661114</created>
+      <updated>1375832720818</updated>
+    </task>
+    <task id="LOCAL-00021" summary="jquery + CSS mixins, automatic pubsub dereg. on $destroy">
+      <created>1374656733320</created>
+      <updated>1374656733320</updated>
+    </task>
+    <task id="LOCAL-00023" summary="clotho API migration to requestId. Assumptions as per emails.&#10;major editor refactor (unified directive, function editor).">
+      <created>1375053992195</created>
+      <updated>1375310695957</updated>
+    </task>
+    <task id="LOCAL-00024" summary="restriction site">
+      <created>1375055737874</created>
+      <updated>1378174375210</updated>
+    </task>
+    <task id="LOCAL-00025" summary="requestId migration (pt2)">
+      <created>1375310716947</created>
+      <updated>1375313401283</updated>
+    </task>
+    <task id="LOCAL-00026" summary="requestId migration v2.&#10;Editor combined to single directive&#10;DNA, PCR, RestrictionSite module additions">
+      <created>1375313102042</created>
+      <updated>1375313102042</updated>
+    </task>
+    <task id="LOCAL-00027" summary="- DNA, Digest, PCR services&#10;- function editor typeahead wrapper for clotho.query">
+      <created>1375747866451</created>
+      <updated>1375747866451</updated>
+    </task>
+    <task id="LOCAL-00028" summary="draggable">
+      <created>1375832711026</created>
+      <updated>1375850428269</updated>
+    </task>
+    <task id="LOCAL-00029" summary="- draggable, droppable, sortable directives&#10;- browser-controller typo&#10;">
+      <created>1375850097800</created>
+      <updated>1375850097800</updated>
+    </task>
+    <task id="LOCAL-00030" summary="- pre-merge commit">
+      <created>1375903693397</created>
+      <updated>1375903693397</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Trail additions">
+      <created>1375920099602</created>
+      <updated>1376339213666</updated>
+    </task>
+    <task id="LOCAL-00032" summary="- youtube directive, UI directives, trail updates">
+      <created>1376338713171</created>
+      <updated>1376338713171</updated>
+    </task>
+    <task id="LOCAL-00033" summary="editor updates">
+      <created>1376339211881</created>
+      <updated>1376433303434</updated>
+    </task>
+    <task id="LOCAL-00034" summary="function editor updates">
+      <created>1376343329302</created>
+      <updated>1376343329302</updated>
+    </task>
+    <task id="LOCAL-00035" summary="function editor updates">
+      <created>1376344825073</created>
+      <updated>1376344825073</updated>
+    </task>
+    <task id="LOCAL-00036" summary="minor function editor updates">
+      <created>1376345149097</created>
+      <updated>1376345149098</updated>
+    </task>
+    <task id="LOCAL-00037" summary="trail quizzes">
+      <created>1376433301844</created>
+      <updated>1376521789410</updated>
+    </task>
+    <task id="LOCAL-00039" summary="function, trail updates">
+      <created>1376521783938</created>
+      <updated>1377033623612</updated>
+    </task>
+    <task id="LOCAL-00040" summary="function schema adherance, editor updates, file maintainence, API update">
+      <created>1376530369182</created>
+      <updated>1376530369182</updated>
+    </task>
+    <task id="LOCAL-00041" summary="editor typeahead + create(), function editor updates and tests">
+      <created>1376542255553</created>
+      <updated>1376542255553</updated>
+    </task>
+    <task id="LOCAL-00042" summary="clotho directive basics working (see construction page)">
+      <created>1376599678133</created>
+      <updated>1376599678133</updated>
+    </task>
+    <task id="LOCAL-00045" summary="editor udpate, trail updates">
+      <created>1377302510838</created>
+      <updated>1377302510838</updated>
+    </task>
+    <task id="LOCAL-00046" summary="anderson lab">
+      <created>1377395733645</created>
+      <updated>1378930621113</updated>
+    </task>
+    <task id="LOCAL-00047" summary="anderson lab (temp), schema editor updates">
+      <created>1377396071172</created>
+      <updated>1377396071172</updated>
+    </task>
+    <task id="LOCAL-00048" summary="api updates">
+      <created>1377458791469</created>
+      <updated>1377470365672</updated>
+    </task>
+    <task id="LOCAL-00049" summary="API updates, anderson lab">
+      <created>1377576458855</created>
+      <updated>1377576458855</updated>
+    </task>
+    <task id="LOCAL-00050" summary="anderson lab -&gt; 1.2, updates">
+      <created>1377582394108</created>
+      <updated>1377582394108</updated>
+    </task>
+    <task id="LOCAL-00052" summary="login in API, button in menu">
+      <created>1377584426728</created>
+      <updated>1377584426728</updated>
+    </task>
+    <task id="LOCAL-00054" summary="searchbar">
+      <created>1377636168135</created>
+      <updated>1377644422019</updated>
+    </task>
+    <task id="LOCAL-00055" summary="searchbar modularization, position fixes">
+      <created>1377642920531</created>
+      <updated>1377642920531</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Trail quizzes">
+      <created>1377644421093</created>
+      <updated>1377733007904</updated>
+    </task>
+    <task id="LOCAL-00057" summary="pcr functions">
+      <created>1377733006766</created>
+      <updated>1379713930372</updated>
+    </task>
+    <task id="LOCAL-00058" summary="DNA module additions, searchbar + trail updates">
+      <created>1377815708227</created>
+      <updated>1377815708227</updated>
+    </task>
+    <task id="LOCAL-00059" summary="ui-services.js merge&#10;">
+      <created>1377907772502</created>
+      <updated>1377907772502</updated>
+    </task>
+    <task id="LOCAL-00061" summary="anderson lab styling, node polyfill&#10;">
+      <created>1377909530997</created>
+      <updated>1377909530997</updated>
+    </task>
+    <task id="LOCAL-00062" summary="quiz directive">
+      <created>1378176847719</created>
+      <updated>1378239757751</updated>
+    </task>
+    <task id="LOCAL-00063" summary="quiz directive&#10;">
+      <created>1378233447245</created>
+      <updated>1378233447245</updated>
+    </task>
+    <task id="LOCAL-00064" summary="quiz:ranking sortable (was overwritten)">
+      <created>1378233640840</created>
+      <updated>1378233640841</updated>
+    </task>
+    <task id="LOCAL-00066" summary="paver compilation rewrite complete, trails rewritten. also:&#10;- login modal&#10;- schema editor update.&#10;- mixins minor error handling&#10;">
+      <created>1378318629000</created>
+      <updated>1378318629000</updated>
+    </task>
+    <task id="LOCAL-00067" summary="dna + construction files">
+      <changelist id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="" />
+      <created>1378749285339</created>
+      <updated>1380161582170</updated>
+    </task>
+    <task id="LOCAL-00068" summary="- $focus service, scripting Intro&#10;- schema editor updates&#10;- dna, digest updates&#10;- models rename">
+      <changelist id="d7747a55-03e1-4e53-b031-1d07fdab04f0" name="- $focus service, scripting Intro&#10;- schema editor updates&#10;- dna, digest updates&#10;- models rename" comment="" />
+      <created>1378756248680</created>
+      <updated>1378930639736</updated>
+    </task>
+    <task id="LOCAL-00069" summary="About page, scriptingIntro uses $dialog, editor updates">
+      <created>1378777356073</created>
+      <updated>1378777356073</updated>
+    </task>
+    <task id="LOCAL-00070" summary="integrate mini youtube player">
+      <created>1378879262684</created>
+      <updated>1378879262684</updated>
+    </task>
+    <task id="LOCAL-00071" summary="update schema editor, trail hints">
+      <created>1378883143053</created>
+      <updated>1378883143053</updated>
+    </task>
+    <task id="LOCAL-00072" summary="new Person schema">
+      <created>1378921621734</created>
+      <updated>1378921957998</updated>
+    </task>
+    <task id="LOCAL-00073" summary="trail rename">
+      <created>1378921956687</created>
+      <updated>1378930081642</updated>
+    </task>
+    <task id="LOCAL-00074" summary="basic digest highlight directive">
+      <created>1378927947563</created>
+      <updated>1378927947563</updated>
+    </task>
+    <task id="LOCAL-00075" summary="$focus service">
+      <created>1378930638767</created>
+      <updated>1378953058354</updated>
+    </task>
+    <task id="LOCAL-00076" summary="digest highlight more dynamic">
+      <created>1378955498098</created>
+      <updated>1378955498098</updated>
+    </task>
+    <task id="LOCAL-00077" summary="clotho intro trail">
+      <changelist id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="" />
+      <created>1379012945025</created>
+      <updated>1383678373742</updated>
+    </task>
+    <task id="LOCAL-00078" summary="quiz + functions">
+      <created>1379034173197</created>
+      <updated>1379036002708</updated>
+    </task>
+    <task id="LOCAL-00079" summary="writing Trails">
+      <created>1379104980674</created>
+      <updated>1379107059372</updated>
+    </task>
+    <task id="LOCAL-00080" summary="use gradeQuiz">
+      <created>1379108470663</created>
+      <updated>1379128552969</updated>
+    </task>
+    <task id="LOCAL-00081" summary="hintButton directive, window title">
+      <created>1379278812498</created>
+      <updated>1379278812498</updated>
+    </task>
+    <task id="LOCAL-00083" summary="retry quizzes">
+      <created>1379526275569</created>
+      <updated>1379526704094</updated>
+    </task>
+    <task id="LOCAL-00084" summary="create Clotho People">
+      <changelist id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
+      <created>1379707268643</created>
+      <updated>1379713928376</updated>
+    </task>
+    <task id="LOCAL-00085" summary="reloadModules implemeent">
+      <created>1379707400185</created>
+      <updated>1379707868357</updated>
+    </task>
+    <task id="LOCAL-00086" summary="migrate modules">
+      <created>1379808300366</created>
+      <updated>1379821736263</updated>
+    </task>
+    <task id="LOCAL-00087" summary="construction dictionary">
+      <created>1380222262707</created>
+      <updated>1382913344809</updated>
+    </task>
+    <task id="LOCAL-00088" summary="autocomplete">
+      <created>1382913340476</created>
+      <updated>1384050808121</updated>
+    </task>
+    <task id="LOCAL-00089" summary="codemirror - better handle language change and editMode">
+      <created>1383608825708</created>
+      <updated>1383608825708</updated>
+    </task>
+    <task id="LOCAL-00090" summary="search bar posts query results after submission (for empty results)">
+      <created>1383678764892</created>
+      <updated>1383678764893</updated>
+    </task>
+    <task id="LOCAL-00091" summary="wiki directive">
+      <created>1384050805786</created>
+      <updated>1384072903654</updated>
+    </task>
+    <task active="true" id="LOCAL-00092" summary="paver html construction refactor">
+      <created>1384072902923</created>
+      <updated>1384072903660</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
+    <option name="createChangelist" value="false" />
+    <option name="createBranch" value="false" />
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="22" width="1680" height="1024" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12321428" sideWeight="0.6706136" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32938644" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32560706" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39957264" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+    <MESSAGE value="editor typeahead + create(), function editor updates and tests" />
+    <MESSAGE value="clotho directive basics working (see construction page)" />
+    <MESSAGE value="editor udpate, trail updates" />
+    <MESSAGE value="anderson lab (temp), schema editor updates" />
+    <MESSAGE value="API updates, anderson lab" />
+    <MESSAGE value="anderson lab -&gt; 1.2, updates" />
+    <MESSAGE value="login in API, button in menu" />
+    <MESSAGE value="schema editor pending confirmation" />
+    <MESSAGE value="searchbar modularization, position fixes" />
+    <MESSAGE value="DNA module additions, searchbar + trail updates" />
+    <MESSAGE value="ui-services.js merge&#10;" />
+    <MESSAGE value="anderson lab styling, node polyfill&#10;" />
+    <MESSAGE value="quiz directive&#10;" />
+    <MESSAGE value="quiz:ranking sortable (was overwritten)" />
+    <MESSAGE value="prep paver composition rewrite" />
+    <MESSAGE value="paver compilation rewrite complete, trails rewritten. also:&#10;- login modal&#10;- schema editor update.&#10;- mixins minor error handling&#10;" />
+    <MESSAGE value="- $focus service, scripting Intro&#10;- schema editor updates&#10;- dna, digest updates&#10;- models rename" />
+    <MESSAGE value="About page, scriptingIntro uses $dialog, editor updates" />
+    <MESSAGE value="integrate mini youtube player" />
+    <MESSAGE value="update schema editor, trail hints" />
+    <MESSAGE value="basic digest highlight directive" />
+    <MESSAGE value="digest highlight more dynamic" />
+    <MESSAGE value="hintButton directive, window title" />
+    <MESSAGE value="codemirror - better handle language change and editMode" />
+    <MESSAGE value="search bar posts query results after submission (for empty results)" />
+    <option name="LAST_COMMIT_MESSAGE" value="search bar posts query results after submission (for empty results)" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="22" selection-start="907" selection-end="907" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/search/search-service.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="164" column="58" selection-start="4861" selection-end="4861" vertical-scroll-proportion="0.73251945" vertical-offset="1800" max-vertical-offset="3060" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="12" selection-start="699" selection-end="699" vertical-scroll-proportion="0.41731408" vertical-offset="389" max-vertical-offset="2100" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/templates/dialogShare.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="901" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/ui-services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="251" column="39" selection-start="7909" selection-end="7915" vertical-scroll-proportion="-6.918857" vertical-offset="9819" max-vertical-offset="15840" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/ui-codemirror.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="83" selection-start="74" selection-end="155" vertical-scroll-proportion="0.03329634" vertical-offset="0" max-vertical-offset="1770" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/ui-filters.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="392" selection-end="413" vertical-scroll-proportion="0.18312986" vertical-offset="0" max-vertical-offset="2910" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interface/ui-markdown.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="45" selection-start="408" selection-end="408" vertical-scroll-proportion="0.29966703" vertical-offset="0" max-vertical-offset="901" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trails/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="0" selection-start="359" selection-end="359" vertical-scroll-proportion="0.067567565" vertical-offset="0" max-vertical-offset="888" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki/parsemw.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="22" selection-start="969" selection-end="969" vertical-scroll-proportion="0.48279688" vertical-offset="0" max-vertical-offset="3300" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/application.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="175" column="39" selection-start="7239" selection-end="7239" vertical-scroll-proportion="0.2663707" vertical-offset="2400" max-vertical-offset="3330" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/search/terminal-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="901" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="32" selection-start="3262" selection-end="3262" vertical-scroll-proportion="0.4104903" vertical-offset="555" max-vertical-offset="2205" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/search/search-directives.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="165" column="4" selection-start="6274" selection-end="6274" vertical-scroll-proportion="0.91675913" vertical-offset="1829" max-vertical-offset="2745" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trails/trail-module.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="192" column="58" selection-start="8093" selection-end="8093" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9405">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="299" column="0" selection-start="8659" selection-end="8659" vertical-scroll-proportion="0.4560811" vertical-offset="4080" max-vertical-offset="9375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+

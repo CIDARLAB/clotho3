@@ -7,8 +7,16 @@
   "language" : "JSONSCHEMA",
   "fields" : [ {
     "javaType" : "java.lang.String",
-    "description" : "Title of Quiz",
-    "name" : "title",
+    "description" : "Quiz type. Determines templates and fields.",
+    "name" : "type",
+    "example" : "Options include: 'mc' (Multiple Choice), 'multipic' (Multi-Picture), 'fillin' (Fill in the Blank), 'essay' (Essay), 'dragdrop' (Drag and Drop Categories), 'multicheck' (Multiple Check), 'ranking' (Ranking), 'match' (Matching), 'assert' (Reason & Assertion)",
+    "type" : "string",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "description" : "Any information that may help in achieving the correct answer",
+    "name" : "hint",
     "example" : "",
     "type" : "string",
     "access" : "PUBLIC",
@@ -23,8 +31,8 @@
     "reference" : false
   }, {
     "javaType" : "java.util.List",
-    "description" : "Required for 'matching'",
-    "name" : "matches",
+    "description" : "Required for most quiz types, exceptions are: 'truefalse', 'fillin', 'essay'. Generally an array of strings, currently exceptions are: 'multipic', 'dragdrop'",
+    "name" : "options",
     "example" : "",
     "type" : "array",
     "access" : "PUBLIC",
@@ -38,11 +46,19 @@
     "access" : "PUBLIC",
     "reference" : false
   }, {
-    "javaType" : "java.lang.String",
-    "description" : "Any information that may help in achieving the correct answer",
-    "name" : "hint",
+    "javaType" : "java.util.List",
+    "description" : "Required for 'matching'",
+    "name" : "matches",
     "example" : "",
-    "type" : "string",
+    "type" : "array",
+    "access" : "PUBLIC",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "description" : "Required for 'dragdrop'",
+    "name" : "categories",
+    "example" : "",
+    "type" : "array",
     "access" : "PUBLIC",
     "reference" : false
   }, {
@@ -55,26 +71,10 @@
     "reference" : false
   }, {
     "javaType" : "java.lang.String",
-    "description" : "Quiz type. Determines templates and fields.",
-    "name" : "type",
-    "example" : "Options include: 'mc' (Multiple Choice), 'multipic' (Multi-Picture), 'fillin' (Fill in the Blank), 'essay' (Essay), 'dragdrop' (Drag and Drop Categories), 'multicheck' (Multiple Check), 'ranking' (Ranking), 'match' (Matching), 'assert' (Reason & Assertion)",
+    "description" : "Title of Quiz",
+    "name" : "title",
+    "example" : "",
     "type" : "string",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "description" : "Required for 'dragdrop'",
-    "name" : "categories",
-    "example" : "",
-    "type" : "array",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "description" : "Required for most quiz types, exceptions are: 'truefalse', 'fillin', 'essay'. Generally an array of strings, currently exceptions are: 'multipic', 'dragdrop'",
-    "name" : "options",
-    "example" : "",
-    "type" : "array",
     "access" : "PUBLIC",
     "reference" : false
   } ]

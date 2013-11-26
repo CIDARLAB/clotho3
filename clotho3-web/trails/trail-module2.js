@@ -1,79 +1,10 @@
 'use strict';
 
-//todo - add back in base64icon
+//todo - add back in base64icon (from orig module)
 
-Application.Trails.service('Trails', ['Clotho', 'YoutubeService', '$q', '$dialog', '$http', '$timeout', '$templateCache', '$compile', '$controller', function(Clotho, YoutubeService, $q, $dialog, $http, $timeout, $templateCache, $compile, $controller) {
-
-
-
-
-
-
-
-	// fields that are handled:
-	// backend: CSS (url), mixin (array|url), script (array|url), onload (array|url), controller (name, must be mixed in)
-	// content: text (html), video (object), template (url), quiz (object), markdown (text)
-	// @param {TrailPage} page
-	var loadPage = function TrailLoadPage(page, $scope) {
-
-		//future in ng-1.2.x, use notify callbacks for updates
-		//todo - error callbacks
-
-		if (!!page.dictionary) {
-			angular.extend($scope, page.dictionary);
-		}
-
-		return Application.css(page.css)
-		.then(function() {
-			return Application.mixin(page.mixin)
-		})
-		.then(function() {
-			return Application.script(page.script)
-		})
-		.then(function (){
-			var promises = [];
-			angular.forEach(page.contents, function (component) {
-				promises.push(loadPageComponent(component.type, component.params))
-			});
-			return promises;
-		})
-		.then(function(content) {
-
-			var contentText = '<div>';
-			angular.forEach(content, function (component) {
-
-				// todo
-				// does it make more sense to have an ng-repeat for each element
-
-			});
-			contentText += '</div>';
-
-
-
-			//check for controller, must be already included (e.g. by mixin)
-			if (page.controller) {
-				var locals = {};
-				locals.$scope = $scope;
-				var ctrl = $controller(page.controller, locals);
-				contentText.data('ngControllerController', ctrl);
-			}
-
-			$scope.content = $compile(contentText)($scope);
-
-			(!!page.onload) && console.log('loading onload script');
-			return Application.script(page.onload);
-
-		}, function(error) {
-			//content loading error
-			console.log(error);
-			//todo - do correctly
-			return $q.reject(load.error(error));
-		});
-	};
-
-
-
-
+Application.Trails.service('Trails',
+	['Clotho', 'YoutubeService', '$q',
+	function(Clotho, YoutubeService, $q) {
 
 	var compile = function TrailCompile(trail) {
 
@@ -147,6 +78,44 @@ Application.Trails.service('Trails', ['Clotho', 'YoutubeService', '$q', '$dialog
 		return deferred.promise;
 	};
 
+    //in form <Chapter>-<Page>
+    var extractPage = function(Trail, indices) {
+        var pos = indices.split("-");
+        var page = Trail.contents[pos[0]]['pages'][pos[1]];
+        return page;
+    };
+
+    //bring back in logic from trail-module.js
+    var calcNextPage = function(Trail, oldpos) {
+        oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, -1];
+        var newpos;
+
+        if (typeof Trail.contents[oldpos[0]]['pages'][+oldpos[1] + 1] != 'undefined')
+            newpos = oldpos[0] + '-' + (+oldpos[1] + 1);
+        else if (typeof Trail.contents[+oldpos[0] + 1]['pages'] != 'undefined')
+            newpos = (+oldpos[0] + 1) + '-' + 0;
+        else {
+            return;
+        }
+        return newpos;
+    };
+
+    var calcPrevPage = function(Trail, oldpos) {
+        if (oldpos == '0-0') return;
+
+        oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, 1];
+        var newpos;
+
+        if (typeof Trail.contents[oldpos[0]]['pages'][+oldpos[1] - 1] != 'undefined')
+            newpos = oldpos[0] + '-' + (+oldpos[1] - 1);
+        else if (typeof Trail.contents[+oldpos[0] - 1]['pages'])
+            newpos = (+oldpos[0] - 1) + '-' + (Trail.contents[+oldpos[0] - 1]['pages'].length - 1);
+        else {
+            return;
+        }
+        return newpos;
+    };
+
 
 
 	var favorite = function(id) {
@@ -158,127 +127,16 @@ Application.Trails.service('Trails', ['Clotho', 'YoutubeService', '$q', '$dialog
 	var persist = {};
 
 	return {
-		loadPage : loadPage,
 		compile : compile,
+        extractPage : extractPage,
+        calcNextPage : calcNextPage,
+        calcPrevPage : calcPrevPage,
 		share : Clotho.share,
 		favorite : favorite,
 		persist : persist
 	}
 }]);
 
-Application.Trails.directive('TrailPageComponent', ['$compile', function($compile) {
-
-	var pageComponentTypes = {};
-
-	pageComponentTypes.hint = function loadHint(hint) {
-		if (!hint) return $q.when();
-
-		var hintDiv = '<div class="pull-right" hint-button="'+hint+'"></div>';
-
-		return $q.when(hintDiv);
-	};
-
-	pageComponentTypes.text = function loadText(text) {
-		if (!text) return $q.when();
-		return $q.when('<div>' + text + '</div>');
-	};
-
-	pageComponentTypes.markdown = function loadMarkdown (text) {
-		if (!text) return $q.when();
-		return $q.when('<ui-markdown>' + text + '</ui-markdown>');
-	};
-
-	pageComponentTypes.video = function loadVideo(obj) {
-		if (!obj) return $q.when();
-
-		var videoId = YoutubeService.extract_youtube( (angular.isString(obj) ? obj : obj.id) );
-		$scope.videoParams = (!!obj.params) ? obj.params : {};
-
-		console.log(obj, obj.autoplay === true, ((obj.autoplay === true) ? 'false' : (obj.mini || true)));
-
-		//note - need single outer parent div to compile properly after replace (maybe not in ng-1.2.x)
-		//add this attr to move to next automatically on-complete="next()"
-		var template = '<div><div youtube="' + videoId + '" params="videoParams" start-mini="'+ ((obj.autoplay === true) ? false : (obj.mini || true)) +'" autoplay="'+ (obj.autoplay || true) +'"></div></div>';
-
-		//todo - write to avoid timeout? video doesn't update on next() otherwise - probably need to defer instantiation till later
-		return $timeout(function() {
-			return template;
-		});
-	};
-
-	pageComponentTypes.template = function loadTemplate (url) {
-		if (!url) return $q.when();
-
-		return $http.get(url, {cache:$templateCache}).then(function (success) {
-			return success.data;
-		}, function(error) {
-			console.log('error retrieving template at: ' + url);
-			return '<p class="alert alert-error">That template couldn\'t be found :(</p>'
-		});
-	};
-
-	pageComponentTypes.quiz = function loadQuiz (content) {
-		if (!content) return $q.when();
-
-		// todo - copy this, so don't delete dictionary on original object below
-
-		$scope.quiz = content;
-
-		//extend the scope with Page.quiz.dictionary (separate from Page.dictionary)
-		if (content.dictionary) {
-			var dict = angular.copy(content.dictionary);
-			//deletes reference too, i.e. scope.quiz.dictioary
-			delete content.dictionary;
-			angular.extend($scope.quiz, dict);
-		}
-
-		$scope.gradeCallback = function(data) {
-			console.log('quiz grade callback result: ' + data);
-		};
-
-		var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback()" advance="next()"></div>';
-		return $q.when(template);
-	};
-
-	pageComponentTypes.error = function loadError(error) {
-		return '<h4>Something didn&apos;t work - that type of Page wasn&apos;t recognized</h4>' +
-			error ? '<div>'+error+'</div>' : '';
-	};
-
-	var loadPageComponent = function TrailLoadPageComponent(obj, type) {
-		if (!type || !angular.isString(type)){
-			console.log('no type passed');
-			return;
-		}
-
-		if (!pageComponentTypes[type]) {
-			return pageComponentTypes.error();
-		}
-
-		return pageComponentTypes[type](obj);
-	};
-
-	return {
-		restrict: 'EA',
-		scope: false, //avoid isolate
-		compile: function compile(tElement, tAttrs, transclude) {
-			return {
-				pre: function preLink(scope, element, attrs) {
-					scope.component = attrs.component;
-					scope.componentType = attrs.component.type;
-					scope.componentParams = attrs.component.params;
-
-					pageComponentTypes[scope.componentType](scope.componentParams).then(function(result) {
-						element.html($compile(result)(scope))
-					});
-				},
-				post: function postLink(scope, element, attrs) {
-
-				}
-			}
-		}
-	}
-}]);
 
 
 Application.Trails.controller('TrailMainCtrl', ['$scope', 'Clotho', function($scope, Clotho) {
@@ -304,19 +162,15 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 
 
 	$scope.activate = function(indices) {
+        //if passed nothing
+        if (!indices || !angular.isString(indices)) return;
 
 		//don't activate already active one
 		if ($scope.current == indices) return;
-
-		console.log('1 - activating Page');
-
 		$scope.current = indices;
 
-		//in form <Chapter>-<Page>
-		var pos = indices.split("-");
-		var page = $scope.trail.contents[pos[0]]['pages'][pos[1]];
-
-		$scope.content = Trails.loadPage(page, $scope);
+        $scope.currentPage = Trails.extractPage($scope.current);
+		//$scope.content = Trails.loadPage(page, $scope);
 	};
 
 	$scope.home = function() {
@@ -334,41 +188,12 @@ Application.Trails.controller('TrailDetailCtrl', ['$scope', '$route', 'Clotho', 
 		Trails.share($scope.id)
 	};
 
-	//todo ? move this heavy logic into Trails Service
-
 	$scope.next = function() {
-		var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, -1],
-			newpos;
-
-		if (typeof $scope.trail.contents[oldpos[0]]['pages'][+oldpos[1] + 1] != 'undefined')
-			newpos = oldpos[0] + '-' + (+oldpos[1] + 1);
-		else if (typeof $scope.trail.contents[+oldpos[0] + 1]['pages'] != 'undefined')
-			newpos = (+oldpos[0] + 1) + '-' + 0;
-		else {
-			$scope.current = undefined;
-			return;
-		}
-
-		$scope.activate(newpos);
+		$scope.activate(Trails.calcNextPage($scope.trail, $scope.current));
 	};
 
 	$scope.prev = function() {
-		console.log($scope.current);
-		if ($scope.current == '0-0') return;
-
-		var oldpos = (typeof $scope.current != 'undefined') ? $scope.current.split("-") : [0, 1],
-			newpos;
-
-		if (typeof $scope.trail.contents[oldpos[0]]['pages'][+oldpos[1] - 1] != 'undefined')
-			newpos = oldpos[0] + '-' + (+oldpos[1] - 1);
-		else if (typeof $scope.trail.contents[+oldpos[0] - 1]['pages'])
-			newpos = (+oldpos[0] - 1) + '-' + ($scope.trail.contents[+oldpos[0] - 1]['pages'].length - 1);
-		else {
-			$scope.current = undefined;
-			return;
-		}
-
-		$scope.activate(newpos);
+		$scope.activate(Trails.calcPrevPage($scope.trail, $scope.current));
 	};
 
 	$keypress.on('keydown', {'alt-right' : 'next()', 'alt-left' : 'prev()'}, $scope);
@@ -517,8 +342,8 @@ Application.Trails.directive('youtube', ['Trails', 'YoutubeService', '$compile',
 		scope: {
 			videoId : '@youtube',
 			params : '=?',
-			autoplay: '@?',
-			startMini: '@?',
+			autoplay: '@?', //can also define on params directly, as 'autoplay'
+			startMini: '@?', //can also define on params directly, as 'mini'
 			onComplete : '&?'
 		},
 		compile: function compile(tElement, tAttrs, transclude) {
@@ -534,6 +359,8 @@ Application.Trails.directive('youtube', ['Trails', 'YoutubeService', '$compile',
 
 					var videoInfo = YoutubeService.youtubeInfo(scope.videoId);
 
+
+
 					//todo - center if width < 700
 
 					//defaults
@@ -541,6 +368,8 @@ Application.Trails.directive('youtube', ['Trails', 'YoutubeService', '$compile',
 						width : 700,
 						height : 525,
 						border: 0,
+						autoplay: false,
+						mini: false,
 						videoId : scope.videoId,
 						playerVars : {
 							autoplay : (!scope.autoplay && !scope.startMini) ? 0 : 1,
@@ -550,6 +379,12 @@ Application.Trails.directive('youtube', ['Trails', 'YoutubeService', '$compile',
 						events : {}
 					};
 					scope.params = angular.extend(defaults, scope.params);
+
+					//pull out of params so don't need to declare as attribute
+					scope.autoplay = angular.isDefined(scope.autoplay) ?
+						scope.autoplay : scope.params.autoplay;
+					scope.startMini = angular.isDefined(scope.startMini) ?
+						scope.startMini : scope.params.mini;
 
 					scope.params.events.onStateChange = function (event) {
 						if (event.data == 0) {

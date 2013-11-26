@@ -1,0 +1,38 @@
+{
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d63c2e6720c8f68ac15",
+  "binaryName" : "org.clothocad.core.datums.Function",
+  "c" : "org.clothocad.core.datums.Function",
+  "name" : "Function",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.Class",
+    "name" : "outputType",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "[Lorg.clothocad.core.datums.Argument;",
+    "name" : "args",
+    "type" : "array",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "author",
+    "type" : "Person",
+    "reference" : true
+  }, {
+    "javaType" : "org.clothocad.core.execution.Script",
+    "name" : "precondition",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "[Lorg.clothocad.core.datums.Function$FunctionTest;",
+    "name" : "tests",
+    "type" : "array",
+    "reference" : false
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "5289abc5ef8620b62d47dc31"
+}

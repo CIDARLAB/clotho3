@@ -1,0 +1,37 @@
+{
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.core.datums.Doo",
+  "c" : "org.clothocad.core.datums.Doo",
+  "name" : "Doo",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.bson.types.ObjectId",
+    "name" : "parentDooId",
+    "type" : "id",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.Date",
+    "name" : "dateEnded",
+    "type" : "date",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "savePolicy",
+    "type" : "boolean",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Exception",
+    "name" : "abortErr",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.util.List",
+    "name" : "messages",
+    "type" : "array",
+    "reference" : false
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "5289abc5ef8620b62d47dc2c"
+}

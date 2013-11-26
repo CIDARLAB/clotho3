@@ -7,6 +7,11 @@
   "name" : "BuiltInSchema",
   "language" : "JAVA",
   "fields" : [ {
+    "javaType" : "org.slf4j.Logger",
+    "name" : "log",
+    "type" : "object",
+    "reference" : false
+  }, {
     "javaType" : "java.lang.String",
     "name" : "binaryName",
     "type" : "string",
@@ -14,11 +19,6 @@
   }, {
     "javaType" : "java.lang.Class",
     "name" : "c",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "org.slf4j.Logger",
-    "name" : "log",
     "type" : "object",
     "reference" : false
   } ]

@@ -1,0 +1,14 @@
+{
+  "id" : "526aec6144ae288aa0ce3aee",
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.core.schema.SimpleSequence",
+  "c" : "org.clothocad.core.schema.SimpleSequence",
+  "name" : "SimpleSequence",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "sequence",
+    "type" : "string",
+    "reference" : false
+  } ]
+}
