@@ -1,9 +1,5 @@
 'use strict';
 
-//todo - declare modules when create, not here
-angular.module('clotho.dna', []);
-
-
 //full default angular stack
 angular.module('clotho.fullPackage', [
 	'clotho.foundation',    //core components as described above
@@ -42,7 +38,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
 		resolve : {
-			deps : function($q) {
+			deps : ['$q', function($q) {
 				//todo - lazyload in directive, not all at once
 				//todo - test if can load library lazily
 				return $clotho.extensions.mixin('bower_components/codemirror/lib/codemirror.js').then(function() {
@@ -55,7 +51,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 						$clotho.extensions.mixin('bower_components/codemirror/mode/markdown/markdown.js')
 					]);
 				})
-			}
+			}]
 		}
 	})
 	.when('/trails', {
@@ -67,7 +63,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
 		resolve : {
-			trail : function (Clotho, $q, $http, $route, Trails) {
+			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 				var deferred = $q.defer();
 				//todo - add timeout
 				//Clotho.get($route.current.params.id).then(function(result) {
@@ -78,7 +74,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 					});
 				});
 				return deferred.promise;
-			},
+			}],
 			deps : function() {
 				//return Application.mixin('https://www.youtube.com/player_api');
 				return $clotho.extensions.mixin('lib/youtubeAPI.js');

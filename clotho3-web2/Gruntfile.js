@@ -211,14 +211,14 @@ module.exports = function (grunt) {
       // By default, your `index.html` <!-- Usemin Block --> will take care of
       // minification. This option is pre-configured if you do not wish to use
       // Usemin blocks.
-      // dist: {
-      //   files: {
-      //     '<%= yeoman.dist %>/styles/main.css': [
-      //       '.tmp/styles/**/*.css',
-      //       '<%= yeoman.app %>/styles/**/*.css'
-      //     ]
-      //   }
-      // }
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/styles/main.css': [
+            '.tmp/styles/**/*.css',
+            '<%= yeoman.app %>/styles/**/*.css'
+          ]
+        }
+      }
     },
     htmlmin: {
       dist: {
@@ -253,8 +253,13 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             'bower_components/**/*',
-            'images/**/*.{gif,webp}',
-            'fonts/*'
+            'images/**/*',
+            'fonts/*',
+	          'extensions/*',
+	          'lib/*',
+	          'models/*',
+	          'partials/**/*',
+	          'views/**/*'
           ]
         }, {
           expand: true,
@@ -315,11 +320,14 @@ module.exports = function (grunt) {
     },
     uglify: {
       dist: {
+        /*
+        //this was the default, but we broke up the scripts into multiple modules... will still use generated block
         files: {
           '<%= yeoman.dist %>/scripts/scripts.js': [
             '<%= yeoman.dist %>/scripts/scripts.js'
           ]
         }
+        */
       }
     }
   });

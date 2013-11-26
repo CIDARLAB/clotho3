@@ -1,0 +1,1 @@
+angular.module('clotho.interface', ['ui.bootstrap', 'ui.codemirror', 'ui.keypress']);

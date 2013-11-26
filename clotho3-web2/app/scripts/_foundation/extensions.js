@@ -1,6 +1,7 @@
 'use strict';
 
 //future - keep list of components already mixed in
+//todo - timeout requests
 
 window.$clotho.extensions = $clotho.extensions = {};
 

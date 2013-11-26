@@ -9,20 +9,24 @@
     <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
     <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
     <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_Chapter.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_LabPerson.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_Page.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_Quiz.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_TrailTransclude.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_trail.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/fn_clientSetup.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/fn_gradeQuiz.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/module_digest.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/module_dna.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/module_pcr.json" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/org/clothocad/core/util/DummyAPI.java" afterPath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/util/DummyAPI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/ClothoStarter.java" afterPath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/ClothoStarter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/util/JSON.java" afterPath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/util/JSON.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/controllers/_kickoff-webapp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_dna/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_editor/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/_kickoff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/angularAdditions.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/angularAdditions.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/Gruntfile.js" afterPath="$PROJECT_DIR$/../clotho3-web2/Gruntfile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/app.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_dna/construction-module.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_dna/construction-module.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/extensions.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/extensions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/home.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/home.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/styles/images.scss" afterPath="$PROJECT_DIR$/../clotho3-web2/app/styles/images.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/index.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/setup.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/setup.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="clotho3-web.iws" />
@@ -67,27 +71,8 @@
       <file leaf-file-name="trail-module2.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="39" selection-start="616" selection-end="616" vertical-scroll-proportion="0.39779004" vertical-offset="0" max-vertical-offset="6915">
+            <state line="22" column="20" selection-start="577" selection-end="577" vertical-scroll-proportion="0.3646409" vertical-offset="0" max-vertical-offset="6915">
               <folding>
-                <marker date="1385442284000" expanded="true" signature="3641:6753" placeholder="[...]" />
-                <marker date="1385442284000" expanded="true" signature="3673:6752" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="3682:3719" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="3880:3920" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="4013:4221" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="4209:4221" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="4588:4790" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="4712:4790" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="4910:5410" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="5167:5252" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="5294:5336" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="5638:5800" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="5610:5676" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="5790:5794" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="6000:6712" placeholder="{&quot;restrict&quot;: 'EA'...}" />
-                <marker date="1385442284000" expanded="true" signature="6101:6712" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="6074:6629" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="6138:6350" placeholder="{...}" />
-                <marker date="1385442284000" expanded="true" signature="6436:6565" placeholder="{...}" />
                 <marker date="1385442284000" expanded="false" signature="12284:12303" placeholder="..." />
                 <marker date="1385442284000" expanded="false" signature="12465:12479" placeholder="..." />
                 <marker date="1385442284000" expanded="false" signature="12528:12637" placeholder="..." />
@@ -1041,7 +1026,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1637" height="1028" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -1196,27 +1181,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="39" selection-start="616" selection-end="616" vertical-scroll-proportion="0.39779004" vertical-offset="0" max-vertical-offset="6915">
+        <state line="22" column="20" selection-start="577" selection-end="577" vertical-scroll-proportion="0.3646409" vertical-offset="0" max-vertical-offset="6915">
           <folding>
-            <marker date="1385442284000" expanded="true" signature="3641:6753" placeholder="[...]" />
-            <marker date="1385442284000" expanded="true" signature="3673:6752" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="3682:3719" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="3880:3920" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="4013:4221" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="4209:4221" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="4588:4790" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="4712:4790" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="4910:5410" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="5167:5252" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="5294:5336" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="5638:5800" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="5610:5676" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="5790:5794" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="6000:6712" placeholder="{&quot;restrict&quot;: 'EA'...}" />
-            <marker date="1385442284000" expanded="true" signature="6101:6712" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="6074:6629" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="6138:6350" placeholder="{...}" />
-            <marker date="1385442284000" expanded="true" signature="6436:6565" placeholder="{...}" />
             <marker date="1385442284000" expanded="false" signature="12284:12303" placeholder="..." />
             <marker date="1385442284000" expanded="false" signature="12465:12479" placeholder="..." />
             <marker date="1385442284000" expanded="false" signature="12528:12637" placeholder="..." />

@@ -1,0 +1,1 @@
+angular.module('clotho.trails', ['clotho.foundation', 'clotho.interface']);

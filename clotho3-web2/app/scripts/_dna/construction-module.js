@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('clotho.dna').service('Construction', ['Clotho', 'DNA', 'Digest', 'PCR', '$parse', '$q', function(Clotho, DNA, Digest, PCR, $parse, $q) {
+angular.module('clotho.dna').service('Construction', function(DNA, Digest, PCR, $parse, $q) {
 
     //testing
     var dnaModules = {};
@@ -225,7 +225,7 @@ angular.module('clotho.dna').service('Construction', ['Clotho', 'DNA', 'Digest',
     }
 
 
-}]);
+});
 
 //note - returns array, need to maintain object references
 angular.module('clotho.dna').filter('orderByProp', function() {

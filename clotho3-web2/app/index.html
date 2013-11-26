@@ -10,17 +10,17 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
+        <!-- build:css styles/bootstrap.css -->
         <!--temporarily using bootstrap 2.3.2-->
         <link rel="stylesheet" href="styles/bootstrap.css">
-        <!-- build:css(.tmp) styles/main.css -->
+        <!--endbuild-->
+        <!-- build:css styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="styles/bootstrapAdds.css">
         <link rel="stylesheet" href="styles/commandbar.css">
         <link rel="stylesheet" href="styles/constructionfile.css">
         <link rel="stylesheet" href="styles/images.css">
         <link rel="stylesheet" href="styles/trails.css">
-
-
         <!-- endbuild -->
 
       <script type="application/javascript">
@@ -83,7 +83,6 @@
 
 <!-- SCRIPTS -->
 
-
 <script src="bower_components/jquery/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/lodash/dist/lodash.js"></script>
@@ -109,20 +108,19 @@
 <!-- build:js scripts/angularui-modules.js -->
 <!--todo - use development version and build with grunt-->
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
 <!-- todo - load codemirror modes in app.js using refactored $clotho.extensions -->
+<script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
 <!-- endbuild -->
 
 
+<!-- build:js scripts/app.js -->
 <script src="scripts/app.js"></script>
+<!--endbuild-->
 
 
 <!-- build:js scripts/clotho-core-module.js -->
-<script type="text/javascript">
-    angular.module('clotho.core', ['clotho.angularAdditions', 'clotho.setup']);
-</script>
-<script src="scripts/_foundation/angularAdditions.js"></script>
-<script src="scripts/_foundation/setup.js"></script>
+<script src="scripts/_core/_kickoff.js"></script>
+<script src="scripts/_core/angularAdditions.js"></script>
 <script src="scripts/_core/clothoAPI.js"></script>
 <script src="scripts/_core/clientAPI.js"></script>
 <script src="scripts/_core/collector.js"></script>
@@ -132,18 +130,15 @@
 
 
 <!-- build:js scripts/clotho-foundation.js -->
-<script type="text/javascript">
-    angular.module('clotho.foundation', ['clotho.core', 'clotho.clothoDirectives', 'clotho.extensions']);
-</script>
+<script src="scripts/_foundation/_kickoff.js"></script>
 <script src="scripts/_foundation/clothoDirectives.js"></script>
 <script src="scripts/_foundation/extensions.js"></script>
+<script src="scripts/_foundation/setup.js"></script>
 <!--endbuild-->
 
 
 <!-- build:js scripts/clotho-search-module.js -->
-<script type="text/javascript">
-    angular.module('clotho.search', ['clotho.core']);
-</script>
+<script src="scripts/_search/_kickoff.js"></script>
 <script src="scripts/_search/commandBar.js"></script>
 <script src="scripts/_search/clothoCommandBar.js"></script>
 <script src="scripts/_search/terminal.js"></script>
@@ -155,10 +150,8 @@
 
 <!-- build:js scripts/clotho-interface-module.js -->
 <!--todo - remove clotho.core functionality from this module so not dependent on module-->
-<script type="text/javascript">
-    //future - refactor ui-bootstrap dependencies here
-    angular.module('clotho.interface', ['ui.bootstrap', 'ui.codemirror', 'ui.keypress']);
-</script>
+<!--future - refactor ui-bootstrap dependencies here-->
+<script src="scripts/_interface/_kickoff.js"></script>
 <script src="scripts/_interface/angular-ui/dialog.js"></script>
 <script src="scripts/_interface/clotho/sharable.js"></script>
 <script src="scripts/_interface/elements/hintButton.js"></script>
@@ -184,9 +177,7 @@
 
 
 <!-- build:js scripts/clotho-trails-module.js -->
-<script type="text/javascript">
-    angular.module('clotho.trails', ['clotho.foundation', 'clotho.interface']);
-</script>
+<script src="scripts/_trails/_kickoff.js"></script>
 <script src="scripts/_trails/trails.js"></script>
 <script src="scripts/_trails/trailQuiz.js"></script>
 <script src="scripts/_trails/youtube.js"></script>
@@ -197,9 +188,7 @@
 
 
 <!-- build:js scripts/clotho-editor-module.js -->
-<script type="text/javascript">
-    angular.module('clotho.editor', ['clotho.foundation', 'clotho.interface']);
-</script>
+<script src="scripts/_editor/_kickoff.js"></script>
 <script src="scripts/_editor/generic.js"></script>
 <script src="scripts/_editor/sharable.js"></script>
 <script src="scripts/_editor/function.js"></script>
@@ -209,9 +198,7 @@
 
 <!--note - TEMPORARY - THESE SHOULD ALL EXIST ON THE SERVER ONLY -->
 <!-- build:js scripts/clotho-dna-module.js -->
-<script type="text/javascript">
-    angular.module('clotho.dna', []);
-</script>
+<script src="scripts/_dna/_kickoff.js"></script>
 <script src="scripts/_dna/dna-module.js"></script>
 <script src="scripts/_dna/digest-module.js"></script>
 <script src="scripts/_dna/pcr-module.js"></script>
@@ -220,10 +207,7 @@
 
 
 <!-- build:js scripts/clotho-webapp-module.js -->
-<script type="text/javascript">
-    //todo - take out clotho.dna once on server (polyfill for now)
-    angular.module('clotho.webapp', ['clotho.foundation', 'clotho.interface', 'clotho.dna']);
-</script>
+<script src="scripts/controllers/_kickoff-webapp.js"></script>
 <script src="scripts/controllers/home.js"></script>
 <script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/team.js"></script>
