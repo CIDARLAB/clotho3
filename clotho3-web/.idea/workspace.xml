@@ -9,31 +9,7 @@
     <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
     <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
     <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.gitignore" afterPath="$PROJECT_DIR$/../.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/523e3b4cc2e6967acacb1721.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/523e3b4cc2e6967acacb1721.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/523e3b4cc2e6967acacb1722.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/523e3b4cc2e6967acacb1722.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/523e3b4cc2e6967acacb1723.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/523e3b4cc2e6967acacb1723.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d5cc2e6720c8f68ac02.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d5cc2e6720c8f68ac02.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d62c2e6720c8f68ac03.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d62c2e6720c8f68ac03.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d62c2e6720c8f68ac04.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d62c2e6720c8f68ac04.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d63c2e6720c8f68ac06.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d63c2e6720c8f68ac06.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d63c2e6720c8f68ac07.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d63c2e6720c8f68ac07.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d63c2e6720c8f68ac0a.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/52771d63c2e6720c8f68ac0a.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/aa7f191e810c19729de86101.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/aa7f191e810c19729de86101.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/app.iml" afterPath="$PROJECT_DIR$/.idea/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/application.js" afterPath="$PROJECT_DIR$/application/application.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/browser/browser-controller.js" afterPath="$PROJECT_DIR$/browser/browser-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af11.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af11.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af13.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af13.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af14.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af14.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af15.json" afterPath="$PROJECT_DIR$/../src/test/resources/authoredJSON/cc2f87dec2e6d9c71a57af15.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki/mwcolors.css" afterPath="$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki/mwcolors.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki/parsemw.js" afterPath="$PROJECT_DIR$/lib/codemirror-3.19/mode/mediawiki/parsemw.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trails/trail-module2.js" afterPath="$PROJECT_DIR$/trails/trail-module2.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trails/trail-page-component-directive.js" afterPath="$PROJECT_DIR$/trails/trail-page-component-directive.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trails/trail-page-directive.js" afterPath="$PROJECT_DIR$/trails/trail-page-directive.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/ui-directives.js" afterPath="$PROJECT_DIR$/interface/ui-directives.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/style/darkBackground.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/style/darkBackground.js" />
     </list>
     <ignored path="clotho3-web.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1012,7 +988,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1637" height="1028" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />

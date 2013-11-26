@@ -3,7 +3,8 @@ angular.module('clotho.interface')
     return {
       restrict: 'A',
       link: function postLink(scope, element, attrs) {
-        //todo - convert to class, use toggleClass(), remove on scope.$destroy() or $location change
+        //todo - convert to class, use toggleClass()
+
 	      var oldBackground = $document.find('body').css('background');
 				$document.find('body').css({background: '#eeeeee'});
 
