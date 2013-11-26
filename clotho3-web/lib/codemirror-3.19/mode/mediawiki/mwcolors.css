@@ -1,0 +1,60 @@
+.editbox {
+	margin: .4em;
+	padding: 0;
+	font-family: monospace;
+	font-size: 10pt;
+	color: #000000;
+}
+
+pre.code, .editbox {
+	color: #000000;
+}
+
+.editbox p {
+	margin: 0;
+}
+
+span.mw-text {
+	color: #000000;
+}
+
+span.mw-syntaxerror {
+	color: #FFFFFF;
+	background-color: #990000;
+}
+
+span.mw-comment {
+	color: #999999;
+}
+
+span.mw-bolditalic {
+	color: #000000;
+	font-weight: bold; 
+	font-style: italic;
+}
+
+span.mw-bold {
+	color: #000000;
+	font-weight: bold; 
+}
+
+span.mw-italic {
+	color: #000000;
+	font-style: italic;
+}
+
+span.mw-file {
+	color: #FF6600;
+}
+
+span.mw-link {
+	color: #006600;
+}
+
+span.mw-weblink {
+	color: #000099;
+}
+
+span.mw-table {
+	color: #339999;
+}

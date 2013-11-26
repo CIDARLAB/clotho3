@@ -117,6 +117,8 @@ Application.Trails.directive('youtube', ['Trails', '$compile', '$timeout', funct
 
 Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', '$http', function(Clotho, $q, $dialog, $http) {
 
+
+		//todo - move these functions into a youtube service
     /**
      * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work.
      * @source http://stackoverflow.com/a/10315969/624466
@@ -150,8 +152,6 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', '$http', functi
 
         //If pass by reference (depending on Clotho.get() ) need to copy to don't edit in dependencies
         //trail = angular.copy(trail);
-
-        //todo - better chaining
 
         var transcludes = trail.dependencies || null,
             deferred = $q.defer();
@@ -224,7 +224,6 @@ Application.Trails.service('Trails', ['Clotho', '$q', '$dialog', '$http', functi
         console.log("favorite trail with id: " + id);
     };
 
-    //todo - better logic...
     var persist = {};
 
     return {
