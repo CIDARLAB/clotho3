@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_RestrictionDigestsCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Digest', 'Clotho', '$q', 'Searchbar', function($scope, $focus, $timeout, $dialog, Digest, Clotho, $q, Searchbar) {
+angular.module('clotho.extensions').controller('clothoIntro_RestrictionDigestsCtrl', function($scope, $focus, $timeout, $dialog, Digest, Clotho, $q, CommandBar) {
     $scope.Digest = Digest;
 
     $scope.demo = {};
@@ -15,8 +15,8 @@ angular.module('clotho.extensions').controller('clothoIntro_RestrictionDigestsCt
         $dialog.messageBox('Variables', '<p>You can create variables in the Command Bar that Clotho will remember.</p><p>For example: <code>var mySeq = "acgatcgaatatGAATTCacgtactgatcga"</code></p><p>And using a Clotho-defined enzyme: <code>var myEnz = Digest.enzymes.EcoRI</code></p><p>We\'ll go ahead and declare <code>MySeq</code> and <code>MyEnz</code> for you behind the scenes.</p>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
         .then(function() {
             return $q.all([
-                Searchbar.submit('var mySeq = "acgatcgaatatGAATTCacgtactgatcga"'),
-                Searchbar.submit('var myEnz = Digest.enzymes.EcoRI'),
+                CommandBar.submit('var mySeq = "acgatcgaatatGAATTCacgtactgatcga"'),
+	              CommandBar.submit('var myEnz = Digest.enzymes.EcoRI'),
                 $focus.typeOutSearch('Digest.digest(mySeq, myEnz)')
             ]);
         })
@@ -24,4 +24,4 @@ angular.module('clotho.extensions').controller('clothoIntro_RestrictionDigestsCt
             $focus.focusSearch();
         });
     }
-}]);
+});

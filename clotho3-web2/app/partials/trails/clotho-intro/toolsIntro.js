@@ -6,7 +6,7 @@ angular.module('clotho.extensions').controller('clothoIntro_toolsIntroCtrl', ['$
         backdrop: false,
         keyboard: false,
         dialogFade : true,
-        templateUrl: 'views/_interface/templates/dialogMessagebox.html',
+        templateUrl: 'views/_interface/ui-custom/dialogMessagebox.html',
         controller: 'MessageBoxController',
         resolve:
         {model: function() {
@@ -22,7 +22,7 @@ angular.module('clotho.extensions').controller('clothoIntro_toolsIntroCtrl', ['$
         backdrop: false,
         keyboard: false,
         dialogFade : true,
-        templateUrl: 'views/_interface/templates/dialogMessagebox.html',
+        templateUrl: 'views/_interface/ui-custom/dialogMessagebox.html',
         controller: 'MessageBoxController',
         resolve:
         {model: function() {
