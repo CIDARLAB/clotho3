@@ -9,7 +9,21 @@
     <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
     <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
     <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/style/darkBackground.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/style/darkBackground.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_Chapter.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_LabPerson.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_Page.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_Quiz.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_TrailTransclude.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/definition_trail.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/fn_clientSetup.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/fn_gradeQuiz.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/module_digest.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/module_dna.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/json/essential/module_pcr.json" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/org/clothocad/core/util/DummyAPI.java" afterPath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/util/DummyAPI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/ClothoStarter.java" afterPath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/ClothoStarter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/util/JSON.java" afterPath="$PROJECT_DIR$/../src/main/java/org/clothocad/core/util/JSON.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="clotho3-web.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,11 +55,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="application.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="application.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/application.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="114" column="41" selection-start="3976" selection-end="3976" vertical-scroll-proportion="0.016574586" vertical-offset="1710" max-vertical-offset="3660">
+            <state line="145" column="0" selection-start="5290" selection-end="5290" vertical-scroll-proportion="0.0" vertical-offset="1695" max-vertical-offset="3660">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="trail-module2.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="39" selection-start="616" selection-end="616" vertical-scroll-proportion="0.39779004" vertical-offset="0" max-vertical-offset="6915">
+              <folding>
+                <marker date="1385442284000" expanded="true" signature="3641:6753" placeholder="[...]" />
+                <marker date="1385442284000" expanded="true" signature="3673:6752" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="3682:3719" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="3880:3920" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="4013:4221" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="4209:4221" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="4588:4790" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="4712:4790" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="4910:5410" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="5167:5252" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="5294:5336" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="5638:5800" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="5610:5676" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="5790:5794" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="6000:6712" placeholder="{&quot;restrict&quot;: 'EA'...}" />
+                <marker date="1385442284000" expanded="true" signature="6101:6712" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="6074:6629" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="6138:6350" placeholder="{...}" />
+                <marker date="1385442284000" expanded="true" signature="6436:6565" placeholder="{...}" />
+                <marker date="1385442284000" expanded="false" signature="12284:12303" placeholder="..." />
+                <marker date="1385442284000" expanded="false" signature="12465:12479" placeholder="..." />
+                <marker date="1385442284000" expanded="false" signature="12528:12637" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -127,7 +173,6 @@
         <option value="$PROJECT_DIR$/search/terminal-controller.js" />
         <option value="$PROJECT_DIR$/trails/trail-module.js" />
         <option value="$PROJECT_DIR$/trails/youtube-directive.js" />
-        <option value="$PROJECT_DIR$/trails/trail-module2.js" />
         <option value="$PROJECT_DIR$/trails/trail-page-component-directive.js" />
         <option value="$PROJECT_DIR$/trails/trail-page-directive.js" />
         <option value="$USER_HOME$/Sites/clotho3-web2/app/scripts/app.js" />
@@ -138,6 +183,7 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/browser/browser-controller.js" />
         <option value="$PROJECT_DIR$/application/application.js" />
+        <option value="$PROJECT_DIR$/trails/trail-module2.js" />
       </list>
     </option>
   </component>
@@ -215,6 +261,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -547,23 +594,22 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="203" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="205" />
-    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="205" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="205" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../clotho3-web2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="216" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1004" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="1003" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="211" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1004" />
     <property name="JavaScriptPreferStrict" value="true" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="211" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="207" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
@@ -594,14 +640,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
-      <option name="VMOptions" />
-      <option name="arguments" />
-      <option name="filePath" />
-      <option name="scope" value="ALL" />
-      <option name="testName" />
-      <method />
-    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -610,6 +648,21 @@
       <option name="saveOutputToFile" value="false" />
       <option name="showConsoleOnStdErr" value="false" />
       <option name="showConsoleOnStdOut" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
+      <setting name="configLocationType" value="CONFIG_FILE" />
+      <setting name="settingsFile" value="" />
+      <setting name="serverType" value="INTERNAL" />
+      <setting name="preferredDebugBrowser" value="CHROME" />
       <method />
     </configuration>
     <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
@@ -994,7 +1047,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13011606" sideWeight="0.6706136" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12950519" sideWeight="0.6706136" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -1050,11 +1103,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/_NOT TO SYNC/definition_trail.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="32" selection-start="587" selection-end="587" vertical-scroll-proportion="0.20524515" vertical-offset="0" max-vertical-offset="877" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/_NOT TO SYNC/trail_clothoIntro-extended.json">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="901" />
@@ -1093,13 +1141,6 @@
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="109" column="30" selection-start="5454" selection-end="5454" vertical-scroll-proportion="0.0" vertical-offset="1635" max-vertical-offset="2145">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/application.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="114" column="41" selection-start="3976" selection-end="3976" vertical-scroll-proportion="0.016574586" vertical-offset="1710" max-vertical-offset="3660">
           <folding />
         </state>
       </provider>
@@ -1143,6 +1184,43 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="18" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="780">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/application.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="145" column="0" selection-start="5290" selection-end="5290" vertical-scroll-proportion="0.0" vertical-offset="1695" max-vertical-offset="3660">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trails/trail-module2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="39" selection-start="616" selection-end="616" vertical-scroll-proportion="0.39779004" vertical-offset="0" max-vertical-offset="6915">
+          <folding>
+            <marker date="1385442284000" expanded="true" signature="3641:6753" placeholder="[...]" />
+            <marker date="1385442284000" expanded="true" signature="3673:6752" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="3682:3719" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="3880:3920" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="4013:4221" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="4209:4221" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="4588:4790" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="4712:4790" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="4910:5410" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="5167:5252" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="5294:5336" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="5638:5800" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="5610:5676" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="5790:5794" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="6000:6712" placeholder="{&quot;restrict&quot;: 'EA'...}" />
+            <marker date="1385442284000" expanded="true" signature="6101:6712" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="6074:6629" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="6138:6350" placeholder="{...}" />
+            <marker date="1385442284000" expanded="true" signature="6436:6565" placeholder="{...}" />
+            <marker date="1385442284000" expanded="false" signature="12284:12303" placeholder="..." />
+            <marker date="1385442284000" expanded="false" signature="12465:12479" placeholder="..." />
+            <marker date="1385442284000" expanded="false" signature="12528:12637" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

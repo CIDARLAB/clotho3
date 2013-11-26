@@ -15,10 +15,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.util.JSON;
 import org.clothocad.webserver.jetty.ClothoWebserver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 //Start then navigate to:  http://localhost:8080/#/
 @Slf4j
@@ -34,9 +34,18 @@ public class ClothoStarter
 
         Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
 
+        Persistor persistor = injector.getInstance(Persistor.class);
+        
+        ensureMinimalObjects(persistor);
+        
         server = injector.getInstance(ClothoWebserver.class);
         
         server.start();
+    }
+    
+    
+    protected static void ensureMinimalObjects(Persistor p){
+        JSON.importTestJSON(Paths.get("src", "main", "resources", "json", "essential").toString(), p, false);
     }
     
     protected static CommandLine parseArgs(String[] args) throws ParseException{
@@ -54,9 +63,12 @@ public class ClothoStarter
             String path = cmd.getOptionValue(ConfigOption.propfile.abbreviation);
             try {
                 properties.load(Files.newInputStream(Paths.get(path)));
+                log.info("Properties loaded from file at {}", path);
             } catch (IOException ex) {
                 log.warn("Could not load properties file at {}", path);
             }
+        } else {
+            log.debug("No property file specified.");
         }
         
         for (ConfigOption configOption : ConfigOption.values()){
