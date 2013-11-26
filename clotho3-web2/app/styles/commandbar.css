@@ -1,0 +1,94 @@
+/**************
+Command Bar
+**************/
+
+/* line 5, ../../app/styles/commandbar.scss */
+
+#clothoSearchbarAutocomplete {
+  z-index: 1001;
+}
+
+/* line 9, ../../app/styles/commandbar.scss */
+
+#clothoSearchbarAutocompleteList {
+  width: 350px;
+  display: block;
+}
+
+/* line 14, ../../app/styles/commandbar.scss */
+
+.clothoSearchbarAutocompleteListItem {
+  padding-left: 28px;
+  padding-right: 20px;
+}
+
+/* line 19, ../../app/styles/commandbar.scss */
+
+#clothoSearchbarAutocompleteDetail {
+  max-width: 400px;
+  width: 400px;
+  float: left;
+  z-index: 1001;
+  /*bootstrap dropdown-menu is 1000*/
+  position: absolute;
+  left: 350px;
+}
+
+/* line 28, ../../app/styles/commandbar.scss */
+
+#searchBarInput {
+  background: white url("../images/iconSlice.png") no-repeat 5px 6px;
+  padding-left: 28px;
+  width: 316px;
+}
+
+/* todo - viewport container to hide scrollbar */
+
+/* line 35, ../../app/styles/commandbar.scss */
+
+#clothoSearchbarLog {
+  z-index: 999;
+  max-width: 400px;
+  width: 400px;
+  display: block;
+  /*override bootstrap*/
+}
+
+/* line 42, ../../app/styles/commandbar.scss */
+
+#clothoSearchbarLogSnippet {
+  padding: 3px 12px 4px;
+  margin: 5px 5px 0;
+  max-width: 254px;
+  max-height: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* line 51, ../../app/styles/commandbar.scss */
+
+#clothoSearchbarLog .logEntry {
+  max-width: 360px;
+  overflow-y: hidden;
+  word-wrap: break-word;
+  /*display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  max-height: 120px;
+  */
+}
+
+/* to fit into bootstrap */
+
+/* line 64, ../../app/styles/commandbar.scss */
+
+.clotho-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background: url("../images/iconSlice.png") no-repeat -3px 0px;
+}

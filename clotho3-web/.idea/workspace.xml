@@ -8,15 +8,7 @@
     <list id="d7747a55-03e1-4e53-b031-1d07fdab04f0" name="- $focus service, scripting Intro&#10;- schema editor updates&#10;- dna, digest updates&#10;- models rename" comment="" />
     <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
     <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
-    <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/Gruntfile.js" afterPath="$PROJECT_DIR$/../clotho3-web2/Gruntfile.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/RestrictionDigests.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/RestrictionDigests.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/searchbarIntro.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/searchbarIntro.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/dist/partials/trails/clotho-intro/searchbarIntro.js" afterPath="$PROJECT_DIR$/../clotho3-web2/dist/partials/trails/clotho-intro/searchbarIntro.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/toolsIntro.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/toolsIntro.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/dist/partials/trails/clotho-intro/toolsIntro.js" afterPath="$PROJECT_DIR$/../clotho3-web2/dist/partials/trails/clotho-intro/toolsIntro.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)" />
     <ignored path="clotho3-web.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />

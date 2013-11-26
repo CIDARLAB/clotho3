@@ -1,0 +1,104 @@
+/******************
+construction
+****************/
+
+/* line 5, ../../app/styles/constructionfile.scss */
+
+.constructionDictionary {
+  margin-bottom: 10px;
+}
+
+/* line 9, ../../app/styles/constructionfile.scss */
+
+.constructionDictionary .computed {
+  background-color: #d9edf7;
+}
+
+/* line 13, ../../app/styles/constructionfile.scss */
+
+.constructionStep {
+  position: relative;
+  margin: 0 0 8px;
+  border: 3px solid #d9edf7;
+  background-color: #fff;
+  border-radius: 8px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 24, ../../app/styles/constructionfile.scss */
+
+.constructionStep .arrow,
+.constructionStep .arrow:after {
+  position: absolute;
+  pointer-events: none;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+/* line 34, ../../app/styles/constructionfile.scss */
+
+.constructionStep .arrow {
+  border-width: 11px;
+  top: -11px;
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-color: #d9edf7;
+  border-top-width: 0;
+}
+
+/* line 43, ../../app/styles/constructionfile.scss */
+
+.constructionStep .arrow:after {
+  border-width: 7px;
+  content: "";
+  top: 4px;
+  margin-left: -7px;
+  border-bottom-color: #ffffff;
+  border-top-width: 0;
+}
+
+/* line 52, ../../app/styles/constructionfile.scss */
+
+.constructionStep .errorBackground {
+  background-color: #f2dede;
+}
+
+/* line 56, ../../app/styles/constructionfile.scss */
+
+.constructionStep .warningBackground {
+  background-color: #fcf8e3;
+}
+
+/* line 60, ../../app/styles/constructionfile.scss */
+
+.constructionStep .reaction {
+  padding: 4px 17px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #8D9094;
+  border-radius: 4px 4px 0 0;
+}
+
+/* line 69, ../../app/styles/constructionfile.scss */
+
+.constructionStep .fields {
+  padding: 10px 15px 0;
+  background: #d9edf7;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: #3a87ad;
+}
+
+/* line 76, ../../app/styles/constructionfile.scss */
+
+.constructionStep .output {
+  padding: 4px 35px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #8D9094;
+  border-radius: 0 0 4px 4px;
+}
