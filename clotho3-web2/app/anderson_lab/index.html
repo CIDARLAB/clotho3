@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7 ie6"> <![endif]-->
+<!--[if IE 7]>         <html class="lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>         <html class="lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="searchBar/styles/searchBar.css" />
+    <script src="scripts/modernizr-2.6.2.min.js"></script>  
+  </head>
+  <body>
+    
+    <div id="page">
+      <div id="skipNav"><a href="#main">Skip Navigation</a></div>
+    
+      <header id="pageHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col width3">
+              <a href="#"><img id="pageLogo" src="assets/logos/AndersonLabLogo.png" alt="Anderson Lab Logo" /></a>
+            </div>
+            <div class="col width7">
+              <ul class="menu main">
+                <li><a href="people.html">People</a></li>
+                <li><a href="research.html">Research</a></li>
+                <li><a href="software.html">Software</a></li>
+              </ul>
+            </div>
+            <div class="col width6">
+              <ul class="menu secondary">
+                <li><a href="">Education</a></li>
+                <li><a href="">Blog</a></li>
+              </ul>
+            </div>
+          </div>
+      </div>
+    </header>    
+        
+      <div class="container clotho">
+        <div class="row">
+          <div class="col full clearfix">
+           
+            <div id="searchBarContainer"></div>
+            
+          </div>
+        </div>
+      </div>
+    
+      
+      <section id="main" role="main" class="container">
+        <div class="row">
+          <ul class="col full multipleslideshows">
+            <li><!-- slideshow 1 -->
+              <ul class="slideshowContainer">
+                <li><img src="assets/pictures/pic1.jpg" alt="" /></li>
+              </ul>
+            </li>
+            <li><!-- slideshow 2 -->
+              <ul class="slideshowContainer">
+                <li><img src="assets/pictures/pic2.jpg" alt="" /></li>
+              </ul>
+            </li>
+            <li><!-- slideshow 3 -->
+              <ul class="slideshowContainer">
+                <li><img src="assets/pictures/pic3.jpg" alt="" /></li>
+              </ul>
+            </li>
+            <li><!-- slideshow 4 -->
+              <ul class="slideshowContainer">
+                <li><img src="assets/pictures/pic4.jpg" alt="" /></li>
+              </ul>
+            </li>
+            <li><!-- slideshow 5 -->
+              <ul class="slideshowContainer">
+                <li><img src="assets/pictures/pic5.jpg" alt="" /></li>
+              </ul>
+            </li>
+            <li><!-- slideshow 6 -->
+              <ul class="slideshowContainer">
+                <li><img src="assets/pictures/pic6.jpg" alt="" /></li>
+              </ul>
+            </li>            
+            <li class="titleField">
+              <h1>Putting the engineering into generic engineering</h1>
+              <ul>
+                <li>
+                  <span class="name">JChristopher Anderson</span>
+                  Assistant Professor, Bioengineering<br />
+                  University of California at Berkeley
+                </li>
+                <li>
+                  <strong>Email:</strong><br />
+                  <a href="mailto:jcanderson@berkeley.edu">jcanderson@berkeley.edu</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+      
+      <section id="sponsors" class="container">
+        <div class="row">
+          <div class="col full">
+            <strong>Our founders and associations:</strong>
+            <ul class="col full sponsorsList">
+              <li><img src="assets/logos/sponsorLogos/agilent.png" alt="" /></li>
+              <li><img src="assets/logos/sponsorLogos/synberc.png" alt="" /></li>
+              <li><img src="assets/logos/sponsorLogos/nsf.png" alt="" /></li>
+              <li><img src="assets/logos/sponsorLogos/darpa.png" alt="" /></li>
+              <li><img src="assets/logos/sponsorLogos/cal.png" alt="" /></li>
+              <li><img src="assets/logos/sponsorLogos/berkeleylab.png" alt="" /></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    
+    
+    
+      <footer class="container vcard">
+        <div class="row">
+          <div class="col width12">
+            <ul>
+              <li class="fn">AndersonLab</li>
+              <li class="org"><strong>University of California at Berkeley</strong></li>
+              <li>
+                <ul class="adr">
+                  <li class="street-address">327 Stanley Hall, Mailcode #1762,</li>
+                  <li class="locality">Berkeley,</li>
+                  <li class="region">CA</li>
+                  <li class="postal-code">94020</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="col width4">
+            <div class="emailWrap">
+              <strong>Email: </strong><a class="email"  href="mailto:jcanderson@berkeley.edu">jcanderson@berkeley.edu</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    
+    </div> <!-- end page -->
+     
+    <!-- scripts load at the end of the body -->
+    <!-- preference is given to CDNs for faster loading -->
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
+    <script>window.jQuery || document.write('<script src="scripts/jquery-1.9.0.min.js"><\/script>')</script>
+    <!-- <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script> -->
+    <script>window.jQuery.ui || document.write('<script src="scripts/jquery-ui-1.10.0.min.js"><\/script>')</script>    
+    
+    <!-- the next two lines insert the searchbar. These lines have to be placed after the jQuery/jQuery UI scripts -->
+    <!-- it is assumed that a <div id="searchBarContainer"></div> exists -->
+    <script> var sbarAttr = {
+                  'backgroundIsWhite' : true, 
+                  'backgroundAlpha': '0',
+                  'showHelpPane' : false
+                }; </script>
+    <!-- <script src="http://bussedesignstage.com/ajax/cl01.1/searchBar/scripts/initSearchBar.js"> </script> -->
+    <script src="searchBar/scripts/initSearchBar.js"> </script>
+    
+    <script src="scripts/jquery.columnizer.min.js"> </script>
+     
+    <script src="scripts/cl02.js"></script> 
+     
+     
+     
+  </body>
+</html>

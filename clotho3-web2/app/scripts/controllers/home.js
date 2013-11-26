@@ -1,0 +1,13 @@
+angular.module('clotho.webapp').controller('HomeCtrl', function ($scope, $location) {
+	$scope.enterClotho = function() {
+		$location.path('/trails/bb99191e810c19729de860fe');
+	};
+
+	$scope.enterEugene = function() {
+		$location.path('/trails/bb02191e810c19729de860aa');
+	};
+
+	$scope.enterRaven = function() {
+		$location.path('/trails/bb02191e810c19729de860bb');
+	};
+});

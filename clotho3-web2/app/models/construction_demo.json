@@ -1,0 +1,68 @@
+{
+    "name": "Construction File Demo",
+    "id": "ee2f87dec2e6d9c71a57aa11",
+    "schema": "ConstructionFile",
+    "description": "The Construction File automates the process of building custom DNAs. 'steps' are sequential functions that will be run. The 'dictionary' is a hash of variables that will be used throughout the reaction. Each function will return it's normal return, which will be assigned to the 'output' field and added to the 'dictionary' for the next 'step'. 'Output' should be a single string, which will match the return signature of the function run. Each step will use angular's $parse for each input (e.g. if previous step returns an object or array 'fragments', you could enter as input for the next step 'fragments.key' or 'fragments[0]' respectively). Final result should be called 'final'.",
+    "dictionary": [
+        {
+            "key": "primer1",
+            "value": "tatcgatcgta"
+        },
+        {
+            "key": "primer2",
+            "value": "gatcgatcgat"
+        },
+        {
+            "key": "template",
+            "value": "ccccccccccccccccccccCGTCTCccccccagctacgatcgataaaaaaaaatttttttttttgatcgatcgatagctaggGAATTCgggggggggggggggggggggggggggggg"
+        },
+        {
+            "key": "EcoRI",
+            "Clotho": true,
+            "preprocess": "Digest.enzymes.EcoRI"
+        },
+        {
+            "key": "BsmbI",
+            "Clotho": true,
+            "preprocess": "Digest.enzymes.BsmbI"
+        },
+        {
+            "key": "backbone",
+            "value": "^cccc_atcgatcgatcgactagctacgacgatcgatcgatcgatcgatcgatcgatcgatcagcatcgactagctacgactgc^aatt_"
+        }
+    ],
+    "steps": [
+        {
+            "reaction": "PCR.predict",
+            "input": ["template", ["primer1", "primer2"]],
+            "output": "pcr_product"
+        },
+        {
+            "reaction": "Digest.digest",
+            "input": ["pcr_product", "EcoRI"],
+            "output": "fragments"
+        },
+        {
+            "reaction": "Digest.gelPurify",
+            "input": ["fragments", "70"],
+            "output": "targetFrag"
+        },
+        {
+            "reaction": "Digest.digest",
+            "input": ["targetFrag", "BsmbI"],
+            "output": "fragments2"
+        },
+        {
+            "reaction": "Digest.gelPurify",
+            "input": ["fragments2", "70"],
+            "output": "targetFrag2"
+        },
+        {
+            "reaction": "PCR.ligate",
+            "input": [
+                ["targetFrag2", "backbone"]
+            ],
+            "output": "final"
+        }
+    ]
+}

@@ -1,0 +1,125 @@
+<div ng-controller="Editor_FunctionCtrl">
+    <legend>Function Editor</legend>
+    <div class="ng-cloak">
+
+        <div class="control-group">
+            <label class="control-label" for="functionName">Name</label>
+            <div class="controls">
+                <input type="text" id="functionName" ng-model="editable.name" ng-disabled="!editMode">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionId">ID</label>
+            <div class="controls">
+                <input type="text" id="functionId" ng-model="editable.id" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionLang">Language</label>
+            <div class="controls">
+                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionDesc">Description</label>
+            <div class="controls">
+                <textarea type="text" id="functionDesc" class="input-large" ng-model="editable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="functionPre">Precondition</label>
+            <div class="controls">
+                <textarea type="text" id="functionPre" class="input-large" ng-model="editable.precondition" style="width: 100%; height: 6em" ng-disabled="!editMode"></textarea>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Dependencies</label>
+            <div class="controls">
+                <div ng-repeat="param in editable.dependencies" class="pull-left">
+                    <div class="input-append">
+                        <input type="text" class="input-xlarge" ng-model="param" ng-disabled="!editMode">
+                        <button class="btn" ng-click="editable.dependencies.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                    </div>
+
+                </div>
+                <button class="btn pull-right" type="button" ng-click="addDep()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Arguments</label>
+            <div class="controls">
+                <div ng-repeat="param in editable.args" class="pull-left">
+                    <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.category for c in paramTypes">
+                    </select>
+                    <!-- see http://jsfiddle.net/M32pj/1/ for another select directive-->
+
+                    <!--<input type="text" ng-model="param.type" typeahead="type for type in paramTypes | filter:$viewValue" ng-disabled="!editMode">-->
+
+                    <div class="input-append">
+                        <input type="text" ng-model="param.name" ng-disabled="!editMode">
+                        <button class="btn" ng-click="editable.args.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                    </div>
+
+                </div>
+                <button class="btn pull-right" type="button" ng-click="addArg()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+            </div>
+        </div>
+
+        <textarea ui-codemirror="codemirrorEditorOptions" type="text" id="functionCode" ng-model="editable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
+
+
+        <h3 class="text-center">
+            Tests
+            <div class="btn-group">
+                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="form.$invalid || editable.tests.length < 1">Run All</button>
+            </div>
+            <button class="btn pull-right" type="button" ng-click="addTest()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+        </h3>
+
+        <div ng-repeat="test in editable.tests">
+            <div class="control-group">
+                <label class="control-label" for="functionTestArg{{ $index }}">Test Arguments</label>
+                <div class="controls">
+                    <button class="btn pull-right" ng-click="editable.tests.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                    <div ng-repeat="param in editable.args">
+                        <div ng-if="simpleTypes[param.type]">
+                            <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" ng-disabled="!editMode">
+                        </div>
+                        <div ng-if="!simpleTypes[param.type]">
+                            <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" typeahead="opt for opt in querySchemaWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="Search for an object of type {{ param.type }}" popover-trigger="focus" ng-disabled="!editMode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="functionTestResult{{ $index }}">Expected Output</label>
+                <div class="controls">
+                    <select ng-model="test.output.type" class="span2" ng-disabled="!editMode" ng-options="t.value as t.name for t in outputTypes">
+                    </select>
+                    <input type="text" id="functionTestResult{{ $index }}" ng-model="test.output.value" ng-disabled="!editMode">
+                    <button class="btn" ng-click="singleTest($index)" ng-disabled="form.$invalid" ng-class="{'btn-success' : testResults[$index] === true, 'btn-danger' : testResults[$index] === false}">Test</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-actions" ng-hide="editMode">
+            <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+        <div class="form-actions" ng-show="editMode">
+            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
+            <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+            <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
+            <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+    </div>
+</div>

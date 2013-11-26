@@ -1,0 +1,75 @@
+/**
+ * @fileOverview Typography css for clotho project cl01
+ *
+ *
+ */
+body {
+  font-family: arial, helvetica, sans-serif; 
+  font-size: 12px; 
+}
+p,
+h1,
+h2,
+h3,
+h4 {
+  line-height:  1.3;
+  margin:  0;
+} 
+h1 { 
+  font-size: 24px; 
+} 
+h2 { 
+  font-size: 20px; 
+}
+h3 { 
+  font-size: 18px; 
+}
+h4 { 
+  font-size: 14px; 
+}
+em { 
+  font-style: italic; 
+}
+strong { 
+  font-weight: bold; 
+  color: inherit; 
+}
+small { 
+  font-size: 80%; 
+}
+
+blockquote, 
+blockquote p {
+  font-family: Georgia, serif;
+  font-size: 16px; 
+  line-height: 1.5;  
+  font-style: italic; 
+}
+blockquote { 
+  margin: 0 0 20px; 
+  padding: 10px; 
+}
+blockquote cite { 
+  display: block;
+  font-family: Helvetica-Neue, Arial, Helvetica, sans-serif;
+  font-size: 12px; 
+}
+blockquote cite:before { 
+  content: "\2014 \00A0"; 
+}
+blockquote cite a, 
+blockquote cite a:visited, 
+blockquote cite a:visited { 
+  color: #555; 
+}
+hr { 
+  border: solid #ddd; 
+  border-width: 1px 0 0; 
+  clear: both; 
+  margin: 10px 0 30px; 
+  height: 0;
+}
+a {
+  text-decoration: none;
+  color: #468baa;
+}

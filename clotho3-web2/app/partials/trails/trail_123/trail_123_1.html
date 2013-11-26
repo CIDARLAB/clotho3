@@ -1,0 +1,40 @@
+<!-- third way - mixin a new directive -->
+<div ng-controller="demoClothoDirectives">
+    <h2>Clotho Server Directives</h2>
+
+    <p>Demonstrating Directives that interact with the server rather than using client-code for model formatting</p>
+
+    <div class="control-group">
+        <label class="control-label" for="seq">Enter your sequence</label>
+        <div class="controls">
+            <input type="text" id="seq" placeholder="Choose a function to Run" ng-model="sequence">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="clothofn">Choose Clotho Function</label>
+        <div class="controls">
+            <input type="text" id="clothofn" placeholder="Choose a function to Run" ng-model="chooseFunction" typeahead="fn.name for fn in clothoFunctions">
+        </div>
+    </div>
+
+    <div class="control-group clearfix">
+        <div class="span6 pull-left">
+            <label class="control-label" for="clothorunpre">Clotho.run as pre</label>
+            <div class="controls">
+                <pre id="clothorunpre" placeholder="Remote reverse" ng-model="sequence" clotho-run="{{ chooseFunction }}"></pre>
+            </div>
+        </div>
+        <div class="span6 pull-right">
+            <label class="control-label" for="clothorun">Clotho.run as input</label>
+            <div class="controls">
+                <input type="text" id="clothorun" placeholder="remote Reverse" ng-model="sequence" clotho-run="{{ chooseFunction }}" disabled>
+            </div>
+        </div>
+    </div>
+
+
+    <h3>Demoing a few other things</h3>
+    <button class="btn" ng-click="openVideo()">Open video Modal</button>
+
+</div>

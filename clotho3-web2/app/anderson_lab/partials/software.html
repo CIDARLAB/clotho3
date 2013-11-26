@@ -1,0 +1,55 @@
+<section id="main" role="main" class="container">
+    <div class="row">
+        <div class="col full">
+            <h1>Software Projects</h1>
+        </div>
+    </div>
+    <hr />
+    <div class="row softwareItem">
+        <div class="col width7 overview">
+            <h2>The mothership: Clotho</h2>
+            <p>Clotho is a Java-based software environment for creating, deploying, and sharing BioCAD tools. It is designed to represent the data objects that exist in synthetic biology research in a standardized form while remaining agnostic about the specific tasks a user wishes to do with those objects or the mode in which users interact with the objects.</p>
+            <a class="button primary" href="">Download</a>
+        </div>
+        <div class="col width8">
+            <p>Clotho provides persistence to such objects through relational databases that at least partially correspond the Clotho data model. Beyond database access and data model API support, Clotho Apps provide more specific functionality to Clotho such as viewing and editing data, running simulations, and automating various tasks. When thinking about Clotho Apps, an appropriate analogy would be Apps running on the Android operating system rather than the add-ons that extend the functionality of Firefox.</p>
+            <p>Apps are the essence of Clotho. Without them, Clotho doesn't do anything. These apps can be written by anyone and shared. Beyond providing a hub for plugins, Clotho allows plugins to interact with one another and simplifies the implementation of things such as drag-and-drop, copy-and-paste, and data change listening. Visit http://www.clothocad.org for more information and downloading Clotho.</p>
+        </div>
+    </div>
+    <hr />
+    <div class="row softwareItem">
+        <div class="col width7 overview">
+            <h2>oligoDesigner</h2>
+            <p>oligoDesigner is a standalone tool for automated design of fabrication strategies for BglBrick basic parts. It takes as input a list of DNA sequences and information such as whether a template DNA is available for the sequence, whether the part contains a protein coding sequence, and whether additional restriction sites should be removed from the sequence.</p>
+            <a class="button primary" href="">Download</a>
+        </div>
+        <div class="col width8">
+            <p>For each part, it chooses a strategy for fabrication using either overlap extension, polymerase chain assembly, enzymatic inverse PCR, or PCR from a DNA template. If internal BamHI, BglII, EcoRI, or XhoI restriction sites are present in the sequence, it will remove those using silent mutations. It designs all the oligonucleotides needed to construct each basic part and then outputs a series of files. This includes documentation in the form of of parts and oligonucleotides lists and human readable construction files describing the steps needed to build each basic part.</p>
+            <p>oligoDesigner also outputs an order form for the oligonucleotides arrayed in a 96-well plate. Finally, it outputs robot commands for implementing PCA and PCR-based construction using the oligonucleotides clicking on "oligoDesigner" above, unzip the file, then rundist/oligoDesigner.jar. It's java, so you'll need java installed on your system, but it will run on Mac / PC / Linux.</p>
+        </div>
+    </div>
+    <hr />
+    <div class="row softwareItem">
+        <div class="col width7 overview">
+            <h2>Degenerator</h2>
+            <p>Degenerator is a web tool that allows you to determine the best degeneracy code for a list of amino acids. It is for designing oligos to do saturation mutagenesis.</p>
+            <a class="button primary" href="">Download</a>
+        </div>
+        <div class="col width8">
+            <p>Vestibulum id ligula porta felis euismod semper. Sed posuere consectetur est at lobortis. Nulla vitae elit libero, a pharetra augue. Vestibulum id ligula porta felis euismod semper. Donec id elit non mi porta gravida at eget metus. Donec sed odio dui. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Aenean eu leo quam.</p>
+            <p>Pellentesque ornare sem lacinia quam venenatis vestibulum. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis.</p>
+        </div>
+    </div>
+    <hr />
+    <div class="row softwareItem">
+        <div class="col width7 overview">
+            <h2>assemblyManager</h2>
+            <p>assemblyManager is a software tool for computing the robotic commands for 2ab assembly. Assembly Manager  takes as input a list of composite parts described in terms of their basic part composition.</p>
+            <a class="button primary" href="">Download</a>
+        </div>
+        <div class="col width8">
+            <p>It performs an analysis of this list to determine a minimal assembly tree for constructing the set of parts using a dynamic programming-based algorithm. The reactions described in the tree are sorted based on their assembly vector and methylating strain, and then the reactions are arrayed into 96 well plates for each round of assembly. Finally, the software outputs a list of files. These files include both human readable instructions and robot commands that can be sent to the robot.</p>
+            <p class="columnbreak">To use assemblyManager, download by clicking on "assemblyManager" above, unzip the file, then run dist/assemblyManager.jar. It's java, so you'll need java installed on your system, but it will run on Mac / PC / Linux.</p>
+        </div>
+    </div>
+</section>

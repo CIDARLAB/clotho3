@@ -1,0 +1,52 @@
+/********************
+ BOOTSTRAP OVERRIDES
+********************/
+
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.noPointerEvents {
+  pointer-events: none;
+}
+
+/* Bootstrap add-ons */
+
+.alert-muted {
+  color: #555555;
+  background-color: #eeeeee;
+  border-color: #cfcfcf;
+}
+
+div.inline {
+  display: inline;
+}
+div.inline-block {
+  display: inline-block;
+}
+.top {
+  margin-top: 0;
+}
+.bottom {
+  margin-bottom: 0;
+}
+
+
+/*future - check for this to be fixed later by bootstrap */
+.navbar-form .input-prepend, .navbar-form .input-append {
+  margin-bottom: 0;
+}
+
+/*************
+CUSTOM
+*************/
+.scrollable {
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px; /*just in case... need to define with inline style*/
+}

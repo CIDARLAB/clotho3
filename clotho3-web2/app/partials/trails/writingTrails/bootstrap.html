@@ -1,0 +1,51 @@
+<div>
+    <p>Some of the UI elements have been ported into Angular via directives. Some of them don't require controllers. Look at the source for this template : <code>clotho3-web/partials/trails/writingTrails/bootstrap.html</code></p>
+
+    <p>You can find deeper documentation on these at <a href="http://angular-ui.github.io/bootstrap/">Angular UI</a> - though not all of these exist here, and several have been customized (but API is mostly the same)</p>
+
+
+
+    <h4>Popover</h4>
+
+    <input type="text" val="some text" popover="This is the content" popover-title="This is the title" popover-trigger="focus">
+
+
+
+    <h4>Tooltip</h4>
+
+    <div>Dynamic Tooltip Text: <input type="text" ng-model="dynamicTooltipText" ng-init="dynamicTooltipText = 'starting text'"></div>
+    <div>Dynamic Tooltip Popup Text: <input type="text" ng-model="dynamicTooltip"></div>
+    <p>
+        Demo: <a><span tooltip="{{dynamicTooltip}}">{{dynamicTooltipText}}</span></a>
+    </p>
+
+
+
+
+    <h4>Typeahead</h4>
+
+    <p>declare your asynchronous object / array to search in the controller, e.g. if using Clotho.query() or Clotho.get()</p>
+
+    <input type="text" ng-model="typeaheadSelected" typeahead="schema as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10">
+
+    <p>model: {{ typeaheadSelected }}</p>
+
+
+
+
+    <h4>Dropdown</h4>
+
+    <li class="dropdown">
+        <a class="dropdown-toggle">
+            Click me for a dropdown, yo!
+        </a>
+        <ul class="dropdown-menu">
+            <li ng-repeat="choice in dropdownItems">
+                <a>{{choice}}</a>
+            </li>
+        </ul>
+    </li>
+
+
+
+</div>

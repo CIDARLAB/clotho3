@@ -1,0 +1,19 @@
+<div ng-controller="Editor_SharableCtrl">
+
+    <legend>Sharable Editor</legend>
+    <div class="ng-cloak">
+        <insert-fields></insert-fields>
+
+        <div class="form-actions" ng-hide="editMode">
+            <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+        <div class="form-actions" ng-show="editMode">
+            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
+            <button type="button" class="btn btn-danger" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+            <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
+            <button type="button" class="btn btn-warning" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+    </div>
+</div>
