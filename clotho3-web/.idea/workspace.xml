@@ -9,67 +9,11 @@
     <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
     <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
     <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/austinDay.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/chrisAnderson.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/chrisAnderson_large.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/christophNeyer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/davidTulga.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/douglasDensmore.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/gabrielLopez.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/hannahCole.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/jannaSerbo.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/jennBrophy.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/jinHun.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/joshKittleson.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/madhviVentakesh.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/marianaLeguia.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/nimaEmami.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/robertFrawley.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/samanthaLiang.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/shellyCheng.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/sherineCheung.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/sushantSundaresh.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/tahouraSamad.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/people/timHsiau.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/labroster.json" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/pictures/pic44.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/pictures/pic45.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/pictures/pic46.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/assets/pictures/pic47.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/people.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/person.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/research.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/images/ajax-loader.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/images/defaultAvatar.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/images/iconSlice.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/scripts/activityLog.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/scripts/initSearchBar.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/scripts/searchBar-e.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/scripts/searchBar-ee.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/scripts/searchBar.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/styles/colorA.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/styles/colorB.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/styles/colorC.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/styles/colorDefault.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/styles/normalize.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/searchBar/styles/searchBar.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/software.html" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/angular-index.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/index.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/application/application.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/application.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/_kickoff.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/_kickoff.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/_kickoff.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/_kickoff.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/resources/testData/andersonLabroster.json" afterPath="$PROJECT_DIR$/../src/test/resources/testData/andersonLabroster.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/angularAdditions.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/angularAdditions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/app.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/clientAPI.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/clientAPI.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/clothoAPI.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/clothoAPI.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/extensions.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_foundation/extensions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/partials/header.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/partials/header.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/parsers/wiki.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/thirdparty/uiMarkdown.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/parsers/uiMarkdown.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/index.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/controllers/menu.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/controllers/menu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/partials/people.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/partials/people.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/partials/person.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/anderson_lab/partials/person.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/socket.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_core/socket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPage.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPage.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPageComponent.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPageComponent.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="clotho3-web.iws" />

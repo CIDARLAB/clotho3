@@ -1,7 +1,7 @@
 /**
- fields that are handled:
+ field types that are handled:
  backend: CSS (url), mixin (array|url), script (array|url), onload (array|url), controller (name, must be mixed in)
- content: text (string|html), video (object), template (url), quiz (object), markdown (text)
+ content: text (string|html), video (object), template (url), quiz (object), markdown (text), wiki (text)
  */
 angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $controller) {
 

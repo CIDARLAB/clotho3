@@ -1,5 +1,3 @@
-//todo - need trail in proper format to test
-
 angular.module('clotho.trails').directive('trailPageComponent', function ($compile, $q, $timeout, $http, $templateCache, YoutubeService) {
 
 	return {
@@ -29,6 +27,11 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 					pageComponentTypes.markdown = function loadMarkdown(text) {
 						if (!text) return $q.when();
 						return $q.when('<ui-markdown>' + text + '</ui-markdown>');
+					};
+
+					pageComponentTypes.wiki = function loadWiki(text) {
+						if (!text) return $q.when();
+						return $q.when('<wiki>' + text + '</wiki>');
 					};
 
 					pageComponentTypes.video = function loadVideo(obj) {
