@@ -1,6 +1,6 @@
 //angular components needed, add a couple methods to prototype
 angular.module('clotho.angularAdditions', [
-		'ngCookies', 'ngSanitize', 'ngRoute'
+		'ngSanitize', 'ngRoute'
 	])
 	.config(function() {
 		//angular function extensions

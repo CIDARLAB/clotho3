@@ -19,9 +19,37 @@ angular.module('clotho.core').service('Socket',
 		    socketReady,
 		    socketQueue = [];
 
-	   //assume the socket doesn't exist... there's no way it should unless it's declared outside this service
+	   //usually assume the socket doesn't exist (it would have to be declared manually), but it may if need to connect to a specific port and not what is created here
 
-	    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + window.location.pathname + "websocket");
+	    if ($window.$clotho.socket) {
+		    socket = $window.$clotho.socket;
+	    } else {
+		    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + window.location.pathname + "websocket");
+	    }
+
+	    if (socket.readyState == 1) {
+
+		    console.log('socket already present, sending items in socket Queue');
+		    socketReady = true;
+		    angular.forEach(socketQueue, function(data, index) {
+			    socket.send(data);
+			    socketQueue.splice(index, 1); //verify
+		    });
+
+	    } else {
+
+		    socket.onopen = function() {
+			    console.log('socket opened, sending queued items');
+			    socketReady = true;
+
+			    angular.forEach(socketQueue, function(data, index) {
+				    socket.send(data);
+				    socketQueue.splice(index, 1); //verify
+			    });
+	      }
+
+	    }
+
 
 	    socket.onopen = function() {
 		    console.log('socket opened, sending queued items');

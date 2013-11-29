@@ -66,9 +66,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 				var deferred = $q.defer();
 				//todo - add timeout
-				//Clotho.get($route.current.params.id).then(function(result) {
-				$http.get('experiments/trail_clotho-intro.json').then(function(result) {
-					Trails.compile(result.data).then(function (compiled) {
+				Clotho.get($route.current.params.id).then(function(result) {
+					Trails.compile(result).then(function (compiled) {
 						$route.current.$$route.title = result.name;
 						deferred.resolve(compiled);
 					});

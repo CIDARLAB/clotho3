@@ -1,302 +1,62 @@
-<section id="main" role="main" class="container">
+<section id="main" role="main" class="container" ng-controller="PeopleCtrl">
+
 <div class="row">
     <div class="col full">
         <h1>Anderson Lab Faculty</h1>
         <ul class="peopleList management">
-            <li>
+            <li ng-repeat="fac in faculty.management">
                 <ul class="person">
-                    <li><img src="content/anderson.jpg" alt="" /></li>
-                    <li class="name">Chris Anderson</li>
-                    <li class="title">Assistant Professor at UC Berkeley</li>
-                    <li class="description">Nullam quis risus eget urna mollis ornare vel eu leo. Donec ullamcorper nulla non metus auctor fringilla.</li>
-                </ul>
-            </li>
-            <li>
-                <ul class="person">
-                    <li><img src="content/frawley.jpg" alt="" /></li>
-                    <li class="name">Robert Frawley</li>
-                    <li class="title">Faculty Assistant at UC Berkeley</li>
-                    <li class="description">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus.</li>
+                    <a ng-href="#/people/{{ fac.name }}">
+                    <li><img ng-src="assets/people/{{fac.icon}}" alt="{{fac.name}}" style="width: 185px; height: 220px; margin-right: 15px;"/></li>
+                    </a>
+                    <li class="name">{{fac.givenName + ' ' + fac.surName}}</li>
+                    <li class="title">{{fac.title}}</li>
+                    <li class="description">{{ fac.description | limitTo:200 }}<span ng-if="fac.description.length > 200">...</span></li>
                 </ul>
             </li>
         </ul>
     </div>
 </div>
-<hr />
+
+<hr/>
+
 <div class="row">
 <div class="col full">
 <h2>Present Members</h2>
-<h3>Postdocs</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/leguia.jpg" alt="" />
-            <div class="name"><span class="firstName">Mariana</span><span class="lastName">Leguia</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-</ul>
-<h3>Grad Students</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/lopez.jpg" alt="" />
-            <div class="name"><span class="firstName">Gabriel</span><span class="lastName">Lopez</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/hsia.jpg" alt="" />
-            <div class="name"><span class="firstName">Tim</span><span class="lastName">Hsia</span></div></a>
-    </li>
-</ul>
-<h3>Programmers</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">Babe</span><span class="lastName">Forgetmenot</span></div></a>
-    </li>
-</ul>
-<h3>Undergrads</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/sundaresh.jpg" alt="" />
-            <div class="name"><span class="firstName">Sushant</span><span class="lastName">Sundaresh</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/cole.jpg" alt="" />
-            <div class="name"><span class="firstName">Hannah</span><span class="lastName">Cole</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/cheng.jpg" alt="" />
-            <div class="name"><span class="firstName">Hsiao-Ying</span><span class="lastName">Cheng</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-</ul>
-<h3>Collaborators</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
 
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-</ul>
-<hr />
+<div ng-repeat="group in faculty.current" ng-if="group.members.length">
+    <h3>{{ group.name }}</h3>
+    <ul class="peopleList members">
+        <li ng-repeat="person in group.members | orderBy:'name'">
+            <a ng-href="#/people/{{ person.name }}"><img ng-src="assets/people/{{ person.icon }}" onerror="this.src = 'content/default.jpg'" alt="{{ person.name }}" style="width: 130px; height: 130px;"/>
+
+                <div class="name"><span class="firstName">{{ person.givenName }}</span><span class="lastName">{{ person.surName }}</span></div>
+            </a>
+        </li>
+    </ul>
+</div>
+
+</div>
+</div>
+
+<hr/>
+
+<div class="row">
+<div class="col full">
 <h2>Past Members</h2>
-<h3>Postdocs</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-</ul>
-<h3>Grad Students</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/huh.jpg" alt="" />
-            <div class="name"><span class="firstName">Jin</span><span class="lastName">Huh</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/kittleson.jpg" alt="" />
-            <div class="name"><span class="firstName">Josh</span><span class="lastName">Kittleson</span></div></a>
-    </li>
-</ul>
-<h3>Undergrads</h3>
-<ul class="peopleList members">
-    <li>
-        <a href=""><img src="content/sundaresh.jpg" alt="" />
-            <div class="name"><span class="firstName">Sushant</span><span class="lastName">Sundaresh</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/cole.jpg" alt="" />
-            <div class="name"><span class="firstName">Hannah</span><span class="lastName">Cole</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/cheng.jpg" alt="" />
-            <div class="name"><span class="firstName">Hsiao-Ying</span><span class="lastName">Cheng</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/day.jpg" alt="" />
-            <div class="name"><span class="firstName">Austin</span><span class="lastName">Day</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/cheung.jpg" alt="" />
-            <div class="name"><span class="firstName">Sherine</span><span class="lastName">Cheung</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/liang.jpg" alt="" />
-            <div class="name"><span class="firstName">Samantha</span><span class="lastName">Liang</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/tulga.jpg" alt="" />
-            <div class="name"><span class="firstName">David</span><span class="lastName">Tulga</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/venkatesh.jpg" alt="" />
-            <div class="name"><span class="firstName">Madhvi</span><span class="lastName">Venkatesh</span></div></a>
-    </li>
-    <li>
-        <a href="person.html"><img src="content/densmore2.jpg" alt="" />
-            <div class="name"><span class="firstName">Douglas</span><span class="lastName">Densmore</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/serbo.jpg" alt="" />
-            <div class="name"><span class="firstName">Janna</span><span class="lastName">Serbo</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-    <li>
-        <a href=""><img src="content/default.jpg" alt="" />
-            <div class="name"><span class="firstName">First Name</span><span class="lastName">Last Name</span></div></a>
-    </li>
-</ul>
+
+<div ng-repeat="group in faculty.past" ng-if="group.members.length">
+    <h3>{{ group.name }}</h3>
+    <ul class="peopleList members">
+        <li ng-repeat="person in group.members | orderBy:'name'">
+            <a ng-href="#/people/{{ person.name }}"><img ng-src="assets/people/{{ person.icon }}" onerror="this.src = 'content/default.jpg'" alt="{{ person.name }}" style="width: 130px; height: 130px;"/>
+
+                <div class="name"><span class="firstName">{{ person.givenName }}</span><span class="lastName">{{ person.surName }}</span></div>
+            </a>
+        </li>
+    </ul>
+</div>
+
 </div>
 </div>
 </section>

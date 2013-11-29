@@ -1,1 +1,1 @@
-angular.module('clotho.foundation', ['clotho.core', 'clotho.clothoDirectives', 'clotho.extensions']);
+angular.module('clotho.foundation', ['clotho.core', 'clotho.setup', 'clotho.clothoDirectives', 'clotho.extensions']);

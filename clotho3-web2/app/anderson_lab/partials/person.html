@@ -1,29 +1,22 @@
-<section id="main" role="main" class="container">
+<section id="main" role="main" class="container ng-cloak" ng-controller="PersonCtrl">
     <div class="row">
         <div class="col width4 leftCol">
             <ul class="shortStats">
-                <li><img src="content/densmore.jpg" alt='' /></li>
-                <li class="status"><span>Member Status:</span><span class="statusData">Sep 01, 2009 - Jan 04, 2010</span></li>
-                <li class="location"><span>Current Location:</span><span class="locationData">Professor at Boston University</span></li>
-                <li class="email"><span>Email:</span><span class="emailData">doug.densmore@gmail.com</span></li>
-                <li class="socialLinks">
-                    <a href="https://twitter.com/DouglasDensmore"></a>
-                    <a href="https://www.facebook.com/boston.university.ece/posts/520828537970025"></a>
-                    <a href="http://www.linkedin.com/pub/douglas-densmore/3/224/85"></a>
+                <li><img ng-src="assets/people/{{ indiv.icon }}" alt='{{ indiv.name }}'  style="max-width: 220px;"/></li>
+                <li class="status"><span>Member Status:</span><span class="statusData">{{ indiv.startDate | date:'MMM, yyyy' }} - {{ indiv.endDate ? (indiv.endDate | date:'MMM, yyyy') : 'present' }}</span></li>
+                <li class="location" ng-if="indiv.currentLocation"><span>Current Location:</span><span class="locationData">{{ indiv.currentLocation }}</span></li>
+                <li class="email" ng-if="indiv.email"><span>Email:</span><span class="emailData">{{ indiv.email }}</span></li>
+                <li class="socialLinks" ng-if="indiv.social.length">
+                    <a ng-repeat="link in indiv.social" ng-href="link.url" ng-class="{{link.class}}"></a>
                 </li>
             </ul>
         </div>
         <div class="col width12 mainCol">
-            <h1>Douglas Densmore<span>Postdoc, Bioengeneering/EECS</span></h1>
-            <p>Douglas received his Bachelors of Science in Computer Engineering from the University of Michigan in April 2001. He received his Masters of Science in Electrical Engineering in May 2004 and his PhD in Electrical
-                Engineering in May 2007 (both from UC Berkeley).  After receiving his PhD he was a UC Chancellor’s post
-                doctoral researcher both at UC Berkeley and the Joint BioEnergy Institute (JBEI).  Douglas led UC Berkeley’s award winning software tools team for the International Genetically Engineered Machine Competition (iGEM) in 2008 and 2009.</p>
+            <h1>{{ indiv.givenName + ' ' + indiv.surName }}<span>{{ indiv.role }}</span></h1>
+            <p>{{ indiv.biography }}</p>
             <hr />
-            <h2>Clotho: BioCAD tools for synthetic biology</h2>
-            <p>Douglas initiated the development of Clotho while at Berkeley and continues to spearhead the effort from BU.  Clotho is a software platform for designing and assemblying synthetic biological systems. It provides a
-                mechanism to connect repositories of genetic parts with a wide variety of apps designed to use that information. These Apps provide the functionality and user interfaces that enable data management, automation of design tasks, visualization and simulation, control of liquid handling robotics, sample management, sharing data, or anything else that you might think to do with the data.  Clotho provides a data model which is consistent with the needs of the synthetic biology community and provides access to it via an easy to use API.  Most importantly, anyone can write a Clotho App with basic knowledge of Java programming using this API.  Clotho is an open source project with collaborations at Boston University, UC Berkeley, MIT, BBN Technologies, and the BioFAB. For more complete information, please visit the website at http://www.clothocad.org.</p>
-
-            <p>Additionally, Douglas developed the domain specific language “Eugene” for synthetic biological systems. Eugene allows for both the specification of synthetic biological designs based on biological parts, as well as providing a very expressive constraint system to drive the automatic creation of composite Devices from a collection of individual Parts.  Eugene allows for the rapid design space exploration of composite devices by permuting individual devices using available parts and rules for their composition. Eugene then communicates with the Clotho design environment in order to interface with liquid handing robots for an automated assembly flow for synthetic biology.</p>
+            <h2>{{ indiv.title }}</h2>
+            <p>{{ indiv.description }}</p>
 
         </div>
     </div>

@@ -5,7 +5,7 @@
  * This is the client Clotho API - commands issued BY the server to be run on the client
  */
 angular.module('clotho.core').service('ClientAPI',
-	function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile, $dialog) {
+	function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile) {
 
     /**
      * @name clientAPI.collect
@@ -41,6 +41,8 @@ angular.module('clotho.core').service('ClientAPI',
      */
     var edit = function(uuid) {
 
+        /*
+        //note - use if $dialog is present
         var dialog_opts = {
 
             backdrop: true,
@@ -50,8 +52,9 @@ angular.module('clotho.core').service('ClientAPI',
         };
         var d = $dialog.dialog(dialog_opts);
         d.open();
+        */
 
-	    //$location.path('/editor/' + uuid)
+	    $location.path('/editor/' + uuid)
     };
 
     /**
@@ -233,12 +236,18 @@ angular.module('clotho.core').service('ClientAPI',
     var alert = function clientAPIAlert(msg) {
 
         PubSub.trigger('serverAlert', {});
-        $rootScope.$safeApply($dialog.serverAlert(msg)
+
+	      /*
+	      //note - to use if $dialog is present
+	      $rootScope.$safeApply($dialog.serverAlert(msg)
             .open()
             .then(function(result){
                 console.log('dialog closed with result: ' + result);
             })
         );
+	       */
+
+	      window.alert(msg);
     };
 
     /**

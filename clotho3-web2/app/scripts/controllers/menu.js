@@ -7,8 +7,6 @@ angular.module('clotho.webapp')
 			{"name" : "Editor", "path" : "/editor"},
 			{"name" : "Trails", "path" : "/trails"},
 			{"name" : "Browser", "path" : "/browser"},
-			{"name" : "Plasmid", "path" : "/plasmid"},
-			{"name" : "DNA Playground", "path" : "/dnaPlayground"}
 		];
 
 

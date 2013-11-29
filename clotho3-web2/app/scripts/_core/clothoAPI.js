@@ -19,7 +19,7 @@
  */
 
 angular.module('clotho.core').service('Clotho',
-	function(Socket, Collector, PubSub, $window, $q, $rootScope, $location, $timeout, $dialog) {
+	function(Socket, Collector, PubSub, $window, $q, $rootScope, $location, $timeout) {
 
 //attach to window, only instantiate once
 return ($window.$clotho.api) ? $window.$clotho.api : $window.$clotho.api = generateClothoAPI();
@@ -551,19 +551,9 @@ function generateClothoAPI() {
      * @description Opens a modal to share the current page
      */
     var share = function() {
-        /*var dialog_opts = {
-            backdrop: true,
-            backdropFade: true,
-            keyboard: true,
-            backdropClick: true,
-            templateUrl:  '/interface/templates/dialogShare.html',
-            controller: 'DialogShareCtrl',
-            dependencies : [
-                "/interface/DialogShareCtrl.js"
-            ]
-        };*/
-
-        $dialog.share().open();
+	      //todo - need to set up share (outside API)
+	      console.log('need to set up share');
+        //$dialog.share().open();
     };
 
 
