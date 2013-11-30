@@ -217,11 +217,9 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 		getCommandBarInput : function () {
 			return elements.commandBarInput;
 		},
-
 		focusInput : function() {
 			elements.commandBarInput.focus();
 		}
-
 	}
 
 });
