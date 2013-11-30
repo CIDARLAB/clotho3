@@ -3,7 +3,7 @@
 //full default angular stack
 angular.module('clotho.fullPackage', [
 	'clotho.foundation',    //core components as described above
-	'clotho.search',        //command bar
+	'clotho.commandbar',        //command bar
 	'clotho.webapp',        //general web app components
 	//additional webapp modules
 	'clotho.editor', 'clotho.interface', 'clotho.trails'
@@ -81,7 +81,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		}
 	})
 	.when('/terminal', {
-		templateUrl:'views/_search/terminal.html',
+		templateUrl:'views/_command/terminal.html',
 		title : 'Terminal',
 		resolve : {
 			deps : function() {

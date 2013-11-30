@@ -5,7 +5,7 @@ angular.module('clotho.search').directive('clothoCommandBar', function(Clotho, C
 	return {
 		restrict: 'A',
 		replace: true,
-		templateUrl: "views/_search/commandbar.html",
+		templateUrl: "views/_command/commandbar.html",
 		controller: function($scope, $element, $attrs) {
 
 			$scope.options = CommandBar.options;
@@ -126,41 +126,41 @@ angular.module('clotho.search').directive('clothoCommandBar', function(Clotho, C
 			};
 
 
+		},
+		link : function clothoCommandBarLink(scope, element, attrs, controller) {
+
 			/*** help icons ***/
 
-			$scope.newPage = function() {
+			scope.newPage = function() {
 				$window.open($window.location.origin, "_blank");
 			};
 
-			$scope.newWorkspace = function() {
+			scope.newWorkspace = function() {
 				$window.open($window.location.origin, "_blank");
 			};
 
-			$scope.showMeHow = function() {
+			scope.showMeHow = function() {
 				Clotho.query({name: 'Learning Clotho'}).then(function (result) {
 					$location.path('/trails/' + result[0].id);
 				});
 			};
 
-			$scope.goHome = function() {
+			scope.goHome = function() {
 				$location.path('/');
 			};
 
-			$scope.aboutClotho = function() {
+			scope.aboutClotho = function() {
 				//$window.open('http://www.clothocad.org/index.php/background/', 'aboutClotho');
 				$location.path('/about')
 			};
 
-			$scope.teamClotho = function() {
+			scope.teamClotho = function() {
 				$location.path('/team');
 			};
 
-			$scope.toggleTooltips = function() {
+			scope.toggleTooltips = function() {
 				console.log("tooltips");
 			};
-
-		},
-		link: function (scope, element, attrs, controller) {
 
 		}
 	}

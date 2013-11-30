@@ -9,11 +9,28 @@
     <list id="21b5038f-08b8-4dd0-a1a9-ebf908859492" name="dna + construction files" comment="digest highlight more dynamic" />
     <list id="0c857e34-ef5a-46f8-90a8-9ffa4efc5061" name="create Clotho People" comment="" />
     <list default="true" id="72dea69e-c80b-4c6f-b63e-8283d5607310" name="clotho intro trail" comment="search bar posts query results after submission (for empty results)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/parsers/wiki.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/thirdparty/uiMarkdown.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/parsers/uiMarkdown.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_command/autocomplete.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/autocomplete.js" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/events/keypress.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/events/ui-keypress.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/_kickoff.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_command/_kickoff.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/clothoCommandBar.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_command/clothoCommandBar.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/commandBar.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_command/commandBar.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/logEntries.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_command/logEntries.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_search/terminal.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_command/terminal.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/_search/autocomplete.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/_command/autocomplete.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/_search/commandbar.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/_command/commandbar.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/_search/detail-author.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/_command/detail-author.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/_search/detail-command.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/_command/detail-command.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/_search/logEntries.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/_command/logEntries.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../clotho3-web2/app/views/_search/terminal.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/views/_command/terminal.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/PCR.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/PCR.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/app.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/styles/commandbar.css" afterPath="$PROJECT_DIR$/../clotho3-web2/app/styles/commandbar.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/styles/commandbar.scss" afterPath="$PROJECT_DIR$/../clotho3-web2/app/styles/commandbar.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/interaction/focus.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/interaction/focus.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/index.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPage.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPage.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPageComponent.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_trails/trailPageComponent.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/scriptingIntro.html" afterPath="$PROJECT_DIR$/../clotho3-web2/app/partials/trails/clotho-intro/scriptingIntro.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/parsers/uiMarkdown.js" afterPath="$PROJECT_DIR$/../clotho3-web2/app/scripts/_interface/parsers/uiMarkdown.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="clotho3-web.iws" />

@@ -1,3 +1,8 @@
+<!--todo - create showdown module to load via angular DI, to ensure loaded-->
+<!--future - add prettify module-->
+$script('bower_components/showdown/src/showdown.js');
+
+
 /**
  @description Converts markdown into HTML
  @note relies on Showdown being present: https://github.com/coreyti/showdown

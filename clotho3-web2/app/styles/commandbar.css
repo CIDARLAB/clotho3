@@ -36,7 +36,7 @@ Command Bar
 
 /* line 28, ../../app/styles/commandbar.scss */
 
-#searchBarInput {
+#clothoCommandBarInput {
   background: white url("../images/iconSlice.png") no-repeat 5px 6px;
   padding-left: 28px;
   width: 316px;

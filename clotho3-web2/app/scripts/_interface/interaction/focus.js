@@ -1,8 +1,8 @@
 //note - jQuery reliance
 //todo - rewrite for autonomy
-angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, Clotho, CommandBar) {
+angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, Clotho) {
 
-	var searchBarInput = ($('#searchBarInput'));
+	var searchBarInput = ($('#clothoCommandBarInput'));
 
 	var maxZ = function() {
 		return Math.max.apply(null,
@@ -23,6 +23,7 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		setZ(newZ, element);
 		return $q.when(oldZ);
 	};
+
 
 
 	var typeOut = function(element, string, model) {
@@ -86,23 +87,16 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 			.then(function(unhighlight) {
 				return $timeout(function() {unhighlight()}, 600).then(function() {
 					if (submit) {
-						CommandBar.display.log = true;
-						return CommandBar.submit(string);
+						//CommandBar.display.log = true;
+						//return CommandBar.submit(string);
+						$q.when(searchBarInput.parents('form').submit())
 					} else {
-						return focusSearch();
+						return $q.when(searchBarInput.focus())
 					}
 				});
 			});
-
 	};
 
-	var submitSearch = function(string) {
-		return Clotho.submit(string)
-	};
-
-	var focusSearch = function() {
-		return $q.when(searchBarInput.focus())
-	};
 
 	var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
 
@@ -160,8 +154,6 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		bringToFront : bringToFront,
 		typeOut : typeOut,
 		typeOutSearch : typeOutSearch,
-		focusSearch : focusSearch,
-		submitSearch : submitSearch,
 		addBackdrop : addBackdrop,
 		removeBackdrop : removeBackdrop,
 		highlightElement : highlightElement

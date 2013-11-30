@@ -1,6 +1,6 @@
 //rename directive
 
-angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI, $timeout, $q) {
+angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -8,7 +8,16 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 		timeFilter : 'timestamp'
 	};
 
-	/******* data *******/
+	/******* elements ******/
+
+	//todo - should capture from commandBar directive as possible
+	var elements = {};
+	elements.commandBarElement = angular.element($document.getElementById('clothoCommandBar'));
+	elements.commandBarInput = angular.element($document.getElementById('clothoCommandBarInput'));
+	elements.commandBarLogButton = angular.element($document.getElementById('clothoCommandBarLogButton'));
+
+
+	/******* log data *******/
 	var log = {};
 
 	var autocomplete = {};
@@ -56,7 +65,7 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 
 	// todo - should be CSS
 	display.genLogPos = function() {
-		var target = document.getElementById('searchbar_logbutton');
+		var target = elements.commandBarLogButton;
 		display.logpos = {
 			left : (target.offsetLeft + (target.scrollWidth / 2) - 200) + "px",
 			top : (target.offsetTop + target.scrollHeight)  + "px"
@@ -65,7 +74,7 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 
 	// todo - should be CSS
 	display.genAutocompletePos = function() {
-		var target = document.getElementById('searchBarInput');
+		var target = elements.commandBarInput;
 		display.autocompletePos = {
 			left : (target.offsetLeft) + "px",
 			top : (target.offsetTop + target.scrollHeight + 6)  + "px"
@@ -98,11 +107,11 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 		//choose template
 		switch (type) {
 			case 'command' : {
-				autocomplete.detailTemplate = 'views/_search/detail-command.html';
+				autocomplete.detailTemplate = 'views/_command/detail-command.html';
 				break;
 			}
 			case 'author' : {
-				autocomplete.detailTemplate = 'views/_search/detail-author.html';
+				autocomplete.detailTemplate = 'views/_command/detail-author.html';
 				break;
 			}
 			default : {}
@@ -199,7 +208,20 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 		},
 		autocomplete : autocomplete,
 		submit : submit,
-		execute : execute
+		execute : execute,
+
+		//interaction
+		getCommandBarElement: function() {
+			return elements.commandBarElement;
+		},
+		getCommandBarInput : function () {
+			return elements.commandBarInput;
+		},
+
+		focusInput : function() {
+			elements.commandBarInput.focus();
+		}
+
 	}
 
 });
