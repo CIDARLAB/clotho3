@@ -34,7 +34,7 @@ angular.module('clotho.extensions').controller('clothoIntro_PCRCtrl', ['$scope',
         $dialog.messageBox('Your Turn!', 'We\'re leaving the variable declaration up to you this time. Try just copying some sequences from the PCR tool.', [{label: "No! I'm lazy.", cssClass: "", result: false}, {label: "OK", cssClass: "btn-primary", result: true}]).open()
         .then(function(result) {
             if (result)
-                $('#searchBarInput').focus();
+                $('#clothoCommandBarInput').focus();
             else {
                 Searchbar.submit('var myBackbone = "cccccccccccagctacgatcgataaaaaaaaaaatttttttttttgatcgatcgatagctaggggggggggggg"');
                 Searchbar.submit("var myPrimers = ['tatcgatcgta', 'gatcgatcgat']");
@@ -43,7 +43,7 @@ angular.module('clotho.extensions').controller('clothoIntro_PCRCtrl', ['$scope',
                 .then(function() {
                     var str = 'PCR.predict(myBackbone, myPrimers)';
                     $focus.typeOutSearch(str);
-                    $('#searchBarInput').focus();
+                    $('#clothoCommandBarInput').focus();
                 })
 
 

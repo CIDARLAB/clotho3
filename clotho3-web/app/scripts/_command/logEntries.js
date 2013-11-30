@@ -1,4 +1,4 @@
-angular.module('clotho.search').directive('logEntries', function() {
+angular.module('clotho.commandbar').directive('logEntries', function() {
 
 	return {
 		restrict: 'A',

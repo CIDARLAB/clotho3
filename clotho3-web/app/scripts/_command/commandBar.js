@@ -1,6 +1,6 @@
 //rename directive
 
-angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI, $timeout, $q, $document) {
+angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -12,9 +12,10 @@ angular.module('clotho.search').service('CommandBar', function(Clotho, ClientAPI
 
 	//todo - should capture from commandBar directive as possible
 	var elements = {};
-	elements.commandBarElement = angular.element($document.getElementById('clothoCommandBar'));
-	elements.commandBarInput = angular.element($document.getElementById('clothoCommandBarInput'));
-	elements.commandBarLogButton = angular.element($document.getElementById('clothoCommandBarLogButton'));
+
+	elements.commandBarElement = angular.element($document[0].getElementById('clothoCommandBar'));
+	elements.commandBarInput = angular.element($document[0].getElementById('clothoCommandBarInput'));
+	elements.commandBarLogButton = angular.element($document[0].getElementById('clothoCommandBarLogButton'));
 
 
 	/******* log data *******/

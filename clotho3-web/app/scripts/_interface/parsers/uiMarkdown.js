@@ -1,5 +1,5 @@
-<!--todo - create showdown module to load via angular DI, to ensure loaded-->
-<!--future - add prettify module-->
+//todo - create showdown module to load via angular DI, to ensure loaded
+//future - add prettify module
 $script('bower_components/showdown/src/showdown.js');
 
 

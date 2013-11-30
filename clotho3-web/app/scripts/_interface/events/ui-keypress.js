@@ -73,7 +73,8 @@ angular.module('ui.keypress',[]).
 			});
 
 			// Check only matching of pressed keys one of the conditions
-			elm.bind(mode, function (event) {
+			//custom - assign to handler so can also use in $scope.$destroy
+			var handler = function (event) {
 				// No need to do that inside the cycle
 				var metaPressed = !!(event.metaKey && !event.ctrlKey);
 				var altPressed = !!event.altKey;
@@ -109,10 +110,12 @@ angular.module('ui.keypress',[]).
 						});
 					}
 				});
-			});
+			};
+
+			elm.bind(mode, handler);
 
 			//custom
-			//kill on scope desctruction
+			//kill on scope desctruction, if pass in scope
 			scope.$on('$destroy', function() {
 				elm.unbind(mode, handler);
 			});

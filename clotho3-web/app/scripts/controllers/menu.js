@@ -6,7 +6,7 @@ angular.module('clotho.webapp')
 		$scope.modes = [
 			{"name" : "Editor", "path" : "/editor"},
 			{"name" : "Trails", "path" : "/trails"},
-			{"name" : "Browser", "path" : "/browser"},
+			{"name" : "Browser", "path" : "/browser"}
 		];
 
 
