@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <div class="page-header">
+                <h1>Trail Browser <small>Learn Synthetic Biology with Clotho</small></h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span8" id="trail_preview">
+            <div class="text-center">
+                <img class="img-rounded" src="images/trails_splash.jpg" height="376" width="620" />
+            </div>
+        </div>
+        <div class="span4" id="trail_list">
+            <input type="text" class="span4" placeholder="Filter Text" ng-model="searchText">
+
+            <article class="well clearfix" style="padding: 0 " ng-repeat="trail in trails | filter:{name:searchText} | limitTo:10">
+                <a class="pull-left" ng-href="#/trails/{{trail.id}}" style="padding-right: 10px;">
+                    <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" ng-src="{{base64icon}}">
+                </a>
+                <div style="padding: 0 8px;">
+                    <h5>{{trail.name}}</h5>
+                    <h5 class="muted" style="margin: 5px 0 0;">{{trail.author}}</h5>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>

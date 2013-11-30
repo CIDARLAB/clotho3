@@ -1,0 +1,24 @@
+<div class="container" dark-background>
+    <div class="hero-unit clearfix shadowBox" style="padding-top: 30px; padding-bottom: 30px;">
+
+        <img src="images/clothologo.png" class="float-left span4" style="width: 257px; height: 336px" />
+
+        <div class="span6" style="padding-left: 15px">
+            <h2>About Clotho</h2>
+
+            <p>Clotho is for engineering synthetic biological systems and managing the data which is used to create
+                them. It also provides a mechanism to begin the process of creating standardized data, algorithms, and
+                methodologies for synthetic biology.</p>
+
+            <p>Join our mailing list to learn keep up to date!</p>
+
+            <!--todo - use bootstrap 3 elements-->
+            <div class="input-append">
+                <input class="input-xlarge" type="email" style="padding: 11px 19px;
+    font-size: 17px; line-height: 1.33; border-radius: 6px 0 0 6px;" placeholder="your@email.com" required ng-model="emailToAdd">
+                <button class="btn btn-large btn-primary" type="button" ng-click="joinMailingList(emailToAdd)" ng-disabled="!emailToAdd">Join List</button>
+            </div>
+        </div>
+
+    </div>
+</div>
