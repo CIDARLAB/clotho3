@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7 ie6"> <![endif]-->
+<!--[if IE 7]>         <html class="lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>         <html class="lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Anderson Lab</title>
+
+    <link rel="stylesheet" href="styles/main.css"/>
+
+    <script type="text/javascript">
+        //temporary? Patch to connect to correct socket - change if this becomes root
+        window.$clotho = {};
+        window.$clotho.socket = new WebSocket("wss://" + window.location.host + "/websocket");
+    </script>
+
+</head>
+<body ng-app="andersonLab">
+
+    <div ng-include="'partials/header.html'"></div>
+
+    <div ng-view="" ng-cloak=""></div>
+
+    <div ng-include="'partials/footer.html'"></div>
+
+
+    <!-- SCRIPTS -->
+    <!--note - these are copied over, do not minify-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <!--future - only use jquery-ui modules we need, as in old version-->
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+    <script src="scripts/anderson-app.js"></script>
+
+
+    <script src="scripts/anderson-angular-modules.js"></script>
+
+    <script src="scripts/anderson-core-module.js"></script>
+
+
+    <script src="scripts/anderson-foundation-module.js"></script>
+
+</body>
+</html>
