@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('andersonLab', ['ngRoute', 'clotho.foundation'])
-	.config(['$routeProvider', function ($routeProvider) {
+	.config(function ($routeProvider) {
 		$routeProvider
 			.when('/', {
 				templateUrl: 'partials/home.html'
@@ -55,13 +55,13 @@ angular.module('andersonLab', ['ngRoute', 'clotho.foundation'])
 			.otherwise({
 				redirectTo: '/'
 			})
-	}])
+	})
 	.run(function ($timeout) {
 		//note - need to load and run these scripts after bootstrapping so that the elements are present
 		$timeout(function () {
-			$script("scripts/slides.min.jquery.js", "slideshow");
-			$script("scripts/jquery.columnizer.min.js", "columnizer");
-			$script("scripts/cl02.js", "clotho");
+			$script(["scripts/slides.min.jquery.js", "scripts/jquery.columnizer.min.js"], "Busse-components", function() {
+				$script("scripts/cl02.js", "clotho");
+			});
 		});
 	})
 	.controller('PeopleCtrl', function ($scope, $route, $location) {

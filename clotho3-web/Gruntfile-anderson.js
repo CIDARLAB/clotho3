@@ -14,8 +14,8 @@ module.exports = function (grunt) {
   grunt.initConfig({
     yeoman: {
       // configurable paths
-      app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
+      app: 'anderson_lab',
+      dist: 'dist-anderson'
     },
     watch: {
       coffee: {
@@ -144,7 +144,7 @@ module.exports = function (grunt) {
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
         fontsDir: '<%= yeoman.app %>/fonts',
-        importPath: '<%= yeoman.app %>/bower_components',
+        importPath: 'app/bower_components',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
         httpFontsPath: '/fonts',
@@ -214,14 +214,14 @@ module.exports = function (grunt) {
       // By default, your `index.html` <!-- Usemin Block --> will take care of
       // minification. This option is pre-configured if you do not wish to use
       // Usemin blocks.
-      dist: {
-        files: {
-          '<%= yeoman.dist %>/styles/main.css': [
-            '.tmp/styles/**/*.css',
-            '<%= yeoman.app %>/styles/**/*.css'
-          ]
-        }
-      }
+      // dist: {
+      //   files: {
+      //     '<%= yeoman.dist %>/styles/main.css': [
+      //       '.tmp/styles*//***/*//*.css',
+      //       '<%= yeoman.app %>/styles*//***/*//*.css'
+      //     ]
+      //   }
+      // }
     },
     htmlmin: {
       dist: {
@@ -255,14 +255,10 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
-            'bower_components/**/*',
-            'images/**/*',
-            'fonts/*',
-	          'extensions/*',
-	          'lib/*',
-	          'models/*',
-	          'partials/**/*',
-	          'views/**/*'
+            'assets/**/*',
+	          'content/**/*',
+	          'scripts/**/*',
+	          'partials/**/*'
           ]
         }, {
           expand: true,
@@ -273,6 +269,19 @@ module.exports = function (grunt) {
           ]
         }]
       },
+	    //don't want to copy into yeoman.app because will stay there
+	    //only need a few to keep size down
+	    bower_components : {
+			    expand: true,
+			    dot: true,
+			    cwd: 'app',
+			    dest: '<%= yeoman.dist %>',
+			    src: [
+				    'bower_components/angular/**/*',
+				    'bower_components/jquery/**/*',
+				    'bower_components/jquery-ui/**/*'
+			    ]
+	    },
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
@@ -299,12 +308,6 @@ module.exports = function (grunt) {
         'svgmin',
         'htmlmin'
       ]
-    },
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js',
-        singleRun: true
-      }
     },
     cdnify: {
       dist: {
@@ -353,13 +356,13 @@ module.exports = function (grunt) {
     'clean:server',
     'concurrent:test',
     'autoprefixer',
-    'connect:test',
-    'karma'
+    'connect:test'
   ]);
 
   grunt.registerTask('build', [
     'clean:dist',
-    'useminPrepare',
+	  'copy:bower_components',
+	  'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
     'concat',

@@ -4,8 +4,8 @@
  * @author werner@bussedesign.com
  * 
  */
-@import "normalize.css";
-@import "wgrid16.css";
+@import "normalize";
+@import "wgrid16";
 
 /**
  * Typography
@@ -452,7 +452,7 @@ footer li {
   color: #fff;
   text-decoration: none;
   /* background */
-  background-color: ##searchBarContainer;
+  //background-color: ##searchBarContainer;
   background-repeat: no-repeat;
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5a8c9e), to(#417385));
   background-image: -webkit-linear-gradient(#5a8c9e, #417385);
