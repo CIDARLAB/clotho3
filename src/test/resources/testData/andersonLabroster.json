@@ -1674,6 +1674,27 @@
 		"title": "Putting the Engineering in Genetic Engineering",
 		"description": "As an undergraduate, I was interested in polymer chemistry and pursued applications of polymeric surfactants in supercritical CO2 with Joe DeSimone at UNC. I became increasingly interested in enzymes and protein engineering during those years and sought out something in the area of protein engineering and combinatorial methods at Scripps. My graduate work was on the site-specific incorporation of unnatural amino acids, with a specific focus on four-base codons. Near the end I became more interested in the influence of chassis and specific problems related to amino acid metabolism. We demonstrated we could biosynthesize p-aminophenylalanine and then incorporate it into protein. We also showed that we could knockout catabolic pathways and incorporate an alpha-hydroxy acid into protein to form an ester linkage in the backbone. These explorations of systems-level engineering led me to work with Adam Arkin and Chris Voigt for my postdoc where we explored the idea of E. coli derived therapeutic bacteria for the elimination of tumors. When I started my lab, I in part continued the work on therapeutic bacteria for several years, but my focus shifted to the technology of genetic engineering. It was clear that there were many foundational challenges associated with doing genetic engineering of systems at this elevated complexity. My lab now focuses on addressing these bottlenecks and integrating new technologies like deep sequencing and multiplex oligonucleotide synthesis into workflows. Central to these projects are BioCAD tools that automate and manage the large amount of information involved in these projects. Generally, our goal is to modify the practice of genetic engineering to simplify it, reduce uncertainty, reduce risk, and facilitate the identification of new applications.",
 
+		"social": ""
+	},
+	{
+
+		"schema" : "LabPerson", "lab" : "Anderson",  "givenName": "Maxwell",
+		"nickName": "Max",
+		"surName": "Bates",
+		"name": "maxbates",
+		"emailAddress": "maxbates@gmail.com",
+		"icon": "maxBates.png",
+		"imgUrl": "",
+		"startDate": "2012-06-01",
+		"endDate": "",
+		"currentLocation": "",
+		"current": true,
+		"dateCreated": "2012-06-01",
+		"isManagement": true,
+		"role": "Programmer",
+		"biography": "Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.",
+		"title": "Web Developer",
+		"description": "",
 
 		"social": ""
 	}
