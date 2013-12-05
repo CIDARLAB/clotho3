@@ -10,7 +10,7 @@
                     <li><img ng-src="assets/people/{{fac.icon}}" alt="{{fac.name}}" style="width: 185px; height: 220px; margin-right: 15px;"/></li>
                     </a>
                     <li class="name">{{fac.givenName + ' ' + fac.surName}}</li>
-                    <li class="title">{{fac.title}}</li>
+                    <li class="title">{{fac.role}}</li>
                     <li class="description">{{ fac.description | limitTo:200 }}<span ng-if="fac.description.length > 200">...</span></li>
                 </ul>
             </li>
