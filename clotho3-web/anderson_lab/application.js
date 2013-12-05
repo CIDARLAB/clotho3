@@ -109,6 +109,10 @@ angular.module('andersonLab', ['ngRoute', 'clotho.foundation'])
 					facultyBin[time].postdocs.push(fac);
 					return;
 				}
+				case "Programmer" : {
+					facultyBin[time].programmers.push(fac);
+					return;
+				}
 				case "Graduate Student" : {
 					facultyBin[time].grads.push(fac);
 					return;
@@ -132,6 +136,7 @@ angular.module('andersonLab', ['ngRoute', 'clotho.foundation'])
 		var nameMap = [
 			{ "short" : "postdocs"      ,   "screen" : "Postdocs"                     },
 			{ "short" : "grads"         ,   "screen" : "Graduate Students"            },
+			{ "short" : "programmers"   ,   "screen" : "Programmers"                  },
 			{ "short" : "undergrads"    ,   "screen" : "Undergraduate Researchers"    },
 			{ "short" : "igem"          ,   "screen" : "iGEM Participants"            },
 			{ "short" : "collaborators" ,   "screen" : "Collaborators"                }
