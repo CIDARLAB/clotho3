@@ -119,7 +119,7 @@ public class TestUtils {
 
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
-        Person person = new Person("Test Person", lab, null);
+        Person person = new Person("Test Person",null);
         lab.setPI(person);
 
         Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);

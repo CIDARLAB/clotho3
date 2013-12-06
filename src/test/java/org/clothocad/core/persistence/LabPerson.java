@@ -20,20 +20,26 @@ PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 ENHANCEMENTS, OR MODIFICATIONS..
  */
-package org.clothocad.model;
+package org.clothocad.core.persistence;
 
 import com.github.jmkgreen.morphia.annotations.Reference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.clothocad.core.datums.SharableObjBase;
+import org.clothocad.model.*;
 
 /**
  *
  * @author J. Christopher Anderson
  */
 @NoArgsConstructor
-public class Person extends SharableObjBase {
+public class LabPerson extends Person {
+
+    @Getter
+    @Setter
+    @Reference
+    private Lab lab;
     @Getter
     @Setter
     @Reference
@@ -41,7 +47,7 @@ public class Person extends SharableObjBase {
     
     @Getter
     @Setter
-    private String givenName, surName, nickName, emailAddress, snailMailAddress;
+    private String givenName, surName, nickName, registryName, emailAddress, snailMailAddress;
     
 
     /**Constructor from raw data
@@ -51,129 +57,16 @@ public class Person extends SharableObjBase {
      */
     //unique name criterion
     //valid or nonexistent email
-    public Person( String displayname, String rawPassword ) {
+    public LabPerson( String displayname, Lab alab, String rawPassword ) {
         //XXX:  Do people have authors?
         super(displayname, null);
+        lab = alab;
         //changePassword( rawPassword );
         myCollection = new Collection();
         //biography = new WikiText("");
     }
 
     
-
-    /* SETTERS
-     * */
-
-    /**
-     * Public accessible method for setting a Person as administrator.
-     *
-     * An administrator must be the current user for this to do anything.
-     * -OR-
-     * If the database has only 3 people in it the change is also allowed
-     *
-     * Admins have the ability to clear a person's password and possibly other
-     * sensitive things.
-     *
-     * @param isit
-     */
-    public final void setAsAdministrator( boolean isit ) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /* SETTERS
-     * */
-
-    /**
-     * Method for clearing the password so that a new one can be entered
-     * An administrator must be logged in to use this
-     */
-    public final boolean clearPassword() {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /**
-     * Plugin-accessible method for changing the Person's password
-     * @param raw
-     */
-    public final void changePassword( String raw ) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /**
-     * Check the Person's password
-     * @return true if the user successfully provided the correct password
-     */
-    public final boolean checkPassword() {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /**
-     * Login this Person.  This involves validating that the password has been confirmed.
-     */
-    public final void login() {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /**
-     * Plugin-accessible call to determine if the Person is logged in
-     * @return true if this Person is logged in
-     */
-    public final boolean isLoggedIn() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Change the User's first name
-     * @param str a String
-     */
-    /*public final void changeGivenName( String str ) {
-        if(!hasChangeClearance()) {
-            //fireData(new RefreshEvent(this, RefreshEvent.Condition.GIVEN_NAME_CHANGED));
-            return;
-        }
-        //addUndo( "_given_name", _personDatum._given_name, str );
-        _personDatum._given_name = str;
-        //setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.GIVEN_NAME_CHANGED);
-    }*/
-
-    /**
-     * Change the user's last name (surname)
-     * @param str a String
-     */
-   /* public final void changeSurName( String str ) {
-        if(!hasChangeClearance()) {
-            fireData(new RefreshEvent(this, RefreshEvent.Condition.SURNAME_CHANGED));
-            return;
-        }
-        addUndo( "_surname", _personDatum._surname, str );
-        _personDatum._surname = str;
-        setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.SURNAME_CHANGED);
-    }
-
-    /**
-     * Change the name a user wishes to be called
-     * @param str a String
-     */
-    /*public final void changeNickName( String str ) {
-        if(!hasChangeClearance()) {
-            fireData(new RefreshEvent(this, RefreshEvent.Condition.NICKNAME_CHANGED));
-            return;
-        }
-        addUndo( "_nick_name", _personDatum._nick_name, str );
-        _personDatum._nick_name = str;
-        setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.NICKNAME_CHANGED);
-    }
-
-
-
-    /**
-     * Change the user's display name
-     * @param str a String
-     */
-    public final void setDisplayName( String str ) {
-        setName(str);
-    }
-
 
 
 
@@ -200,10 +93,6 @@ public class Person extends SharableObjBase {
      * @param raw the raw password supplied by user
      * @return true if it's a match
      */
-    public final boolean checkPassword( String raw ) {
-     throw new UnsupportedOperationException();
-    }
-
 
 
     /*private boolean hasChangeClearance() {

@@ -19,7 +19,6 @@ import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
-import org.clothocad.model.Person;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,7 +62,7 @@ public class PersistorTest {
     @Test
     public void testSharedObject() {
 
-        Person testPerson = new Person("Test Person", null, null);
+        LabPerson testPerson = new LabPerson("Test Person", null, null);
 
         //class w/ composition
         Part part1 = Part.generateBasic("test part", "This part is a test", "ATCG", new FreeForm(), testPerson);
@@ -99,7 +98,7 @@ public class PersistorTest {
     public void testCircular() {
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
-        Person testPerson = new Person("Test Person", lab, null);
+        LabPerson testPerson = new LabPerson("Test Person", lab, null);
         lab.setPI(testPerson);
 
         saveAndGet(testPerson);
