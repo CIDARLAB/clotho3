@@ -279,7 +279,9 @@ module.exports = function (grunt) {
 			    src: [
 				    'bower_components/angular/**/*',
 				    'bower_components/jquery/**/*',
-				    'bower_components/jquery-ui/**/*'
+				    'bower_components/jquery-ui/**/*',
+				    'bower_components/es5-shim/**/*',
+				    'bower_components/json3/**/*'
 			    ]
 	    },
       styles: {
