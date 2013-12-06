@@ -9,7 +9,7 @@
         <div class="col width7 overview">
             <h2>The mothership: Clotho</h2>
             <p>Clotho is a Java-based software environment for creating, deploying, and sharing BioCAD tools. It is designed to represent the data objects that exist in synthetic biology research in a standardized form while remaining agnostic about the specific tasks a user wishes to do with those objects or the mode in which users interact with the objects.</p>
-            <a class="button primary" href="">Download</a>
+            <a class="button primary" href="http://www.clothocad.org/">Download</a>
         </div>
         <div class="col width8">
             <p>Clotho provides persistence to such objects through relational databases that at least partially correspond the Clotho data model. Beyond database access and data model API support, Clotho Apps provide more specific functionality to Clotho such as viewing and editing data, running simulations, and automating various tasks. When thinking about Clotho Apps, an appropriate analogy would be Apps running on the Android operating system rather than the add-ons that extend the functionality of Firefox.</p>
@@ -19,9 +19,20 @@
     <hr />
     <div class="row softwareItem">
         <div class="col width7 overview">
+            <h2>Act Ontology and Synthesizer</h2>
+            <p>Act is a tool for automatically designing biosynthetic pathways based on all available data about monofunctional enzyme reactions.  It computes all Reachable or Degradable compounds, all pathways for these compounds, and rankings of the most plausible routes.</p>
+            <a class="button primary" href="http://act.berkeley.edu/synthesizer">Download</a>
+        </div>
+        <div class="col width8">
+            <p>The Act Synthesizer is based on the Act Formalism which describes biochemical networks as a Mealy machine wherein reactions are edges and the inputs and outputs are constrained by chemical models of reactivity. Act describes biochemical data in terms of this formalism and synthesizes biosynthetic pathways. Act Ontology, the aggregated data that support the synthesis algorithm pulls in data from BRENDA and KEGG as Observations of enzymatic reactivity.  Act organizes this information in terms of exact 'concrete' chemical transformations such as benzyl alcohol + NAD+ --> benzaldehyde + NADH + H+.  It also interprets each reaction in terms of algorithmically defined electronic reaction operators and binds the data based on this abstraction.  Finally, it includes expression data.  From this data, Act can compute all possible chemicals that are reachable or degradable at different levels of confidence and speculation.</p>
+        </div>
+    </div>
+    <hr />
+    <div class="row softwareItem">
+        <div class="col width7 overview">
             <h2>oligoDesigner</h2>
             <p>oligoDesigner is a standalone tool for automated design of fabrication strategies for BglBrick basic parts. It takes as input a list of DNA sequences and information such as whether a template DNA is available for the sequence, whether the part contains a protein coding sequence, and whether additional restriction sites should be removed from the sequence.</p>
-            <a class="button primary" href="">Download</a>
+            <a class="button primary" href="http://andersonlab.qb3.berkeley.edu/Software/oligoDesigner.zip">Download</a>
         </div>
         <div class="col width8">
             <p>For each part, it chooses a strategy for fabrication using either overlap extension, polymerase chain assembly, enzymatic inverse PCR, or PCR from a DNA template. If internal BamHI, BglII, EcoRI, or XhoI restriction sites are present in the sequence, it will remove those using silent mutations. It designs all the oligonucleotides needed to construct each basic part and then outputs a series of files. This includes documentation in the form of of parts and oligonucleotides lists and human readable construction files describing the steps needed to build each basic part.</p>
@@ -33,7 +44,7 @@
         <div class="col width7 overview">
             <h2>Degenerator</h2>
             <p>Degenerator is a web tool that allows you to determine the best degeneracy code for a list of amino acids. It is for designing oligos to do saturation mutagenesis.</p>
-            <a class="button primary" href="">Download</a>
+            <a class="button primary" href="http://andersonlab.qb3.berkeley.edu/Software/Degenerator.html">Download</a>
         </div>
         <div class="col width8">
             <p>
@@ -46,7 +57,7 @@
         <div class="col width7 overview">
             <h2>assemblyManager</h2>
             <p>assemblyManager is a software tool for computing the robotic commands for 2ab assembly. Assembly Manager  takes as input a list of composite parts described in terms of their basic part composition.</p>
-            <a class="button primary" href="">Download</a>
+            <a class="button primary" href="http://andersonlab.qb3.berkeley.edu/Software/assemblymanager.zip">Download</a>
         </div>
         <div class="col width8">
             <p>It performs an analysis of this list to determine a minimal assembly tree for constructing the set of parts using a dynamic programming-based algorithm. The reactions described in the tree are sorted based on their assembly vector and methylating strain, and then the reactions are arrayed into 96 well plates for each round of assembly. Finally, the software outputs a list of files. These files include both human readable instructions and robot commands that can be sent to the robot.</p>
