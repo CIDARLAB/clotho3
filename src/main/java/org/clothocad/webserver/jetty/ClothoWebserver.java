@@ -84,7 +84,7 @@ public class ClothoWebserver {
         
         
         servletHandler.setContextPath("/");
-        servletHandler.setResourceBase("./clotho3-web/dist-anderson");
+        servletHandler.setResourceBase("./clotho3-web/app");
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
         
         servletHandler.addFilter(GuiceFilter.class, "/*", null);
