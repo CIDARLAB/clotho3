@@ -23,15 +23,9 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  */
 public class ClothoModule extends AbstractModule {
     public ClothoModule(Properties properties){
-        defaults.put("port", "8080");
-        defaults.put("confidentialport", "8443");
-        defaults.put("dbname", "clotho");
-        defaults.put("dbhost", "localhost");
-        defaults.put("dbport", "27017");
-        defaults.put("loglevel", "warn"); //TODO: doesn't affect anything yet
-        defaults.put("keystorepath", System.getProperty("java.home") + "/lib/security/cacerts".replace('/', File.separatorChar)); //;
-        defaults.put("keystorepass", ""); //XXX: storing passwords as strings in memory is insecure
-        defaults.put("keymanagerpass", "");
+        for (ConfigOption option : ConfigOption.values()){
+            defaults.put(option.name(), option.defaultValue);
+        }
         this.properties = new Properties(defaults);
         if (properties != null) this.properties.putAll(properties);
     }

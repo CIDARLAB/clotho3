@@ -35,7 +35,7 @@ public class ClothoWebserver {
             @Named("confidentialport") int confidentialPort,
             SslConnector sslConnector,
             @Named("containerServletContext") ServletContextHandler servletHandler,
-            final Router router)
+            final Router router, @Named("clientdirectory") String clientDirectory)
             throws Exception {
 
         server = new Server();
@@ -84,7 +84,11 @@ public class ClothoWebserver {
         
         
         servletHandler.setContextPath("/");
+<<<<<<< HEAD
         servletHandler.setResourceBase("./clotho3-web/app");
+=======
+        servletHandler.setResourceBase(clientDirectory);
+>>>>>>> 3f40acc400c793a7a4ac62ee02d66f65c8c10983
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
         
         servletHandler.addFilter(GuiceFilter.class, "/*", null);

@@ -5,6 +5,7 @@
 package org.clothocad.core;
 
 import java.io.File;
+import java.util.Properties;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -22,7 +23,8 @@ public enum ConfigOption {
     keystorepath("ks", "path to the keystore", System.getProperty("java.home") + "/lib/security/cacerts".replace('/', File.separatorChar)),
     keystorepass("kspass", "keystore password", ""),
     keymanagerpass("ksmpass", "keymanager password", ""),
-    propfile("p", "path to properties file", "");
+    propfile("p", "path to properties file", ""),
+    clientdirectory("cdir", "directory client files are served from", "./clotho3-web/dist");
     
     public final String abbreviation;
     public final String description;
