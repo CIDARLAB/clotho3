@@ -145,13 +145,15 @@ dependencies: none
 <!--
 name: clotho.interface
 function: Clotho-Angular Interface components
-dependencies: ui.bootstrap, jQuery-UI for draggable, sortable directives
+dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angularFileUpload for file uploads
 -->
 <!--future - refactor ui-bootstrap dependencies here-->
 <script src="scripts/_interface/_kickoff.js"></script>
 <script src="scripts/_interface/events/ui-keypress.js"></script> <!-- ui.keypress module -->
 <!-- todo - load codemirror modes as module using refactored $clotho.extensions -->
-<script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
+<script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script> <!-- ui.codemirror -->
+<script src="bower_components/ng-file-upload/angular-file-upload.js"></script> <!-- angularFileUpload -->
+<script src="scripts/_interface/html5/fileUpload.js"></script>
 <script src="scripts/_interface/angular-ui/dialog.js"></script>
 <script src="scripts/_interface/clotho/sharable.js"></script>
 <script src="scripts/_interface/elements/hintButton.js"></script>

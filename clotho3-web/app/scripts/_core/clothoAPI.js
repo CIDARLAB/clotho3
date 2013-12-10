@@ -238,9 +238,7 @@ function generateClothoAPI() {
      * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Should be included, or will bloat. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
-     * Watches for published changes for a given uuid
-     *
-     * todo - smarter reference logic
+     * Watches for published changes for a given uuid, executing a callback
      */
     var watch = function clothoAPI_watch(uuid, callback, reference) {
         reference = typeof reference != 'undefined' ? reference : null;
@@ -249,9 +247,26 @@ function generateClothoAPI() {
         }, reference);
     };
 
+	/**
+	 * @name Clotho.autoupdate
+	 *
+	 * @param {string} uuid UUID of Sharable to watch for changes
+	 * @param {object} obj Object to be updated (using angular.extend) using passed model for given UUID
+	 * @param {string} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
+	 *
+	 * @description
+	 * Watches for published changes for a given uuid, updating the object using angular.extend
+	 */
+		var autoupdate = function clothoAPI_autoupdate(uuid, obj, reference) {
+			reference = typeof reference != 'undefined' ? reference : null;
+			PubSub.on('update:'+uuid, function(model) {
+				$rootScope.$safeApply(angular.extend(obj, model));
+			}, reference);
+		};
+
 
     /**
-    // todo - mix into watch, check for function || array
+    // todo - convert usage to Clotho.autoupdate
      * @name Clotho.watch2
      *
      * @param {string} uuid UUID of Sharable to watch for changes

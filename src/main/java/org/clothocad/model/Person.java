@@ -34,11 +34,6 @@ import org.clothocad.core.datums.SharableObjBase;
  */
 @NoArgsConstructor
 public class Person extends SharableObjBase {
-
-    @Getter
-    @Setter
-    @Reference
-    private Lab lab;
     @Getter
     @Setter
     @Reference
@@ -46,7 +41,7 @@ public class Person extends SharableObjBase {
     
     @Getter
     @Setter
-    private String givenName, surName, nickName, registryName, emailAddress, snailMailAddress;
+    private String givenName, surName, nickName, emailAddress, snailMailAddress;
     
 
     /**Constructor from raw data
@@ -56,10 +51,9 @@ public class Person extends SharableObjBase {
      */
     //unique name criterion
     //valid or nonexistent email
-    public Person( String displayname, Lab alab, String rawPassword ) {
+    public Person( String displayname, String rawPassword ) {
         //XXX:  Do people have authors?
         super(displayname, null);
-        lab = alab;
         //changePassword( rawPassword );
         myCollection = new Collection();
         //biography = new WikiText("");
