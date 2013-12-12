@@ -5,7 +5,6 @@
 package org.clothocad.core;
 
 import java.io.File;
-import java.util.Properties;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -42,6 +41,7 @@ public enum ConfigOption {
         for (ConfigOption option : ConfigOption.values()){
             options.addOption(new Option(option.abbreviation, option.name(), option.hasarg, option.description));
         }
+        options.addOption(new Option("help", false, "print this message"));
         return options;
     }
 }

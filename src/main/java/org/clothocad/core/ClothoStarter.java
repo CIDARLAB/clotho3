@@ -10,6 +10,7 @@ import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -30,19 +31,32 @@ public class ClothoStarter
     public static void main(String[] args)
             throws Exception {
 
-        CommandLine cmd = parseArgs(args);
+        try {
+            CommandLine cmd = parseArgs(args);
+            
+            if (cmd.hasOption("help")){
+                printHelp();
+                return;
+            }
+            
+            Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
 
-        Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
-
-        Persistor persistor = injector.getInstance(Persistor.class);
+            Persistor persistor = injector.getInstance(Persistor.class);
         
-        ensureMinimalObjects(persistor);
+            ensureMinimalObjects(persistor);
         
-        server = injector.getInstance(ClothoWebserver.class);
+            server = injector.getInstance(ClothoWebserver.class);
         
-        server.start();
+            server.start();
+        } catch (ParseException e){
+            System.out.println(e.getMessage());
+            printHelp();
+        }
     }
     
+    protected static void printHelp(){
+        new HelpFormatter().printHelp(" ", ConfigOption.getOptions());
+    }
     
     protected static void ensureMinimalObjects(Persistor p){
         JSON.importTestJSON(Paths.get("src", "main", "resources", "json", "essential").toString(), p, false);
