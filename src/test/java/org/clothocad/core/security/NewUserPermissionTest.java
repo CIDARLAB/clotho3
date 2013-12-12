@@ -29,7 +29,7 @@ import org.junit.Test;
  * @author yu
  * @version 1.0
  */
-public class WritePermissionTest {
+public class NewUserPermissionTest {
 
     private Router router;
     private Persistor persistor;
@@ -40,7 +40,7 @@ public class WritePermissionTest {
     /**
      * constructor
      */
-    public WritePermissionTest() {
+    public NewUserPermissionTest() {
     }
 
     /**
