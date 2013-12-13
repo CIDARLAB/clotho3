@@ -13,33 +13,34 @@ import org.apache.commons.cli.Options;
  * @author spaige
  */
 public enum ConfigOption {
-    port("port", "the port the Clotho accepts connections on", "8080"),
-    confidentialport("cport", "the port Clotho accepts ssl connections on", "8443"),
-    dbname("dbn", "the name of the mongodb database to use", "clotho"),
-    dbhost("dbh", "the hostname of the machine the database is on", "localhost"),
-    dbport("dbp", "mongodb port", "27017"),
+    port("http listening port", "8080", "port"),
+    confidentialport("https listening port", "8443", "port"),
+    dbname("database name", "clotho", "name"),
+    dbhost("database url hostname", "localhost", "hostname"),
+    dbport("database url port", "27017", "port"),
     //loglevel,
-    keystorepath("ks", "path to the keystore", System.getProperty("java.home") + "/lib/security/cacerts".replace('/', File.separatorChar)),
-    keystorepass("kspass", "keystore password", ""),
-    keymanagerpass("ksmpass", "keymanager password", ""),
-    propfile("p", "path to properties file", ""),
-    clientdirectory("cdir", "directory client files are served from", "./clotho3-web/dist");
+    keystorepath("ssl keystore path", System.getProperty("java.home") + "/lib/security/cacerts".replace('/', File.separatorChar), "path"),
+    keystorepass( "ssl keystore password", "", "password"),
+    propfile( "path to properties file", "", "path"),
+    clientdirectory( "path to client files directory", "clotho3-web/dist", "path");
     
-    public final String abbreviation;
     public final String description;
     public final String defaultValue;
+    public final String argName;
     public final boolean hasarg;
-    private ConfigOption(final String abbreviation, final String description, final String defaultValue){
+    private ConfigOption(final String description, final String defaultValue, final String argName){
         hasarg = true;
-        this.abbreviation = abbreviation;
         this.description = description;
         this.defaultValue = defaultValue;
+        this.argName = argName;
     }
     
     public static Options getOptions() {
         Options options = new Options();
         for (ConfigOption option : ConfigOption.values()){
-            options.addOption(new Option(option.abbreviation, option.name(), option.hasarg, option.description));
+            Option cliOption = new Option(option.name(), option.hasarg, option.description + String.format(" (default: %s)", option.defaultValue));
+            cliOption.setArgName(option.argName);
+            options.addOption(cliOption);
         }
         options.addOption(new Option("help", false, "print this message"));
         return options;

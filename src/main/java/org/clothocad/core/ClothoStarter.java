@@ -38,7 +38,7 @@ public class ClothoStarter
                 printHelp();
                 return;
             }
-            
+            //TODO: if keystorepass option passed w/o arg, prompt for password 
             Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
 
             Persistor persistor = injector.getInstance(Persistor.class);
@@ -49,6 +49,7 @@ public class ClothoStarter
         
             server.start();
         } catch (ParseException e){
+            //TODO: customise message to include default values
             System.out.println(e.getMessage());
             printHelp();
         }
@@ -73,8 +74,8 @@ public class ClothoStarter
         Properties properties = new Properties();
         
         //properties in properties file are overwritten by command-line arguments
-        if (cmd.hasOption(ConfigOption.propfile.abbreviation)){
-            String path = cmd.getOptionValue(ConfigOption.propfile.abbreviation);
+        if (cmd.hasOption(ConfigOption.propfile.name())){
+            String path = cmd.getOptionValue(ConfigOption.propfile.name());
             try {
                 properties.load(Files.newInputStream(Paths.get(path)));
                 log.info("Properties loaded from file at {}", path);
@@ -87,8 +88,8 @@ public class ClothoStarter
         
         for (ConfigOption configOption : ConfigOption.values()){
             if (configOption.equals(ConfigOption.propfile)) continue;
-            if (cmd.hasOption(configOption.abbreviation))
-                properties.setProperty(configOption.name(), cmd.getOptionValue(configOption.abbreviation));
+            if (cmd.hasOption(configOption.name()))
+                properties.setProperty(configOption.name(), cmd.getOptionValue(configOption.name()));
         }
         return properties;
     }
