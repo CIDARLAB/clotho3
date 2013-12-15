@@ -1,6 +1,3 @@
-'use strict';
-
-
 /*!
  Async script loader
  $script.js v1.3
@@ -8,9 +5,11 @@
  */
 !function(a,b,c){function t(a,c){var e=b.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){e[m]&&!/^c|loade/.test(e[m])||f||(e.onload=e[o]=null,f=1,c())},e.async=1,e.src=a,d.insertBefore(e,d.firstChild)}function q(a,b){p(a,function(a){return!b(a)})}var d=b.getElementsByTagName("head")[0],e={},f={},g={},h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange",p=function(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1};!b[m]&&b[n]&&(b[n](l,function r(){b.removeEventListener(l,r,j),b[m]="complete"},j),b[m]="loading");var s=function(a,b,d){function o(){if(!--m){e[l]=1,j&&j();for(var a in g)p(a.split("|"),n)&&!q(g[a],n)&&(g[a]=[])}}function n(a){return a.call?a():e[a]}a=a[k]?a:[a];var i=b&&b.call,j=i?b:d,l=i?a.join(""):b,m=a.length;c(function(){q(a,function(a){h[a]?(l&&(f[l]=1),o()):(h[a]=1,l&&(f[l]=1),t(s.path?s.path+a+".js":a,o))})},0);return s};s.get=t,s.ready=function(a,b,c){a=a[k]?a:[a];var d=[];!q(a,function(a){e[a]||d[k](a)})&&p(a,function(a){return e[a]})?b():!function(a){g[a]=g[a]||[],g[a][k](b),c&&c(d)}(a.join("|"));return s};var u=a.$script;s.noConflict=function(){a.$script=u;return this},typeof module!="undefined"&&module.exports?module.exports=s:a.$script=s}(this,document,setTimeout);
 
-
-//future - keep list of components already mixed in
 //todo - timeout requests
+
+//note - this module should not contain any components (controller, directives, etc.) to be loaded at initial bootstrap. $inject calls are re-routed through provider to add them manually
+
+//note - you can always add a new module, and bootstrap a new widget. That widget can inherit the functionality of the clotho webapp by including the appropriate package (at time of writing, clotho.fullPackage). Then you can have config and run blocks, ignore routing, run autonomously, configure providers, etc.
 
 angular.module('clotho.extensions', [])
 .config(function($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
@@ -25,20 +24,55 @@ angular.module('clotho.extensions', [])
 		$provide: $provide
 	};
 
-	$clotho.extensions.getQueue = function() {
-		return angular.module('clotho.extensions')._invokeQueue;
+	// adapted from Ifeanyi Isitor: http://ify.io/lazy-loading-in-angularjs/
+	// preserve the original references. angular.module('clotho.extensions').controller() is the same as $clotho.extensions._controller(). You can use these references and process the queue manually. Recommended you use the provider-based interface below though, and download components which take the form $clotho.extensions.controller() [without the underscore] which will be added automatically
+	$clotho.extensions._controller = $clotho.extensions.controller;
+	$clotho.extensions._service = $clotho.extensions.service;
+	$clotho.extensions._factory = $clotho.extensions.factory;
+	$clotho.extensions._value = $clotho.extensions.value;
+	$clotho.extensions._directive = $clotho.extensions.directive;
+
+
+	// Convert controllers, services, factories, directives, filters to provider-based alternatives, so that when they are loaded later, they are automatically registered
+	$clotho.extensions.controller = function( name, constructor ) {
+		$controllerProvider.register( name, constructor );
+		return( this );
+	};
+	$clotho.extensions.service = function( name, constructor ) {
+		$provide.service( name, constructor );
+		return( this );
+	};
+	$clotho.extensions.factory = function( name, factory ) {
+		$provide.factory( name, factory );
+		return( this );
+	};
+	$clotho.extensions.value = function( name, value ) {
+		$provide.value( name, value );
+		return( this );
+	};
+	$clotho.extensions.directive = function( name, factory ) {
+		$compileProvider.directive( name, factory );
+		return( this );
+	};
+	$clotho.extensions.filter = function( name, factory ) {
+		$filterProvider.filter( name, factory );
+		return( this );
 	};
 
-	$clotho.extensions.registeredQueue = $clotho.extensions.getQueue().length;
-
 })
-.run(function($rootScope, $q, $timeout, $templateCache, $http, $rootElement) {
+.run(function($rootScope, $q, $timeout, $templateCache, $http, $rootElement, $compile) {
 
-	//need to call this before compiling new element
-	$clotho.extensions.processQueue = function() {
-		var queue = $clotho.extensions.getQueue();
+	//these functions are for mixing in components that are not added via the provider interface above
+	var getQueue = function() {
+		return angular.module('clotho.extensions')._invokeQueue;
+	};
+	var registeredQueue = getQueue().length;
+	//Only needs to be called when not using the provider interface above, i.e. components that have been prefaced, e.g. angular.module('clotho.extensions').controller() instead of $clotho.extensions.controller()
+		//todo - verify that processing queue after adding components using provider-based mechanism doesn't cause problems with queue length mismatch
+	var processQueue = function() {
+		var queue = getQueue();
 
-		for(var i=$clotho.extensions.registeredQueue;i<queue.length;i++) {
+		for(var i=registeredQueue;i<queue.length;i++) {
 			var call = queue[i];
 			// call is in the form [providerName, providerFunc, providerArguments]
 			var provider = $clotho.extensions.providers[call[0]];
@@ -49,47 +83,53 @@ angular.module('clotho.extensions', [])
 			}
 		}
 
-		$clotho.extensions.registeredQueue = $clotho.extensions.getQueue().length;
+		registeredQueue = getQueue().length;
 	};
 
+	//note - create a new isolate scope, deleting scope and children if present
+	//todo - DEPRECATE. can't really scrub DOM of compiled code, so should use bootstrap for something that needs to be compiled (i.e. cache template and bootstrap that div, as easy to recompile a template in $templateCache)
 	$clotho.extensions.recompile = function(element, args) {
-		//can't compile already-compiled elements or cause problems
 		if (typeof element == 'undefined') {return;}
 		args = args || {};
 
-		//todo - check for class ng-scope in what compile -- don't wanna recompile
-
-		//todo - should inherit from closest relative scope - not rootscope
+		if (element.hasClass('ng-scope')) element.scope().$destroy();
 
 		$rootElement.injector().invoke(function($compile, $rootScope) {
-			var scope = $rootScope.$new();
+			var scope = $rootScope.$new(true);
 			angular.extend(scope, args);
 			$compile($(element))(scope);
 			$rootScope.$apply();
 		});
 	};
 
+	$clotho.extensions.extend = angular.extend;
+
+	$clotho.extensions.extendRootscope = function(args) {
+		$clotho.extensions.extend($rootScope, args);
+	};
+
 	/**
 	 * @name Application.mixin
 	 *
+	 * @description Will download URLs only once
+	 *
 	 * @param urls URLs of dependencies. Only downloaded if hasn't been already
-	 * @param element Element to be compiled. Necessary for compiling (to avoid recompiling)
-	 * @param args Arguments to extend the scope
 	 * @returns {promise} Element Promise to be fulfilled on successful addition, value is element
 	 */
-	$clotho.extensions.mixin = function(urls, element, args) {
+	$clotho.extensions.mixin = function(urls) {
 
 		if (angular.isUndefined(urls) || urls == '') {
-			//console.log('[Application.mixin] no url - return empty resolved promise');
 			return $q.when('no mixin url');
 		}
 
 		var deferred = $q.defer();
 
+		//timeout our requests at 5 seconds
+		var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
+
 		$script(urls, function() {
-			$clotho.extensions.processQueue();
-			$clotho.extensions.recompile(element, args);
-			$rootScope.$safeApply(deferred.resolve(element));
+			$timeout.cancel(timeoutPromise);
+			$rootScope.$safeApply(deferred.resolve());
 		});
 
 		return deferred.promise;
@@ -98,14 +138,14 @@ angular.module('clotho.extensions', [])
 	/**
 	 * @name Application.script
 	 *
-	 * @description Downloads and executes a script, using cache-busting. Timestamp is appended to the script, to ensure it will run each time.
+	 * @description Downloads and executes a script or scripts, using cache-busting. Timestamp is appended to the script, to ensure it will run each time.
 	 *
 	 * @param {string|Array} urls URLs of scripts to be executed
 	 * @returns {Promise} Promise which is resolved when all scripts have been executed
 	 */
 	$clotho.extensions.script = function(urls) {
 
-		if (angular.isUndefined(urls) || urls == '') {
+		if (angular.isUndefined(urls) || urls.length == 0) {
 			return $q.when('no script url');
 		}
 
@@ -113,15 +153,17 @@ angular.module('clotho.extensions', [])
 			downloads; //don't want to overwrite source urls with timestamp
 
 		if (angular.isString(urls))
-			downloads = urls + '?_=' + Date.now();
-		else {
-			downloads = [];
-			angular.forEach(urls, function(url) {
-				downloads.push(url + '?_=' + Date.now());
-			});
-		}
+			downloads = [urls];
 
-		$script(urls, function() {
+		angular.forEach(urls, function(url) {
+			downloads.push(url + '?_=' + Date.now());
+		});
+
+		//timeout our requests at 5 seconds
+		var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
+
+		$script(downloads, function() {
+			$timeout.cancel(timeoutPromise);
 			$rootScope.$safeApply(deferred.resolve());
 		});
 
@@ -137,16 +179,22 @@ angular.module('clotho.extensions', [])
 	 *
 	 * @returns {Promise} Promise to be fulfilled once CSS files are downloaded and appended
 	 */
+	var css_urls_downloaded = [];
 	$clotho.extensions.css = function(url) {
 
 		if (angular.isUndefined(url) || url == '') {
 			return $q.when('no css url');
 		}
 
-		//todo - track so only added once
+		if (_.indexOf(css_urls_downloaded, url) > -1)
+			return $q.when('CSS url already added');
+
 		//todo - handle array
 
 		var deferred = $q.defer();
+
+		//timeout our requests at 5 seconds
+		var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
 
 		if (document.createStyleSheet) { //IE
 			document.createStyleSheet(url);
@@ -157,8 +205,10 @@ angular.module('clotho.extensions', [])
 			link.rel = "stylesheet";
 			link.href = url;
 			document.getElementsByTagName("head")[0].appendChild(link);
+			$timeout.cancel(timeoutPromise);
 			$rootScope.$safeApply(deferred.resolve());
 		}
+		css_urls_downloaded.push(url);
 
 		return deferred.promise;
 	};
@@ -166,7 +216,7 @@ angular.module('clotho.extensions', [])
 	/**
 	 * @name Application.cache
 	 *
-	 * @description Downloads caches an angular template for later use
+	 * @description Downloads caches an angular template for later use. Forces addition to the cache, under ID of the passed URL. So, to use later, e.g. use <div ng-include="url_you_passed"></div>. Note that the template is cached in the primary Clotho App, so to access it in a separately bootstrapped app, you'll need to list the appropriate angular module as a dependency
 	 *
 	 * @param {URL} url URL of angular template file
 	 *
@@ -180,16 +230,23 @@ angular.module('clotho.extensions', [])
 
 		var deferred = $q.defer();
 
-		$http.get(url, {cache:$templateCache})
-			.success(function() {deferred.resolve()})
-			.error(function() {deferred.reject()});
+		//timeout our requests at 5 seconds
+		var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
+
+		$http.get(url)
+			.success(function(data) {
+				$timeout.cancel(timeoutPromise);
+				$templateCache.put(url, data);
+				deferred.resolve(data)
+			})
+			.error(function(data) {deferred.reject(data)});
 
 		return deferred.promise;
 	};
 
 	/**
+	 * todo - deprecate this version. create a wrapper for angular.bootstrap instead
 	 * @name Application.bootstrap
-	 * @previous Clotho.bootstrap
 	 *
 	 * @param appInfo {object} Object with necessary information to bootstrap, minimally including:
 	 * {
@@ -200,7 +257,7 @@ angular.module('clotho.extensions', [])
 	 * @returns {Promise} Array of selectors in form: [<appUUID>, <jQuery Selector>]
 	 * @description
 	 * Load a widget and bootstrap it. appInfo must contain a full module. for simply adding components to the stack, use mixin()
-	 */
+
 	var widgetID = 0;
 	$clotho.extensions.bootstrap = function (appInfo) {
 		widgetID++;
@@ -209,11 +266,9 @@ angular.module('clotho.extensions', [])
 
 		//angular version
 		//note angular returns parent, not appended element
-		//todo - if want this, select appropriate child element
+		//note - if want this, select appropriate child element
 		//var insertInto = angular.element(document).find("ng-app-clothoWidgets").append(angular.element('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>'));
 
-
-		//todo - move away from ng-view and routing - just use a template
 
 
 		//jQuery version
@@ -224,7 +279,72 @@ angular.module('clotho.extensions', [])
 			deferred.resolve([widgetID, "[clotho-widget-uuid="+widgetID+"]"]);
 		});
 
+
+
+		//INJECTOR VERSION, basically just angular.bootstrap
+		/*
+		//set up modules array for bootstrap
+		var modules;
+		if (angular.isString(moduleNames))
+			modules = ['ng'].push(moduleNames);
+		else if (angular.isArray(moduleNames))
+			modules = moduleNames.unshift('ng');
+		else
+			modules = ['ng'];
+
+		// create an injector
+		var $injector = angular.injector(modules);
+
+		// use the injector to kick off your application
+		// use the type inference to auto inject arguments, or use implicit injection
+		$injector.invoke(function(){
+			var scope = element.scope();
+			$compile(element)(scope);
+			scope.$digest();
+		});
+		*//*
+
+
 		return deferred.promise;
+	};
+	*/
+
+	/**
+	 * @name $clotho.extensions.bootstrap
+	 *
+	 * @description This is just a reference to angular.bootstrap. Bootstraps a new app manually, creating a new (isolate) $rootScope outside the flow of the parent app. Need to define clotho angular modules for them to be present in this app if you want their functionality. Note that this method expects all dependencies to have already been downloaded
+	 */
+	$clotho.extensions.bootstrap = angular.bootstrap;
+
+
+
+
+
+
+
+	//todo - incorporate separately? don't need to know type this way
+	var headEl = document.getElementsByTagName('head')[0];
+	function addTag(name, attributes, sync) {
+		var el = document.createElement(name),
+			attrName;
+
+		for (attrName in attributes) {
+			el.setAttribute(attrName, attributes[attrName]);
+		}
+
+		sync ? document.write(outerHTML(el)) : headEl.appendChild(el);
+	}
+
+	function outerHTML(node){
+		// if IE, Chrome take the internal method otherwise build one
+		return node.outerHTML || (
+			function(n){
+				var div = document.createElement('div'), h;
+				div.appendChild(n);
+				h = div.innerHTML;
+				div = null;
+				return h;
+			})(node);
 	}
 
 });

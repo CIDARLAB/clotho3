@@ -34,13 +34,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		redirectTo: '/editor'
 	})
 	.when('/editor', {
-	  //todo - create dynamic route using search parameters and setting reloadOnSearch to false
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
 		resolve : {
 			deps : ['$q', function($q) {
-				//todo - lazyload in directive, not all at once
-				//todo - test if can load library lazily
 				return $clotho.extensions.mixin('bower_components/codemirror/lib/codemirror.js').then(function() {
 					$q.all([
 						$clotho.extensions.css('bower_components/codemirror/lib/codemirror.css'),
@@ -58,14 +55,12 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl'
 	})
-	//todo - support routing for chapter and page
 	.when('/trails/:id', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
 		resolve : {
 			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 				var deferred = $q.defer();
-				//todo - add timeout
 				Clotho.get($route.current.params.id).then(function(result) {
 					Trails.compile(result).then(function (compiled) {
 						$route.current.$$route.title = result.name;
@@ -73,11 +68,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 					});
 				});
 				return deferred.promise;
-			}],
-			deps : function() {
-				//return Application.mixin('https://www.youtube.com/player_api');
-				return $clotho.extensions.mixin('lib/youtubeAPI.js');
-			}
+			}]
 		}
 	})
 	.when('/terminal', {
