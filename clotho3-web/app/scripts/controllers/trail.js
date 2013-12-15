@@ -1,9 +1,8 @@
-angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route, $timeout, Clotho, Trails,$keypress) {
+angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route, $timeout, Clotho, Trails, $keypress) {
 
 	//inherited from $routeProvider.resolve clause in application.js
 	$scope.id = $route.current.params.id;
 	$scope.trail = $route.current.locals.trail;
-
 
 	$scope.activate = function(indices) {
 
@@ -49,5 +48,6 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 	$scope.base64icon = base64icon;
 
 	//kickoff
-	$scope.activate('0-0');
+	console.log($route.current.params);
+	$scope.activate($route.current.params.position || '0-0');
 });

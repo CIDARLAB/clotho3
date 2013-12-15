@@ -55,7 +55,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl'
 	})
-	.when('/trails/:id', {
+	.when('/trails/:id/:position?', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
 		resolve : {
