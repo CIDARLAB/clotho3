@@ -67,7 +67,11 @@ function generateClothoAPI() {
         if (!angular.isFunction(func))
             func = angular.noop() ;
 
+	      //timeout our requests at 5 seconds
+	      var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
+
         PubSub.once(channel+':'+requestId, function(data){
+	          $timeout.cancel(timeoutPromise);
             $rootScope.$safeApply(deferred.resolve(data));
             func(data);
         }, '$clotho');

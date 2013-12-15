@@ -1,0 +1,45 @@
+<div ng-controller="Editor_PartialCtrl">
+    <legend>Partial Editor</legend>
+    <div class="ng-cloak">
+
+        <div class="control-group">
+            <label class="control-label" for="name">Name</label>
+            <div class="controls">
+                <input type="text" id="name" ng-model="editable.name" ng-disabled="!editMode">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="id">ID</label>
+            <div class="controls">
+                <input type="text" id="id" ng-model="editable.id" disabled>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="desc">Description</label>
+            <div class="controls">
+                <textarea type="text" id="desc" class="input-large" ng-model="editable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="form-actions" ng-hide="editMode">
+            <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+        <div class="form-actions" ng-show="editMode">
+            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
+            <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
+            <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
+            <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
+            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
+        </div>
+    </div>
+</div>
