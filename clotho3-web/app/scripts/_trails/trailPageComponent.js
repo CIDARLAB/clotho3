@@ -1,4 +1,4 @@
-angular.module('clotho.trails').directive('trailPageComponent', function ($compile, $q, $timeout, $http, $templateCache, YoutubeService) {
+angular.module('clotho.trails').directive('trailPageComponent', function ($compile, $q, $timeout, $http, $templateCache, Youtube) {
 
 	return {
 		restrict: 'EA',
@@ -37,7 +37,7 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 					pageComponentTypes.video = function loadVideo(obj) {
 						if (!obj) return $q.when();
 
-						var videoId = YoutubeService.extract_youtube((angular.isString(obj) ? obj : obj.id));
+						var videoId = Youtube.extract((angular.isString(obj) ? obj : obj.id));
 						scope.videoParams = (!!obj.params) ? obj.params : {};
 
 						scope.videoParams.autoplay = angular.isDefined(obj.autoplay) ? obj.autoplay : false;
@@ -108,10 +108,6 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 							return $q.when(element.html($compile(result)(scope)));
 						});
 					};
-
-					//LOAD IT
-					//note- not linked in pre-phase
-					//return scope.createPage();
 				},
 				post: function postLink(scope, element, attrs) {
 					scope.$watch(attrs.trailPageComponent, function (oldComp, newComp) {

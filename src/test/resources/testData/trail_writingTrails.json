@@ -23,7 +23,7 @@
 						},
 						{
 							"type" : "text",
-							"params" : "<p>Trails can take on several forms - check out other trails -  but essentially they revolve around videos and/or HTML content. <b>Be sure to check <a href='http://docs.angularjs.org/api/'>the Angular API</a> for several of its directives which you can obviously use anywhere in your trail, and the <a href='http://getbootstrap.com/2.3.2/'>Bootstrap CSS framework(v 2.3.2)</a></b></p>"
+							"params" : "<p>Trails can take on several forms - check out other trails -  but essentially they revolve around videos and/or HTML content. <b>Be sure to check <a href='http://docs.angularjs.org/api/'>the Angular API</a> for several of its directives which you can obviously use anywhere in your trail, and the <a href='http://getbootstrap.com/'>Bootstrap CSS framework</a> for CSS components</b>.</p>"
 						}
 					]
 				},

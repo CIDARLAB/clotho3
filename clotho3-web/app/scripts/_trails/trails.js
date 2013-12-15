@@ -1,4 +1,4 @@
-angular.module('clotho.trails').service('Trails', function(Clotho, YoutubeService, $q) {
+angular.module('clotho.trails').service('Trails', function(Clotho, $q) {
 
 	var compile = function TrailCompile(trail) {
 

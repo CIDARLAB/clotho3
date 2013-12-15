@@ -2,6 +2,9 @@
     <!--assumes presence of $scope.demoSchema-->
     <p>{{ demoSchema.description }}</p>
 
+    <!--this is a dumb hack-->
+    <pre class="pre-scrollable" ng-if="demoSchema.name == 'Page'">{{ PageExample | json }}</pre>
+
     <table class="table table-bordered table-striped code-table">
         <thead>
             <tr><th>Param</th><th>Type</th><th>Details</th><th>Example</th></tr>

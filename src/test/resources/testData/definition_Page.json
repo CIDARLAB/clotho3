@@ -3,7 +3,7 @@
     "schema": "ClothoSchema",
     "language": "JSONSCHEMA",
     "name": "Page",
-    "description": "Defines the content for each unit of a Trail. Content fields are (from top to bottom of rendered page): intro, video, template, quiz, outro. Files can be added via (ordered by load time): mixin, css, script, <render content>, onload",
+    "description": "Defines the content for each unit of a Trail. A page is an an object, as defined below. Javascript / CSS can be added via (ordered by load time): mixin, css, script, <render content>, onload. You can define a controller, and dictionary for interpolation on the page. Content fields are added in the order they are defined in the contents array, and can be: text, video, markdown, wiki, template, quiz",
     "fields": [
         {
             "name": "title",
@@ -19,25 +19,45 @@
             "name": "icon",
             "type": "string",
             "description": "icon to use for Trail sidenav",
-            "example": "Options include: 'quiz', 'template', 'video', 'exercise'",
+            "example": "Options include: 'list', 'info', 'quiz', 'template', 'video', 'exercise'",
             "constraints": null,
             "access": "PUBLIC",
             "javaType": "java.lang.String",
             "reference": false
         },
         {
-            "name": "intro",
+            "name": "text",
             "type": "string",
-            "description": "HTML to display at top of Page content",
+            "description": "Text or HTML, can contain bindings to be processed by angular.",
             "example": "",
             "constraints": null,
             "access": "PUBLIC",
             "javaType": "java.lang.String",
             "reference": false
         },
+	    {
+		    "name": "wiki",
+		    "type": "string",
+		    "description": "Text in MediaWiki format converted to HTML",
+		    "example": "",
+		    "constraints": null,
+		    "access": "PUBLIC",
+		    "javaType": "java.lang.String",
+		    "reference": false
+	    },
+	    {
+		    "name": "markdown",
+		    "type": "string",
+		    "description": "Text converted by Showdown.js to HTML",
+		    "example": "",
+		    "constraints": null,
+		    "access": "PUBLIC",
+		    "javaType": "java.lang.String",
+		    "reference": false
+	    },
         {
             "name": "video",
-            "type": "string",
+            "type": "object|string",
             "description": "YouTube VideoID or link to Youtube video. Can also be an object, where: <code>obj.id</code> is the ID or link to the YouTube video, <code>obj.params</code> is an object as defined by the YouTube iFrame API, <code>obj.mini</code> dictates whether the video starts in small form, and <code>obj.autoplay</code> dictates whether the video should play immediately",
             "example": "",
             "constraints": null,
@@ -63,16 +83,6 @@
             "constraints": null,
             "access": "PUBLIC",
             "javaType": "java.util.HashMap",
-            "reference": false
-        },
-        {
-            "name": "outro",
-            "type": "string",
-            "description": "HTML to display at bottom of Page content",
-            "example": "",
-            "constraints": null,
-            "access": "PUBLIC",
-            "javaType": "java.lang.String",
             "reference": false
         },
         {
