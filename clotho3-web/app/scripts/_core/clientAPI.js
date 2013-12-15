@@ -7,6 +7,17 @@
 angular.module('clotho.core').service('ClientAPI',
 	function(PubSub, Collector, $q, $templateCache, $http, $rootScope, $location, $compile) {
 
+		//todo - verify this works and retrieves the service properly
+		var interfaceModulePresent = false,
+			$dialog;
+			try {
+				angular.module('clotho.interface');
+				interfaceModulePresent = true;
+				$dialog = angular.injector('clotho.interface').get('$dialog');
+			} catch (err) {
+				// not present
+			}
+
     /**
      * @name clientAPI.collect
      *
@@ -40,21 +51,18 @@ angular.module('clotho.core').service('ClientAPI',
      * @param uuid UUID of sharable to edit, opens in modal
      */
     var edit = function(uuid) {
-
-        /*
-        //note - use if $dialog is present
-        var dialog_opts = {
-
-            backdrop: true,
-            keyboard: true,
-            backdropClick: true,
-            template:  '<form sharable-editor name="sharableEditor" uuid="'+uuid+'" class="span6 form-horizontal well" novalidate></form>'
-        };
-        var d = $dialog.dialog(dialog_opts);
-        d.open();
-        */
-
-	    $location.path('/editor/' + uuid)
+	    if (interfaceModulePresent) {
+		    var dialog_opts = {
+			    backdrop: true,
+			    keyboard: true,
+			    backdropClick: true,
+			    template:  '<form sharable-editor name="sharableEditor" uuid="'+uuid+'" class="span6 form-horizontal well" novalidate></form>'
+		    };
+		    var d = $dialog.dialog(dialog_opts);
+		    d.open();
+	    } else {
+		    $location.path('/editor/' + uuid)
+	    }
     };
 
     /**
@@ -161,7 +169,7 @@ angular.module('clotho.core').service('ClientAPI',
         $rootScope.$safeApply($http.get(template, {cache: $templateCache})
             .success(function(precompiled) {
 
-                Application.mixin([dependencies, controller], $(precompiled).appendTo(target), args)
+                $clotho.extensions.mixin([dependencies, controller], $(precompiled).appendTo(target), args)
                     .then(function(div) {
                         //testing
                         //console.log($position.position(div));
@@ -237,17 +245,18 @@ angular.module('clotho.core').service('ClientAPI',
 
         PubSub.trigger('serverAlert', {});
 
-	      /*
-	      //note - to use if $dialog is present
-	      $rootScope.$safeApply($dialog.serverAlert(msg)
-            .open()
-            .then(function(result){
-                console.log('dialog closed with result: ' + result);
-            })
-        );
-	       */
+		    if (interfaceModulePresent) {
+			    $rootScope.$safeApply($dialog.serverAlert(msg)
+				    .open()
+				    .then(function(result){
+					    console.log('dialog closed with result: ' + result);
+				    })
+			    );
+		    } else {
+			    window.alert(msg);
+		    }
 
-	      window.alert(msg);
+
     };
 
     /**
