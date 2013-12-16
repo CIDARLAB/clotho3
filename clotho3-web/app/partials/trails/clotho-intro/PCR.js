@@ -50,4 +50,4 @@ $clotho.extensions.controller('clothoIntro_PCRCtrl', function($scope, $focus, $t
             }
         });
     };
-}]);
+});

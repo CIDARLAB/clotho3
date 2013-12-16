@@ -54,7 +54,7 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
             }, $scope);
 
-            Clotho.watch2($scope.uuid, $scope.editable, $scope);
+            Clotho.watch($scope.uuid, $scope.editable, $scope);
 
 
 

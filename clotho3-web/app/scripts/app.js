@@ -42,6 +42,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 					$q.all([
 						$clotho.extensions.css('bower_components/codemirror/lib/codemirror.css'),
 						$clotho.extensions.mixin('bower_components/codemirror/mode/javascript/javascript.js'),
+						$clotho.extensions.mixin('bower_components/codemirror/mode/css/css.js'),
+						$clotho.extensions.mixin('bower_components/codemirror/mode/htmlmixed/htmlmixed.js'),
 						$clotho.extensions.mixin('bower_components/codemirror/mode/python/python.js'),
 						$clotho.extensions.mixin('bower_components/codemirror/mode/groovy/groovy.js'),
 						$clotho.extensions.mixin('bower_components/codemirror/mode/clike/clike.js'),

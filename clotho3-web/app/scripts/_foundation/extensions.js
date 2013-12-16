@@ -149,25 +149,15 @@ angular.module('clotho.extensions', [])
 			return $q.when('no script url');
 		}
 
-		var deferred = $q.defer(),
-			downloads; //don't want to overwrite source urls with timestamp
+		var downloads; //don't want to overwrite source urls with timestamp
 
 		if (angular.isString(urls))
 			downloads = [urls];
-
 		angular.forEach(urls, function(url) {
 			downloads.push(url + '?_=' + Date.now());
 		});
 
-		//timeout our requests at 5 seconds
-		var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
-
-		$script(downloads, function() {
-			$timeout.cancel(timeoutPromise);
-			$rootScope.$safeApply(deferred.resolve());
-		});
-
-		return deferred.promise;
+		return $clotho.extensions.mixin(downloads);
 	};
 
 	/**
@@ -347,4 +337,71 @@ angular.module('clotho.extensions', [])
 			})(node);
 	}
 
-});
+})
+
+/**
+ * @name clotho-show
+ *
+ * @usage <div clotho-show="VIEW_ID" module=""></div>
+ */
+.directive('clothoShow', function ($browser, $anchorScroll, $templateCache, $provide, $locationProvider) {
+
+		/*
+		Views are expected to take the following form:
+
+
+
+
+
+		 */
+
+		return {
+			restrict: 'A',
+			terminal: true,
+			scope: {
+				id: '=clothoShow'
+			},
+			controller: function ($scope, $element, $attrs) {
+
+			},
+			compile: function compile(tElement, tAttrs, transclude) {
+				return {
+					pre: function preLink(scope, element, attrs) {
+
+					},
+					post: function postLink(scope, element, attrs) {
+
+						//should overwrite certain services that we don't want the widget to have using provide, and pass in a modified 'modules' var that will overwrite the default 'ng' ones
+						var modules = [];
+
+						modules.push(function() {
+							$provide.value('$templateCache', {
+								get: function(key) {
+									var value = $templateCache.get(key);
+									if (value) {
+										value = value.replace(/#\//mg, '/');
+									}
+									return value;
+								}
+							});
+							$provide.value('$anchorScroll', angular.noop);
+							$provide.value('$browser', $browser);
+							$locationProvider.html5Mode(true);
+							$locationProvider.hashPrefix('!');
+						});
+						if (attrs.module) {
+							modules.push(attrs.module);
+						}
+
+						//todo
+						element.html();
+
+
+						element.data('$injector', null);
+						angular.bootstrap(element, modules);
+
+					}
+				}
+			}
+		}
+	});
