@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_scriptingIntroCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Clotho', function($scope, $focus, $timeout, $dialog, Clotho) {
+$clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Clotho', function($scope, $focus, $timeout, $dialog, Clotho) {
 
     $scope.quiz = {
         "type" : "fillin",

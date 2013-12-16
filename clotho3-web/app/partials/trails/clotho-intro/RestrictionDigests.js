@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_RestrictionDigestsCtrl', function($scope, $focus, $timeout, $dialog, Digest, Clotho, $q, CommandBar) {
+$clotho.extensions.controller('clothoIntro_RestrictionDigestsCtrl', function($scope, $focus, $timeout, $dialog, Digest, Clotho, $q, CommandBar) {
     $scope.Digest = Digest;
 
     $scope.demo = {};

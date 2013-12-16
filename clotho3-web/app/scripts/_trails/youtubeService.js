@@ -7,11 +7,11 @@ angular.module('clotho.trails')
 		var firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	})
-	.service('Youtube', function($http, $rootScope, $q, $timeout) {
+	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
 		var api_ready = $q.defer();
 		$rootScope.$watch(function() {
-			return YT.loaded == 1;
+			return angular.isDefined($window.YT) && $window.YT.loaded == 1;
 		},function(newval) {
 			if (!!newval) {
 				api_ready.resolve();

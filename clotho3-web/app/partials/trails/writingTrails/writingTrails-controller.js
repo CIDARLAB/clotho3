@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('writingTrailsCtrl', function($compile, $scope, Clotho, $http, $location) {
+$clotho.extensions.controller('writingTrailsCtrl', function($compile, $scope, Clotho, $http, $location) {
     $scope.getSchema = function(schemaName) {
       Clotho.query({schema: "ClothoSchema", name: schemaName})
         .then(function(results) {

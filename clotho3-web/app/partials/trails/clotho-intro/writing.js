@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_WritingCtrl', ['$scope', '$focus', '$timeout', '$dialog', '$http', 'DNA', 'Digest', 'PCR', 'Construction', 'Clotho', function($scope, $focus, $timeout, $dialog, $http, DNA, Digest, PCR, Construction, Clotho) {
+$clotho.extensions.controller('clothoIntro_WritingCtrl', ['$scope', '$focus', '$timeout', '$dialog', '$http', 'DNA', 'Digest', 'PCR', 'Construction', 'Clotho', function($scope, $focus, $timeout, $dialog, $http, DNA, Digest, PCR, Construction, Clotho) {
 
     $scope.getConstructionFile = function(selection) {
 

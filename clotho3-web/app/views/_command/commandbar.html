@@ -41,7 +41,7 @@
 
         <!--log-->
         <div class="inline-block" style="position:relative;" ng-init="display.genLogPos()" click-outside="display.hide('log');" click-outside-active="display.log">
-            <button id="searchbar_logbutton" class="btn" ng-click="display.toggle('log'); log.unread = null">
+            <button id="clothoCommandBarLogButton" class="btn" ng-click="display.toggle('log'); log.unread = null">
                 <i class="icon-tasks"></i>
                 <span class="label label-info" ng-if="log.unread">{{ log.unread }}</span>
             </button>

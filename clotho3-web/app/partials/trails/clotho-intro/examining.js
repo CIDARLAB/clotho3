@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_ExaminingCtrl', function($scope, $focus, $timeout, $dialog, $http, Construction, Clotho) {
+$clotho.extensions.controller('clothoIntro_ExaminingCtrl', function($scope, $focus, $timeout, $dialog, $http, Construction, Clotho) {
 
     $http.get('models/construction_gfp.json').then(function(data) {
         $scope.constructionFile = data.data

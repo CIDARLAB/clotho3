@@ -1,6 +1,6 @@
 <div ng-repeat="entry in entries | orderBy:options.timeFilter:true" class="clearfix">
     <div ng-class="{'pull-right': entry.from == 'client', 'text-right': entry.from == 'client'}" class="logEntry {{entry.class == 'muted' ? 'muted' : 'text-' + entry.class | lowercase}}">
-        <span tooltip="{{ entry.timestamp | date:options.dateFilter }}" tooltip-placement="{{ (entry.from == 'client') ? 'left' : 'right' }}" tooltip-append-to-body="true">{{entry.text}}</span>
+        <span tooltip="{{ entry.timestamp | date:'mediumTime' }}" tooltip-placement="{{ (entry.from == 'client') ? 'left' : 'right' }}" tooltip-append-to-body="true">{{entry.text}}</span>
         <br />
     </div>
 </div>
