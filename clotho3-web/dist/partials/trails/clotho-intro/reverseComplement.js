@@ -1,4 +1,4 @@
-angular.module('clotho.extensions').controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $dialog, Clotho) {
+$clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $dialog, Clotho) {
 
     var dialogOpts = {
         backdrop: false,

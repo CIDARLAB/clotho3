@@ -28,7 +28,7 @@
 		{
 			"name": "mixin",
 			"type": "string",
-			"description": "URL of Angular components to add, before the trail is compiled. Must be prefixed by Application.Extensions._____",
+			"description": "URL of Angular components to add, before the trail is compiled. Must be prefixed by angular.module('clotho.extensions')._____",
 			"example": "",
 			"constraints": null,
 			"access": "PUBLIC",

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_LigationCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR) {
+$clotho.extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR) {
     $scope.DNA = DNA;
     $scope.Digest = Digest;
     $scope.PCR = PCR;

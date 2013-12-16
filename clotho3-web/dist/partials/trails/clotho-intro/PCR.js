@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.extensions').controller('clothoIntro_PCRCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', 'Clotho', 'Searchbar', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR, Clotho, Searchbar) {
+$clotho.extensions.controller('clothoIntro_PCRCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', 'Clotho', 'Searchbar', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR, Clotho, Searchbar) {
 
     $scope.pcr_demoSets = [
         {

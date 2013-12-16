@@ -1,8 +1,8 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app="clothoRoot"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" ng-app="clothoRoot"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" ng-app="clothoRoot"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app="clothoRoot"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,37 +21,30 @@
 <![endif]-->
 
 
-<!--Primary Clotho App-->
-<div id="clothoAppRoot" ng-app="clothoRoot">
+<div class="container">
+    <div class="navbar" ng-controller="MenuCtrl">
+        <div class="navbar-inner" ng-cloak="" ng-hide="hideNavBar">
+            <a class="brand" href="#">Clotho Demo</a>
+            <ul class="nav">
+                <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
+            </ul>
 
-
-    <div class="container">
-        <div class="navbar" ng-controller="MenuCtrl">
-            <div class="navbar-inner" ng-cloak="" ng-hide="hideNavBar">
-                <a class="brand" href="#">Clotho Demo</a>
-                <ul class="nav">
-                    <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
-                </ul>
-
-                <div class="btn-group pull-right">
-                    <button class="btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="icon-user"></i> <span ng-cloak="" ng-if="loggedIn">{{ username }}</span></button>
-                    <button class="btn btn-warning btn-small" ng-click="clearStorage()" disabled="disabled"><i class="icon-trash"></i></button>
-                    <button class="btn btn-warning btn-small" ng-click="reloadModules()"><i class="icon-refresh"></i></button>
-                </div>
+            <div class="btn-group pull-right">
+                <button class="btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="icon-user"></i> <span ng-cloak="" ng-if="loggedIn">{{ username }}</span></button>
+                <button class="btn btn-warning btn-small" ng-click="clearStorage()" disabled="disabled"><i class="icon-trash"></i></button>
+                <button class="btn btn-warning btn-small" ng-click="reloadModules()"><i class="icon-refresh"></i></button>
             </div>
-
-            <div clotho-command-bar=""></div>
-
         </div>
+
+        <div clotho-command-bar=""></div>
+
     </div>
-
-
-    <div ng-view="" ng-cloak=""></div>
-
 </div>
 
 
-<!--Widgets will be inserted here and bootstrapped individually-->
+<div ng-view="" ng-cloak=""></div>
+
+<!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
 
 
