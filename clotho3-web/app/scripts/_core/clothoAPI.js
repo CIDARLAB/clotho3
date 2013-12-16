@@ -234,61 +234,26 @@ function generateClothoAPI() {
 
     };
 
-    /**
-     * @name Clotho.watch
-     *
-     * @param {string} uuid UUID of Sharable to watch for changes
-     * @param {function} callback Function to be executed on change
-     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Should be included, or will bloat. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
-     *
-     * @description
-     * Watches for published changes for a given uuid, executing a callback
-     */
-    var watch = function clothoAPI_watch(uuid, callback, reference) {
-        reference = typeof reference != 'undefined' ? reference : null;
-        PubSub.on('update:'+uuid, function(model) {
-            $rootScope.$safeApply(callback(model));
-        }, reference);
-    };
-
 	/**
-	 * @name Clotho.autoupdate
+	 * @name Clotho.watch
 	 *
 	 * @param {string} uuid UUID of Sharable to watch for changes
-	 * @param {object} obj Object to be updated (using angular.extend) using passed model for given UUID
+	 * @param {object|function} action if Object, object to be updated (using angular.extend) using passed model for given UUID. if Function, function to run on change, passed the new value, with this equal to the reference passed
 	 * @param {string} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
 	 *
 	 * @description
 	 * Watches for published changes for a given uuid, updating the object using angular.extend
 	 */
-		var autoupdate = function clothoAPI_autoupdate(uuid, obj, reference) {
+		var watch = function clothoAPI_watch(uuid, action, reference) {
 			reference = typeof reference != 'undefined' ? reference : null;
 			PubSub.on('update:'+uuid, function(model) {
-				$rootScope.$safeApply(angular.extend(obj, model));
+				if (angular.isFunction(action))
+					$rootScope.$safeApply(action.apply(reference, model));
+				else
+					$rootScope.$safeApply(angular.extend(action, model));
 			}, reference);
 		};
 
-
-    /**
-    // todo - convert usage to Clotho.autoupdate
-     * @name Clotho.watch2
-     *
-     * @param {string} uuid UUID of Sharable to watch for changes
-     * @param {object} scope Object to be updated
-     * @param {string} field field in object to be updated
-     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
-     *
-     * @description
-     * Watches for published changes for a given uuid
-     * note: the object and field cannot be passed in together due to the way javascript handles references. Passing them in separately allows a given field to be changed in the object itself, and the change to exist beyond the scope of this function.
-     *
-     */
-    var watch2 = function clothoAPI_watch2(uuid, scope, field, reference) {
-        reference = typeof reference != 'undefined' ? reference : null;
-        PubSub.on('update:'+uuid, function clothoAPI_watch2_callback(model) {
-            $rootScope.$safeApply(scope[field] = model);
-        }, reference);
-    };
 
     /**
      * @name Clotho.listen
