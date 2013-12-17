@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Saurabh",
+  "nickName" : "Saurabh",
+  "surName" : "Srivastava",
+  "name" : "saurabhs",
+  "emailAddress" : "saurabhs@berkeley.edu",
+  "icon" : "saurabh_srivastava.png",
+  "imgUrl" : "",
+  "startDate" : "2010-08-01",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2010-08-01",
+  "isManagement" : false,
+  "role" : "Postdoc",
+  "biography" : "",
+  "title" : "Act Ontology and Synthesizer",
+  "description" : "",
+  "social" : "",
+  "id" : "52af8edfef86a80946c987e1"
+}

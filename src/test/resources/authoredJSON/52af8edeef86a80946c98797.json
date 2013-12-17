@@ -1,0 +1,42 @@
+{
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.model.Part",
+  "c" : "org.clothocad.model.Part",
+  "name" : "Part",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.model.Part$PartFunction",
+    "name" : "type",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.slf4j.Logger",
+    "name" : "log",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "author",
+    "type" : "Person",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.Short",
+    "name" : "riskGroup",
+    "type" : "number",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "shortDescription",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Format",
+    "name" : "format",
+    "type" : "object",
+    "reference" : false
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "52af8edeef86a80946c98797"
+}

@@ -1,11 +1,9 @@
 // Generated on 2013-11-18 using generator-angular 0.6.0-rc.1
 'use strict';
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
+var bower = require('bower');
+var shell = require('shelljs');
+var _ = require('lodash');
 
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
@@ -57,6 +55,12 @@ module.exports = function (grunt) {
         }]
       }
     },
+	  //todo - use in workflow
+	  "merge-conflict": {
+		  files: [
+			  '**/*'
+		  ]
+	  },
     connect: {
       options: {
         port: 9000,
@@ -332,10 +336,38 @@ module.exports = function (grunt) {
         }
         */
       }
-    }
+    },
+		//todo - finish config for git, use in workflow
+	  bump: {
+		  options: {
+			  files: ['package.json'],
+			  commit: false,
+			  createTag: false,
+			  push: false
+		  }
+	  }
   });
 
-  grunt.registerTask('server', function (target) {
+
+	grunt.registerTask('update:npm', 'Update NPM packages.', function () {
+		shell.exec('npm install');
+	});
+
+	grunt.registerTask('update:bower', 'Update Bower packages.', function () {
+		var done = this.async();
+
+		bower.commands.update()
+			.on('log', function (result) {
+				grunt.log.ok('bower: ' + result.id + ' ' + result.data.endpoint.name);
+			})
+			.on('error', grunt.fail.warn.bind(grunt.fail))
+			.on('end', done);
+	});
+
+
+
+
+	grunt.registerTask('server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }

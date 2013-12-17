@@ -1,0 +1,7 @@
+{
+  "schema" : "BasicPart",
+  "name" : "jtk2035",
+  "shortdescription" : "{NeuC 3' UTR}",
+  "sequence" : "GATCTtcatttaacaatctccgctatttcgttttctaatactgtatacccattactattaaaatgtaagccatcataagtatacattttatttagattgccataagagtcttttaaaacgtgatccaagctaataaacttcgcaaaatctacattctctcgaagataagaatttaaatcattaattattctattatctcgatcaatacgcccaaaaacaggaggaaccgacaataaataaatttttgatgcagcatttttcttctttatatactggcatgttttcttcaaataccacaatgtgtcttcttttttccaatcactaacaactatatcattagttccaaaaaagatgaaaacaaactctccgaaattaacaatcagctctttctcaataatatattcatagtactccttcgagtttataccagcgatacctaagttattaacttctatatcatttattttttttacgtcccaataatcaaacagcgagG",
+  "id" : "52af8edfef86a80946c987ed"
+}

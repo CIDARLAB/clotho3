@@ -37,6 +37,24 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		}
 	};
 
+
+
+	$scope.$watch('editable.superClass', function() {
+		$scope.getSuperClass();
+	});
+
+	$scope.getSuperClass = function () {
+		if ($scope.sharable.superClass) {
+			Clotho.get($scope.sharable.superClass)
+				.then(function(result) {
+					$scope.superClassObj = result
+				})
+		}
+	};
+
+
+
+
 	$scope.newMethod = function() {
 		return ""
 	};

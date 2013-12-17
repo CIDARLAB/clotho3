@@ -86,6 +86,10 @@ angular.module('clotho.extensions', [])
 		registeredQueue = getQueue().length;
 	};
 
+
+
+
+
 	//note - create a new isolate scope, deleting scope and children if present
 	//todo - DEPRECATE. can't really scrub DOM of compiled code, so should use bootstrap for something that needs to be compiled (i.e. cache template and bootstrap that div, as easy to recompile a template in $templateCache)
 	$clotho.extensions.recompile = function(element, args) {
@@ -102,11 +106,19 @@ angular.module('clotho.extensions', [])
 		});
 	};
 
+
+
+
 	$clotho.extensions.extend = angular.extend;
 
-	$clotho.extensions.extendRootscope = function(args) {
+	//not really recommended for use...
+	$clotho.extensions.extendPrimaryRootscope = function(args) {
 		$clotho.extensions.extend($rootScope, args);
 	};
+
+
+
+
 
 	/**
 	 * @name Application.mixin
@@ -299,6 +311,7 @@ angular.module('clotho.extensions', [])
 	};
 	*/
 
+
 	/**
 	 * @name $clotho.extensions.bootstrap
 	 *
@@ -309,6 +322,16 @@ angular.module('clotho.extensions', [])
 
 
 
+
+
+
+
+	$clotho.extensions.determineUrlExtension = function ( url ) {
+		//The extension is always the last characters before the ? and after a period.
+		//accounting for the possibility of a period in the query string
+		var b = url.split('?')[0];
+		return b.substr(b.lastIndexOf('.')+1);
+	};
 
 
 
@@ -342,16 +365,19 @@ angular.module('clotho.extensions', [])
 /**
  * @name clotho-show
  *
- * @usage <div clotho-show="VIEW_ID" module=""></div>
+ * @usage <div clotho-show="VIEW_ID"></div>
  */
-.directive('clothoShow', function ($browser, $anchorScroll, $templateCache, $provide, $locationProvider) {
+.directive('clothoShow', function ($q, $browser, $anchorScroll, $templateCache, $provide, $locationProvider) {
 
 		/*
 		Views are expected to take the following form:
 
-
-
-
+		{
+			id: ""            //view id
+			dependencies: []  //CSS, HTML, JS to load - onload scripts executed by callback, collect objects in scripts
+			module: <boolean> //if true, has angular.module('<viewId>')
+			dictionary: {}    // to extend $rootScope
+		}
 
 		 */
 
@@ -368,8 +394,15 @@ angular.module('clotho.extensions', [])
 				return {
 					pre: function preLink(scope, element, attrs) {
 
+						//todo - download dependencies, return promise
+
 					},
 					post: function postLink(scope, element, attrs) {
+
+						//this is the view object
+						var view = {};
+
+
 
 						//should overwrite certain services that we don't want the widget to have using provide, and pass in a modified 'modules' var that will overwrite the default 'ng' ones
 						var modules = [];
@@ -389,11 +422,13 @@ angular.module('clotho.extensions', [])
 							$locationProvider.html5Mode(true);
 							$locationProvider.hashPrefix('!');
 						});
-						if (attrs.module) {
-							modules.push(attrs.module);
+
+						//if view.module is true, bootstrap expecting module named viewId
+						if (view.module) {
+							modules.push(view.id);
 						}
 
-						//todo
+						//todo - get template
 						element.html();
 
 

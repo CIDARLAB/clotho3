@@ -7,7 +7,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath org.clothocad.ClothoStarter -clientdirectory clotho3-web/app</exec.args>
+                <exec.args>-classpath %classpath org.clothocad.core.ClothoStarter</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

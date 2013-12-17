@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Christie",
+  "nickName" : "Christie",
+  "surName" : "Brown",
+  "name" : "helipath",
+  "emailAddress" : "helipath@gmail.com",
+  "icon" : "",
+  "imgUrl" : "",
+  "startDate" : "2008-06-01",
+  "endDate" : "2009-06-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2008-06-01",
+  "isManagement" : false,
+  "role" : "iGEM 2009 Team",
+  "biography" : "",
+  "title" : "Display-O-Matic",
+  "description" : "Cell surface display in E. coli tethers proteins to the outer membrane in order to localize them to the extracellular environment. While this form of localization has allowed many novel functions to be engineered into E. coli, work within this space relies on a trial and error approach rather than design principles. We worked to create a foundation of research which would make the rational design of cell surface display systems in E. coli possible. We used a combinatorial approach to compare the ability of different display proteins to display different classes of functional proteins. This required the development and implementation of an automated assembly method able to construct the large number of devices necessary to draw meaningful conclusions about design within this space.",
+  "social" : "",
+  "id" : "52af8edfef86a80946c987ac"
+}

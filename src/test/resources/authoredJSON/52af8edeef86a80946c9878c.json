@@ -1,0 +1,18 @@
+{
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d63c2e6720c8f68ac11",
+  "binaryName" : "org.clothocad.core.communication.mind.AddPageDoo",
+  "c" : "org.clothocad.core.communication.mind.AddPageDoo",
+  "name" : "AddPageDoo",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.core.communication.mind.PageMode",
+    "name" : "mode",
+    "type" : "object",
+    "reference" : false
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "52af8edeef86a80946c9878c"
+}

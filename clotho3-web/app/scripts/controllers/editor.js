@@ -2,14 +2,14 @@
 
 angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $routeParams, $location, Clotho) {
 
-	//todo - change path, don't reinstantiate controllers etc.
 	//note - could use search param, and set reloadOnSearch to false
-	/*$scope.$watch('id', function (newval, oldval) {
-	 $location.url('/editor/' + $scope.id).replace();
+	/*$scope.$watch('editable', function (newval, oldval) {
+	 $location.url('/editor/' + $scope.editable.id).replace();
 	 });*/
 
 	//init()
-	$scope.id = $routeParams.id;
+	$scope.editable = $routeParams.id;
+	$scope.editModePass = false;
 
 	//data
 
@@ -29,12 +29,13 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		$scope.editableList = editableList;
 	});
 
-	//functions
+	//functionality
 
 	$scope.createNewObject = function () {
 		Clotho.create({schema: $scope.selected}).then(function (id) {
 			console.log(id);
-			$scope.id = id;
+			$scope.editable = id;
+			$scope.editModePass = true;
 		});
 		$scope.selected = undefined;
 	};
@@ -44,6 +45,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	};
 
 	$scope.createNewSchema = function () {
+		$scope.editModePass = true;
 		$scope.editable = {schema: "ClothoSchema", language: "JSONSCHEMA"};
 	};
 });

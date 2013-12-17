@@ -1,0 +1,7 @@
+{
+  "schema" : "BasicPart",
+  "name" : "jtk2055",
+  "shortdescription" : "{GalE 5' UTR}",
+  "sequence" : "gatctattctcgatgaaccactacaggggcttgatccgctgaatcgccagcttatccgccgttttgttgatgtgctgattagcgaaggtgaaacgcaattgttgtttgtttcgcaccacgctgaagatgcgcctgcctgtattacccatcgtcttgagttcgtgccggacggtggactctatcgctatgtgctgacaaaaatatattgagtcggtagtgctgaccttgccggaggcggccttagcaccctctccggccaacggttcgacgcatgcaggcatgaaaccgcgtcttttttcagataaaaagcgcaatcattcataaaccctctgttttataatcacttaatcgcgcataaaaaacggctaaattcttgtgtaaacgattccactaatttattccatgtcacacttttcgcatctttgttatgctatggttatttcataccataagcctaatggagcgaattatgagagttctggttaccggtggtag",
+  "id" : "52af8edfef86a80946c987f2"
+}

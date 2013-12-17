@@ -1,0 +1,7 @@
+{
+  "schema" : "BasicPart",
+  "name" : "jtk2080",
+  "shortdescription" : "{ManB 3' UTR}",
+  "sequence" : "gatcttaccgctgatggaagaaaagacaaaacttatccttgagttactgaacaagtaattcagtaatttcatataaatggtttttaaaaaacggaaaagatgagatatccggtgtggtatagccaaggtaatgctattcagtatctctatgagtgagttaacatctataccacatttaagccgcacacttcgcggtgaccaccccctgacaggagtaaacaatgtcaaagcaacagatcggcgtcgtcggtatggcagtgatggggcgcaacctcgcgctcaacatcgaaagtcgtggttataccgtctctattttcaaccgttcccgtgaaaagcaggaagaagtgattgccgaaaatccaggcaagaaactggttccttactatacggtgaaagagtttgttgaatctctggaaacgcctcgtcgcatcctgttaatggtgaaagcaggtgcaggcacggatgctgctattgattccctcaagccg",
+  "id" : "52af8edfef86a80946c987fc"
+}

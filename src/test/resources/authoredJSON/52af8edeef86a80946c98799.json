@@ -1,0 +1,23 @@
+{
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d64c2e6720c8f68ac1e",
+  "binaryName" : "org.clothocad.model.BasicPart",
+  "c" : "org.clothocad.model.BasicPart",
+  "name" : "BasicPart",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.model.Part$PartType",
+    "name" : "partType",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.NucSeq",
+    "name" : "sequence",
+    "type" : "NucSeq",
+    "reference" : false
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "52af8edeef86a80946c98799"
+}

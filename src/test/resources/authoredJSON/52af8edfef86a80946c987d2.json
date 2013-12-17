@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Michael",
+  "nickName" : "Michael",
+  "surName" : "Dan Yi Lu",
+  "name" : "mdlu",
+  "emailAddress" : "mdlu@berkeley.edu",
+  "icon" : "",
+  "imgUrl" : "",
+  "startDate" : "2008-06-01",
+  "endDate" : "2009-06-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2008-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "52af8edfef86a80946c987d2"
+}
