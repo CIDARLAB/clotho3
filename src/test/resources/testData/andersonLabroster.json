@@ -1546,7 +1546,7 @@
 		"surName": "Modavi",
 		"name": "cyrusmodavi",
 		"emailAddress": "cyrusmodavi@berkeley.edu",
-		"icon": "",
+		"icon": "cyrus_modavi.png",
 		"imgUrl": "",
 		"startDate": "2013-09-01",
 		"endDate": "",
@@ -1558,8 +1558,6 @@
 		"biography": "",
 		"title": "",
 		"description": "",
-
-
 		"social": ""
 	},
 	{
