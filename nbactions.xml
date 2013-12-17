@@ -7,7 +7,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath org.clothocad.ClothoStarter -clientdirectory clotho3-web/app</exec.args>
+                <exec.args>-classpath %classpath org.clothocad.core.ClothoStarter --keystorepath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/security/cacerts --keystorepass changeit</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -18,9 +18,46 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath org.clothocad.ClothoStarter</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath org.clothocad.core.ClothoStarter --keystorepath /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/security/cacerts --keystorepass changeit --propfile doesntexist</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-show help</actionName>
+            <displayName>show help</displayName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath org.clothocad.core.ClothoStarter -help</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-Run Test Environment</actionName>
+            <displayName>Run Test Environment</displayName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment</exec.args>
+                <exec.executable>java</exec.executable>
+                <exec.classpathScope>test</exec.classpathScope>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-Run Authoring Environment</actionName>
+            <displayName>Run Authoring Environment</displayName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment</exec.args>
+                <exec.executable>java</exec.executable>
             </properties>
         </action>
     </actions>
