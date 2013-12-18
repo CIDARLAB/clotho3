@@ -194,11 +194,11 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
 		                //listen for collector_reset and reget & recompile
 		                Clotho.listen('collector_reset', function Editor_onCollectorReset() {
-			                $scope.compileEditor();
-		                }, $scope);
+			                scope.compileEditor();
+		                }, scope);
 
 		                //watch for internal PubSub Changes
-		                Clotho.watch($scope.id, $scope.sharable, $scope);
+		                Clotho.watch(scope.id, scope.sharable, scope);
 
 
 	                  //todo - can probably join these two watchers

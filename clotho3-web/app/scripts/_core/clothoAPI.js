@@ -811,7 +811,6 @@ function generateClothoAPI() {
         //toolkit
         bootstrap: bootstrap,
         watch : watch,
-        watch2 : watch2,
         listen : listen,
         silence : silence,
         trigger: trigger,

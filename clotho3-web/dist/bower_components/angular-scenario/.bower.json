@@ -1,16 +1,16 @@
 {
   "name": "angular-scenario",
-  "version": "1.2.4",
+  "version": "1.2.6-build.2000+sha.73c6671",
   "main": "./angular-scenario.js",
   "dependencies": {
-    "angular": "1.2.4"
+    "angular": "1.2.6-build.2000+sha.73c6671"
   },
   "homepage": "https://github.com/angular/bower-angular-scenario",
-  "_release": "1.2.4",
+  "_release": "1.2.6-build.2000+sha.73c6671",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.4",
-    "commit": "c4c6996679c0e27f45315e84319ac4982f63b875"
+    "tag": "v1.2.6-build.2000+sha.73c6671",
+    "commit": "9dfcc1f1f8930fd748d41c1c4daecdec7abf9118"
   },
   "_source": "git://github.com/angular/bower-angular-scenario.git",
   "_target": "~1.2.0",

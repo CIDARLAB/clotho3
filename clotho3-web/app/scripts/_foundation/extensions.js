@@ -337,6 +337,29 @@ angular.module('clotho.extensions', [])
 
 	//todo - incorporate separately? don't need to know type this way
 	var headEl = document.getElementsByTagName('head')[0];
+
+		/*
+		EXAMPLE USAGE
+
+		// note on angular site (docs app)
+		 // dynamically add base tag as well as css and javascript files.
+		 // we can't add css/js the usual way, because some browsers (FF) eagerly prefetch resources
+		 // before the base attribute is added, causing 404 and terribly slow loading of the docs app.
+
+		 var jquery = true;
+		 addTag('base', {href: baseUrl});
+		 addTag('link', {rel: 'stylesheet', href: 'components/bootstrap/css/' + (debug ? 'bootstrap.css' : 'bootstrap.min.css'), type: 'text/css'});
+		 addTag('link', {rel: 'stylesheet', href: 'components/font-awesome/css/' + (debug ? 'font-awesome.css' : 'font-awesome.min.css'), type: 'text/css'});
+		 addTag('link', {rel: 'stylesheet', href: 'css/prettify.css', type: 'text/css'});
+		 addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
+		 addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
+		 if (jQuery) addTag('script', {src: (debug ? 'components/jquery.js' : 'components/jquery.min.js')});
+		 addTag('script', {src: path('angular.js')}, sync);
+		 addTag('script', {src: path('angular-resource.js') }, sync);
+		 addTag('script', {src: path('angular-route.js') }, sync);
+
+		 */
+
 	function addTag(name, attributes, sync) {
 		var el = document.createElement(name),
 			attrName;
@@ -361,82 +384,100 @@ angular.module('clotho.extensions', [])
 	}
 
 })
-
 /**
  * @name clotho-show
  *
  * @usage <div clotho-show="VIEW_ID"></div>
  */
-.directive('clothoShow', function ($q, $browser, $anchorScroll, $templateCache, $provide, $locationProvider) {
+.directive('clothoShow', function ($q, $timeout, $browser) {
 
-		/*
-		Views are expected to take the following form:
+	/* VIEW OBJECT - what is expected from server	*/
+	var view = {
+		//id of the view, used
+		id: "123456789",
 
-		{
-			id: ""            //view id
-			dependencies: []  //CSS, HTML, JS to load - onload scripts executed by callback, collect objects in scripts
-			module: <boolean> //if true, has angular.module('<viewId>')
-			dictionary: {}    // to extend $rootScope
-		}
+		//views declared as dependencies so can use filenames locally
+		importedViews : {
+			"otherView" : "987654321"
+		},
 
-		 */
+		//ATM no need to pass this to the client... these can be requested lazily
+		files: [],
 
-		return {
-			restrict: 'A',
-			terminal: true,
-			scope: {
-				id: '=clothoShow'
-			},
-			controller: function ($scope, $element, $attrs) {
+		//files to download, URLs passed by server (likely to be namespaced by id)
+		dependencies: [
+			'widgets/123456789/external-module.js',
+			'widgets/123456789/widgetModule.js'
+		],
 
-			},
-			compile: function compile(tElement, tAttrs, transclude) {
-				return {
-					pre: function preLink(scope, element, attrs) {
-
-						//todo - download dependencies, return promise
-
-					},
-					post: function postLink(scope, element, attrs) {
-
-						//this is the view object
-						var view = {};
-
-
-
-						//should overwrite certain services that we don't want the widget to have using provide, and pass in a modified 'modules' var that will overwrite the default 'ng' ones
-						var modules = [];
-
-						modules.push(function() {
-							$provide.value('$templateCache', {
-								get: function(key) {
-									var value = $templateCache.get(key);
-									if (value) {
-										value = value.replace(/#\//mg, '/');
-									}
-									return value;
-								}
-							});
-							$provide.value('$anchorScroll', angular.noop);
-							$provide.value('$browser', $browser);
-							$locationProvider.html5Mode(true);
-							$locationProvider.hashPrefix('!');
-						});
-
-						//if view.module is true, bootstrap expecting module named viewId
-						if (view.module) {
-							modules.push(view.id);
-						}
-
-						//todo - get template
-						element.html();
-
-
-						element.data('$injector', null);
-						angular.bootstrap(element, modules);
-
-					}
-				}
+		//to extend the scope. client will add in id and imported views
+		dictionary: {
+			"dictString" : "My String",
+			"dictObject" : {
+				"myKey" : "myValue"
 			}
+		},
+
+		//information for bootstrap
+		bootstrap: {
+			modules: ['123456789']
 		}
-	});
+
+	};
+
+	return {
+		terminal: true,
+		restrict: 'E',
+		scope: {
+			id: '=clothoShow'
+		},
+		controller: function ($scope, $element, $attrs) {
+
+		},
+		link: function linkFunction (scope, element, attrs) {
+
+			//todo - emulate sending something to the server
+
+			//todo - use partial.html
+
+			//todo - extend scope
+
+
+			//DICTIONARY EXTENSION
+			angular.extend(view.dictionary, view.importedViews);
+			view.dictionary.id = view.id;
+			//testing
+			view.dictionary.widgetBase = 'widgets/' + view.id;
+
+
+			$clotho.extensions.mixin(view.dependencies).then(function() {
+
+				//OVERWRITE DEFAULT SERVICES
+				var modules = [];
+				modules.push(function($provide) {
+					//future - ensure services like $templateCache can be namespaced if necessary
+
+					$provide.value('$anchorScroll', angular.noop);
+					$provide.value('$browser', $browser);
+				});
+
+				//ADD DECLARED MODULE DEPENDENCIES
+				modules = modules.concat(view.bootstrap.modules);
+
+				//testing - ensure widgetModule directive works
+				element.html('<special></special>');
+
+				//BOOTSTRAP
+				element.data('$injector', null);
+				angular.bootstrap(element, modules);
+
+				//CALLBACK
+				//note - better place for this may be a run clause of the module
+				$timeout(function() {
+					console.log('execute callback');
+				});
+
+			});
+		}
+	};
+});

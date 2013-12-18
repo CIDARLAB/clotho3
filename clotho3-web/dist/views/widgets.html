@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li class="active"><a ng-href="#/">Home</a></li>
+            <li><a ng-href="#/widget">Widgets</a></li>
+        </ul>
+        <h3 class="text-muted">widgettest</h3>
+    </div>
+
+    <div class="jumbotron">
+        <p>
+            <a class="btn btn-lg btn-success" ng-click="bootstrapNewApp()">Bootstrap Inside ng-view</a>
+            <a class="btn btn-lg btn-info" ng-click="bootstrapNewAppExternal()">Bootstrap Outside</a>
+        </p>
+    </div>
+
+    <div class="row marketing">
+        <h4>Content</h4>
+        <p>
+            Widget will be inserted below
+        </p>
+    </div>
+
+    <insert-widgets-here></insert-widgets-here>
+</div>
