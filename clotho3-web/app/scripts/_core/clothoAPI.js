@@ -72,7 +72,7 @@ function generateClothoAPI() {
 
         PubSub.once(channel+':'+requestId, function(data){
 	          $timeout.cancel(timeoutPromise);
-            $rootScope.$safeApply(deferred.resolve(data));
+            deferred.resolve(data);
             func(data);
         }, '$clotho');
         fn.emit(channel, data, requestId, options);
@@ -248,14 +248,11 @@ function generateClothoAPI() {
 		var watch = function clothoAPI_watch(uuid, action, reference) {
 			reference = typeof reference != 'undefined' ? reference : null;
 			PubSub.on('update:'+uuid, function(model) {
-				console.log(action, typeof action, angular.isFunction(action));
 				if (angular.isFunction(action)) {
-					console.log('function');
-					$rootScope.$safeApply(function() {action.apply(reference, model)});
+					action.apply(reference, model);
 				}
 				else {
-					console.log('object');
-					$rootScope.$safeApply(function() {angular.extend(action, model)});
+					angular.extend(action, model);
 				}
 			}, reference);
 		};
@@ -275,7 +272,7 @@ function generateClothoAPI() {
         reference = typeof reference != 'undefined' ? reference : null;
 
         PubSub.on(channel, function clothoAPI_listen_callback(data) {
-            $rootScope.$safeApply(callback(data));
+            callback(data);
         }, reference);
     };
 
@@ -634,7 +631,7 @@ function generateClothoAPI() {
             //testing
             //PubSub.once('autocompleteDetail_'+'function_id123', function(data) {
             PubSub.once('update:detail_'+uuid, function(data) {
-                $rootScope.$safeApply(deferred.resolve(data));
+                deferred.resolve(data);
             }, '$clotho');
         }
 
@@ -680,9 +677,7 @@ function generateClothoAPI() {
         var deferred = $q.defer();
 
         PubSub.once('displayRecent', function(data) {
-            console.log('runAPI');
-            console.log(data);
-            $rootScope.$safeApply(deferred.resolve(data));
+            deferred.resolve(data);
         }, 'clothoAPI');
 
         return deferred.promise;

@@ -1,5 +1,5 @@
 angular.module('clotho.core').service('PubSub',
-	function() {
+	function($rootScope) {
 
     /* ABOUT
      // Purpose
@@ -149,7 +149,11 @@ angular.module('clotho.core').service('PubSub',
                 // testing
                 // console.log("PUBSUB\tpublish on " + curTopic + " " + args);
                 listeners[curTopic] && angular.forEach(listeners[curTopic], function(array, idx) {
-                    array[0](args);
+
+	                  $rootScope.$apply(function() {
+		                  array[0](args);
+	                  });
+
                     if (array[1]) {
                         //console.log("splicing inside trigger: " + curTopic);
                         //console.log(array[0]);
