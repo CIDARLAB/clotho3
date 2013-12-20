@@ -141,7 +141,6 @@ angular.module('clotho.core').service('PubSub',
          @param topic {string} channel to publish on, can be multiple space-separated
          @param args {string | object | array}  What the callback for a subscriber would expect.
 
-         note: using function.apply() requires an array be passed, and it's not the fastest. function.call() requires a known number of parameters, and requires a switch depending on the number of parameters.
          note: optimized using invoke(undef) : http://jsperf.com/apply-vs-call-vs-invoke
          */
         var trigger = function(topic, args) {

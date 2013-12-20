@@ -244,13 +244,19 @@ function generateClothoAPI() {
 	 * @description
 	 * Watches for published changes for a given uuid, updating the object using angular.extend
 	 */
+		//todo - option to delete all fields of existing object
 		var watch = function clothoAPI_watch(uuid, action, reference) {
 			reference = typeof reference != 'undefined' ? reference : null;
 			PubSub.on('update:'+uuid, function(model) {
-				if (angular.isFunction(action))
-					$rootScope.$safeApply(action.apply(reference, model));
-				else
-					$rootScope.$safeApply(angular.extend(action, model));
+				console.log(action, typeof action, angular.isFunction(action));
+				if (angular.isFunction(action)) {
+					console.log('function');
+					$rootScope.$safeApply(function() {action.apply(reference, model)});
+				}
+				else {
+					console.log('object');
+					$rootScope.$safeApply(function() {angular.extend(action, model)});
+				}
 			}, reference);
 		};
 
@@ -542,47 +548,6 @@ function generateClothoAPI() {
 
 
     /**
-     * DEPRECATED - use Application.bootstrap in Application.mixin.js
-     * @name Clotho.bootstrap
-     *
-     * @param appInfo {object} Object with necessary information to bootstrap, minimally including:
-     * {
-     *      "moduleName" : <Name of module as defined in Angular>
-     *      "moduleUrl" : "<URL to module js file>",
-     * }
-     *
-     * @returns {array} Selectors in form: [<appUUID>, <jQuery Selector>]
-     * @description
-     * Load a widget and bootstrap it
-     * note - jQuery dependency
-     */
-    var nextWidgetUUID = 0;
-    var bootstrap = function clothoAPI_bootstrap(appInfo) {
-
-        nextWidgetUUID++;
-        var appUUID = nextWidgetUUID;
-
-        var deferred = $q.defer();
-
-        //angular version
-        //note angular returns parent, not appended element
-        //todo - if want this, select appropriate child element
-        //var insertInto = angular.element(document).find("ng-app-clothoWidgets").append(angular.element('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>'));
-
-        //jQuery version
-        var insertInto = $($('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>')).appendTo($clotho.appWidgets);
-
-        var script = appInfo.moduleUrl ? appInfo.moduleUrl + '?_=' + Date.now() : '';
-        $script(script, function () {
-            angular.bootstrap(insertInto, [appInfo.moduleName]);
-            deferred.resolve([appUUID, "[clotho-widget-uuid="+appUUID+"]"]);
-            $rootScope.$safeApply();
-        });
-
-        return deferred.promise;
-    };
-
-    /**
      * @name Clotho.log
      *
      * @param {string} msg
@@ -809,7 +774,6 @@ function generateClothoAPI() {
         gradeQuiz : gradeQuiz,
 
         //toolkit
-        bootstrap: bootstrap,
         watch : watch,
         listen : listen,
         silence : silence,

@@ -425,7 +425,10 @@ angular.module('clotho.extensions', [])
 
 	};
 
-	return {
+
+
+
+		return {
 		terminal: true,
 		restrict: 'E',
 		scope: {
@@ -438,19 +441,27 @@ angular.module('clotho.extensions', [])
 
 			//todo - emulate sending something to the server
 
-			//todo - use partial.html
-
-			//todo - extend scope
-
-
-			//DICTIONARY EXTENSION
-			angular.extend(view.dictionary, view.importedViews);
-			view.dictionary.id = view.id;
-			//testing
-			view.dictionary.widgetBase = 'widgets/' + view.id;
-
 
 			$clotho.extensions.mixin(view.dependencies).then(function() {
+
+				//DICTIONARY EXTENSION
+				angular.extend(view.dictionary, view.importedViews);
+				view.dictionary.id = view.id;
+				//testing
+				view.dictionary.widgetBase = 'widgets/' + view.id;
+
+
+				//hack-y creating custom module so we can set some stuff up
+				var customModuleName = view.dictionary.id + '-clothoAdditions';
+				angular.module(customModuleName, [])
+					.run(function($rootScope) {
+						angular.extend($rootScope, view.dictionary);
+
+						$rootScope.prefixUrl = function (url) {
+							return view.dictionary.widgetBase + '/' + url;
+						}
+					});
+
 
 				//OVERWRITE DEFAULT SERVICES
 				var modules = [];
@@ -462,14 +473,15 @@ angular.module('clotho.extensions', [])
 				});
 
 				//ADD DECLARED MODULE DEPENDENCIES
-				modules = modules.concat(view.bootstrap.modules);
+				modules = modules.concat(view.bootstrap.modules, customModuleName);
 
-				//testing - ensure widgetModule directive works
-				element.html('<special></special>');
+				element.html('<div id="'+view.dictionary.id+'"><div ng-include="prefixUrl(\'index.html\')"></div></div>');
+
 
 				//BOOTSTRAP
 				element.data('$injector', null);
 				angular.bootstrap(element, modules);
+
 
 				//CALLBACK
 				//note - better place for this may be a run clause of the module

@@ -337,6 +337,11 @@ module.exports = function (grunt) {
         */
       }
     },
+	  shell: {
+		  mongo: {
+			  command: 'mongod'
+		  }
+	  },
 		//todo - finish config for git, use in workflow
 	  bump: {
 		  options: {
@@ -380,6 +385,15 @@ module.exports = function (grunt) {
       'watch'
     ]);
   });
+
+	//todo -- need to open localhost:8443, make sure styles work, make sure livereload works
+	grunt.registerTask('dev', [
+		'clean:server',
+		'concurrent:server',
+		'autoprefixer',
+		'connect:livereload',
+		'watch'
+	]);
 
   grunt.registerTask('test', [
     'clean:server',
