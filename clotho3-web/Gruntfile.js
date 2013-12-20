@@ -38,12 +38,13 @@ module.exports = function (grunt) {
         },
         files: [
           '<%= yeoman.app %>/**/*.html',
-          '.tmp/styles/**/*.css',
+          '<%= yeoman.app %>/css/**/*.css',
           '{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
           '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
     },
+	  //todo - update to /css/ not /.tmp/ layout
     autoprefixer: {
       options: ['last 1 version'],
       dist: {
@@ -99,12 +100,13 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
+	          'css',
             '<%= yeoman.dist %>/*',
             '!<%= yeoman.dist %>/.git*'
           ]
         }]
       },
-      server: '.tmp'
+      server: ['.tmp', 'css']
     },
     jshint: {
       options: {
@@ -143,7 +145,7 @@ module.exports = function (grunt) {
     compass: {
       options: {
         sassDir: '<%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
+        cssDir: '<%= yeoman.app %>/css',
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
@@ -339,7 +341,13 @@ module.exports = function (grunt) {
     },
 	  shell: {
 		  mongo: {
-			  command: 'mongod'
+			  command: "exec /Users/maxwellbates/Dropbox/clothoApps/clotho3/clotho3-web/startMongoIfNotRunning.sh",
+			  options: {
+				  async: true
+			  }
+		  },
+		  clothoServer: {
+			  command: ''
 		  }
 	  },
 		//todo - finish config for git, use in workflow
@@ -386,12 +394,13 @@ module.exports = function (grunt) {
     ]);
   });
 
-	//todo -- need to open localhost:8443, make sure styles work, make sure livereload works
 	grunt.registerTask('dev', [
+		'shell:mongo',
+		'shell:clothoServer',
 		'clean:server',
 		'concurrent:server',
 		'autoprefixer',
-		'connect:livereload',
+		'connect:livereload', //todo shouldn't open this, open specified URL, just want livereload going
 		'watch'
 	]);
 

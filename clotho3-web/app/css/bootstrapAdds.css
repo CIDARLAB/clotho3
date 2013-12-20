@@ -1,0 +1,62 @@
+/********************
+ BOOTSTRAP OVERRIDES
+********************/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\000035}}
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000313}}
+.noPointerEvents {
+  pointer-events: none;
+}
+
+/* Bootstrap add-ons */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000319}}
+.alert-muted {
+  color: #555555;
+  background-color: #eeeeee;
+  border-color: #cfcfcf;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000325}}
+div.inline {
+  display: inline;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000328}}
+div.inline-block {
+  display: inline-block;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000331}}
+.top {
+  margin-top: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000334}}
+.bottom {
+  margin-bottom: 0;
+}
+
+/*future - check for this to be fixed later by bootstrap */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000340}}
+.navbar-form .input-prepend, .navbar-form .input-append {
+  margin-bottom: 0;
+}
+
+/*************
+CUSTOM
+*************/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000347}}
+.scrollable {
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px;
+  /*just in case... need to define with inline style*/
+}

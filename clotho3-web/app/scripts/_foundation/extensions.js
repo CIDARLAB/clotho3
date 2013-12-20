@@ -389,10 +389,14 @@ angular.module('clotho.extensions', [])
  *
  * @usage <div clotho-show="VIEW_ID"></div>
  */
-.directive('clothoShow', function ($q, $timeout, $browser) {
+.directive('clothoShow', function ($q, $timeout, $browser, Clotho) {
+
+	function generateWidgetUrl (url, viewId) {
+		return 'widgets/' + viewId + '/' + url;
+	}
 
 	/* VIEW OBJECT - what is expected from server	*/
-	var view = {
+	var exampleReturnedView = {
 		//id of the view, used
 		id: "123456789",
 
@@ -402,7 +406,10 @@ angular.module('clotho.extensions', [])
 		},
 
 		//ATM no need to pass this to the client... these can be requested lazily
-		files: [],
+		files: [
+			'index.html', //it is expected a view to be displayed will have a partial named index.html. This is the template that will be used when added to the DOM
+			'lazyPartial.html'
+		],
 
 		//files to download, URLs passed by server (likely to be namespaced by id)
 		dependencies: [
@@ -432,63 +439,80 @@ angular.module('clotho.extensions', [])
 		terminal: true,
 		restrict: 'E',
 		scope: {
-			id: '=clothoShow'
+			id: '@'
 		},
 		controller: function ($scope, $element, $attrs) {
 
 		},
 		link: function linkFunction (scope, element, attrs) {
 
-			//todo - emulate sending something to the server
+			if (!scope.id) return;
+
+			//config element
+			//todo
+			element.addClass('clothoWidget');
+
+			//retrieve view
+			$q.when(exampleReturnedView)                //testing
+			//Clotho.get(scope.id)
+			.then(function (view) {
+
+				//todo - get importedView dependencies
+
+				$clotho.extensions.mixin(view.dependencies).then(function() {
+
+					//configure dictionary
+					angular.extend(view.dictionary, view.importedViews);
+					view.dictionary.id = view.id;
 
 
-			$clotho.extensions.mixin(view.dependencies).then(function() {
 
-				//DICTIONARY EXTENSION
-				angular.extend(view.dictionary, view.importedViews);
-				view.dictionary.id = view.id;
-				//testing
-				view.dictionary.widgetBase = 'widgets/' + view.id;
+					//hack-y creating custom module so we can set some stuff up without taking the module creation out of the user's control
+					var customModuleName = view.id + '-clothoAdditions';
+					angular.module(customModuleName, [])
+						.run(function($rootScope) {
+							//extend scope with dictionary
+							angular.extend($rootScope, view.dictionary);
+
+							/**
+							 * @name prefixUrl
+							 *
+							 * @description Function which will prefix partial URLs appropriately, e.g. in ng-include
+							 * @param url {string} URL of partial, relative to View root
+							 * @param specifyView {string} ID of view. Pass nothing to default to this view's id
+ 							 */
+							//todo - handle specifying view by name
+							$rootScope.prefixUrl = function (url, specifyView) {
+								return generateWidgetUrl(url, specifyView ? specifyView : view.id)
+							}
+						});
 
 
-				//hack-y creating custom module so we can set some stuff up
-				var customModuleName = view.dictionary.id + '-clothoAdditions';
-				angular.module(customModuleName, [])
-					.run(function($rootScope) {
-						angular.extend($rootScope, view.dictionary);
 
-						$rootScope.prefixUrl = function (url) {
-							return view.dictionary.widgetBase + '/' + url;
-						}
+
+					//Modules : overwrite some default services
+					var modules = [];
+					modules.push(function($provide) {
+						$provide.value('$anchorScroll', angular.noop);
+						$provide.value('$browser', $browser);
 					});
+					//Modules : add declared dependencies. May also list in module definition
+					modules = modules.concat(view.bootstrap.modules, customModuleName);
+
+					element.html('<div ng-include="prefixUrl(\'index.html\')"></div>');
 
 
-				//OVERWRITE DEFAULT SERVICES
-				var modules = [];
-				modules.push(function($provide) {
-					//future - ensure services like $templateCache can be namespaced if necessary
-
-					$provide.value('$anchorScroll', angular.noop);
-					$provide.value('$browser', $browser);
-				});
-
-				//ADD DECLARED MODULE DEPENDENCIES
-				modules = modules.concat(view.bootstrap.modules, customModuleName);
-
-				element.html('<div id="'+view.dictionary.id+'"><div ng-include="prefixUrl(\'index.html\')"></div></div>');
+					//BOOTSTRAP
+					element.data('$injector', null);
+					angular.bootstrap(element, modules);
 
 
-				//BOOTSTRAP
-				element.data('$injector', null);
-				angular.bootstrap(element, modules);
-
-
-				//CALLBACK
-				//note - better place for this may be a run clause of the module
-				$timeout(function() {
-					console.log('execute callback');
-				});
-
+					//CALLBACK
+					//note - better place for this may be a run clause of the module
+					$timeout(function() {
+						console.log('execute callback');
+					});
+				})
 			});
 		}
 	};

@@ -1,9 +1,7 @@
 angular.module('123456789', ['clotho.core', 'externalModule']);
 
 angular.module('123456789').run(function(Clotho) {
-	console.log('logging clotho shows dependencies can be shared from the main app');
-	console.log(Clotho);
-	console.log('this module also depends on externalModule, which should log something in the console');
+	console.log('this module (123456789) also depends on externalModule, which should log something in the console');
 });
 
 angular.module('123456789').directive('special', function () {
