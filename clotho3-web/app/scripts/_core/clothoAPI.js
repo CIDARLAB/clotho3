@@ -240,19 +240,23 @@ function generateClothoAPI() {
 	 * @param {string} uuid UUID of Sharable to watch for changes
 	 * @param {object|function} action if Object, object to be updated (using angular.extend) using passed model for given UUID. if Function, function to run on change, passed the new value, with this equal to the reference passed
 	 * @param {string} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
+	 * @param {boolean} overwriteExistingObj If truthy, will extend an empty object, removing existing fields. Only applies if extending an object
 	 *
 	 * @description
 	 * Watches for published changes for a given uuid, updating the object using angular.extend
 	 */
-		//todo - option to delete all fields of existing object
-		var watch = function clothoAPI_watch(uuid, action, reference) {
+		var watch = function clothoAPI_watch(uuid, action, reference, overwriteExistingObj) {
 			reference = typeof reference != 'undefined' ? reference : null;
 			PubSub.on('update:'+uuid, function(model) {
 				if (angular.isFunction(action)) {
 					action.apply(reference, model);
 				}
 				else {
-					angular.extend(action, model);
+					if (!!overwriteExistingObj) {
+						angular.extend({}, model);
+					} else {
+						angular.extend(action, model);
+					}
 				}
 			}, reference);
 		};
