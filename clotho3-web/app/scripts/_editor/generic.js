@@ -12,20 +12,23 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
     return {
         restrict: 'A',
-        require: '^form',
+        require: ['ngModel', '^form'],
         scope: {
-          sharable: '=?',
-	        editMode: '='
+          inputSharable: '=ngModel',
+	        editMode: '=?'
         },
         controller: function($scope, $element, $attrs) {
             /******
             GENERAL
             ******/
 
-            console.log($scope.sharable); //testing
-
             //add novalidate to the form to bypass browser validation
             $attrs.$set('novalidate', "novalidate");
+
+	          //if no name is set, set so can use for form validation
+	          if (!angular.isString($attrs.name)) {
+		          $attrs.$set('name', 'sharableEditor')
+	          }
 
 	          //determine whether to start in edit mode
 	          $scope.editMode = !!$scope.editMode;
@@ -43,40 +46,46 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
             //process input sharable to see if object, or id string
 	          $scope.processInputSharable = function(sharable) {
-		          $scope.sharable = sharable || $scope.sharable;
 
-		          if (angular.isObject($scope.sharable)) {
+		          $scope.sharable = {};
+		          console.log(sharable);
+
+		          if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
 			          console.log('sharable object passed');
-			          $scope.id = $scope.sharable.id;
+			          $scope.id = sharable.id;
+			          $scope.sharable = sharable;
 		          }
-		          else if (angular.isString($scope.sharable)) {
+		          else if (angular.isString(sharable)) {
 			          //if its a string, call clotho.get()
-			          $scope.id = $scope.sharable;
+			          console.log('passed a string, assuming a valid ID: ' + sharable);
+			          $scope.id = sharable;
 		          } else {
-			          console.log('sharable must be an object or a string, you passed: ', $scope.sharable);
+			          console.log('sharable must be an object or a string, you passed: ', sharable);
 			          //todo - better exit if nothing present
+			          $scope.id = '';
+			          $scope.sharable = {};
 		          }
+
+
+		          //if its a string, it's an ID so get it, otherwise just return a wrapper promise for the object
+		          var getObj = (angular.isEmpty($scope.sharable) && $scope.id != '') ? Clotho.get($scope.id) : $q.when($scope.sharable);
+
+		          getObj.then(function(result) {
+
+			          $scope.sharable = result;
+
+			          $scope.type = $scope.determineType(result);
+			          $scope.getPartialAndCompile($scope.type, result);
+		          });
+
 	          };
 
-	          $scope.processInputSharable();
+	        //init with input sharable
+	        $scope.processInputSharable($scope.inputSharable);
 
             /*********
             COMPILATION
             **********/
-
-
-            //wrapper function
-            $scope.compileEditor = function() {
-                var getObj = ($scope.id == 'id') ? $q.when() : Clotho.get($scope.id);
-
-                getObj.then(function(result) {
-                    $scope.sharable = result;
-
-                    $scope.type = $scope.determineType(result);
-                    $scope.getPartialAndCompile($scope.type, result);
-                });
-            };
-
 
 	          //todo - needs to be generic to handle all schemas so don't need a switch for each schema name
 	          //(or rename all templates and remove this method)
@@ -150,11 +159,8 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
             return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
 
-                    //note - separation at this point into pre is not hugely important as nothing is linked to form controller
-                    scope.compileEditor();
-
                 },
-                post: function postLink(scope, iElement, iAttrs, controller) {
+                post: function postLink(scope, iElement, iAttrs, ngModelCtrl) {
 
                     /* config */
 
@@ -194,26 +200,17 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
 		                //listen for collector_reset and reget & recompile
 		                Clotho.listen('collector_reset', function Editor_onCollectorReset() {
-			                scope.compileEditor();
+			                scope.processInputSharable();
 		                }, scope);
 
 		                //watch for internal PubSub Changes
 		                Clotho.watch(scope.id, scope.sharable, scope);
 
 
-	                  //todo - can probably join these two watchers
-	                  //watch scope id
-                    scope.$watch('id', function(newval, oldval) {
-                        if (!!newval && newval != oldval) {
-                            scope.compileEditor();
-                        }
-                    });
 
-                    scope.$watch('sharable', function(newval, oldval) {
+                    scope.$watch('inputSharable', function(newval, oldval) {
                         scope.processInputSharable(newval);
                     });
-
-
 
                 }
             }

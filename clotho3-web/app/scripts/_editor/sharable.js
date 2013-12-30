@@ -7,10 +7,9 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 			$scope.schema_custom = result.custom;
 
 			//todo - this is kinda a hack... should get element more directly
-			var insert = angular.element(document).find('insert-fields').html(generateDynamicForm($scope));
+			var insert = angular.element(document).find('insert-fields').html(generateDynamicForm());
 			$compile(insert.contents())($scope);
 		});
-
 	});
 
 
@@ -21,7 +20,7 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 	function generateDynamicForm () {
 		var fulltext = "";
 
-		//todo - need BSON types from server
+		//todo - need BSON types from server (GH #99)
 		/*
 		 string -> test vs. textarea
 		 when use select?
@@ -40,7 +39,7 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 			if (type == '?') field.type == 'text';
 			var required = field.required ? "required='required'" : "";
 
-			//todo - convert this to a directive
+			//todo - convert this to a directive (GH #105)
 			var htmlText_pre = '<div class="control-group">' +
 				'<label class="control-label" for="' + field.name + '">' + field.name + '</label>' +
 				'<div class="controls">';
@@ -50,7 +49,7 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 
 			switch (type) {
 				case "textarea": {
-					inputText = '<textarea class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-model="editable.'+field.name+'" ng-disabled="!editMode"></textarea>';
+					inputText = '<textarea class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-model="sharable.'+field.name+'" ng-disabled="!editMode"></textarea>';
 					break;
 				}
 				case "select": {
@@ -60,14 +59,14 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 						optionsText = optionsText + '<option value="'+value+'">'+ value + '</option>';
 					});
 
-					inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="editable.'+field.name+'">' + optionsText + '</select>';
+					inputText = '<select id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'">' + optionsText + '</select>';
 					break;
 				}
 				case "sharable": {
 				}
 				//todo - add filedrop support, and radio. checkbox works.
 				default: {
-					inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="editable.'+field.name+'" >';
+					inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'" >';
 					break;
 				}
 

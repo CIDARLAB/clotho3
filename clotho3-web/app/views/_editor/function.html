@@ -5,45 +5,45 @@
         <div class="control-group">
             <label class="control-label" for="functionName">Name</label>
             <div class="controls">
-                <input type="text" id="functionName" ng-model="editable.name" ng-disabled="!editMode">
+                <input type="text" id="functionName" ng-model="sharable.name" ng-disabled="!editMode">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="functionId">ID</label>
             <div class="controls">
-                <input type="text" id="functionId" ng-model="editable.id" disabled>
+                <input type="text" id="functionId" ng-model="sharable.id" disabled>
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="functionLang">Language</label>
             <div class="controls">
-                <select id="functionLang" ng-model="editable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
+                <select id="functionLang" ng-model="sharable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="functionDesc">Description</label>
             <div class="controls">
-                <textarea type="text" id="functionDesc" class="input-large" ng-model="editable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
+                <textarea type="text" id="functionDesc" class="input-large" ng-model="sharable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="functionPre">Precondition</label>
             <div class="controls">
-                <textarea type="text" id="functionPre" class="input-large" ng-model="editable.precondition" style="width: 100%; height: 6em" ng-disabled="!editMode"></textarea>
+                <textarea type="text" id="functionPre" class="input-large" ng-model="sharable.precondition" style="width: 100%; height: 6em" ng-disabled="!editMode"></textarea>
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label">Dependencies</label>
             <div class="controls">
-                <div ng-repeat="param in editable.dependencies" class="pull-left">
+                <div ng-repeat="param in sharable.dependencies" class="pull-left">
                     <div class="input-append">
                         <input type="text" class="input-xlarge" ng-model="param" ng-disabled="!editMode">
-                        <button class="btn" ng-click="editable.dependencies.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                        <button class="btn" ng-click="sharable.dependencies.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     </div>
 
                 </div>
@@ -54,7 +54,7 @@
         <div class="control-group">
             <label class="control-label">Arguments</label>
             <div class="controls">
-                <div ng-repeat="param in editable.args" class="pull-left">
+                <div ng-repeat="param in sharable.args" class="pull-left">
                     <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.category for c in paramTypes">
                     </select>
                     <!-- see http://jsfiddle.net/M32pj/1/ for another select directive-->
@@ -63,7 +63,7 @@
 
                     <div class="input-append">
                         <input type="text" ng-model="param.name" ng-disabled="!editMode">
-                        <button class="btn" ng-click="editable.args.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                        <button class="btn" ng-click="sharable.args.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     </div>
 
                 </div>
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <textarea ui-codemirror="codemirrorEditorOptions" type="text" id="functionCode" ng-model="editable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
+        <textarea ui-codemirror="codemirrorEditorOptions" type="text" id="functionCode" ng-model="sharable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
 
         <div clotho-file-upload style="padding: 10px 0; border: 1px solid #cccccc;"></div>
 
@@ -79,17 +79,17 @@
         <h3 class="text-center">
             Tests
             <div class="btn-group">
-                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="form.$invalid || editable.tests.length < 1">Run All</button>
+                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="form.$invalid || sharable.tests.length < 1">Run All</button>
             </div>
             <button class="btn pull-right" type="button" ng-click="addTest()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
         </h3>
 
-        <div ng-repeat="test in editable.tests">
+        <div ng-repeat="test in sharable.tests">
             <div class="control-group">
                 <label class="control-label" for="functionTestArg{{ $index }}">Test Arguments</label>
                 <div class="controls">
-                    <button class="btn pull-right" ng-click="editable.tests.splice($index, 1)" ng-disabled="!editMode">&times;</button>
-                    <div ng-repeat="param in editable.args">
+                    <button class="btn pull-right" ng-click="sharable.tests.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                    <div ng-repeat="param in sharable.args">
                         <div ng-if="simpleTypes[param.type]">
                             <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" ng-disabled="!editMode">
                         </div>

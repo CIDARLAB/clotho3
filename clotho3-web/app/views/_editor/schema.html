@@ -7,14 +7,14 @@
         <div class="control-group">
             <label class="control-label" for="schemaName">Name</label>
             <div class="controls">
-                <input type="text" id="schemaName" ng-model="editable.name" ng-disabled="!editMode" required restrict-input="findSpacesRegExp">
+                <input type="text" id="schemaName" ng-model="sharable.name" ng-disabled="!editMode" required restrict-input="findSpacesRegExp">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="superClass">Parent</label>
             <div class="controls">
-                <select id="superClass" ng-model="editable.superClass" ng-options="schema.id as schema.name for schema in schemas" ng-disabled="!editMode">
+                <select id="superClass" ng-model="sharable.superClass" ng-options="schema.id as schema.name for schema in schemas" ng-disabled="!editMode">
                     <option value="">-</option>
                 </select>
             </div>
@@ -23,7 +23,7 @@
         <div class="control-group">
             <label class="control-label" for="schemaDesc">Description</label>
             <div class="controls">
-                <textarea type="text" id="schemaDesc" class="input-large" ng-model="editable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
+                <textarea type="text" id="schemaDesc" class="input-large" ng-model="sharable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
             </div>
         </div>
 
@@ -35,13 +35,13 @@
             <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!editMode || !newMethodObj"><i class="icon-plus"></i></button>
         </div>
 
-        {{ editable.methods | json }}
+        {{ sharable.methods | json }}
 
         <h3>
             Fields
         </h3>
 
-        <div ng-if="editable.superClass">
+        <div ng-if="sharable.superClass">
             <h4>Inherited Fields</h4>
 
             <div ng-repeat="field in superClassObj.fields">
@@ -56,7 +56,7 @@
 
         </div>
 
-        <div ng-repeat="field in editable.fields">
+        <div ng-repeat="field in sharable.fields">
             <div class="row-fluid">
                 <select ng-model="field.type" class="span3" ng-disabled="!editMode" ng-options="t.name as t.name group by t.category for t in paramTypes" ng-change="parseField(field)" required>
                     <option value="" disabled>Type</option>
@@ -107,7 +107,7 @@
             <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
         </div>
 
-        {{ editable | json }}
+        {{ sharable | json }}
 
 
     </div>

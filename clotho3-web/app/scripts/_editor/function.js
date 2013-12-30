@@ -44,36 +44,36 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 
 	$scope.addArg = function() {
-		if (angular.isEmpty($scope.editable.args)) {$scope.editable.args = [];}
-		$scope.editable.args.push({"type" : "", "name" : ""});
+		if (angular.isEmpty($scope.sharable.args)) {$scope.sharable.args = [];}
+		$scope.sharable.args.push({"type" : "", "name" : ""});
 	};
 
 	$scope.addDep = function() {
-		if (angular.isEmpty($scope.editable.dependencies)) {$scope.editable.dependencies = [];}
-		$scope.editable.dependencies.push("");
+		if (angular.isEmpty($scope.sharable.dependencies)) {$scope.sharable.dependencies = [];}
+		$scope.sharable.dependencies.push("");
 	};
 
 	$scope.addTest = function() {
-		if (angular.isEmpty($scope.editable.tests)) {$scope.editable.tests = [];}
-		$scope.editable.tests.push({"args" : [], "output" : {"value" : "", "type" : ""}});
+		if (angular.isEmpty($scope.sharable.tests)) {$scope.sharable.tests = [];}
+		$scope.sharable.tests.push({"args" : [], "output" : {"value" : "", "type" : ""}});
 	};
 
 	$scope.testResults = {};
 	$scope.singleTest = function(index) {
 
 		var data = {};
-		data.id = $scope.editable.id;
-		if (angular.isEmpty($scope.editable.tests)) {
+		data.id = $scope.sharable.id;
+		if (angular.isEmpty($scope.sharable.tests)) {
 			data.args = [];
 		}
 		else {
-			data.args = $scope.editable.tests[index].args;
+			data.args = $scope.sharable.tests[index].args;
 		}
 
 		Clotho.run(data.id, data.args).then(function (result){
-			console.log(result, $scope.editable.tests[index].output.value, result == $scope.editable.tests[index].output.value);
-			$scope.testResults[index] = (result == $scope.editable.tests[index].output.value);
-			/* if (result == angular.fromJson($scope.editable.testResult)) {
+			console.log(result, $scope.sharable.tests[index].output.value, result == $scope.sharable.tests[index].output.value);
+			$scope.testResults[index] = (result == $scope.sharable.tests[index].output.value);
+			/* if (result == angular.fromJson($scope.sharable.testResult)) {
 			 ClientAPI.say({text:"test success!"});
 			 } else {
 			 ClientAPI.say({text:"test failed!"});
@@ -82,7 +82,7 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 	};
 
 	$scope.runAllTests = function() {
-		for (var i = 0; i < $scope.editable.tests.length; i++) {
+		for (var i = 0; i < $scope.sharable.tests.length; i++) {
 			$scope.singleTest(i);
 		}
 	};
@@ -109,9 +109,9 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		lineNumbers: true,
 		onLoad : function(_cm){
 			// HACK to have the codemirror instance in the scope...
-			$scope.$watch('editable.language', function(newlang) {
+			$scope.$watch('sharable.language', function(newlang) {
 				// HACK to catch java case
-				var mode = $scope.editable.language.toLowerCase();
+				var mode = $scope.sharable.language.toLowerCase();
 				mode = (mode == 'java') ? 'text/x-java' : mode;
 
 				_cm.setOption("mode", mode);

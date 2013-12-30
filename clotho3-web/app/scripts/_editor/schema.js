@@ -39,7 +39,7 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 
 
 
-	$scope.$watch('editable.superClass', function() {
+	$scope.$watch('sharable.superClass', function() {
 		$scope.getSuperClass();
 	});
 
@@ -60,8 +60,8 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 	};
 
 	$scope.addMethod = function(method) {
-		if (angular.isEmpty($scope.editable.methods)) {$scope.editable.methods = [];}
-		$scope.editable.methods.push(method);
+		if (angular.isEmpty($scope.sharable.methods)) {$scope.sharable.methods = [];}
+		$scope.sharable.methods.push(method);
 	};
 
 	$scope.addNewMethod = function() {
@@ -83,8 +83,8 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 	};
 
 	$scope.addField = function() {
-		if (angular.isEmpty($scope.editable.fields)) {$scope.editable.fields = [];}
-		$scope.editable.fields.push($scope.newField());
+		if (angular.isEmpty($scope.sharable.fields)) {$scope.sharable.fields = [];}
+		$scope.sharable.fields.push($scope.newField());
 	};
 
 	//note - constraints are processed in saveSchema (link function)
@@ -96,14 +96,14 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 	};
 
 	$scope.addConstraint = function(index) {
-		if (angular.isEmpty($scope.editable.fields[index].constraints))
-			$scope.editable.fields[index].constraints = [];
-		$scope.editable.fields[index].constraints.push($scope.newConstraint())
+		if (angular.isEmpty($scope.sharable.fields[index].constraints))
+			$scope.sharable.fields[index].constraints = [];
+		$scope.sharable.fields[index].constraints.push($scope.newConstraint())
 	};
 
 	$scope.saveSchema = function () {
 		//process constraints to object
-		angular.forEach($scope.editable.fields, function(field) {
+		angular.forEach($scope.sharable.fields, function(field) {
 			console.log(field);
 			if (field.constraints) {
 				var constraintsArray = field.constraints;
@@ -116,7 +116,7 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 			}
 		});
 
-		console.log($scope.editable);
+		console.log($scope.sharable);
 
 		//inherited
 		$scope.save();
