@@ -389,7 +389,7 @@ angular.module('clotho.extensions', [])
  *
  * @usage <div clotho-show="VIEW_ID"></div>
  */
-.directive('clothoShow', function ($q, $timeout, $browser, Clotho) {
+.directive('clothoShow', function ($q, $timeout, $browser, $rootScope, Clotho, PubSub) {
 
 	function generateWidgetUrl (url, viewId) {
 		return 'widgets/' + viewId + '/' + url;
@@ -439,7 +439,8 @@ angular.module('clotho.extensions', [])
 		terminal: true,
 		restrict: 'E',
 		scope: {
-			id: '@'
+			id: '@',
+			callback: '=?'
 		},
 		controller: function ($scope, $element, $attrs) {
 
@@ -449,12 +450,11 @@ angular.module('clotho.extensions', [])
 			if (!scope.id) return;
 
 			//config element
-			//todo
 			element.addClass('clothoWidget');
 
 			//retrieve view
 			$q.when(exampleReturnedView)                //testing
-			//Clotho.get(scope.id)
+			//Clotho.get(scope.id)                      //when server handles
 			.then(function (view) {
 
 				//todo - get importedView dependencies
@@ -508,9 +508,10 @@ angular.module('clotho.extensions', [])
 
 
 					//CALLBACK
-					//note - better place for this may be a run clause of the module
+					//can also use run clause of module, but not passed the element
 					$timeout(function() {
-						console.log('execute callback');
+						angular.isFunction(scope.callback) && scope.callback(element);
+						PubSub.trigger('clothoShow:' + scope.id, [scope.id, element, view])
 					});
 				})
 			});

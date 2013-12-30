@@ -1,7 +1,15 @@
 angular.module('123456789', ['clotho.core', 'externalModule']);
 
-angular.module('123456789').run(function(Clotho) {
-	console.log('this module (123456789) also depends on externalModule, which should log something in the console');
+angular.module('123456789')
+.config(function() {
+	console.log('widget module config block');
+})
+.run(function(Clotho, $timeout) {
+	console.log('widget module run block');
+
+	$timeout(function() {
+		console.log('widget module timeout fn - effective callback w/o args')
+	});
 });
 
 angular.module('123456789').directive('special', function () {

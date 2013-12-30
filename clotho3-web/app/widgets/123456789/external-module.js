@@ -1,4 +1,7 @@
 angular.module('externalModule', [])
+.config(function() {
+	console.log('external module config block');
+})
 .run(function() {
 	console.log('external module run block');
 })
