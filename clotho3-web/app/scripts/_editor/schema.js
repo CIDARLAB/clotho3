@@ -87,7 +87,7 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		$scope.sharable.fields.push($scope.newField());
 	};
 
-	//note - constraints are processed in saveSchema (link function)
+	//constraints are processed in saveSchema (link function)
 	$scope.newConstraint = function() {
 		return {
 			type: "",
@@ -101,7 +101,8 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		$scope.sharable.fields[index].constraints.push($scope.newConstraint())
 	};
 
-	$scope.saveSchema = function () {
+	//overwrite the save function for schemas specifically
+	$scope.save = function () {
 		//process constraints to object
 		angular.forEach($scope.sharable.fields, function(field) {
 			console.log(field);
@@ -119,7 +120,8 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		console.log($scope.sharable);
 
 		//inherited
-		$scope.save();
+		//verify
+		$scope.$parent.save();
 	};
 
 });

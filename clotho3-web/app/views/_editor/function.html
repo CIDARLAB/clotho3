@@ -2,31 +2,12 @@
     <legend>Function Editor</legend>
     <div class="ng-cloak">
 
-        <div class="control-group">
-            <label class="control-label" for="functionName">Name</label>
-            <div class="controls">
-                <input type="text" id="functionName" ng-model="sharable.name" ng-disabled="!editMode">
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="functionId">ID</label>
-            <div class="controls">
-                <input type="text" id="functionId" ng-model="sharable.id" disabled>
-            </div>
-        </div>
+        <div ng-include="_objBaseFields"></div>
 
         <div class="control-group">
             <label class="control-label" for="functionLang">Language</label>
             <div class="controls">
                 <select id="functionLang" ng-model="sharable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="functionDesc">Description</label>
-            <div class="controls">
-                <textarea type="text" id="functionDesc" class="input-large" ng-model="sharable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
             </div>
         </div>
 
@@ -112,16 +93,6 @@
         </div>
 
 
-        <div class="form-actions" ng-hide="editMode">
-            <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
-            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
-        </div>
-        <div class="form-actions" ng-show="editMode">
-            <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
-            <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
-            <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
-            <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
-            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
-        </div>
+        <div ng-include="_formActions"></div>
     </div>
 </div>

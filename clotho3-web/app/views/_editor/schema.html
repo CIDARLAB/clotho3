@@ -35,8 +35,6 @@
             <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!editMode || !newMethodObj"><i class="icon-plus"></i></button>
         </div>
 
-        {{ sharable.methods | json }}
-
         <h3>
             Fields
         </h3>
@@ -95,17 +93,8 @@
         <button class="btn" type="button" ng-click="addField()" ng-disabled="!editMode"><i class="icon-plus"></i> New Field</button>
 
 
-        <div class="form-actions" ng-hide="editMode">
-            <button class="btn" type="button" ng-click="edit()"><i class="icon-edit"></i> Edit</button>
-            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
-        </div>
-        <div class="form-actions" ng-show="editMode">
-            <button type="submit" class="btn btn-primary" ng-click="saveSchema()" ng-disabled="form.$invalid"><i class="icon-white icon-ok-sign"></i> Save</button>
-            <button type="button" class="btn btn-warning" ng-click="discard()"><i class="icon-white icon-backward"></i> Discard</button>
-            <button type="button" class="btn btn-warning" ng-click="reset()"><i class="icon-white icon-refresh"></i> Reset</button>
-            <button type="button" class="btn btn-danger" ng-click="destroy()"><i class="icon-white icon-trash"></i> Destroy</button>
-            <button type="button" class="btn btn-inverse" ng-click="logScope()">Log</button>
-        </div>
+        <div ng-include="_formActions"></div>
+
 
         {{ sharable | json }}
 

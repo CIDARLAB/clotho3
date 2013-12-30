@@ -41,6 +41,9 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
             $scope.schema = {}; //todo - remove
             $scope.formDirty = false; // todo - remove
 
+	          //scoped variables for including templates
+	          $scope._objBaseFields = 'views/_editor/_baseFields.html';
+	          $scope._formActions = 'views/_editor/_formActions.html';
 
             /** model **/
 
