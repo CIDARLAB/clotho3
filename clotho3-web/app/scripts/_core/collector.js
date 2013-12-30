@@ -10,8 +10,8 @@ angular.module('clotho.core').service('Collector',
     function generateCollector() {
 
         function broadcastModelUpdate(uuid, obj) {
-            PubSub.trigger("update", uuid);
-            PubSub.trigger("update:" + uuid, angular.copy(obj));
+            PubSub.trigger("update", [uuid]);
+            PubSub.trigger("update:" + uuid, [angular.copy(obj)]);
         }
 
         /************
@@ -202,7 +202,7 @@ angular.module('clotho.core').service('Collector',
         var clearStorage = function() {
             angularLS.clear();
             collector = {};
-            PubSub.trigger("collector_reset", null);
+            PubSub.trigger("collector_reset");
         };
 
 

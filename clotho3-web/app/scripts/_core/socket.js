@@ -140,7 +140,7 @@ angular.module('clotho.core').service('Socket',
             //fixme - temporary hack - will move to own service soon
             else {
                 //console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
-                PubSub.trigger(channel+':'+requestId, data);
+                PubSub.trigger(channel+':'+requestId, [data]);
             }
         };
 

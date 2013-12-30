@@ -288,7 +288,7 @@ function generateClothoAPI() {
      * Publish an event directly to PubSub, bypassing the socket and server.
      */
     var trigger = function clothoAPI_trigger(channel, data) {
-        PubSub.trigger(channel, data);
+        PubSub.trigger(channel, [data]);
     };
 
 

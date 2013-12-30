@@ -139,19 +139,26 @@ angular.module('clotho.core').service('PubSub',
          @description
          Publish some data on a topic
          @param topic {string} channel to publish on, can be multiple space-separated
-         @param args {string | object | array}  What the callback for a subscriber would expect.
+         @param args {array}  Array of arguments to apply
 
          note: optimized using invoke(undef) : http://jsperf.com/apply-vs-call-vs-invoke
          */
         var trigger = function(topic, args) {
-            var topics = topic.split(eventSplitter);
+	          var topics = topic.split(eventSplitter);
+		        //ensure arguments are array
+	          if (angular.isUndefined(args) || angular.isEmpty(args)) {
+		          args = null;
+	          }
+	          else if (!angular.isArray(args)) {
+		          args = [args];
+		        }
             angular.forEach(topics, function(curTopic) {
                 // testing
                 // console.log("PUBSUB\tpublish on " + curTopic + " " + args);
                 listeners[curTopic] && angular.forEach(listeners[curTopic], function(array, idx) {
 
 	                  $rootScope.$apply(function() {
-		                  array[0](args);
+		                  array[0].apply(null, args);
 	                  });
 
                     if (array[1]) {

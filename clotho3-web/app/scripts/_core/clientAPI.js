@@ -105,7 +105,7 @@ angular.module('clotho.core').service('ClientAPI',
      *
      */
     var broadcast = function clientAPIBroadcast(obj) {
-       PubSub.trigger(obj.channel, obj.data);
+       PubSub.trigger(obj.channel, [obj.data]);
     };
 
     /**
@@ -229,7 +229,7 @@ angular.module('clotho.core').service('ClientAPI',
         data.timestamp = (!!data.timestamp) ? data.timestamp : Date.now();
         data.from = (!!data.from) ? data.from : 'server';
 
-        PubSub.trigger("activityLog", data);
+        PubSub.trigger("activityLog", [data]);
     };
 
     /**
@@ -243,7 +243,7 @@ angular.module('clotho.core').service('ClientAPI',
      */
     var alert = function clientAPIAlert(msg) {
 
-        PubSub.trigger('serverAlert', {});
+        PubSub.trigger('serverAlert');
 
 		    if (interfaceModulePresent) {
 			    $rootScope.$safeApply($dialog.serverAlert(msg)
@@ -281,7 +281,7 @@ angular.module('clotho.core').service('ClientAPI',
      * Publish list of versions for a given resource on "revisions:<uuid>"
      */
     var revisions = function clientAPIRevisions(uuid, data) {
-        PubSub.trigger('revisions:'+uuid, data);
+        PubSub.trigger('revisions:'+uuid, [data]);
     };
 
     /**
@@ -311,7 +311,7 @@ angular.module('clotho.core').service('ClientAPI',
         console.log('Hit autocomplete');
         console.log(JSON.stringify(list));
 
-        PubSub.trigger('autocomplete', list);
+        PubSub.trigger('autocomplete', [list]);
     };
 
     var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
@@ -322,7 +322,7 @@ angular.module('clotho.core').service('ClientAPI',
         var id = obj.command_object.function_id;
 
         Collector.storeModel("detail_" + id, obj);
-        PubSub.trigger('autocompleteDetail_'+id, obj);
+        PubSub.trigger('autocompleteDetail_'+id, [obj]);
     };
 
 
