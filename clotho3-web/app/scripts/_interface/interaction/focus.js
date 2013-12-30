@@ -35,12 +35,14 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 			deferred = $q.defer();
 
 
+		//given parent obj and desc in form 'desc.desc.child', set child with val
 		function setDescendentProperty(obj, desc, val) {
 			var arr = desc.split(".");
 			while(arr.length > 1 && (obj = obj[arr.shift()]));
 			obj[arr.shift()] = val;
 		}
 
+		//
 		function typeIt() {
 			timeOut = $timeout(function() {
 				charInd++;
@@ -71,6 +73,8 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 
 	var typeOutSearch = function(string, submit) {
 
+		string = angular.isArray(string) ? string : [string];
+
 		return $q.when(searchBarInput.focus())
 			.then(function() {
 				return highlightElement(searchBarInput)
@@ -79,19 +83,27 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 
 				//todo - handle array of strings to input
 
-				return typeOut(searchBarInput, string, 'display.query')
-					.then(function() {
-						return unhighlight;
+				var promise = $q.when(),
+					current;
+
+				while (current = string.shift()) {
+					promise.then(function() {
+						return typeOut(searchBarInput, current, 'display.query');
 					});
+				}
+
+				return promise.then(function() {
+					return unhighlight;
+			});
 			})
 			.then(function(unhighlight) {
 				return $timeout(function() {unhighlight()}, 600).then(function() {
 					if (submit) {
 						//CommandBar.display.log = true;
 						//return CommandBar.submit(string);
-						$q.when(searchBarInput.parents('form').submit())
+						return $q.when(searchBarInput.parents('form').submit());
 					} else {
-						return $q.when(searchBarInput.focus())
+						return $q.when(searchBarInput.focus());
 					}
 				});
 			});
