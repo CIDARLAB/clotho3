@@ -1,9 +1,7 @@
 // Generated on 2013-11-18 using generator-angular 0.6.0-rc.1
 'use strict';
 
-var bower = require('bower');
 var shell = require('shelljs');
-var _ = require('lodash');
 
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
@@ -24,6 +22,17 @@ module.exports = function (grunt) {
         files: ['test/spec/**/*.coffee'],
         tasks: ['coffee:test']
       },
+	    js: {
+		    files: ['<%= yeoman.app %>/scripts/**/*.js'],
+		    //tasks: ['newer:jshint:all'],
+		    options: {
+			    livereload: true
+		    }
+	    },
+	    jsTest: {
+		    files: ['test/spec/**/*.js'],
+		    //tasks: ['newer:jshint:test', 'karma']
+	    },
       compass: {
         files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
@@ -32,6 +41,9 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/**/*.css'],
         tasks: ['copy:styles', 'autoprefixer']
       },
+	    gruntfile: {
+		    files: ['Gruntfile.js']
+	    },
       livereload: {
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -56,12 +68,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-	  //todo - use in workflow
-	  "merge-conflict": {
-		  files: [
-			  '**/*'
-		  ]
-	  },
     connect: {
       options: {
         port: 9000,
@@ -116,7 +122,13 @@ module.exports = function (grunt) {
       all: [
         'Gruntfile.js',
         '<%= yeoman.app %>/scripts/**/*.js'
-      ]
+      ],
+	    test: {
+		    options: {
+			    jshintrc: 'test/.jshintrc'
+		    },
+		    src: ['test/spec/**/*.js']
+	    }
     },
     coffee: {
       options: {
@@ -142,6 +154,15 @@ module.exports = function (grunt) {
         }]
       }
     },
+
+	  // Automatically inject Bower components into the app
+	  'bower-install': {
+		  app: {
+			  html: '<%= yeoman.app %>/index.html',
+			  ignorePath: '<%= yeoman.app %>/'
+		  }
+	  },
+
     compass: {
       options: {
         sassDir: '<%= yeoman.app %>/styles',
@@ -231,21 +252,16 @@ module.exports = function (grunt) {
     },
     htmlmin: {
       dist: {
-        options: {
-          /*removeCommentsFromCDATA: true,
-          // https://github.com/yeoman/grunt-usemin/issues/44
-          //collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true*/
-        },
+	      options: {
+		      collapseWhitespace: true,
+		      collapseBooleanAttributes: true,
+		      removeCommentsFromCDATA: true,
+		      removeOptionalTags: true
+	      },
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'views/*.html'],
+          cwd: '<%= yeoman.dist %>',
+          src: ['*.html', 'partials/**/*.html', 'views/**/*.html', 'extensions/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -339,6 +355,13 @@ module.exports = function (grunt) {
         */
       }
     },
+	  //grunt-conventional-changelog
+	  //todo - use
+	  changelog: {
+		  options: {
+			  // Task-specific options go here.
+		  }
+	  },
 	  shell: {
 		  mongo: {
 			  command: "exec /Users/maxwellbates/Dropbox/clothoApps/clotho3/clotho3-web/startMongoIfNotRunning.sh",
@@ -369,13 +392,20 @@ module.exports = function (grunt) {
 			  app: 'Google Chrome'
 		  }
 	  },
-		//todo - finish config for git, use in workflow
+	  //todo - use in workflow
+	  "merge-conflict": {
+		  files: [
+			  '**/*'
+		  ]
+	  },
+		//note - this is for versioning
 	  bump: {
 		  options: {
 			  files: ['package.json'],
-			  commit: false,
-			  createTag: false,
-			  push: false
+			  commit: true,
+			  createTag: true,
+			  push: true,
+			  pushTo: 'origin'
 		  }
 	  }
   });
@@ -385,21 +415,8 @@ module.exports = function (grunt) {
 		shell.exec('npm install');
 	});
 
-	grunt.registerTask('update:bower', 'Update Bower packages.', function () {
-		var done = this.async();
 
-		bower.commands.update()
-			.on('log', function (result) {
-				grunt.log.ok('bower: ' + result.id + ' ' + result.data.endpoint.name);
-			})
-			.on('error', grunt.fail.warn.bind(grunt.fail))
-			.on('end', done);
-	});
-
-
-
-
-	grunt.registerTask('server', function (target) {
+	grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
@@ -433,6 +450,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+	  'bower-install',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -443,11 +461,12 @@ module.exports = function (grunt) {
     'cssmin',
     'uglify',
     //'rev',
-    'usemin'
+    'usemin',
+	  'htmlmin'
   ]);
 
   grunt.registerTask('default', [
-    'jshint',
+    'newer:jshint',
     'test',
     'build'
   ]);
