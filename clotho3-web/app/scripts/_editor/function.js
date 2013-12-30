@@ -97,6 +97,18 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		})
 	};
 
+	$scope.$watch('sharable', function(newval, oldval) {
+		if (newval != oldval && !angular.isEmpty($scope.testResults)) {
+			$scope.resetTests();
+		}
+	});
+
+	//overwrite save to reset tests
+	$scope.save = function() {
+		$scope.resetTests();
+		$scope.$parent.save()
+	};
+
 
 	// code mirror
 
