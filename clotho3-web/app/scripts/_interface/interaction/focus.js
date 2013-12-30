@@ -71,6 +71,7 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		return deferred.promise;
 	};
 
+	//can pass string or array
 	var typeOutSearch = function(string, submit) {
 
 		string = angular.isArray(string) ? string : [string];

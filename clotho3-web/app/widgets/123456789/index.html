@@ -4,6 +4,10 @@
 
 <div ng-include="prefixUrl('lazyPartial.html')"></div>
 
-<p>This partial is from the importedView</p>
+<p>This partial is from the importedView:</p>
 
-<div ng-include="prefixUrl('importable.html', {{ otherView }})"></div>
+<div ng-include="prefixUrl('importable.html', otherView)"></div>
+
+<p>Below is a directive with a dependency on another module:</p>
+
+<special></special>
