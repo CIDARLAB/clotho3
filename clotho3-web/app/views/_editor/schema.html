@@ -35,6 +35,12 @@
             <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!editMode || !newMethodObj"><i class="icon-plus"></i></button>
         </div>
 
+        <ul class="unstyled inline">
+            <li ng-repeat="method in sharable.methods">
+                <a ng-click="sharable.methods.splice($index,1)">{{ determineMethodName(method) }}</a>
+            </li>
+        </ul>
+
         <h3>
             Fields
         </h3>

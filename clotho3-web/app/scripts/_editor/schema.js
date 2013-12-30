@@ -5,6 +5,11 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		$scope.schemas = data;
 	});
 
+	$scope.clothoFunctions = [];
+	Clotho.query({"schema": "Function"}).then(function(data) {
+		$scope.clothoFunctions = data;
+	});
+
 	$scope.accessTypes = [
 		{name:'Public', value:'PUBLIC'},
 		{name:'Private', value:'PRIVATE'},
@@ -69,6 +74,10 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 
 		$scope.addMethod($scope.newMethodObj);
 		$scope.newMethodObj = $scope.newMethod();
+	};
+
+	$scope.determineMethodName = function(id) {
+		return _.find($scope.clothoFunctions, {id : id}).name;
 	};
 
 	$scope.newField = function() {
