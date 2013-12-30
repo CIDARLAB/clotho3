@@ -346,8 +346,27 @@ module.exports = function (grunt) {
 				  async: true
 			  }
 		  },
-		  clothoServer: {
-			  command: ''
+		  clothoTestServer: {
+			  /* requires mvn command line tools installed
+			  set JAVA_HOME
+			  set JAVA_PATH to java executable
+
+			  e.g. in ~/.profile, or set manually each time
+
+			   export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
+			   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
+			   export JAVA_PATH=$JAVA_HOME/bin/java
+			  */
+			  command: 'cd ..; mvn "-Dexec.args=-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=$JAVA_PATH -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  }
+	  },
+	  open : {
+		  dev : {
+			  path: 'https://localhost:8443/',
+			  app: 'Google Chrome'
 		  }
 	  },
 		//todo - finish config for git, use in workflow
@@ -396,11 +415,11 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('dev', [
 		'shell:mongo',
-		'shell:clothoServer',
+		'shell:clothoTestServer',
 		'clean:server',
 		'concurrent:server',
 		'autoprefixer',
-		'connect:livereload', //todo shouldn't open this, open specified URL, just want livereload going
+		'open',
 		'watch'
 	]);
 

@@ -45,7 +45,11 @@
     "shelljs": "~0.2.6",
     "grunt-merge-conflict": "0.0.2",
     "lodash": "~2.4.1",
-    "grunt-shell-spawn": "~0.3.0"
+    "grunt-shell-spawn": "~0.3.0",
+    "grunt-ngdocs": "~0.1.7",
+    "grunt-conventional-changelog": "~1.0.0",
+    "grunt-release": "~0.6.0",
+    "grunt-open": "~0.2.2"
   },
   "repository": {
     "type": "git",
