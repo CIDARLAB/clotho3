@@ -1,6 +1,10 @@
-<div>
-    This is the template index.html ... below is an ng-include to load another partial (lazily, after bootstrap)
-</div>
+<p>This is the template index.html</p>
+
+<p>This is from the dictionary: {{ dictString }}</p>
+
+<p>This is from the parent controller: {{ controllerVar }}</p>
+
+<p>below is an ng-include to load another partial (lazily, after bootstrap)</p>
 
 <div ng-include="prefixUrl('lazyPartial.html')"></div>
 
