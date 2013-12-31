@@ -97,11 +97,12 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		})
 	};
 
-	$scope.$watch('sharable', function(newval, oldval) {
-		if (newval != oldval && !angular.isEmpty($scope.testResults)) {
-			$scope.resetTests();
-		}
-	});
+	$scope.testPopoverText = function (ind) {
+		var args = $scope.sharable.tests[ind].args;
+		return !!args ? $filter('json')(args) : 'Search for an object of type {{ param.type }}';
+	};
+
+	//todo - re-parse non-simple tests - interpolate strings to objects so run correctly
 
 	//overwrite save to reset tests
 	$scope.save = function() {
@@ -131,7 +132,9 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 			// example Events
 			_cm.on("beforeChange", function(){});
-			_cm.on("change", function(){});
+			_cm.on("change", function(){
+				$scope.resetTests();
+			});
 		}
 	};
 
