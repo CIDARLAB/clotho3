@@ -2,13 +2,13 @@
     <h2>The Clotho Team</h2>
 
     <div class="row">
-        <div ng-repeat="person in ClothoTeam | orderBy:'surName'" class="span12">
+        <div ng-repeat="person in ClothoTeam | orderBy:'surName'" class="col-xs-12">
             <div class="shadowBox" style="padding: 12px 24px">
-                <div class="row-fluid">
-                    <div class="span3" ng-class="{'pull-right' : $index%2}">
+                <div class="row">
+                    <div class="col-xs-3" ng-class="{'pull-right' : $index%2}">
                         <img class="img-circle" ng-src="{{ (person.icon) ? person.icon :  'images/assets/user-default.png' }}" />
                     </div>
-                    <div class="span9" ng-style="{'margin-left' : ($index%2 ? '0' : '')}">
+                    <div class="col-xs-9" ng-style="{'margin-left' : ($index%2 ? '0' : '')}">
                         <h3>{{ person.name }}</h3>
                         <h5>{{ person.title }}</h5>
                         <small>{{ person.description | limitTo:600 }}</small>

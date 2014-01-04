@@ -40,10 +40,11 @@ Command Bar
 }
 
 #clothoSearchbarLogSnippet {
-  padding: 3px 12px 4px;
-  margin: 5px 5px 0;
-  max-width: 254px;
-  max-height: 21px;
+  padding: 0px 12px;
+  margin: 0 15px;
+  line-height: 2em;
+  max-width: 300px;
+  max-height: 34px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

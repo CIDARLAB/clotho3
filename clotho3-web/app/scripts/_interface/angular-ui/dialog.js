@@ -387,7 +387,7 @@ angular.module('clotho.interface').controller('DialogLoginController', ['$scope'
 				$scope.notification = {class : "alert-success", message: "Log in Success"};
 				dialog.close($scope.cred.username);
 			} else {
-				$scope.notification = {class : "alert-error", message: "Log in Error"};
+				$scope.notification = {class : "alert-danger", message: "Log in Error"};
 				$scope.cred = {username : "", password: ""};
 			}
 		});

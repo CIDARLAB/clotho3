@@ -40,16 +40,14 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 			var required = field.required ? "required='required'" : "";
 
 			//todo - convert this to a directive (GH #105)
-			var htmlText_pre = '<div class="control-group">' +
-				'<label class="control-label" for="' + field.name + '">' + field.name + '</label>' +
-				'<div class="controls">';
-			var htmlText_post = '</div>' +
-				'</div>';
+			var htmlText_pre = '<div class="form-group">' +
+				'<label class="control-label" for="' + field.name + '">' + field.name + '</label>';
+			var htmlText_post = '</div>';
 			var inputText;
 
 			switch (type) {
 				case "textarea": {
-					inputText = '<textarea class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-model="sharable.'+field.name+'" ng-disabled="!editMode"></textarea>';
+					inputText = '<textarea class="input-lg" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-model="sharable.'+field.name+'" ng-disabled="!editMode"></textarea>';
 					break;
 				}
 				case "select": {
@@ -66,7 +64,7 @@ angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scop
 				}
 				//todo - add filedrop support, and radio. checkbox works.
 				default: {
-					inputText = '<input type="' + type + '" class="input-large" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'" >';
+					inputText = '<input type="' + type + '" class="input-lg" id="' + field.name + '" name="' + field.name + '" ' + required + ' ng-disabled="!editMode" ng-model="sharable.'+field.name+'" >';
 					break;
 				}
 

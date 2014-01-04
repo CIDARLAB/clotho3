@@ -56,7 +56,7 @@ angular.module('clotho.core').service('ClientAPI',
 			    backdrop: true,
 			    keyboard: true,
 			    backdropClick: true,
-			    templateUrl:  '<form sharable-editor ng-model="'+uuid+'" class="span6 form-horizontal well"></form>'
+			    templateUrl:  '<form sharable-editor ng-model="'+uuid+'" class="col-xs-6 form-horizontal well"></form>'
 		    };
 		    var d = $dialog.dialog(dialog_opts);
 		    d.open();

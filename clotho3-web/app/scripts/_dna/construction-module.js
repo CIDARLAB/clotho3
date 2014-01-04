@@ -304,11 +304,9 @@ angular.module('clotho.dna').directive('constructionField', ['$compile', '$filte
             return {
                 pre: function preLink(scope, element, attrs, ngModel) {
 
-                    var template = angular.element('<div class="control-group" ng-class="{\'error\' : hasInvalidItem || hasFutureItem}">' +
+                    var template = angular.element('<div class="form-group" ng-class="{\'has-error\' : hasInvalidItem || hasFutureItem}">' +
                         '<label class="control-label">{{ fieldName }}</label>' +
-                        '<div class="controls">' +
                         '<constructionFieldInput></constructionFieldInput>' +
-                        '</div>' +
                         '</div>');
 
                     template.find('constructionFieldInput').html(selectTemplate(scope.type));
@@ -415,15 +413,15 @@ angular.module('clotho.dna').directive('constructionStep', ['Construction', '$pa
                         var template = angular.element('<div class="constructionStep clearfix">'+
                             '<div class="arrow"></div>' +
                             '<div class="reaction" ng-class="{\'errorBackground\' : !reactions[step.reaction]}">' +
-                            '<i ng-class="{\'icon-resize-full\' : !showReaction, \'icon-resize-small\' : showReaction}" style="cursor : pointer;" ng-click="toggleReaction()"></i> ' +
+                            '<i ng-class="{\'glyphicon glyphicon-resize-full\' : !showReaction, \'glyphicon glyphicon-resize-small\' : showReaction}" style="cursor : pointer;" ng-click="toggleReaction()"></i> ' +
                             '{{ reactions[step.reaction].readable || step.reaction }}'+
                             //'<input type="text" class="reactionName" typeahead="r.reaction as r.readable for r in reactionsArray" ng-model="step.reaction" style="margin-bottom: 0px; padding: 3px 5px;" />' +
-                            '<i ng-if="editable" class="pull-right icon-remove" ng-click="confirmRemoveStep()" style="cursor : pointer; margin-top: 3px"></i> ' +
+                            '<i ng-if="editable" class="pull-right glyphicon glyphicon-remove" ng-click="confirmRemoveStep()" style="cursor : pointer; margin-top: 3px"></i> ' +
                             '</div>'+
                             '<div ng-show="showReaction">' +
                             //'{{fields}}' +
                             '<div class="fields" ng-style="{cursor : (editable ? \'move\' : \'inherit\')}">' +
-                            '<stepFields class="row-fluid clearfix"></stepFields>' +
+                            '<stepFields class="row clearfix"></stepFields>' +
                             //'{{ step }}'+
                             '</div>' +
                             '<div class="output" ng-class="{\'errorBackground\' : !dictionaryObject[step.output], \'warningBackground\' : !dictionaryObject[step.output].value}" tooltip="{{ index < processto ? (dictionaryObject[step.output].value | stringEnds) : \'<unprocessed>\' }}">Output: <code contenteditable="{{ editable }}" ng-model="step.output" style="display: inline-block; padding: 0 4px;"></code></div>' +

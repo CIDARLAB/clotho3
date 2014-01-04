@@ -61,10 +61,10 @@ angular.module('clotho.trails').directive('youtube', function(Trails, Youtube, $
 							scope.miniInfo.durationFormatted = (Math.floor(scope.miniInfo.duration/60) + ":" + ((scope.miniInfo.duration%60 < 10) ? '0' : '') + (scope.miniInfo.duration%60));
 						});
 
-						var thumbnailHTML = '<div class="row-fluid" style="margin-bottom: 15px">' +
+						var thumbnailHTML = '<div class="row" style="margin-bottom: 15px">' +
 							'<div class="thumbnail clearfix">' +
-							'<img class="span5" ng-src="{{miniThumb}}">' +
-							'<div class="span7 caption">' +
+							'<img class="col-xs-5" ng-src="{{miniThumb}}">' +
+							'<div class="col-xs-7 caption">' +
 							'<h5 style="margin-top:5px">{{ miniInfo.title }}</h5>' +
 							'<p style="overflow:hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 4.5em">{{ miniInfo.description | limitTo:300 }}</p>' +
 							'<a class="btn btn-primary" ng-click="convertToPlayer()">Watch Video {{ "(" + miniInfo.durationFormatted +")" }}</a>' +

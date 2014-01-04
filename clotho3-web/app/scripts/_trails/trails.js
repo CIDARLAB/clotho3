@@ -110,14 +110,14 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q) {
 	};
 
 	var trailIconMap = {
-		'quiz'        : 'icon-pencil'     ,
-		'list'        : 'icon-list-alt'   ,
-		'eye'         : 'icon-eye-open'   ,
-		'info'        : 'icon-info-sign'  ,
-		'video'       : 'icon-film'       ,
-		'template'    : 'icon-book'       ,
-		'exercise'    : 'icon-edit'       ,
-		'undefined'   : 'icon-file'         //fallthrough
+		'quiz'        : 'glyphicon glyphicon-pencil'     ,
+		'list'        : 'glyphicon glyphicon-list-alt'   ,
+		'eye'         : 'glyphicon glyphicon-eye-open'   ,
+		'info'        : 'glyphicon glyphicon-info-sign'  ,
+		'video'       : 'glyphicon glyphicon-film'       ,
+		'template'    : 'glyphicon glyphicon-book'       ,
+		'exercise'    : 'glyphicon glyphicon-edit'       ,
+		'undefined'   : 'glyphicon glyphicon-file'         //fallthrough
 	};
 
 	var mapIcon = function(iconName) {

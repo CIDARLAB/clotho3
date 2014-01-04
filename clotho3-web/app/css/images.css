@@ -1,7 +1,12 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\000031}}
+img {
+  max-width: 100%;
+}
+
 /*******
 img highlights
 ********/
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\000035}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\000039}}
 .hoverFade {
   opacity: 1;
   -webkit-transition: opacity 0.15s linear;
@@ -10,12 +15,12 @@ img highlights
   transition: opacity 0.15s linear;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000312}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000316}}
 .hoverFade:hover {
   opacity: 0.7;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000319}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000323}}
 .shadowBox {
   position: relative;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
@@ -24,18 +29,18 @@ img highlights
   margin: 10px 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000327}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000331}}
 .shadowBox.hover:hover {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.2) inset;
   transition: box-shadow 0.15s linear;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000332}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000336}}
 .shadowBox.background {
   margin: 20px 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000337}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000341}}
 .shadowBox.background:before, .shadowBox.background:after {
   content: "";
   position: absolute;
@@ -51,7 +56,7 @@ img highlights
   border-radius: 100px / 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000353}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/images\.scss}line{font-family:\0000357}}
 .shadowBox.background:after {
   right: 10px;
   left: auto;

@@ -4,7 +4,7 @@ angular.module('clotho.interface').directive('hintButton', function() {
 			hint : '@hintButton'
 		},
 		replace: true,
-		template : '<button class="btn" popover="{{ hint }}" popover-trigger="mouseenter" popover-placement="left"><i class="icon-info-sign"></i> Hint</button>',
+		template : '<button class="btn" popover="{{ hint }}" popover-trigger="mouseenter" popover-placement="left"><i class="glyphicon glyphicon-info-sign"></i> Hint</button>',
 		link: function(scope, element, attrs) {}
 	}
 });

@@ -10,10 +10,6 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
-        <!-- build:css(.tmp) styles/bootstrap.css -->
-        <!--currently using bootstrap 2.3.2, pending internal rewrite and upgrade of angular-ui-bootstrap-->
-        <link rel="stylesheet" href="styles/bootstrap.css">
-        <!--endbuild-->
         <!-- build:css(css) styles/main.css -->
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/bootstrapAdds.css">
@@ -32,23 +28,29 @@
 
 
 <div class="container">
-    <div class="navbar" ng-controller="MenuCtrl">
-        <div class="navbar-inner" ng-cloak ng-hide="hideNavBar">
-            <a class="brand" href="#">Clotho Demo</a>
-            <ul class="nav">
+
+    <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
+        <div class="navbar navbar-default" style="margin-bottom: 0;">
+            <a class="navbar-brand" href="#">Clotho</a>
+
+            <ul class="nav navbar-nav">
                 <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
             </ul>
 
-            <div class="btn-group pull-right">
-                <button class="btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="icon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
-                <button class="btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="icon-trash"></i></button>
-                <button class="btn btn-warning btn-small" ng-click="reloadModules()"><i class="icon-refresh"></i></button>
+            <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
+                <div class="btn-group">
+                    <button class="btn navbar-btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="glyphicon glyphicon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i
+                            class="glyphicon glyphicon-trash"></i></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i
+                            class="glyphicon glyphicon-refresh"></i></button>
+                </div>
             </div>
         </div>
-
-        <div clotho-command-bar></div>
-
     </div>
+
+    <div clotho-command-bar></div>
+
 </div>
 
 

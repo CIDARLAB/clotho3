@@ -3,32 +3,24 @@
 
     <p>Again demoing clotho directives in a template. This bold text shows you can interpolate values in templates from the dictionary {{ templateTemplateValue }}</p>
 
-    <div class="control-group">
+    <div class="form-group">
         <label class="control-label" for="seq">Enter your sequence</label>
-        <div class="controls">
             <input type="text" id="seq" placeholder="Choose a function to Run" ng-model="sequence">
-        </div>
     </div>
 
-    <div class="control-group">
+    <div class="form-group">
         <label class="control-label" for="clothofn">Choose Clotho Function</label>
-        <div class="controls">
             <input type="text" id="clothofn" placeholder="Choose a function to Run" ng-model="chooseFunction" typeahead="fn.name for fn in clothoFunctions">
-        </div>
     </div>
 
-    <div class="control-group clearfix">
-        <div class="span6 pull-left">
+    <div class="form-group clearfix">
+        <div class="col-xs-6 pull-left">
             <label class="control-label" for="clothorunpre">Clotho.run as pre</label>
-            <div class="controls">
                 <pre id="clothorunpre" ng-model="sequence" clotho-run="{{ chooseFunction }}"></pre>
-            </div>
         </div>
-        <div class="span6 pull-right">
+        <div class="col-xs-6 pull-right">
             <label class="control-label" for="clothorun">Clotho.run as input</label>
-            <div class="controls">
                 <input type="text" id="clothorun" placeholder="remote function result" ng-model="sequence" clotho-run="{{ chooseFunction }}" disabled>
-            </div>
         </div>
     </div>
 

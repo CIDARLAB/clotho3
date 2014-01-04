@@ -1,12 +1,15 @@
 <div class="container">
     <div class="row">
 
-        <form clotho-editor ng-model="editable" class="span8 form-horizontal well"></form>
+        <form clotho-editor ng-model="editable" class="col-xs-8 form-horizontal well"></form>
 
-        <div class="span3">
+        <div class="col-xs-3">
             <div class="well">
                 <h5>Select an Object</h5>
-                <select ng-model="editable" class="span2" ng-options="c.id as c.name group by c.schema for c in editableList"></select>
+                <div class="form-group">
+                    <select ng-model="editable" class="form-control"
+                            ng-options="c.id as c.name group by c.schema for c in editableList"></select>
+                </div>
 
                 <h5>Create from Schema</h5>
                 <!--popover induces isolate scope, need to call $parent.selected in ngModel, see angular issue https://github.com/angular/angular.js/issues/1924 -->
@@ -16,7 +19,10 @@
 
             <div class="well">
                 <h5>Select an Schema</h5>
-                <select ng-model="editable" class="span2" ng-options="c.id as c.name for c in schemas | orderBy:'name'"></select>
+                <div class="form-group">
+                    <select ng-model="editable" class="form-control"
+                            ng-options="c.id as c.name for c in schemas | orderBy:'name'"></select>
+                </div>
                 <h5>Create a new Schema</h5>
                 <button class="btn" ng-click="createNewSchema()">Create New</button>
             </div>

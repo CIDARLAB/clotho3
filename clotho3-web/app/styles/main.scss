@@ -1,5 +1,6 @@
-//uncomment to add bootstrap 3.0.x
-//@import 'sass-bootstrap/lib/bootstrap';
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+
+@import 'sass-bootstrap/lib/bootstrap';
 
 body {
   padding: 20px;

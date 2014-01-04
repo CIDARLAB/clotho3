@@ -949,7 +949,7 @@ angular.module('clotho.dna').directive('digestMark', ['Digest', '$filter', '$par
             });
 
             var highlightSites = function (input) {
-                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-error');
+                //return $filter('highlight')(input, Digest.enzymes.BamHI.match, 'text-danger');
                 return Digest.markSites(input, enz)
             };
 

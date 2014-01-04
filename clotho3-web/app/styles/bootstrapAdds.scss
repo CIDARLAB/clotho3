@@ -37,8 +37,33 @@ div.inline-block {
 
 
 /*future - check for this to be fixed later by bootstrap */
-.navbar-form .input-prepend, .navbar-form .input-append {
+.navbar-form .input-group {
   margin-bottom: 0;
+}
+
+.glyphicon-white {
+  color: #fff;
+}
+
+
+.form-actions {
+  padding: 19px 20px 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e5e5e5;
+  *zoom: 1;
+}
+
+.form-actions:before,
+.form-actions:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.form-actions:after {
+  clear: both;
 }
 
 /*************

@@ -59,7 +59,7 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 						 return success.data;
 						 }, function(error) {
 						 console.log('error retrieving template at: ' + url);
-						 return '<p class="alert alert-error">That template couldn\'t be found :(</p>'
+						 return '<p class="alert alert-danger">That template couldn\'t be found :(</p>'
 						 });*/
 					};
 

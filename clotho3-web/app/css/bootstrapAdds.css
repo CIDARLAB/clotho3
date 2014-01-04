@@ -45,14 +45,42 @@ div.inline-block {
 
 /*future - check for this to be fixed later by bootstrap */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000340}}
-.navbar-form .input-prepend, .navbar-form .input-append {
+.navbar-form .input-group {
   margin-bottom: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000344}}
+.glyphicon-white {
+  color: #fff;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000349}}
+.form-actions {
+  padding: 19px 20px 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e5e5e5;
+  *zoom: 1;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000359}}
+.form-actions:before,
+.form-actions:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000365}}
+.form-actions:after {
+  clear: both;
 }
 
 /*************
 CUSTOM
 *************/
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000347}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000372}}
 .scrollable {
   position: relative;
   overflow-y: scroll;

@@ -20,36 +20,31 @@
 
     <form name="ligation" class=" well form-horizontal">
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="chooseLigation">Example Set:</label>
-            <div class="controls btn-group" style="display: block;" id="chooseLigation" >
-                <button ng-repeat="set in ligate_demoSets" class="btn" ng-click="setLigate($index)" ng-disabled="fragments == ligate_demoSets[$index]">Set {{ $index + 1}}</button>
+            <div class="btn-group" style="display: block;" id="chooseLigation">
+                <button ng-repeat="set in ligate_demoSets" class="btn btn-default" ng-click="setLigate($index)" ng-disabled="fragments == ligate_demoSets[$index]">Set {{ $index + 1}}</button>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="frag1">Fragments</label>
-            <div class="controls">
-                <input type="text" id="frag1" placeholder="Fragment 1" ng-model="fragments[0]" />
-                <input type="text" id="frag2" placeholder="Fragment 2" ng-model="fragments[1]" />
-            </div>
+            <input type="text" id="frag1" placeholder="Fragment 1" ng-model="fragments[0]" />
+            <input type="text" id="frag2" placeholder="Fragment 2" ng-model="fragments[1]" />
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="ligationAlign">Ligation Product</label>
-            <div class="controls">
-                <pre id="ligationAlign" placeholder="Ligation Alignment" ng-model="fragments" ligate-align></pre>
-            </div>
+            <pre id="ligationAlign" placeholder="Ligation Alignment" ng-model="fragments" ligate-align></pre>
         </div>
 <!--
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="ligationProd">Ligation Product</label>
-            <div class="controls">
-                <pre id="ligationProd" placeholder="Ligated Sequence" ng-model="ligated" contenteditable="false"></pre>
-            </div>
+            <pre id="ligationProd" placeholder="Ligated Sequence" ng-model="ligated" contenteditable="false"></pre>
         </div>-->
     </form>
 
-    <button class="btn btn-info btn-large" ng-click="showMeHow()"><i class="icon-white icon-eye-open"></i> Show me how</button>
+    <button class="btn btn-info btn-lg" ng-click="showMeHow()"><i
+            class="glyphicon-white glyphicon glyphicon-eye-open"></i> Show me how</button>
 
 </div>

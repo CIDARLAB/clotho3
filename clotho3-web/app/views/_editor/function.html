@@ -4,52 +4,44 @@
 
         <div ng-include="_objBaseFields"></div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="functionLang">Language</label>
-            <div class="controls">
                 <select id="functionLang" ng-model="sharable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
-            </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label" for="functionPre">Precondition</label>
-            <div class="controls">
-                <textarea type="text" id="functionPre" class="input-large" ng-model="sharable.precondition" style="width: 100%; height: 6em" ng-disabled="!editMode"></textarea>
-            </div>
+                <textarea type="text" id="functionPre" class="input-lg" ng-model="sharable.precondition" style="width: 100%; height: 6em" ng-disabled="!editMode"></textarea>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">Dependencies</label>
-            <div class="controls">
                 <div ng-repeat="param in sharable.dependencies" class="pull-left">
-                    <div class="input-append">
+                    <div class="input-group">
                         <input type="text" class="input-xlarge" ng-model="param" ng-disabled="!editMode">
                         <button class="btn" ng-click="sharable.dependencies.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     </div>
 
                 </div>
-                <button class="btn pull-right" type="button" ng-click="addDep()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
-            </div>
+                <button class="btn pull-right" type="button" ng-click="addDep()" ng-disabled="!editMode"><i class="glyphicon glyphicon-plus"></i></button>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">Arguments</label>
-            <div class="controls">
                 <div ng-repeat="param in sharable.args" class="pull-left">
-                    <select ng-model="param.type" class="span2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.category for c in paramTypes">
+                    <select ng-model="param.type" class="col-xs-2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.category for c in paramTypes">
                     </select>
                     <!-- see http://jsfiddle.net/M32pj/1/ for another select directive-->
 
                     <!--<input type="text" ng-model="param.type" typeahead="type for type in paramTypes | filter:$viewValue" ng-disabled="!editMode">-->
 
-                    <div class="input-append">
+                    <div class="input-group">
                         <input type="text" ng-model="param.name" ng-disabled="!editMode">
                         <button class="btn" ng-click="sharable.args.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     </div>
 
                 </div>
-                <button class="btn pull-right" type="button" ng-click="addArg()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
-            </div>
+                <button class="btn pull-right" type="button" ng-click="addArg()" ng-disabled="!editMode"><i class="glyphicon glyphicon-plus"></i></button>
         </div>
 
 
@@ -65,15 +57,15 @@
         <h3 class="text-center">
             Tests
             <div class="btn-group">
-                <button class="btn btn-small" ng-click="runAllTests()" ng-disabled="editMode || form.$invalid || sharable.tests.length < 1">Run All</button>
+                <button class="btn btn-sm" ng-click="runAllTests()" ng-disabled="editMode || form.$invalid || sharable.tests.length < 1">Run All</button>
             </div>
-            <button class="btn pull-right" type="button" ng-click="addTest()" ng-disabled="!editMode"><i class="icon-plus"></i></button>
+            <button class="btn pull-right" type="button" ng-click="addTest()" ng-disabled="!editMode"><i
+                    class="glyphicon glyphicon-plus"></i></button>
         </h3>
 
         <div ng-repeat="test in sharable.tests">
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="functionTestArg{{$index}}">Test Arguments</label>
-                <div class="controls">
                     <button class="btn pull-right" ng-click="sharable.tests.splice($index, 1)" ng-disabled="!editMode">&times;</button>
                     <div ng-repeat="param in sharable.args">
                         <div ng-if="simpleTypes[param.type]">
@@ -83,17 +75,14 @@
                             <input type="text" id="functionTestArg{{ $index }}" ng-model="test.args[$index]" typeahead="opt as opt.name for opt in querySchemaWrapper(param.type) | filter:$viewValue" typeahead-min-length="0" popover="{{ testPopoverText($index) }}" popover-trigger="mouseenter" ng-disabled="!editMode">
                         </div>
                     </div>
-                </div>
             </div>
 
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="functionTestResult{{ $index }}">Expected Output</label>
-                <div class="controls">
-                    <select ng-model="test.output.type" class="span2" ng-disabled="!editMode" ng-options="t.value as t.name for t in outputTypes">
+                    <select ng-model="test.output.type" class="col-xs-2" ng-disabled="!editMode" ng-options="t.value as t.name for t in outputTypes">
                     </select>
                     <input type="text" id="functionTestResult{{ $index }}" ng-model="test.output.value" ng-disabled="!editMode">
                     <button class="btn" ng-click="singleTest($index)" ng-disabled="editMode || form.$invalid" ng-class="{'btn-success' : testResults[$index] === true, 'btn-danger' : testResults[$index] === false}">Test</button>
-                </div>
             </div>
         </div>
 
