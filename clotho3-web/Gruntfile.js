@@ -205,9 +205,19 @@ module.exports = function (grunt) {
       }
     },
     useminPrepare: {
-	    html: '<%= yeoman.app %>/index.html',
+	    //html: '<%= yeoman.app %>/index.html', //for single-target only
 	    options: {
+		    root: '<%= yeoman.app %>',
 		    dest: '<%= yeoman.dist %>'
+	    },
+	    dist: {
+		    src: 'index-dist.html'
+	    },
+	    api: {
+		    src: 'index-api.html'
+	    },
+	    command: {
+		    src: 'index-command.html'
 	    }
     },
     usemin: {
@@ -407,6 +417,35 @@ module.exports = function (grunt) {
 			  push: true,
 			  pushTo: 'origin'
 		  }
+	  },
+	  processhtml : {
+		  options : {
+			  commentMarker : 'process' //don't want to use default 'build' bc usemin
+		  },
+		  dist : {
+			  options : {
+				  commentMarker : 'processDist' //don't want to use default 'build' bc usemin
+			  },
+			  files : {
+				  '<%= yeoman.app %>/index-dist.html': ['<%= yeoman.app %>/index.html']
+			  }
+		  },
+		  api : {
+			  options : {
+				  commentMarker : 'processApi'
+			  },
+			  files : {
+				  '<%= yeoman.app %>/index-api.html': ['<%= yeoman.app %>/index.html']
+			  }
+		  },
+		  command : {
+			  options : {
+				  commentMarker : 'processCommand'
+			  },
+			  files : {
+				  '<%= yeoman.app %>/index-command.html': ['<%= yeoman.app %>/index.html']
+			  }
+		  }
 	  }
   });
 
@@ -451,6 +490,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
 	  'bower-install',
+	  'processhtml',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',

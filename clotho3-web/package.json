@@ -51,7 +51,8 @@
     "grunt-release": "~0.6.0",
     "grunt-open": "~0.2.2",
     "grunt-git": "~0.2.3",
-    "grunt-bower-install": "~0.8.0"
+    "grunt-bower-install": "~0.8.0",
+    "grunt-processhtml": "~0.2.7"
   },
   "repository": {
     "type": "git",

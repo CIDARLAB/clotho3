@@ -5,3 +5,39 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 body {
   padding: 20px;
 }
+
+/* interaction */
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.noPointerEvents {
+  pointer-events: none;
+}
+
+
+/* display */
+
+.scrollable {
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px; /*just in case... need to define with inline style*/
+}
+
+div.inline {
+  display: inline;
+}
+div.inline-block {
+  display: inline-block;
+}
+.top {
+  margin-top: 0;
+}
+.bottom {
+  margin-bottom: 0;
+}
