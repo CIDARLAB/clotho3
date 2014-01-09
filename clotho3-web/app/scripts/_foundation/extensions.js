@@ -141,7 +141,7 @@ angular.module('clotho.extensions', [])
 
 		$script(urls, function() {
 			$timeout.cancel(timeoutPromise);
-			$rootScope.$safeApply(deferred.resolve());
+			$rootScope.$safeApply(deferred.resolve(urls));
 		});
 
 		return deferred.promise;

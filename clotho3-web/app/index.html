@@ -103,18 +103,10 @@ SCRIPTS
 
 
 <!--note - correct app based on the distribution-->
-<!-- processCommand:remove -->
-<!-- processApi:remove -->
-<!-- build:js scripts/clotho-app.js -->
-<script src="scripts/app.js"></script>
-<!--endbuild-->
-<!-- /processApi -->
-<!-- /processCommand -->
-
 <!-- processDist:remove -->
 <!-- processCommand:remove -->
 <!-- build:js scripts/clotho-app-api.js -->
-<script src="scripts/app-api.js"></script>
+<!--<script src="scripts/app-api.js"></script>
 <!--endbuild-->
 <!-- /processCommand -->
 <!-- /processDist -->
@@ -126,6 +118,14 @@ SCRIPTS
 <!--endbuild-->
 <!-- /processApi -->
 <!-- /processDist -->
+
+<!-- processCommand:remove -->
+<!-- processApi:remove -->
+<!-- build:js scripts/clotho-app.js -->
+<script src="scripts/app.js"></script>
+<!--endbuild-->
+<!-- /processApi -->
+<!-- /processCommand -->
 
 
 
@@ -175,7 +175,8 @@ dependencies: clotho.core
 -->
 <script src="scripts/_foundation/_kickoff.js"></script>
 <script src="scripts/_foundation/setup.js"></script>
-<script src="scripts/_foundation/clothoDirectives.js"></script>
+<script src="scripts/_foundation/clothoRun.js"></script>
+<script src="scripts/_foundation/clothoShow.js"></script>
 <script src="scripts/_foundation/extensions.js"></script>
 <!--endbuild-->
 

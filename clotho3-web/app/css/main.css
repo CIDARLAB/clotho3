@@ -7632,3 +7632,48 @@ td.visible-print {
 body {
   padding: 20px;
 }
+
+/* interaction */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000310}}
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000318}}
+.noPointerEvents {
+  pointer-events: none;
+}
+
+/* display */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000325}}
+.scrollable {
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px;
+  /*just in case... need to define with inline style*/
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000332}}
+div.inline {
+  display: inline;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000335}}
+div.inline-block {
+  display: inline-block;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000338}}
+.top {
+  margin-top: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/main\.scss}line{font-family:\0000341}}
+.bottom {
+  margin-bottom: 0;
+}

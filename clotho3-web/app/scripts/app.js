@@ -78,7 +78,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		title : 'Terminal',
 		resolve : {
 			deps : function() {
-				return $clotho.extensions.mixin('search/terminal-controller.js')
+				return $clotho.extensions.mixin('_command/terminal.js')
 			}
 		}
 	})

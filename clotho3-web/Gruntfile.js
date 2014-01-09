@@ -11,7 +11,9 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
+      dist: 'dist',
+	    api: 'api',
+	    command: 'command'
     },
     watch: {
       coffee: {
@@ -24,7 +26,7 @@ module.exports = function (grunt) {
       },
 	    js: {
 		    files: ['<%= yeoman.app %>/scripts/**/*.js'],
-		    //tasks: ['newer:jshint:all'],
+		    tasks: ['newer:jshint:all'],
 		    options: {
 			    livereload: true
 		    }
