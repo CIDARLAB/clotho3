@@ -4,7 +4,7 @@ angular.module('clotho.clothoDirectives', [])
  *
  * @usage <div clotho-show="VIEW_ID"></div>
  */
-.directive('clothoShow', function ($q, $http, $timeout, $browser, $rootScope, Clotho, PubSub) {
+.directive('clothoShow', function ($q, $http, $timeout, $browser, $rootScope, $compile, Clotho, PubSub) {
 
 	function generateWidgetUrl (viewId, url) {
 		return 'widgets/' + viewId + (!!url ? '/' + url : '');
@@ -27,6 +27,8 @@ angular.module('clotho.clothoDirectives', [])
 	 */
 	var downloadDependencies = function (view) {
 
+		console.log(view.dependencies, view.importedViews);
+
 		//create array of promises of nested dependencies from importedView
 		var nestedDeps = [];
 		_.forEach(view.importedViews, function (id, alias) {
@@ -47,14 +49,13 @@ angular.module('clotho.clothoDirectives', [])
 				_.forEach(view.dependencies, function (dep) {
 					relativeDeps.push(generateWidgetUrl(view.id, dep));
 				});
+
 				return $clotho.extensions.mixin(relativeDeps);
 			})
 			.then(function() {
 				return view;
 			});
 	};
-
-
 
 
 	return {
@@ -69,6 +70,7 @@ angular.module('clotho.clothoDirectives', [])
 		},
 		link: function linkFunction (scope, element, attrs) {
 
+			//checks
 			if (!scope.id) return;
 
 			//todo - basic check to make sure proper form
@@ -77,25 +79,21 @@ angular.module('clotho.clothoDirectives', [])
 			element.addClass('clothoWidget');
 
 			//retrieve view
-			$q.when(clientGetView('123456789'))           //testing
+			$q.when(clientGetView(scope.id))              //testing
 				//Clotho.get(scope.id)                      //when server handles
 				.then(function(view){
 					return downloadDependencies(view);
 				})
 				.then(function (view) {
 
-					console.log(view);
-
 					//configure dictionary
 					view.dictionary = angular.extend({}, view.dictionary, view.importedViews);
 					view.dictionary.id = view.id;
 
-
-
 					if (view.bootstrap) {
-						//hack-y creating custom module so we can set some stuff up without taking the module creation out of the user's control
+						//creating custom module so we can set some stuff up without taking the module creation out of the user's control
 						var customModuleName = view.id + '-additions';
-						var dependencies = view.includeExtensionsModule === true ? ['clotho.extensions'] : [];
+						var dependencies = view.bootstrap.includeExtensionsModule === true ? ['clotho.extensions'] : [];
 						angular.module(customModuleName, dependencies)
 							.run(function($rootScope) {
 								//extend scope with dictionary
@@ -108,7 +106,6 @@ angular.module('clotho.clothoDirectives', [])
 								 * @param url {string} URL of partial, relative to View root
 								 * @param specifyView {string} ID of view. Pass nothing to default to this view's id
 								 */
-									//todo - handle specifying view by name
 								$rootScope.prefixUrl = function (url, specifyView) {
 									return generateWidgetUrl(specifyView ? specifyView : view.id, url)
 								}
@@ -135,9 +132,42 @@ angular.module('clotho.clothoDirectives', [])
 						element.data('$injector', null);
 						angular.bootstrap(element, modules);
 					}
-					else {
-						//handle according to type
 
+					//if don't pass bootstrap clause, handle appropriately
+					else {
+
+						//this is what will be inserted
+						var htmlString;
+
+						//if pass index.html, include template
+						if (_.indexOf(view.files, 'index.html') >= 0) {
+
+							htmlString = '<div ';
+
+							if (!!view.controller) {
+								htmlString += 'ng-controller="' + view.controller + '" ';
+							}
+
+							htmlString += 'ng-include="prefixUrl(\'index.html\')"></div>';
+
+						}
+						//if only one file, handle according to type
+						else if (view.files.length == 1) {
+
+							//todo - other types?
+
+							var reg_image = /([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/i;
+
+							//if image, create img tag
+							if (reg_image.test(view.files[0])) {
+								htmlString = '<img src="' +
+									generateWidgetUrl(view.id, view.files[0]) + '"' +
+									'alt="view '+view.id+'" />';
+							}
+						}
+
+						angular.extend(scope, view.dictionary);
+						element.html($compile(htmlString)(scope));
 
 					}
 

@@ -24,11 +24,10 @@
 		}
 	},
 
-	"includeExtensionsModule": true,
-
 	"controller": "123456789_parentController",
 
 	"bootstrap": {
+		"includeExtensionsModule": true,
 		"modules": ["123456789"]
 	}
 }

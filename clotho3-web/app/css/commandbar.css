@@ -49,7 +49,7 @@ Command Bar
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000342}}
 #clothoSearchbarLogSnippet {
   padding: 0px 12px;
-  margin: 0 15px;
+  margin: 0 10px 0 15px;
   line-height: 2em;
   max-width: 300px;
   max-height: 34px;

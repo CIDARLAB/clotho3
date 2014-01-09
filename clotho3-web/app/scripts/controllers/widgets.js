@@ -21,5 +21,11 @@ angular.module('clotho.webapp')
 			$compile(newEl)($scope);
 		};
 
+		$scope.bootstrapSimple = function () {
+			var newEl = angular.element('<clotho-show id="813579135"></clotho-show>');
+			angular.element(document).find('insert-widgets-here').append(newEl);
+			$compile(newEl)($scope);
+		};
+
 		$scope.someValue = 'from parent controller not passed down';
   });

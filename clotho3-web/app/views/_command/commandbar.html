@@ -50,8 +50,8 @@
                 click-outside="display.hide('log');" click-outside-active="display.log">
             <button id="clothoCommandBarLogButton" class="btn btn-default"
                     ng-click="display.toggle('log'); log.unread = null">
-                <i class="glyphicon glyphicon-tasks"></i>
-                <span class="label label-info" ng-if="log.unread">{{ log.unread }}</span>
+                <i class="glyphicon glyphicon-tasks" style="top: 3px;"></i>
+                <span class="badge badge-info" ng-if="log.unread">{{ log.unread }}</span>
             </button>
 
             <div id="clothoSearchbarLog" class="popover bottom" style="position: absolute;" ng-show="display.log" ng-style="display.logpos" >
@@ -75,7 +75,7 @@
 
 
         <!--log snippet-->
-        <div id="clothoSearchbarLogSnippet" class="navbar-left inline alert alert-{{log.entries[0].class | lowercase}}"  style="margin-right: 15px;" ng-show="display.logSnippet" ng-mouseenter="log.cancelLogTimeout()" ng-mouseleave="log.startLogTimeout()">
+        <div id="clothoSearchbarLogSnippet" class="navbar-left inline alert alert-{{log.entries[0].class | lowercase}}"  style="margin-right: 10px;" ng-show="display.logSnippet" ng-mouseenter="log.cancelLogTimeout()" ng-mouseleave="log.startLogTimeout()">
             <small>{{log.entries[0].text}}</small>
         </div>
 
