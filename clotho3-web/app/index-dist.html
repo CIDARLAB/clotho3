@@ -9,19 +9,16 @@
     <title>Clotho</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
-    <!-- processApi:remove -->
-    <!-- build:css(css) styles/main.css -->
+    <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/bootstrapAdds.css">
     <link rel="stylesheet" href="css/commandbar.css">
-    <!-- processCommand:remove -->
+    <!-- endbuild -->
+    <!-- build:css styles/webapp.css -->
     <link rel="stylesheet" href="css/constructionfile.css">
     <link rel="stylesheet" href="css/images.css">
     <link rel="stylesheet" href="css/trails.css">
-    <!-- /processCommand -->
     <!-- endbuild -->
-    <!-- /processApi -->
 
 </head>
 <body>
@@ -29,11 +26,8 @@
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
-
-
 <div class="container">
 
-    <!-- processApi:remove -->
     <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
         <div class="navbar navbar-default" style="margin-bottom: 0;">
             <a class="navbar-brand" href="#">Clotho</a>
@@ -53,22 +47,16 @@
             </div>
         </div>
     </div>
-    <!-- /processApi -->
 
     <div clotho-command-bar></div>
 
 </div>
-
-<!-- processCommand:remove -->
-<!-- processApi:remove -->
 <!-- note - ignore main content for stripped down versions -->
 <div ng-view="" ng-cloak></div>
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
 
-<!-- /processApi -->
-<!-- /processCommand -->
 
 <!--------
 SCRIPTS
@@ -77,9 +65,6 @@ SCRIPTS
 <script src="bower_components/jquery/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/lodash/dist/lodash.js"></script>
-
-<!-- processCommand:remove -->
-<!-- processApi:remove -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
 <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
@@ -89,18 +74,12 @@ SCRIPTS
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <!-- endbuild -->
-<!-- /processApi -->
-<!-- /processCommand -->
 
 
 <!--note - correct app based on the distribution-->
-<!-- processCommand:remove -->
-<!-- processApi:remove -->
 <!-- build:js scripts/clotho-app.js -->
 <script src="scripts/app.js"></script>
 <!--endbuild-->
-<!-- /processApi -->
-<!-- /processCommand -->
 
 
 
@@ -118,11 +97,7 @@ dependencies: none
 <script src="scripts/_core/pubsub.js"></script>
 <script src="scripts/_core/socket.js"></script>
 <!--endbuild-->
-
-
-<!-- processApi:remove -->
 <!--note - remove all scripts below this for api-only build-->
-
 <!-- build:js scripts/clotho-command-module.js -->
 <!--
 name: clotho.commandbar
@@ -136,10 +111,6 @@ dependencies: clotho.core
 <script src="scripts/_command/autocomplete.js"></script>
 <script src="scripts/_command/logEntries.js"></script>
 <!--endbuild-->
-
-
-
-<!-- processCommand:remove -->
 <!--note - remove all scripts below this for command-only build-->
 
 <!-- build:js scripts/clotho-foundation-module.js -->
@@ -150,7 +121,8 @@ dependencies: clotho.core
 -->
 <script src="scripts/_foundation/_kickoff.js"></script>
 <script src="scripts/_foundation/setup.js"></script>
-<script src="scripts/_foundation/clothoDirectives.js"></script>
+<script src="scripts/_foundation/clothoRun.js"></script>
+<script src="scripts/_foundation/clothoShow.js"></script>
 <script src="scripts/_foundation/extensions.js"></script>
 <!--endbuild-->
 
@@ -264,8 +236,6 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/controllers/widgets.js"></script>
 <!-- endbuild -->
 
-<!-- /processCommand -->
-<!-- /processApi -->
 
 </body>
 </html>

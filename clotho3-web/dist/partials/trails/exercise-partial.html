@@ -1,12 +1,1 @@
-<div>
-    <div ng-bind-html="exercise.text"></div>
-
-    <div ng-include="exercise.template"></div>
-
-    <div ng-if="exercise.video" youtube="{{exercise.video.id}}" params="exercise.video.params"></div>
-
-    <p>Still need to figure this part out -- server not working at the moment</p>
-
-    <div ng-if="exercise.tool" ng-bind-template="exercise.tool"></div>
-
-</div>
+<div><div ng-bind-html="exercise.text"></div><div ng-include="exercise.template"></div><div ng-if="exercise.video" youtube="{{exercise.video.id}}" params="exercise.video.params"></div><p>Still need to figure this part out -- server not working at the moment</p><div ng-if="exercise.tool" ng-bind-template="exercise.tool"></div></div>

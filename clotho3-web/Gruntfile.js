@@ -179,7 +179,11 @@ module.exports = function (grunt) {
         httpFontsPath: '/fonts',
         relativeAssets: false
       },
-      dist: {},
+      dist: {
+	      options: {
+		      debugInfo : false
+	      }
+      },
       server: {
         options: {
           debugInfo: true
@@ -207,20 +211,22 @@ module.exports = function (grunt) {
       }
     },
     useminPrepare: {
-	    //html: '<%= yeoman.app %>/index.html', //for single-target only
+	    html: '<%= yeoman.app %>/index.html', //for single-target only
 	    options: {
-		    root: '<%= yeoman.app %>',
+		    dest: '<%= yeoman.dist %>'
+	    }
+	    /*dist: {
+		    src: '<%= yeoman.app %>/index-dist.html',
+	      dest: '<%= yeoman.dist %>'
+	    }
+	    api: {
+		    src: '<%= yeoman.app %>/index-api.html',
 		    dest: '<%= yeoman.dist %>'
 	    },
-	    dist: {
-		    src: 'index-dist.html'
-	    },
-	    api: {
-		    src: 'index-api.html'
-	    },
 	    command: {
-		    src: 'index-command.html'
-	    }
+		    src: '<%= yeoman.app %>/index-command.html',
+		    dest: '<%= yeoman.dist %>'
+	    }*/
     },
     usemin: {
       html: ['<%= yeoman.dist %>/**/*.html'],
@@ -289,6 +295,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
+	          '*.html',
             'bower_components/**/*',
             'images/**/*',
             'fonts/*',
@@ -310,7 +317,7 @@ module.exports = function (grunt) {
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
-        dest: '.tmp/styles/',
+        dest: 'css/',
         src: '{,*/}*.css'
       }
     },
@@ -422,30 +429,22 @@ module.exports = function (grunt) {
 	  },
 	  processhtml : {
 		  options : {
-			  commentMarker : 'process' //don't want to use default 'build' bc usemin
+			  commentMarker : 'process', //don't want to use default 'build' bc usemin,
+			  stripUnparsed : true
 		  },
 		  dist : {
-			  options : {
-				  commentMarker : 'processDist' //don't want to use default 'build' bc usemin
-			  },
 			  files : {
-				  '<%= yeoman.app %>/index-dist.html': ['<%= yeoman.app %>/index.html']
+				  '<%= yeoman.dist %>/index-dist.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
 		  api : {
-			  options : {
-				  commentMarker : 'processApi'
-			  },
 			  files : {
-				  '<%= yeoman.app %>/index-api.html': ['<%= yeoman.app %>/index.html']
+				  '<%= yeoman.dist %>/index-api.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
 		  command : {
-			  options : {
-				  commentMarker : 'processCommand'
-			  },
 			  files : {
-				  '<%= yeoman.app %>/index-command.html': ['<%= yeoman.app %>/index.html']
+				  '<%= yeoman.dist %>/index-command.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  }
 	  }
@@ -491,8 +490,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-	  'bower-install',
-	  'processhtml',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -504,6 +501,7 @@ module.exports = function (grunt) {
     'uglify',
     //'rev',
     'usemin',
+	  'processhtml',
 	  'htmlmin'
   ]);
 

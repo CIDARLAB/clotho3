@@ -35,18 +35,6 @@ angular.module('clotho.core').service('ClientAPI',
     };
 
     /**
-     * @name clientAPI.update
-     *
-     * @param data
-     *
-     * @description
-     * Update an object. TODO according to options and caching queries
-     */
-    var update = function clientAPIUpdate (data) {
-
-    };
-
-    /**
      * @name clientAPI.edit
      * @param uuid UUID of sharable to edit, opens in modal
      */
@@ -72,22 +60,6 @@ angular.module('clotho.core').service('ClientAPI',
      */
     var changeUrl = function(newUrl) {
         $location.path(newUrl);
-    };
-
-    /**
-     * @name clientAPI.notify
-     *
-     * @param {string} uuid UUID of model to update
-     * @param {object} obj  Model
-     * @param {function} callback
-     *
-     * @description
-     * ??
-     * concerns -- I think it's best to pass in a callback in serverAPI.run() (and every other method) so you can pass in $scope etc. without having to dig through the angular application looking for it, or angular applications on a given page. Communication between apps should happen on a separate channel.
-     *
-     */
-    var notify = function clientAPINotify(uuid, obj, callback) {
-
     };
 
     /**
@@ -155,7 +127,7 @@ angular.module('clotho.core').service('ClientAPI',
      note CAVEATS:
      - currently, controllers etc. must be tied to Application.Extensions.___
      */
-    var display = function clientAPIDisplaySimple(data) {
+    var display = function clientAPIDisplay(data) {
 
         console.log(data);
 
@@ -187,14 +159,14 @@ angular.module('clotho.core').service('ClientAPI',
      * @name clientAPI.hide
      *
      * @param {string} uuid
-     * @param {function} callback
+     * @param {function} callback, passed the element
      *
      * @description
      * Hide a view on the client
      *
      */
     var hide = function clientAPIHide(uuid, callback) {
-
+	    callback.apply(null, $("[clotho-show='"+uuid+"']").remove());
     };
 
     /**

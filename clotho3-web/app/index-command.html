@@ -9,17 +9,11 @@
     <title>Clotho</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
-    <!-- processApi:remove -->
-    <!-- build:css(css) styles/main.css -->
+    <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/bootstrapAdds.css">
     <link rel="stylesheet" href="css/commandbar.css">
     <!-- endbuild -->
-    <!-- /processApi -->
-
-    <!-- processDist:remove -->
-    <!-- /processDist -->
 
 </head>
 <body>
@@ -27,11 +21,8 @@
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
-
-
 <div class="container">
 
-    <!-- processApi:remove -->
     <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
         <div class="navbar navbar-default" style="margin-bottom: 0;">
             <a class="navbar-brand" href="#">Clotho</a>
@@ -51,7 +42,6 @@
             </div>
         </div>
     </div>
-    <!-- /processApi -->
 
     <div clotho-command-bar></div>
 
@@ -67,17 +57,9 @@ SCRIPTS
 
 
 <!--note - correct app based on the distribution-->
-
-<!-- processDist:remove -->
-<!-- /processDist -->
-
-<!-- processDist:remove -->
-<!-- processApi:remove -->
 <!-- build:js scripts/clotho-app-command.js -->
 <script src="scripts/app-command.js"></script>
 <!--endbuild-->
-<!-- /processApi -->
-<!-- /processDist -->
 
 
 
@@ -95,11 +77,7 @@ dependencies: none
 <script src="scripts/_core/pubsub.js"></script>
 <script src="scripts/_core/socket.js"></script>
 <!--endbuild-->
-
-
-<!-- processApi:remove -->
 <!--note - remove all scripts below this for api-only build-->
-
 <!-- build:js scripts/clotho-command-module.js -->
 <!--
 name: clotho.commandbar
@@ -113,7 +91,6 @@ dependencies: clotho.core
 <script src="scripts/_command/autocomplete.js"></script>
 <script src="scripts/_command/logEntries.js"></script>
 <!--endbuild-->
-<!-- /processApi -->
 
 </body>
 </html>

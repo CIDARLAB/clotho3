@@ -156,8 +156,8 @@ angular.module('clotho.core').service('PubSub',
                 // testing
                 // console.log("PUBSUB\tpublish on " + curTopic + " " + args);
                 listeners[curTopic] && angular.forEach(listeners[curTopic], function(array, idx) {
-
-	                  $rootScope.$apply(function() {
+										//todo - avoid $safeApply
+	                  $rootScope.$safeApply(function() {
 		                  array[0].apply(null, args);
 	                  });
 

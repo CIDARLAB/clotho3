@@ -1,4 +1,4 @@
-angular.module('clotho.clothoDirectives', [])
+angular.module('clotho.clothoDirectives')
 /**
  * @name clotho-show
  *
@@ -26,8 +26,6 @@ angular.module('clotho.clothoDirectives', [])
 	 Returns promise that is fulfilled when all dependencies downloaded
 	 */
 	var downloadDependencies = function (view) {
-
-		console.log(view.dependencies, view.importedViews);
 
 		//create array of promises of nested dependencies from importedView
 		var nestedDeps = [];

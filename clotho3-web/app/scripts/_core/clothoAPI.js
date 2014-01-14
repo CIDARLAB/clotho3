@@ -509,30 +509,19 @@ function generateClothoAPI() {
     /**
      * @name Clotho.show
      *
-     * @param {object} parameters Example given below
+     * @param {string} viewId
+     * @param {object} options Example given below
      *
-     format:
      {
-         "template" : <url>,         // required
-         "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
-         "args" : {<object>}         // data to extend the $scope
-         "controller" : <url>,       // optional
-         "dependencies" : [
-             <urls>                  // required if in controller, or used in template
-         ],
-         styles : {
-             <styles>
-             //e.g.
-             "background-color" : "#FF0000"
-         }
+         "target" : <DOM ELEMENT>    // suggested, otherwise placed outside ng-view
      }
-
-     note CAVEATS:
-     - currently, components (controllers etc.) must be tied to Application.Extensions.___
-
      */
-    var show = function(parameters) {
-        fn.api.emit('show', parameters);
+    var show = function(viewId, options) {
+	    var packaged = {
+		    "viewId" : viewId,
+		    "options" : options
+	    };
+        fn.api.emit('show', packaged);
     };
 
 

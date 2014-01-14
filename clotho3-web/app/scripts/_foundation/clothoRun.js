@@ -12,9 +12,10 @@
  (2) If you want to update the model only with the run function, add the attribute tag clotho-run-update-model="true" ... this will update the model with the result of the run function once it is complete.
 
  @example
- <p clotho-run="lowercase" ng-model="'HEY THERE'"></p> will output <p>hey there</p>
+ Assuming $scope.myModel = 'HEY THERE';
+ `<p clotho-run="lowercase" ng-model="myModel"></p>` will output `<p>hey there</p>`
  */
-angular.module('clotho.clothoDirectives', [])
+angular.module('clotho.clothoDirectives')
 .directive('clothoRun', function(Clotho) {
 
 	var inputsVal = {input: true, textarea : true, select: true};
@@ -37,7 +38,9 @@ angular.module('clotho.clothoDirectives', [])
 			scope.$watch(function() {
 				return attrs.clothoRun
 			}, function(newval, oldval) {
-				if (!!newval) runFunction(ngModel.$modelValue);
+				if (!!newval) {
+					runFunction(ngModel.$modelValue);
+				}
 			});
 
 			//model changes
@@ -55,11 +58,6 @@ angular.module('clotho.clothoDirectives', [])
 				updateParent = !!newval;
 			});
 
-			//form array out of arguments if not an array
-			var parseInput = function(input) {
-				return angular.isArray(input) ? input : [input];
-			};
-
 			var updateParentModel = function(newModel) {
 				if (updateParent) {
 					//todo - make sure passes up to $parent
@@ -72,11 +70,15 @@ angular.module('clotho.clothoDirectives', [])
 				element[method](newval);
 			};
 
+			//form array out of arguments if not an array
+			var parseInput = function(input) {
+				return angular.isArray(input) ? input : [input];
+			};
+
 			var runFunction = function(input) {
 				input = parseInput(input);
 
 				return Clotho.run(attrs.clothoRun, input).then(function(result) {
-					console.log(result);
 					updateParentModel(result);
 					updateElement(result);
 				});
