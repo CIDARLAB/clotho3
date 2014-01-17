@@ -41,7 +41,7 @@ import org.clothocad.model.Person;
 public class TestUtils {
 
     public static void importTestJSON(Persistor persistor) {
-        importTestJSON("src/test/resources/testData", persistor, false);
+        importTestJSON("src/test/resources/testData", persistor, true);
     }
 
     public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {

@@ -54,13 +54,13 @@ testThroughAsync("get",
 testThroughAsync("query Parts",
         new Message("query", {"schema":"Part"}),
         function (data) {
-            equal(data.length, 4);
+            equal(data.length, 55);
         });
 
 testThroughAsync("query BasicParts",
         new Message("query", {"schema":"BasicPart"}),
         function (data) {
-            equal(data.length, 3);
+            equal(data.length, 54);
         });
 
 testThroughAsync("query CompositeParts",

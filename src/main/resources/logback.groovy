@@ -10,11 +10,36 @@
 // For professional support please see
 //   http://www.qos.ch/shop/products/professionalSupport
 
+def logLevel = TRACE
+def rootLevel = INFO
+
+if (System.getProperty("loglevel") != null){
+    switch (System.getProperty("loglevel").toUpperCase()){
+        case 'OFF':
+            logLevel = OFF
+            rootLevel = OFF
+            break
+        case 'ERROR':
+            logLevel = ERROR
+            rootLevel = ERROR
+            break
+        case 'WARN':
+            logLevel = WARN
+            rootLevel = WARN
+            break
+        case 'INFO':
+            logLevel = INFO
+            break
+        case 'DEBUG':
+            logLevel = DEBUG
+            break
+    }
+}
 
 appender("STDOUT", ConsoleAppender) {
   encoder(PatternLayoutEncoder) {
     pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
   }
 }
-root(INFO, ["STDOUT"])
-logger("org.clothocad", TRACE)
+root(rootLevel, ["STDOUT"])
+logger("org.clothocad", logLevel)

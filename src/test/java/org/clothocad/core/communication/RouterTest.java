@@ -116,7 +116,7 @@ public class RouterTest {
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(4, ((List) returnMessage.data).size());
+        assertEquals(55, ((List) returnMessage.data).size());
         //assertEquals(3, ((List) returnMessage.data).size());
         
         connection = new TestConnection("queryTest2");
@@ -126,7 +126,7 @@ public class RouterTest {
         sendMessage(message, connection);
         returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(3, ((List) returnMessage.data).size());
+        assertEquals(54, ((List) returnMessage.data).size());
     }
 
     
