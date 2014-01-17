@@ -187,7 +187,7 @@ public class ServerAPITest {
         query.put("schema", "Part");
         
         List<Map<String, Object>> results = api.query(query);
-        assertEquals(4, results.size());
+        assertEquals(55, results.size());
         //assertEquals(3, results.size());
         Set<String> names = new HashSet();
 
