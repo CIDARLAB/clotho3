@@ -1,14 +1,11 @@
-<div class="form-group">
-    <label class="control-label" for="functionName">Name</label>
-        <input type="text" id="functionName" ng-model="sharable.name" ng-disabled="!editMode">
-</div>
+<form-field name="Name">
+    <input type="text" id="sharableName" ng-model="sharable.name">
+</form-field>
 
-<div class="form-group">
-    <label class="control-label" for="functionId">ID</label>
-        <input type="text" id="functionId" ng-model="sharable.id" disabled>
-</div>
+<form-field name="ID">
+    <input type="text" id="sharableId" ng-model="sharable.id" disabled>
+</form-field>
 
-<div class="form-group">
-    <label class="control-label" for="functionDesc">Description</label>
-        <textarea type="text" id="functionDesc" class="input-lg" ng-model="sharable.description" style="width: 100%; height: 3em" ng-disabled="!editMode"></textarea>
-</div>
+<form-field name="Description">
+    <textarea type="text" id="sharableDescription" ng-model="sharable.description" rows="3"></textarea>
+</form-field>

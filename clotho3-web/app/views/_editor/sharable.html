@@ -1,10 +1,12 @@
 <div ng-controller="Editor_SharableCtrl">
 
+    <fieldset class="ng-cloak" ng-disabled="!editMode">
     <legend>Sharable Editor</legend>
-    <div class="ng-cloak">
+    <div>
         <!--don't include _objBaseFields as they are generated in insert-fields-->
         <insert-fields></insert-fields>
 
         <div ng-include="_formActions"></div>
     </div>
+    </fieldset>
 </div>

@@ -2,32 +2,32 @@
     <legend>Function Editor</legend>
     <div class="ng-cloak">
 
-        <div ng-include="_objBaseFields"></div>
+        <fieldset ng-disabled="!editMode">
+            <div ng-include="_objBaseFields"></div>
 
-        <div class="form-group">
-            <label class="control-label" for="functionLang">Language</label>
-                <select id="functionLang" ng-model="sharable.language" ng-disabled="!editMode" ng-options="lang.value as lang.name for lang in langTypes" required></select>
-        </div>
+            <form-field name="Language">
+                <select id="functionLang" ng-model="sharable.language" ng-options="lang.value as lang.name for lang in langTypes" required></select>
+            </form-field>
 
-        <div class="form-group">
-            <label class="control-label" for="functionPre">Precondition</label>
-                <textarea type="text" id="functionPre" class="input-lg" ng-model="sharable.precondition" style="width: 100%; height: 6em" ng-disabled="!editMode"></textarea>
-        </div>
+            <form-field name="Precondition">
+                <textarea type="text" id="functionPre" class="input-lg" ng-model="sharable.precondition" rows="3"></textarea>
+            </form-field>
 
-        <div class="form-group">
-            <label class="control-label">Dependencies</label>
+            <div class="form-group">
+                <label class="control-label">Dependencies</label>
                 <div ng-repeat="param in sharable.dependencies" class="pull-left">
                     <div class="input-group">
-                        <input type="text" class="input-xlarge" ng-model="param" ng-disabled="!editMode">
-                        <button class="btn" ng-click="sharable.dependencies.splice($index, 1)" ng-disabled="!editMode">&times;</button>
+                        <input type="text" class="input-xlarge" ng-model="param">
+                        <button class="btn" ng-click="sharable.dependencies.splice($index, 1)">&times;</button>
                     </div>
 
                 </div>
-                <button class="btn pull-right" type="button" ng-click="addDep()" ng-disabled="!editMode"><i class="glyphicon glyphicon-plus"></i></button>
-        </div>
+                <button class="btn pull-right" type="button" ng-click="addDep()"><i class="glyphicon glyphicon-plus"></i></button>
+            </div>
 
-        <div class="form-group">
-            <label class="control-label">Arguments</label>
+
+            <div class="form-group">
+                <label class="control-label">Arguments</label>
                 <div ng-repeat="param in sharable.args" class="pull-left">
                     <select ng-model="param.type" class="col-xs-2" ng-disabled="!editMode" ng-options="c.name as c.name group by c.category for c in paramTypes">
                     </select>
@@ -42,16 +42,17 @@
 
                 </div>
                 <button class="btn pull-right" type="button" ng-click="addArg()" ng-disabled="!editMode"><i class="glyphicon glyphicon-plus"></i></button>
-        </div>
+            </div>
 
 
-        <textarea ui-codemirror="codemirrorEditorOptions" id="functionCode" ng-model="sharable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
+            <textarea ui-codemirror="codemirrorEditorOptions" id="functionCode" ng-model="sharable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
 
-        {{ sharable.code }}
+            {{ sharable.code }}
 
 
-        <div clotho-file-upload style="padding: 10px 0; border: 1px solid #cccccc;"></div>
+            <div clotho-file-upload style="padding: 10px 0; border: 1px solid #cccccc;"></div>
 
+        </fieldset>
 
 
         <h3 class="text-center">
