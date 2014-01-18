@@ -69,10 +69,11 @@ angular.module('clotho.core').service('Collector',
             // returns an item, or optional defaultValue if not found
             var getItem = function( key, defaultValue ){
                 var value = refStorage.getItem( prefix+key );
+	            console.log(value, typeof value);
                 if (typeof value == 'undefined' || value === false){
-                    return((typeof( defaultValue ) != "undefined") ? defaultValue : null );
+                    return(angular.isDefined(defaultValue) ? defaultValue : null );
                 } else {
-                    return(serializer.parse( value ) );
+                    return angular.isObject(value) ? value : serializer.parse(value);
                 }
             };
 

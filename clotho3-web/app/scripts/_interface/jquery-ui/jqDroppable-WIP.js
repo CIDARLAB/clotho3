@@ -1,4 +1,4 @@
-angular.module('clotho.interface')..directive('jqDroppable', function() {
+angular.module('clotho.interface').directive('jqDroppable', function() {
 	return {
 		restrict: 'A',
 		require: ['?ngModel', '^?jqDraggable'],

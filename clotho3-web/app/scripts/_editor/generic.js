@@ -97,9 +97,11 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
                     return str.indexOf(suffix, str.length - suffix.length) !== -1;
                 }
 
-                if (angular.isUndefined(obj) || angular.isEmpty(obj)) { return 'undefined' }
+                if (angular.isUndefined(obj) || angular.isUndefined(obj.schema) || angular.isEmpty(obj)) { return 'undefined' }
 
                 var schema = angular.lowercase(obj.schema);
+	            
+	              console.log(obj, schema);
 
                 if (endsWith(schema, 'schema'))
                     return 'schema';
@@ -116,6 +118,8 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 	          // should check for custom template and use if exists. otherwise, do the form generation for the generic
             $scope.getPartialAndCompile = function(type, obj) {
                 $scope.editMode = false;
+
+	              //todo - just $http the suspected path based on schema, use error clause
 
                 switch (angular.lowercase(type)) {
                     case 'function' : {

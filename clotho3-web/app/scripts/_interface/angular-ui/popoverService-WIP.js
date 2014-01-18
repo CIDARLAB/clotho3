@@ -1,4 +1,4 @@
-Application.Interface.service('popoverService', [ '$compile', '$timeout', '$parse', '$window', '$tooltip',  function ( $compile, $timeout, $parse, $window, $tooltip ) {
+angular.module('clotho.interface').service('popoverService', [ '$compile', '$timeout', '$parse', '$window', '$tooltip',  function ( $compile, $timeout, $parse, $window, $tooltip ) {
 
 	//todo - hack to show by parameter
 

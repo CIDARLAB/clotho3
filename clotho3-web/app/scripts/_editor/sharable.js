@@ -1,10 +1,9 @@
 angular.module('clotho.editor').controller('Editor_SharableCtrl', function($scope, $compile, Clotho) {
 
 	$scope.$watch('sharable', function(newval) {
-		console.log(newval);
 		Clotho.get(newval.schema).then(function(result) {
 			$scope.schema = result;
-			$scope.schema_custom = result.custom;
+			//$scope.schema_custom = result.custom; //deprecated
 
 			//todo - this is kinda a hack... should get element more directly
 			var insert = angular.element(document).find('insert-fields').html(generateDynamicForm());
