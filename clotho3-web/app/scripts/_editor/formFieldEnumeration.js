@@ -156,18 +156,18 @@ angular.module('clotho.editor')
 						console.log('updating fields');
 						scope.generateFields();
 					}
-				});
+				}, true);
 
 				//update schema with superClass fields
 				scope.$watch('schema', function (newval) {
-					if (!!newval) {
+					if (!!newval && !!newval.fields && newval.fields.length) {
 						console.log('updating schema');
 						scope.getSuperClasses(newval)
 							.then(function() {
 								scope.generateFields();
 							});
 					}
-				});
+				}, true);
 
 				//update sharable schema based on superClass
 				scope.$watch('sharable', function(newval) {
@@ -182,7 +182,7 @@ angular.module('clotho.editor')
 							scope.generateFields({schema : compiledSchema});
 						});
 					}
-				});
+				}, true);
 
 			}
 		}

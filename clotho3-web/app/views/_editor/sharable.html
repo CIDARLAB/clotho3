@@ -6,6 +6,19 @@
         <!--don't include _objBaseFields as they are generated in insert-fields-->
         <!--<insert-fields></insert-fields>-->
     </div>
+
+        <hr />
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <input type="text" class="form-control" ng-model="newFieldKey" placeholder="New Field Key">
+        </div>
+        <div class="col-md-7">
+            <input type="text" class="form-control" ng-model="newFieldVal" placeholder="New Field Value">
+        </div>
+        <button ng-click="addNewField()" class="btn btn-default col-md-2" ng-disabled="!newFieldVal || !newFieldKey">Add Field</button>
+    </div>
+
     </fieldset>
     <div ng-include="_formActions"></div>
 </div>
