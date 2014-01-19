@@ -2,9 +2,9 @@
 
     <fieldset class="ng-cloak" ng-disabled="!editMode">
     <legend>Sharable Editor</legend>
-    <div>
+    <div form-field-enumeration sharable="sharable">
         <!--don't include _objBaseFields as they are generated in insert-fields-->
-        <insert-fields></insert-fields>
+        <!--<insert-fields></insert-fields>-->
     </div>
     </fieldset>
     <div ng-include="_formActions"></div>

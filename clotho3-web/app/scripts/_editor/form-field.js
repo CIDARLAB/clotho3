@@ -2,7 +2,7 @@ angular.module('clotho.editor')
 /**
  * @name formField
  *
- * @description Wrapper for form elements, adding bootstrap classes automatically. Also adds Labels and Help blocks.
+ * @description Wrapper for form elements, adding bootstrap classes automatically. Also adds Labels and Help blocks. Must be recompiled so don't change internal contents and expect re-render.
  *
  * @note Known problem: Updates to form controls within this directive will not an undefined model. Model should at least be declared as empty object.
  *

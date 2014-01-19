@@ -5,23 +5,8 @@ angular.module('clotho.angularAdditions', [
 	.config(function() {
 		//angular function extensions
 		var ext = {};
-		//taken from Lodash so not a dependency for core module
-		ext.isEmpty = function isEmpty(value) {
-			var result = true;
-			if (!value) {
-				return result;
-			}
-			var className = toString.call(value),
-				length = value.length;
-
-			if ((className == '[object Array]' || className == '[object String]' || className == '[object Arguments]' ) ||
-				(className == '[object Object]' && typeof length == 'number' && isFunction(value.splice))) {
-				return !length;
-			}
-			forOwn(value, function() {
-				return (result = false);
-			});
-			return result;
+		ext.isEmpty = function(value) {
+			return (angular.isDefined(_) && _.isEmpty(value)) || angular.isUndefined(value) || value === '' || value === null || value !== value;
 		};
 		ext.isScope = function(obj) {
 			return obj && obj.$evalAsync && obj.$watch;

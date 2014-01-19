@@ -150,23 +150,33 @@ function generateClothoAPI() {
     };
 
     var get_async = function clothoAPI_get_async(uuid, options) {
-        //check collector
-        var retrieved = Collector.retrieveModel(uuid);
 
-        if (!!retrieved) {
-            var deferred = $q.defer();
-            deferred.resolve(retrieved);
-            return deferred.promise;
-        } else {
-            var callback = function(data) {
-                Collector.storeModel(uuid, data);
-            };
+		    if (angular.isUndefined(uuid)) {
+			    return $q.when();
+		    }
 
-            return fn.emitSubCallback('get', uuid, callback, options);
-        }
+	      //check collector
+	      var retrieved = Collector.retrieveModel(uuid);
+
+	      if (!!retrieved) {
+	          var deferred = $q.defer();
+	          deferred.resolve(retrieved);
+	          return deferred.promise;
+	      } else {
+	          var callback = function(data) {
+	              Collector.storeModel(uuid, data);
+	          };
+
+	          return fn.emitSubCallback('get', uuid, callback, options);
+	      }
     };
 
     var get_sync = function clothoAPI_get_sync(uuid, options) {
+
+		    if (angular.isUndefined(uuid)) {
+			    return;
+		    }
+
         //check collector
         var data = Collector.retrieveModel(uuid);
 
