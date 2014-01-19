@@ -10,7 +10,7 @@ angular.module('clotho.clothoDirectives')
 		return 'widgets/' + viewId + (!!url ? '/' + url : '');
 	}
 
-	//simple polyfill for Clotho.get() to retrieve a view
+	//client polyfill for Clotho.get() to retrieve a view for testing
 	var clientGetView = function(viewId) {
 		return $http.get(generateWidgetUrl(viewId) + '/model.json')
 		.then(function(data){
@@ -31,7 +31,7 @@ angular.module('clotho.clothoDirectives')
 		var nestedDeps = [];
 		_.forEach(view.importedViews, function (id, alias) {
 			//return Clotho.get(id).then(function(retrievedView) {    //when server
-			nestedDeps.push($q.when(clientGetView(id))                //testing
+			nestedDeps.push(clientGetView(id)               //testing
 				.then(function (retrievedView) {
 					return downloadDependencies(retrievedView);
 				})
