@@ -51,7 +51,7 @@ angular.module('clotho.clothoDirectives')
 					if (view.bootstrap) {
 						//creating custom module so we can set some stuff up without taking the module creation out of the user's control
 						var customModuleName = view.id + '-additions';
-						var dependencies = view.bootstrap.includeExtensionsModule === true ? ['clotho.extensions'] : [];
+						var dependencies = view.bootstrap.excludeExtensionsModule !== false ? ['clotho.extensions'] : [];
 						angular.module(customModuleName, dependencies)
 							.run(function($rootScope) {
 								//extend scope with dictionary

@@ -27,9 +27,6 @@
 		}
 	},
 
-	//if true, will include module clotho.extensions so can add components easily
-	"includeExtensionsModule": true,
-
 	//attach a controller for the whole widget - use angular.module("clotho.extensions") if not using own module and use boolean to include module
 	"controller": "123456789_parentController",
 
