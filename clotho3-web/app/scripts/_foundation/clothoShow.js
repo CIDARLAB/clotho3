@@ -4,11 +4,9 @@ angular.module('clotho.clothoDirectives')
  *
  * @usage <div clotho-show="VIEW_ID"></div>
  */
-.directive('clothoShow', function ($q, $http, $timeout, $browser, $rootScope, $compile, Clotho, PubSub) {
+.directive('clothoShow', function ($q, $http, $timeout, $browser, $rootScope, $compile, Clotho, PubSub, ClothoUtils) {
 
-	function generateWidgetUrl (viewId, url) {
-		return 'widgets/' + viewId + (!!url ? '/' + url : '');
-	}
+	var generateWidgetUrl = ClothoUtils.generateWidgetUrl;
 
 	//client polyfill for Clotho.get() to retrieve a view for testing
 	var clientGetView = function(viewId) {
@@ -17,44 +15,6 @@ angular.module('clotho.clothoDirectives')
 			return data.data
 		});
 	};
-
-	/*
-	 Download view dependencies recursively.
-
-	 Will go into imported views sequentially, download *their* dependencies, then bubble up to current view.
-
-	 Returns promise that is fulfilled when all dependencies downloaded
-	 */
-	var downloadDependencies = function (view) {
-
-		//create array of promises of nested dependencies from importedView
-		var nestedDeps = [];
-		_.forEach(view.importedViews, function (id, alias) {
-			//return Clotho.get(id).then(function(retrievedView) {    //when server
-			nestedDeps.push(clientGetView(id)               //testing
-				.then(function (retrievedView) {
-					return downloadDependencies(retrievedView);
-				})
-			);
-		});
-
-		//download nested dependencies, from deepest import bubbling up
-		return $q.all(nestedDeps)
-			//after imported dependencies downloaded, mixin current view's dependencies
-			.then(function() {
-				console.log('downloaded nested dependencies of view ' + view.id);
-				var relativeDeps = [];
-				_.forEach(view.dependencies, function (dep) {
-					relativeDeps.push(generateWidgetUrl(view.id, dep));
-				});
-
-				return $clotho.extensions.mixin(relativeDeps);
-			})
-			.then(function() {
-				return view;
-			});
-	};
-
 
 	return {
 		terminal: true,
@@ -80,7 +40,7 @@ angular.module('clotho.clothoDirectives')
 			$q.when(clientGetView(scope.id))              //testing
 				//Clotho.get(scope.id)                      //when server handles
 				.then(function(view){
-					return downloadDependencies(view);
+					return ClothoUtils.downloadViewDependencies(view);
 				})
 				.then(function (view) {
 
