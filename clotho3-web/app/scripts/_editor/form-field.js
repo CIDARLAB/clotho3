@@ -6,23 +6,24 @@ angular.module('clotho.editor')
  *
  * @note Known problem: Updates to form controls within this directive will not an undefined model. Model should at least be declared as empty object.
  *
- * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select).
+ * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName.
  *
  * @example
- <form-field name="Long Input" help="Enter a short biography about yourself">
+ <form-field name="Long Input" help="Enter a short biography about yourself" removable="true">
  <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography"></textarea>
  </form-field>
 
- Produces:
+ Produces (some removeField classes stripped):
 
  <div ng-form="" class="form-group" name="Long Input" help="Enter a short biography about yourself">
  <label for="exampleTextarea">Long Input</label>
  <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography" class="form-control"></textarea>
+ <button ng-click="removeField($index)"></button>
  <p class="help-block">Enter a short biography about yourself</p>
  </div>
 
  */
-	.directive('formField', function () {
+	.directive('formField', function ($compile) {
 
 		var template = '<div class="form-group" ng-form ng-transclude>' +
 			'</div>';
@@ -32,14 +33,18 @@ angular.module('clotho.editor')
 			template: template,
 			replace: true,
 			transclude: true,
-			require: '^form',
+			require: ['^form', '^clothoEditor'],
 			controller: function ($scope, $element, $attrs) {
 
 			},
-			link : function linkFunction(scope, element, attrs, formCtrl) {
+			link : function linkFunction(scope, element, attrs, parentCtrls) {
+
+				var formCtrl = parentCtrls[0],
+					editorCtrl = parentCtrls[1];
 
 				var passedName = attrs.name,
 					passedHelp = attrs.help,
+					removable = attrs.removableField,
 					childElement = element.children();
 
 				if (childElement.length !== 1) {
@@ -74,16 +79,24 @@ angular.module('clotho.editor')
 				if (regWrapElementInType.test(elemType)) {
 					label.prepend(childElement);
 					var wrapper = angular.element('<div class="'+elemType+'"></div>');
-					wrapper.append(label);
+					element.append(wrapper);
+				}
+
+				scope.removeField = editorCtrl.removeField;
+
+				if (removable) {
+					var wrapper = angular.element('<div class="input-group"></div>');
+					var removeButton = angular.element('<span class="input-group-btn"><button class="btn btn-danger" type="button" ng-click="removeField(\''+removable+'\')"><span class="glyphicon glyphicon-trash"></span></button></span>');
+					$compile(removeButton)(scope);
+					wrapper.prepend(element.contents());
+					wrapper.append(removeButton);
 					element.append(wrapper);
 				}
 
 				//add label if pass name
-				else if (passedName) {
+				if (passedName) {
 					element.prepend(label);
 				}
-
-
 
 				//append help
 				if (passedHelp) {
@@ -92,9 +105,9 @@ angular.module('clotho.editor')
 
 				//watch for error
 				scope.$watch(function() {
-					return formCtrl.$invalid && formCtrl.$error;
-				}, function (isValid, lastVal) {
-					element.toggleClass('has-error', isValid);
+					return formCtrl.$invalid || Object.keys(formCtrl.$error).length > 0;
+				}, function (isInvalid, lastVal) {
+					element.toggleClass('has-error', isInvalid);
 				});
 			}
 		};

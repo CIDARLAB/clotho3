@@ -160,6 +160,14 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 		                }
                 }
             };
+
+	          //controller API
+	          return {
+		          removeField : function (name) {
+			          console.log('removing key ' + name);
+			          delete $scope.sharable[name];
+		          }
+	          }
         },
         compile: function compile(tElement, tAttrs, transclude) {
 
@@ -212,8 +220,6 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
 		                //watch for internal PubSub Changes
 		                Clotho.watch(scope.id, scope.sharable, scope);
-
-
 
                     scope.$watch('inputSharable', function(newval, oldval) {
                         scope.processInputSharable(newval);

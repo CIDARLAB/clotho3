@@ -7,7 +7,7 @@ angular.module('clotho.editor')
  * - schema: pass a schema to generate a list of fields from the schema
  * - sharable: pass a sharable (containing a schema) to generate a form containing its fields, and the fields of its schema
  */
-	.directive('formFieldEnumeration', function (Clotho, $q, $compile) {
+	.directive('formFieldEnumeration', function (Clotho, ClothoUtils, $q, $compile) {
 
 		function generateDynamicForm (fields) {
 			var fulltext = "";
@@ -30,7 +30,7 @@ angular.module('clotho.editor')
 				if (type == '?') field.type == 'text';
 				var required = field.required ? "required" : "";
 
-				var htmlText_pre = '<form-field name="' + field.name + '">';
+				var htmlText_pre = '<form-field name="' + field.name + '" removable-field="' + field.name + '">';
 				var htmlText_post = '</form-field>';
 				var inputText;
 
@@ -74,46 +74,6 @@ angular.module('clotho.editor')
 			},
 			controller: function($scope, $element, $attrs) {
 
-				//todo - clean up
-				//will update schema as reference (whether sharable.schema or just a schema object)
-				$scope.getSuperClasses = function (schema) {
-
-					//initial check
-					if (!schema.superClass) {
-						return schema
-					}
-
-					var finalSchema = angular.copy(schema);
-					var promiseChain = $q.when();
-					var reachedBottom = $q.defer();
-
-					function getSuperClass (passedSchema) {
-						if (passedSchema.superClass) {
-							promiseChain.then(function () {
-								//testing console.log('retriving ' + passedSchema.superClass);
-								return Clotho.get(passedSchema.superClass)
-								.then(function (retrieved) {
-									//testing console.log('retrieved ' + retrieved.id + ' - ' + retrieved.name, _.pluck(retrieved.fields, 'name'), retrieved);
-									finalSchema.fields = finalSchema.fields.concat(retrieved.fields);
-									//testing console.log('finalSchema now', _.pluck(finalSchema.fields, 'name'));
-									return getSuperClass(retrieved)
-								});
-							});
-						} else {
-							reachedBottom.resolve();
-						}
-					}
-
-					getSuperClass(schema);
-
-					return reachedBottom.promise.then(function() {
-						return promiseChain
-					})
-					.then(function (chain) {
-						return finalSchema;
-					});
-				};
-
 				$scope.generateFields = function (opts) {
 
 					var fields = opts.fields || $scope.fields || [];
@@ -150,11 +110,19 @@ angular.module('clotho.editor')
 					return;
 				}
 
+				function updateWithSchema (schema) {
+					return ClothoUtils.downloadSchemaDependencies(schema)
+					.then(function(compiledSchema) {
+						scope.generateFields({schema : compiledSchema});
+					});
+				}
+
 				//regenerate if fields change
 				scope.$watch('fields', function (newval) {
 					if (!!newval) {
 						console.log('updating fields');
-						scope.generateFields();
+
+						scope.generateFields({fields: newval});
 					}
 				}, true);
 
@@ -162,10 +130,8 @@ angular.module('clotho.editor')
 				scope.$watch('schema', function (newval) {
 					if (!!newval && !!newval.fields && newval.fields.length) {
 						console.log('updating schema');
-						scope.getSuperClasses(newval)
-							.then(function() {
-								scope.generateFields();
-							});
+
+						updateWithSchema(newval);
 					}
 				}, true);
 
@@ -173,14 +139,11 @@ angular.module('clotho.editor')
 				scope.$watch('sharable', function(newval) {
 					if (!!newval) {
 						console.log('updating sharable');
+
 						Clotho.get(newval.schema)
 						.then(function(retrievedSchema) {
-							return scope.getSuperClasses(retrievedSchema)
+							updateWithSchema(retrievedSchema);
 						})
-						.then(function(compiledSchema) {
-							console.log(compiledSchema);
-							scope.generateFields({schema : compiledSchema});
-						});
 					}
 				}, true);
 
