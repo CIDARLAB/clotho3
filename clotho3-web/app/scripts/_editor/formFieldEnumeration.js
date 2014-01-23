@@ -136,11 +136,15 @@ angular.module('clotho.editor')
 				}, true);
 
 				//update sharable schema based on superClass
-				scope.$watch('sharable', function(newval) {
-					if (!!newval) {
+				scope.$watch(function () {
+					return _.keys(scope.sharable)
+				}, function(newkeys) {
+					if (!!scope.sharable) {
 						console.log('updating sharable');
 
-						Clotho.get(newval.schema)
+						//todo - don't get schema and just pass fields
+
+						Clotho.get(scope.sharable.schema)
 						.then(function(retrievedSchema) {
 							updateWithSchema(retrievedSchema);
 						})

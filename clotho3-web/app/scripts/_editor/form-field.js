@@ -4,7 +4,7 @@ angular.module('clotho.editor')
  *
  * @description Wrapper for form elements, adding bootstrap classes automatically. Also adds Labels and Help blocks. Must be recompiled so don't change internal contents and expect re-render.
  *
- * @note Known problem: Updates to form controls within this directive will not an undefined model. Model should at least be declared as empty object.
+ * @note The element declared as child of form-field is transcluded, ng-model delcarations will run into prototypical inheritance weirdness (i.e. if you don't declare in the form of "object.field", define as "$parent.object"). Updates to form controls within this directive will not an undefined model. Model should at least be declared as empty object.
  *
  * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName.
  *
@@ -33,7 +33,7 @@ angular.module('clotho.editor')
 			template: template,
 			replace: true,
 			transclude: true,
-			require: ['^form', '^clothoEditor'],
+			require: ['^form', '^?clothoEditor'],
 			controller: function ($scope, $element, $attrs) {
 
 			},
@@ -82,7 +82,7 @@ angular.module('clotho.editor')
 					element.append(wrapper);
 				}
 
-				scope.removeField = editorCtrl.removeField;
+				scope.removeField = angular.isDefined(editorCtrl) ? editorCtrl.removeField : angular.noop;
 
 				if (removable) {
 					var wrapper = angular.element('<div class="input-group"></div>');
@@ -105,7 +105,7 @@ angular.module('clotho.editor')
 
 				//watch for error
 				scope.$watch(function() {
-					return formCtrl.$invalid || Object.keys(formCtrl.$error).length > 0;
+					return formCtrl.$invalid;
 				}, function (isInvalid, lastVal) {
 					element.toggleClass('has-error', isInvalid);
 				});
