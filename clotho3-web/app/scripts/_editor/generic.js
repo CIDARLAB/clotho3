@@ -32,6 +32,7 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
 	          //determine whether to start in edit mode
 	          $scope.editMode = !!$scope.editMode;
+	          $scope.showJsonEditor = false;
 
 	          //for testing, easily log scope
 	          $scope.logScope = function() { console.log($scope); };
@@ -39,7 +40,6 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
             /** config **/
             $scope.schema = {}; //todo - remove
-            $scope.formDirty = false; // todo - remove
 
 	          //scoped variables for including templates
 	          $scope._objBaseFields = 'views/_editor/_baseFields.html';
@@ -90,7 +90,7 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
             COMPILATION
             **********/
 
-	          //todo - needs to be generic to handle all schemas so don't need a switch for each schema name
+	          //todo - deprecate. needs to be generic to handle all schemas so don't need a switch for each schema name
 	          //(or rename all templates and remove this method)
             $scope.determineType = function(obj) {
                 function endsWith(str, suffix) {
@@ -114,12 +114,11 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
                 return 'sharable';
             };
 
-	          //todo - handle types that do not require additional processing but have custom template (e.g. trail)
 	          // should check for custom template and use if exists. otherwise, do the form generation for the generic
             $scope.getPartialAndCompile = function(type, obj) {
                 $scope.editMode = false;
 
-	              //todo - just $http the suspected path based on schema, use error clause
+	              //todo - just $http the suspected path based on schema, use error clause to default to generic sharable editor
 
                 switch (angular.lowercase(type)) {
                     case 'function' : {
@@ -172,21 +171,25 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
         compile: function compile(tElement, tAttrs, transclude) {
 
             return {
-                pre: function preLink(scope, iElement, iAttrs, controller) {
+                pre: function preLink(scope, iElement, iAttrs, controllers) {
 
                 },
-                post: function postLink(scope, iElement, iAttrs, ngModelCtrl) {
+                post: function postLink(scope, iElement, iAttrs, controllers) {
 
                     /* config */
 
-                    scope.form = $parse(iAttrs.name)(scope);
+                    scope.formCtrl = controllers[1];
 
                     scope.edit = function() {
                         scope.editMode = true;
                     };
 
+		                scope.toggleJsonEdit = function() {
+			                scope.showJsonEditor = !scope.showJsonEditor;
+		                };
+
                     scope.reset = function() {
-                        scope.form.$setPristine();
+                        scope.formCtrl.$setPristine();
                         Clotho.get(scope.id).then(function(result) {
                             scope.sharable = result;
                         });
@@ -207,7 +210,7 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
                             scope.editMode = false;
                             scope.sharable = null;
                             scope.id = null;
-                            scope.compileEditor();
+                            scope.processInputSharable({});
                         });
                     };
 

@@ -17,6 +17,13 @@
         <button ng-click="addNewField()" class="btn btn-default col-md-2" ng-disabled="!newFieldVal || !newFieldKey">Add Field</button>
     </div>
 
+    <div ng-show="showJsonEditor">
+        <hr>
+        <form-field name="Edit JSON directly">
+            <textarea json-edit ng-model="$parent.sharable" rows="12"></textarea>
+        </form-field>
+    </div>
+
     </fieldset>
     <div ng-include="_formActions"></div>
 </div>

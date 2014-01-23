@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.interface')
+angular.module('clotho.editor')
 	.directive('jsonEdit', function () {
 		return {
 			restrict: 'A',
@@ -11,12 +11,10 @@ angular.module('clotho.interface')
 			link: function(scope, element, attrs, ngModelCtrl) {
 
 				function fromUser(text) {
-
-					console.log(text, typeof text);
 					try {
 						return angular.fromJson(text);
 					} catch (err) {
-						ngModelCtrl.$setValidity(false);
+						ngModelCtrl.$setValidity('json', false);
 						return text;
 					}
 				}
@@ -33,6 +31,8 @@ angular.module('clotho.interface')
 					} catch (err) {
 						flag = false;
 					}
+					console.log(flag);
+					console.log(ngModelCtrl);
 					return flag;
 				}
 
@@ -42,6 +42,7 @@ angular.module('clotho.interface')
 
 				scope.$watch('model', function(newValue, oldValue) {
 					if (newValue != oldValue && isValidJson(newValue)) {
+						ngModelCtrl.$setValidity('json', true);
 						ngModelCtrl.$setViewValue(toUser(newValue));
 						ngModelCtrl.$render();
 					}
