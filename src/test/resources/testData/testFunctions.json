@@ -11,7 +11,7 @@
     "name":"lowercase",
     "language":"JAVASCRIPT",
     "schema":"Function",
-    "code":"function (str) {return str.toLowerCase();};",
+    "code":"function (str) {return str.toLowerCase();}",
     "args":[{"name":"str", "type":"string"}]
 },
 {

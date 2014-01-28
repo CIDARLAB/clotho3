@@ -70,6 +70,11 @@ public class JavaScriptScript implements Script {
 
     @Override
     public String modularizeFunction(String code) {
+        //semicolon check
+        code = code.trim();
+        if (!code.endsWith(";")){
+            code = code + ";";
+        }
         String format = "(function() {"
                 + "var f = %s"
                 + "return f;"
