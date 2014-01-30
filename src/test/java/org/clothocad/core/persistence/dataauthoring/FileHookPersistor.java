@@ -8,7 +8,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Files;
@@ -24,7 +23,6 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.OverwriteConfirmationException;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.util.JSON;
 
 /**

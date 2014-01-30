@@ -38,7 +38,7 @@ public class Doo
         if(parent == null) {
             parentDooId = null;
         } else {
-            parentDooId = parent.getUUID();
+            parentDooId = parent.getId();
         }
         savePolicy = saveit;
         save();

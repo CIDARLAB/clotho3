@@ -4,7 +4,7 @@
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
+import org.clothocad.core.persistence.Reference;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

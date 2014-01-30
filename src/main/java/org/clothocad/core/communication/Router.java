@@ -65,9 +65,6 @@ public class Router {
                 case autocomplete:
                     api.autocomplete(data.toString());
                     break;
-                case autocompleteDetail:
-                    api.autocompleteDetail(data.toString());
-                    break;
                 case submit:
                     response = api.submit(data.toString());
                     break;

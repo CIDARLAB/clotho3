@@ -69,10 +69,10 @@ public class PersistorTest {
         Part part2 = Part.generateBasic("different test part", "This part is another test", "TCAG", new FreeForm(), testPerson);
         persistor.save(part1);
 
-        ObjectId id1 = part1.getUUID();
+        ObjectId id1 = part1.getId();
 
         //can now find testPerson in DB
-        assertNotNull(testPerson.getUUID());
+        assertNotNull(testPerson.getId());
 
 
         testPerson.setDisplayName("Different Name");
@@ -113,10 +113,10 @@ public class PersistorTest {
         Part p = Part.generateBasic("test part", "This part is a test", "ATCG", new FreeForm(), null);
         persistor.save(p);
 
-        ObjectId id = p.getUUID();
+        ObjectId id = p.getId();
         ExtendedPart ep = persistor.get(ExtendedPart.class, id);
 
-        assertEquals(p.getUUID(), ep.getUUID());
+        assertEquals(p.getId(), ep.getId());
         assertEquals("test part", ep.getName());
         assertEquals("This part is a test", ep.getShortDescription());
 
@@ -186,7 +186,7 @@ public class PersistorTest {
 
     public static void saveAndGet(ObjBase o) {
         persistor.save(o);
-        ObjectId id = o.getUUID();
+        ObjectId id = o.getId();
         Class c = o.getClass();
         o = null;
         persistor.get(c, id);

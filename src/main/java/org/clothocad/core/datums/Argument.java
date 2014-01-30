@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.IdUtils;
-import org.clothocad.core.persistence.Replace;
-import org.clothocad.core.persistence.mongodb.ClothoMappedField;
 import org.clothocad.core.schema.Schema;
 
 /**
@@ -29,7 +27,7 @@ public class Argument {
     @Getter
     private String name;
     @Getter
-    @Replace(encoder = "jsonifyFieldType", decoder = "decodeFieldType")
+    //XXX: @Replace(encoder = "jsonifyFieldType", decoder = "decodeFieldType")
     private Class type;
 
     public Argument(String name, Class type) {

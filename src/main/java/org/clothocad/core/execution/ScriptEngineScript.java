@@ -4,8 +4,6 @@
  */
 package org.clothocad.core.execution;
 
-import com.github.jmkgreen.morphia.annotations.Transient;
-import com.github.jmkgreen.morphia.annotations.PostLoad;
 import java.util.Collection;
 import java.util.Set;
 import javax.script.Invocable;
@@ -28,8 +26,7 @@ public class ScriptEngineScript implements Script {
     //TODO: each script function needs to execute in its own scope
     //but
     //script functions should be cached somehow
-    @Transient
-    protected ScriptEngine engine;
+    protected transient ScriptEngine engine;
        
     protected String source;
     protected String name;
@@ -45,8 +42,7 @@ public class ScriptEngineScript implements Script {
         getScriptEngine();
     }
     
-    @Transient
-    protected boolean loaded = false;
+    protected transient boolean loaded = false;
     
     protected void load() throws ScriptException{
         Object result = null;
@@ -61,7 +57,7 @@ public class ScriptEngineScript implements Script {
         loaded = true;
     }
     
-    @PostLoad
+    //XXX: replace @PostLoad w/ non-morphia annotation
     public void getScriptEngine(){
         engine = ClothoScriptEngineManager.getEngineByLanguage(language);
     }

@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.datums;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +14,7 @@ import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
 import org.clothocad.core.execution.JavaScriptScript;
 import org.clothocad.core.execution.Script;
-import org.clothocad.core.persistence.Replace;
+import org.clothocad.core.persistence.Reference;
 
 /**
  *
@@ -23,7 +22,6 @@ import org.clothocad.core.persistence.Replace;
  */
 public class Module extends ObjBase {
     
-    @Replace(encoder="encodeScript", decoder="decodeScript")
     protected Script code;
     @Reference
     protected Module[] dependencies;
@@ -90,7 +88,7 @@ public class Module extends ObjBase {
     private static Set<ObjectId> getDependencySet(Module[] dependencies) {
         Set<ObjectId> output = new HashSet<>();
         for (Module obj : dependencies){
-            output.add(obj.getUUID());
+            output.add(obj.getId());
         }
         return output;
     }

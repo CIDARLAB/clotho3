@@ -24,32 +24,22 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
-import com.github.jmkgreen.morphia.mapping.MappingException;
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
-import org.clothocad.core.datums.Function;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.Reference;
 import org.clothocad.core.persistence.Rename;
-import org.clothocad.core.persistence.Replace;
-import org.clothocad.core.persistence.mongodb.ClothoMappedField;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.Constraint;
-import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -58,7 +48,6 @@ import org.slf4j.LoggerFactory;
 
 @Getter
 @Setter
-@Add(provider="getType", name="javaType")
 public class ClothoField {
     
     private ClothoField() {}
@@ -95,15 +84,12 @@ public class ClothoField {
 
     private String name;
     
-    //TODO: let replace reference another class
-    @Replace(encoder="jsonifyFieldType", decoder="decodeFieldType")
     private Class<?> type;
     private Type subtype;
     private String example;   //A string representation/explanation of an expected value
     private Access access;  
     private boolean reference;
     
-    @Replace(encoder="prettyPrintConstraints", decoder="decodeConstraints")
     private Set<Constraint>  constraints;
     
     public Map prettyPrintConstraints(){
@@ -135,7 +121,7 @@ public class ClothoField {
         if (s.length() == 0) return s;
         return s.substring(0,1).toUpperCase() + s.substring(1);
     }
-    
+    /*
     public String jsonifyFieldType(){
         Class c = this.type;
         
@@ -172,7 +158,7 @@ public class ClothoField {
             throw new RuntimeException(ex);
         }
     }
-    
+    */
     public void decodeConstraints(Map object){
         Map<String, Map<String, Object>> constraints = (Map<String, Map<String, Object>>) object.get("constraints");
         if (constraints == null) return;
@@ -244,7 +230,7 @@ public class ClothoField {
                     } else if (paramType instanceof Class) {
                         return (Class) paramType;
                     } else {
-                        throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                        throw new RuntimeException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
                     }
                 }
             }

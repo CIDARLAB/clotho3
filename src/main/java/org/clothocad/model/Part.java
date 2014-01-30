@@ -22,7 +22,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
+import org.clothocad.core.persistence.Reference;
 import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.AssertTrue;
@@ -35,7 +35,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.persistence.Replace;
 
 /**
  *
@@ -64,7 +63,7 @@ public abstract class Part extends ObjBase {
     
     @Getter
     @NotNull
-    @Replace(encoder = "getFormatName", decoder="setFormatFromName")
+//XXX:    @Replace(encoder = "getFormatName", decoder="setFormatFromName")
     private Format format;
 
     @Getter

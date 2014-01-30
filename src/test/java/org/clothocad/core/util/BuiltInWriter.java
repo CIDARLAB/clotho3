@@ -18,7 +18,7 @@ import java.util.Map;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -36,7 +36,7 @@ public class BuiltInWriter {
         
         Injector injector = Guice.createInjector(
                 new ClothoTestModule(),
-                new MongoDBModule());
+                new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         
         schemas = new ArrayList<>();
@@ -65,7 +65,7 @@ public class BuiltInWriter {
     
     private static void makeBuiltIns(Class<? extends ObjBase> c, Schema superSchema, Reflections ref){
         BuiltInSchema builtIn = new BuiltInSchema(c, superSchema);
-        builtIn.setUUID(new ObjectId());
+        builtIn.setId(new ObjectId());
         schemas.add(builtIn);
         
         for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){

@@ -22,7 +22,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
+import org.clothocad.core.persistence.Reference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -126,11 +126,11 @@ public class Collection extends ObjBase {
     }
 
     <T extends ObjBase> Set<T> recursiveRelay(Class<T> type, Set<ObjectId> tested) {
-        tested.add(getUUID());
+        tested.add(getId());
         Set<T> out = new HashSet<T>();
         List<Collection> allmycollections = getAll(Collection.class);
         for (Collection childcoll : allmycollections) {
-            if (tested.contains(childcoll.getUUID())) {
+            if (tested.contains(childcoll.getId())) {
                 continue;
             }
             Set<T> itscontents = childcoll.recursiveRelay(type, tested);
@@ -156,7 +156,7 @@ public class Collection extends ObjBase {
         HashSet out = new HashSet<UUID>();
         for (ObjBase item : items){
             if (type.isInstance(item)) {
-                out.add(item.getUUID());
+                out.add(item.getId());
             }
         }
         return out;
@@ -189,7 +189,7 @@ public class Collection extends ObjBase {
         ArrayList<Plasmid> allplas = (ArrayList<Plasmid>) getAll(ObjType.PLASMID);
         ArrayList<Plasmid> out = new ArrayList<Plasmid>();
         for (Plasmid p : allplas) {
-            if (p.getPart().getUUID().equals(_myPart.getUUID())) {
+            if (p.getPart().getId().equals(_myPart.getId())) {
                 out.add(p);
             }
         }
@@ -209,9 +209,9 @@ public class Collection extends ObjBase {
         ArrayList<PlasmidSample> out = new ArrayList<PlasmidSample>();
         for (Sample p : allsam) {
             PlasmidSample ps = (PlasmidSample) p;
-            System.out.println("comparing " + ps.getPlasmid().getUUID() + "  " + _myPlasmid.getUUID());
+            System.out.println("comparing " + ps.getPlasmid().getId() + "  " + _myPlasmid.getId());
 
-            if (ps.getPlasmid().getUUID().equals(_myPlasmid.getUUID())) {
+            if (ps.getPlasmid().getId().equals(_myPlasmid.getId())) {
                 out.add(ps);
             }
         }

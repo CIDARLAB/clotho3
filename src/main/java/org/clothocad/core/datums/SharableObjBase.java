@@ -32,7 +32,7 @@ public abstract class SharableObjBase extends ObjBase implements Sharable {
     
     @Override
     public ObjectId getId() {
-        return getUUID();
+        return getId();
     }
 
     @Getter @Setter

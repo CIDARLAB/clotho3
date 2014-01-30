@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.schema;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -22,6 +21,7 @@ import org.clothocad.core.persistence.Add;
 import org.clothocad.core.persistence.Adds;
 import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.DBOnly;
+import org.clothocad.core.persistence.Reference;
 import org.clothocad.model.Person;
 
 /**
@@ -68,7 +68,7 @@ public abstract class Schema extends SharableObjBase {
     //can get bytecode from functions? 
    
     public String getBinaryName(){
-        return BASE_PACKAGE_BINARY + "C"+ this.getUUID();
+        return BASE_PACKAGE_BINARY + "C"+ this.getId();
     }
     
     public static String getBinaryName(ObjectId id){
@@ -101,7 +101,7 @@ public abstract class Schema extends SharableObjBase {
 
     public boolean childOf(Schema schema) {
         if (schema == null || superClass == null) return false;
-        if (schema.getUUID().equals(superClass.getUUID())) return true;
+        if (schema.getId().equals(superClass.getId())) return true;
         return (childOf(schema.superClass));
     }
 }

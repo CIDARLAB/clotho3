@@ -161,7 +161,7 @@ public class Persistor{
 
         //recurse in persistor
         connection.saveAll(relevantObjects);
-        return obj.getUUID();
+        return obj.getId();
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
@@ -227,8 +227,8 @@ public class Persistor{
     }
         
     private Set<ObjBase> getObjBaseSet(ObjBase obj, Set<ObjBase> exclude){
-        boolean newId = obj.getUUID() == null;
-        if(newId) obj.setUUID(ObjectId.get());
+        boolean newId = obj.getId() == null;
+        if(newId) obj.setId(ObjectId.get());
         exclude.add(obj);        
         
         //recurse on object's children

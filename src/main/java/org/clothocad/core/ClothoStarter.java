@@ -17,7 +17,7 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.webserver.jetty.ClothoWebserver;
 
@@ -39,7 +39,7 @@ public class ClothoStarter
                 return;
             }
             //TODO: if keystorepass option passed w/o arg, prompt for password 
-            Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new MongoDBModule());
+            Injector injector = Guice.createInjector(new ClothoModule(commandToProperties(cmd)), new JongoModule());
 
             Persistor persistor = injector.getInstance(Persistor.class);
         

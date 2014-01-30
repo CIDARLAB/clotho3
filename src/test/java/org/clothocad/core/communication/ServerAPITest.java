@@ -13,11 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bson.types.ObjectId;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.TestUtils;
 import org.junit.After;
@@ -46,7 +44,7 @@ public class ServerAPITest {
 
     @BeforeClass
     public static void setUpClass() {
-        Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        Injector injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
         mind = new Mind();

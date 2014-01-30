@@ -4,8 +4,8 @@
  */
 package org.clothocad.core.schema;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
 import org.clothocad.core.datums.util.ClothoField;
+import org.clothocad.core.persistence.Reference;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;
 import static org.objectweb.asm.Opcodes.*;

@@ -42,10 +42,6 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.DBClassLoader;
-import org.clothocad.core.schema.Access;
-import org.clothocad.core.schema.ClothoSchema;
-import org.clothocad.core.schema.Constraint;
-import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.TestUtils;
 import org.junit.Test;
 
@@ -87,7 +83,7 @@ public class ClothoSchemaTest {
         ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
 
         ObjectId id = new ObjectId();
-        featureSchema.setUUID(id);
+        featureSchema.setId(id);
         p.save(featureSchema);
 
         return p.get(ClothoSchema.class, id);
@@ -182,10 +178,10 @@ public class ClothoSchemaTest {
         assertEquals("sequence", field.get("name"));
         assertNotNull(((Map) field.get("constraints")).get("pattern"));
 
-        p.delete(featureSchema.getUUID());
+        p.delete(featureSchema.getId());
 
         ObjectId id = p.save(p.toJSON(featureSchema));
-        Schema secondSchema = p.get(ClothoSchema.class, featureSchema.getUUID());
+        Schema secondSchema = p.get(ClothoSchema.class, featureSchema.getId());
 
         assertEquals(output, p.toJSON(secondSchema));
     }

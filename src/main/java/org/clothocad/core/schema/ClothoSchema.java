@@ -4,10 +4,10 @@
  */
 package org.clothocad.core.schema;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Set;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.persistence.Reference;
 import org.clothocad.model.Person;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -55,7 +55,7 @@ public class ClothoSchema extends Schema {
     }
 
     protected byte[] generateClassData() {
-        logger.trace("generating class bytecode for schema {} ({})", this.getName(), this.getUUID());
+        logger.trace("generating class bytecode for schema {} ({})", this.getName(), this.getId());
 
         ClassWriter cwriter = new ClassWriter(0);
         //TraceClassVisitor tcv = new TraceClassVisitor(cwriter, new PrintWriter(System.out));

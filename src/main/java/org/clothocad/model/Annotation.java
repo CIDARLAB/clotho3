@@ -22,13 +22,13 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
 import java.awt.Color;
 
 import org.clothocad.core.datums.ObjBase;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.clothocad.core.persistence.Reference;
 
 /**
  * An Annotation is a single line of genbank essentially.  It maps a Feature

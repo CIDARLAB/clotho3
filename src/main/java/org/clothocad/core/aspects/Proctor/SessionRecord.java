@@ -36,7 +36,7 @@ import org.clothocad.model.Person;
 
 public class SessionRecord {
     public SessionRecord(Person person) {
-        this.personId = person.getUUID();
+        this.personId = person.getId();
     }
     
     public void timestampCompletion() {

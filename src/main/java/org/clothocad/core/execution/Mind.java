@@ -23,9 +23,6 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.execution;
 
-import com.github.jmkgreen.morphia.annotations.NotSaved;
-import com.github.jmkgreen.morphia.annotations.PostLoad;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +30,6 @@ import java.util.Map;
 import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 
@@ -43,8 +39,6 @@ import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.ScriptAPI;
 import org.clothocad.core.communication.ClientConnection;
-import org.clothocad.core.execution.MetaEngine;
-import org.clothocad.core.util.FileUtils;
 import org.clothocad.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,13 +146,12 @@ public final class Mind
     @Setter
     private String username;
     
-    @NotSaved
-    private List<Message> lastCommands = new ArrayList<>();
+    private transient List<Message> lastCommands = new ArrayList<>();
     
     private transient MetaEngine engine;
     
     private  List<String> lastSharables = new ArrayList<>();
-    @Getter @Setter @NotSaved
+    @Getter @Setter 
     private transient ClientConnection connection;
     
     private Map<Date, String> commandHistory;

@@ -98,18 +98,6 @@ public class ServerSideAPI {
         router.sendMessage(mind.getConnection(), msg);
     }
 
-    //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
-    public final String autocompleteDetail(String uuid) {
-        try {
-            Map<String, Object> msg = JSON.deserializeObject("{\"channel\":\"autocompleteDetail\",\"data\":{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"command\":\"clotho.run('230sdv-232', '18919e-18')\",\"versions\":[{\"uuid\":\"uuid123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"uuid\":\"uuid_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"uuid\":\"uuid456\",\"text\":\"pBca 1256\",\"author\":{\"uuid\":\"uuid_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
-            return msg.get("data").toString();
-        } catch (JsonParseException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-    }
-
     //JCA:  as 0f 6/6/2013 submit seems to work
     public final Object submit(String command) {
         //Resolve the arguments to a command string
@@ -173,6 +161,7 @@ public class ServerSideAPI {
     }
 
     public final boolean changePassword(String newPassword) {
+        //TODO
         return true;
     }
 // </editor-fold> 
@@ -520,7 +509,7 @@ public class ServerSideAPI {
                 } else if (textName != null){
                     spec.put("className", textName);
                 } else {
-                    spec.put("className", ((ObjBase) schema).getUUID());
+                    spec.put("className", ((ObjBase) schema).getId());
                 }
             } catch (EntityNotFoundException e) {
                 //maybe already full name?
@@ -741,7 +730,7 @@ public class ServerSideAPI {
 //            System.out.println("Trail i has been created: " + i.toString());
 //            
 //            Persistor.get().save(i);
-//            ObjectId id = i.getUUID();
+//            ObjectId id = i.getId();
 //            
 //            String uuid = id.toString();
 //

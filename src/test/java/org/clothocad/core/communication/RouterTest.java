@@ -15,12 +15,8 @@ import javax.persistence.EntityNotFoundException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.bson.types.ObjectId;
-import org.clothocad.core.communication.Channel;
-import org.clothocad.core.communication.Message;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -46,7 +42,7 @@ public class RouterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         router = injector.getInstance(Router.class);
         SecurityUtils.setSecurityManager(new DefaultSecurityManager());
     }

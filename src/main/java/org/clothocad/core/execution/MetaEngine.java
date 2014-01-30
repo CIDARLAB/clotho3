@@ -4,10 +4,6 @@
  */
 package org.clothocad.core.execution;
 
-import com.github.jmkgreen.morphia.annotations.NotSaved;
-import com.github.jmkgreen.morphia.annotations.PostLoad;
-import com.github.jmkgreen.morphia.annotations.PreLoad;
-import com.github.jmkgreen.morphia.annotations.PrePersist;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import java.util.Collection;
@@ -33,16 +29,14 @@ import org.mozilla.javascript.RhinoException;
  */
 public class MetaEngine {
     
-    @NotSaved
-    private Map<Language,ScriptContext> contexts = new HashMap<>();
+    private transient Map<Language,ScriptContext> contexts = new HashMap<>();
     
-    @NotSaved
-    private Map<Language,ScriptEngine> engines = new HashMap<>();
+    private transient Map<Language,ScriptEngine> engines = new HashMap<>();
     
-    private Map<Language, Map<String, Object>> bindings = new HashMap<>();
+    private Map<Language, Bindings> bindings = new HashMap<>();
     
 
-    
+    /*
     @PreLoad
     public DBObject preLoad(DBObject obj){
         Map map = ((BasicDBObject) obj.get("bindings")).toMap();
@@ -54,7 +48,7 @@ public class MetaEngine {
         obj.removeField("bindings");
         return obj;
     }
-    
+    * XXX: create contexts after load
     @PostLoad
     public void postLoad(){
         for (Language key : bindings.keySet()){
@@ -62,16 +56,16 @@ public class MetaEngine {
             context.setBindings(new SimpleBindings(bindings.get(key)), ScriptContext.ENGINE_SCOPE);
         }
     }
-    
+    * XXX: make clotho binding effectively transient
     @PrePersist
     public void prePersist(){
-        for (Language key : contexts.keySet()){
-            Bindings bindings = contexts.get(key).getBindings(ScriptContext.ENGINE_SCOPE);
+        for (Language language : contexts.keySet()){
+            Bindings bindings = contexts.get(language).getBindings(ScriptContext.ENGINE_SCOPE);
             bindings.remove("clotho");
-            this.bindings.put(key, bindings);
+            this.bindings.put(language, bindings);
         }
     }
-    
+    */
     public Object eval(String script, Language language, ScriptAPI api) throws ScriptException{
         ScriptContext context = getContext(language);
         HackEngine engine = getEngine(language);
@@ -120,7 +114,7 @@ public class MetaEngine {
     }
     
     public void loadAsGlobal(Module module, ScriptAPI api) throws ScriptException{
-        String name = "f"+module.getUUID().toString();
+        String name = "f"+module.getId().toString();
         //TODO: check last saved date
         //if (getEngine(module.getLanguage()).getContext().getBindings(ScriptContext.ENGINE_SCOPE).containsKey(name)){
         //    return;
@@ -135,7 +129,7 @@ public class MetaEngine {
        injectAPI(api, engine.getContext());
        loadAsGlobal(module, api);
        
-       return engine.invokeFunction(idToName(module.getUUID()), args.toArray());
+       return engine.invokeFunction(idToName(module.getId()), args.toArray());
     }
     
     
@@ -144,7 +138,7 @@ public class MetaEngine {
        injectAPI(api, engine.getContext());
        loadAsGlobal(module, api);
     
-       Object thiz = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).get(idToName(module.getUUID()));
+       Object thiz = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).get(idToName(module.getId()));
        return engine.invokeMethod(thiz, methodName, args.toArray());
     }
     

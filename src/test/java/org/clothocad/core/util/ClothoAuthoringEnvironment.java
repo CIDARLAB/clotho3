@@ -12,15 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Properties;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.apache.shiro.SecurityUtils;
-import org.clothocad.core.ClothoModule;
 import org.clothocad.core.ClothoStarter;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.dataauthoring.FileHookPersistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
 import static org.clothocad.core.util.ClothoTestEnvironment.main;
 import org.clothocad.webserver.jetty.ClothoWebserver;
@@ -42,7 +39,7 @@ public class ClothoAuthoringEnvironment extends ClothoStarter {
             }
             Injector injector = Guice.createInjector(
                     new ClothoAuthoringModule(commandToProperties(cmd)),
-                    new MongoDBModule());
+                    new JongoModule());
 
             org.apache.shiro.mgt.SecurityManager securityManager = injector.getInstance(org.apache.shiro.mgt.SecurityManager.class);
             SecurityUtils.setSecurityManager(securityManager);

@@ -79,7 +79,7 @@ public class JSON {
     
     public static Map<String, Object> mappify(Object o){
         try {
-                //XXX: ugh
+            //XXX: ugh
             return deserializeObject(serialize(o));
         } catch (JsonParseException ex) {
             throw new RuntimeException(ex);

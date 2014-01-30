@@ -45,7 +45,7 @@ public class TrailTest {
         
         //Save then re-retrieve the trail
         persistor.save(trail);
-        ObjectId uuid = trail.getUUID();
+        ObjectId uuid = trail.getId();
         ServerTrailDeprecated result = persistor.get(ServerTrailDeprecated.class, uuid);
         assert(result.getName().equals("First Biosafety Module"));
         

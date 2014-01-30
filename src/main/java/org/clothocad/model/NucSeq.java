@@ -720,7 +720,7 @@ public class NucSeq
         Set<Feature> allfeatures = new HashSet<Feature>(col.getAll(Feature.class));
         System.out.println( "Autoannotating with all features from a particular collection:" );
         for ( Feature f : allfeatures ) {
-            System.out.println( "autoannotate with " + f.getUUID() );
+            System.out.println( "autoannotate with " + f.getId() );
         }
         autoAnnotate( allfeatures, user, true );
     }
@@ -750,7 +750,7 @@ public class NucSeq
             if(constrainTo) {
                 if ( onlyFeatures != null ) {
                     if ( !onlyFeatures.contains( f ) ) {
-                        System.out.println( f.getUUID() + " is not requested" );
+                        System.out.println( f.getId() + " is not requested" );
                         continue;
                     }
                 }
@@ -975,7 +975,7 @@ public class NucSeq
     public Set<ObjectId> getAnnotationLinks() {
         Set<ObjectId> out = new HashSet<ObjectId>();
         for (Annotation a : annotations){
-            out.add(a.getUUID());
+            out.add(a.getId());
         }
         return out;
     }

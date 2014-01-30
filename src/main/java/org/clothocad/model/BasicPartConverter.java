@@ -39,7 +39,7 @@ public class BasicPartConverter extends Converter<BasicPart> {
 
     public static BasicPart convertEugenePartToBasicPart(Map<String, Object> eugenePart) {
         BasicPart part = new BasicPart(eugenePart.get("Name").toString(), null, eugenePart.get("Sequence").toString(), new FreeForm(), null);
-        if (eugenePart.containsKey("_id")) part.setUUID(new ObjectId(eugenePart.get("_id").toString()));
+        if (eugenePart.containsKey("_id")) part.setId(new ObjectId(eugenePart.get("_id").toString()));
         try {
             Part.PartFunction function = Part.PartFunction.valueOf(eugenePart.get("PartType").toString().toUpperCase());
             part.setType(function);

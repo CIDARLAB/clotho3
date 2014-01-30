@@ -11,23 +11,19 @@ import lombok.Setter;
 
 import org.bson.types.ObjectId;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Id;
-import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.Arrays;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.persistence.DBOnly;
-import org.clothocad.core.persistence.Rename;
+import org.clothocad.core.persistence.Reference;
 import org.clothocad.core.security.Visibility;
 
 /**
  *
  * @author spaige
  */
-@Entity("data")
 @EqualsAndHashCode(exclude = {"dateCreated", "lastModified", "lastAccessed", "isDeleted"})
 @Data()
 @NoArgsConstructor
@@ -40,9 +36,7 @@ public abstract class ObjBase {
     public ObjBase(String name) {
         this.name = name;
     }
-    @Id
-    @Rename("id")
-    private ObjectId UUID;
+    private ObjectId id;
     private String name;
     @DBOnly
     private boolean isDeleted;

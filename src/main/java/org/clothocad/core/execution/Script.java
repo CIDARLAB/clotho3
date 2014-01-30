@@ -22,5 +22,4 @@ public interface Script{
     public String modularizeFunction(String code);
     
     public String encapsulateModule(String code, String setupCode);
-    
 }
