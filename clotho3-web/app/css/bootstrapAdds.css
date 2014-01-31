@@ -1,18 +1,18 @@
 /* Bootstrap add-ons */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\000033}}
+/* line 3, ../styles/bootstrapAdds.scss */
 .alert-muted {
   color: #555555;
   background-color: #eeeeee;
   border-color: #cfcfcf;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\000039}}
+/* line 9, ../styles/bootstrapAdds.scss */
 .glyphicon-white {
   color: #fff;
 }
 
 /* carry-over from 2.3 */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000314}}
+/* line 14, ../styles/bootstrapAdds.scss */
 .form-actions {
   padding: 19px 20px 20px;
   margin-top: 20px;
@@ -22,7 +22,7 @@
   *zoom: 1;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000324}}
+/* line 24, ../styles/bootstrapAdds.scss */
 .form-actions:before,
 .form-actions:after {
   display: table;
@@ -30,7 +30,7 @@
   content: "";
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/bootstrapAdds\.scss}line{font-family:\0000330}}
+/* line 30, ../styles/bootstrapAdds.scss */
 .form-actions:after {
   clear: both;
 }

@@ -1,24 +1,24 @@
 /**************
 Command Bar
 **************/
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\000035}}
+/* line 5, ../styles/commandbar.scss */
 #clothoSearchbarAutocomplete {
   z-index: 1001;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\000039}}
+/* line 9, ../styles/commandbar.scss */
 #clothoSearchbarAutocompleteList {
   width: 350px;
   display: block;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000314}}
+/* line 14, ../styles/commandbar.scss */
 .clothoSearchbarAutocompleteListItem {
   padding-left: 28px;
   padding-right: 20px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000319}}
+/* line 19, ../styles/commandbar.scss */
 #clothoSearchbarAutocompleteDetail {
   max-width: 400px;
   width: 400px;
@@ -29,7 +29,7 @@ Command Bar
   left: 350px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000328}}
+/* line 28, ../styles/commandbar.scss */
 #clothoCommandBarInput {
   background: white url("../images/iconSlice.png") no-repeat 5px 6px;
   padding-left: 28px;
@@ -37,7 +37,7 @@ Command Bar
 }
 
 /* todo - viewport container to hide scrollbar */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000335}}
+/* line 35, ../styles/commandbar.scss */
 #clothoSearchbarLog {
   z-index: 999;
   max-width: 400px;
@@ -46,7 +46,7 @@ Command Bar
   /*override bootstrap*/
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000342}}
+/* line 42, ../styles/commandbar.scss */
 #clothoSearchbarLogSnippet {
   padding: 0px 12px;
   margin: 0 10px 0 15px;
@@ -57,7 +57,7 @@ Command Bar
   text-overflow: ellipsis;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000352}}
+/* line 52, ../styles/commandbar.scss */
 #clothoSearchbarLog .logEntry {
   max-width: 360px;
   overflow-y: hidden;
@@ -70,7 +70,7 @@ Command Bar
 }
 
 /* to fit into bootstrap */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/commandbar\.scss}line{font-family:\0000365}}
+/* line 65, ../styles/commandbar.scss */
 .clotho-icon {
   display: inline-block;
   width: 14px;

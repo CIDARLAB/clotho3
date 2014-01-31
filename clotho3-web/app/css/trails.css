@@ -1,7 +1,7 @@
 /**********
 youtube
 *********/
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/trails\.scss}line{font-family:\000035}}
+/* line 5, ../styles/trails.scss */
 .youtubePlayer {
   box-sizing: border-box;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
@@ -13,7 +13,7 @@ youtube
 quiz
 ************/
 /* Base class */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/trails\.scss}line{font-family:\0000317}}
+/* line 17, ../styles/trails.scss */
 .quiz {
   position: relative;
   padding: 8px 14px;
@@ -25,7 +25,7 @@ quiz
   border-radius: 4px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/trails\.scss}line{font-family:\0000328}}
+/* line 28, ../styles/trails.scss */
 .quiz:after {
   content: "Quiz";
   position: absolute;
@@ -40,7 +40,7 @@ quiz
   border-radius: 0 4px 0 7px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/trails\.scss}line{font-family:\0000342}}
+/* line 42, ../styles/trails.scss */
 .quizResult {
   margin: 0 0 0 5px;
   padding: 4px 12px;

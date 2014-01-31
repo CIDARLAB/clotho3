@@ -33,7 +33,7 @@ module.exports = function (grunt) {
 	    },
 	    jsTest: {
 		    files: ['test/spec/**/*.js'],
-		    //tasks: ['newer:jshint:test', 'karma']
+		    tasks: ['newer:jshint:test', 'karma']
 	    },
       compass: {
         files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
@@ -108,7 +108,7 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
-	          'css',
+	          '<%= yeoman.app %>/css',
             '<%= yeoman.dist %>/*',
             '!<%= yeoman.dist %>/.git*'
           ]
@@ -181,7 +181,8 @@ module.exports = function (grunt) {
       },
       dist: {
 	      options: {
-		      debugInfo : false
+		      debugInfo : false,
+		      generatedImagesDir: '<%= yeoman.dist %>/images/generated'
 	      }
       },
       server: {
@@ -255,19 +256,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-    cssmin: {
-      // By default, your `index.html` <!-- Usemin Block --> will take care of
-      // minification. This option is pre-configured if you do not wish to use
-      // Usemin blocks.
-      // dist: {
-      //   files: {
-      //     '<%= yeoman.dist %>/styles/main.css': [
-      //       '.tmp/styles/**/*.css',
-      //       '<%= yeoman.app %>/styles/**/*.css'
-      //     ]
-      //   }
-      // }
-    },
     htmlmin: {
       dist: {
 	      options: {
@@ -318,7 +306,7 @@ module.exports = function (grunt) {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
         dest: 'css/',
-        src: '{,*/}*.css'
+        src: '**/*.css'
       }
     },
     concurrent: {
@@ -336,7 +324,7 @@ module.exports = function (grunt) {
         'coffee',
         'compass:dist',
         'copy:styles',
-        'imagemin',
+        //'imagemin',
         'svgmin',
         'htmlmin'
       ]

@@ -1,17 +1,17 @@
 /******************
 construction
 ****************/
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\000035}}
+/* line 5, ../styles/constructionfile.scss */
 .constructionDictionary {
   margin-bottom: 10px;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\000039}}
+/* line 9, ../styles/constructionfile.scss */
 .constructionDictionary .computed {
   background-color: #d9edf7;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000313}}
+/* line 13, ../styles/constructionfile.scss */
 .constructionStep {
   position: relative;
   margin: 0 0 8px;
@@ -21,7 +21,7 @@ construction
   box-sizing: border-box;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000324}}
+/* line 24, ../styles/constructionfile.scss */
 .constructionStep .arrow,
 .constructionStep .arrow:after {
   position: absolute;
@@ -33,7 +33,7 @@ construction
   border-style: solid;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000334}}
+/* line 34, ../styles/constructionfile.scss */
 .constructionStep .arrow {
   border-width: 11px;
   top: -11px;
@@ -43,7 +43,7 @@ construction
   border-top-width: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000343}}
+/* line 43, ../styles/constructionfile.scss */
 .constructionStep .arrow:after {
   border-width: 7px;
   content: "";
@@ -53,17 +53,17 @@ construction
   border-top-width: 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000352}}
+/* line 52, ../styles/constructionfile.scss */
 .constructionStep .errorBackground {
   background-color: #f2dede;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000356}}
+/* line 56, ../styles/constructionfile.scss */
 .constructionStep .warningBackground {
   background-color: #fcf8e3;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000360}}
+/* line 60, ../styles/constructionfile.scss */
 .constructionStep .reaction {
   padding: 4px 17px;
   font-size: 14px;
@@ -72,7 +72,7 @@ construction
   border-radius: 4px 4px 0 0;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000369}}
+/* line 69, ../styles/constructionfile.scss */
 .constructionStep .fields {
   padding: 10px 15px 0;
   background: #d9edf7;
@@ -80,7 +80,7 @@ construction
   color: #3a87ad;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/maxwellbates\/Dropbox\/clothoApps\/clotho3\/clotho3-web\/app\/styles\/constructionfile\.scss}line{font-family:\0000376}}
+/* line 76, ../styles/constructionfile.scss */
 .constructionStep .output {
   padding: 4px 35px;
   font-size: 14px;
