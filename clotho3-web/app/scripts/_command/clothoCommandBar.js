@@ -20,15 +20,12 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 			//functions
 
 			$scope.$watch('display.query', function(newValue, oldValue) {
-				/*
-				 //future - reactivate when autocomplete is working (and will need to show autocomplete -- ng-hide)
 				 $scope.display.autocomplete = !!newValue;
 				 if (!!newValue) {
-				 Clotho.autocomplete($scope.display.query).then(function(data) {
-				 $scope.autocomplete.autocompletions = data;
-				 });
+					 Clotho.autocomplete($scope.display.query).then(function(data) {
+					  $scope.autocomplete.autocompletions = data;
+					 });
 				 }
-				 */
 			});
 
 			//todo - rewrite

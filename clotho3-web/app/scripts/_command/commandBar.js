@@ -11,11 +11,23 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	/******* elements ******/
 
 	//todo - should capture from commandBar directive as possible
-	var elements = {};
 
-	elements.commandBarElement = angular.element($document[0].getElementById('clothoCommandBar'));
-	elements.commandBarInput = angular.element($document[0].getElementById('clothoCommandBarInput'));
-	elements.commandBarLogButton = angular.element($document[0].getElementById('clothoCommandBarLogButton'));
+	var getCommandBarElement = function() {
+		return angular.element($document[0].getElementById('clothoCommandBar'));
+	};
+
+	var getCommandBarInput = function () {
+		return angular.element($document[0].getElementById('clothoCommandBarInput'));
+	};
+
+	var getCommandBarLogButton = function () {
+		return angular.element($document[0].getElementById('clothoCommandBarLogButton'));
+	};
+
+	var focusInput = function() {
+		getCommandBarElement().focus();
+	};
+
 
 
 	/******* log data *******/
@@ -66,7 +78,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 	// todo - should be CSS
 	display.genLogPos = function() {
-		var target = elements.commandBarLogButton;
+		var target = getCommandBarLogButton()[0];
 		display.logpos = {
 			left : (target.offsetLeft + (target.scrollWidth / 2) - 200) + "px",
 			top : (target.offsetTop + target.scrollHeight)  + "px"
@@ -75,11 +87,12 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 	// todo - should be CSS
 	display.genAutocompletePos = function() {
-		var target = elements.commandBarInput;
+		var target = getCommandBarInput()[0];
 		display.autocompletePos = {
 			left : (target.offsetLeft) + "px",
-			top : (target.offsetTop + target.scrollHeight + 6)  + "px"
+			top : (target.offsetTop + target.clientHeight)  + "px"
 		};
+		console.log(target, display);
 	};
 
 
