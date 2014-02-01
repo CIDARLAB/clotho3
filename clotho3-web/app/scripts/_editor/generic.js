@@ -32,7 +32,6 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 
 	          //determine whether to start in edit mode
 	          $scope.editMode = !!$scope.editMode;
-	          $scope.showJsonEditor = false;
 
 	          //for testing, easily log scope
 	          $scope.logScope = function() { console.log($scope); };
@@ -117,6 +116,7 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
 	          // should check for custom template and use if exists. otherwise, do the form generation for the generic
             $scope.getPartialAndCompile = function(type, obj) {
                 $scope.editMode = false;
+	              $scope.showJsonEditor = false;
 
 	              //todo - just $http the suspected path based on schema, use error clause to default to generic sharable editor
 

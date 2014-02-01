@@ -1,8 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app="clothoRoot"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" ng-app="clothoRoot"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" ng-app="clothoRoot"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" ng-app="clothoRoot"> <!--<![endif]-->
+<html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -96,17 +93,6 @@ SCRIPTS
 
 
 <!--note - correct app based on the distribution-->
-<!-- process:remove:dist,command -->
-<!-- build:js scripts/clotho-app-api.js -->
-<script src="scripts/app-api.js"></script>
-<!--endbuild-->
-<!-- /process -->
-
-<!-- process:remove:dist,api -->
-<!-- build:js scripts/clotho-app-command.js -->
-<script src="scripts/app-command.js"></script>
-<!--endbuild-->
-<!-- /process -->
 
 <!-- process:remove:command,api -->
 <!-- build:js scripts/clotho-app.js -->
@@ -114,6 +100,19 @@ SCRIPTS
 <!--endbuild-->
 <!-- /process -->
 
+<!-- process:remove:dist,api -->
+<!-- build:js scripts/clotho-app-command.js -->
+<!--<script src="scripts/app-command.js"></script>-->
+<!--endbuild-->
+<!-- /process -->
+
+<!-- process:remove:dist,command -->
+<!-- build:js scripts/clotho-app-api.js -->
+<!--
+<script src="scripts/app-api.js"></script>
+-->
+<!--endbuild-->
+<!-- /process -->
 
 
 <!-- build:js scripts/clotho-core-module.js -->

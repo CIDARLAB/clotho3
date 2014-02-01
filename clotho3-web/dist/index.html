@@ -1,8 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app="clothoRoot"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" ng-app="clothoRoot"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" ng-app="clothoRoot"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" ng-app="clothoRoot"> <!--<![endif]-->
+<html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,32 +67,32 @@
 SCRIPTS
 --------->
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="bower_components/jquery/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/lodash/dist/lodash.js"></script>
 
 <!-- process:remove:command,api -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
 
 <script src="scripts/clotho-angular-modules.js"></script>
 <!-- /process -->
 
 
 <!--note - correct app based on the distribution-->
-<!-- process:remove:dist,command -->
-<script src="scripts/clotho-app-api.js"></script>
+
+<!-- process:remove:command,api -->
+<script src="scripts/clotho-app.js"></script>
 <!-- /process -->
 
 <!-- process:remove:dist,api -->
 <script src="scripts/clotho-app-command.js"></script>
 <!-- /process -->
 
-<!-- process:remove:command,api -->
-<script src="scripts/clotho-app.js"></script>
+<!-- process:remove:dist,command -->
+<script src="scripts/clotho-app-api.js"></script>
 <!-- /process -->
-
 
 
 <script src="scripts/clotho-core-module.js"></script>

@@ -92,7 +92,6 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 			left : (target.offsetLeft) + "px",
 			top : (target.offsetTop + target.clientHeight)  + "px"
 		};
-		console.log(target, display);
 	};
 
 

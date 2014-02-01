@@ -112,3 +112,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
 	});
 });
+
+angular.element(document).ready(function() {
+	angular.bootstrap(document, ['clothoRoot']);
+});

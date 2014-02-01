@@ -1,7 +1,5 @@
 //angular components needed, add a couple methods to prototype
-angular.module('clotho.angularAdditions', [
-		'ngSanitize', 'ngRoute'
-	])
+angular.module('clotho.angularAdditions', [])
 	.config(function() {
 		//angular function extensions
 		var ext = {};
