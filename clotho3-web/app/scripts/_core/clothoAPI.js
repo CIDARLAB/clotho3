@@ -47,17 +47,6 @@ function generateClothoAPI() {
         fn.send(fn.pack(eventName, data, requestId, options));
     };
 
-    //note: wrappers no longer in use
-    fn.api = {};
-    fn.searchbar = {};
-    fn.api.emit = function (eventName, data, requestId) {
-        fn.emit(eventName, data, requestId);
-    };
-    fn.searchbar.emit = function (eventName, data, requestId) {
-        fn.emit(eventName, data, requestId);
-    };
-
-
     //helper functions
 
     fn.emitSubCallback = function(channel, data, func, options) {
@@ -326,7 +315,7 @@ function generateClothoAPI() {
      * Emit an object on a custom channel message to the server
      */
     var emit = function clothoAPI_emit(channel, args) {
-        fn.api.emit(channel, args || {});
+        fn.emit(channel, args || {});
     };
 
     /**
@@ -339,7 +328,7 @@ function generateClothoAPI() {
      * Broadcast an object on a given channel on the client
      */
     var broadcast = function clothoAPI_broadcast(channel, args) {
-        fn.api.emit('broadcast', fn.pack(channel, args));
+        fn.emit('broadcast', fn.pack(channel, args));
     };
 
     /**
@@ -452,8 +441,6 @@ function generateClothoAPI() {
      *
      */
     var edit = function clothoAPI_edit(uuid) {
-        //fn.api.emit('edit', uuid);
-
         $location.path("/editor/" + uuid);
     };
 
@@ -523,7 +510,7 @@ function generateClothoAPI() {
      * @param {object} options Example given below
      *
      {
-         "target" : <DOM ELEMENT>    // suggested, otherwise placed outside ng-view
+         "target" : <css selector>   // suggested, otherwise placed outside ng-view
      }
      */
     var show = function(viewId, options) {
@@ -531,7 +518,7 @@ function generateClothoAPI() {
 		    "viewId" : viewId,
 		    "options" : options
 	    };
-        fn.api.emit('show', packaged);
+        fn.emit('show', packaged);
     };
 
 
@@ -557,7 +544,7 @@ function generateClothoAPI() {
      *
      */
     var log = function clothoAPI_log(msg) {
-        fn.api.emit('log', msg);
+        fn.emit('log', msg);
     };
 
     /**
@@ -576,7 +563,7 @@ function generateClothoAPI() {
             "msg" : msg,
             "timestamp" : Date.now()
         };
-        fn.api.emit('say', packaged);
+        fn.emit('say', packaged);
     };
 
     /**
@@ -589,7 +576,7 @@ function generateClothoAPI() {
      *
      */
     var notify = function clothoAPI_notify(data) {
-        fn.api.emit('notify', data);
+        fn.emit('notify', data);
     };
 
     /**
@@ -607,7 +594,7 @@ function generateClothoAPI() {
             "userID" : userID,
             "msg" : msg
         };
-        fn.api.emit('alert', packaged);
+        fn.emit('alert', packaged);
     };
 
     var autocomplete = function(query) {
@@ -629,7 +616,7 @@ function generateClothoAPI() {
             var packaged = {
                 "uuid" : uuid
             };
-            fn.searchbar.emit('autocompleteDetail', packaged);
+            fn.emit('autocompleteDetail', packaged);
 
             //testing
             //PubSub.once('autocompleteDetail_'+'function_id123', function(data) {
@@ -675,7 +662,7 @@ function generateClothoAPI() {
      * @returns {Promise}
      */
     var recent_deprecated = function() {
-        fn.api.emit('requestRecent', {});
+        fn.emit('requestRecent', {});
 
         var deferred = $q.defer();
 

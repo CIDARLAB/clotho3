@@ -107,23 +107,8 @@ angular.module('clotho.core').service('ClientAPI',
     /**
      * @name clientAPI.display
      *
-     * @param {object} data
-     * format:
-        {
-            "template" : <url>,         // required
-            "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
-            "args" : {<object>}         // data to copy onto $scope
-            "controller" : <url>,       // optional
-            "dependencies" : [
-                <urls>                  // required if in controller
-            ],
-            styles : {
-                <styles>
-                //e.g.
-                "background-color" : "#FF0000"
-            }
-        }
-     * @param targetSelector css Selector of target to append to
+     * @param {object} uuid UUID of view to show
+     * @param targetSelector CSS Selector of target to append to, otherwise widget area at bottom
 
      note CAVEATS:
      - currently, controllers etc. must be tied to Application.Extensions.___
@@ -131,7 +116,13 @@ angular.module('clotho.core').service('ClientAPI',
     var display = function clientAPIDisplay(uuid, targetSelector) {
 
 	    var showDiv = angular.element('<div clotho-show="'+uuid+'"></div>');
-	    var targetEl = angular.element(document.querySelector(targetSelector));
+	    var targetEl = document.querySelector(targetSelector);
+
+	    if (!targetEl) {
+		    targetEl = document.getElementById('clothoAppWidgets');
+	    }
+
+	    targetEl = angular.element(targetEl);
 
 	    targetEl.append($compile(showDiv)($rootScope));
 
