@@ -123,13 +123,20 @@ angular.module('clotho.core').service('ClientAPI',
                 "background-color" : "#FF0000"
             }
         }
+     * @param targetSelector css Selector of target to append to
 
      note CAVEATS:
      - currently, controllers etc. must be tied to Application.Extensions.___
      */
-    var display = function clientAPIDisplay(data) {
+    var display = function clientAPIDisplay(uuid, targetSelector) {
 
-        console.log(data);
+	    var showDiv = angular.element('<div clotho-show="'+uuid+'"></div>');
+	    var targetEl = angular.element(document.querySelector(targetSelector));
+
+	    targetEl.append($compile(showDiv)($rootScope));
+
+	    /*
+	    console.log(data);
 
         var template = data.template,
             controller = data.controller || "",
@@ -153,20 +160,23 @@ angular.module('clotho.core').service('ClientAPI',
                 console.log("error getting template");
             })
         );
+        */
     };
 
     /**
      * @name clientAPI.hide
      *
-     * @param {string} uuid
-     * @param {function} callback, passed the element
+     * @param {string} uuid of view to remove
+     * @param {function} callback which passed the removed element
      *
      * @description
      * Hide a view on the client
      *
      */
     var hide = function clientAPIHide(uuid, callback) {
-	    callback.apply(null, $("[clotho-show='"+uuid+"']").remove());
+	    var el = angular.element(document.querySelector('[clotho-show="'+uuid+'"]'));
+
+	    callback.apply(null, el.remove());
     };
 
     /**
