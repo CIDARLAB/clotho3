@@ -48,10 +48,8 @@
             <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
                 <div class="btn-group">
                     <button class="btn navbar-btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="glyphicon glyphicon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i
-                            class="glyphicon glyphicon-trash"></i></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i
-                            class="glyphicon glyphicon-refresh"></i></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="glyphicon glyphicon-trash"></i></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i class="glyphicon glyphicon-refresh"></i></button>
                 </div>
             </div>
         </div>
@@ -64,7 +62,7 @@
 
 <!-- process:remove:command,api -->
 <!-- note - ignore main content for stripped down versions -->
-<div ng-view ng-cloak></div>
+<div id="clothoAppNgView" ng-view ng-cloak></div>
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
@@ -92,7 +90,7 @@ SCRIPTS
 <!-- /process -->
 
 
-<!--note - correct app based on the distribution-->
+<!--note - correct app based on the distribution, comments removed by build-->
 
 <!-- process:remove:command,api -->
 <!-- build:js scripts/clotho-app.js -->
