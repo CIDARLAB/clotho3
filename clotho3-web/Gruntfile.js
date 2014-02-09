@@ -371,23 +371,21 @@ module.exports = function (grunt) {
 	  },
 	  shell: {
 		  mongo: {
-			  command: "exec /Users/maxwellbates/Dropbox/clothoApps/clotho3/clotho3-web/startMongoIfNotRunning.sh",
+			  command: "sh startMongoIfNotRunning.sh",
 			  options: {
 				  async: true
 			  }
 		  },
 		  clothoTestServer: {
-			  /* requires mvn command line tools installed
-			  set JAVA_HOME
-			  set JAVA_PATH to java executable
-
-			  e.g. (on a mac) in ~/.profile (or set manually each time)
-
+			  /*
+			   requires mvn command line tools installed:
 			   export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
+
+			   these no longer required:
 			   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
 			   export JAVA_PATH=$JAVA_HOME/bin/java
 			  */
-			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=$JAVA_PATH -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
 			  }
