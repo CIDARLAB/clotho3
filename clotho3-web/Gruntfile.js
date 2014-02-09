@@ -420,11 +420,6 @@ module.exports = function (grunt) {
 			  commentMarker : 'process', //don't want to use default 'build' bc usemin,
 			  stripUnparsed : true
 		  },
-		  dist : {
-			  files : {
-				  '<%= yeoman.dist %>/index-dist.html': ['<%= yeoman.dist %>/index.html']
-			  }
-		  },
 		  api : {
 			  files : {
 				  '<%= yeoman.dist %>/index-api.html': ['<%= yeoman.dist %>/index.html']
@@ -433,6 +428,11 @@ module.exports = function (grunt) {
 		  command : {
 			  files : {
 				  '<%= yeoman.dist %>/index-command.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  dist : {
+			  files : {
+				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  }
 	  }

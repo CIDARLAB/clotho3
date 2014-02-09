@@ -1,1 +1,1 @@
-"use strict";angular.element(document).ready(function(){angular.bootstrap(document,["clotho.core"])});
+"use strict";angular.module("clothoRoot",["clotho.core"]),angular.element(document).ready(function(){angular.bootstrap(document,["clothoRoot"])});

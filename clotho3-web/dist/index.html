@@ -6,18 +6,8 @@
     <title>Clotho</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
-    <!-- process:remove:api -->
     <link rel="stylesheet" href="styles/main.css"/>
-    <!-- /process -->
-    <!-- process:remove:api,command -->
     <link rel="stylesheet" href="styles/webapp.css"/>
-    <!-- /process -->
-
-    <!-- process:remove:api,dist,command -->
-    <!-- note - dev only -->
-    <script src="http://localhost:35729/livereload.js"></script>
-    <!-- /process -->
 
 </head>
 <body>
@@ -25,8 +15,6 @@
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
-
-<!-- process:remove:api -->
 <div class="container">
 
     <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
@@ -40,10 +28,8 @@
             <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
                 <div class="btn-group">
                     <button class="btn navbar-btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="glyphicon glyphicon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i
-                            class="glyphicon glyphicon-trash"></i></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i
-                            class="glyphicon glyphicon-refresh"></i></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="glyphicon glyphicon-trash"></i></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i class="glyphicon glyphicon-refresh"></i></button>
                 </div>
             </div>
         </div>
@@ -52,16 +38,12 @@
     <div clotho-command-bar></div>
 
 </div>
-<!-- /process -->
-
-<!-- process:remove:command,api -->
 <!-- note - ignore main content for stripped down versions -->
-<div ng-view ng-cloak></div>
+<div id="clothoAppNgView" ng-view ng-cloak></div>
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
 
-<!-- /process -->
 
 <!--------
 SCRIPTS
@@ -70,40 +52,20 @@ SCRIPTS
 <script src="bower_components/jquery/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/lodash/dist/lodash.js"></script>
-
-<!-- process:remove:command,api -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
 <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
 
 <script src="scripts/clotho-angular-modules.js"></script>
-<!-- /process -->
 
 
-<!--note - correct app based on the distribution-->
-
-<!-- process:remove:command,api -->
+<!--note - correct app based on the distribution, comments removed by build-->
 <script src="scripts/clotho-app.js"></script>
-<!-- /process -->
-
-<!-- process:remove:dist,api -->
-<script src="scripts/clotho-app-command.js"></script>
-<!-- /process -->
-
-<!-- process:remove:dist,command -->
-<script src="scripts/clotho-app-api.js"></script>
-<!-- /process -->
 
 
 <script src="scripts/clotho-core-module.js"></script>
-
-
-<!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
 <script src="scripts/clotho-command-module.js"></script>
-<!-- /process -->
-
-<!-- process:remove:api,command -->
 <!--note - remove all scripts below this for command-only build-->
 
 <script src="scripts/clotho-foundation-module.js"></script>
@@ -128,7 +90,6 @@ SCRIPTS
 
 <script src="scripts/clotho-webapp-module.js"></script>
 
-<!-- /process -->
 
 </body>
 </html>
