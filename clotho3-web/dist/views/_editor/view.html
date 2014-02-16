@@ -1,0 +1,69 @@
+<div ng-controller="Editor_FunctionCtrl">
+    <legend>View Editor</legend>
+    <div class="ng-cloak">
+        <fieldset ng-disabled="!editMode">
+
+            <div ng-include="_objBaseFields"></div>
+
+            <!-- view importedViews -->
+
+            <form-group name="Imported Views" help="List of Views on which this one is dependent, as key-value pairs">
+                <textarea json-edit ng-model="sharable.importedViews" rows="3"></textarea>
+            </form-group>
+
+            <alert type="warning">Filedrop support not yet ready</alert>
+
+            <!-- view dependencies -->
+            <div class="form-group">
+                <label class="control-label">Dependencies</label>
+                <div ng-repeat="param in sharable.dependencies" class="pull-left">
+                    <div class="input-group">
+                        <input type="text" class="input-xlarge" ng-model="param">
+                        <button class="btn" ng-click="sharable.dependencies.splice($index, 1)">&times;</button>
+                    </div>
+
+                </div>
+                <button class="btn pull-right" type="button" ng-click=""><i class="glyphicon glyphicon-plus"></i></button>
+            </div>
+
+
+
+            <!-- view files -->
+            <div class="form-group">
+                <label class="control-label">Files</label>
+                <div ng-repeat="param in sharable.files" class="pull-left">
+                    <div class="input-group">
+                        <input type="text" class="input-xlarge" ng-model="param">
+                        <button class="btn" ng-click="sharable.files.splice($index, 1)">&times;</button>
+                    </div>
+
+                </div>
+                <button class="btn pull-right" type="button" ng-click=""><i class="glyphicon glyphicon-plus"></i></button>
+            </div>
+
+
+
+            <!-- view dictionary -- json-edit -->
+
+
+
+            <!-- if view is html -->
+                <!-- controller -->
+                <!-- bootstrap -->
+
+
+
+
+
+            <button ng-show="editMode && !showJsonEditor" type="button" class="btn btn-default" ng-click="toggleJsonEdit()">Edit Json</button>
+            <div ng-show="showJsonEditor">
+                <hr>
+                <form-field name="Edit JSON directly">
+                    <textarea json-edit ng-model="$parent.sharable" rows="12"></textarea>
+                </form-field>
+            </div>
+
+        </fieldset>
+        <div ng-include="_formActions"></div>
+    </div>
+</div>
