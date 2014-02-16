@@ -17,7 +17,8 @@
     "angular-ui-bootstrap": "~0.6.0",
     "angular-ui-codemirror": ">=0.0.5",
     "angular-bootstrap": "~0.7.0",
-    "ng-file-upload": "~1.1.10"
+    "ng-file-upload": "~1.1.10",
+    "bootstrap-sass": "git://github.com/twbs/bootstrap-sass.git#~3.1.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.9",
