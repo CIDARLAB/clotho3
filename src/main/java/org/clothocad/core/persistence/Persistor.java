@@ -110,10 +110,6 @@ public class Persistor{
         
         
         converters = new Converters();
-        //XXX: demo hack
-        if (initializeBuiltins){
-            converters.addConverter(new BasicPartConverter(this));           
-        }
        
     }
     
