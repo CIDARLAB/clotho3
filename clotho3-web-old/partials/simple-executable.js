@@ -1,1 +1,0 @@
-console.log("\nFrom simple-executable\n");
