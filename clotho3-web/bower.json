@@ -5,7 +5,6 @@
     "angular": "~1.2.9",
     "json3": "~3.2.4",
     "jquery": "~2.0.3",
-    "sass-bootstrap": "~3.0.0",
     "es5-shim": "~2.1.0",
     "angular-cookies": "~1.2.9",
     "angular-sanitize": "~1.2.9",
