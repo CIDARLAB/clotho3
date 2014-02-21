@@ -45,8 +45,6 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 
 	$keypress.on('keydown', {'alt-right' : 'next()', 'alt-left' : 'prev()'}, $scope);
 
-	$scope.base64icon = base64icon;
-
 	//kickoff
 	console.log($route.current.params);
 	$scope.activate($route.current.params.position || '0-0');

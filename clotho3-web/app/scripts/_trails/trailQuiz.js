@@ -35,7 +35,7 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 
 				},
 				post: function postLink(scope, element, attrs) {
-
+					
 					scope.createEmptyAnswer = function(quiz, value) {
 						value = (typeof value != 'undefined') ? value : false;
 						scope.quiz.answer = new Array(quiz.options.length);

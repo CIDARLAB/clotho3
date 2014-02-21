@@ -80,6 +80,7 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 							console.log('quiz grade callback result: ' + data);
 						};
 
+						//note - next is from parent controller -- go to next page
 						var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback" advance="next()"></div>';
 						return $q.when(template);
 					};

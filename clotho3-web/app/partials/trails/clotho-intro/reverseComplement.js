@@ -2,7 +2,7 @@ $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($sco
 
     var dialogOpts = {
         backdrop: false,
-        keyboard: false,
+        keyboard: true,
         dialogFade : true,
         templateUrl: 'views/_interface/ui-custom/dialogMessagebox.html',
         controller: 'MessageBoxController',
@@ -16,20 +16,19 @@ $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($sco
         }}
     };
 
-    //hacks to hide dialog
-    var dialog;
-    var oldNext = $scope.next;
-    $scope.$parent.next = function() {
-        console.log('called it');
-        console.log(dialog);
-        dialog.close();
-        oldNext();
-    };
-
-        $modal.open(dialogOpts)
-	        .opened
-	        .then(function() {
-		        $focus.highlightElement($('.quiz'))
-	        });
+	$focus.addBackdrop().then(function() {
+		return $focus.bringToFront($('.quiz'))
+	})
+	.then(function (oldZ) {
+		return $modal.open(dialogOpts)
+			.result
+			.then(function() {
+				return oldZ
+			});
+	})
+	.then(function(oldZ) {
+		$focus.setZ(oldZ, $('.quiz'));
+		return $focus.removeBackdrop();
+	});
 
 });
