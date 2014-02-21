@@ -1,5 +1,6 @@
-angular.module('clotho.interface').config(function($provide) {
-	$provide.decorator("$modal", function($delegate) {
+angular.module('ui.bootstrap-decorate', ['ui.bootstrap'])
+	.config(function($provide) {
+	$provide.decorator("$modal", ['$delegate', function($delegate) {
 
 		$delegate.messageBox = function(title, message, buttons){
 			return $delegate.open({
@@ -70,7 +71,7 @@ angular.module('clotho.interface').config(function($provide) {
 			//todo: preserve aspect ratio
 			angular.extend(videoParams, {width: "560"});
 
-			return new Dialog({
+			return $delegate.open({
 				backdrop: true,
 				backdropFade: true,
 				keyboard: true,
@@ -85,11 +86,11 @@ angular.module('clotho.interface').config(function($provide) {
 						}
 					}
 				}
-			})
+			});
 		};
 
 		return $delegate;
-	})
+	}])
 });
 
 

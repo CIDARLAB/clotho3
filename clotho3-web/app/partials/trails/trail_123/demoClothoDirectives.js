@@ -1,6 +1,6 @@
 'use strict';
 
-Application.Extensions.controller('demoClothoDirectives', ['$scope', 'Clotho', '$dialog', function($scope, Clotho, $dialog) {
+$clotho.extensions.controller('demoClothoDirectives', function($scope, Clotho, $modal) {
 
     $scope.sequence = 'acgtACGTACTGACacagt';
     $scope.chooseFunction = 'lowercase';
@@ -14,6 +14,6 @@ Application.Extensions.controller('demoClothoDirectives', ['$scope', 'Clotho', '
 
     //demo video modal
     $scope.openVideo = function() {
-        $dialog.video('ivif214cQLE', {}).open();
+        $modal.video('ivif214cQLE', {});
     }
-}]);
+});

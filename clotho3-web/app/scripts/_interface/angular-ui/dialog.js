@@ -1,5 +1,4 @@
-//note - polyfill until migrate to $modal
-//ignoring breaking up controllers etc. since will get rid of this
+// THIS SERVICE IS DEPRECATED, use $modal instead
 
 angular.module('clotho.interface').provider("$dialog", function(){
 

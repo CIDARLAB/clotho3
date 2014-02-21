@@ -132,7 +132,7 @@
 					]
 				},
 				{
-					"title" : "$focus + $dialog",
+					"title" : "$focus + $modal",
 					"controller" : "writingTrailsUICtrl",
 					"contents" : [
 						{

@@ -1,4 +1,4 @@
-angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, $parse, Clotho, $interpolate, $q, $sce) {
+angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q, $sce) {
 
 	return {
 		restrict: "EA",
@@ -15,21 +15,15 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 
 					//todo -- rethink extending scope with whole quiz (i.e. want dictionary, but maintain quiz namespace?)
 					angular.extend(scope, scope.quiz);
-					//can't use $interpolate - need to maintain bindings
-					//can't compile with scope.quiz - not a scope object - and can't create isolate because bindings not maintained
+
 					// note - see also grade and retry functions, and load.quiz
-					// todo - use $parse quiz question
 
-					console.log(scope.quiz);
-
+					//$watch in postLink
 					scope.interpolatedQuestion = $interpolate(scope.quiz.question)(scope);
 
 					scope.parsedQuestion = function() {
 						return $sce.trustAsHtml('<h5>' + scope.quiz.question + '</h5>');
 					};
-
-					//scope.quiz.question = $compile('<h5>' + scope.quiz.question + '</h5>')(scope);
-					//console.log(scope.quiz.question);
 
 					$http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
 						.success(function (data) {

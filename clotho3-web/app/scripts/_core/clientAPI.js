@@ -9,11 +9,11 @@ angular.module('clotho.core').service('ClientAPI',
 
 		//todo - verify this works and retrieves the service properly
 		var interfaceModulePresent = false,
-			$dialog;
+			$modal;
 			try {
 				angular.module('clotho.interface');
 				interfaceModulePresent = true;
-				$dialog = angular.injector('clotho.interface').get('$dialog');
+				$modal = angular.injector('clotho.interface').get('$modal');
 			} catch (err) {
 				// not present
 			}
@@ -46,8 +46,7 @@ angular.module('clotho.core').service('ClientAPI',
 			    backdropClick: true,
 			    templateUrl:  '<form sharable-editor ng-model="'+uuid+'" class="col-sm-6 form-horizontal well"></form>'
 		    };
-		    var d = $dialog.dialog(dialog_opts);
-		    d.open();
+		    $modal.open(dialog_opts);
 	    } else {
 		    $location.path('/editor/' + uuid)
 	    }
@@ -219,8 +218,8 @@ angular.module('clotho.core').service('ClientAPI',
         PubSub.trigger('serverAlert');
 
 		    if (interfaceModulePresent) {
-			    $rootScope.$safeApply($dialog.serverAlert(msg)
-				    .open()
+			    $rootScope.$safeApply($modal.serverAlert(msg)
+				    .result
 				    .then(function(result){
 					    console.log('dialog closed with result: ' + result);
 				    })
@@ -228,8 +227,6 @@ angular.module('clotho.core').service('ClientAPI',
 		    } else {
 			    window.alert(msg);
 		    }
-
-
     };
 
     /**

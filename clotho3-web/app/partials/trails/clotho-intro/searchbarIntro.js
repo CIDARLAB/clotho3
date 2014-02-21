@@ -65,7 +65,7 @@ $clotho.extensions.controller('clothoIntro_searchbarIntroCtrl', function($scope,
         return $timeout(function() { return oldZ }, 100 );
     })
     .then(function(oldZ) {
-        return $dialog.dialog(dialog2Opts).open().then(function() {return oldZ})
+        return $modal.open(dialog2Opts).result.then(function() {return oldZ})
     })
     .then(function(oldZ) {
         $focus.setZ(oldZ, $('#searchBarInput').parent());

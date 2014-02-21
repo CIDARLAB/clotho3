@@ -1,1 +1,1 @@
-angular.module('clotho.interface', ['ui.bootstrap', 'ui.codemirror', 'ui.keypress', 'angularFileUpload']);
+angular.module('clotho.interface', ['ui.bootstrap', 'ui.bootstrap-decorate', 'ui.codemirror', 'ui.keypress', 'angularFileUpload']);
