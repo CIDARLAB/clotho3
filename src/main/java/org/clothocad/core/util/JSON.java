@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
@@ -41,6 +42,60 @@ public class JSON {
         mapper.registerModule(new ClothoJacksonModule());
     }
     private final static TypeReference<Map<String, Object>>  stringToObject = new TypeReference<Map<String, Object>>(){};
+
+    private static List<Map>
+    parseJSONFiles(File[] paths) {
+        ObjectReader reader = new ObjectMapper().reader(Map.class);
+        List<Map> out = new ArrayList<Map>();
+        for (File path : paths) {
+            Iterator<Map> it;
+            try {
+                it = reader.readValues(path);
+            } catch (JsonProcessingException ex) {
+                log.warn("{}: not valid JSON", path.getAbsolutePath());
+                continue;
+            } catch (IOException ex) {
+                log.warn("Could not open {}", path.getAbsolutePath());
+                continue;
+            }
+            while (it.hasNext())
+                out.add(it.next());
+        }
+        return out;
+    }
+
+    private static boolean
+    persistorHasObject(Persistor persistor, Map object) {
+        try {
+            persistor.resolveSelector(object.get("name").toString(), false);
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean
+    insertObjectIntoAPI(Map object, ServerSideAPI api, Persistor persistor,
+                        boolean overwrite) {
+        if (overwrite) {
+            try {
+                ObjectId result = api.create(object);
+                if (result == null)
+                    api.set(object);
+            } catch (RuntimeException e) {
+                return false;
+            }
+        } else {
+            if (persistorHasObject(persistor, object))
+                return true;
+            try {
+                ObjectId result = api.create(object);
+            } catch (RuntimeException e) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     public static String serializeJSONMap(Map object){
         return serializeJSONMap(object, false);
@@ -128,62 +183,13 @@ public class JSON {
     static abstract class DisableGetters {
         
     } 
-    
-    public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {
+
+    public static void
+    importTestJSON(String path, Persistor persistor, boolean overwrite) {
         ServerSideAPI api = new DummyAPI(persistor);
-        ObjectReader reader = new ObjectMapper().reader(Map.class);
-        
-        List<Map> objects = new ArrayList<>();
-        for (File child : new File(path).listFiles()) {
-            if (!child.getName().endsWith(".json")) {
-                continue;
-            }
-            try {
-                MappingIterator<Map> it = reader.readValues(child);
-                while (it.hasNext()) {
-                    objects.add(it.next());
-                }
-                
-            } catch (JsonProcessingException ex) {
-                log.warn("Could not process {} as JSON", child.getAbsolutePath());
-            } catch (IOException ex) {
-                log.warn("Could not open {}", child.getAbsolutePath());
-            }
-        }
-        
-        while (objects.size() > 0) {
-            int prevSize = objects.size();
-            List<Map> newObjects = new ArrayList();
-
-            for (Map obj : objects) {
-                if (!overwrite) {
-                    try {
-                        persistor.resolveSelector(obj.get("name").toString(), false);
-                        continue;
-
-                    } catch (EntityNotFoundException e) {
-                    }
-                }
-                try {
-                    ObjectId result = api.create(obj);
-
-                    if (overwrite && result == null) {
-                        api.set(obj);
-                    }
-                } catch (RuntimeException e) {
-                    newObjects.add(obj);
-                } catch (ClassCircularityError e){
-                    e.getMessage();
-                }
-            }
-
-            objects = newObjects;
-            if (objects.size() >= prevSize) {
+        List<Map> objects = parseJSONFiles(new File(path).listFiles());
+        for (Map obj : objects)
+            if (!insertObjectIntoAPI(obj, api, persistor, overwrite))
                 log.error("Could not load some files: {}", objects.toString());
-                return;
-            }
-
-        }
     }
-    
 }
