@@ -1,8 +1,6 @@
 'use strict';
 
-$clotho.extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Clotho', function($scope, $focus, $timeout, $dialog, Clotho) {
-
-	/*
+$clotho.extensions.controller('clothoIntro_toolsIntroCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
     var dialogOpts = {
         backdrop: false,
@@ -46,7 +44,9 @@ $clotho.extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$focus',
         return $timeout(function() {return oldZ}, 500 );
     })
     .then(function(oldZ) {
-        return $dialog.dialog(dialogOpts).open().then(function() {return oldZ});
+        return $modal.open(dialogOpts)
+	        .result
+	        .then(function() {return oldZ});
     })
     .then(function(oldZ) {
         return $timeout(function() {
@@ -55,14 +55,14 @@ $clotho.extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$focus',
         }, 200);
     })
     .then(function(oldZ) {
-        return $dialog.dialog(dialog2Opts).open().then(function() {return oldZ});
+        return $modal.open(dialog2Opts)
+	        .result
+	        .then(function() {return oldZ});
     })
     .then(function(oldZ) {
         $focus.setZ(oldZ, $('#showMeHow'));
         return $focus.removeBackdrop();
     });
-
-	*/
 
 
     $scope.quiz = {
@@ -85,4 +85,4 @@ $clotho.extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$focus',
             return $timeout(function() {unhighlight() }, 1000);
         })
     };
-}]);
+});

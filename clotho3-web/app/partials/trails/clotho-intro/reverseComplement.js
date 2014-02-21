@@ -1,8 +1,5 @@
 $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
-
-
-	/*
     var dialogOpts = {
         backdrop: false,
         keyboard: false,
@@ -29,23 +26,10 @@ $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($sco
         oldNext();
     };
 
-    //allow tide for quiz to render
-    $timeout(angular.noop,200)
-    .then(function() {
-         $focus.addBackdrop();
-        return $focus.highlightElement($('.quiz'))
-    })
-    .then(function() {
-        return $timeout(function() {  }, 500 );
-    })
-    .then(function() {
-        dialog = $modal.open(dialogOpts);
-        return dialog
-    })
-    .then(function() {
-        return $focus.removeBackdrop();
-    })
-
-    */
+        $modal.open(dialogOpts)
+	        .opened
+	        .then(function() {
+		        $focus.highlightElement($('.quiz'))
+	        });
 
 });

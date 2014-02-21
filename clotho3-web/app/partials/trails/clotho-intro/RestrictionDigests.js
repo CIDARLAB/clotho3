@@ -1,15 +1,13 @@
 'use strict';
 
-$clotho.extensions.controller('clothoIntro_RestrictionDigestsCtrl', function($scope, $focus, $timeout, $dialog, $modal, Digest, Clotho, $q, CommandBar) {
+$clotho.extensions.controller('clothoIntro_RestrictionDigestsCtrl', function($scope, $focus, $timeout, $modal, Digest, Clotho, $q, CommandBar) {
     $scope.Digest = Digest;
 
     $scope.demo = {};
     $scope.demo.digestEnz = Digest.enzymes.EcoRI;
     $scope.demo.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc';
 
-/*
-    $dialog.messageBox('On to the Next Chapter...', '<p>Moving forward, we\'ll focus on using Clotho tools in sequence manipulation and other synthetic biology applications.</p> <p><b>We\'ll show you the tools, and click \"Show Me How\" to see how to use them in the Command Bar.</b></p>', [{label: "OK", cssClass: "btn-primary", result: true}]).open();
-*/
+    $modal.messageBox('On to the Next Chapter...', '<p>Moving forward, we\'ll focus on using Clotho tools in sequence manipulation and other synthetic biology applications.</p> <p><b>We\'ll show you the tools, and click \"Show Me How\" to see how to use them in the Command Bar.</b></p>', [{label: "OK", cssClass: "btn-primary", result: true}]);
 
     $scope.showMeHow = function () {
         /*
