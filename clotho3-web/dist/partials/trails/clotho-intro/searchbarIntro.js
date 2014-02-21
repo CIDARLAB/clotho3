@@ -1,4 +1,4 @@
-$clotho.extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Clotho', function($scope, $focus, $timeout, $dialog, Clotho) {
+$clotho.extensions.controller('clothoIntro_searchbarIntroCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
     var dialogOpts = {
         backdrop: false,
@@ -54,7 +54,7 @@ $clotho.extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '$foc
         return $timeout(function() { return oldZ }, 500 );
     })
     .then(function(oldZ) {
-        return $dialog.dialog(dialogOpts).open().then(function() {return oldZ})
+        return $modal.open(dialogOpts).result.then(function() {return oldZ})
     })
     .then(function(oldZ) {
         $focus.setZ(oldZ, $('#clothoSearchbar'));
@@ -76,7 +76,7 @@ $clotho.extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '$foc
         return $timeout(function() { return oldZ }, 100 );
     })
     .then(function(oldZ) {
-        return $dialog.dialog(dialog3Opts).open().then(function() {return oldZ})
+        return $modal.open(dialog3Opts).result.then(function() {return oldZ})
     })
     .then(function(oldZ) {
         $focus.setZ(oldZ, $('#searchbar_logbutton'));
@@ -118,4 +118,4 @@ $clotho.extensions.controller('clothoIntro_searchbarIntroCtrl', ['$scope', '$foc
         $focus.typeOutSearch(str, true);
     };
 
-}]);
+});

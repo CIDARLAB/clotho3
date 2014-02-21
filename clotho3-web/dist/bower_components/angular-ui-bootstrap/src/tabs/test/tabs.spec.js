@@ -1,5 +1,5 @@
 describe('tabs', function() {
-  beforeEach(module('ui.bootstrap.tabs', 'template/tabs/tabset.html', 'template/tabs/tab.html', 'template/tabs/tabset-titles.html'));
+  beforeEach(module('ui.bootstrap.tabs', 'template/tabs/tabset.html', 'template/tabs/tab.html'));
 
   var elm, scope;
   function titles() {
@@ -46,7 +46,7 @@ describe('tabs', function() {
         '      <tab-heading><b>Second</b> Tab {{second}}</tab-heading>',
         '      second content is {{second}}',
         '    </tab>',
-        '  </tabs>',
+        '  </tabset>',
         '</div>'
       ].join('\n'))(scope);
       scope.$apply();
@@ -100,6 +100,57 @@ describe('tabs', function() {
       expect(scope.deselectFirst).toHaveBeenCalled();
     });
 
+  });
+
+  describe('basics with initial active tab', function() {
+
+    beforeEach(inject(function($compile, $rootScope) {
+      scope = $rootScope.$new();
+
+      function makeTab(active) {
+        return {
+          active: !!active,
+          select: jasmine.createSpy()
+        };
+      }
+      scope.tabs = [
+        makeTab(), makeTab(), makeTab(true), makeTab()
+      ];
+      elm = $compile([
+        '<tabset>',
+        '  <tab active="tabs[0].active" select="tabs[0].select()">',
+        '  </tab>',
+        '  <tab active="tabs[1].active" select="tabs[1].select()">',
+        '  </tab>',
+        '  <tab active="tabs[2].active" select="tabs[2].select()">',
+        '  </tab>',
+        '  <tab active="tabs[3].active" select="tabs[3].select()">',
+        '  </tab>',
+        '</tabset>'
+      ].join('\n'))(scope);
+      scope.$apply();
+    }));
+
+    function expectTabActive(activeTab) {
+      var _titles = titles();
+      angular.forEach(scope.tabs, function(tab, i) {
+        if (activeTab === tab) {
+          expect(tab.active).toBe(true);
+          //It should only call select ONCE for each select
+          expect(tab.select).toHaveBeenCalled();
+          expect(_titles.eq(i)).toHaveClass('active');
+          expect(contents().eq(i)).toHaveClass('active');
+        } else {
+          expect(tab.active).toBe(false);
+          expect(_titles.eq(i)).not.toHaveClass('active');
+        }
+      });
+    }
+
+    it('should make tab titles and set active tab active', function() {
+      expect(titles().length).toBe(scope.tabs.length);
+      expectTabActive(scope.tabs[2]);
+    });
   });
 
   describe('ng-repeat', function() {
@@ -179,14 +230,14 @@ describe('tabs', function() {
   });
 
   describe('advanced tab-heading element', function() {
-    beforeEach(inject(function($compile, $rootScope) {
+    beforeEach(inject(function($compile, $rootScope, $sce) {
       scope = $rootScope.$new();
-      scope.myHtml = "<b>hello</b>, there!";
+      scope.myHtml = $sce.trustAsHtml("<b>hello</b>, there!");
       scope.value = true;
       elm = $compile([
         '<tabset>',
         '  <tab>',
-        '    <tab-heading ng-bind-html-unsafe="myHtml" ng-show="value">',
+        '    <tab-heading ng-bind-html="myHtml" ng-show="value">',
         '    </tab-heading>',
         '  </tab>',
         '  <tab><data-tab-heading>1</data-tab-heading></tab>',
@@ -206,11 +257,11 @@ describe('tabs', function() {
     });
 
     it('should hide and show the heading depending on value', function() {
-      expect(heading().eq(0).css('display')).not.toBe('none');
+      expect(heading().eq(0)).not.toBeHidden();
       scope.$apply('value = false');
-      expect(heading().eq(0).css('display')).toBe('none');
+      expect(heading().eq(0)).toBeHidden();
       scope.$apply('value = true');
-      expect(heading().eq(0).css('display')).not.toBe('none');
+      expect(heading().eq(0)).not.toBeHidden();
     });
 
     it('should have a tab-heading no matter what syntax was used', function() {
@@ -392,16 +443,33 @@ describe('tabs', function() {
       expectTitles(['1', 'tab 1', 'tab 2', 'tab 3']);
       expectContents(['Hello', 'content 1', 'content 2', 'content 3']);
 
+      // Select last tab
       titles().find('a').eq(3).click();
       expect(contents().eq(3)).toHaveClass('active');
       expect(titles().eq(3)).toHaveClass('active');
 
+      // Remove last tab
       scope.$apply('list = [1,2]');
       expectTitles(['1', 'tab 1', 'tab 2']);
       expectContents(['Hello', 'content 1', 'content 2']);
 
+      // "tab 2" is now selected
       expect(titles().eq(2)).toHaveClass('active');
       expect(contents().eq(2)).toHaveClass('active');
+
+      // Select 2nd tab ("tab 1")
+      titles().find('a').eq(1).click();
+      expect(titles().eq(1)).toHaveClass('active');
+      expect(contents().eq(1)).toHaveClass('active');
+
+      // Remove 2nd tab
+      scope.$apply('list = [2]');
+      expectTitles(['1', 'tab 2']);
+      expectContents(['Hello', 'content 2']);
+
+      // New 2nd tab is now selected
+      expect(titles().eq(1)).toHaveClass('active');
+      expect(contents().eq(1)).toHaveClass('active');
     }));
   });
 
@@ -478,6 +546,19 @@ describe('tabs', function() {
     });
   });
 
+  describe('justified', function() {
+      beforeEach(inject(function($compile, $rootScope) {
+          scope = $rootScope.$new();
+          scope.justified = true;
+          elm = $compile('<tabset justified="justified"></tabset>')(scope);
+          scope.$apply();
+      }));
+
+      it('to justify tabs', function() {
+          expect(elm.find('ul.nav-tabs')).toHaveClass('nav-justified');
+      });
+  });
+
   describe('type', function() {
     beforeEach(inject(function($compile, $rootScope) {
       scope = $rootScope.$new();
@@ -491,56 +572,6 @@ describe('tabs', function() {
       expect(elm.find('ul')).toHaveClass('nav-pills');
       expect(elm.find('ul')).not.toHaveClass('nav-tabs');
     });
-  });
-
-  describe('direction', function() {
-    it('should not have `tab-left`, `tab-right` nor `tabs-below` classes if the direction is undefined', inject(function($compile, $rootScope) {
-      scope = $rootScope.$new();
-      scope.direction = undefined;
-
-      elm = $compile('<tabset direction="direction"></tabset>')(scope);
-      scope.$apply();
-      expect(elm).not.toHaveClass('tabs-left');
-      expect(elm).not.toHaveClass('tabs-right');
-      expect(elm).not.toHaveClass('tabs-below');
-      expect(elm.find('.nav + .tab-content').length).toBe(1);
-    }));
-
-    it('should only have the `tab-left` direction class if the direction is "left"', inject(function($compile, $rootScope) {
-      scope = $rootScope.$new();
-      scope.direction = 'left';
-
-      elm = $compile('<tabset direction="direction"></tabset>')(scope);
-      scope.$apply();
-      expect(elm).toHaveClass('tabs-left');
-      expect(elm).not.toHaveClass('tabs-right');
-      expect(elm).not.toHaveClass('tabs-below');
-      expect(elm.find('.nav + .tab-content').length).toBe(1);
-    }));
-
-    it('should only have the `tab-right direction class if the direction is "right"', inject(function($compile, $rootScope) {
-      scope = $rootScope.$new();
-      scope.direction = 'right';
-
-      elm = $compile('<tabset direction="direction"></tabset>')(scope);
-      scope.$apply();
-      expect(elm).not.toHaveClass('tabs-left');
-      expect(elm).toHaveClass('tabs-right');
-      expect(elm).not.toHaveClass('tabs-below');
-      expect(elm.find('.nav + .tab-content').length).toBe(1);
-    }));
-
-    it('should only have the `tab-below direction class if the direction is "below"', inject(function($compile, $rootScope) {
-      scope = $rootScope.$new();
-      scope.direction = 'below';
-
-      elm = $compile('<tabset direction="direction"></tabset>')(scope);
-      scope.$apply();
-      expect(elm).not.toHaveClass('tabs-left');
-      expect(elm).not.toHaveClass('tabs-right');
-      expect(elm).toHaveClass('tabs-below');
-      expect(elm.find('.tab-content + .nav').length).toBe(1);
-    }));
   });
 
   //https://github.com/angular-ui/bootstrap/issues/524
@@ -594,6 +625,115 @@ describe('tabs', function() {
       expect(contents.eq(0).text().trim()).toEqual('1,2,3,');
       expect(contents.eq(1).text().trim()).toEqual('2,3,4,');
       expect(contents.eq(2).text().trim()).toEqual('3,4,5,');
+    }));
+  });
+
+  //https://github.com/angular-ui/bootstrap/issues/783
+  describe('nested tabs', function() {
+    var elm;
+    it('should render without errors', inject(function($compile, $rootScope) {
+      var scope = $rootScope.$new();
+      elm = $compile([
+        '<div>',
+        '  <tabset>',
+        '    <tab heading="Tab 1">',
+        '      <tabset>',
+        '        <tab heading="Tab 1A">',
+        '        </tab>',
+        '      </tabset>',
+        '    </tab>',
+        '    <tab heading="Tab 2">',
+        '      <tabset>',
+        '        <tab heading="Tab 2A">',
+        '        </tab>',
+        '      </tabset>',
+        '    </tab>',
+        '  </tabset>',
+        '</div>'
+      ].join('\n'))(scope);
+      scope.$apply();
+
+      // 1 outside tabset, 2 nested tabsets
+      expect(elm.find('.tabbable').length).toEqual(3);
+    }));
+
+    it('should render with the correct scopes', inject(function($compile, $rootScope) {
+      var scope = $rootScope.$new();
+      scope.tab1Text = 'abc';
+      scope.tab1aText = '123';
+      scope.tab1aHead = '123';
+      scope.tab2aaText = '456';
+      elm = $compile([
+        '<div>',
+        '  <tabset>',
+        '    <tab heading="Tab 1">',
+        '      <tabset>',
+        '        <tab heading="{{ tab1aHead }}">',
+        '          {{ tab1aText }}',
+        '        </tab>',
+        '      </tabset>',
+        '      <span class="tab-1">{{ tab1Text }}</span>',
+        '    </tab>',
+        '    <tab heading="Tab 2">',
+        '      <tabset>',
+        '        <tab heading="Tab 2A">',
+        '          <tabset>',
+        '            <tab heading="Tab 2AA">',
+        '              <span class="tab-2aa">{{ tab2aaText }}</span>',
+        '            </tab>',
+        '          </tabset>',
+        '        </tab>',
+        '      </tabset>',
+        '    </tab>',
+        '  </tabset>',
+        '</div>'
+      ].join('\n'))(scope);
+      scope.$apply();
+
+      var outsideTabset = elm.find('.tabbable').eq(0);
+      var nestedTabset = outsideTabset.find('.tabbable');
+
+      expect(elm.find('.tabbable').length).toEqual(4);
+      expect(outsideTabset.find('.tab-pane').eq(0).find('.tab-1').text().trim()).toEqual(scope.tab1Text);
+      expect(nestedTabset.find('.tab-pane').eq(0).text().trim()).toEqual(scope.tab1aText);
+      expect(nestedTabset.find('ul.nav-tabs li').eq(0).text().trim()).toEqual(scope.tab1aHead);
+      expect(nestedTabset.eq(2).find('.tab-pane').eq(0).find('.tab-2aa').text().trim()).toEqual(scope.tab2aaText);
+    }));
+
+    it('ng-repeat works with nested tabs', inject(function($compile, $rootScope) {
+      var scope = $rootScope.$new();
+      scope.tabs = [
+        {
+          tabs: [
+          {
+            content: 'tab1a'
+          },
+          {
+            content: 'tab2a'
+          }
+          ],
+          content: 'tab1'
+        }
+      ];
+      elm = $compile([
+        '<div>',
+        '  <tabset>',
+        '    <tab ng-repeat="tab in tabs">',
+        '      <tabset>',
+        '        <tab ng-repeat="innerTab in tab.tabs">',
+        '          <span class="inner-tab-content">{{ innerTab.content }}</span>',
+        '        </tab>',
+        '      </tabset>',
+        '      <span class="outer-tab-content">{{ tab.content }}</span>',
+        '    </tab>',
+        '  </tabset>',
+        '</div>'
+      ].join('\n'))(scope);
+      scope.$apply();
+
+      expect(elm.find('.inner-tab-content').eq(0).text().trim()).toEqual(scope.tabs[0].tabs[0].content);
+      expect(elm.find('.inner-tab-content').eq(1).text().trim()).toEqual(scope.tabs[0].tabs[1].content);
+      expect(elm.find('.outer-tab-content').eq(0).text().trim()).toEqual(scope.tabs[0].content);
     }));
   });
 });
