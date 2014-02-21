@@ -1,25 +1,26 @@
 {
   "id" : "cc2f87dec2e6d9c71a57af12",
   "schema" : "ClothoSchema",
-  "binaryName" : "org.clothocad.loadedschemas.Ccc2f87dec2e6d9c71a57af12",
-  "description" : "Alternative to Page, transclude the Chapters of another Trail (whose id must be listed in Trail.dependencies)",
-  "name" : "TrailTransclude",
   "language" : "JSONSCHEMA",
+  "name" : "TrailTransclude",
+  "description" : "Alternative to Page, transclude the Chapters of another Trail (whose id must be listed in Trail.dependencies)",
   "fields" : [ {
-    "javaType" : "java.lang.String",
-    "description" : "ID of trail from which pulling content. Must be defined also in Trail.dependencies",
     "name" : "id",
-    "example" : "",
     "type" : "string",
+    "description" : "ID of trail from which pulling content. Must be defined also in Trail.dependencies",
+    "example" : "",
+    "constraints" : null,
     "access" : "PUBLIC",
+    "javaType" : "java.lang.String",
     "reference" : false
   }, {
-    "javaType" : "java.lang.String",
-    "description" : "Can take one of three forms: 'all' to transclude all chapter, '#' to transclude a single chapter, or '#-#' to give a start and end chapter to transclude",
     "name" : "chapters",
-    "example" : "",
     "type" : "string",
+    "description" : "Can take one of three forms: 'all' to transclude all chapter, '#' to transclude a single chapter, or '#-#' to give a start and end chapter to transclude",
+    "example" : "",
+    "constraints" : null,
     "access" : "PUBLIC",
+    "javaType" : "java.lang.String",
     "reference" : false
   } ]
 }

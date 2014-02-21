@@ -1,0 +1,8 @@
+{
+  "id" : "5306b7a0ef86a028da2d7021",
+  "schema" : "Function",
+  "dependencies" : [ "522af4b4b22548ae323e4475" ],
+  "name" : "moduleTestFunction",
+  "code" : "function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
+  "language" : "JAVASCRIPT"
+}

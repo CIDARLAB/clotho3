@@ -1,0 +1,11 @@
+{
+  "id" : "5306b7a0ef86a028da2d701f",
+  "schema" : "Function",
+  "args" : [ {
+    "name" : "str",
+    "type" : "string"
+  } ],
+  "name" : "lowercase",
+  "code" : "function (str) {return str.toLowerCase();}",
+  "language" : "JAVASCRIPT"
+}

@@ -1,0 +1,7 @@
+{
+  "id" : "5306b7a0ef86a028da2d7023",
+  "schema" : "Function",
+  "name" : "useLodash",
+  "code" : "function() {return _.map([1,2,3],function(i){return i+1;});};",
+  "language" : "JAVASCRIPT"
+}

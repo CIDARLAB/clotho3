@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Mariana",
+  "nickName" : "Mariana",
+  "surName" : "Leguia",
+  "name" : "mariana.leguia",
+  "emailAddress" : "mariana.leguia@gmail.com",
+  "icon" : "marianaLeguia.png",
+  "imgUrl" : "",
+  "startDate" : "2009-09-01",
+  "endDate" : "2011-06-25",
+  "currentLocation" : "Researcher in US Navy in Peru",
+  "current" : false,
+  "dateCreated" : "2009-09-01",
+  "isManagement" : false,
+  "role" : "Postdoc",
+  "biography" : "",
+  "title" : "Automated Assembly",
+  "description" : "",
+  "social" : "",
+  "id" : "5306b79fef86a028da2d6f74"
+}

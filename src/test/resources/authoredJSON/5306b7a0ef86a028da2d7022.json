@@ -1,0 +1,12 @@
+{
+  "name" : "moduleTestFunction2",
+  "language" : "JAVASCRIPT",
+  "schema" : "Function",
+  "dependencies" : [ "522f58729f915de6a1023298" ],
+  "code" : "function(i) {return moduleTestFunction(i);};",
+  "args" : [ {
+    "type" : "number",
+    "name" : "i"
+  } ],
+  "id" : "5306b7a0ef86a028da2d7022"
+}

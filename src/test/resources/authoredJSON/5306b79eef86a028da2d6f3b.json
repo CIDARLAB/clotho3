@@ -1,0 +1,38 @@
+{
+  "schema" : "BuiltInSchema",
+  "superClass" : "52771d62c2e6720c8f68ac04",
+  "binaryName" : "org.clothocad.model.Lab",
+  "c" : "org.clothocad.model.Lab",
+  "name" : "Lab",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "PI",
+    "type" : "Person",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "department",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "address",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.model.Institution",
+    "name" : "institution",
+    "type" : "Institution",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "website",
+    "type" : "string",
+    "reference" : false
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "5306b79eef86a028da2d6f3b"
+}

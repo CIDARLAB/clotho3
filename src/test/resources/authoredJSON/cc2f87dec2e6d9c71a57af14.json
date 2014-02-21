@@ -1,41 +1,44 @@
 {
   "id" : "cc2f87dec2e6d9c71a57af14",
   "schema" : "ClothoSchema",
-  "binaryName" : "org.clothocad.loadedschemas.Ccc2f87dec2e6d9c71a57af14",
-  "description" : "Container for Trail. Trails consist primarily of Chapters, which contain either a transclude or list of Pages.",
-  "name" : "Trail",
   "language" : "JSONSCHEMA",
+  "name" : "Trail",
+  "description" : "Container for Trail. Trails consist primarily of Chapters, which contain either a transclude or list of Pages.",
   "fields" : [ {
-    "javaType" : "java.lang.String",
-    "description" : "HTML that is used as a splash when the trail is selected, providing some information about the trail.",
-    "name" : "description",
-    "example" : "",
-    "type" : "string",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "description" : "Array of Chapters. The contents of the trail. Refer to Chapter and Page schemas.",
-    "name" : "contents",
-    "example" : "",
-    "type" : "array",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
-    "description" : "URL of Angular components to add, before the trail is compiled. Must be prefixed by Application.Extensions._____",
-    "name" : "mixin",
-    "example" : "",
-    "type" : "string",
-    "access" : "PUBLIC",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "description" : "Array of ID strings. Dependencies are downloaded at initial stage of Trail compilation, must be defined here if transcluding Chapters from other Trails",
     "name" : "dependencies",
-    "example" : "",
     "type" : "array",
+    "description" : "Array of ID strings. Dependencies are downloaded at initial stage of Trail compilation, must be defined here if transcluding Chapters from other Trails",
+    "example" : "",
+    "constraints" : null,
     "access" : "PUBLIC",
+    "javaType" : "java.util.List",
+    "reference" : false
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "description" : "HTML that is used as a splash when the trail is selected, providing some information about the trail.",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC",
+    "javaType" : "java.lang.String",
+    "reference" : false
+  }, {
+    "name" : "mixin",
+    "type" : "string",
+    "description" : "URL of Angular components to add, before the trail is compiled. Must be prefixed by Application.Extensions._____",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC",
+    "javaType" : "java.lang.String",
+    "reference" : false
+  }, {
+    "name" : "contents",
+    "type" : "array",
+    "description" : "Array of Chapters. The contents of the trail. Refer to Chapter and Page schemas.",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC",
+    "javaType" : "java.util.List",
     "reference" : false
   } ]
 }

@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Samantha",
+  "nickName" : "Sam",
+  "surName" : "Liang",
+  "name" : "liang.samantha",
+  "emailAddress" : "liang.samantha@gmail.com",
+  "icon" : "samanthaLiang.png",
+  "imgUrl" : "",
+  "startDate" : "2007-06-01",
+  "endDate" : "2013-08-09",
+  "currentLocation" : "Graduate Student at UCSF",
+  "current" : false,
+  "dateCreated" : "2007-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "5306b79fef86a028da2d6f7c"
+}
