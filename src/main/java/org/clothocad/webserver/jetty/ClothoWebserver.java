@@ -82,7 +82,6 @@ public class ClothoWebserver {
         //Handler stack
         
         
-        
         servletHandler.setContextPath("/");
         servletHandler.setResourceBase(clientDirectory);
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
@@ -90,7 +89,9 @@ public class ClothoWebserver {
         servletHandler.addFilter(GuiceFilter.class, "/*", null);
         servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
         servletHandler.addServlet(new ServletHolder(wsServlet), "/websocket");
-                
+        
+        servletHandler.addServlet(new ServletHolder(new RestApi()),"/rest/*");
+
         HandlerList handlers = new HandlerList();
         handlers.addHandler(constraintHandler);
         constraintHandler.setHandler(servletHandler);        
