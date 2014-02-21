@@ -4,7 +4,8 @@
     <div class="navbar navbar-default" style="padding: 8px 15px;">
 
         <!--input-->
-        <div class="input-group col-xs-4" style="padding-left: 0px;">
+        <!--hack -- float -->
+        <div class="input-group col-xs-4" style="padding-left: 0px; float: left;">
             <!--todo - add these attributes via directive -->
             <input id="clothoCommandBarInput" class="form-control" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext($event)','up':'selectAutoPrev($event)','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
             <span class="input-group-btn">
