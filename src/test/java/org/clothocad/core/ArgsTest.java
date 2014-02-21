@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core;
 
 import java.nio.file.Paths;
@@ -19,10 +15,11 @@ import org.junit.Test;
  * @author spaige
  */
 public class ArgsTest {
-    
-    
-    private static ClothoModule moduleFromArgs(String[] args) throws ParseException{
-        return new ClothoModule(ClothoStarter.commandToProperties(ClothoStarter.parseArgs(args)));
+    private static ClothoModule
+    moduleFromArgs(String[] args) throws ParseException {
+        return new ClothoModule(
+            AbstractClothoStarter.commandToProperties(
+                AbstractClothoStarter.parseArgs(args)));
     }
     
     @Test
