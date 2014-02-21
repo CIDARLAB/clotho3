@@ -1,5 +1,8 @@
-$clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $dialog, Clotho) {
+$clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
+
+
+	/*
     var dialogOpts = {
         backdrop: false,
         keyboard: false,
@@ -36,11 +39,13 @@ $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($sco
         return $timeout(function() {  }, 500 );
     })
     .then(function() {
-        dialog = $dialog.dialog(dialogOpts);
-        return dialog.open()
+        dialog = $modal.open(dialogOpts);
+        return dialog
     })
     .then(function() {
         return $focus.removeBackdrop();
     })
+
+    */
 
 });

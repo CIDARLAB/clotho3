@@ -1,4 +1,4 @@
-angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q) {
+angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, $parse, Clotho, $interpolate, $q, $sce) {
 
 	return {
 		restrict: "EA",
@@ -19,7 +19,16 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 					//can't compile with scope.quiz - not a scope object - and can't create isolate because bindings not maintained
 					// note - see also grade and retry functions, and load.quiz
 					// todo - use $parse quiz question
-					scope.quiz.question = $compile('<h5>' + scope.quiz.question + '</h5>')(scope);
+
+					console.log(scope.quiz);
+
+					scope.interpolatedQuestion = $interpolate(scope.quiz.question)(scope);
+
+					scope.parsedQuestion = function() {
+						return $sce.trustAsHtml('<h5>' + scope.quiz.question + '</h5>');
+					};
+
+					//scope.quiz.question = $compile('<h5>' + scope.quiz.question + '</h5>')(scope);
 					//console.log(scope.quiz.question);
 
 					$http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
@@ -52,9 +61,16 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 							scope.quiz.response = {};
 							scope.quiz.response.result = data;
 							//console.log(scope.gradeCallback);
-							scope.gradeCallback(data);
+
+							if (angular.isDefined(scope.gradeCallback)) {
+								scope.gradeCallback(data);
+							}
 						});
 					};
+
+					scope.$watch('quiz.questionValue', function () {
+						scope.interpolatedQuestion = $interpolate(scope.quiz.question)(scope)
+					});
 
 					scope.resetQuiz = function () {
 						scope.quiz.submitted = false;

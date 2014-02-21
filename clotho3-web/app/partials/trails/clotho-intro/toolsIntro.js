@@ -2,6 +2,8 @@
 
 $clotho.extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Clotho', function($scope, $focus, $timeout, $dialog, Clotho) {
 
+	/*
+
     var dialogOpts = {
         backdrop: false,
         keyboard: false,
@@ -60,6 +62,7 @@ $clotho.extensions.controller('clothoIntro_toolsIntroCtrl', ['$scope', '$focus',
         return $focus.removeBackdrop();
     });
 
+	*/
 
 
     $scope.quiz = {
