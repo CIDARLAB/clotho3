@@ -57,6 +57,7 @@
             <properties>
                 <exec.args>-classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment</exec.args>
                 <exec.executable>java</exec.executable>
+                <exec.classpathScope>test</exec.classpathScope>
             </properties>
         </action>
     </actions>
