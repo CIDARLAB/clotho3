@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import org.apache.commons.cli.CommandLine;
+import java.util.Properties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
@@ -27,10 +27,13 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
     public static void main(String[] args) throws Exception {
         baseMain(args, new MainHook() {
             @Override public Injector
-            getInjector(CommandLine cmd) {
+            getInjector(Properties config) {
+                final Properties override = new Properties(config);
+                override.setProperty("dbname", "authoringenv");
                 return Guice.createInjector(
-                    new ClothoAuthoringModule(commandToProperties(cmd)),
-                    new MongoDBModule());
+                    new ClothoAuthoringModule(override),
+                    new MongoDBModule()
+                );
             }
 
             @Override public void

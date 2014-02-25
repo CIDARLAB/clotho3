@@ -1,6 +1,7 @@
 package org.clothocad.core;
 
 import java.nio.file.Paths;
+import java.util.Properties;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -21,7 +22,11 @@ public enum ConfigOption {
                       .toString(),
                  "path"),
     keystorepass("SSL keystore password", "", "password"),
-    propfile("path to properties file", "", "path"),
+    configfile("path to configuration file",
+               Paths.get(System.getProperty("user.home"))
+                    .resolve(Paths.get(".clothoconfig"))
+                    .toString(),
+               "path"),
     clientdirectory("path to client files directory",
                     Paths.get("clotho3-web", "dist").toString(),
                     "path");
@@ -48,10 +53,17 @@ public enum ConfigOption {
 
     public static Options getOptions() {
         Options options = new Options();
-        for (ConfigOption opt : ConfigOption.values()) {
+        for (ConfigOption opt : ConfigOption.values())
             options.addOption(opt.toOption());
-        }
         options.addOption(new Option("help", false, "print this message"));
         return options;
+    }
+
+    /** TODO: the only legitimate user is org.clothocad.core.util.Config.get */
+    public static Properties getDefaultConfig() {
+        final Properties out = new Properties();
+        for (final ConfigOption c : ConfigOption.values())
+            out.setProperty(c.name(), c.defaultValue);
+        return out;
     }
 }

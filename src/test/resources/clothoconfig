@@ -1,0 +1,6 @@
+# Test configuration
+
+dbname = earlier dbname value
+dbname = config \
+         file DB
+dbhost = badhost.nonexistent.com

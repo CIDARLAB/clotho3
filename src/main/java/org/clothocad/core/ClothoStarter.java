@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import org.apache.commons.cli.CommandLine;
+import java.util.Properties;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.util.JSON;
@@ -14,10 +14,9 @@ public class ClothoStarter extends AbstractClothoStarter {
     public static void main(String[] args) throws Exception {
         baseMain(args, new MainHook() {
             @Override public Injector
-            getInjector(CommandLine cmd) {
+            getInjector(Properties config) {
                 return Guice.createInjector(
-                    new ClothoModule(commandToProperties(cmd)),
-                    new MongoDBModule()
+                    new ClothoModule(config), new MongoDBModule()
                 );
             }
 

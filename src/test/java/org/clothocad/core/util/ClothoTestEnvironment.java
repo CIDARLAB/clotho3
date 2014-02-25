@@ -3,7 +3,7 @@ package org.clothocad.core.util;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.util.Arrays;
-import org.apache.commons.cli.CommandLine;
+import java.util.Properties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
@@ -21,9 +21,11 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
     public static void main(String[] args) throws Exception {
         baseMain(args, new MainHook() {
             @Override public Injector
-            getInjector(CommandLine cmd) {
+            getInjector(Properties config) {
+                final Properties override = new Properties(config);
+                override.setProperty("dbname", "testClotho");
                 return Guice.createInjector(
-                    new ClothoTestModule(commandToProperties(cmd)),
+                    new ClothoTestModule(override),
                     new MongoDBModule()
                 );
             }
