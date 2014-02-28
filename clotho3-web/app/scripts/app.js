@@ -6,7 +6,9 @@ angular.module('clotho.fullPackage', [
 	'clotho.commandbar',        //command bar
 	'clotho.webapp',        //general web app components
 	//additional webapp modules
-	'clotho.editor', 'clotho.interface', 'clotho.trails'
+	'clotho.editor',
+	'clotho.interface',
+	'clotho.trails'
 ]);
 
 //web application set up

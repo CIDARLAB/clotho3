@@ -380,12 +380,15 @@ module.exports = function (grunt) {
 			  /*
 			   requires mvn command line tools installed:
 			   export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
-
-			   these no longer required:
-			   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
-			   export JAVA_PATH=$JAVA_HOME/bin/java
 			  */
 			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  },
+		  clothoProdServer: {
+			  //todo - update to proper server etc (currently just uses /dist/)
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
 			  }
@@ -402,6 +405,15 @@ module.exports = function (grunt) {
 		  files: [
 			  '**/*'
 		  ]
+	  },
+	  // Removes unused CSS
+	  //future - integrate when handle dynamically added css
+	  uncss: {
+		  dist: {
+			  files : {
+				  '<%= yeoman.dist %>/styles/main.css': ['<%= yeoman.dist %>/*.html', '<%= yeoman.dist %>/views/**/*','<%= yeoman.dist %>/partials/**/*']
+			  }
+		  }
 	  },
 		//note - this is for versioning
 	  bump: {
@@ -490,6 +502,11 @@ module.exports = function (grunt) {
 	  'processhtml',
 	  'htmlmin'
   ]);
+
+	grunt.registerTask('build-uncss', [
+		'build',
+		'uncss'
+	]);
 
   grunt.registerTask('default', [
     'newer:jshint',

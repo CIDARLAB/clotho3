@@ -199,7 +199,6 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	/****** listeners *****/
 
 	Clotho.listen("activityLog", function (data) {
-		console.log('received message on activityLog', data);
 		receiveMessage(data);
 	}, 'searchbar');
 
