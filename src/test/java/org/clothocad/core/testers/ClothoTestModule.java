@@ -29,10 +29,8 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  * @author spaige
  */
 public class ClothoTestModule extends ClothoModule {
-
-    public ClothoTestModule(Properties props) {
-        super(props);
-        defaults.put("dbname", "testClotho");
+    public ClothoTestModule(Properties config) {
+        super(config);
     }
 
     public ClothoTestModule() {
