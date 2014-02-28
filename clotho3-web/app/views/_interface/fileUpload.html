@@ -1,12 +1,18 @@
 <!--todo - reintroduce progress -->
 
-<div ng-form>
-    <div class="alert" ng-show="!dropSupported">File Drop support not present!!</div>
-    <div class="alert">File upload not working yet</div>
+<div ng-form class="form" style="margin: 10px 0;">
+    <div class="alert alert-warning" ng-show="!dropSupported">File Drop support not present!!</div>
+    <div class="alert alert-warning">File upload not working yet</div>
 
-    File Name: <input type="text" ng-model="fileName">
-    <br>
-    <input type="file" ng-file-select="onFileSelect($files)" multiple>
+    <div class="form-group">
+        <label class="control-label" for="fileName">File Name</label>
+        <input id="fileName" type="text" class="form-input" ng-model="fileName">
+    </div>
+
+    <div class="form-group">
+        <label for="fileInput">File input</label>
+        <input id="fileInput" ng-file-select="onFileSelect($files)" type="file" multiple>
+    </div>
 
     <div ng-show="dropSupported" style="background: #efefff; padding: 10px 5px;" ng-file-drop="onFileSelect($files);" ng-file-drop-available="dropSupported=true">or drop files here</div>
     <label class="checkbox">
