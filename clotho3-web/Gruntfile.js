@@ -478,6 +478,16 @@ module.exports = function (grunt) {
 		'watch'
 	]);
 
+	grunt.registerTask('dev2', [
+		'shell:mongo',
+		'shell:clothoProdServer',
+		'clean:server',
+		'concurrent:server',
+		'autoprefixer',
+		'open',
+		'watch'
+	]);
+
   grunt.registerTask('test', [
     'clean:server',
     'concurrent:test',
