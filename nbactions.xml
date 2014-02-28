@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action> <!-- TODO: this is a copy of the Test Environment invocation -->
+        <action>
             <actionName>run</actionName>
             <goals>
                 <goal>process-classes</goal>
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/dist</exec.args>
+                <exec.args>-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.classpathScope>test</exec.classpathScope>
             </properties>
@@ -48,19 +48,6 @@
             </properties>
         </action>
         <action>
-            <actionName>CUSTOM-Run Test Environment</actionName>
-            <displayName>Run Test Environment</displayName>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/dist</exec.args>
-                <exec.executable>java</exec.executable>
-                <exec.classpathScope>test</exec.classpathScope>
-            </properties>
-        </action>
-        <action>
             <actionName>CUSTOM-Run Authoring Environment</actionName>
             <displayName>Run Authoring Environment</displayName>
             <goals>
@@ -70,6 +57,7 @@
             <properties>
                 <exec.args>-classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment</exec.args>
                 <exec.executable>java</exec.executable>
+                <exec.classpathScope>test</exec.classpathScope>
             </properties>
         </action>
     </actions>

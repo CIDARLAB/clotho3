@@ -1,8 +1,8 @@
-$clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $dialog, Clotho) {
+$clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
     var dialogOpts = {
         backdrop: false,
-        keyboard: false,
+        keyboard: true,
         dialogFade : true,
         templateUrl: 'views/_interface/ui-custom/dialogMessagebox.html',
         controller: 'MessageBoxController',
@@ -16,31 +16,19 @@ $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($sco
         }}
     };
 
-    //hacks to hide dialog
-    var dialog;
-    var oldNext = $scope.next;
-    $scope.$parent.next = function() {
-        console.log('called it');
-        console.log(dialog);
-        dialog.close();
-        oldNext();
-    };
-
-    //allow tide for quiz to render
-    $timeout(angular.noop,200)
-    .then(function() {
-         $focus.addBackdrop();
-        return $focus.highlightElement($('.quiz'))
-    })
-    .then(function() {
-        return $timeout(function() {  }, 500 );
-    })
-    .then(function() {
-        dialog = $dialog.dialog(dialogOpts);
-        return dialog.open()
-    })
-    .then(function() {
-        return $focus.removeBackdrop();
-    })
+	$focus.addBackdrop().then(function() {
+		return $focus.bringToFront($('.quiz'))
+	})
+	.then(function (oldZ) {
+		return $modal.open(dialogOpts)
+			.result
+			.then(function() {
+				return oldZ
+			});
+	})
+	.then(function(oldZ) {
+		$focus.setZ(oldZ, $('.quiz'));
+		return $focus.removeBackdrop();
+	});
 
 });

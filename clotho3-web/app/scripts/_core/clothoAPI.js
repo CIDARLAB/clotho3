@@ -530,7 +530,7 @@ function generateClothoAPI() {
     var share = function() {
 	      //todo - need to set up share (outside API)
 	      console.log('need to set up share');
-        //$dialog.share().open();
+        //$modal.share($location.absUrl());
     };
 
 

@@ -1,0 +1,32 @@
+{
+  "schema" : "BuiltInSchema",
+  "binaryName" : "org.clothocad.core.datums.Module",
+  "c" : "org.clothocad.core.datums.Module",
+  "name" : "Module",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "description",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.core.datums.util.Language",
+    "name" : "language",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.core.execution.Script",
+    "name" : "code",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "[Lorg.clothocad.core.datums.Module;",
+    "name" : "dependencies",
+    "type" : "array",
+    "reference" : true
+  } ],
+  "_id" : {
+    "new" : false
+  },
+  "id" : "5306b79eef86a028da2d6f40"
+}

@@ -1,73 +1,76 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.util;
+
+import static org.clothocad.core.util.ClothoTestEnvironment.main;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.ParseException;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
-import org.clothocad.core.ClothoModule;
-import org.clothocad.core.ClothoStarter;
-import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.AbstractClothoStarter;
 import org.clothocad.core.persistence.dataauthoring.FileHookPersistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.security.ClothoRealm;
-import static org.clothocad.core.util.ClothoTestEnvironment.main;
-import org.clothocad.webserver.jetty.ClothoWebserver;
 
 /**
  *
  * @author spaige
  */
-public class ClothoAuthoringEnvironment extends ClothoStarter {
-
-    public static void main(String[] args)
-            throws Exception {
-        try {
-            CommandLine cmd = parseArgs(args);
-
-            if (cmd.hasOption("help")) {
-                printHelp();
-                return;
-            }
-            Injector injector = Guice.createInjector(
-                    new ClothoAuthoringModule(commandToProperties(cmd)),
-                    new MongoDBModule());
-
-            org.apache.shiro.mgt.SecurityManager securityManager = injector.getInstance(org.apache.shiro.mgt.SecurityManager.class);
-            SecurityUtils.setSecurityManager(securityManager);
-
-            //test-specific setup
-
-            FileHookPersistor persistor = injector.getInstance(FileHookPersistor.class);
-            ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-            Path storageFolder = injector.getInstance(Key.get(Path.class, Names.named("storagefolder")));
-            if (!Files.exists(storageFolder) || !Files.newDirectoryStream(storageFolder).iterator().hasNext()) {
-                persistor.initializeBuiltInSchemas();
+public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
+    public static void main(String[] args) throws Exception {
+        baseMain(args, new MainHook() {
+            @Override public Injector
+            getInjector(Properties config) {
+                final Properties override = new Properties(config);
+                override.setProperty("dbname", "authoringenv");
+                return Guice.createInjector(
+                    new ClothoAuthoringModule(override),
+                    new MongoDBModule()
+                );
             }
 
-            TestUtils.importTestJSON(Paths.get("src", "test", "resources").toString(), persistor, false);
-            TestUtils.importTestJSON(storageFolder.toString(), persistor, true);
-            TestUtils.importTestJSON(persistor);
-            TestUtils.setupTestUsers(realm);
+            @Override public void
+            call(Injector injector) {
+                SecurityManager securityManager
+                    = injector.getInstance(SecurityManager.class);
+                SecurityUtils.setSecurityManager(securityManager);
 
-            server = injector.getInstance(ClothoWebserver.class);
-            server.start();
-        } catch (ParseException e) {
-            //TODO: customise message to include default values
-            System.out.println(e.getMessage());
-            printHelp();
-        }
+                /* test-specific setup */
+                FileHookPersistor persistor =
+                    injector.getInstance(FileHookPersistor.class);
+                ClothoRealm realm = injector.getInstance(ClothoRealm.class);
+                Path storageFolder = injector.getInstance(
+                    Key.get(Path.class, Names.named("storagefolder"))
+                );
+                if (isBoringDirectory(storageFolder))
+                    persistor.initializeBuiltInSchemas();
+
+                TestUtils.importTestJSON(
+                    Paths.get("src", "test", "resources").toString(),
+                    persistor,
+                    false
+                );
+                TestUtils.importTestJSON(
+                    storageFolder.toString(), persistor, true);
+                TestUtils.importTestJSON(persistor);
+                TestUtils.setupTestUsers(realm);
+            }
+
+            private boolean isBoringDirectory(Path dir) {
+                try {
+                    return !Files.newDirectoryStream(dir).iterator().hasNext();
+                } catch (IOException e) {
+                    return true;
+                }
+            }
+        });
     }
 
     @Override

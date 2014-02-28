@@ -1,8 +1,8 @@
-# bootstrap - [AngularJS](http://angularjs.org/) directives specific to [twitter bootstrap](http://twitter.github.io/bootstrap/)
+# bootstrap - [AngularJS](http://angularjs.org/) directives specific to [Bootstrap](http://getbootstrap.com)
 
 ***
 
-[![Build Status](https://secure.travis-ci.org/angular-ui/bootstrap.png)](http://travis-ci.org/angular-ui/bootstrap)
+[![Build Status](https://secure.travis-ci.org/angular-ui/bootstrap.png)](http://travis-ci.org/angular-ui/bootstrap) [![devDependency Status](https://david-dm.org/angular-ui/bootstrap/dev-status.png?branch=master)](https://david-dm.org/angular-ui/bootstrap#info=devDependencies)
 
 ## Demo
 
@@ -50,7 +50,7 @@ We are simply not regularly testing against IE8.
 
 ### Native, lightweight directives
 
-We are aiming at providing a set of AngularJS directives based on Twitter Bootstrap's markup and CSS. The goal is to provide **native AngularJS directives** without any dependency on jQuery or Bootstrap's JavaScript.
+We are aiming at providing a set of AngularJS directives based on Bootstrap's markup and CSS. The goal is to provide **native AngularJS directives** without any dependency on jQuery or Bootstrap's JavaScript.
 It is often better to rewrite an existing JavaScript code and create a new, pure AngularJS directive. Most of the time the resulting directive is smaller as compared to the orginal JavaScript code size and better integrated into the AngularJS ecosystem.
 
 ### Customizability
@@ -78,13 +78,79 @@ We are always looking for the quality contributions! Please check the [CONTRIBUT
 
 #### Build
 * Build the whole project: `grunt` - this will run `lint`, `test`, and `concat` targets
+* To build modules, first run `grunt html2js` then `grunt build:module1:module2...:moduleN`
 
-Check the Grunt build file for other tasks that are defined for this project
+You can generate a custom build, containing only needed modules, from the project's homepage.
+Alternativelly you can run local Grunt build from the command line and list needed modules as shown below:
+
+```
+grunt build:modal:tabs:alert:popover:dropdownToggle:buttons:progressbar
+```
+
+Check the Grunt build file for other tasks that are defined for this project.
 
 #### TDD
 * Run test: `grunt watch`
  
 This will start Karma server and will continously watch files in the project, executing tests upon every change.
+
+#### Test coverage
+Add the `--coverage` option (e.g. `grunt test --coverage`, `grunt watch --coverage`) to see reports on the test coverage. These coverage reports are found in the coverage folder.
+
+### Customize templates
+
+As mentioned directives from this repository have all the markup externalized in templates. You might want to customize default
+templates to match your desired look & feel, add new functionality etc.
+
+The easiest way to override an individual template is to use the `<script>` directive:
+
+```javascript
+<script id="template/alert/alert.html" type="text/ng-template">
+    <div class='alert' ng-class='type && "alert-" + type'>
+        <button ng-show='closeable' type='button' class='close' ng-click='close()'>Close</button>
+        <div ng-transclude></div>
+    </div>
+</script>
+```
+
+If you want to override more templates it makes sense to store them as individual files and feed the `$templateCache` from those partials.
+For people using Grunt as the build tool it can be easily done using the `grunt-html2js` plugin. You can also configure your own template url.
+Let's have a look:
+
+Your own template url is `views/partials/ui-bootstrap-tpls/alert/alert.html`.
+
+Add "html2js" task to your Gruntfile
+```
+html2js: {
+  options: {
+    base: '.',
+    module: 'ui-templates',
+    rename: function (modulePath) {
+      var moduleName = modulePath.replace('app/views/partials/ui-bootstrap-tpls/', '').replace('.html', '');
+      return 'template' + '/' + moduleName + '.html';
+    }
+  },
+  main: {
+    src: ['app/views/partials/ui-bootstrap-tpls/**/*.html'],
+    dest: '.tmp/ui-templates.js'
+  }
+}
+```
+
+Make sure to load your template.js file
+`<script src="/ui-templates.js"></script>`
+
+Inject the `ui-templates` module in your `app.js`
+```
+angular.module('myApp', [
+  'ui.bootstrap',
+  'ui-templates'
+]);
+```
+
+Then it will work fine!
+
+For more information visit: https://github.com/karlgoldstein/grunt-html2js
 
 ### Release
 * Bump up version number in `package.json`

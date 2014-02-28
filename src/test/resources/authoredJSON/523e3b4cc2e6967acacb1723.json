@@ -1,15 +1,19 @@
 {
-  "id" : "523e3b4cc2e6967acacb1723",
   "schema" : "Function",
-  "tests" : [ {
-    "args" : [ [ "aaaaaaaaaaA^CATG_", "^CATG_Tttggttggttgg" ] ]
-  } ],
+  "id" : "523e3b4cc2e6967acacb1723",
   "dependencies" : [ "523e36e1c2e647abe23c1fa6" ],
   "args" : [ {
-    "name" : "sequence",
-    "type" : "string"
+    "type" : "string",
+    "name" : "sequence"
   } ],
   "name" : "PCRModuleTest",
   "code" : "function(frags) { return PCR.ligate(frags); };",
-  "language" : "JAVASCRIPT"
+  "language" : "JAVASCRIPT",
+  "tests" : [ {
+    "args" : [ [ "aaaaaaaaaaA^CATG_", "^CATG_Tttggttggttgg" ] ],
+    "output" : {
+      "value" : "aaaaaaaaaaACATGTttggttggttgg",
+      "type" : "VALUE"
+    }
+  } ]
 }

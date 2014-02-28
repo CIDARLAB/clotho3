@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Janna",
+  "nickName" : "Janna",
+  "surName" : "Serbo",
+  "name" : "jannaserbo",
+  "emailAddress" : "jannaserbo@gmail.com",
+  "icon" : "jannaSerbo.png",
+  "imgUrl" : "",
+  "startDate" : "2008-01-01",
+  "endDate" : "2008-05-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2008-01-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "5306b79fef86a028da2d6f79"
+}

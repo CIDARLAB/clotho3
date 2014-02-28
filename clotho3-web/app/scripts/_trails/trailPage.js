@@ -11,13 +11,13 @@ angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $c
 			'<div trail-page-component="comp"></div>' +
 			'</div>',
 		scope: {
-			page: '=trailPage'
+			page: '=trailPage',
+			next : '=',
+			prev : '='
 		},
 		compile: function compile(tElement, tAttrs, transclude) {
 			return {
 				pre: function preLink(scope, element, attrs) {
-
-					console.log(scope.page);
 
 					//future in ng-1.2.x, use notify callbacks for updates
 					//future - this provides the foundation for Clotho.view() -- move it there
@@ -76,12 +76,15 @@ angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $c
 					};
 
 					//init
-					return scope.createPage(scope.page);
+					//return scope.createPage(scope.page);
 				},
 				post: function postLink(scope, element, attrs) {
-					scope.$watch(attrs.trailPage, function(oldpage, newpage) {
+
+					/*
+					scope.$watch(attrs.trailPage, function(newpage, oldpage) {
 						!!newpage && scope.setPage(newpage);
 					}, true)
+					*/
 				}
 			}
 		}
