@@ -639,7 +639,7 @@ function generateClothoAPI() {
     /**
      * @name Clotho.run
      *
-     * @param {string} func Object UUID or name indicating the function to be run (follows get semantics for ambiguous selectors)
+     * @param {string} func Object UUID or name (as name or module.name) indicating the function to be run (follows get semantics for ambiguous selectors)
      * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
      *
      * @description

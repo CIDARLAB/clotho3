@@ -3,7 +3,8 @@
 angular.module('clotho.webapp')
   .controller('WidgetsCtrl', function ($scope, $compile) {
 
-		$scope.myModel = "WHATS up";
+		$scope.myModel = 'WHATS up';
+		$scope.myDNAmodel = 'aaaagt';
 
 		$scope.bootstrapCallback = function(element) {
 			console.log('widget controller callback! passed element:', element);
