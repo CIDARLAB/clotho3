@@ -1,5 +1,10 @@
 package org.clothocad.core.datums;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +14,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.bson.types.ObjectId;
 
 import java.util.Arrays;
 import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.persistence.DBOnly;
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.jackson.JSONViews;
+import org.clothocad.core.persistence.annotations.Reference;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
+import org.clothocad.core.persistence.jackson.WideningDefaultTypeResolverBuilder;
 import org.clothocad.core.security.Visibility;
 
 /**
@@ -28,6 +34,12 @@ import org.clothocad.core.security.Visibility;
 @Data()
 @NoArgsConstructor
 @Slf4j
+@JsonAutoDetect(fieldVisibility=com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY,
+                getterVisibility=com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
+                isGetterVisibility=com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
+                setterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "schema", include = JsonTypeInfo.As.PROPERTY)
+@JsonTypeResolver(WideningDefaultTypeResolverBuilder.class)
 public abstract class ObjBase {
 
     //add schema
@@ -36,13 +48,16 @@ public abstract class ObjBase {
     public ObjBase(String name) {
         this.name = name;
     }
+    
+    @JsonView(JSONViews.IdOnly.class)
+    @JsonProperty("_id")
     private ObjectId id;
     private String name;
-    @DBOnly
+    @JsonView(JSONViews.Internal.class)
     private boolean isDeleted;
     @Setter(AccessLevel.NONE)
     private Date dateCreated;
-    @DBOnly
+    @JsonView(JSONViews.Internal.class)
     private Date lastModified, lastAccessed;
     
     @Getter
@@ -98,7 +113,7 @@ public abstract class ObjBase {
         ArrayList<Field> output = new ArrayList<>();
         while (c != null && c != Object.class) {
             for (Field f : c.getDeclaredFields()) {
-                if (f.getAnnotation(Reference.class) != null) {
+                if (f.getAnnotation(Reference.class) != null || f.getAnnotation(ReferenceCollection.class) != null) {
                     output.add(f);
                 }
             }

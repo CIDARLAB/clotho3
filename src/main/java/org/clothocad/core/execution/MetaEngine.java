@@ -4,8 +4,6 @@
  */
 package org.clothocad.core.execution;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -14,13 +12,12 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.communication.ScriptAPI;
+import org.clothocad.core.datums.ObjectId;
 import org.mozilla.javascript.RhinoException;
 
 /**

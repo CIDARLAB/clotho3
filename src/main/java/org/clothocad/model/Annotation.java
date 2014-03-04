@@ -28,7 +28,7 @@ import org.clothocad.core.datums.ObjBase;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.annotations.Reference;
 
 /**
  * An Annotation is a single line of genbank essentially.  It maps a Feature

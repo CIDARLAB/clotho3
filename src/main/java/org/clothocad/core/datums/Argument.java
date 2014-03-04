@@ -12,7 +12,6 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.IdUtils;
 import org.clothocad.core.schema.Schema;
 
@@ -100,13 +99,7 @@ public class Argument {
             return;
         }   
         ObjectId id;
-        if (ObjectId.isValid(s)){
-        id = new ObjectId(s);            
-        } else {
-            id = IdUtils.resolveSelector(s, true);
-        }
-        
-
+        id = IdUtils.resolveSelector(s, true);
         try {
             
             type = IdUtils.getClass(id);

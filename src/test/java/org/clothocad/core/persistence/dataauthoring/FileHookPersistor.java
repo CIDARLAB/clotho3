@@ -17,9 +17,8 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.JSONSerializer;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.OverwriteConfirmationException;
 import org.clothocad.core.persistence.Persistor;
@@ -36,8 +35,8 @@ public class FileHookPersistor extends Persistor{
     protected Path storageFolder;
     
     @Inject
-    public FileHookPersistor(final ClothoConnection connection, JSONSerializer serializer, @Named("storagefolder") Path storageFolder) throws IOException{
-        super(connection, serializer, false);
+    public FileHookPersistor(final ClothoConnection connection, @Named("storagefolder") Path storageFolder) throws IOException{
+        super(connection, false);
         this.storageFolder = storageFolder;
         if (!Files.exists(storageFolder)) Files.createDirectories(storageFolder);
     }
@@ -54,20 +53,27 @@ public class FileHookPersistor extends Persistor{
     }
     
     public void writeToFile(ObjBase o){
-        //if (o instanceof BuiltInSchema ) return;
-        writeToFile(toJSON(o));
+        Path file = storageFolder.resolve(o.getId().toString()+".json");
+        if (file == null){
+            log.warn("No id provided for json object: \n{}", o);
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)){
+            writer.write(JSON.serializeForExternal(o, true));
+        } catch (IOException ex) {
+            log.error("Error serializing object {}: {}:", o, ex);
+        }
     }
     
     public void writeToFile(Map<String,Object> json){
         Path file = storageFolder.resolve(json.get("id").toString()+".json");
-        String content = JSON.serializeJSONMap(json, true);
+        String content = JSON.serializeJSONMapForExternal(json, true);
         if (file == null){
             log.warn("No id provided for json object: \n{}", content);
         }
         try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)){
             writer.write(content);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error("Error serializing object {}: {}:", json, ex);
         }
     }
     

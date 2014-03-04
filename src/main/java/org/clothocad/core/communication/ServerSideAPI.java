@@ -41,8 +41,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.apache.shiro.subject.Subject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
@@ -51,6 +49,7 @@ import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.communication.mind.Widget;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
@@ -610,7 +609,7 @@ public class ServerSideAPI {
                     results.add(result);
                 }
             }
-            Message message = new Message(Channel.run, persistor.toJSON(results), requestId);
+            Message message = new Message(Channel.run, results, requestId);
             send(message);
             return Void.TYPE;
         }

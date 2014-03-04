@@ -7,7 +7,7 @@ package org.clothocad.model;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.InferredSchema;

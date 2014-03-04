@@ -9,12 +9,11 @@ import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
 import org.clothocad.core.execution.JavaScriptScript;
 import org.clothocad.core.execution.Script;
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 /**
  *
@@ -23,7 +22,7 @@ import org.clothocad.core.persistence.Reference;
 public class Module extends ObjBase {
     
     protected Script code;
-    @Reference
+    @ReferenceCollection
     protected Module[] dependencies;
     protected String description;
     @Getter

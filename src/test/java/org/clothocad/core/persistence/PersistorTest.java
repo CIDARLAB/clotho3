@@ -4,15 +4,18 @@
  */
 package org.clothocad.core.persistence;
 
+import com.fasterxml.jackson.core.JsonToken;
+import de.undercouch.bson4jackson.BsonParser;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import org.clothocad.model.FreeForm;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.BasicPart;
 import org.clothocad.model.Feature;
@@ -112,8 +115,13 @@ public class PersistorTest {
     public void testCompositeSuperAndSubClass() {
         Part p = Part.generateBasic("test part", "This part is a test", "ATCG", new FreeForm(), null);
         persistor.save(p);
-
-        ObjectId id = p.getId();
+        Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
+        persistor.save(i);
+        ObjectId id = i.getId();
+        i = persistor.get(Institution.class, id);
+        
+        id = p.getId();
+        p = persistor.get(BasicPart.class, id);
         ExtendedPart ep = persistor.get(ExtendedPart.class, id);
 
         assertEquals(p.getId(), ep.getId());
@@ -211,4 +219,14 @@ public class PersistorTest {
     }
     
     //TODO: verify results are in appropriate style (id instead of _id), (schema instead of ClassName), etc
+    
+    
+    public static List<JsonToken> getAllBsonTokens(BsonParser parser) throws IOException{
+        List<JsonToken> out = new ArrayList<>();
+        while (parser.nextToken() != null){
+            out.add(parser.getCurrentToken());
+        }
+        
+        return out;
+    }
 }

@@ -22,6 +22,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.core.persistence;
 
+import org.clothocad.core.persistence.annotations.Reference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.Language;
 
 /**

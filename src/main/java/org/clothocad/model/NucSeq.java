@@ -8,10 +8,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -19,9 +17,8 @@ import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 
 @NoArgsConstructor
 public class NucSeq 

@@ -46,7 +46,7 @@ public class ConverterTest {
     public void testConvert() throws JsonParseException {
         Converter<BasicPart> converter = new BasicPartConverter(p);
         Schema eugenePartSchema = new InferredSchema("eugene.dom.components.Part");
-        Map<String, Object> eugeneJSON = JSON.deserializeObject("    {\n"
+        Map<String, Object> eugeneJSON = JSON.deserializeObjectToMap("    {\n"
                 + "         \"Name\":\"B0015\",\n"
                 + "         \"schema\":\"eugene.dom.components.Part\",\n"
                 + "         \"PartType\":\"Terminator\",\n"

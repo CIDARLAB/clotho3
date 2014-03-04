@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ClientConnection;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 
 /**

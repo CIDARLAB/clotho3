@@ -22,7 +22,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.annotations.Reference;
 import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.AssertTrue;

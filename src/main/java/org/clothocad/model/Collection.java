@@ -22,17 +22,17 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.annotations.Reference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 /**
  *
@@ -244,7 +244,7 @@ public class Collection extends ObjBase {
     @Getter
     @Reference
     private Person author;
-    @Reference
+    @ReferenceCollection
     private List<ObjBase> items;
             
    /* public static class CollectionDatum extends ObjBaseDatum {

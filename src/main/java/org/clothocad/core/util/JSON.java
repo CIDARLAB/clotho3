@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.File;
@@ -25,9 +26,10 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.persistence.jackson.JSONViews;
 
 /**
  *
@@ -36,17 +38,15 @@ import org.clothocad.core.persistence.Persistor;
 @Slf4j
 public class JSON {
     
+    //TODO: accept mapper configuration details from Guice, so sync'd w/ 
+    //      persistor
     public final static ObjectMapper mapper = new ObjectMapper();
     static {
         mapper.registerModule(new ClothoJacksonModule());
     }
     private final static TypeReference<Map<String, Object>>  stringToObject = new TypeReference<Map<String, Object>>(){};
     
-    public static String serializeJSONMap(Map object){
-        return serializeJSONMap(object, false);
-    }
-    
-    public static String serializeJSONMap(Map object, boolean pretty){
+    public static String serializeJSONMapForExternal(Map object, boolean pretty){
         StringWriter writer = new StringWriter();
         if (pretty) mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
@@ -59,11 +59,29 @@ public class JSON {
         if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
         return null;
     }
+        
+    public static String serializeForExternal(Object o){
+        return serializeForExternal(o, false);
+    }
+    
+    //Serialize w/ public view - omit db-only fields
+    public static String serializeForExternal(Object o, boolean pretty){
+        ObjectWriter w = mapper.writerWithView(JSONViews.Public.class);
+        if (pretty) w = w.with(SerializationFeature.INDENT_OUTPUT);
+        try {
+        return w.writeValueAsString(o);
+            
+        } catch (JsonProcessingException ex) {
+            log.warn("Could not serialize object", ex);
+            return ex.getMessage();
+        }
+    }
     
     public static String serialize(Object o){
         return serialize(o, false);
     }
     
+    //Serialize w/ internal view
     public static String serialize(Object o, boolean pretty){
         StringWriter writer = new StringWriter();
         if (pretty) mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -80,13 +98,13 @@ public class JSON {
     public static Map<String, Object> mappify(Object o){
         try {
             //XXX: ugh
-            return deserializeObject(serialize(o));
+            return deserializeObjectToMap(serialize(o));
         } catch (JsonParseException ex) {
             throw new RuntimeException(ex);
         }
     }
     
-    public static Map<String, Object> deserializeObject(String json) throws JsonParseException {
+    public static Map<String, Object> deserializeObjectToMap(String json) throws JsonParseException {
         try {
             Map<String,Object> object = mapper.readValue(json, stringToObject);
                     return object;
@@ -109,7 +127,6 @@ public class JSON {
         return null;
     }
     
-    
     static class ClothoJacksonModule extends SimpleModule {
         public ClothoJacksonModule(){
             //TODO: why is this deprecated?
@@ -128,7 +145,9 @@ public class JSON {
     static abstract class DisableGetters {
         
     } 
+
     
+    //XXX: move to test utils
     public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {
         ServerSideAPI api = new DummyAPI(persistor);
         ObjectReader reader = new ObjectMapper().reader(Map.class);

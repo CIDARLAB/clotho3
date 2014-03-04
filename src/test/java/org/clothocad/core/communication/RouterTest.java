@@ -14,7 +14,7 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -205,7 +205,7 @@ public class RouterTest {
     
     
     private void sendMessage(Message message, ClientConnection connection) {
-        String stringMessage = JSON.serialize(message);
+        String stringMessage = JSON.serializeForExternal(message);
         try {
             message = JSON.mapper.readValue(stringMessage, Message.class);
         } catch (IOException ex) {

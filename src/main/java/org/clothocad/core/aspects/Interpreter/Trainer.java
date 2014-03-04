@@ -49,7 +49,7 @@ public class Trainer {
             } else if (input.contains("/")) {
                 try {
                     String[] cmdAct = input.split("/");
-                    Map<String, Object> json = JSON.deserializeObject(cmdAct[1]);
+                    Map<String, Object> json = JSON.deserializeObjectToMap(cmdAct[1]);
                     Interpreter.get().learnNative(cmdAct[0], json);
                 } catch (JsonParseException ex) {
                     ex.printStackTrace();
@@ -68,7 +68,7 @@ public class Trainer {
         if (input.contains("/")) {
             while (reps > 0) {
                 String[] cmdAct = input.split("/");
-                Map<String, Object> json = JSON.deserializeObject(cmdAct[1]);
+                Map<String, Object> json = JSON.deserializeObjectToMap(cmdAct[1]);
                 Interpreter.get().learnNative(cmdAct[0], json);
                 reps -= 1;
             }

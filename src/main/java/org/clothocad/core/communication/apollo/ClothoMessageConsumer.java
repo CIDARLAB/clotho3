@@ -36,7 +36,7 @@ public class ClothoMessageConsumer
         try {
             if (this.message.propertyExists("request")) {
 
-                Map<String, Object> json = JSON.deserializeObject(message.getStringProperty("request"));
+                Map<String, Object> json = JSON.deserializeObjectToMap(message.getStringProperty("request"));
 
                 // get the message's correlation id
                 String sCorrelationID = this.message.getJMSCorrelationID();

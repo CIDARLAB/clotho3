@@ -13,7 +13,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;

@@ -39,22 +39,21 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.BSONObject;
-import org.bson.types.ObjectId;
-import org.clothocad.core.aspects.JSONSerializer;
 import org.clothocad.core.datums.ObjBase;
 import org.reflections.Reflections;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.jackson.JSONFilter;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.util.JSON;
 import org.clothocad.model.BasicPartConverter;
 
 /**
@@ -88,33 +87,24 @@ public class Persistor{
     
     private ClothoConnection connection;
     
-    @Delegate
-    private JSONSerializer serializer;
-    
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     private Converters converters;
     
     
     @Inject
-    public Persistor(final ClothoConnection connection, JSONSerializer serializer){
-        this(connection, serializer, true);
+    public Persistor(final ClothoConnection connection){
+        this(connection, true);
     }
     
-    public Persistor(final ClothoConnection connection, JSONSerializer serializer, boolean initializeBuiltins){
+    public Persistor(final ClothoConnection connection, boolean initializeBuiltins){
         this.connection = connection;
         connect();
-        this.serializer = serializer;
         
         if (initializeBuiltins) initializeBuiltInSchemas();
         
         
-        converters = new Converters();
-        //XXX: demo hack
-        if (initializeBuiltins){
-            converters.addConverter(new BasicPartConverter(this));           
-        }
-       
+        converters = new Converters();       
     }
     
     protected void validate(ObjBase obj){
@@ -168,10 +158,9 @@ public class Persistor{
         //XXX: convert id field so that mongoDB understands it (hackish)
         if (data.containsKey("id") && !data.containsKey("_id")){
             Object id = data.get("id");
-            if (!(id instanceof ObjectId) && ObjectId.isValid(id.toString())){
-                id = new ObjectId(id.toString());
+            if (!(id instanceof ObjectId)){
+                id = new ObjectId(id);
             }
-            //TODO: figure out what our range of acceptable ids actually is/ what we disable for non-ObjectId ids
             data.remove("id");
             data.put("_id", id);
             
@@ -216,7 +205,7 @@ public class Persistor{
     }
     
     public Map<String, Object> getAsJSON(ObjectId uuid){
-        return serializer.toJSON(connection.getAsBSON(uuid).toMap());
+        return connection.getAsBSON(uuid);
     }
     
     
@@ -228,7 +217,7 @@ public class Persistor{
         
     private Set<ObjBase> getObjBaseSet(ObjBase obj, Set<ObjBase> exclude){
         boolean newId = obj.getId() == null;
-        if(newId) obj.setId(ObjectId.get());
+        if(newId) obj.setId(new ObjectId());
         exclude.add(obj);        
         
         //recurse on object's children
@@ -358,10 +347,10 @@ public class Persistor{
         for (Schema schema : converters.getConverterSchemas(originalSchema)){
             Map<String, Object> query = new HashMap<>();
             query.put("className", schema.getName());
-            List<BSONObject> convertibles = connection.getAsBSON(query);
+            List<Map<String,Object>> convertibles = connection.getAsBSON(query);
             Converter converter = converters.getConverter(schema, originalSchema);
-            for (BSONObject bson : convertibles){
-                Map<String,Object> convertedData = convertAsBSON(bson.toMap(), schema, converter);
+            for (Map<String,Object> bson : convertibles){
+                Map<String,Object> convertedData = convertAsBSON(bson, schema, converter);
                 
                 results.add(convertedData);
             }
@@ -424,13 +413,10 @@ public class Persistor{
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
         spec = modifyQueryForSchemaSearch(spec);
         //TODO: limit results
-        List<BSONObject> results = connection.getAsBSON(spec);
-        List<Map<String, Object>> out = new ArrayList<>();
-        for (BSONObject result : results){
-            out.add(serializer.toJSON(result.toMap()));
-        }
+        List<Map<String,Object>> out = connection.getAsBSON(spec);
         
-        //also converted stuff
+        //also find converted stuff
+        //XXX: change to work w/ jongo
         if (spec.containsKey("className")){
             List<String> schemaNames = new ArrayList<>();
             Object className = spec.get("className");
@@ -454,10 +440,10 @@ public class Persistor{
                 //TODO: filtering so things are unique
             }
         }
-        return filterById(out);
+        return filterDuplicatesById(out);
     }
     
-    private List<Map<String,Object>> filterById(List<Map<String,Object>> objects){
+    private List<Map<String,Object>> filterDuplicatesById(List<Map<String,Object>> objects){
         List<Map<String,Object>> filteredObjects = new ArrayList<>();
         Set<String> ids = new HashSet<>();
         for (Map<String,Object> object : objects){
@@ -503,11 +489,13 @@ public class Persistor{
         }
     }
     
-    private void makeBuiltIns(Class<? extends ObjBase> c, Schema superSchema, Reflections ref){
-        Schema builtIn = new BuiltInSchema(c, superSchema);
-        try{
-            resolveSelector(builtIn.getName(), BuiltInSchema.class, false);
-        } catch (EntityNotFoundException e){
+    //XXX: remove this method from 'core' persistor behavior
+    private void makeBuiltIns(Class<? extends ObjBase> c, BuiltInSchema superSchema, Reflections ref){
+        //JSONfilter only transiently holds data, don't make a schema for it
+        if (c == JSONFilter.class) return;
+        //XXX: inefficient
+        BuiltInSchema builtIn = new BuiltInSchema(c, superSchema);
+        if (!has(new ObjectId(c.getCanonicalName()))){
             save(builtIn);           
         }
         for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){
@@ -558,7 +546,7 @@ public class Persistor{
     
     public Map<String,Object> convertAsBSON(Map<String,Object> data, Schema type, Converter converter){
         ObjBase converted = (ObjBase) converter.convert(data, type);
-        Map<String,Object> convertedData = serializer.toJSON(converted);
+        Map<String,Object> convertedData = JSON.mappify(converted);
         return unifyObjectDescriptions(data, convertedData);
     }
     
@@ -583,13 +571,12 @@ public class Persistor{
     }
 
     public ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict) {
+        //XXX: needs to go away b/c name for id shorthand is going away
         //uuid?
         ObjectId id;
 
-        try {
-            id = new ObjectId(selector);
-            return id;
-        } catch (IllegalArgumentException e) {
+        if (org.bson.types.ObjectId.isValid(selector)){
+            return new ObjectId(selector);
         }
 
         Map<String, Object> spec = new HashMap<>();
@@ -612,5 +599,5 @@ public class Persistor{
         //complain about ambiguity
         log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
-    }
+    } 
 }

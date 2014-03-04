@@ -36,8 +36,9 @@ import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.clothocad.core.persistence.Reference;
-import org.clothocad.core.persistence.Rename;
+import org.clothocad.core.persistence.annotations.Reference;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
+import org.clothocad.core.persistence.annotations.Rename;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.Constraint;
 import org.slf4j.Logger;
@@ -62,6 +63,7 @@ public class ClothoField {
         
         type = field.getType();
         reference = field.getAnnotation(Reference.class) != null;
+        referenceCollection = field.getAnnotation(ReferenceCollection.class) != null;
         
         //TODO: access, validate
         
@@ -89,6 +91,7 @@ public class ClothoField {
     private String example;   //A string representation/explanation of an expected value
     private Access access;  
     private boolean reference;
+    private boolean referenceCollection;
     
     private Set<Constraint>  constraints;
     

@@ -27,9 +27,9 @@ import static com.google.common.collect.Sets.newHashSet;
 import com.mongodb.BasicDBObject;
 import java.util.Set;
 import org.bson.BSONObject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.persistence.DBClassLoader;

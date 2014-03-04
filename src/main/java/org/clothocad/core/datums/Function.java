@@ -9,7 +9,7 @@ import java.util.Map;
 import lombok.Getter;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.execution.Script;
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.model.Person;
 
 /**

@@ -4,7 +4,7 @@
  */
 package org.clothocad.model;
 
-import org.clothocad.core.persistence.Reference;
+import org.clothocad.core.persistence.annotations.Reference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

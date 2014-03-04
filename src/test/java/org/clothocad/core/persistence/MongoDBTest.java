@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,6 +14,7 @@ import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jongo.JongoConnection;
 import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.Institution;
@@ -28,6 +28,7 @@ public class MongoDBTest {
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
         conn = TestUtils.getDefaultTestInjector().getInstance(JongoConnection.class);
+        conn.connect();
     }
     
     @Before
@@ -77,6 +78,7 @@ public class MongoDBTest {
         assertEquals(i.getId(),lab.getInstitution().getId());
     }
     @Test
+    //id is non-null after saving
     public void testIdAssociation(){
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         assertNull(i.getId());
@@ -87,7 +89,7 @@ public class MongoDBTest {
     @Test 
     public void testGetById(){
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
-        ObjectId id = ObjectId.get();
+        ObjectId id = new ObjectId();
         i.setId(id);
         conn.save(i);
         Institution j = conn.get(Institution.class, id);

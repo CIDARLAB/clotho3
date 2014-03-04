@@ -25,7 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.aspects.Proctor;
 
 import java.util.Date;
-import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.model.Person;
 
 

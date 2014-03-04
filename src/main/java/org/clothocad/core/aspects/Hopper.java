@@ -26,8 +26,8 @@ package org.clothocad.core.aspects;
 
 import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Doo;
+import org.clothocad.core.datums.ObjectId;
 
 /**
  * The hopper is where Doo's are held while a process is going on elsewhere.

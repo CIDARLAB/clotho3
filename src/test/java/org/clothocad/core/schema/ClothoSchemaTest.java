@@ -36,9 +36,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.Pattern;
 import org.bson.BSONObject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.DBClassLoader;
@@ -166,7 +166,7 @@ public class ClothoSchemaTest {
 
     @Test
     public void testSchemaJSON() {
-        Map output = p.toJSON(featureSchema);
+        Map output = TestUtils.serializeForExternalAsMap(featureSchema);
 
         assertFalse(output.containsKey("isDeleted"));
         assertFalse(output.containsKey("lastUpdated") || output.containsKey("lastAccessed"));
@@ -180,10 +180,10 @@ public class ClothoSchemaTest {
 
         p.delete(featureSchema.getId());
 
-        ObjectId id = p.save(p.toJSON(featureSchema));
+        ObjectId id = p.save(TestUtils.serializeForExternalAsMap(featureSchema));
         Schema secondSchema = p.get(ClothoSchema.class, featureSchema.getId());
 
-        assertEquals(output, p.toJSON(secondSchema));
+        assertEquals(output, TestUtils.serializeForExternalAsMap(secondSchema));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class ClothoSchemaTest {
         data.put("sequence", sequence);
 
         ObjBase featureInstance = instantiateSchema(data, featureSchema);
-        Map output = p.toJSON(featureInstance);
+        Map output = TestUtils.serializeForExternalAsMap(featureInstance);
 
         assertNotNull(output);
         assertEquals(sequence, output.get("sequence"));
