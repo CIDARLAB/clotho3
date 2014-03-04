@@ -17,7 +17,7 @@
 
                 <span class="input-group-btn">
                 <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="answerUndefined(quiz) || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Grade Quiz</button>
-                <button class="btn" ng-click="retryQuiz()" ng-if="quiz.submitted && !quiz.response.result" class="btn-danger">Retry</button>
+                <button class="btn btn-danger" ng-click="retryQuiz()" ng-if="quiz.submitted && !quiz.response.result">Retry</button>
                 <!--todo - actually check for advance-->
                 <button ng-if="quiz.submitted && !!quiz.response.result && !!advance" class="btn btn-success" ng-click="advance()">Next Page!</button>
                 </span>

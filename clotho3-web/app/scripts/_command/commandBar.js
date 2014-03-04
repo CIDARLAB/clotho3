@@ -188,7 +188,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 			return Clotho.submit(query).then(function(result){
 				display.query = '';
-				!!result && ClientAPI.say({text: result});
+				ClientAPI.say({text: result});
 			});
 		}
 		else {
@@ -224,15 +224,9 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		execute : execute,
 
 		//interaction
-		getCommandBarElement: function() {
-			return elements.commandBarElement;
-		},
-		getCommandBarInput : function () {
-			return elements.commandBarInput;
-		},
-		focusInput : function() {
-			elements.commandBarInput.focus();
-		}
+		getCommandBarElement: getCommandBarElement,
+		getCommandBarInput : getCommandBarInput,
+		focusInput : focusInput
 	}
 
 });

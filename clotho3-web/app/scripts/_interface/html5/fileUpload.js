@@ -49,15 +49,18 @@ angular.module('clotho.interface')
 					data : {
 						myModel : $scope.fileName
 					},
-					/* formDataAppender: function(fd, key, val) {
-					 if (angular.isArray(val)) {
-					 angular.forEach(val, function(v) {
-					 fd.append(key, v);
-					 });
-					 } else {
-					 fd.append(key, val);
-					 }
-					 }, */
+					/*
+					//see https://github.com/danialfarid/angular-file-upload/pull/40
+					formDataAppender: function(fd, key, val) {
+						if (angular.isArray(val)) {
+					    angular.forEach(val, function(v) {
+					      fd.append(key, v);
+					    });
+						} else {
+							fd.append(key, val);
+						}
+					},
+					*/
 					file: $scope.selectedFiles[index],
 					fileFormDataName: 'myFile'
 				}).then(function(response) {

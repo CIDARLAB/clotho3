@@ -198,10 +198,15 @@ angular.module('clotho.core').service('ClientAPI',
      *
      */
     var say = function clientAPISay(data) {
-        data.timestamp = (!!data.timestamp) ? data.timestamp : Date.now();
-        data.from = (!!data.from) ? data.from : 'server';
+	      var defaults = {
+		      'class' : 'success',
+		      'from' : 'server',
+		      'timestamp' : Date.now().valueOf()
+	      };
 
-        PubSub.trigger("activityLog", [data]);
+	      angular.extend(defaults, data);
+
+        PubSub.trigger("activityLog", [defaults]);
     };
 
     /**

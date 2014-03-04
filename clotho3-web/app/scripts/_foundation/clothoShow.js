@@ -141,9 +141,4 @@ angular.module('clotho.clothoDirectives')
 				})
 		}
 	};
-})
-
-	//todo
-	.directive('clothoModal', function () {
-
-	});
+});

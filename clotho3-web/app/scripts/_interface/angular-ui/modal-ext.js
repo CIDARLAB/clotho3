@@ -197,3 +197,63 @@ angular.module('clotho.interface').controller('VideoDialogController', function(
 		$modalInstance.close(res);
 	};
 });
+
+/*
+Todo - transclude contents, so that can be compiled
+ */
+angular.module('clotho.interface')
+	.directive('clothoModal', function ($modal, $parse) {
+		return {
+			restrict : 'E',
+			transclude : 'element',
+			/*scope: {
+				title : '@?',
+				open : '@',
+				callback : '&?'
+			},*/
+			link: function (scope, element, attrs, nullCtrl, transclude) {
+
+				var modal, transcludedDom;
+
+				//fixme - ugly hack to get HTML, but doesn't actually transclude
+				transclude(scope, function (clone) {
+					console.log(clone);
+					transcludedDom = clone[0].innerHTML;
+				});
+
+				scope.$watch(function () {
+						return $parse(attrs.open);
+					}, function (newval) {
+						if (!!newval) {
+							modal = $modal.open({
+								backdrop: true,
+								backdropFade: true,
+								keyboard: true,
+								backdropClick: true,
+								templateUrl: 'views/_interface/ui-custom/dialogClothoModal.html',
+								controller: 'clothoModalController',
+								resolve: {
+									model: function () {
+										return {
+											title : attrs.title || '',
+											model : attrs.model | {},
+											transclude : transcludedDom
+										}
+									}
+								}
+							})
+								.result
+								.then(function (result) {
+									angular.isFunction(attrs.callback) && attrs.callback(result);
+								});
+						}
+					});
+			}
+		}
+	})
+	.controller('clothoModalController', function($scope, $modalInstance, model, $compile){
+
+		$scope.title = model.title;
+		$scope.model = model.model;
+		$scope.transclude = model.transclude;
+	});

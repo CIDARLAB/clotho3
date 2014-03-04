@@ -1,5 +1,4 @@
-// todo - add activate attr, deregister listener based on it
-// note - use click-outside-active attr
+// note - use click-outside-active attr.. should set that attr to false when take action with this directive
 // note - requires jQuery has()
 // future - to make more universal, see:
 // https://raw.github.com/cowboy/jquery-outside-events/v1.1/jquery.ba-outside-events.js
@@ -11,23 +10,22 @@ angular.module('clotho.interface').directive('clickOutside', function($document,
 		var clickAction = $parse(attr['clickOutside']),
 			active;
 
-		attr.$observe('clickOutsideActive', function(value) {
-			active = !!value;
+		scope.$watch(function () {
+			return $parse(attr.clickOutsideActive)(scope);
+		}, function (newval, oldval) {
+			active = !!newval;
 		});
 
 		var handler = function (event) {
 
 			if (active) {
-				event.preventDefault();
-				event.stopPropagation();
+				if (element.has(event.target).length == 0) {
+					console.log('click captured');
 
-				if (element.has(event.target).length == 0)
+					event.preventDefault();
+					event.stopPropagation();
 					scope.$apply( clickAction(scope, {$event:event}) );
-
-				//todo - how handle deregistration???
-				/*$document.bind('click', function() {
-				 active = false;
-				 })*/
+				}
 			}
 		};
 

@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2299+sha.84ad0a0
+ * @license AngularJS v1.2.14-build.2343+sha.3344396
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -437,7 +437,7 @@ angular.mock.$LogProvider = function() {
  * @description
  * Mock implementation of the $interval service.
  *
- * Use {@link ngMock.$interval#methods_flush `$interval.flush(millis)`} to
+ * Use {@link ngMock.$interval#flush `$interval.flush(millis)`} to
  * move forward by `millis` milliseconds and trigger any functions scheduled to run in that
  * time.
  *
@@ -446,7 +446,7 @@ angular.mock.$LogProvider = function() {
  * @param {number=} [count=0] Number of times to repeat. If not set, or 0, will repeat
  *   indefinitely.
  * @param {boolean=} [invokeApply=true] If set to `false` skips model dirty checking, otherwise
- *   will invoke `fn` within the {@link ng.$rootScope.Scope#methods_$apply $apply} block.
+ *   will invoke `fn` within the {@link ng.$rootScope.Scope#$apply $apply} block.
  * @returns {promise} A promise which will be notified on each iteration.
  */
 angular.mock.$IntervalProvider = function() {
@@ -501,13 +501,12 @@ angular.mock.$IntervalProvider = function() {
     /**
      * @ngdoc method
      * @name $interval#cancel
+     *
      * @description
+     * Cancels a task associated with the `promise`.
      *
-     * Clears the interval.
-     *
-     * @param {promise} The promise of the interval to cancel.
-     *
-     * @return {boolean}
+     * @param {number} promise A promise from calling the `$interval` function.
+     * @returns {boolean} Returns `true` if the task was successfully cancelled.
      */
     $interval.cancel = function(promise) {
       if(!promise) return false;
@@ -765,21 +764,24 @@ angular.mock.TzDate.prototype = Date.prototype;
 angular.mock.animate = angular.module('ngAnimateMock', ['ng'])
 
   .config(['$provide', function($provide) {
-    var reflowQueue = [];
 
+    var reflowQueue = [];
     $provide.value('$$animateReflow', function(fn) {
+      var index = reflowQueue.length;
       reflowQueue.push(fn);
-      return angular.noop;
+      return function cancel() {
+        reflowQueue.splice(index, 1);
+      };
     });
 
-    $provide.decorator('$animate', function($delegate) {
+    $provide.decorator('$animate', function($delegate, $$asyncCallback) {
       var animate = {
         queue : [],
         enabled : $delegate.enabled,
+        triggerCallbacks : function() {
+          $$asyncCallback.flush();
+        },
         triggerReflow : function() {
-          if(reflowQueue.length === 0) {
-            throw new Error('No animation reflows present');
-          }
           angular.forEach(reflowQueue, function(fn) {
             fn();
           });
@@ -1664,6 +1666,48 @@ angular.mock.$TimeoutDecorator = function($delegate, $browser) {
   return $delegate;
 };
 
+angular.mock.$RAFDecorator = function($delegate) {
+  var queue = [];
+  var rafFn = function(fn) {
+    var index = queue.length;
+    queue.push(fn);
+    return function() {
+      queue.splice(index, 1);
+    };
+  };
+
+  rafFn.supported = $delegate.supported;
+
+  rafFn.flush = function() {
+    if(queue.length === 0) {
+      throw new Error('No rAF callbacks present');
+    }
+
+    var length = queue.length;
+    for(var i=0;i<length;i++) {
+      queue[i]();
+    }
+
+    queue = [];
+  };
+
+  return rafFn;
+};
+
+angular.mock.$AsyncCallbackDecorator = function($delegate) {
+  var callbacks = [];
+  var addFn = function(fn) {
+    callbacks.push(fn);
+  };
+  addFn.flush = function() {
+    angular.forEach(callbacks, function(fn) {
+      fn();
+    });
+    callbacks = [];
+  };
+  return addFn;
+};
+
 /**
  *
  */
@@ -1697,6 +1741,8 @@ angular.module('ngMock', ['ng']).provider({
   $rootElement: angular.mock.$RootElementProvider
 }).config(['$provide', function($provide) {
   $provide.decorator('$timeout', angular.mock.$TimeoutDecorator);
+  $provide.decorator('$$rAF', angular.mock.$RAFDecorator);
+  $provide.decorator('$$asyncCallback', angular.mock.$AsyncCallbackDecorator);
 }]);
 
 /**
