@@ -21,10 +21,10 @@ import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.security.CredentialStore;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.model.FreeForm;
 import org.clothocad.model.Institution;
@@ -138,6 +138,10 @@ public class TestUtils {
         persistor.save(part1);
         persistor.save(part2);
         persistor.save(part3);
+        
+        Function dummyPackager = DummyPackager.createDummyPackager();
+        persistor.save(dummyPackager);
+        
         ObjectId eugeneID = persistor.save(eugenePart);
 
         return Arrays.asList(part1.getUUID(), part2.getUUID(), part3.getUUID(), eugeneID);

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
@@ -21,6 +22,7 @@ import org.clothocad.core.persistence.Replace;
  *
  * @author spaige
  */
+@Slf4j
 public class Module extends ObjBase {
     
     @Replace(encoder="encodeScript", decoder="decodeScript")
@@ -33,6 +35,15 @@ public class Module extends ObjBase {
     protected Language language;
 
     public Module() {
+    }
+    
+    public Module(String name, String description, Language language, 
+            String code, Module[] dependencies){
+        setName(name);
+        this.description = description;
+        this.language = language;
+        this.dependencies = dependencies;
+        setCode(code);
     }
     
     
@@ -57,8 +68,13 @@ public class Module extends ObjBase {
         }          
     }
     
-    public void decodeScript(Map obj){
-        setCode((String) obj.get("code"), Language.valueOf((String) obj.get("language")));
+    public void decodeScript(Map obj){ 
+        try {
+            setCode((String) obj.get("code"), Language.valueOf((String) obj.get("language")));
+        } catch (UnsupportedOperationException e){
+            // just don't do anything 
+            log.warn("Tried to create code in unsupported language: {}", obj.get("language"));
+        }
     }
     
 //    @PrePersist

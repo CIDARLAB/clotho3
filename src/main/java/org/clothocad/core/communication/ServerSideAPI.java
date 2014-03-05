@@ -545,7 +545,7 @@ public class ServerSideAPI {
         }
 
         if (data.containsKey("id")) {
-            //XXX:(ugh ugh) end-run if *Function
+            //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
             Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
@@ -561,6 +561,7 @@ public class ServerSideAPI {
                 }
             }
             //XXX: this whole function is still a mess
+            //same as above, but now we're looking for schemas named *Module
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
                     Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
@@ -583,9 +584,7 @@ public class ServerSideAPI {
                 }
             }
             //reflectively (ugh) run function of instance
-            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
-
-
+            ObjBase instance = persistor.get(ObjBase.class, persistor.resolveSelector(data.get("id").toString(), false));
 
             Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
             Object result = method.invoke(instance, args.toArray());
