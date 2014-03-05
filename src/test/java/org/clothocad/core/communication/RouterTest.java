@@ -80,12 +80,12 @@ public class RouterTest {
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals("Test Part 1", ((Map) ((List)returnMessage.data).get(0)).get("name").toString());
+        assertEquals("Test Part 1", ((Map) ((List)returnMessage.getData()).get(0)).get("name").toString());
     }
 
     private void assertMatch(Message m1, Message m2) {
-        assertEquals(m1.channel, m2.channel);
-        assertEquals(m1.requestId, m2.requestId);
+        assertEquals(m1.getChannel(), m2.getChannel());
+        assertEquals(m1.getRequestId(), m2.getRequestId());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class RouterTest {
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(2);
         assertMatch(message, returnMessage);
-        assertEquals(id.toString(), ((List)returnMessage.data).get(0).toString());
+        assertEquals(id.toString(), ((List)returnMessage.getData()).get(0).toString());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class RouterTest {
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(55, ((List) returnMessage.data).size());
+        assertEquals(55, ((List) returnMessage.getData()).size());
         //assertEquals(3, ((List) returnMessage.data).size());
         
         connection = new TestConnection("queryTest2");
@@ -126,7 +126,7 @@ public class RouterTest {
         sendMessage(message, connection);
         returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(54, ((List) returnMessage.data).size());
+        assertEquals(54, ((List) returnMessage.getData()).size());
     }
 
     
@@ -189,7 +189,7 @@ public class RouterTest {
         
         sendMessage(new Message(Channel.submit, script, "6"), connection);
         
-        assertEquals("CCCAAA", connection.messages.get(1).data);
+        assertEquals("CCCAAA", connection.messages.get(1).getData());
         
     }
 

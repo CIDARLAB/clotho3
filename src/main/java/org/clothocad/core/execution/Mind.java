@@ -144,7 +144,7 @@ public final class Mind
     }
     
     public void addLastCommand(Channel channel, Object data){
-        lastCommands.add(new Message(channel, data));
+        lastCommands.add(new Message(channel, data, null));
     }
     
     private Person person;

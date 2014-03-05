@@ -29,7 +29,7 @@ public class TestRouter extends Router {
 
     @Override
     public void receiveMessage(ClientConnection connection, Message request) {
-        if (request.channel == Channel.reloadModels){
+        if (request.getChannel() == Channel.reloadModels){
             Map<String,Object> query = new HashMap<>();
             query.put("className", "org.clothocad.core.schema.BuiltInSchema");
             List<Map<String,Object>> results = persistor.findAsBSON(query);
@@ -49,7 +49,7 @@ public class TestRouter extends Router {
             }
             
             TestUtils.setupTestData(persistor);
-            Message message = new Message(request.channel, "", request.requestId);
+            Message message = new Message(request.getChannel(), "", request.getRequestId());
             connection.send(message);
             
         } else {

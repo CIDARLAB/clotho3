@@ -92,7 +92,7 @@ public class ServerSideAPI {
 
     public final void autocomplete(String userText) {
         List<String> completions = completer.getCompletions(userText);
-        Message msg = new Message(Channel.autocomplete, completions);
+        Message msg = new Message(Channel.autocomplete, completions, null);
         router.sendMessage(mind.getConnection(), msg);
     }
 
@@ -241,7 +241,7 @@ public class ServerSideAPI {
     //clotho.alert("this is an alert!");
     public final void alert(String message) {
 
-        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message));
+        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message, null));
     }
 
     //JCA:  This runs, and the message goes to the console.log spot.
@@ -249,7 +249,7 @@ public class ServerSideAPI {
     public final void log(String message) {
         log.debug("log has: {}", message);
 
-        Message msg = new Message(Channel.log, message);
+        Message msg = new Message(Channel.log, message, null);
 
         router.sendMessage(mind.getConnection(), msg);
     }

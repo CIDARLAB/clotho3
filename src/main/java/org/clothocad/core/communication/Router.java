@@ -54,14 +54,14 @@ public class Router {
         } else {
             mind = getMind(connection);
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.requestId);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId());
 
 
-        Object data = request.data;
+        Object data = request.getData();
         
         Object response = null;
         try {
-            switch (request.channel) {
+            switch (request.getChannel()) {
                 case autocomplete:
                     api.autocomplete(data.toString());
                     break;
@@ -152,21 +152,21 @@ public class Router {
                     api.unlisten(data.toString());
                     break;
                 default:
-                    log.warn("Unknown channel {}", request.channel);
+                    log.warn("Unknown channel {}", request.getChannel());
                     break;
             }
             
             if (response == Void.TYPE){
-                connection.deregister(request.channel, request.requestId);
+                connection.deregister(request.getChannel(), request.getRequestId());
             }
             else {
-                Message message = new Message(request.channel, response, request.requestId);
+                Message message = new Message(request.getChannel(), response, request.getRequestId());
                 connection.send(message);
             }
             
         } catch (Exception e) {
             //TODO: message client with failure
-            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.requestId);
+            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
         }
     }
