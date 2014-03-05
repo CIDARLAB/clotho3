@@ -54,8 +54,9 @@ public class ClothoWebSocket
     @Override
     public void send(Message msg) {
         try {
-            connection.sendMessage(msg.serialize());
-            log.trace("sent: {}", msg.serialize());
+            final String s = JSON.serialize(msg);
+            connection.sendMessage(s);
+            log.trace("sent: {}", s);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
         }
