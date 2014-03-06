@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import java.io.IOException;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
@@ -26,4 +27,11 @@ public class ReferenceSerializer extends JsonSerializer<ObjBase>{
         ObjectId id = value.getId();
         jgen.writeString(id.toString());
     }   
+
+    @Override
+    public void serializeWithType(ObjBase value, JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException, JsonProcessingException {
+        //serialization w/ type is irrelevant - type is encoded in referenced document
+        serialize(value, jgen, provider);
+    }
+    
 }
