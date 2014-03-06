@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -533,9 +534,13 @@ public class ServerSideAPI {
     }
 
     //TODO: needs serious cleaning up
-    public final Object run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Map<String, Object> data = JSON.mappify(o);
-        List<Object> args;
+    public final Object run(Object o)
+    throws ScriptException,
+           IllegalAccessException,
+           IllegalArgumentException,
+           InvocationTargetException {
+        final Map<String, Object> data = JSON.mappify(o);
+        final List<Object> args;
 
         try {
             args = (List) data.get("args");
@@ -544,73 +549,8 @@ public class ServerSideAPI {
             return null;
         }
 
-        if (data.containsKey("id")) {
-            //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
-            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
-                try {
-                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
-
-                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
-                } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
-                    return Void.TYPE;
-                } catch (NoSuchMethodException ex) {
-                    logAndSayError("No such function found", ex);
-                    return Void.TYPE;
-                }
-            }
-            //XXX: this whole function is still a mess
-            //same as above, but now we're looking for schemas named *Module
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
-                try {
-                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
-
-                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
-                } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
-                    return Void.TYPE;
-                } catch (NoSuchMethodException ex) {
-                    logAndSayError("No such method found", ex);
-                    return Void.TYPE;
-                }
-            }
-
-            for (int i = 0; i < args.size(); i++) {
-                try {
-                    ObjectId id = new ObjectId(args.get(i).toString());
-                    args.set(i, persistor.get(ObjBase.class, id));
-                } catch (IllegalArgumentException e) {
-                }
-            }
-            //reflectively (ugh) run function of instance
-            ObjBase instance = persistor.get(ObjBase.class, persistor.resolveSelector(data.get("id").toString(), false));
-
-            Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
-            Object result = method.invoke(instance, args.toArray());
-            if (method.getReturnType().equals(Void.TYPE)) {
-                return Void.TYPE;
-            }
-            List<Object> results = new ArrayList<>();
-            if (result instanceof Iterable) {
-                for (Object r : ((Iterable) result)) {
-                    if (r instanceof ObjBase) {
-                        results.add(persistor.save((ObjBase) r));
-                    } else {
-                        results.add(r);
-                    }
-                }
-            } else {
-                if (result instanceof ObjBase) {
-                    results.add(persistor.save((ObjBase) result));
-                } else {
-                    results.add(result);
-                }
-            }
-            Message message = new Message(Channel.run, persistor.toJSON(results), requestId);
-            send(message);
-            return Void.TYPE;
-        }
+        if (data.containsKey("id"))
+            return runWithId(data, args);
 
         Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
         List arguments;
@@ -627,9 +567,7 @@ public class ServerSideAPI {
             Message message = new Message(Channel.run, result, requestId);
             send(message);
         }
-
         return Void.TYPE;
-
     }
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
@@ -869,5 +807,92 @@ public class ServerSideAPI {
         FAILURE,
         NORMAL,
         MUTED
+    }
+
+    //XXX: this whole function is still a mess
+    private final Object
+    runWithId(final Map<String, Object> data, final List<Object> args)
+    throws IllegalAccessException, InvocationTargetException {
+        final String dataId = data.get("id").toString();
+        final Map<String, Object> functionData =
+            persistor.getAsJSON(persistor.resolveSelector(dataId, true));
+        if (functionData.containsKey("schema")) {
+            final String functionDataSchema = functionData.get("schema").toString();
+            //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
+            final ScriptAPI scriptAPI = new ScriptAPI(mind, persistor, router, requestId);
+            try {
+                if (functionDataSchema.endsWith("Function")) {
+                    final Function function = persistor.get(Function.class, persistor.resolveSelector(dataId, true));
+                    return mind.invoke(function, args, scriptAPI);
+                }
+                if (functionDataSchema.endsWith("Module")) {
+                    final Module module = persistor.get(Module.class, persistor.resolveSelector(dataId, true));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, scriptAPI);
+                }
+            } catch (ScriptException e) {
+                logAndSayError("Script Exception thrown: " + e.getMessage(), e);
+            } catch (NoSuchMethodException ex) {
+                logAndSayError("No such function found", ex);
+            }
+            return Void.TYPE;
+        }
+        final List<Object> newArgs = new ArrayList<Object>();
+        for (final Object arg : args)
+            newArgs.add(mungeArg(arg));
+        //reflectively (ugh) run function of instance
+        final ObjBase instance = persistor.get(
+            ObjBase.class,
+            persistor.resolveSelector(dataId, false)
+        );
+        final Method method = ReflectionUtils.findMethodNamed(
+            data.get("function").toString(),
+            newArgs.size(),
+            instance.getClass()
+        );
+        if (!method.getReturnType().equals(Void.TYPE))
+            send(new Message(
+                Channel.run,
+                persistor.toJSON(extractResults(method.invoke(
+                    instance,
+                    newArgs.toArray()
+                ))),
+                requestId
+            ));
+        return Void.TYPE;
+    }
+
+    /* TODO: explain what this does */
+    private final Object mungeArg(final Object obj) {
+        try {
+            return persistor.get(
+                ObjBase.class,
+                new ObjectId(obj.toString())
+            );
+        } catch (IllegalArgumentException e) {
+            return obj;
+        }
+    }
+
+    private final List<Object> extractResults(Object result) {
+        final Iterable iter;
+        try {
+            iter = (Iterable) result;
+        } catch (ClassCastException e) {
+            return Arrays.asList(trySave(result));
+        }
+        final List<Object> out = new ArrayList<Object>();
+        for (final Object r : iter)
+            out.add(trySave(r));
+        return out;
+    }
+
+    private final Object trySave(Object result) {
+        final ObjBase objresult;
+        try {
+            objresult = (ObjBase) result;
+        } catch (ClassCastException e) {
+            return result;
+        }
+        return persistor.save(objresult);
     }
 }
