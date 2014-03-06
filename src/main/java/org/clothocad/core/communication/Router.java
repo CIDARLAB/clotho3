@@ -1,5 +1,12 @@
 package org.clothocad.core.communication;
 
+import static org.clothocad.core.communication.Channel.autocompleteDetail;
+import static org.clothocad.core.communication.Channel.create;
+import static org.clothocad.core.communication.Channel.destroy;
+import static org.clothocad.core.communication.Channel.log;
+import static org.clothocad.core.communication.Channel.submit;
+
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,18 +14,12 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
-import static org.clothocad.core.communication.Channel.create;
-import static org.clothocad.core.communication.Channel.destroy;
-import static org.clothocad.core.communication.Channel.log;
-import static org.clothocad.core.communication.Channel.submit;
-
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.JSON;
@@ -38,7 +39,11 @@ public class Router {
 
     // send message    
     public void sendMessage(ClientConnection connection, Message message) {
-        log.debug(JSON.serialize(message));
+        try {
+            log.debug(JSON.serialize(message));
+        } catch (IOException e) {
+            log.debug("failed to serialize message: {}", message);
+        }
         connection.send(message);
     }
 

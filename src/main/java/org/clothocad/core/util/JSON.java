@@ -96,47 +96,30 @@ public class JSON {
         }
         return true;
     }
-    
-    public static String serializeJSONMap(Map object){
-        return serializeJSONMap(object, false);
-    }
-    
-    public static String serializeJSONMap(Map object, boolean pretty){
-        StringWriter writer = new StringWriter();
-        if (pretty) mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        try {
-            mapper.writeValue(writer, object);
-                            return writer.toString();
-        }  catch (JsonGenerationException | JsonMappingException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-        }
-        if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
-        return null;
-    }
-    
-    public static String serialize(Object o){
+
+    public static String serialize(Object o) throws IOException {
         return serialize(o, false);
     }
-    
-    public static String serialize(Object o, boolean pretty){
+
+    public static String serialize(Object o, boolean pretty)
+    throws IOException {
         StringWriter writer = new StringWriter();
-        if (pretty) mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        if (pretty)
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
             mapper.writeValue(writer, o);
-            //if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
-            return writer.toString();
-        } catch (IOException ex) {
-           // if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
-            throw new RuntimeException(ex);
+        } finally {
+            if (pretty)
+                mapper.disable(SerializationFeature.INDENT_OUTPUT);
         }
+        return writer.toString();
     }
-    
+
     public static Map<String, Object> mappify(Object o){
         try {
                 //XXX: ugh
             return deserializeObject(serialize(o));
-        } catch (JsonParseException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }

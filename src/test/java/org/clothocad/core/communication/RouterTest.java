@@ -209,9 +209,9 @@ public class RouterTest {
     
     
     private void sendMessage(Message message, ClientConnection connection) {
-        String stringMessage = JSON.serialize(message);
         try {
-            message = JSON.mapper.readValue(stringMessage, Message.class);
+            message = JSON.mapper.readValue(JSON.serialize(message),
+                                            Message.class);
         } catch (IOException ex) {
         }
         router.receiveMessage(connection, message);
