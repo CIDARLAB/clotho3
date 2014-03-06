@@ -158,43 +158,14 @@ public class Persistor{
         //XXX: convert id field so that mongoDB understands it (hackish)
         if (data.containsKey("id") && !data.containsKey("_id")){
             Object id = data.get("id");
-            if (!(id instanceof ObjectId)){
-                id = new ObjectId(id);
-            }
             data.remove("id");
             data.put("_id", id);
-            
         }
         else if (!data.containsKey("_id")){
             Object id = new ObjectId();
-            data.put("_id", id);
+            //Our ObjectId class isn't a BSON datatype, so use string representation
+            data.put("_id", id.toString());
         }
-        
-        //XXX: set up through refs instead
-        if (data.containsKey("schema")){
-            Object schema = data.get("schema");
-            String resolvedSchemaName;
-            
-            try{
-                resolvedSchemaName = get(BuiltInSchema.class,resolveSelector(schema.toString(), true)).getBinaryName();
-                if (resolvedSchemaName == null){
-                    throw new EntityNotFoundException();
-                }
-            }
-            catch (EntityNotFoundException e){
-                try{
-                    Map<String,Object> schemaData = getAsJSON(resolveSelector(schema.toString(), false));
-                    resolvedSchemaName = schemaData.get("name").toString();
-                }
-                catch (EntityNotFoundException ex){
-                    resolvedSchemaName = schema.toString();
-                }
-            }
-            data.remove("schema");
-            data.put("className", resolvedSchemaName);
-        }
-        
-        
         connection.save(data);
         
         return new ObjectId(data.get("_id").toString());

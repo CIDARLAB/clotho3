@@ -405,14 +405,13 @@ public class ServerSideAPI {
 
                 ObjectId uuid = resolveId(obj.get(idKey).toString());
                 if (uuid == null) {
+                    //TODO: error message for empty id field (or just treat as non-existent id?)
                     return null;
                 }
                 if (persistor.has(uuid)) {
-                    say("An object with the uuid " + uuid + " already exists.  No object was created.", Severity.FAILURE);
+                    say("An object with the id " + uuid + " already exists.  No object was created.", Severity.FAILURE);
                     return null;
                 }
-
-                obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
             //TODO: create sets author to current user
             ObjectId id = persistor.save(obj);
