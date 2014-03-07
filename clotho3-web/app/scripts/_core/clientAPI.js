@@ -198,15 +198,26 @@ angular.module('clotho.core').service('ClientAPI',
      *
      */
     var say = function clientAPISay(data) {
-	      var defaults = {
-		      'class' : 'success',
-		      'from' : 'server',
-		      'timestamp' : Date.now().valueOf()
-	      };
+      var defaults = {
+	      'class' : 'muted',
+	      'from' : 'server',
+	      'timestamp' : Date.now().valueOf()
+      };
 
-	      angular.extend(defaults, data);
+			//alert-info reserved for client-initiated messages
+	    var classMap = {
+		    success : 'success',
+		    warning : 'warning',
+		    failure : 'danger',
+		    normal : 'success',
+		    muted : 'muted',
+		    info : 'info'
+	    };
 
-        PubSub.trigger("activityLog", [defaults]);
+      angular.extend(defaults, data);
+      defaults.class = classMap[angular.lowercase(defaults.class)];
+
+      PubSub.trigger('activityLog', [defaults]);
     };
 
     /**
@@ -253,7 +264,7 @@ angular.module('clotho.core').service('ClientAPI',
      * @param {object} data
      *
      * @description
-     * Publish list of versions for a given resource on "revisions:<uuid>"
+     * Publish list of versions for a given resource on 'revisions:<uuid>'
      */
     var revisions = function clientAPIRevisions(uuid, data) {
         PubSub.trigger('revisions:'+uuid, [data]);
@@ -268,7 +279,7 @@ angular.module('clotho.core').service('ClientAPI',
      * start a trail with a given uuid
      */
     var startTrail = function clothoAPI_startTrail(uuid) {
-        $location.path("/trails/" + uuid);
+        $location.path('/trails/' + uuid);
     };
 
 
@@ -296,7 +307,7 @@ angular.module('clotho.core').service('ClientAPI',
         
         var id = obj.command_object.function_id;
 
-        Collector.storeModel("detail_" + id, obj);
+        Collector.storeModel('detail_' + id, obj);
         PubSub.trigger('autocompleteDetail_'+id, [obj]);
     };
 
