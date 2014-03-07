@@ -23,11 +23,11 @@
  */
 package org.clothocad.core.communication;
 
-import org.clothocad.core.util.XMLParser;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,23 +37,24 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
+import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.execution.Mind;
-import org.clothocad.core.communication.mind.Widget;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
+import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
 
 /**
@@ -90,11 +91,9 @@ public class ServerSideAPI {
         this.router = router;
     }
 
-// <editor-fold defaultstate="collapsed" desc="Human Interaction">      
-    //JCA:  as of 6/6/2013 autcomplete works.  Wordlist is not persisted, but the completer does learn submitted phrases.
     public final void autocomplete(String userText) {
         List<String> completions = completer.getCompletions(userText);
-        Message msg = new Message(Channel.autocomplete, completions);
+        Message msg = new Message(Channel.autocomplete, completions, null);
         router.sendMessage(mind.getConnection(), msg);
     }
 
@@ -110,7 +109,6 @@ public class ServerSideAPI {
 
     }
 
-    //JCA:  as 0f 6/6/2013 submit seems to work
     public final Object submit(String command) {
         //Resolve the arguments to a command string
         //say(command, Severity.MUTED, null, true);
@@ -175,14 +173,11 @@ public class ServerSideAPI {
     public final boolean changePassword(String newPassword) {
         return true;
     }
-// </editor-fold> 
 
     public final void clear() {
         mind.clear();
         say("The mind has been cleared", Severity.SUCCESS);
     }
-// <editor-fold defaultstate="collapsed" desc="Logging and Messaging"> 
-    //JCA:  as 0f 6/9/2013 say seems to work
 
     public final void say(Object obj) {
         if (obj instanceof String) {
@@ -212,15 +207,12 @@ public class ServerSideAPI {
      * @param severity "text-error", "text", "text-warning", "text-success" see
      * search-directives.js for 'from', is client or server
      */
-    //JCA:  as 0f 6/9/2013 say seems to work
     public final void say(String message, Severity severity) {
-//        System.out.println("say has : " + message);
         say(message, severity, null, false);
 
     }
 
     public final void say(String message, Severity severity, String recipients) {
-//        System.out.println("say has : " + message);
         say(message, severity, recipients, false);
 
     }
@@ -250,7 +242,7 @@ public class ServerSideAPI {
     //clotho.alert("this is an alert!");
     public final void alert(String message) {
 
-        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message));
+        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message, null));
     }
 
     //JCA:  This runs, and the message goes to the console.log spot.
@@ -258,7 +250,7 @@ public class ServerSideAPI {
     public final void log(String message) {
         log.debug("log has: {}", message);
 
-        Message msg = new Message(Channel.log, message);
+        Message msg = new Message(Channel.log, message, null);
 
         router.sendMessage(mind.getConnection(), msg);
     }
@@ -271,8 +263,6 @@ public class ServerSideAPI {
         say("I've stored your note (but not really): " + message);
     }
 
-// </editor-fold> 
-// <editor-fold defaultstate="collapsed" desc="Data Manipulation"> 
     protected void send(Message message) {
         router.sendMessage(mind.getConnection(), message);
     }
@@ -542,13 +532,15 @@ public class ServerSideAPI {
         }
 
     }
-// </editor-fold> 
 
-// <editor-fold defaultstate="collapsed" desc="Execution"> 
     //TODO: needs serious cleaning up
-    public final Object run(Object o) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Map<String, Object> data = JSON.mappify(o);
-        List<Object> args;
+    public final Object run(Object o)
+    throws ScriptException,
+           IllegalAccessException,
+           IllegalArgumentException,
+           InvocationTargetException {
+        final Map<String, Object> data = JSON.mappify(o);
+        final List<Object> args;
 
         try {
             args = (List) data.get("args");
@@ -557,74 +549,8 @@ public class ServerSideAPI {
             return null;
         }
 
-        if (data.containsKey("id")) {
-            //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
-                try {
-                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
-
-                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
-                } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
-                    return Void.TYPE;
-                } catch (NoSuchMethodException ex) {
-                    logAndSayError("No such function found", ex);
-                    return Void.TYPE;
-                }
-            }
-            //XXX: this whole function is still a mess
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
-                try {
-                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
-
-                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
-                } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
-                    return Void.TYPE;
-                } catch (NoSuchMethodException ex) {
-                    logAndSayError("No such method found", ex);
-                    return Void.TYPE;
-                }
-            }
-
-            for (int i = 0; i < args.size(); i++) {
-                try {
-                    ObjectId id = new ObjectId(args.get(i).toString());
-                    args.set(i, persistor.get(ObjBase.class, id));
-                } catch (IllegalArgumentException e) {
-                }
-            }
-            //reflectively (ugh) run function of instance
-            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
-
-
-
-            Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
-            Object result = method.invoke(instance, args.toArray());
-            if (method.getReturnType().equals(Void.TYPE)) {
-                return Void.TYPE;
-            }
-            List<Object> results = new ArrayList<>();
-            if (result instanceof Iterable) {
-                for (Object r : ((Iterable) result)) {
-                    if (r instanceof ObjBase) {
-                        results.add(persistor.save((ObjBase) r));
-                    } else {
-                        results.add(r);
-                    }
-                }
-            } else {
-                if (result instanceof ObjBase) {
-                    results.add(persistor.save((ObjBase) result));
-                } else {
-                    results.add(result);
-                }
-            }
-            Message message = new Message(Channel.run, persistor.toJSON(results), requestId);
-            send(message);
-            return Void.TYPE;
-        }
+        if (data.containsKey("id"))
+            return runWithId(data, args);
 
         Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
         List arguments;
@@ -641,9 +567,7 @@ public class ServerSideAPI {
             Message message = new Message(Channel.run, result, requestId);
             send(message);
         }
-
         return Void.TYPE;
-
     }
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
@@ -808,7 +732,6 @@ public class ServerSideAPI {
          */
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Command Factories"> 
     /**
      * Instantiate a new workspace page. Only the Proctor can construct
      * arguments for TRAILS or specific editors. Security thing.
@@ -854,8 +777,6 @@ public class ServerSideAPI {
         return null;
     }
 
-// </editor-fold> 
-    // <editor-fold defaultstate="collapsed" desc="Utility Methods"> 
     /**
      * Replace the _widget_id phrases with the actual uuid
      *
@@ -880,12 +801,98 @@ public class ServerSideAPI {
         return result.get(0);
     }
 
-    public enum Severity {
-
+    public static enum Severity {
         SUCCESS,
         WARNING,
         FAILURE,
         NORMAL,
         MUTED
+    }
+
+    //XXX: this whole function is still a mess
+    private final Object
+    runWithId(final Map<String, Object> data, final List<Object> args)
+    throws IllegalAccessException, InvocationTargetException {
+        final String dataId = data.get("id").toString();
+        final Map<String, Object> functionData =
+            persistor.getAsJSON(persistor.resolveSelector(dataId, true));
+        if (functionData.containsKey("schema")) {
+            final String functionDataSchema = functionData.get("schema").toString();
+            //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
+            final ScriptAPI scriptAPI = new ScriptAPI(mind, persistor, router, requestId);
+            try {
+                if (functionDataSchema.endsWith("Function")) {
+                    final Function function = persistor.get(Function.class, persistor.resolveSelector(dataId, true));
+                    return mind.invoke(function, args, scriptAPI);
+                }
+                if (functionDataSchema.endsWith("Module")) {
+                    final Module module = persistor.get(Module.class, persistor.resolveSelector(dataId, true));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, scriptAPI);
+                }
+            } catch (ScriptException e) {
+                logAndSayError("Script Exception thrown: " + e.getMessage(), e);
+            } catch (NoSuchMethodException ex) {
+                logAndSayError("No such function found", ex);
+            }
+            return Void.TYPE;
+        }
+        final List<Object> newArgs = new ArrayList<Object>();
+        for (final Object arg : args)
+            newArgs.add(mungeArg(arg));
+        //reflectively (ugh) run function of instance
+        final ObjBase instance = persistor.get(
+            ObjBase.class,
+            persistor.resolveSelector(dataId, false)
+        );
+        final Method method = ReflectionUtils.findMethodNamed(
+            data.get("function").toString(),
+            newArgs.size(),
+            instance.getClass()
+        );
+        if (!method.getReturnType().equals(Void.TYPE))
+            send(new Message(
+                Channel.run,
+                persistor.toJSON(extractResults(method.invoke(
+                    instance,
+                    newArgs.toArray()
+                ))),
+                requestId
+            ));
+        return Void.TYPE;
+    }
+
+    /* TODO: explain what this does */
+    private final Object mungeArg(final Object obj) {
+        try {
+            return persistor.get(
+                ObjBase.class,
+                new ObjectId(obj.toString())
+            );
+        } catch (IllegalArgumentException e) {
+            return obj;
+        }
+    }
+
+    private final List<Object> extractResults(Object result) {
+        final Iterable iter;
+        try {
+            iter = (Iterable) result;
+        } catch (ClassCastException e) {
+            return Arrays.asList(trySave(result));
+        }
+        final List<Object> out = new ArrayList<Object>();
+        for (final Object r : iter)
+            out.add(trySave(r));
+        return out;
+    }
+
+    private final Object trySave(Object result) {
+        final ObjBase objresult;
+        try {
+            objresult = (ObjBase) result;
+        } catch (ClassCastException e) {
+            return result;
+        }
+        return persistor.save(objresult);
     }
 }

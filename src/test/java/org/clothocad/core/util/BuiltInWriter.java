@@ -32,7 +32,7 @@ public class BuiltInWriter {
     private static Persistor persistor;
     private static List<BuiltInSchema> schemas;
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         
         Injector injector = Guice.createInjector(
                 new ClothoTestModule(),

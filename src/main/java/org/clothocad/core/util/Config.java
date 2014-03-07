@@ -75,7 +75,8 @@ public class Config {
                                     StandardCharsets.UTF_8)) {
             out.load(r);
         } catch (IOException e) {
-            log.error("Could not load config file at {}", fileName);
+            log.error("Could not load config file at {}: {}", fileName, 
+                    e.toString());
             return defaults;
         }
         log.debug("Read configuration file: {}", fileName);
