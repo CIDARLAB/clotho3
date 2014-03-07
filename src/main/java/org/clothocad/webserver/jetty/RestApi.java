@@ -28,11 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
 
-    private static ServerSideAPI api;
-    private static Persistor persistor;
-    private static Mind mind;
     private static Router router;
     private static Message m;
+    private static RestConnection rc = new RestConnection("RestConnection");;
 
     // retrieve mind object/create new one - session id w/ shiro
     // minds are in router
@@ -44,16 +42,13 @@ public class RestApi extends HttpServlet {
     // post : change value of shareable with new val
 
     @Inject
-    public void RestApi(@Named("apiRouter") Router apiRouter,
-        @Named("persistorObj") Persistor persistorObj) {
-        this.persistor = persistorObj;
-        this.router = apiRouter;
+    public void RestApi(Router router) {
+        this.router = router;
     }
 
 
     protected void doGet(HttpServletRequest request, 
     	HttpServletResponse response) throws ServletException, IOException {
-        // response.getWriter().write(json.toString());
 
     	response.setContentType("text/json");
 
@@ -65,47 +60,21 @@ public class RestApi extends HttpServlet {
         if (id.equals("")) { // no id has been supplied
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("requestId is required - the proper GET url format is .../rest/{id}");
-        } else if (subject.isAuthenticated()) { // the user is logged in.
-            // We can do this all through router api - apiRouter.receiveMessage(...)
-
-            mind = getAuthenticatedMind(subject.getPrincipal().toString());
-            // how do we run mind.setconnection() ?
-            persistor.save(mind);
-            // How do we retrieve/generate router?
-            api = new ServerSideAPI(mind, this.persistor, this.router, null);
-
-            // In order for this to work properly, id has to be incapsulated in a Message object
-            // Map<String, Object> result = api.receiveMessage(id);
-            // String jsonResult = JSON.serialize(result);
-
-            response.setStatus(HttpServletResponse.SC_OK);
-            // response.getWriter().println(jsonResult);
         } else {
-            // router.receiveMessage(..) requires connection & Message request
-            // Map<String, Object> result = apiRouter.receiveMessage(id);
-            // String jsonResult = JSON.serialize(result);
-            mind = new Mind();
-            // how do we run mind.setconnection() ?
-            // persistor.save(mind);
+            // We build our new message
+            Map<String, Object> messageMap = new HashMap<String, Object>();
+            messageMap.put("data", id);
+            messageMap.put("channel", "get");
+    
+            m = new Message(messageMap);
 
-            api = new ServerSideAPI(mind, this.persistor, this.router, null);
+            // Now we send that message to the router
+            System.out.println(this.router);
+            this.router.receiveMessage(this.rc, m);
 
-            Map<String, Object> result = api.get(id);
-            System.out.println("hey");
-            String jsonResult = JSON.serialize(result);
-
+            response.getWriter().write(this.rc.getResult().toString());
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write(jsonResult.toString());
         }
-
-
-        // {
-        //     Map<String, Object> messageMap = new HashMap<String, Object>();
-        //     messageMap.put("requestId", null);
-        //     messageMap.put("data", id);
-        //     m = new Message(messageMap);
-        //     apiRouter.receiveMessage(null, m);
-        // }
     }
 
     protected void doPost(HttpServletRequest request, 
@@ -120,37 +89,14 @@ public class RestApi extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("requestId is required - the proper POST url format is .../rest/{id}");
         } else if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
-            mind.setUsername(username);
-            persistor.save(mind);
-            api = new ServerSideAPI(mind, persistor, null, null);
+            // String username = SecurityUtils.getSubject().getPrincipal().toString();
+            // mind.setUsername(username);
+            // persistor.save(mind);
+            // api = new ServerSideAPI(mind, persistor, null, null);
             // again, how do we pass an object in http? Does it have an id I can grab?
             // ObjectId response = api.set();
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println("Logged in to post");
-        }
-    }
-
-
-    private Mind getAuthenticatedMind(String username)  {
-        //XXX: this whole method is janky
-        Map<String,Object> query = new HashMap();
-        query.put("username", username);
-        query.put("className", Mind.class.getCanonicalName());
-        try {
-            Iterable<ObjBase> minds = persistor.find(query);
-            Mind mind;
-            
-            if (!minds.iterator().hasNext()){
-                mind = new Mind();
-            } else {
-                mind = (Mind) minds.iterator().next();
-            }
-
-            return mind;
-        } catch (Exception ex){
-            ex.printStackTrace();
-            throw ex;
         }
     }
 }
