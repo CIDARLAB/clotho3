@@ -200,6 +200,9 @@ angular.module('clotho.interface').controller('VideoDialogController', function(
 
 /*
 Todo - transclude contents, so that can be compiled
+todo - handle id and clotho-show it
+todo - try including in $modal $delegate directly and transcluding
+
  */
 angular.module('clotho.interface')
 	.directive('clothoModal', function ($modal, $parse) {
