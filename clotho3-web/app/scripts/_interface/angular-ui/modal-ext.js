@@ -201,7 +201,6 @@ angular.module('clotho.interface').controller('VideoDialogController', function(
 /*
 Todo - transclude contents, so that can be compiled
 todo - try including in $modal $delegate directly and transcluding
-todo - onOpen callback delegate to clotho-show callback
  */
 
 angular.module('clotho.interface')
@@ -213,6 +212,7 @@ angular.module('clotho.interface')
 				id : '@',
 				open : '@',
 				onClose : '=?',
+				onOpen : '=?',
 				title : '@?',
 				model : '@?'
 			},
@@ -247,11 +247,17 @@ angular.module('clotho.interface')
 										}
 									}
 								}
-							})
-								.result
-								.then(function (result) {
-									angular.isFunction(scope.onClose) && scope.onClose(result);
-								});
+							});
+
+							modal.opened
+							.then(function (result) {
+								angular.isFunction(scope.onOpen) && scope.onOpen(result);
+							});
+
+							modal.result
+							.then(function (result) {
+								angular.isFunction(scope.onClose) && scope.onClose(result);
+							});
 						}
 					});
 			}
