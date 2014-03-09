@@ -39,19 +39,21 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
 		resolve : {
-			deps : ['$q', function($q) {
-				return $clotho.extensions.mixin('bower_components/codemirror/lib/codemirror.js').then(function() {
-					$q.all([
-						$clotho.extensions.css('bower_components/codemirror/lib/codemirror.css'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/javascript/javascript.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/css/css.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/htmlmixed/htmlmixed.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/python/python.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/groovy/groovy.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/clike/clike.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/markdown/markdown.js')
-					]);
-				})
+			deps : ['codemirrorLoader', function(loader) {
+				return loader.loadMain();
+			}]
+		}
+	})
+	//todo - DRY
+	.when('/editor/:id', {
+		templateUrl: 'views/editor.html',
+		controller: 'EditorCtrl',
+		resolve : {
+			queryResult : ['Clotho', '$route', function (Clotho, $route) {
+				return Clotho.query({id : $route.current.params.id});
+			}],
+			deps : ['codemirrorLoader', function(loader) {
+				return loader.loadMain();
 			}]
 		}
 	})
