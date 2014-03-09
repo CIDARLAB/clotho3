@@ -9,6 +9,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	 });*/
 
 	//init()
+	//todo - test
 	if ($routeParams.queryResult) {
 		console.log($scope.queryResult);
 		$scope.editable = $routeParams.queryResult[0];

@@ -82,8 +82,9 @@ angular.module('clotho.editor')
 					element.append(wrapper);
 				}
 
+				/*
+				//note - not supporting field removal for now
 				scope.removeField = angular.isDefined(editorCtrl) ? editorCtrl.removeField : angular.noop;
-
 				if (removable) {
 					var wrapper = angular.element('<div class="input-group"></div>');
 					var removeButton = angular.element('<span class="input-group-btn"><button class="btn btn-danger" type="button" ng-click="removeField(\''+removable+'\')"><span class="glyphicon glyphicon-trash"></span></button></span>');
@@ -92,6 +93,7 @@ angular.module('clotho.editor')
 					wrapper.append(removeButton);
 					element.append(wrapper);
 				}
+			 */
 
 				//add label if pass name
 				if (passedName) {
