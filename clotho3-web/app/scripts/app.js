@@ -35,7 +35,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/edit', {
 		redirectTo: '/editor'
 	})
-	.when('/editor', {
+	.when('/editor/:id?', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
 		resolve : {
@@ -44,13 +44,12 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			}]
 		}
 	})
-	//todo - DRY
-	.when('/editor/:id', {
+	.when('/editor/query/:params', {
 		templateUrl: 'views/editor.html',
 		controller: 'EditorCtrl',
 		resolve : {
 			queryResult : ['Clotho', '$route', function (Clotho, $route) {
-				return Clotho.query({id : $route.current.params.id});
+				return Clotho.query($route.current.params);
 			}],
 			deps : ['codemirrorLoader', function(loader) {
 				return loader.loadMain();
