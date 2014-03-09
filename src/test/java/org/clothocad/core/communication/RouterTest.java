@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.communication;
 
 import com.google.inject.Guice;
@@ -12,15 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.SecurityUtils;
 import org.bson.types.ObjectId;
 import org.clothocad.core.communication.Channel;
+import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ClientConnection;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -74,9 +70,14 @@ public class RouterTest {
     // public void hello() {}
 
     @Test
-    public void getAll() {
+    public void getAll() throws IOException {
         TestConnection connection = new TestConnection("getTest");
-        Message message = new Message(Channel.getAll, new String[]{"Test Part 1"} , "1");
+        final Message message = new Message(
+            Channel.getAll,
+            new String[] {"Test Part 1"},
+            "1",
+            null
+        );
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
@@ -89,7 +90,7 @@ public class RouterTest {
     }
 
     @Test
-    public void createAll() {
+    public void createAll() throws IOException {
         ObjectId id = new ObjectId();
         //XXX: this is actually bad data
         Map<String, Object> newPart = new HashMap<>();
@@ -100,7 +101,12 @@ public class RouterTest {
         newPart.put("id", id.toString());
 
         TestConnection connection = new TestConnection("createTest");
-        Message message = new Message(Channel.createAll, new Map[]{newPart}, "2");
+        final Message message = new Message(
+            Channel.createAll,
+            new Map[] {newPart},
+            "2",
+            null
+        );
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(2);
         assertMatch(message, returnMessage);
@@ -108,11 +114,11 @@ public class RouterTest {
     }
 
     @Test
-    public void query() {
+    public void query() throws IOException {
         Map<String, Object> query = new HashMap<>();
         query.put("schema", "Part");
         TestConnection connection = new TestConnection("queryTest");
-        Message message = new Message(Channel.query, query, "3");
+        Message message = new Message(Channel.query, query, "3", null);
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
@@ -122,7 +128,7 @@ public class RouterTest {
         connection = new TestConnection("queryTest2");
         query = new HashMap<>();
         query.put("schema", "BasicPart");
-        message = new Message(Channel.query, query, "4");
+        message = new Message(Channel.query, query, "4", null);
         sendMessage(message, connection);
         returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
@@ -131,14 +137,19 @@ public class RouterTest {
 
     
     @Test
-    public void destroyAll(){
+    public void destroyAll() throws IOException {
         TestConnection connection = new TestConnection("destroyTest");
         List<String> stringIds = new ArrayList<>();
         for (ObjectId id : ids){
             stringIds.add(id.toString());
         }
         
-        Message message = new Message(Channel.destroyAll, stringIds, "4");
+        final Message message = new Message(
+            Channel.destroyAll,
+            stringIds,
+            "4",
+            null
+        );
         sendMessage(message, connection);
         Persistor persistor = injector.getInstance(Persistor.class);
         for (ObjectId id : ids){
@@ -151,7 +162,7 @@ public class RouterTest {
     
     
     @Test
-    public void setAll(){
+    public void setAll() throws IOException {
         TestConnection connection = new TestConnection("setTest");
         List<Map<String,Object>> specs = new ArrayList<>();
         
@@ -163,8 +174,15 @@ public class RouterTest {
         }
         
         Persistor persistor = injector.getInstance(Persistor.class);
-        Message message = new Message(Channel.setAll, specs, "5");
-        sendMessage(message, connection);
+        sendMessage(
+            new Message(
+                Channel.setAll,
+                specs,
+                "5",
+                null
+            ),
+            connection
+        );
         for (ObjectId id : ids){
             Map<String,Object> result = persistor.getAsJSON(id);
             assertEquals("set",result.get("name"));
@@ -173,7 +191,7 @@ public class RouterTest {
     }
     
     @Test
-    public void testConstructFunction() {
+    public void testConstructFunction() throws IOException {
         String script = 
                   "var data = {};\n"
                 + "data.name = \"reverse1\";\n"
@@ -187,10 +205,17 @@ public class RouterTest {
                 + "clotho.run(\"reverse1\", [\"AAACCC\"]);";
         TestConnection connection = new TestConnection("constructFunction");
         
-        sendMessage(new Message(Channel.submit, script, "6"), connection);
+        sendMessage(
+            new Message(
+                Channel.submit,
+                script,
+                "6",
+                null
+            ),
+            connection
+        );
         
         assertEquals("CCCAAA", connection.messages.get(1).getData());
-        
     }
 
     //TODO:
@@ -208,12 +233,11 @@ public class RouterTest {
     
     
     
-    private void sendMessage(Message message, ClientConnection connection) {
-        try {
-            message = JSON.mapper.readValue(JSON.serialize(message),
-                                            Message.class);
-        } catch (IOException ex) {
-        }
-        router.receiveMessage(connection, message);
+    private void sendMessage(Message message, ClientConnection connection)
+    throws IOException {
+        router.receiveMessage(
+            connection,
+            JSON.mapper.readValue(JSON.serialize(message), Message.class)
+        );
     }
 }

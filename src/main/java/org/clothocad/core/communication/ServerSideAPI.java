@@ -92,9 +92,15 @@ public class ServerSideAPI {
     }
 
     public final void autocomplete(String userText) {
-        List<String> completions = completer.getCompletions(userText);
-        Message msg = new Message(Channel.autocomplete, completions, null);
-        router.sendMessage(mind.getConnection(), msg);
+        router.sendMessage(
+            mind.getConnection(),
+            new Message(
+                Channel.autocomplete,
+                completer.getCompletions(userText),
+                null,
+                null
+            )
+        );
     }
 
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
@@ -234,25 +240,27 @@ public class ServerSideAPI {
         data.put("class", severity);
         data.put("timestamp", new Date().getTime());
 
-        Message msg = new Message(Channel.say, data, requestId);
+        Message msg = new Message(Channel.say, data, requestId, null);
         router.sendMessage(mind.getConnection(), msg);
     }
 
     //JCA:  Java side looks fine, but client code crashes browser
     //clotho.alert("this is an alert!");
     public final void alert(String message) {
-
-        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message, null));
+        router.sendMessage(
+            mind.getConnection(),
+            new Message(Channel.alert, message, null, null)
+        );
     }
 
     //JCA:  This runs, and the message goes to the console.log spot.
     //clotho.log("I did some minipreps today");
     public final void log(String message) {
         log.debug("log has: {}", message);
-
-        Message msg = new Message(Channel.log, message, null);
-
-        router.sendMessage(mind.getConnection(), msg);
+        router.sendMessage(
+            mind.getConnection(),
+            new Message(Channel.log, message, null, null)
+        );
     }
 
     //Make note of this message in my notebook
@@ -563,10 +571,8 @@ public class ServerSideAPI {
             return Void.TYPE;
         }
         Object result = run(function, arguments);
-        if (!result.equals(Void.TYPE)) {
-            Message message = new Message(Channel.run, result, requestId);
-            send(message);
-        }
+        if (!result.equals(Void.TYPE))
+            send(new Message(Channel.run, result, requestId, null));
         return Void.TYPE;
     }
 
@@ -856,7 +862,8 @@ public class ServerSideAPI {
                     instance,
                     newArgs.toArray()
                 ))),
-                requestId
+                requestId,
+                null
             ));
         return Void.TYPE;
     }
