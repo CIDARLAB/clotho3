@@ -201,11 +201,6 @@ public final class Mind
         return getEngine().invoke(code, name, args, api);
     }
 
-    public Object evalFunction(String code, String setup, String name, List args, ScriptAPI api) throws ScriptException {
-        return getEngine().invoke(code, setup, name, args, api);
-    }
-    
-    
     public Object invoke(Function f, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException {
         return getEngine().invoke(f, convertArgs(args), api);
     }

@@ -119,7 +119,7 @@ public class ServerSideAPI {
         //Resolve the arguments to a command string
         //say(command, Severity.MUTED, null, true);
         try {
-            Object returnValue = mind.runCommand(command, new ScriptAPI(mind, persistor, router, requestId));
+            Object returnValue = mind.runCommand(command, getScriptAPI());
             //If the command successfully executed, it gets retained
             mind.addLastCommand(Channel.submit, command);
             return returnValue;
@@ -570,16 +570,15 @@ public class ServerSideAPI {
             logAndSayError("malformed arguments", ex);
             return Void.TYPE;
         }
-        Object result = run(function, arguments);
+        final Object result = mind.evalFunction(
+            function.getCode(),
+            function.getName(),
+            arguments,
+            getScriptAPI()
+        );
         if (!result.equals(Void.TYPE))
             send(new Message(Channel.run, result, requestId, null));
         return Void.TYPE;
-    }
-
-    public final Object run(Function function, List<Object> args) throws ScriptException {
-
-
-        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
     }
 
     /**
@@ -815,6 +814,10 @@ public class ServerSideAPI {
         MUTED
     }
 
+    private ScriptAPI getScriptAPI() {
+        return new ScriptAPI(mind, persistor, router, requestId);
+    }
+
     //XXX: this whole function is still a mess
     private final Object
     runWithId(final Map<String, Object> data, final List<Object> args)
@@ -825,7 +828,7 @@ public class ServerSideAPI {
         if (functionData.containsKey("schema")) {
             final String functionDataSchema = functionData.get("schema").toString();
             //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
-            final ScriptAPI scriptAPI = new ScriptAPI(mind, persistor, router, requestId);
+            final ScriptAPI scriptAPI = getScriptAPI();
             try {
                 if (functionDataSchema.endsWith("Function")) {
                     final Function function = persistor.get(Function.class, persistor.resolveSelector(dataId, true));
