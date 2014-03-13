@@ -163,6 +163,7 @@ public class RouterTest {
         for (ObjectId id : ids){
             Map<String,Object> result = persistor.getAsJSON(id);
             assertEquals("set",result.get("name"));
+            //simple way to check that set has not disrupted the rest of the data in the object
             assertNotNull(result.get("schema"));
         }       
     }

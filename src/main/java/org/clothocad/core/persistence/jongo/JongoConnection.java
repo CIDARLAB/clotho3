@@ -118,7 +118,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     @Override
     public void save(Map obj) {
         obj = mongifyIdField(obj);
-        rawDataCollection.save(new BasicDBObject(obj));
+        DBObject idQuery = new BasicDBObject("_id", obj.get("_id"));
+        obj.remove("_id");
+        Map<String,Object> setExpression = new HashMap<>();
+        setExpression.put("$set", obj);
+        rawDataCollection.update(idQuery, new BasicDBObject(setExpression),true, false);  //upsert true, multi false        
     }
 
     @Override
