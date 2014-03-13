@@ -20,6 +20,7 @@
 
 package org.clothocad.core.aspects.Interpreter;
 
+import groovy.lang.Tuple;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +39,7 @@ public class AutoComplete {
     
     /* AutoComplete Contructor */
     public AutoComplete () {
+        persistor = injector.getInstance(Persistance.class);
         trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
         
         //Load up the words from the word bank into the Trie
@@ -82,6 +84,10 @@ public class AutoComplete {
     private Set<String> getWordBank() {
         try {
             if(wordBank==null) {
+                if(persistor == null){
+                    System.out.println("The persistor is empty");
+                }
+                Tuple[] temp = persistor.getTuples();
                 String sfile = FileUtils.readFile("wordbank.txt");
                 List listy = JSON.deserializeList(sfile);
                 if (listy == null) return new HashSet<>(); //XXX
@@ -101,4 +107,5 @@ public class AutoComplete {
 
     private Trie<String, String> trie;
     transient private Set<String> wordBank;
+    
 }

@@ -26,6 +26,10 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.persistence;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import groovy.lang.Tuple;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -608,5 +612,23 @@ public class Persistor{
         //complain about ambiguity
         log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
+    }
+    public Tuple[] getTuples(){
+        DBCollection data = connection.getDataCollection();
+        DBCursor cursor = data.find();
+        Tuple[] output = new Tuple[cursor.length()];
+        int i = 0;
+        while(cursor.hasNext()){
+            DBObject temp = cursor.next();
+            Object name = temp.get("name");
+            Object uuid = temp.get("uuid");
+            Object[] elem = new Object[2];
+            elem[0] = name;
+            elem[1] = uuid;
+            Tuple input = new Tuple(elem);
+            output[i] = input;
+            i++;
+        }
+        return output;
     }
 }

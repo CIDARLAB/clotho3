@@ -329,7 +329,7 @@ public class MongoDBConnection
     public BSONObject getOneAsBSON(String name) {
         return getOneAsBSON(new BasicDBObject("_id", name));
     }
-
+    
     @Override
     public <T extends ObjBase> List<T> getAll(Class<T> type) {
         return dataStore.find(type).disableValidation().field(Mapper.CLASS_NAME_FIELDNAME).equal(type.getName()).asList();
@@ -399,5 +399,9 @@ public class MongoDBConnection
     public void deleteAllCredentials() {
         cred.drop();
     }
-
+    
+    @Override
+    public DBCollection getDataCollection(){
+        return data;
+    }
 }

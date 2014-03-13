@@ -23,6 +23,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.persistence;
 
+
+import com.mongodb.DBCollection;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Date;
@@ -160,5 +162,7 @@ public interface ClothoConnection {
     void deleteAll();
 
     public boolean exists(ObjectId id);
+    
+    public DBCollection getDataCollection();
  
 }
