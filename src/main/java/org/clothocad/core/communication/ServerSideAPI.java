@@ -498,6 +498,7 @@ public class ServerSideAPI {
         if (data.containsKey(ID)) {
             //XXX:(ugh ugh) end-run if *Function
             Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get(ID).toString(), true));
+            //XXX: should just fetch schema, then check if Function is ancestor of schema
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get(ID).toString(), true));

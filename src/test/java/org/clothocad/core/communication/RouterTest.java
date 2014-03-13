@@ -106,23 +106,24 @@ public class RouterTest {
     @Test
     public void query() {
         Map<String, Object> query = new HashMap<>();
-        query.put("schema", "Part");
+        query.put("schema", "org.clothocad.model.Part");
         TestConnection connection = new TestConnection("queryTest");
         Message message = new Message(Channel.query, query, "3");
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(55, ((List) returnMessage.data).size());
+        int size = ((List) returnMessage.data).size();
+        assertNotEquals(0, size);
         //assertEquals(3, ((List) returnMessage.data).size());
         
         connection = new TestConnection("queryTest2");
         query = new HashMap<>();
-        query.put("schema", "BasicPart");
+        query.put("schema", "org.clothocad.model.BasicPart");
         message = new Message(Channel.query, query, "4");
         sendMessage(message, connection);
         returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(54, ((List) returnMessage.data).size());
+        assertNotEquals(0, ((List) returnMessage.data).size());
     }
 
     
@@ -174,7 +175,7 @@ public class RouterTest {
                   "var data = {};\n"
                 + "data.name = \"reverse1\";\n"
                 + "data.language = \"JAVASCRIPT\";\n"
-                + "data.schema = \"Function\";\n"
+                + "data.schema = \"org.clothocad.core.datums.Function\";\n"
                 + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
                 + "data.arguments = [{name:'sequence', type:'String'}];\n"
                 + "\n"
