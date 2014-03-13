@@ -31,6 +31,7 @@ public class RestApi extends HttpServlet {
     private static Router router;
     private static Message m;
     private static RestConnection rc = new RestConnection("RestConnection");;
+    private static Map<String, Object> messageMap;
 
     // retrieve mind object/create new one - session id w/ shiro
     // minds are in router
@@ -41,8 +42,7 @@ public class RestApi extends HttpServlet {
     // get : shareable through uuid
     // post : change value of shareable with new val
 
-    @Inject
-    public void RestApi(Router router) {
+    public RestApi(Router router) {
         this.router = router;
     }
 
@@ -50,53 +50,57 @@ public class RestApi extends HttpServlet {
     protected void doGet(HttpServletRequest request, 
     	HttpServletResponse response) throws ServletException, IOException {
 
-    	response.setContentType("text/json");
+    	response.setContentType("application/json");
 
-    	String path = request.getPathInfo();
-        String id = path.split("/")[1];
+    	String id = request.getPathInfo().split("/")[1];
 
-        Subject subject = SecurityUtils.getSubject();
+        // We build our new message
+        messageMap = new HashMap<String, Object>();
+        messageMap.put("data", id);
+        messageMap.put("channel", "get");
 
-        if (id.equals("")) { // no id has been supplied
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("requestId is required - the proper GET url format is .../rest/{id}");
-        } else {
-            // We build our new message
-            Map<String, Object> messageMap = new HashMap<String, Object>();
-            messageMap.put("data", id);
-            messageMap.put("channel", "get");
-    
-            m = new Message(messageMap);
+        m = new Message(messageMap);
 
-            // Now we send that message to the router
-            System.out.println(this.router);
-            this.router.receiveMessage(this.rc, m);
+        // Now we send that message to the router
+        this.router.receiveMessage(this.rc, m);
 
-            response.getWriter().write(this.rc.getResult().toString());
+        String result = this.rc.getResult().toString();
+        response.getWriter().write(result);
+
+        if (!result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
     protected void doPost(HttpServletRequest request, 
         HttpServletResponse response) throws ServletException, IOException {
 
-        response.setContentType("text/json");
+        response.setContentType("application/json");
 
-        String path = request.getPathInfo();
-        String id = path.split("/")[0];
+        // Need to add checks for id
+        String id = request.getPathInfo().split("/")[1];
+        // For set, we need other parameters. What are they?
 
-        if (id.equals("")) { // no id has been supplied
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("requestId is required - the proper POST url format is .../rest/{id}");
-        } else if (SecurityUtils.getSubject().isAuthenticated()) {
-            // String username = SecurityUtils.getSubject().getPrincipal().toString();
-            // mind.setUsername(username);
-            // persistor.save(mind);
-            // api = new ServerSideAPI(mind, persistor, null, null);
-            // again, how do we pass an object in http? Does it have an id I can grab?
-            // ObjectId response = api.set();
+        // We build our new message
+        messageMap = new HashMap<String, Object>();
+        messageMap.put("data", id);
+        messageMap.put("channel", "set");
+
+        m = new Message(messageMap);
+
+        // Now we send that message to the router
+        this.router.receiveMessage(this.rc, m);
+
+        // Get the result & check to see if it was successful/if it failed
+        String result = this.rc.getResult().toString();
+        response.getWriter().write(result);
+
+        if (!result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println("Logged in to post");
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
