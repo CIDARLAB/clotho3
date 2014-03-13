@@ -170,7 +170,9 @@ public class Persistor{
     }
     
     public Map<String, Object> getAsJSON(ObjectId uuid){
-        return connection.getAsBSON(uuid);
+        Map<String,Object> result = connection.getAsBSON(uuid);
+        if (result == null) throw new EntityNotFoundException(uuid.toString());
+        return result;
     }
     
     
