@@ -145,7 +145,6 @@ public class RouterTest {
         }
     }
     
-    
     @Test
     public void setAll(){
         TestConnection connection = new TestConnection("setTest");

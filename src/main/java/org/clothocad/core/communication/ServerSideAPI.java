@@ -41,6 +41,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
+import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
@@ -50,7 +51,6 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
@@ -332,12 +332,12 @@ public class ServerSideAPI {
     public final ObjectId set(Map<String, Object> values) {
         try {
 
-            if (values.get("id") == null) {
+            if (values.get(ID) == null) {
                 say("set: No uuid provided", Severity.WARNING);
                 return create(values);
             }
 
-            ObjectId uuid = resolveId(values.get("id").toString());
+            ObjectId uuid = resolveId(values.get(ID).toString());
             if (uuid == null) {
                 return null;
             }
@@ -392,18 +392,9 @@ public class ServerSideAPI {
 
         try {
             //Confirm that there is no pre-existing object with this uuid
-            String idKey = null;
-            if (obj.containsKey("id")) {
-                idKey = "id";
-            }
-            if (obj.containsKey("_id")) {
-                idKey = "_id";
-            }
+            if (obj.containsKey(ID)) {
 
-
-            if (idKey != null) {
-
-                ObjectId uuid = resolveId(obj.get(idKey).toString());
+                ObjectId uuid = resolveId(obj.get(ID).toString());
                 if (uuid == null) {
                     //TODO: error message for empty id field (or just treat as non-existent id?)
                     return null;
@@ -478,45 +469,6 @@ public class ServerSideAPI {
 
     public List<Map<String, Object>> query(Map<String, Object> spec) {
         List<Map<String, Object>> objs;
-        //in case we are handed an immutable map, make a copy
-        spec = new HashMap(spec);
-
-        //XXX: demo hack to resolve schema smartly
-        if (spec.containsKey("schema")) {
-            //figure out what the schema actually is
-            try {
-                Map<String, Object> schema = persistor.getAsJSON(persistor.resolveSelector(spec.get("schema").toString(), false));
-                String binaryName = (String) schema.get("binaryName"); //try and fallback to name name?
-                //if (schemaName == null || ){ 
-                //    schemaName = schema.get("name").toString();
-                //}
-                String textName = (String) schema.get("name");
-                
-                if (!(schema instanceof BuiltInSchema)) textName = (String) schema.get("name");
-                
-                spec.remove("schema");
-                if (binaryName != null && textName != null){
-                    Map<String,Object> query = new HashMap();
-                    List<String> names = new ArrayList<>();
-                    names.add(textName);
-                    names.add(binaryName);
-                    query.put("$in", names);
-                    spec.put("className", query);
-                } else if (binaryName != null){
-                    spec.put("className", binaryName);
-                } else if (textName != null){
-                    spec.put("className", textName);
-                } else {
-                    spec.put("className", ((ObjBase) schema).getId());
-                }
-            } catch (EntityNotFoundException e) {
-                //maybe already full name?
-                logAndSayError(String.format("No schema found for selector %s", spec.get("schema").toString()), e);
-                objs = new ArrayList<>();
-                return objs;
-            }
-        }
-
         try {
             //Relay the query to Persistor and return the hits
             objs = persistor.findAsBSON(spec);
@@ -527,7 +479,6 @@ public class ServerSideAPI {
             e.printStackTrace();
             return new ArrayList<>();
         }
-
     }
 // </editor-fold> 
 
@@ -544,12 +495,12 @@ public class ServerSideAPI {
             return null;
         }
 
-        if (data.containsKey("id")) {
+        if (data.containsKey(ID)) {
             //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
+            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get(ID).toString(), true));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get(ID).toString(), true));
 
                     return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
                 } catch (ScriptException e) {
@@ -563,7 +514,7 @@ public class ServerSideAPI {
             //XXX: this whole function is still a mess
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
-                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
+                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get(ID).toString(), true));
 
                     return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
                 } catch (ScriptException e) {
@@ -583,7 +534,7 @@ public class ServerSideAPI {
                 }
             }
             //reflectively (ugh) run function of instance
-            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
+            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get(ID).toString()));
 
 
 
@@ -852,7 +803,7 @@ public class ServerSideAPI {
      */
     public static final String replaceWidgetId(String script, String widgetIdPrefix) {
         try {
-            return XMLParser.addPrefixToTagAttribute(script, "id", widgetIdPrefix);
+            return XMLParser.addPrefixToTagAttribute(script, ID, widgetIdPrefix);
         } catch (Exception ex) {
             log.error("", ex);
         }

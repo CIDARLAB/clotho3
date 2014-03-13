@@ -50,7 +50,7 @@ public abstract class ObjBase {
     }
     
     @JsonView(JSONViews.IdOnly.class)
-    @JsonProperty("_id")
+    //@JsonProperty("_id")
     private ObjectId id;
     private String name;
     @JsonView(JSONViews.Internal.class)

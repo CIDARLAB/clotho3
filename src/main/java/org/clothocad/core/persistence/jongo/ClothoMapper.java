@@ -4,13 +4,14 @@
  */
 package org.clothocad.core.persistence.jongo;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.persistence.jackson.IdRenamingMixin;
+import org.clothocad.core.persistence.jongo.ClothoObjectIdUpdater.ClothoIdFieldSelector;
 import org.jongo.Mapper;
 import org.jongo.ObjectIdUpdater;
 import org.jongo.marshall.Marshaller;
-import org.jongo.marshall.jackson.JacksonIdFieldSelector;
 import org.jongo.marshall.jackson.configuration.AbstractMappingBuilder;
 import org.jongo.marshall.jackson.configuration.MapperModifier;
 import org.jongo.marshall.jackson.configuration.Mapping;
@@ -32,7 +33,7 @@ public class ClothoMapper implements Mapper {
         ClothoMapperBuilder builder = new ClothoMapperBuilder();
         Mapping mapping = builder.createMapping();
         engine = new RefResolvingJacksonEngine(mapping);
-        objectIdUpdater = new ClothoObjectIdUpdater(new JacksonIdFieldSelector());
+        objectIdUpdater = new ClothoObjectIdUpdater(new ClothoIdFieldSelector());
         queryFactory = new BsonQueryFactory(engine);
     }
 
@@ -73,8 +74,8 @@ public class ClothoMapper implements Mapper {
                         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
                         //mapper.setDefaultTyping(typer);
                         
-                        // databind module handles ids and circular structures
-                        //mapper.registerModule(new ClothoDatabindModule());
+                        //add "id" -> "_id" renaming mixin
+                        mapper.addMixInAnnotations(ObjBase.class, IdRenamingMixin.class);
                     }
                 });
             return super.createMapping();

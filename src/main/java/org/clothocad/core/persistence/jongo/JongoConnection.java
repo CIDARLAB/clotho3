@@ -21,6 +21,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -29,12 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
+import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.security.CredentialStore;
-import org.jongo.Jongo;
-import org.jongo.MongoCollection;
+import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
 
 /**
@@ -54,11 +56,6 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     protected DBCollection rawDataCollection;
     private static final TypeReference<Map<String, Object>> STRINGMAP = new TypeReference<Map<String, Object>>() {
     };
-    /*
-     * Jackson config:
-     * serialize all fields (except transient) s'thing like:
-     * @JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE, setterVisibility=Visibility.NONE)
-     */
 
     @Inject
     public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname) throws UnknownHostException {
@@ -70,11 +67,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public void connect() throws UnknownHostException {
-        //custom type handling - allows widening transform
-        /*final TypeResolverBuilder typer = new WideningDefaultTypeResolverBuilder(OBJECT_AND_NON_CONCRETE);
-        typer.inclusion(JsonTypeInfo.As.PROPERTY);
-        typer.init(JsonTypeInfo.Id.CLASS, null);*/
         //TODO: cover reconnect case?
+
         //Mimic Jongo customization         
         mapper = new ObjectMapper();
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
@@ -90,43 +84,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
          * mapper.disable(AUTO_DETECT_IS_GETTERS);
          **/
 
-        //final FilterProvider clothoFilters = new SimpleFilterProvider().addFilter("clotho", new ClothoBeanPropertyFilter());
-        
-/*        jongo = new Jongo(db, new JacksonMapper.Builder()
-                .disable(FAIL_ON_EMPTY_BEANS)
-                .addModifier(new MapperModifier() {
-                    @Override
-                    public void modify(ObjectMapper mapper) {
-                        //write types into serialized objects
-                        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
-                        //mapper.setDefaultTyping(typer);
-                        
-                        // databind module handles ids and circular structures
-                        //mapper.registerModule(new ClothoDatabindModule());
-                    }
-                })
-                //below this line - config related to java object deser - not in the other mapper
-                //handle our custom ObjectId class
-                .withObjectIdUpdater(new ClothoObjectIdUpdater(new JacksonIdFieldSelector()))
-                                //custom callback to use our filter set
-                /*.setWriterCallback(new WriterCallback () {
-                    @Override
-                    public ObjectWriter getWriter(ObjectMapper mapper, Object pojo) {
-                        return mapper.writer().with(clothoFilters);
-                    }
-                })*/
-                /*.setReaderCallback(new ReaderCallback () {
-                    @Override
-                    public ObjectReader getReader(ObjectMapper mapper, Class<?> clazz) {
-                        //TODO: set injectable values to include obj id <-> created instance mapping
-                        return mapper.reader().with
-                    }
-                })*/
-//                .build());
         jongo = new RefJongo(db, new ClothoMapper());
         data = jongo.getCollection("data");
     }
 
+    //Do we really need this?
     @Override
     public boolean isAClothoDatabase() {
         //TODO
@@ -155,6 +117,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public void save(Map obj) {
+        obj = mongifyIdField(obj);
         rawDataCollection.save(new BasicDBObject(obj));
     }
 
@@ -212,12 +175,12 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public Map<String, Object> getAsBSON(ObjectId uuid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return data.findOne("{_id:#}", uuid.toString()).map(DemongifyHandler.get());
     }
 
     @Override
     public List<ObjBase> get(Map query) {
-        return Lists.newArrayList(data.resolvingFind(serialize(query)).as(ObjBase.class));
+        return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).as(ObjBase.class));
     }
 
     @Override
@@ -227,7 +190,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
-        return Lists.newArrayList(data.resolvingFind(serialize(query)).as(type));
+        return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).as(type));
     }
 
     @Override
@@ -238,7 +201,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public List<Map<String, Object>> getAsBSON(Map query) {
-        return mappify(get(JSONFilter.class, query));
+        return Lists.newArrayList(data.find(serialize(mongifyIdField(query))).map(DemongifyHandler.get()));
     }
 
     @Override
@@ -248,7 +211,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public <T extends ObjBase> List<Map<String, Object>> getAsBSON(Class<T> type, Map query) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
@@ -258,7 +221,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public <T extends ObjBase> T getOne(Class<T> type, Map query) {
-        return data.findOne(serialize(query)).as(type);
+        return data.findOne(serialize(mongifyIdField(query))).as(type);
     }
 
     @Override
@@ -268,12 +231,12 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public Map<String, Object> getOneAsBSON(Map query) {
-        return mappify(getOne(JSONFilter.class, query));
+        return data.findOne(serialize(mongifyIdField(query))).map(DemongifyHandler.get());
     }
 
     @Override
     public Map<String, Object> getOneAsBSON(String name) {
-        return mappify(getOne(JSONFilter.class, name));
+        return getOneAsBSON(new BasicDBObject("name", name).toMap());
     }
 
     @Override
@@ -347,4 +310,53 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
             throw new RuntimeException(ex);
         }
     }
+
+    //renames "id" key to "_id", and replaces ObjectId with String
+    protected static Map<String,Object> mongifyIdField(Map<String, Object> obj) {
+        if (obj.containsKey(ID)){
+            Map<String,Object> copy = new HashMap<>();
+            copy.putAll(obj);
+            obj = copy;
+            Object id = obj.get(ID);
+            if (id instanceof ObjectId){
+                id = ((ObjectId) id).toString();
+            }
+            obj.remove(ID);
+            obj.put("_id", id);
+        }
+        return obj;
+    }
+    
+    //renames "_id" to "id" 
+    //doesn't recurse on sub-objects, since no embedded object will have an objectid
+    //mutates instead of returning new object
+    protected static Map<String,Object> demongifyIdField(Map<String,Object> obj){
+        if (obj.containsKey("_id")){
+            Object id = obj.get("_id");
+            obj.remove("_id");
+            obj.put(ID, id);
+        }
+        return obj;
+    }
+    
+    protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
+
+        @Override
+        public Map<String,Object> map(DBObject result) {
+            BasicDBObject basicResult = new BasicDBObject();
+            basicResult.putAll(result);
+            Map<String,Object> resultMap = basicResult.toMap();
+            return demongifyIdField(resultMap);
+        }
+        
+        private static DemongifyHandler instance;
+        
+        public static DemongifyHandler get(){
+            if (instance == null){
+                instance = new DemongifyHandler();
+            }
+            return instance;
+        }
+
+    } 
 }

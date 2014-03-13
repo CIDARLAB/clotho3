@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
+import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
 import org.clothocad.core.schema.BuiltInSchema;
@@ -54,7 +55,6 @@ import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
-import org.clothocad.model.BasicPartConverter;
 
 /**
  * @author jcanderson
@@ -155,20 +155,14 @@ public class Persistor{
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
-        //XXX: convert id field so that mongoDB understands it (hackish)
-        if (data.containsKey("id") && !data.containsKey("_id")){
-            Object id = data.get("id");
-            data.remove("id");
-            data.put("_id", id);
-        }
-        else if (!data.containsKey("_id")){
+       if (!data.containsKey(ID)){
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
-            data.put("_id", id.toString());
+            data.put(ID, id.toString());
         }
         connection.save(data);
         
-        return new ObjectId(data.get("_id").toString());
+        return new ObjectId(data.get(ID).toString());
     }
     
     public void delete(ObjectId id){
@@ -306,7 +300,7 @@ public class Persistor{
     
     public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
 
-        query = modifyQueryForSchemaSearch(query);
+        query = addSubSchemas(query);
         List<ObjBase> result = connection.get(query);
         //TODO: also add converted instances
         return result;
@@ -317,7 +311,7 @@ public class Persistor{
 
         for (Schema schema : converters.getConverterSchemas(originalSchema)){
             Map<String, Object> query = new HashMap<>();
-            query.put("className", schema.getName());
+            query.put(SCHEMA, schema.getName());
             List<Map<String,Object>> convertibles = connection.getAsBSON(query);
             Converter converter = converters.getConverter(schema, originalSchema);
             for (Map<String,Object> bson : convertibles){
@@ -330,11 +324,11 @@ public class Persistor{
         return results;
     }
     
-    private Map<String, Object> modifyQueryForSchemaSearch(Map<String, Object> query) {
-        //if searching for schema
+    //XXX: mutator - maybe should make copy?
+    private Map<String, Object> addSubSchemas(Map<String, Object> query) {
         //XXX: needs to be fixed to handle complex schema queries less clunkily
-        if (query.containsKey("className")) {
-            Object originalSchema = query.get("className");
+        if (query.containsKey(SCHEMA)) {
+            Object originalSchema = query.get(SCHEMA);
             Map<String, Object> schemaQuery = new HashMap();
             List<String> schemaNames = new ArrayList<>();
             if (originalSchema instanceof Map && ((Map) originalSchema).containsKey("$in")){
@@ -353,7 +347,7 @@ public class Persistor{
 
             if (relatedSchemas.size() > 1) {
                 schemaQuery.put("$in", relatedSchemas);
-                query.put("className", schemaQuery);
+                query.put(SCHEMA, schemaQuery);
             }
         }
         return query;
@@ -382,33 +376,32 @@ public class Persistor{
     }
     
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
-        spec = modifyQueryForSchemaSearch(spec);
         //TODO: limit results
+        spec = addSubSchemas(spec);
         List<Map<String,Object>> out = connection.getAsBSON(spec);
+
         
-        //also find converted stuff
-        //XXX: change to work w/ jongo
-        if (spec.containsKey("className")){
-            List<String> schemaNames = new ArrayList<>();
-            Object className = spec.get("className");
-            if (className instanceof String) schemaNames.add((String) className);
-            else if (className instanceof Map && ((Map) className).containsKey("$in")){
+        if (spec.containsKey(SCHEMA) && spec.get(SCHEMA)!= null){
+            //copy spec so we don't mutate original search object
+            spec = new HashMap(spec);
+            Set<String> schemaIds = new HashSet<>();
+            Object className = spec.get(SCHEMA).toString();
+            //XXX: mongo-specific syntax
+            if (className instanceof Map && ((Map) className).containsKey("$in")){
                 for (String name : (List<String>) ((Map) className).get("$in")){
-                    schemaNames.add(name);
+                    schemaIds.add(name);
                 }
-            }
-            for (String schemaName : schemaNames) {
+            } else schemaIds.add(className.toString());
+            
+            for (String id : schemaIds) {
                 //try finding a schema by binary name
                 Map schemaQuery = new HashMap();
-                schemaQuery.put("binaryName", schemaName);
+                schemaQuery.put(ID, id);
                 Schema originalSchema = connection.getOne(Schema.class, schemaQuery);
-                //try finding a schema by name name
-                if (originalSchema == null) {
-                    originalSchema = get(Schema.class, resolveSelector(schemaName, false));
+                if (originalSchema != null) {
+                    List<Map<String, Object>> convertedData = getConvertedData(originalSchema);
+                    out.addAll(filterDataByQuery(convertedData, spec));
                 }
-                List<Map<String, Object>> convertedData = getConvertedData(originalSchema);
-                out.addAll(filterDataByQuery(convertedData, spec));
-                //TODO: filtering so things are unique
             }
         }
         return filterDuplicatesById(out);
@@ -418,15 +411,16 @@ public class Persistor{
         List<Map<String,Object>> filteredObjects = new ArrayList<>();
         Set<String> ids = new HashSet<>();
         for (Map<String,Object> object : objects){
-            if (ids.contains(object.get("id").toString())) continue;
+            //these objects are coming out of the DB, so we know they have an id
+            if (ids.contains(object.get(ID).toString())) continue;
             else {
-                ids.add(object.get("id").toString());
+                ids.add(object.get(ID).toString());
                 filteredObjects.add(object);
             }
         }
         return filteredObjects;
     }
-    
+   
     private List<Map<String,Object>> filterDataByQuery(List<Map<String,Object>> convertedData,Map<String, Object> spec){
         //TODO
         return convertedData;
@@ -562,7 +556,7 @@ public class Persistor{
 
         if (results.isEmpty()) throw new EntityNotFoundException(selector);
         
-        id = new ObjectId(results.get(0).get("id").toString());
+        id = new ObjectId(results.get(0).get(ID).toString());
         if (results.size() == 1 || !strict) {
             return id;
         }

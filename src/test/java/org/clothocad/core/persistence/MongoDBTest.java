@@ -4,6 +4,8 @@ package org.clothocad.core.persistence;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 
@@ -14,6 +16,8 @@ import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
+import java.util.Map;
+import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jongo.JongoConnection;
 import org.clothocad.core.util.TestUtils;
@@ -115,5 +119,17 @@ public class MongoDBTest {
     //TODO
     public void testSimpleSuperAndSubClass(){
  
+    }
+    
+    //Test that returned maps have  field instead of "_id"
+    @Test
+    public void testIdFieldName(){
+        Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
+        ObjectId id = new ObjectId();
+        i.setId(id);
+        conn.save(i);
+        Map<String,Object> map = conn.getAsBSON(id);
+        assertTrue(map.containsKey(ID));
+        assertFalse(map.containsKey("_id"));
     }
 }
