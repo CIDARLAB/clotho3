@@ -251,6 +251,24 @@ testThroughAsync("use lodash",
             deepEqual(data, [2,3,4]);
         });
 
+asyncTest("package module", function (){
+    var socket = getSocket(clothosocket);
+    socket.onopen = function () {
+        socket.send(new Message("run", {id:"packager", "function":"packJavaScript",
+            //arg order is name, description, code, dependencies (as array)
+            args:["packMe", "a module", "(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());", []]}), function (results){
+                //returns the created module by means of an id - use a get to grab the new module
+                var id = results[0];
+                socket.send(new Message("get", id), function (result){
+            //this doesn't test anything interesting, but you can put a breakpoint here to inspect the returned packaged module
+                    equal(result.name, "packMe");
+                    start();
+                });
+            });
+    };
+});
+
+
 module("SynBERC demo issues - all through submit channel")
 
 testThroughAsync("console.log",
@@ -294,3 +312,5 @@ testThroughAsync("functions on objects",
         function (data) {
             equal(data, 'hey Bob');
         });
+
+

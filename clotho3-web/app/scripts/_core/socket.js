@@ -50,24 +50,15 @@ angular.module('clotho.core').service('Socket',
 
 	    }
 
-
-	    socket.onopen = function() {
-		    console.log('socket opened, sending queued items');
-		    socketReady = true;
-
-		    angular.forEach(socketQueue, function(data) {
-			    socket.send(data)
-		    });
-	    };
-
-	    socket.onerror = function() {
+	    socket.onerror = function(err) {
 		    socketReady = false;
 		    console.log('socket error');
+		    console.log(err);
 	    };
 
-        socket.onclose = function(evt) {
-            ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"})
-        };
+      socket.onclose = function(evt) {
+          ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"})
+      };
 
 	    /*
         //external use - use in other apps, or for custom events

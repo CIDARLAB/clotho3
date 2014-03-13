@@ -37,8 +37,6 @@ public class ApolloConnection
 
     @Override
     public void send(Message msg) {
-        
-        
-        messageProducer.onSuccess(msg.data);
+        messageProducer.onSuccess(msg.getData());
     }
 }

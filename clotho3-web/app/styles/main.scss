@@ -1,4 +1,4 @@
-$icon-font-path: "/bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
+$icon-font-path: "../bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
 
 @import 'bootstrap-sass/vendor/assets/stylesheets/bootstrap';
 
@@ -31,6 +31,7 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   max-height: 700px; /*just in case... need to define with inline style*/
+  width: 100%;
 }
 
 div.inline {

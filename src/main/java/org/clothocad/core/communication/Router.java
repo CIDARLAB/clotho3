@@ -1,5 +1,12 @@
 package org.clothocad.core.communication;
 
+import static org.clothocad.core.communication.Channel.autocompleteDetail;
+import static org.clothocad.core.communication.Channel.create;
+import static org.clothocad.core.communication.Channel.destroy;
+import static org.clothocad.core.communication.Channel.log;
+import static org.clothocad.core.communication.Channel.submit;
+
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,18 +14,12 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
-import static org.clothocad.core.communication.Channel.create;
-import static org.clothocad.core.communication.Channel.destroy;
-import static org.clothocad.core.communication.Channel.log;
-import static org.clothocad.core.communication.Channel.submit;
-
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.JSON;
@@ -38,7 +39,11 @@ public class Router {
 
     // send message    
     public void sendMessage(ClientConnection connection, Message message) {
-        log.debug(JSON.serialize(message));
+        try {
+            log.debug(JSON.serialize(message));
+        } catch (IOException e) {
+            log.debug("failed to serialize message: {}", message);
+        }
         connection.send(message);
     }
 
@@ -54,14 +59,14 @@ public class Router {
         } else {
             mind = getMind(connection);
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.requestId);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId());
 
 
-        Object data = request.data;
+        Object data = request.getData();
         
         Object response = null;
         try {
-            switch (request.channel) {
+            switch (request.getChannel()) {
                 case autocomplete:
                     api.autocomplete(data.toString());
                     break;
@@ -152,21 +157,26 @@ public class Router {
                     api.unlisten(data.toString());
                     break;
                 default:
-                    log.warn("Unknown channel {}", request.channel);
+                    log.warn("Unknown channel {}", request.getChannel());
                     break;
             }
             
-            if (response == Void.TYPE){
-                connection.deregister(request.channel, request.requestId);
-            }
-            else {
-                Message message = new Message(request.channel, response, request.requestId);
-                connection.send(message);
-            }
+            if (response == Void.TYPE)
+                connection.deregister(
+                    request.getChannel(),
+                    request.getRequestId()
+                );
+            else
+                connection.send(new Message(
+                    request.getChannel(),
+                    response,
+                    request.getRequestId(),
+                    null
+                ));
             
         } catch (Exception e) {
             //TODO: message client with failure
-            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.requestId);
+            api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
         }
     }

@@ -200,17 +200,22 @@ angular.module('clotho.interface').controller('VideoDialogController', function(
 
 /*
 Todo - transclude contents, so that can be compiled
+todo - try including in $modal $delegate directly and transcluding
  */
+
 angular.module('clotho.interface')
 	.directive('clothoModal', function ($modal, $parse) {
 		return {
 			restrict : 'E',
 			transclude : 'element',
-			/*scope: {
-				title : '@?',
+			scope: {
+				id : '@',
 				open : '@',
-				callback : '&?'
-			},*/
+				onClose : '=?',
+				onOpen : '=?',
+				title : '@?',
+				model : '@?'
+			},
 			link: function (scope, element, attrs, nullCtrl, transclude) {
 
 				var modal, transcludedDom;
@@ -235,17 +240,24 @@ angular.module('clotho.interface')
 								resolve: {
 									model: function () {
 										return {
-											title : attrs.title || '',
-											model : attrs.model | {},
+											showId : scope.id || '',
+											title : scope.title || '',
+											model : scope.model | {},
 											transclude : transcludedDom
 										}
 									}
 								}
-							})
-								.result
-								.then(function (result) {
-									angular.isFunction(attrs.callback) && attrs.callback(result);
-								});
+							});
+
+							modal.opened
+							.then(function (result) {
+								angular.isFunction(scope.onOpen) && scope.onOpen(result);
+							});
+
+							modal.result
+							.then(function (result) {
+								angular.isFunction(scope.onClose) && scope.onClose(result);
+							});
 						}
 					});
 			}
@@ -256,4 +268,7 @@ angular.module('clotho.interface')
 		$scope.title = model.title;
 		$scope.model = model.model;
 		$scope.transclude = model.transclude;
+
+		//if show Id present, use a clotho-show
+		$scope.showId = model.showId;
 	});

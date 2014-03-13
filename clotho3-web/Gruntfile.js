@@ -386,6 +386,15 @@ module.exports = function (grunt) {
 				  async: true
 			  }
 		  },
+		  clothoCleanBuild: {
+			  command: 'cd ..; clean install'
+		  },
+			clothoTestServerVerbose: {
+			  command: 'cd ..; mvn "-Dexec.args= -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  },
 		  clothoProdServer: {
 			  //todo - update to proper server etc (currently just uses /dist/)
 			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',

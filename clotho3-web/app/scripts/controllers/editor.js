@@ -2,13 +2,21 @@
 
 angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $routeParams, $location, Clotho) {
 
-	//note - could use search param, and set reloadOnSearch to false
+	// todo - better handle dynamic routing
+	// note - could use search param, and set reloadOnSearch to false
 	/*$scope.$watch('editable', function (newval, oldval) {
 	 $location.url('/editor/' + $scope.editable.id).replace();
 	 });*/
 
 	//init()
-	$scope.editable = $routeParams.id;
+	//todo - test
+	if ($routeParams.queryResult) {
+		console.log($scope.queryResult);
+		$scope.editable = $routeParams.queryResult[0];
+	} else {
+		$scope.editable = $routeParams.id;
+	}
+
 	$scope.editModePass = false;
 
 	//data
@@ -19,6 +27,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	});
 
 	$scope.editableList = [];
+	//todo - pending #164 and #165, limit query size
 	Clotho.query({}).then(function (data) {
 		var editableList = [];
 		for (var i = 0; i < data.length; i++) {

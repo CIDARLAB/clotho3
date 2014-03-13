@@ -47,7 +47,7 @@
 
             <textarea ui-codemirror="codemirrorEditorOptions" id="functionCode" ng-model="sharable.code" style="position: relative; width: 100%; height: 9em" ng-disabled="!editMode" required></textarea>
 
-            <div clotho-file-upload></div>
+            <div function-code-drop update-on-read="sharable.code"></div>
 
         </fieldset>
 
