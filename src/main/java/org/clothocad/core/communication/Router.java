@@ -161,13 +161,18 @@ public class Router {
                     break;
             }
             
-            if (response == Void.TYPE){
-                connection.deregister(request.getChannel(), request.getRequestId());
-            }
-            else {
-                Message message = new Message(request.getChannel(), response, request.getRequestId());
-                connection.send(message);
-            }
+            if (response == Void.TYPE)
+                connection.deregister(
+                    request.getChannel(),
+                    request.getRequestId()
+                );
+            else
+                connection.send(new Message(
+                    request.getChannel(),
+                    response,
+                    request.getRequestId(),
+                    null
+                ));
             
         } catch (Exception e) {
             //TODO: message client with failure

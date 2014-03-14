@@ -49,15 +49,14 @@ public class TestRouter extends Router {
             }
             
             TestUtils.setupTestData(persistor);
-            Message message = new Message(request.getChannel(), "", request.getRequestId());
-            connection.send(message);
-            
+            connection.send(new Message(
+                request.getChannel(),
+                "",
+                request.getRequestId(),
+                null
+            ));
         } else {
-            super.receiveMessage(connection, request); //To change body of generated methods, choose Tools | Templates.           
+            super.receiveMessage(connection, request);
         }
-        
     }
-    
-    
-    
 }

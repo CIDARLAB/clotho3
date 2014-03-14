@@ -92,9 +92,15 @@ public class ServerSideAPI {
     }
 
     public final void autocomplete(String userText) {
-        List<String> completions = completer.getCompletions(userText);
-        Message msg = new Message(Channel.autocomplete, completions, null);
-        router.sendMessage(mind.getConnection(), msg);
+        router.sendMessage(
+            mind.getConnection(),
+            new Message(
+                Channel.autocomplete,
+                completer.getCompletions(userText),
+                null,
+                null
+            )
+        );
     }
 
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
@@ -113,7 +119,7 @@ public class ServerSideAPI {
         //Resolve the arguments to a command string
         //say(command, Severity.MUTED, null, true);
         try {
-            Object returnValue = mind.runCommand(command, new ScriptAPI(mind, persistor, router, requestId));
+            Object returnValue = mind.runCommand(command, getScriptAPI());
             //If the command successfully executed, it gets retained
             mind.addLastCommand(Channel.submit, command);
             return returnValue;
@@ -234,25 +240,27 @@ public class ServerSideAPI {
         data.put("class", severity);
         data.put("timestamp", new Date().getTime());
 
-        Message msg = new Message(Channel.say, data, requestId);
+        Message msg = new Message(Channel.say, data, requestId, null);
         router.sendMessage(mind.getConnection(), msg);
     }
 
     //JCA:  Java side looks fine, but client code crashes browser
     //clotho.alert("this is an alert!");
     public final void alert(String message) {
-
-        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message, null));
+        router.sendMessage(
+            mind.getConnection(),
+            new Message(Channel.alert, message, null, null)
+        );
     }
 
     //JCA:  This runs, and the message goes to the console.log spot.
     //clotho.log("I did some minipreps today");
     public final void log(String message) {
         log.debug("log has: {}", message);
-
-        Message msg = new Message(Channel.log, message, null);
-
-        router.sendMessage(mind.getConnection(), msg);
+        router.sendMessage(
+            mind.getConnection(),
+            new Message(Channel.log, message, null, null)
+        );
     }
 
     //Make note of this message in my notebook
@@ -562,18 +570,15 @@ public class ServerSideAPI {
             logAndSayError("malformed arguments", ex);
             return Void.TYPE;
         }
-        Object result = run(function, arguments);
-        if (!result.equals(Void.TYPE)) {
-            Message message = new Message(Channel.run, result, requestId);
-            send(message);
-        }
+        final Object result = mind.evalFunction(
+            function.getCode(),
+            function.getName(),
+            arguments,
+            getScriptAPI()
+        );
+        if (!result.equals(Void.TYPE))
+            send(new Message(Channel.run, result, requestId, null));
         return Void.TYPE;
-    }
-
-    public final Object run(Function function, List<Object> args) throws ScriptException {
-
-
-        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
     }
 
     /**
@@ -809,6 +814,10 @@ public class ServerSideAPI {
         MUTED
     }
 
+    private ScriptAPI getScriptAPI() {
+        return new ScriptAPI(mind, persistor, router, requestId);
+    }
+
     //XXX: this whole function is still a mess
     private final Object
     runWithId(final Map<String, Object> data, final List<Object> args)
@@ -819,7 +828,7 @@ public class ServerSideAPI {
         if (functionData.containsKey("schema")) {
             final String functionDataSchema = functionData.get("schema").toString();
             //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
-            final ScriptAPI scriptAPI = new ScriptAPI(mind, persistor, router, requestId);
+            final ScriptAPI scriptAPI = getScriptAPI();
             try {
                 if (functionDataSchema.endsWith("Function")) {
                     final Function function = persistor.get(Function.class, persistor.resolveSelector(dataId, true));
@@ -856,7 +865,8 @@ public class ServerSideAPI {
                     instance,
                     newArgs.toArray()
                 ))),
-                requestId
+                requestId,
+                null
             ));
         return Void.TYPE;
     }
