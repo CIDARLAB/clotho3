@@ -1,7 +1,7 @@
 <div ng-controller="Editor_SchemaCtrl">
 
-    <fieldset class="ng-cloak" ng-disabled="!editMode">
     <legend>Schema Editor</legend>
+    <fieldset class="ng-cloak" ng-disabled="!editMode">
 
         <form-field name="Name">
             <input type="text" id="schemaName" ng-model="sharable.name" required restrict-input="findSpacesRegExp">
@@ -90,12 +90,10 @@
 
         <button class="btn" type="button" ng-click="addField()" ng-disabled="!editMode"><i class="glyphicon glyphicon-plus"></i> New Field</button>
 
-
-        <div ng-include="_formActions"></div>
-
-
-        {{ sharable | json }}
-
-
     </fieldset>
+
+    <div ng-include="_formActions"></div>
+
+    {{ sharable | json }}
+
 </div>
