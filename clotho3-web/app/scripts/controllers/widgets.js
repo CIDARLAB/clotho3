@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.webapp')
-  .controller('WidgetsCtrl', function ($scope, $compile) {
+  .controller('WidgetsCtrl', function ($scope, $compile, $modal) {
 
 		$scope.myModel = 'WHATS up';
 		$scope.myDNAmodel = 'aaaagt';
