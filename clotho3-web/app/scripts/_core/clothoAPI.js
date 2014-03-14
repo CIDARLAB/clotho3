@@ -49,9 +49,19 @@ function generateClothoAPI() {
 
     //helper functions
 
+		//pending ES6
+
+		var numberAPICalls = new (function () {
+			var commandNum = 0;
+			this.next = function () {
+				commandNum += 1;
+				return commandNum.toString();
+			};
+		});
+
     fn.emitSubCallback = function(channel, data, func, options) {
         var deferred = $q.defer(),
-            requestId = Date.now().toString();
+            requestId = Date.now().toString() + numberAPICalls.next();
 
         if (!angular.isFunction(func))
             func = angular.noop() ;
