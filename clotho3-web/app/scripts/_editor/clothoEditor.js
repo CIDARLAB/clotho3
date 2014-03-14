@@ -96,7 +96,7 @@ angular.module('clotho.editor').directive('clothoEditor', function(Clotho, $comp
                     return str.indexOf(suffix, str.length - suffix.length) !== -1;
                 }
 
-                if (angular.isUndefined(obj) || angular.isEmpty(obj) || angular.isUndefined(obj.schema)) { return 'undefined' }
+                if (angular.isUndefined(obj) || angular.isEmpty(obj)) { return 'undefined' }
 
                 var schema = angular.lowercase(obj.schema);
 	            
