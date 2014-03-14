@@ -22,6 +22,12 @@
     <!-- endbuild -->
     <!-- /process -->
 
+    <!-- process:remove:api -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <!-- /process -->
+    <!-- note that angular is required for any clotho functionality -->
+    <script src="bower_components/angular/angular.js"></script>
+
     <!-- process:remove:api,dist,command -->
     <!-- note - dev only -->
     <script src="http://localhost:35729/livereload.js"></script>
@@ -73,8 +79,6 @@
 SCRIPTS
 --------->
 
-<script src="bower_components/jquery/jquery.js"></script>
-<script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/lodash/dist/lodash.js"></script>
 
 <!-- process:remove:command,api -->

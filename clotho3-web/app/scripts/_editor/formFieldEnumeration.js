@@ -28,8 +28,8 @@ angular.module('clotho.editor')
 
 			angular.forEach(fields, function(field) {
 
-				//fixme -- don't all convert to text if not in typemap
-				var type = typeMap[field.type] || 'text';
+				//todo - better handling!
+				var type = typeMap[field.type] || field.type || 'text';
 				if (type == '?') field.type == 'text';
 				var required = field.required ? "required" : "";
 
