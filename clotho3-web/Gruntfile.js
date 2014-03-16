@@ -387,7 +387,7 @@ module.exports = function (grunt) {
 			  }
 		  },
 		  clothoCleanBuild: {
-			  command: 'cd ..; clean install'
+			  command: 'cd ..; mvn clean install'
 		  },
 			clothoTestServerVerbose: {
 			  command: 'cd ..; mvn "-Dexec.args= -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',

@@ -2,7 +2,7 @@ angular.module('clotho.editor')
 /**
  * @name formField
  *
- * @description Wrapper for form elements, adding bootstrap classes automatically. Also adds Labels and Help blocks. Must be recompiled so don't change internal contents and expect re-render.
+ * @description Wrapper for form elements, adding bootstrap classes automatically. Specifically handles according to element type, wrapping appropriately. Also adds Labels and Help blocks. Does not compile internal contents.
  *
  * @note The element declared as child of form-field is transcluded, ng-model delcarations will run into prototypical inheritance weirdness (i.e. if you don't declare in the form of "object.field", define as "$parent.object"). Updates to form controls within this directive will not an undefined model. Model should at least be declared as empty object.
  *
@@ -23,7 +23,7 @@ angular.module('clotho.editor')
  </div>
 
  */
-	.directive('formField', function ($compile) {
+	.directive('formField', function () {
 
 		var template = '<div class="form-group" ng-form ng-transclude>' +
 			'</div>';

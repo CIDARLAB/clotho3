@@ -32,8 +32,9 @@ angular.module('clotho.core').service('Socket',
 		    console.log('socket already present, sending items in socket Queue');
 		    socketReady = true;
 		    angular.forEach(socketQueue, function(data, index) {
+			    console.log('SOCKET sending: ', data);
 			    socket.send(data);
-			    socketQueue.splice(index, 1); //verify
+			    socketQueue.splice(index, 1);
 		    });
 
 	    } else {
@@ -43,21 +44,22 @@ angular.module('clotho.core').service('Socket',
 			    socketReady = true;
 
 			    angular.forEach(socketQueue, function(data, index) {
+				    console.log('SOCKET sending: ', data);
 				    socket.send(data);
-				    socketQueue.splice(index, 1); //verify
+				    socketQueue.splice(index, 1);
 			    });
 	      }
 
 	    }
 
 	    socket.onerror = function(err) {
-		    socketReady = false;
-		    console.log('socket error');
-		    console.log(err);
+		    console.error('socket error: ', err);
 	    };
 
       socket.onclose = function(evt) {
-          ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"})
+	      socketReady = false;
+        ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"});
+	      //todo - re-establish connection
       };
 
 	    /*
@@ -155,8 +157,9 @@ angular.module('clotho.core').service('Socket',
                 };
                 socket.send(packaged);
 
-                if (typeof callback == 'function')
-                    callback(packaged);
+                if (typeof callback == 'function') {
+	                callback(packaged);
+                }
             },
 
             //send properly formatted string on channel message
