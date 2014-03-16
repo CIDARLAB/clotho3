@@ -102,25 +102,4 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	$scope.editExisting = function (item, model, label) {
 		$scope.editable = item;
 	};
-
-	// old stuff
-
-	$scope.createNewObject = function () {
-		Clotho.create({schema: $scope.selected})
-		.then(function (id) {
-			console.log(id);
-			$scope.editable = id;
-			$scope.editModePass = true;
-		});
-		$scope.selected = undefined;
-	};
-
-	$scope.logSelected = function () {
-		console.log($scope.selected);
-	};
-
-	$scope.createNewSchema = function () {
-		$scope.editModePass = true;
-		$scope.editable = {schema: "ClothoSchema", language: "JSONSCHEMA"};
-	};
 });
