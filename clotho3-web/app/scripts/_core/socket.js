@@ -155,6 +155,9 @@ angular.module('clotho.core').service('Socket',
             off : off,
             */
 
+		        state : function () {
+			        return socket.readyState;
+		        },
             //send a JSON on an arbitrary channel [ repackaged using send() ]
             //note - callback is run on send, not really a callback
             emit: function (channel, data, callback) {
