@@ -19,6 +19,27 @@ angular.module('clotho.core').service('Socket',
 		    socketReady,
 		    socketQueue = [];
 
+	    //expecting a string
+	    function socket_send (data) {
+		    if (!socketReady) {
+			    console.log('socket not ready, queueing request: ', data);
+			    socketQueue.push(data);
+			    return;
+		    }
+
+		    data = angular.isObject(data) ? JSON.stringify(data) : data;
+
+		    console.log("SOCKET\tsending data: " + data);
+		    socket.send(data);
+	    }
+
+	    function sendSocketQueue () {
+		    angular.forEach(socketQueue, function(data, index) {
+			    socket_send(data);
+		    });
+		    socketQueue = [];
+	    }
+
 	   //usually assume the socket doesn't exist (it would have to be declared manually), but it may if need to connect to a specific port and not what is created here
 
 	    if ($window.$clotho.socket) {
@@ -28,27 +49,15 @@ angular.module('clotho.core').service('Socket',
 	    }
 
 	    if (socket.readyState == 1) {
-
 		    console.log('socket already present, sending items in socket Queue');
 		    socketReady = true;
-		    angular.forEach(socketQueue, function(data, index) {
-			    console.log('SOCKET sending: ', data);
-			    socket.send(data);
-			    socketQueue.splice(index, 1);
-		    });
-
+		    sendSocketQueue();
 	    } else {
-
 		    socket.onopen = function() {
 			    console.log('socket opened, sending queued items');
 			    socketReady = true;
-
-			    angular.forEach(socketQueue, function(data, index) {
-				    console.log('SOCKET sending: ', data);
-				    socket.send(data);
-				    socketQueue.splice(index, 1);
-			    });
-	      }
+			    sendSocketQueue();
+        }
 
 	    }
 
@@ -59,11 +68,12 @@ angular.module('clotho.core').service('Socket',
       socket.onclose = function(evt) {
 	      socketReady = false;
         ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"});
-	      //todo - re-establish connection
+	      //todo - re-establish connection on loss
       };
 
 	    /*
         //external use - use in other apps, or for custom events
+	     //todo - enable as separate service, outside core
         var customChannels = {};
 
         //external use
@@ -130,50 +140,37 @@ angular.module('clotho.core').service('Socket',
             }
             */
             // don't know what to do, so publish to PubSub
-            //fixme - temporary hack - will move to own service soon
             else {
-                //console.log("SOCKET\tno listener found for channel: " + channel+'\nTriggering PubSub');
                 PubSub.trigger(channel+':'+requestId, [data]);
             }
         };
 
         return {
 
-	        /*
+	          /*
             //For adding custom channels - for use in other apps etc.
+            //todo - enable as separate service, outside core
             on : on,
             once : once,
             off : off,
             */
 
-            //send a JSON on a 'custom channel' [ repackaged using send() ]
+            //send a JSON on an arbitrary channel [ repackaged using send() ]
             //note - callback is run on send, not really a callback
-            emit: function (eventName, data, callback) {
-                console.log("SOCKET\tdata emitted on channel: " + eventName);
-
+            emit: function (channel, data, callback) {
                 var packaged = {
-                    "channel" : eventName,
+                    "channel" : channel,
                     "data" : data
                 };
-                socket.send(packaged);
+                socket_send(packaged);
 
                 if (typeof callback == 'function') {
 	                callback(packaged);
                 }
             },
 
-            //send properly formatted string on channel message
-            send: function(data) {
-
-	            if (!socketReady) {
-		            console.log('socket not ready, queueing request');
-		            socketQueue.push(data);
-		            return;
-	            }
-
-	            console.log("SOCKET\tsending data: " + data);
-              socket.send(data);
-            }
+            //send properly packaged and formatted string
+            send: socket_send
         }
     }
 });
