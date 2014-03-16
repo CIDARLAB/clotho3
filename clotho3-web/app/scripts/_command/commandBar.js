@@ -145,7 +145,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	function receiveMessage (data) {
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
 		log.entries.unshift(data);
-		console.log(log.entries);
+		console.log('LOG - entries: ', log.entries);
 		display.show('logSnippet');
 		log.startLogTimeout();
 	}

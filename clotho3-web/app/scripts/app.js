@@ -78,9 +78,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl'
 	})
-	.when('/trails/:id/:position?', {
+	.when('/trails/:id', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
+		reloadOnSearch: false,
 		resolve : {
 			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 				var deferred = $q.defer();
