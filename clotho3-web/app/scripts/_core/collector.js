@@ -158,14 +158,14 @@ angular.module('clotho.core').service('Collector',
         //pass true for 'force' to force collect even if obj identical and broadcast of update
         var storeModel = function(uuid, obj, force) {
 	          //todo - ensure that what is in collector also matches localStorage
-            if (force || !angular.equals(collector[uuid], obj)) {
-                //testing console.log("COLLECTOR\t" + uuid + " is being saved");
+            if (force || !angular.equals(retrieveRef(uuid), obj)) {
+                console.log("COLLECTOR\t" + uuid + " - saving", collector[uuid], obj);
                 silentAddModel(uuid, obj);
                 broadcastModelUpdate(uuid, obj);
                 //testing console.log(collector[uuid]);
             }
             else {
-                console.log("COLLECTOR\t" + uuid + "model is same as collector");
+                console.log("COLLECTOR\t" + uuid + " - model unchanged");
             }
         };
 
