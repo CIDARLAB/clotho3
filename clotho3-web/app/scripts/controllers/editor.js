@@ -94,7 +94,6 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
-		console.log(arguments);
 		createForEditor({schema: model, language: "JSONSCHEMA"}, label);
 		$scope.chooseSubtype = false;
 	};
