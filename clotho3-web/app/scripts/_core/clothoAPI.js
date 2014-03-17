@@ -116,6 +116,18 @@ function generateClothoAPI() {
         return fn.emitSubOnce('login', cred);
     };
 
+		/**
+		 * @name Clotho.logout
+		 *
+		 * @description
+		 * Logout of Clotho
+		 *
+		 * @returns {Promise} result of login
+		 */
+		var logout = function clothoAPI_logout() {
+			return fn.emitSubOnce('logout', '');
+		};
+
     /**
      * @name Clotho.get
      *
@@ -312,6 +324,7 @@ function generateClothoAPI() {
      * Destroys listener functions associated with a given reference
      *
      */
+	   //todo - deprecate
     var silence = function clothoAPI_silence(reference) {
         PubSub.destroy(reference);
     };
@@ -751,6 +764,7 @@ function generateClothoAPI() {
     return {
         //api
         login : login,
+        logout : logout,
         get : get,
         set : set,
         query : query,
@@ -769,6 +783,11 @@ function generateClothoAPI() {
         notify : notify,
         gradeQuiz : gradeQuiz,
 
+		    //searchbar
+		    submit: submit,
+		    autocomplete : autocomplete,
+		    autocompleteDetail : autocompleteDetail,
+
         //toolkit
         watch : watch,
         listen : listen,
@@ -779,12 +798,7 @@ function generateClothoAPI() {
         on : on,
         once : once,
         off : off,
-        share : share,
-
-        //searchbar
-        submit: submit,
-        autocomplete : autocomplete,
-        autocompleteDetail : autocompleteDetail
+        share : share
 
     }
 
