@@ -32,6 +32,7 @@ function generateClothoAPI() {
     //socket communication
     var fn = {};
 
+		//note that angular.toJson will strip $-prefixed keys, so should be avoided
     fn.send = function(pkg) {
         Socket.send(angular.toJson(pkg));
     };
@@ -49,9 +50,19 @@ function generateClothoAPI() {
 
     //helper functions
 
+		//pending ES6
+
+		var numberAPICalls = new (function () {
+			var commandNum = 0;
+			this.next = function () {
+				commandNum += 1;
+				return commandNum.toString();
+			};
+		});
+
     fn.emitSubCallback = function(channel, data, func, options) {
         var deferred = $q.defer(),
-            requestId = Date.now().toString();
+            requestId = Date.now().toString() + numberAPICalls.next();
 
         if (!angular.isFunction(func))
             func = angular.noop() ;
@@ -104,6 +115,18 @@ function generateClothoAPI() {
         var cred = {username: username, password: password};
         return fn.emitSubOnce('login', cred);
     };
+
+		/**
+		 * @name Clotho.logout
+		 *
+		 * @description
+		 * Logout of Clotho
+		 *
+		 * @returns {Promise} result of login
+		 */
+		var logout = function clothoAPI_logout() {
+			return fn.emitSubOnce('logout', '');
+		};
 
     /**
      * @name Clotho.get
@@ -301,6 +324,7 @@ function generateClothoAPI() {
      * Destroys listener functions associated with a given reference
      *
      */
+	   //todo - deprecate
     var silence = function clothoAPI_silence(reference) {
         PubSub.destroy(reference);
     };
@@ -740,6 +764,7 @@ function generateClothoAPI() {
     return {
         //api
         login : login,
+        logout : logout,
         get : get,
         set : set,
         query : query,
@@ -758,6 +783,11 @@ function generateClothoAPI() {
         notify : notify,
         gradeQuiz : gradeQuiz,
 
+		    //searchbar
+		    submit: submit,
+		    autocomplete : autocomplete,
+		    autocompleteDetail : autocompleteDetail,
+
         //toolkit
         watch : watch,
         listen : listen,
@@ -768,12 +798,7 @@ function generateClothoAPI() {
         on : on,
         once : once,
         off : off,
-        share : share,
-
-        //searchbar
-        submit: submit,
-        autocomplete : autocomplete,
-        autocompleteDetail : autocompleteDetail
+        share : share
 
     }
 

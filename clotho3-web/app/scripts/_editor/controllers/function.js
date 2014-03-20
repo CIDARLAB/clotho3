@@ -123,14 +123,16 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		lineNumbers: true,
 		// HACK to have the codemirror instance in the scope...
 		onLoad : function(_cm){
-			$scope.$watch('sharable.language', function(newlang) {
-				var mode = newlang.toLowerCase();
+			$scope.$watch('sharable.language', function(newlang, oldlang) {
+				if (!!newlang && newlang != oldlang) {
+					var mode = newlang.toLowerCase();
 
-				codemirrorLoader.loadLanguage(mode).then(function () {
-					// HACK to catch java case
-					mode = (mode == 'java') ? 'text/x-java' : mode;
-					_cm.setOption("mode", mode);
-				});
+					codemirrorLoader.loadLanguage(mode).then(function () {
+						// HACK to catch java case
+						mode = (mode == 'java') ? 'text/x-java' : mode;
+						_cm.setOption("mode", mode);
+					});
+				}
 			});
 
 			// example Events

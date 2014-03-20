@@ -89,6 +89,24 @@ angular.module('ui.bootstrap-decorate', ['ui.bootstrap'])
 			});
 		};
 
+		$delegate.clothoEdit = function (uuid) {
+			return $delegate.open({
+				backdrop: true,
+				backdropFade: true,
+				keyboard: true,
+				backdropClick: false,
+				templateUrl:  'views/_interface/ui-custom/clothoEditModal.html',
+				controller: 'DialogEditController',
+				resolve: {
+					model: function() {
+						return {
+							uuid : uuid
+						}
+					}
+				}
+			});
+		};
+
 		return $delegate;
 	}])
 });
@@ -197,6 +215,11 @@ angular.module('clotho.interface').controller('VideoDialogController', function(
 		$modalInstance.close(res);
 	};
 });
+
+angular.module('clotho.interface').controller('DialogEditController', function($scope, $modalInstance, model){
+	$scope.uuid = model.uuid;
+});
+
 
 /*
 Todo - transclude contents, so that can be compiled

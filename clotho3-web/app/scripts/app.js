@@ -35,6 +35,36 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/edit', {
 		redirectTo: '/editor'
 	})
+	.when('/editor/query/:queryTerm', {
+		templateUrl: 'views/editor.html',
+		controller: 'EditorCtrl',
+		resolve : {
+			queryResult : ['Clotho', '$route', '$q', function (Clotho, $route, $q) {
+				var query = '';
+				try {
+					query = angular.fromJson($route.current.params.queryTerm);
+				} catch (err) {
+					console.warn('editor query malformed: ' + err)
+				}
+
+				console.log('querying for editor: ', query);
+
+				if (!angular.isEmpty(query)) {
+					return Clotho.query(query).then(function (data) {
+						return data;
+					});
+				} else {
+					return $q.when();
+				}
+			}],
+			deps : ['codemirrorLoader', function(loader) {
+				return loader.loadMain();
+			}]
+		}
+	})
+	.when('/editor/query', {
+		redirectTo : '/editor'
+	})
 	.when('/editor/:id?', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
@@ -44,25 +74,14 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			}]
 		}
 	})
-	.when('/editor/query/:params', {
-		templateUrl: 'views/editor.html',
-		controller: 'EditorCtrl',
-		resolve : {
-			queryResult : ['Clotho', '$route', function (Clotho, $route) {
-				return Clotho.query($route.current.params);
-			}],
-			deps : ['codemirrorLoader', function(loader) {
-				return loader.loadMain();
-			}]
-		}
-	})
 	.when('/trails', {
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl'
 	})
-	.when('/trails/:id/:position?', {
+	.when('/trails/:id', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
+		reloadOnSearch: false,
 		resolve : {
 			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 				var deferred = $q.defer();

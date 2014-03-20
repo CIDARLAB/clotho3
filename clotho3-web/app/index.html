@@ -22,6 +22,15 @@
     <!-- endbuild -->
     <!-- /process -->
 
+    <!-- process:remove:api -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <!-- /process -->
+
+    <!-- note that angular is required for any clotho functionality -->
+    <script src="bower_components/angular/angular.js"></script>
+    <!-- note that lodash is required by several components -->
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+
     <!-- process:remove:api,dist,command -->
     <!-- note - dev only -->
     <script src="http://localhost:35729/livereload.js"></script>
@@ -72,10 +81,6 @@
 <!--------
 SCRIPTS
 --------->
-
-<script src="bower_components/jquery/jquery.js"></script>
-<script src="bower_components/angular/angular.js"></script>
-<script src="bower_components/lodash/dist/lodash.js"></script>
 
 <!-- process:remove:command,api -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
@@ -243,9 +248,10 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_editor/code-file-drop.js"></script>
 <script src="scripts/_editor/formFieldEnumeration.js"></script>
 <script src="scripts/_editor/jsonEdit.js"></script>
-<script src="scripts/_editor/sharable.js"></script>
-<script src="scripts/_editor/function.js"></script>
-<script src="scripts/_editor/schema.js"></script>
+<script src="scripts/_editor/controllers/sharable.js"></script>
+<script src="scripts/_editor/controllers/function.js"></script>
+<script src="scripts/_editor/controllers/trail.js"></script>
+<script src="scripts/_editor/controllers/schema.js"></script>
 <!--endbuild-->
 
 

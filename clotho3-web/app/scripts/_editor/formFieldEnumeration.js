@@ -28,7 +28,8 @@ angular.module('clotho.editor')
 
 			angular.forEach(fields, function(field) {
 
-				var type = typeMap[field.type] || 'text';
+				//todo - better handling!
+				var type = typeMap[field.type] || field.type || 'text';
 				if (type == '?') field.type == 'text';
 				var required = field.required ? "required" : "";
 
@@ -85,7 +86,7 @@ angular.module('clotho.editor')
 					var schema = opts.schema || $scope.schema || {fields: []};
 					var sharable = opts.sharable || $scope.sharable || {schema : {fields: []}};
 
-					console.log(fields, schema, sharable);
+					//console.log(fields, schema, sharable);
 
 					var concatenatedFields = fields.concat(schema.fields);
 
@@ -96,7 +97,7 @@ angular.module('clotho.editor')
 						});
 					});
 
-					console.log(_.pluck(concatenatedFields, 'name'));
+					//console.log(_.pluck(concatenatedFields, 'name'));
 
 					var uniqueFields = _.uniq(concatenatedFields, function (field) {
 						return field.name;
