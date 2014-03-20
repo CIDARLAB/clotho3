@@ -39,15 +39,20 @@ public class AutoComplete {
     
     /* AutoComplete Contructor */
     public AutoComplete () {
-        persistor = injector.getInstance(Persistance.class);
-        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
         
+        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
         //Load up the words from the word bank into the Trie
         for(String word : getWordBank()) {
             trie.put(word, word);
         }
-        
-        
+
+    }
+    public AutoComplete(Persistor persistorMongo) {
+        persistor = persistorMongo;
+        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
+        for(String word: getWordBank()){
+            trie.put(word,word);
+        }
     }
 
     /**
@@ -58,10 +63,19 @@ public class AutoComplete {
      */
     public List<String> getCompletions(String subString) {
         SortedMap<String, String> subTrie = trie.prefixMap(subString);
+        for(Map.Entry<String,String>entry : trie.entrySet()){
+            System.out.print(entry.getValue()+ " " );
+        }
+        System.out.println();
+        //System.out.println("Trie empty? " + trie.);
+        System.out.println("Select Key " + (trie.firstKey()==""));
+        System.out.println("Select last key " + trie.lastKey());
+        System.out.println("Size of subtrie: " + subTrie.size());
         List<String> options = new ArrayList<>();
         for (Map.Entry<String, String> entry : subTrie.entrySet()) {
             options.add(entry.getValue());
         }
+        options.add(trie.selectKey(subString));
         return options;
     }
 
@@ -86,16 +100,28 @@ public class AutoComplete {
             if(wordBank==null) {
                 if(persistor == null){
                     System.out.println("The persistor is empty");
+                }else{
+                    System.out.println("The persistor is not empty");
                 }
-                Tuple[] temp = persistor.getTuples();
-                String sfile = FileUtils.readFile("wordbank.txt");
-                List listy = JSON.deserializeList(sfile);
-                if (listy == null) return new HashSet<>(); //XXX
+                Tuple[] temp = persistor.getTuplesMongo();
+                System.out.println("Temp size: " + temp.length);
+                //String sfile = FileUtils.readFile("wordbank.txt");
+                //List listy = JSON.deserializeList(sfile);
+                //if (listy == null) return new HashSet<>(); //XXX
                 wordBank = new HashSet<String>();
-                for(int i=0; i<listy.size(); i++) {
-                    String str = listy.get(i).toString();
-                    wordBank.add(str);
+                //for(int i=0; i<listy.size(); i++) {
+                //    String str = listy.get(i).toString();
+                //    wordBank.add(str);
+                //}
+                for(int i = 0; i< temp.length;i++){
+                    if (temp[i].get(0) != null){
+
+                        String str = temp[i].get(0).toString();
+                        wordBank.add(str);
+                        System.out.println("String: " + str);
+                    }
                 }
+                System.out.println("Size of wordbank: " + wordBank.size());
                 return wordBank;
             }
         } catch (Exception ex) {

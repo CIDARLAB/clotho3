@@ -21,8 +21,10 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import groovy.lang.Tuple;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -401,7 +403,24 @@ public class MongoDBConnection
     }
     
     @Override
-    public DBCollection getDataCollection(){
-        return data;
+    public Tuple[] getTuples(){
+        DBCursor cursor = data.find();
+        Iterator<DBObject> iter = cursor.iterator();
+        Tuple[] output = new Tuple[cursor.length()];
+        int i = 0;
+        while(iter.hasNext()){
+            
+            DBObject temp = iter.next();
+            Object name = temp.get("name");
+            Object uuid = temp.get("_id");
+            Object[] elem = new Object[2];
+            elem[0] = name;
+            elem[1] = uuid;
+            Tuple input = new Tuple(elem);
+            output[i] = input;
+            i++;
+        }
+        System.out.println("Number of tuples " + output.length );
+        return output;
     }
 }

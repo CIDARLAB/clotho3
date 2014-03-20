@@ -24,7 +24,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.core.persistence;
 
 
-import com.mongodb.DBCollection;
+
+import groovy.lang.Tuple;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Date;
@@ -163,6 +164,6 @@ public interface ClothoConnection {
 
     public boolean exists(ObjectId id);
     
-    public DBCollection getDataCollection();
+    public Tuple[] getTuples();
  
 }

@@ -78,7 +78,7 @@ import org.clothocad.model.Person;
 @Slf4j
 public class ServerSideAPI {
 
-    private static final AutoComplete completer = new AutoComplete();
+    private final AutoComplete completer;
     private final Router router;
     private final Persistor persistor;
     private final String requestId;
@@ -89,6 +89,7 @@ public class ServerSideAPI {
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
+        this.completer = new AutoComplete(persistor);
     }
 
     public final void autocomplete(String userText) {
