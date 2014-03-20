@@ -44,7 +44,8 @@ angular.module('clotho.angularAdditions', [])
 				func = null;
 				return result;
 			};
-		}
+		};
+
 		angular.extend(angular, ext);
 	})
 	.run(function($rootScope) {

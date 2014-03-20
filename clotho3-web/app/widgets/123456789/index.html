@@ -1,8 +1,21 @@
-<p>This is the template index.html</p>
+<script type="application/javascript">
+    console.log('WIDGET 123456789 - inline script from index.html');
+</script>
 
-<p>This is from the dictionary: {{ dictString }}</p>
+<script type="application/javascript" ng-src="prefixUrl('inlineCalledScript.js')"></script>
 
-<p>This is from the parent controller: {{ controllerVar }}</p>
+<style type="text/css">
+    .greenListItem {
+        color: #44bb44;
+    }
+</style>
+
+<ul>
+    <li>This is the template index.html</li>
+    <li class="greenListItem">Testing inline CSS</li>
+    <li>This is from the dictionary: {{ dictString }}</li>
+    <li>This is from the parent controller: {{ controllerVar }}</li>
+</ul>
 
 <p>below is an ng-include to load another partial (lazily, after bootstrap)</p>
 
