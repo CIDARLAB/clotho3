@@ -409,7 +409,6 @@ public class MongoDBConnection
         Tuple[] output = new Tuple[cursor.length()];
         int i = 0;
         while(iter.hasNext()){
-            
             DBObject temp = iter.next();
             Object name = temp.get("name");
             Object uuid = temp.get("_id");
@@ -420,7 +419,6 @@ public class MongoDBConnection
             output[i] = input;
             i++;
         }
-        System.out.println("Number of tuples " + output.length );
         return output;
     }
 }

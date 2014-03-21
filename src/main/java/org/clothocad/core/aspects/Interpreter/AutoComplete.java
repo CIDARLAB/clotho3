@@ -47,6 +47,9 @@ public class AutoComplete {
         }
 
     }
+    /*
+     * New constructor to accept the persistor from the ServerSideAPI
+     */
     public AutoComplete(Persistor persistorMongo) {
         persistor = persistorMongo;
         trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
@@ -62,20 +65,14 @@ public class AutoComplete {
      * Extracting options from the Trie
      */
     public List<String> getCompletions(String subString) {
+        subString = subString.substring(7, subString.length()-1);
+        //The above is needed because the subString is in the format {query=[subString]}
         SortedMap<String, String> subTrie = trie.prefixMap(subString);
-        for(Map.Entry<String,String>entry : trie.entrySet()){
-            System.out.print(entry.getValue()+ " " );
-        }
-        System.out.println();
-        //System.out.println("Trie empty? " + trie.);
-        System.out.println("Select Key " + (trie.firstKey()==""));
-        System.out.println("Select last key " + trie.lastKey());
-        System.out.println("Size of subtrie: " + subTrie.size());
+        //System.out.println("Size of subtrie: " + subTrie.size());
         List<String> options = new ArrayList<>();
         for (Map.Entry<String, String> entry : subTrie.entrySet()) {
             options.add(entry.getValue());
         }
-        options.add(trie.selectKey(subString));
         return options;
     }
 
@@ -94,15 +91,12 @@ public class AutoComplete {
             err.printStackTrace();
         }
     }
-    
+    /*
+     * Creates a wordbank using the list of tuples from the persistor
+     */
     private Set<String> getWordBank() {
         try {
             if(wordBank==null) {
-                if(persistor == null){
-                    System.out.println("The persistor is empty");
-                }else{
-                    System.out.println("The persistor is not empty");
-                }
                 Tuple[] temp = persistor.getTuplesMongo();
                 System.out.println("Temp size: " + temp.length);
                 //String sfile = FileUtils.readFile("wordbank.txt");
@@ -115,13 +109,10 @@ public class AutoComplete {
                 //}
                 for(int i = 0; i< temp.length;i++){
                     if (temp[i].get(0) != null){
-
                         String str = temp[i].get(0).toString();
                         wordBank.add(str);
-                        System.out.println("String: " + str);
                     }
                 }
-                System.out.println("Size of wordbank: " + wordBank.size());
                 return wordBank;
             }
         } catch (Exception ex) {

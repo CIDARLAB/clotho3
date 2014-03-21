@@ -610,8 +610,10 @@ public class Persistor{
         log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
     }
+    /*
+     * Used to pass the data collection from the MongoDBConnection
+     */
     public Tuple[] getTuplesMongo(){
-        
         return connection.getTuples();
     }
 }
