@@ -3,7 +3,7 @@
 //note : Collector returns **references**. It publishes copies to PubSub. ClothoAPI should copy objects it passes from the collector.
 
 angular.module('clotho.core').service('Collector',
-	function($window, $document, PubSub) {
+	function($window, $document, PubSub, Debug) {
 
     return ($window.$clotho.$collector) ? $window.$clotho.$collector : $window.$clotho.$collector = generateCollector();
 
@@ -13,6 +13,8 @@ angular.module('clotho.core').service('Collector',
             PubSub.trigger("update", [uuid]);
             PubSub.trigger("update:" + uuid, [angular.copy(obj)]);
         }
+
+	      var Debugger = new Debug('Collector', '#55bb55');
 
         /************
          LOCAL STORAGE INTERFACE
@@ -57,7 +59,7 @@ angular.module('clotho.core').service('Collector',
             };
 
             //testing
-            //console.log("localStorage support? " + browserSupportsLocalStorage());
+            //Debugger.log("localStorage support? " + browserSupportsLocalStorage());
 
             // --- local storage interface ----
 
@@ -110,13 +112,13 @@ angular.module('clotho.core').service('Collector',
              */
 
             var handle_storage_change = function(e) {
-                //console.log("change made to local storage");
+                //Debugger.log("change made to local storage");
                 if (!e) { e = $window.event; }
 
                 //TODO - better checking for e.key across browsers
                 var uuid = e.key.replace(prefix, '') || '';
                 var obj = getItem(uuid);
-                console.log("handle_storage_event for " + uuid);
+	            Debugger.log("handle_storage_event for " + uuid);
                 broadcastModelUpdate(uuid, obj)
             };
 
@@ -159,13 +161,13 @@ angular.module('clotho.core').service('Collector',
         var storeModel = function(uuid, obj, force) {
 	          //todo - ensure that what is in collector also matches localStorage
             if (force || !angular.equals(retrieveRef(uuid), obj)) {
-                console.log("COLLECTOR\t" + uuid + " - saving", collector[uuid], obj);
+	            Debugger.log(uuid + " (saving)", collector[uuid], obj);
                 silentAddModel(uuid, obj);
                 broadcastModelUpdate(uuid, obj);
-                //testing console.log(collector[uuid]);
+                //testing Debugger.log(collector[uuid]);
             }
             else {
-                console.log("COLLECTOR\t" + uuid + " - model unchanged");
+	            Debugger.log(uuid + " (model unchanged)");
             }
         };
 

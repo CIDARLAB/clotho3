@@ -1,7 +1,7 @@
 //note - written using lodash internally
 
 angular.module('clotho.core').service('PubSub',
-	function ($rootScope) {
+	function ($rootScope, Debug) {
 
 		//see if already exists, don't re-instantiate
 		return (window.$clotho.$pubsub) ? window.$clotho.$pubsub : window.$clotho.$pubsub = generatePubSubObject();
@@ -29,6 +29,8 @@ angular.module('clotho.core').service('PubSub',
 
 			//split events passed in by a space
 			var eventSplitter = /\s+/;
+
+			var Debugger = new Debug('PubSub', '#cc5555');
 
 			/*********
 			 Internal Helpers
@@ -111,10 +113,10 @@ angular.module('clotho.core').service('PubSub',
 			 **********/
 
 			var logListeners = function () {
-				console.log('PUBSUB - Listeners');
+				Debugger.log('LISTENERS:');
 				_.forEach(map, function (val, key) {
-					console.log(key);
-					console.table(map[key])
+					Debugger.log(key);
+					Debugger.table(map[key])
 				});
 			};
 
@@ -137,7 +139,7 @@ angular.module('clotho.core').service('PubSub',
 				//loop through each passed topic
 				_.forEach(splitTopics(topic), function (current) {
 					//loop through each subscriber
-					console.log('PUBSUB - Publish on ' + current, args);
+					Debugger.log('Publish on ' + current, args);
 					if (checkTopicHasSubs(current)) {
 
 						_.map(_.sortBy(map[current], 'priority'), function (subscriber, index) {

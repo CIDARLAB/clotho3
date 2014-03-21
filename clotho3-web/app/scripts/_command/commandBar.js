@@ -1,12 +1,14 @@
 //rename directive
 
-angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, $timeout, $q, $document) {
+angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
 		dateFilter : 'mediumTime',
 		timeFilter : 'timestamp'
 	};
+
+	var Debugger = new Debug('Command Bar', "#ffbb55");
 
 	/******* elements ******/
 
@@ -145,7 +147,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	function receiveMessage (data) {
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
 		log.entries.unshift(data);
-		console.log('LOG - entries: ', log.entries);
+		Debugger.log('LOG - entries: ', log.entries);
 		display.show('logSnippet');
 		log.startLogTimeout();
 	}
@@ -163,7 +165,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	};
 
 	var execute = function (command) {
-		console.log("this would be run: " + command);
+		Debugger.log("execute called (not implemented) " + command);
 		display.hide('autocomplete');
 		display.undetail();
 	};
@@ -173,9 +175,9 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 			query = display.query;
 
 		/*
-		 console.log(query);
-		 console.log(display.queryHistory);
-		 console.log(log.entries)
+		 Debugger.log(query);
+		 Debugger.log(display.queryHistory);
+		 Debugger.log(log.entries)
 		 */
 
 		if (!!query) {

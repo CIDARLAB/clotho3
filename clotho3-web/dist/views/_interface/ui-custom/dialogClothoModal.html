@@ -3,5 +3,6 @@
     <h3 class="modal-title">{{ title }}</h3>
 </div>
 <div class="modal-body">
-    <div ng-bind-html="transclude"></div>
+    <clotho-show ng-if="showId" id="showId"></clotho-show>
+    <div ng-if="!showId" ng-bind-html="transclude"></div>
 </div>

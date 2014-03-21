@@ -5,7 +5,7 @@
  */
 
 angular.module('clotho.core').service('Socket',
-	function($window, $q, PubSub, ClientAPI) {
+	function($window, $q, PubSub, ClientAPI, Debug) {
 
 	//note - ensuring page-wide singleton
 	return ($window.$clotho.$socket) ?
@@ -19,17 +19,19 @@ angular.module('clotho.core').service('Socket',
 		    socketReady,
 		    socketQueue = [];
 
+	    var Debugger = new Debug('Socket', '#5555bb');
+
 	    //expecting a string
 	    function socket_send (data) {
 		    if (!socketReady) {
-			    console.log('socket not ready, queueing request: ', data);
+			    Debugger.log('(not ready) queueing request: ', data);
 			    socketQueue.push(data);
 			    return;
 		    }
 
 		    data = angular.isObject(data) ? JSON.stringify(data) : data;
 
-		    console.log("SOCKET\tsending data: " + data);
+		    Debugger.log('sending data: ' + data);
 		    socket.send(data);
 	    }
 
@@ -49,12 +51,12 @@ angular.module('clotho.core').service('Socket',
 	    }
 
 	    if (socket.readyState == 1) {
-		    console.log('socket already present, sending items in socket Queue');
+		    Debugger.log('already exists, sending items in socket Queue...');
 		    socketReady = true;
 		    sendSocketQueue();
 	    } else {
 		    socket.onopen = function() {
-			    console.log('socket opened, sending queued items');
+			    Debugger.log('opened, sending queued items...');
 			    socketReady = true;
 			    sendSocketQueue();
         }
@@ -62,7 +64,7 @@ angular.module('clotho.core').service('Socket',
 	    }
 
 	    socket.onerror = function(err) {
-		    console.error('socket error: ', err);
+		    Debugger.error(err);
 	    };
 
       socket.onclose = function(evt) {
@@ -121,7 +123,7 @@ angular.module('clotho.core').service('Socket',
             obj = JSON.parse(obj.data);
 
             // testing
-            console.log('SOCKET\treceived', obj);
+            Debugger.log('received', obj);
 
             var channel = obj.channel;
             var requestId = obj.requestId;
@@ -129,13 +131,13 @@ angular.module('clotho.core').service('Socket',
 
             // it's the ClientAPI method's responsibility to handle data appropriately.
             if (typeof ClientAPI[channel] == 'function') {
-                //console.log("SOCKET\tmapping to ClientAPI - " + channel);
+                //Debugger.log("mapping to ClientAPI - " + channel);
                 ClientAPI[channel](data);
             }
             /*
             //for custom listeners attached
             else if (typeof customChannels[channel+':'+requestId] == 'function') {
-                console.log("SOCKET\tmapping to custom listeners - " + channel);
+                Debugger.log("mapping to custom listeners - " + channel);
                 trigger(channel, data);
             }
             */
