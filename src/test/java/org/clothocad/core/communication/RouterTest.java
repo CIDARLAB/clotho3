@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -44,7 +45,10 @@ public class RouterTest {
     public static void setUpClass() {
         injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         router = injector.getInstance(Router.class);
-        SecurityUtils.setSecurityManager(new DefaultSecurityManager());
+        SecurityManager securityManager = injector.getInstance(SecurityManager.class);
+        SecurityUtils.setSecurityManager(securityManager);
+        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
+        TestUtils.setupTestUsers(realm);
     }
 
     @AfterClass
@@ -190,6 +194,36 @@ public class RouterTest {
         
     }
 
+        
+    //Test for persisting values in the scripting environment
+    
+    @Test
+    public void mindPersistenceTest() {
+        TestConnection connection = new TestConnection("persistenceTest");
+        Map<String,String> credentials = new HashMap<>();
+        credentials.put("username", "testuser");
+        credentials.put("password", "password");
+        
+        //login as testuser
+        sendMessage(new Message(Channel.login, credentials, "7"), connection);
+        Object data = connection.messageDataByChannelAndId.get(Channel.login.name()+"7");
+        assertTrue((Boolean) data);
+        //set value
+        sendMessage(new Message(Channel.submit, "var persistMe = 42 ", "8"), connection);
+        //logout
+        sendMessage(new Message(Channel.logout, "", "9"), connection);
+        //check that value is not available to anonymous user
+        sendMessage(new Message(Channel.submit, "persistMe", "9"), connection);
+        data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"9");
+        assertNotEquals(data, 42);
+        //login again as testuser
+        sendMessage(new Message(Channel.login, credentials, "10"), connection);
+        //check value is available again
+        sendMessage(new Message(Channel.submit, "persistMe", "11"), connection);
+        data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"11");
+        assertEquals(data, 42);
+    }
+    
     //TODO:
     public void testConstructFunctionStreamlined() {
         String script = 
