@@ -1,8 +1,11 @@
 package org.clothocad.core.communication;
 
+import com.google.common.collect.Lists;
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -121,17 +124,17 @@ public class Router {
                     
                 //TODO:
                 case getAll:
-                    response = api.getAll((List) data);
+                    response = api.getAll(asList(data));
                     break;
                 case createAll:
-                    response = api.createAll((List) data);
+                    response = api.createAll(asList(data));
                     break;
                 case destroyAll:
-                    api.destroyAll((List) data);
+                    api.destroyAll(asList(data));
                     response = Void.TYPE;
                     break;
                 case setAll:
-                    api.setAll((List) data);
+                    api.setAll(asList(data));
                     response = Void.TYPE;
                     break;
                 case queryOne:
@@ -240,7 +243,6 @@ public class Router {
         
         Map<String,Object> query = new HashMap();
         query.put("username", username);
-        query.put("className", Mind.class.getCanonicalName());
         try{
             Iterable<ObjBase> minds = persistor.find(query);
 
@@ -258,6 +260,20 @@ public class Router {
             ex.printStackTrace();
             throw ex;
         }
+    }
+    
+    
+    //TODO: make everything in the API use iterators instead of lists
+    private static List asList(Object o){
+        //iterator case
+        if (Iterator.class.isInstance(o)){
+            return Lists.newArrayList((Iterator) o);
+        } else if (Iterable.class.isInstance(o)){
+            return Lists.newArrayList((Iterable) o);
+        } else if (o instanceof Object[]){
+            return Arrays.asList((Object []) o);
+        }
+        throw new UnsupportedOperationException("Couldn't convert argument to a List");
     }
 
 }
