@@ -4,6 +4,18 @@
  */
 package org.clothocad.core.datums;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,7 +25,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.persistence.IdUtils;
-import org.clothocad.core.schema.Schema;
 
 /**
  *
@@ -26,7 +37,9 @@ public class Argument {
     @Getter
     private String name;
     @Getter
-    //XXX: @Replace(encoder = "jsonifyFieldType", decoder = "decodeFieldType")
+    //XXX: Should probably be Type instead
+    @JsonSerialize(using = ArgTypeSerializer.class)
+    @JsonDeserialize(using = ArgTypeDeserializer.class)
     private Class type;
 
     public Argument(String name, Class type) {
@@ -34,15 +47,11 @@ public class Argument {
         this.type = type;
     }
 
-    public String jsonifyFieldType() {
-        Class c = this.type;
+    public static String jsonifyFieldType(Class c) {
 
-        if (Schema.isSchemaClassName(c.getName())) ///XXX: fix for inner classes
-        {
-            return Schema.extractIdFromClassName(c.getName());
-        }
         if (ObjBase.class.isAssignableFrom(c)) {
-            return c.getSimpleName();
+            //we should write the schema name
+            return c.getName();
         }
         if (ObjectId.class.isAssignableFrom(c)) {
             return "id";
@@ -76,8 +85,8 @@ public class Argument {
         log.warn("Unable to jsonify field type {}", c.getName());
         return "object";
     }
+    protected final static Map<String, Class> classMap;
 
-    protected final static Map<String,Class> classMap;
     static {
         //todo: make immutable
         classMap = new HashMap<>();
@@ -89,22 +98,44 @@ public class Argument {
         classMap.put("date", Date.class);
         classMap.put("object", Map.class);
     }
-    
-    public void decodeFieldType(Map object) {
-        String s = (String) object.get("type");
 
+    public static Class decodeFieldType(String s) {
         Class c = classMap.get(s.toLowerCase());
-        if (c != null){
-            type = c;
-            return;
-        }   
+        if (c != null) {
+            return c;
+        }
         ObjectId id;
         id = IdUtils.resolveSelector(s, true);
         try {
-            
-            type = IdUtils.getClass(id);
+            return IdUtils.getClass(id);
         } catch (ClassNotFoundException ex) {
-            throw new RuntimeException("Could not find schema: "+ s, ex);
+            throw new RuntimeException("Could not find schema: " + s, ex);
+        }
+    }
+
+    public static class ArgTypeSerializer extends JsonSerializer<Class> {
+
+        @Override
+        public void serialize(Class value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+            jgen.writeString(jsonifyFieldType(value));
+        }
+
+        @Override
+        public void serializeWithType(Class value, JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException, JsonProcessingException {
+            serialize(value, jgen, provider);
+        }
+    }
+
+    public static class ArgTypeDeserializer extends JsonDeserializer<Class> {
+
+        @Override
+        public Class deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            JsonToken t = jp.getCurrentToken();
+            if (t.isScalarValue()) {
+                return decodeFieldType(jp.getValueAsString());
+            } else {
+                throw new IllegalArgumentException("Cannot read argument type from " + t);
+            }
         }
     }
 }
