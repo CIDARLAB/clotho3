@@ -4,6 +4,8 @@
  */
 package org.clothocad.core.communication;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.NullSerializer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,8 @@ import org.mozilla.javascript.NativeObject;
  * @author spaige
  */
 //XXX: actually JavaScriptAPI
+//this class should never be serialized
+@JsonSerialize(using = NullSerializer.class)
 public class ScriptAPI {
     ServerSideAPI api;
     Mind mind;
@@ -94,7 +98,11 @@ public class ScriptAPI {
         }
         
         //some kind of circular dependency detection would be good
-        return mind.getEngine().eval(module.getCodeToLoad(), module.getLanguage(), this);
+        try{
+            return mind.getEngine().eval(module.getCodeToLoad(), module.getLanguage(), this);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load module "+module.getName()+" because of error: " +e.toString(),e);
+        }
     }
     
     public void say(String text){
