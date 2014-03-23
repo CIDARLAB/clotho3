@@ -4,11 +4,11 @@
  */
 package org.clothocad.core.datums;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
-import lombok.Setter;
 import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
 import org.clothocad.core.execution.JavaScriptScript;
@@ -19,6 +19,8 @@ import org.clothocad.core.persistence.annotations.ReferenceCollection;
  *
  * @author spaige
  */
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY, 
+                setterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY)
 public class Module extends ObjBase {
     
     protected Script code;
@@ -26,19 +28,34 @@ public class Module extends ObjBase {
     protected Module[] dependencies;
     protected String description;
     @Getter
-    @Setter
+    //it's currently unclear to me whether modules or scripts or both 
+    //should have the language parameter
+    
+    //right now scripts are just serialized to the string representation of their source code, 
+    // which is nice and simple
+    // but that means we can't have modules with different languages inside them
     protected Language language;
 
     public Module() {
     }
     
-    
-    public String encodeScript(){
-        return code.toString();
+    public void setLanguage(Language language){
+        this.language = language;
+        //check for cached code
+        if (cachedCode != null){
+            setCode(cachedCode, language);
+            cachedCode = null;
+        }
     }
     
+    private transient String cachedCode;
+    
     public void setCode(String code){
-        setCode(code, language);
+        if (language != null) setCode(code, language);
+        else {
+            //cache to set later when language is set
+            cachedCode = code;
+        }
     }
     
     protected void setCode(String code, Language language){
@@ -52,10 +69,6 @@ public class Module extends ObjBase {
             default:
                 throw new UnsupportedOperationException("unsupported language");
         }          
-    }
-    
-    public void decodeScript(Map obj){
-        setCode((String) obj.get("code"), Language.valueOf((String) obj.get("language")));
     }
     
 //    @PrePersist
@@ -86,24 +99,31 @@ public class Module extends ObjBase {
     
     private static Set<ObjectId> getDependencySet(Module[] dependencies) {
         Set<ObjectId> output = new HashSet<>();
-        for (Module obj : dependencies){
+        
+        if (dependencies != null) for (Module obj : dependencies){
             output.add(obj.getId());
         }
         return output;
     }
     
+
     public String getCode() {
-        return code.getSource();
+        if (language == null) return cachedCode;
+        return code.toString();
     }
     
+    @JsonIgnore
     public String getCodeToLoad() {
         return code.encapsulateModule(code.getSource(), getSetup());
     }
     
+    @JsonIgnore
     public String getSetup(){
+        syncDependencies();
         return this.code.generateImports(getDependencySet(dependencies));
     }
 
+    @JsonIgnore
     public Function getFunction(String name) {
         Function function = new Function(name, null, null, null, language);
         function.dependencies = new Module[]{this};
