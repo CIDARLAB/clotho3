@@ -52,19 +52,19 @@ testThroughAsync("get",
         });
 
 testThroughAsync("query Parts",
-        new Message("query", {"schema":"Part"}),
+        new Message("query", {"schema":"org.clothocad.model.Part"}),
         function (data) {
             equal(data.length, 55);
         });
 
 testThroughAsync("query BasicParts",
-        new Message("query", {"schema":"BasicPart"}),
+        new Message("query", {"schema":"org.clothocad.model.BasicPart"}),
         function (data) {
             equal(data.length, 54);
         });
 
 testThroughAsync("query CompositeParts",
-        new Message("query", {"schema":"CompositePart"}),
+        new Message("query", {"schema":"org.clothocad.model.CompositePart"}),
         function (data) {
             equal(data.length, 1); 
             data = data[0]
@@ -105,7 +105,7 @@ asyncTest("create", function () {
 asyncTest("create with schema", function () {
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
-        socket.send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"BasicPart"}), function (data) {
+        socket.send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"org.clothocad.model.BasicPart"}), function (data) {
             socket.send(new Message("get", "Created Part 2"), function (data2) {
                 ok(data2.hasOwnProperty("schema"));
                 ok(!(data2.hasOwnProperty("className")));
@@ -191,17 +191,17 @@ asyncTest("reload models", function(){
 module("Functions and Modules")
 
 asyncTest("changing function", function(){
-    var f1 = {"schema":"Function","language":"JAVASCRIPT", "code":"function(){return 1;};"};
-    var f2 = {schema:"Function",language:"JAVASCRIPT", "code":"function(){return 2;};"};
+    var f1 = {schema:"org.clothocad.core.datums.Function",language:"JAVASCRIPT", code:"function(){return 1;};"};
+    var f2 = {schema:"org.clothocad.core.datums.Function",language:"JAVASCRIPT", code:"function(){return 2;};"};
 
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
         socket.send(new Message("create", f1), function(id){
-            socket.send(new Message("run", {"id":id, "args":[]}), function(result){
+            socket.send(new Message("run", {"id":id, args:[]}), function(result){
                 equal(result, 1);
                 f2.id = id;
                 socket.send(new Message("set", f2), function(data){
-                    socket.send(new Message("run", {id:id, args:[]}), function(result){
+                    socket.send(new Message("run", {"id":id, args:[]}), function(result){
                         equal(result,2);
                         start();
                     });
@@ -245,10 +245,22 @@ testThroughAsync("importing external library",
         function (data) {
             equal(data, null);
         });
+//TODO: test case for multiple dependencies
+
 testThroughAsync("use lodash",
         new Message("run", {id: "useLodash", args:[]}),
         function(data){
             deepEqual(data, [2,3,4]);
+        });
+testThroughAsync("run revcomp",
+        new Message("run", {id:'DNA', "function":"revcomp", args:['acgtac']}),
+        function(data){
+            equal(data,'gtacgt');
+        });
+testThroughAsync("run ligate",
+        new Message("run", {id:'PCR', "function":"ligate", args:[['aaaaaaaaaaA^CATG_', '^CATG_Tttggttggttgg']]}),
+        function (data){
+            equal(data, "aaaaaaaaaaACATGTttggttggttgg");
         });
 
 module("SynBERC demo issues - all through submit channel")
