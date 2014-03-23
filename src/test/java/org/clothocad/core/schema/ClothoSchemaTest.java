@@ -77,12 +77,12 @@ public class ClothoSchemaTest {
     public static Schema createFeatureSchema() {
 
         ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", false, Access.PUBLIC);
-        field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
+        //field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
         Set<ClothoField> fields = Sets.newHashSet(field);
 
         ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
 
-        ObjectId id = new ObjectId();
+        ObjectId id = new ObjectId("org.clothocad.schemas.SimpleFeature");
         featureSchema.setId(id);
         p.save(featureSchema);
 

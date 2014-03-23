@@ -69,7 +69,7 @@ public abstract class Schema extends SharableObjBase {
     //can get bytecode from functions? 
    
     public String getBinaryName(){
-        return BASE_PACKAGE_BINARY + "C"+ this.getId();
+        return this.getId().toString();
     }
     
     public static String getBinaryName(ObjectId id){
@@ -86,8 +86,7 @@ public abstract class Schema extends SharableObjBase {
     }
     
     public static String extractIdFromClassName(String className){
-        String[] a =  className.split("\\.");
-        return a[a.length-1].substring(1);
+        return className;
     }
     
     public static boolean isSchemaClassName(String className){
