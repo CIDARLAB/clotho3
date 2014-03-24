@@ -1,7 +1,5 @@
 package org.clothocad.core.datums;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
@@ -34,10 +32,6 @@ import org.clothocad.core.security.Visibility;
 @Data()
 @NoArgsConstructor
 @Slf4j
-@JsonAutoDetect(fieldVisibility=com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY,
-                getterVisibility=com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
-                isGetterVisibility=com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
-                setterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "schema", include = JsonTypeInfo.As.PROPERTY)
 @JsonTypeResolver(WideningDefaultTypeResolverBuilder.class)
 public abstract class ObjBase {

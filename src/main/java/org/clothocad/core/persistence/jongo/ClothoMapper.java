@@ -9,6 +9,7 @@ import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.jackson.IdRenamingMixin;
 import org.clothocad.core.persistence.jongo.ClothoObjectIdUpdater.ClothoIdFieldSelector;
+import org.clothocad.core.util.JSON.ClothoJacksonModule;
 import org.jongo.Mapper;
 import org.jongo.ObjectIdUpdater;
 import org.jongo.marshall.Marshaller;
@@ -64,6 +65,7 @@ public class ClothoMapper implements Mapper {
             super();
         }
         
+        @Override
         public Mapping createMapping(){
             //add customizations
             addModifier(new MapperModifier() {
@@ -74,6 +76,7 @@ public class ClothoMapper implements Mapper {
                         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
                         //mapper.setDefaultTyping(typer);
                         
+                        mapper.registerModule(new ClothoJacksonModule());
                         //add "id" -> "_id" renaming mixin
                         mapper.addMixInAnnotations(ObjBase.class, IdRenamingMixin.class);
                     }
