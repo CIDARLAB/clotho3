@@ -59,7 +59,7 @@ angular.module('clotho.core')
 			messages[namespace] = [];
 			var debugFunctionality = {};
 
-			//todo - special handling for table / debug
+			//todo - special handling for table
 
 			angular.forEach(['log', 'warn', 'error', 'debug', 'info', 'table'], function (term) {
 				debugFunctionality[term] = function (msg) {

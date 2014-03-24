@@ -122,7 +122,6 @@ angular.module('clotho.core').service('Socket',
 
             obj = JSON.parse(obj.data);
 
-            // testing
             Debugger.log('received', obj);
 
             var channel = obj.channel;
@@ -143,7 +142,11 @@ angular.module('clotho.core').service('Socket',
             */
             // don't know what to do, so publish to PubSub
             else {
-                PubSub.trigger(channel+':'+requestId, [data]);
+	            if (requestId) {
+		            PubSub.trigger(channel+':'+requestId, [data]);
+	            } else {
+		            PubSub.trigger(channel, [data]);
+	            }
             }
         };
 
