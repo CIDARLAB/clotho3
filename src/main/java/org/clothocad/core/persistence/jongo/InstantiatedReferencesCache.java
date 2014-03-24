@@ -7,6 +7,7 @@ package org.clothocad.core.persistence.jongo;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.InjectableValues;
+import com.fasterxml.jackson.databind.JavaType;
 import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.datums.ObjBase;
@@ -27,9 +28,14 @@ public class InstantiatedReferencesCache extends InjectableValues.Std{
 
     @Override
     public Object findInjectableValue(Object valueId, DeserializationContext ctxt, BeanProperty forProperty, Object beanInstance) {
+        //if a container, get content type
         
-        if (ObjBase.class.isAssignableFrom(forProperty.getType().getRawClass())){
-            Class<ObjBase> c = (Class<ObjBase>) forProperty.getType().getRawClass();
+        JavaType type = forProperty.getType();
+        if (type.isCollectionLikeType() | type.isArrayType()){
+            type = type.getContentType();
+        }
+        if (ObjBase.class.isAssignableFrom(type.getRawClass())){
+            Class<ObjBase> c = (Class<ObjBase>) type.getRawClass();
             try {
                 //already made an object for this id - return it
                 return super.findInjectableValue(valueId, ctxt, forProperty, beanInstance);
