@@ -23,6 +23,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.execution;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,8 +62,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author John Christopher Anderson
  */
-
-public final class Mind 
+public class Mind 
 		extends ObjBase {
 	
     static final Logger logger = LoggerFactory.getLogger(Mind.class);
@@ -148,7 +148,7 @@ public final class Mind
     
     private transient List<Message> lastCommands = new ArrayList<>();
     
-    private transient MetaEngine engine;
+    private MetaEngine engine;
     
     private  List<String> lastSharables = new ArrayList<>();
     @Getter @Setter 
