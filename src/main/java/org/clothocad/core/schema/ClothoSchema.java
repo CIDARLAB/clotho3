@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.schema;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
@@ -37,6 +38,7 @@ public class ClothoSchema extends Schema {
     }
 
     @Override
+    @JsonProperty("language")
     public Language getLanguage() {
         return Language.JSONSCHEMA;
     }
@@ -88,6 +90,8 @@ public class ClothoSchema extends Schema {
                 fv.visitAnnotation(Type.getType(Reference.class).getInternalName(), true).visitEnd();
             }
 
+            //XXX: disabling constraints (see ClothoField.java for explanation)
+            /*
             if (field.getConstraints() != null) {
                 for (Constraint c : field.getConstraints()) {
                     logger.trace("{}.visitAnnotation({},{})", fv, Type.getDescriptor(c.getAnnotation()), true);
@@ -99,7 +103,7 @@ public class ClothoSchema extends Schema {
                     av.visitEnd();
                 }
             }
-
+*/
             logger.trace("{}.visitEnd", fv);
             fv.visitEnd();
             //getters and setters
