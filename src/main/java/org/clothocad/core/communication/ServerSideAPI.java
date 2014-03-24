@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import lombok.extern.slf4j.Slf4j;
@@ -378,12 +379,11 @@ public class ServerSideAPI {
         return create(JSON.mappify(o)).toString();
     }
 
-    //TODO: some global solution for jsonifying ObjectIds
     public final List<String> createAll(List<Object> objects) {
         List<String> returnData = new ArrayList<>();
         //list of selectors?
         for (Object obj : objects) {
-            returnData.add(create(JSON.mappify(obj)).toString());
+            returnData.add(create((Map) obj).toString());
         }
         return returnData;
     }
@@ -497,6 +497,7 @@ public class ServerSideAPI {
 
         if (data.containsKey(ID)) {
             //XXX:(ugh ugh) end-run if *Function
+            //TODO: remove lookup
             Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get(ID).toString(), true));
             //XXX: should just fetch schema, then check if Function is ancestor of schema
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
