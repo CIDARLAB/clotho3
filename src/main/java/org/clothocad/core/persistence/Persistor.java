@@ -550,7 +550,7 @@ public class Persistor{
         spec.put("name", selector);
         /* TODO: class & superclass discrimination
          * if (type != null) {
-            spec.put("className", type);
+            spec.put("schema", type);
         }*/
 
         //name of something?

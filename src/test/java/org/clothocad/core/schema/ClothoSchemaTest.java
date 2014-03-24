@@ -121,6 +121,7 @@ public class ClothoSchemaTest {
         BSONObject data = new BasicDBObject();
         data.put("name", "BadSequence");
         data.put("sequence", "This is not a valid sequence.");
+        data.put("schema", featureSchema.getId().toString());
         try {
             ObjBase featureInstance = instantiateSchema(data, featureSchema);
             fail();

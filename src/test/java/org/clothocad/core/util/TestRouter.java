@@ -31,7 +31,7 @@ public class TestRouter extends Router {
     public void receiveMessage(ClientConnection connection, Message request) {
         if (request.channel == Channel.reloadModels){
             Map<String,Object> query = new HashMap<>();
-            query.put("className", "org.clothocad.core.schema.BuiltInSchema");
+            query.put("schema", "org.clothocad.core.schema.BuiltInSchema");
             List<Map<String,Object>> results = persistor.findAsBSON(query);
             List ids = new ArrayList();
             for (Map<String,Object> result : results){
