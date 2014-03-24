@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -35,7 +34,9 @@ import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.security.CredentialStore;
+import org.clothocad.core.util.JSON;
 import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
 
@@ -54,15 +55,17 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     protected RefMongoCollection data;
     protected DBCollection cred;
     protected DBCollection rawDataCollection;
+    
+    protected DBClassLoader classLoader;
     private static final TypeReference<Map<String, Object>> STRINGMAP = new TypeReference<Map<String, Object>>() {
     };
 
     @Inject
-    public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname) throws UnknownHostException {
+    public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
         cred = db.getCollection("cred");
-
+        classLoader = dbClassLoader;
     }
 
     @Override
@@ -76,7 +79,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         mapper.disable(FAIL_ON_EMPTY_BEANS);
         //mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
         //jongo mimicking over
-        
+        mapper.registerModule(new JSON.ClothoJacksonModule());
+
         /**
          * redundant with ObjBase annotations
          *
@@ -174,6 +178,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public <T extends ObjBase> T get(Class<T> type, ObjectId uuid) {
+        bindClassLoader();
         return data.resolvingFindOne("{_id:#}", uuid.toString()).as(type);
     }
 
@@ -184,21 +189,25 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public List<ObjBase> get(Map query) {
+        bindClassLoader();
         return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).as(ObjBase.class));
     }
 
     @Override
     public List<ObjBase> get(String name) {
+        bindClassLoader();
         return Lists.newArrayList(data.resolvingFind("{name:#}", name).as(ObjBase.class));
     }
 
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
+        bindClassLoader();
         return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).as(type));
     }
 
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, String name) {
+        bindClassLoader();
         return Lists.newArrayList(data.resolvingFind("{name:#}", name).as(type));
 
     }
@@ -225,12 +234,14 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public <T extends ObjBase> T getOne(Class<T> type, Map query) {
-        return data.findOne(serialize(mongifyIdField(query))).as(type);
+        bindClassLoader();
+        return data.resolvingFindOne(serialize(mongifyIdField(query))).as(type);
     }
 
     @Override
     public <T extends ObjBase> T getOne(Class<T> type, String name) {
-        return data.findOne("{name:#}", name).as(type);
+        bindClassLoader();
+        return data.resolvingFindOne("{name:#}", name).as(type);
     }
 
     @Override
@@ -341,6 +352,13 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
             obj.put(ID, id);
         }
         return obj;
+    }
+
+    private void bindClassLoader() {
+        //Set up classloader to look in db for class definitions.
+        // this may not be the right place to do this - not sure if better to do this on thread spawn always
+        //classloader is singleton that delegates to root classloader, so no classloader hairiness should happen
+        Thread.currentThread().setContextClassLoader(classLoader);
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
