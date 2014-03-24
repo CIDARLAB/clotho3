@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import java.io.IOException;
 import org.clothocad.core.datums.ObjBase;
 
@@ -19,6 +20,7 @@ import org.clothocad.core.datums.ObjBase;
  *
  * @author spaige
  */
+//TODO: figure out what to do when a reference can't be resolved
 public class ReferenceDeserializer extends JsonDeserializer<ObjBase> implements ContextualDeserializer {
 
     BeanProperty property;
@@ -32,6 +34,11 @@ public class ReferenceDeserializer extends JsonDeserializer<ObjBase> implements 
             return (ObjBase) ctxt.findInjectableValue(jp.getValueAsString(), property, null);
         }
         else throw new IllegalArgumentException("Cannot read objectid from "+t);
+    }
+
+    @Override
+    public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException, JsonProcessingException {
+        return deserialize(jp, ctxt);
     }
 
     @Override
