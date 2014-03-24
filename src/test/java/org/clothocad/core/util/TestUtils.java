@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
@@ -138,6 +139,10 @@ public class TestUtils {
         persistor.save(part1);
         persistor.save(part2);
         persistor.save(part3);
+        
+        Function dummyPackager = DummyPackager.createDummyPackager();
+        persistor.save(dummyPackager);
+        
         ObjectId eugeneID = persistor.save(eugenePart);
 
         return Arrays.asList(part1.getId(), part2.getId(), part3.getId(), eugeneID);
@@ -151,7 +156,7 @@ public class TestUtils {
         String serialized = JSON.serializeForExternal(o);
         try {
             return JSON.deserializeObjectToMap(serialized);
-        } catch (JsonParseException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             return null;
         }

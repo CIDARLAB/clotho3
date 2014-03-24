@@ -1,10 +1,27 @@
 <div ng-controller="Editor_SharableCtrl">
 
-    <legend>Sharable Editor</legend>
-    <div class="ng-cloak">
-        <!--don't include _objBaseFields as they are generated in insert-fields-->
-        <insert-fields></insert-fields>
+    <fieldset class="ng-cloak" ng-disabled="!editMode">
+        <legend>Sharable Editor</legend>
+        <div form-field-enumeration sharable="sharable"></div>
 
-        <div ng-include="_formActions"></div>
-    </div>
+        <div class="form-group" ng-show="editMode">
+            <div class="col-md-3">
+                <input type="text" class="form-control" ng-model="newFieldKey" placeholder="New Field Key">
+            </div>
+            <div class="col-md-7">
+                <input type="text" class="form-control" ng-model="newFieldVal" placeholder="New Field Value">
+            </div>
+            <button ng-click="addNewField()" class="btn btn-default col-md-2" ng-disabled="!newFieldVal || !newFieldKey">Add Field</button>
+        </div>
+
+        <button ng-show="editMode && !showJsonEditor" type="button" class="btn btn-default" ng-click="toggleJsonEdit()">Edit Json</button>
+        <div ng-show="showJsonEditor">
+            <hr>
+            <form-field name="Edit JSON directly">
+                <textarea json-edit ng-model="$parent.sharable" rows="12"></textarea>
+            </form-field>
+        </div>
+
+    </fieldset>
+    <div ng-include="_formActions"></div>
 </div>

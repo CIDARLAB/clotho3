@@ -58,25 +58,25 @@ angular.module('clotho.clothoDirectives')
 				updateParent = !!newval;
 			});
 
-			var updateParentModel = function(newModel) {
+			function updateParentModel (newModel) {
 				if (updateParent) {
 					//todo - make sure passes up to $parent
 					ngModel.$setViewValue(newModel);
 				}
-			};
+			}
 
-			var updateElement = function(newval) {
+			function updateElement (newval) {
 				var method = useVal ? 'val' : 'text';
 				element[method](newval);
-			};
+			}
 
 			//form array out of arguments if not an array
-			var parseInput = function(input) {
+			function arrayify (input) {
 				return angular.isArray(input) ? input : [input];
-			};
+			}
 
 			var runFunction = function(input) {
-				input = parseInput(input);
+				input = arrayify(input);
 
 				return Clotho.run(attrs.clothoRun, input).then(function(result) {
 					updateParentModel(result);

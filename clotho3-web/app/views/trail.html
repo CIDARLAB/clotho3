@@ -19,9 +19,7 @@
     </div>
 
         <!--<div class="btn-toolbar pagination-centered">
-
             <div class="btn-group">
-                <button ng-click="home()" class="btn" ng-disabled="content == trail.description"><i class="glyphicon glyphicon-info-sign"></i></button>
                 <button ng-click="favorite()" class="btn" ng-class="{'btn-warning' : favorited}"><i class="glyphicon glyphicon-star"></i></button>
                 <button ng-click="share()" class="btn" alt="share"><i class="glyphicon glyphicon-share"></i></button>
             </div>
@@ -33,7 +31,7 @@
         </div>-->
 
     <div class="col-xs-9" id="trail_view">
-        <div trail-page="currentPage"></div>
+        <div trail-page="currentPage" next="next" prev="prev"></div>
     </div>
 
 </div>

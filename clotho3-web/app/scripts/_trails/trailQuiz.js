@@ -1,4 +1,4 @@
-angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q) {
+angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q, $sce) {
 
 	return {
 		restrict: "EA",
@@ -15,12 +15,15 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 
 					//todo -- rethink extending scope with whole quiz (i.e. want dictionary, but maintain quiz namespace?)
 					angular.extend(scope, scope.quiz);
-					//can't use $interpolate - need to maintain bindings
-					//can't compile with scope.quiz - not a scope object - and can't create isolate because bindings not maintained
+
 					// note - see also grade and retry functions, and load.quiz
-					// todo - use $parse quiz question
-					scope.quiz.question = $compile('<h5>' + scope.quiz.question + '</h5>')(scope);
-					//console.log(scope.quiz.question);
+
+					//$watch in postLink
+					scope.interpolatedQuestion = $interpolate(scope.quiz.question)(scope);
+
+					scope.parsedQuestion = function() {
+						return $sce.trustAsHtml('<h5>' + scope.quiz.question + '</h5>');
+					};
 
 					$http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
 						.success(function (data) {
@@ -32,7 +35,7 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 
 				},
 				post: function postLink(scope, element, attrs) {
-
+					
 					scope.createEmptyAnswer = function(quiz, value) {
 						value = (typeof value != 'undefined') ? value : false;
 						scope.quiz.answer = new Array(quiz.options.length);
@@ -52,9 +55,16 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 							scope.quiz.response = {};
 							scope.quiz.response.result = data;
 							//console.log(scope.gradeCallback);
-							scope.gradeCallback(data);
+
+							if (angular.isDefined(scope.gradeCallback)) {
+								scope.gradeCallback(data);
+							}
 						});
 					};
+
+					scope.$watch('quiz.questionValue', function () {
+						scope.interpolatedQuestion = $interpolate(scope.quiz.question)(scope)
+					});
 
 					scope.resetQuiz = function () {
 						scope.quiz.submitted = false;

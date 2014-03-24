@@ -32,6 +32,7 @@ function generateClothoAPI() {
     //socket communication
     var fn = {};
 
+		//note that angular.toJson will strip $-prefixed keys, so should be avoided
     fn.send = function(pkg) {
         Socket.send(angular.toJson(pkg));
     };
@@ -47,22 +48,21 @@ function generateClothoAPI() {
         fn.send(fn.pack(eventName, data, requestId, options));
     };
 
-    //note: wrappers no longer in use
-    fn.api = {};
-    fn.searchbar = {};
-    fn.api.emit = function (eventName, data, requestId) {
-        fn.emit(eventName, data, requestId);
-    };
-    fn.searchbar.emit = function (eventName, data, requestId) {
-        fn.emit(eventName, data, requestId);
-    };
-
-
     //helper functions
+
+		//pending ES6
+
+		var numberAPICalls = new (function () {
+			var commandNum = 0;
+			this.next = function () {
+				commandNum += 1;
+				return commandNum.toString();
+			};
+		});
 
     fn.emitSubCallback = function(channel, data, func, options) {
         var deferred = $q.defer(),
-            requestId = Date.now().toString();
+            requestId = Date.now().toString() + numberAPICalls.next();
 
         if (!angular.isFunction(func))
             func = angular.noop() ;
@@ -115,6 +115,18 @@ function generateClothoAPI() {
         var cred = {username: username, password: password};
         return fn.emitSubOnce('login', cred);
     };
+
+		/**
+		 * @name Clotho.logout
+		 *
+		 * @description
+		 * Logout of Clotho
+		 *
+		 * @returns {Promise} result of login
+		 */
+		var logout = function clothoAPI_logout() {
+			return fn.emitSubOnce('logout', '');
+		};
 
     /**
      * @name Clotho.get
@@ -312,6 +324,7 @@ function generateClothoAPI() {
      * Destroys listener functions associated with a given reference
      *
      */
+	   //todo - deprecate
     var silence = function clothoAPI_silence(reference) {
         PubSub.destroy(reference);
     };
@@ -326,7 +339,7 @@ function generateClothoAPI() {
      * Emit an object on a custom channel message to the server
      */
     var emit = function clothoAPI_emit(channel, args) {
-        fn.api.emit(channel, args || {});
+        fn.emit(channel, args || {});
     };
 
     /**
@@ -339,7 +352,7 @@ function generateClothoAPI() {
      * Broadcast an object on a given channel on the client
      */
     var broadcast = function clothoAPI_broadcast(channel, args) {
-        fn.api.emit('broadcast', fn.pack(channel, args));
+        fn.emit('broadcast', fn.pack(channel, args));
     };
 
     /**
@@ -452,8 +465,6 @@ function generateClothoAPI() {
      *
      */
     var edit = function clothoAPI_edit(uuid) {
-        //fn.api.emit('edit', uuid);
-
         $location.path("/editor/" + uuid);
     };
 
@@ -523,7 +534,7 @@ function generateClothoAPI() {
      * @param {object} options Example given below
      *
      {
-         "target" : <DOM ELEMENT>    // suggested, otherwise placed outside ng-view
+         "target" : <css selector>   // suggested, otherwise placed outside ng-view
      }
      */
     var show = function(viewId, options) {
@@ -531,7 +542,7 @@ function generateClothoAPI() {
 		    "viewId" : viewId,
 		    "options" : options
 	    };
-        fn.api.emit('show', packaged);
+        fn.emit('show', packaged);
     };
 
 
@@ -543,7 +554,7 @@ function generateClothoAPI() {
     var share = function() {
 	      //todo - need to set up share (outside API)
 	      console.log('need to set up share');
-        //$dialog.share().open();
+        //$modal.share($location.absUrl());
     };
 
 
@@ -557,7 +568,7 @@ function generateClothoAPI() {
      *
      */
     var log = function clothoAPI_log(msg) {
-        fn.api.emit('log', msg);
+        fn.emit('log', msg);
     };
 
     /**
@@ -576,7 +587,7 @@ function generateClothoAPI() {
             "msg" : msg,
             "timestamp" : Date.now()
         };
-        fn.api.emit('say', packaged);
+        fn.emit('say', packaged);
     };
 
     /**
@@ -589,7 +600,7 @@ function generateClothoAPI() {
      *
      */
     var notify = function clothoAPI_notify(data) {
-        fn.api.emit('notify', data);
+        fn.emit('notify', data);
     };
 
     /**
@@ -607,7 +618,7 @@ function generateClothoAPI() {
             "userID" : userID,
             "msg" : msg
         };
-        fn.api.emit('alert', packaged);
+        fn.emit('alert', packaged);
     };
 
     var autocomplete = function(query) {
@@ -629,7 +640,7 @@ function generateClothoAPI() {
             var packaged = {
                 "uuid" : uuid
             };
-            fn.searchbar.emit('autocompleteDetail', packaged);
+            fn.emit('autocompleteDetail', packaged);
 
             //testing
             //PubSub.once('autocompleteDetail_'+'function_id123', function(data) {
@@ -652,7 +663,7 @@ function generateClothoAPI() {
     /**
      * @name Clotho.run
      *
-     * @param {string} func Object UUID or name indicating the function to be run (follows get semantics for ambiguous selectors)
+     * @param {string} func Object UUID or name (as name or module.name) indicating the function to be run (follows get semantics for ambiguous selectors)
      * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
      *
      * @description
@@ -675,7 +686,7 @@ function generateClothoAPI() {
      * @returns {Promise}
      */
     var recent_deprecated = function() {
-        fn.api.emit('requestRecent', {});
+        fn.emit('requestRecent', {});
 
         var deferred = $q.defer();
 
@@ -753,6 +764,7 @@ function generateClothoAPI() {
     return {
         //api
         login : login,
+        logout : logout,
         get : get,
         set : set,
         query : query,
@@ -771,6 +783,11 @@ function generateClothoAPI() {
         notify : notify,
         gradeQuiz : gradeQuiz,
 
+		    //searchbar
+		    submit: submit,
+		    autocomplete : autocomplete,
+		    autocompleteDetail : autocompleteDetail,
+
         //toolkit
         watch : watch,
         listen : listen,
@@ -781,12 +798,7 @@ function generateClothoAPI() {
         on : on,
         once : once,
         off : off,
-        share : share,
-
-        //searchbar
-        submit: submit,
-        autocomplete : autocomplete,
-        autocompleteDetail : autocompleteDetail
+        share : share
 
     }
 

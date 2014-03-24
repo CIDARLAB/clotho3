@@ -379,7 +379,7 @@ angular.module('clotho.dna').directive('constructionField', ['$compile', '$filte
     }
 }]);
 
-angular.module('clotho.dna').directive('constructionStep', ['Construction', '$parse', '$compile', '$http', '$templateCache', '$filter', '$timeout', '$dialog', function(Construction, $parse, $compile, $http, $templateCache, $filter, $timeout, $dialog) {
+angular.module('clotho.dna').directive('constructionStep', function(Construction, $parse, $compile, $http, $templateCache, $filter, $timeout, $modal) {
     return {
         restrict : "EA",
         require: "ngModel",
@@ -500,8 +500,9 @@ angular.module('clotho.dna').directive('constructionStep', ['Construction', '$pa
                     };
 
                     scope.confirmRemoveStep = function() {
-                        var d = $dialog.messageBox('Confirm Remove', 'Are you sure you want to remove this reaction?', [{label: "Cancel", cssClass: "", result: false}, {label: "Remove", cssClass: "btn-danger", result: true}]);
-                        d.open().then(function (result) {
+                        var d = $modal.messageBox('Confirm Remove', 'Are you sure you want to remove this reaction?', [{label: "Cancel", cssClass: "", result: false}, {label: "Remove", cssClass: "btn-danger", result: true}])
+                        .result
+	                      .then(function (result) {
                             if (result) {
                                 scope.removeStep();
                             }
@@ -511,7 +512,7 @@ angular.module('clotho.dna').directive('constructionStep', ['Construction', '$pa
             }
         }
     }
-}]);
+});
 
 angular.module('clotho.dna').directive('constructionFull', ['Construction', function(Construction) {
     return {

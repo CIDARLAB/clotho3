@@ -9,11 +9,11 @@ angular.module('clotho.core').service('ClientAPI',
 
 		//todo - verify this works and retrieves the service properly
 		var interfaceModulePresent = false,
-			$dialog;
+			$modal;
 			try {
 				angular.module('clotho.interface');
 				interfaceModulePresent = true;
-				$dialog = angular.injector('clotho.interface').get('$dialog');
+				$modal = angular.injector('clotho.interface').get('$modal');
 			} catch (err) {
 				// not present
 			}
@@ -44,10 +44,9 @@ angular.module('clotho.core').service('ClientAPI',
 			    backdrop: true,
 			    keyboard: true,
 			    backdropClick: true,
-			    templateUrl:  '<form sharable-editor ng-model="'+uuid+'" class="col-xs-6 form-horizontal well"></form>'
+			    templateUrl:  '<form sharable-editor ng-model="'+uuid+'" class="col-sm-6 form-horizontal well"></form>'
 		    };
-		    var d = $dialog.dialog(dialog_opts);
-		    d.open();
+		    $modal.open(dialog_opts);
 	    } else {
 		    $location.path('/editor/' + uuid)
 	    }
@@ -107,29 +106,27 @@ angular.module('clotho.core').service('ClientAPI',
     /**
      * @name clientAPI.display
      *
-     * @param {object} data
-     * format:
-        {
-            "template" : <url>,         // required
-            "target" : <DOM ELEMENT>    // suggested, or absolute positioning in CSS
-            "args" : {<object>}         // data to copy onto $scope
-            "controller" : <url>,       // optional
-            "dependencies" : [
-                <urls>                  // required if in controller
-            ],
-            styles : {
-                <styles>
-                //e.g.
-                "background-color" : "#FF0000"
-            }
-        }
+     * @param {object} uuid UUID of view to show
+     * @param targetSelector CSS Selector of target to append to, otherwise widget area at bottom
 
      note CAVEATS:
      - currently, controllers etc. must be tied to Application.Extensions.___
      */
-    var display = function clientAPIDisplay(data) {
+    var display = function clientAPIDisplay(uuid, targetSelector) {
 
-        console.log(data);
+	    var showDiv = angular.element('<div clotho-show="'+uuid+'"></div>');
+	    var targetEl = document.querySelector(targetSelector);
+
+	    if (!targetEl) {
+		    targetEl = document.getElementById('clothoAppWidgets');
+	    }
+
+	    targetEl = angular.element(targetEl);
+
+	    targetEl.append($compile(showDiv)($rootScope));
+
+	    /*
+	    console.log(data);
 
         var template = data.template,
             controller = data.controller || "",
@@ -153,20 +150,23 @@ angular.module('clotho.core').service('ClientAPI',
                 console.log("error getting template");
             })
         );
+        */
     };
 
     /**
      * @name clientAPI.hide
      *
-     * @param {string} uuid
-     * @param {function} callback, passed the element
+     * @param {string} uuid of view to remove
+     * @param {function} callback which passed the removed element
      *
      * @description
      * Hide a view on the client
      *
      */
     var hide = function clientAPIHide(uuid, callback) {
-	    callback.apply(null, $("[clotho-show='"+uuid+"']").remove());
+	    var el = angular.element(document.querySelector('[clotho-show="'+uuid+'"]'));
+
+	    callback.apply(null, el.remove());
     };
 
     /**
@@ -198,10 +198,26 @@ angular.module('clotho.core').service('ClientAPI',
      *
      */
     var say = function clientAPISay(data) {
-        data.timestamp = (!!data.timestamp) ? data.timestamp : Date.now();
-        data.from = (!!data.from) ? data.from : 'server';
+      var defaults = {
+	      'class' : 'muted',
+	      'from' : 'server',
+	      'timestamp' : Date.now().valueOf()
+      };
 
-        PubSub.trigger("activityLog", [data]);
+			//alert-info reserved for client-initiated messages
+	    var classMap = {
+		    success : 'success',
+		    warning : 'warning',
+		    failure : 'danger',
+		    normal : 'success',
+		    muted : 'muted',
+		    info : 'info'
+	    };
+
+      angular.extend(defaults, data);
+      defaults.class = classMap[angular.lowercase(defaults.class)];
+
+      PubSub.trigger('activityLog', [defaults]);
     };
 
     /**
@@ -218,8 +234,8 @@ angular.module('clotho.core').service('ClientAPI',
         PubSub.trigger('serverAlert');
 
 		    if (interfaceModulePresent) {
-			    $rootScope.$safeApply($dialog.serverAlert(msg)
-				    .open()
+			    $rootScope.$safeApply($modal.serverAlert(msg)
+				    .result
 				    .then(function(result){
 					    console.log('dialog closed with result: ' + result);
 				    })
@@ -227,8 +243,6 @@ angular.module('clotho.core').service('ClientAPI',
 		    } else {
 			    window.alert(msg);
 		    }
-
-
     };
 
     /**
@@ -250,7 +264,7 @@ angular.module('clotho.core').service('ClientAPI',
      * @param {object} data
      *
      * @description
-     * Publish list of versions for a given resource on "revisions:<uuid>"
+     * Publish list of versions for a given resource on 'revisions:<uuid>'
      */
     var revisions = function clientAPIRevisions(uuid, data) {
         PubSub.trigger('revisions:'+uuid, [data]);
@@ -265,7 +279,7 @@ angular.module('clotho.core').service('ClientAPI',
      * start a trail with a given uuid
      */
     var startTrail = function clothoAPI_startTrail(uuid) {
-        $location.path("/trails/" + uuid);
+        $location.path('/trails/' + uuid);
     };
 
 
@@ -293,7 +307,7 @@ angular.module('clotho.core').service('ClientAPI',
         
         var id = obj.command_object.function_id;
 
-        Collector.storeModel("detail_" + id, obj);
+        Collector.storeModel('detail_' + id, obj);
         PubSub.trigger('autocompleteDetail_'+id, [obj]);
     };
 

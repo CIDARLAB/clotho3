@@ -33,7 +33,7 @@ module.exports = function (grunt) {
 	    },
 	    jsTest: {
 		    files: ['test/spec/**/*.js'],
-		    //tasks: ['newer:jshint:test', 'karma']
+		    tasks: ['newer:jshint:test', 'karma']
 	    },
       compass: {
         files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
@@ -108,7 +108,7 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '.tmp',
-	          'css',
+	          '<%= yeoman.app %>/css',
             '<%= yeoman.dist %>/*',
             '!<%= yeoman.dist %>/.git*'
           ]
@@ -181,7 +181,8 @@ module.exports = function (grunt) {
       },
       dist: {
 	      options: {
-		      debugInfo : false
+		      debugInfo : false,
+		      generatedImagesDir: '<%= yeoman.dist %>/images/generated'
 	      }
       },
       server: {
@@ -255,19 +256,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-    cssmin: {
-      // By default, your `index.html` <!-- Usemin Block --> will take care of
-      // minification. This option is pre-configured if you do not wish to use
-      // Usemin blocks.
-      // dist: {
-      //   files: {
-      //     '<%= yeoman.dist %>/styles/main.css': [
-      //       '.tmp/styles/**/*.css',
-      //       '<%= yeoman.app %>/styles/**/*.css'
-      //     ]
-      //   }
-      // }
-    },
     htmlmin: {
       dist: {
 	      options: {
@@ -279,7 +267,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>',
-          src: ['*.html', 'partials/**/*.html', 'views/**/*.html', 'extensions/**/*.html'],
+          src: ['partials/**/*.html', 'views/**/*.html', 'extensions/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -318,7 +306,7 @@ module.exports = function (grunt) {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
         dest: 'css/',
-        src: '{,*/}*.css'
+        src: '**/*.css'
       }
     },
     concurrent: {
@@ -336,7 +324,7 @@ module.exports = function (grunt) {
         'coffee',
         'compass:dist',
         'copy:styles',
-        'imagemin',
+        //'imagemin',
         'svgmin',
         'htmlmin'
       ]
@@ -383,23 +371,33 @@ module.exports = function (grunt) {
 	  },
 	  shell: {
 		  mongo: {
-			  command: "exec /Users/maxwellbates/Dropbox/clothoApps/clotho3/clotho3-web/startMongoIfNotRunning.sh",
+			  command: "sh startMongoIfNotRunning.sh",
 			  options: {
 				  async: true
 			  }
 		  },
 		  clothoTestServer: {
-			  /* requires mvn command line tools installed
-			  set JAVA_HOME
-			  set JAVA_PATH to java executable
-
-			  e.g. (on a mac) in ~/.profile (or set manually each time)
-
+			  /*
+			   requires mvn command line tools installed:
 			   export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
-			   export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
-			   export JAVA_PATH=$JAVA_HOME/bin/java
 			  */
-			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=$JAVA_PATH -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  },
+		  clothoCleanBuild: {
+			  command: 'cd ..; mvn clean install'
+		  },
+			clothoTestServerVerbose: {
+			  command: 'cd ..; mvn "-Dexec.args= -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  },
+		  clothoProdServer: {
+			  //todo - update to proper server etc (currently just uses /dist/)
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
 			  }
@@ -417,6 +415,15 @@ module.exports = function (grunt) {
 			  '**/*'
 		  ]
 	  },
+	  // Removes unused CSS
+	  //future - integrate when handle dynamically added css
+	  uncss: {
+		  dist: {
+			  files : {
+				  '<%= yeoman.dist %>/styles/main.css': ['<%= yeoman.dist %>/*.html', '<%= yeoman.dist %>/views/**/*','<%= yeoman.dist %>/partials/**/*']
+			  }
+		  }
+	  },
 		//note - this is for versioning
 	  bump: {
 		  options: {
@@ -432,11 +439,6 @@ module.exports = function (grunt) {
 			  commentMarker : 'process', //don't want to use default 'build' bc usemin,
 			  stripUnparsed : true
 		  },
-		  dist : {
-			  files : {
-				  '<%= yeoman.dist %>/index-dist.html': ['<%= yeoman.dist %>/index.html']
-			  }
-		  },
 		  api : {
 			  files : {
 				  '<%= yeoman.dist %>/index-api.html': ['<%= yeoman.dist %>/index.html']
@@ -445,6 +447,11 @@ module.exports = function (grunt) {
 		  command : {
 			  files : {
 				  '<%= yeoman.dist %>/index-command.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  dist : {
+			  files : {
+				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  }
 	  }
@@ -480,6 +487,16 @@ module.exports = function (grunt) {
 		'watch'
 	]);
 
+	grunt.registerTask('dev2', [
+		'shell:mongo',
+		'shell:clothoProdServer',
+		'clean:server',
+		'concurrent:server',
+		'autoprefixer',
+		'open',
+		'watch'
+	]);
+
   grunt.registerTask('test', [
     'clean:server',
     'concurrent:test',
@@ -496,7 +513,7 @@ module.exports = function (grunt) {
     'concat',
     'ngmin',
     'copy:dist',
-    'cdnify',
+    //'cdnify',
     'cssmin',
     'uglify',
     //'rev',
@@ -504,6 +521,11 @@ module.exports = function (grunt) {
 	  'processhtml',
 	  'htmlmin'
   ]);
+
+	grunt.registerTask('build-uncss', [
+		'build',
+		'uncss'
+	]);
 
   grunt.registerTask('default', [
     'newer:jshint',

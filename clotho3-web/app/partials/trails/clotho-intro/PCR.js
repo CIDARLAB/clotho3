@@ -1,6 +1,6 @@
 'use strict';
 
-$clotho.extensions.controller('clothoIntro_PCRCtrl', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR, Clotho, CommandBar) {
+$clotho.extensions.controller('clothoIntro_PCRCtrl', function($scope, $focus, $timeout, $modal, DNA, Digest, PCR, Clotho, CommandBar) {
 
     $scope.pcr_demoSets = [
         {
@@ -31,7 +31,8 @@ $clotho.extensions.controller('clothoIntro_PCRCtrl', function($scope, $focus, $t
 
     $scope.showMeHow = function() {
 
-        $dialog.messageBox('Your Turn!', 'We\'re leaving the variable declaration up to you this time. Try just copying some sequences from the PCR tool.', [{label: "No! I'm lazy.", cssClass: "", result: false}, {label: "OK", cssClass: "btn-primary", result: true}]).open()
+        $modal.messageBox('Your Turn!', 'We\'re leaving the variable declaration up to you this time. Try just copying some sequences from the PCR tool.', [{label: "No! I'm lazy.", cssClass: "", result: false}, {label: "OK", cssClass: "btn-primary", result: true}])
+        .result
         .then(function(result) {
             if (result)
                 $('#clothoCommandBarInput').focus();
@@ -39,7 +40,8 @@ $clotho.extensions.controller('clothoIntro_PCRCtrl', function($scope, $focus, $t
                 CommandBar.submit('var myBackbone = "cccccccccccagctacgatcgataaaaaaaaaaatttttttttttgatcgatcgatagctaggggggggggggg"');
 	            CommandBar.submit("var myPrimers = ['tatcgatcgta', 'gatcgatcgat']");
 
-                $dialog.messageBox('ಠ_ಠ', '<p>We\'re creating <code>myBackbone</code> and <code>myPrimers</code> as we speak!</p>', [{label: "Efficiency is intelligent laziness!", cssClass: "btn-primary", result: true}]).open()
+                $modal.messageBox('ಠ_ಠ', '<p>We\'re creating <code>myBackbone</code> and <code>myPrimers</code> as we speak!</p>', [{label: "Efficiency is intelligent laziness!", cssClass: "btn-primary", result: true}])
+                .result
                 .then(function() {
                     var str = 'PCR.predict(myBackbone, myPrimers)';
                     $focus.typeOutSearch(str);

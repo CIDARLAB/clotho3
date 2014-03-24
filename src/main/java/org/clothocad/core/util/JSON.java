@@ -93,23 +93,21 @@ public class JSON {
         }
     }
 
-    public static String serialize(Object o) {
+    public static String serialize(Object o) throws IOException {
         return serialize(o, false);
     }
 
-    //Serialize w/ internal view
-    public static String serialize(Object o, boolean pretty) {
+    //Serialize w/ internal view - all fields included
+    public static String serialize(Object o, boolean pretty) throws IOException {
         StringWriter writer = new StringWriter();
         if (pretty) {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
         try {
             mapper.writeValue(writer, o);
-            //if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
             return writer.toString();
-        } catch (IOException ex) {
-            // if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
-            throw new RuntimeException(ex);
+        } finally {
+            //if (pretty) mapper.disable(SerializationFeature.INDENT_OUTPUT);
         }
     }
 
@@ -117,12 +115,12 @@ public class JSON {
         try {
             //XXX: ugh
             return deserializeObjectToMap(serialize(o));
-        } catch (JsonParseException ex) {
-            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not mappify "+o.toString()+": "+ex.getMessage());
         }
     }
 
-    public static Map<String, Object> deserializeObjectToMap(String json) throws JsonParseException {
+    public static Map<String, Object> deserializeObjectToMap(String json) throws JsonParseException{
         try {
             Map<String, Object> object = mapper.readValue(json, stringToObject);
             return object;

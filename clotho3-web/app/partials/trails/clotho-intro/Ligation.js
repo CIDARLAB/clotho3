@@ -1,6 +1,6 @@
 'use strict';
 
-$clotho.extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'DNA', 'Digest', 'PCR', function($scope, $focus, $timeout, $dialog, DNA, Digest, PCR) {
+$clotho.extensions.controller('clothoIntro_LigationCtrl', function($scope, $focus, $timeout, $modal, DNA, Digest, PCR) {
     $scope.DNA = DNA;
     $scope.Digest = Digest;
     $scope.PCR = PCR;
@@ -34,7 +34,8 @@ $clotho.extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus', '
 
         //todo - move to funciton that takes array to type out commands
 
-        $dialog.messageBox('Defining Variables', 'This time we\'ll define the variables as part of the process. First we need to define our two fragments, <code>frag1</code> and <code>frag2</code>. Then we\'ll join them in an array <code>fragments</code>, which we pass to the function <code>ligate</code>.', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+        $modal.messageBox('Defining Variables', 'This time we\'ll define the variables as part of the process. First we need to define our two fragments, <code>frag1</code> and <code>frag2</code>. Then we\'ll join them in an array <code>fragments</code>, which we pass to the function <code>ligate</code>.', [{label: "OK", cssClass: "btn-primary", result: true}])
+	          .result
             .then(function() {
                 var str = 'var frag1 = "aaatttcccgggA^CATG_";';
                 return $focus.typeOutSearch(str, true)
@@ -52,4 +53,4 @@ $clotho.extensions.controller('clothoIntro_LigationCtrl', ['$scope', '$focus', '
             })
     };
 
-}]);
+});

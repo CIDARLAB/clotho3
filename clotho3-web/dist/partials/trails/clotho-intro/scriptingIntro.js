@@ -1,6 +1,6 @@
 'use strict';
 
-$clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '$focus', '$timeout', '$dialog', 'Clotho', function($scope, $focus, $timeout, $dialog, Clotho) {
+$clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
     $scope.quiz = {
         "type" : "fillin",
@@ -14,10 +14,12 @@ $clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', ['$scope', '$foc
 
     $scope.showMeHow = function() {
 
-        $dialog.messageBox('Entering Commands', 'To reverse complement a sequence, you would call the function <code>DNA.revcomp</code> and pass your sequence in the array of arguments like so: <code>DNA.revcomp("' + $scope.quiz.questionValue + '")</code>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
+	    $modal.messageBox('Entering Commands', 'To reverse complement a sequence, you would call the function <code>DNA.revcomp</code> and pass your sequence in the array of arguments like so: <code>DNA.revcomp("' + $scope.quiz.questionValue + '")</code>', [{label: "OK", cssClass: "btn-primary", result: true}])
+		    .result
         .then(function() {
             return $focus.typeOutSearch("DNA.revcomp('"+$scope.quiz.questionValue+"')")
         })
+
     };
 
-}]);
+});

@@ -6,7 +6,9 @@ angular.module('clotho.fullPackage', [
 	'clotho.commandbar',        //command bar
 	'clotho.webapp',        //general web app components
 	//additional webapp modules
-	'clotho.editor', 'clotho.interface', 'clotho.trails'
+	'clotho.editor',
+	'clotho.interface',
+	'clotho.trails'
 ]);
 
 //web application set up
@@ -33,23 +35,42 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/edit', {
 		redirectTo: '/editor'
 	})
-	.when('/editor', {
+	.when('/editor/query/:queryTerm', {
+		templateUrl: 'views/editor.html',
+		controller: 'EditorCtrl',
+		resolve : {
+			queryResult : ['Clotho', '$route', '$q', function (Clotho, $route, $q) {
+				var query = '';
+				try {
+					query = angular.fromJson($route.current.params.queryTerm);
+				} catch (err) {
+					console.warn('editor query malformed: ' + err)
+				}
+
+				console.log('querying for editor: ', query);
+
+				if (!angular.isEmpty(query)) {
+					return Clotho.query(query).then(function (data) {
+						return data;
+					});
+				} else {
+					return $q.when();
+				}
+			}],
+			deps : ['codemirrorLoader', function(loader) {
+				return loader.loadMain();
+			}]
+		}
+	})
+	.when('/editor/query', {
+		redirectTo : '/editor'
+	})
+	.when('/editor/:id?', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
 		resolve : {
-			deps : ['$q', function($q) {
-				return $clotho.extensions.mixin('bower_components/codemirror/lib/codemirror.js').then(function() {
-					$q.all([
-						$clotho.extensions.css('bower_components/codemirror/lib/codemirror.css'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/javascript/javascript.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/css/css.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/htmlmixed/htmlmixed.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/python/python.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/groovy/groovy.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/clike/clike.js'),
-						$clotho.extensions.mixin('bower_components/codemirror/mode/markdown/markdown.js')
-					]);
-				})
+			deps : ['codemirrorLoader', function(loader) {
+				return loader.loadMain();
 			}]
 		}
 	})
@@ -57,9 +78,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl'
 	})
-	.when('/trails/:id/:position?', {
+	.when('/trails/:id', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
+		reloadOnSearch: false,
 		resolve : {
 			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 				var deferred = $q.defer();
@@ -111,4 +133,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
 	});
+});
+
+angular.element(document).ready(function() {
+	angular.bootstrap(document, ['clothoRoot']);
 });

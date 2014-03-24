@@ -4,7 +4,7 @@ angular.module('clotho.interface')
 		return {
 		restrict: 'A',
 		templateUrl: 'views/_interface/fileUpload.html',
-		controller: function ($scope, $element, $attrs, $upload) {
+		controller: function ($scope, $element, $attrs) {
 			$scope.uploadRightAway = false;
 
 			$scope.upload = [];
@@ -16,19 +16,38 @@ angular.module('clotho.interface')
 				console.log('files changed');
 				$scope.selectedFiles = $files;
 				$scope.dataUrls = [];
+				$scope.inputFiles = [];
 				for ( var i = 0; i < $files.length; i++) {
 					var $file = $files[i];
-					if ($window.FileReader && $file.type.indexOf('image') > -1) {
-						var fileReader = new FileReader();
-						fileReader.readAsDataURL($files[i]);
-						function setPreview(fileReader, index) {
-							fileReader.onload = function(e) {
-								$timeout(function() {
-									$scope.dataUrls[index] = e.target.result;
-								});
+					if ($window.FileReader) {
+
+						console.log($file.type);
+
+						var fileReader;
+						if ($file.type.indexOf('text') > -1) {
+							fileReader = new FileReader();
+							function readContents(fileReader, index) {
+								fileReader.readAsText($files[i]);
+								fileReader.onload = function(e) {
+									$timeout(function() {
+										$scope.inputFiles[index] = e.target.result;
+									});
+								}
 							}
+							readContents(fileReader, i);
 						}
-						setPreview(fileReader, i);
+						else if ($file.type.indexOf('image') > -1) {
+							fileReader = new FileReader();
+							fileReader.readAsDataURL($files[i]);
+							function setPreview(fileReader, index) {
+								fileReader.onload = function(e) {
+									$timeout(function() {
+										$scope.dataUrls[index] = e.target.result;
+									});
+								}
+							}
+							setPreview(fileReader, i);
+						}
 					}
 					$scope.started[i] = false;
 
@@ -49,15 +68,18 @@ angular.module('clotho.interface')
 					data : {
 						myModel : $scope.fileName
 					},
-					/* formDataAppender: function(fd, key, val) {
-					 if (angular.isArray(val)) {
-					 angular.forEach(val, function(v) {
-					 fd.append(key, v);
-					 });
-					 } else {
-					 fd.append(key, val);
-					 }
-					 }, */
+					/*
+					//see https://github.com/danialfarid/angular-file-upload/pull/40
+					formDataAppender: function(fd, key, val) {
+						if (angular.isArray(val)) {
+					    angular.forEach(val, function(v) {
+					      fd.append(key, v);
+					    });
+						} else {
+							fd.append(key, val);
+						}
+					},
+					*/
 					file: $scope.selectedFiles[index],
 					fileFormDataName: 'myFile'
 				}).then(function(response) {

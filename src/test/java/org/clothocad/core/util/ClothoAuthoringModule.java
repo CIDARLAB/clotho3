@@ -8,7 +8,6 @@ import com.google.inject.name.Names;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import org.clothocad.core.ClothoModule;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.dataauthoring.FileHookPersistor;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -18,10 +17,8 @@ import org.clothocad.core.testers.ClothoTestModule;
  * @author spaige
  */
 class ClothoAuthoringModule extends ClothoTestModule {
-
-    public ClothoAuthoringModule(Properties properties) {
-        super(properties);
-        defaults.put("dbname", "authoringenv");
+    public ClothoAuthoringModule(Properties config) {
+        super(config);
     }
     
     public ClothoAuthoringModule(){

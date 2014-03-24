@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
 import org.clothocad.core.execution.JavaScriptScript;
@@ -21,6 +22,7 @@ import org.clothocad.core.persistence.annotations.ReferenceCollection;
  */
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY, 
                 setterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY)
+@Slf4j
 public class Module extends ObjBase {
     
     protected Script code;
@@ -38,7 +40,15 @@ public class Module extends ObjBase {
 
     public Module() {
     }
-    
+    public Module(String name, String description, Language language, 
+            String code, Module[] dependencies){
+        setName(name);
+        this.description = description;
+        this.language = language;
+        this.dependencies = dependencies;
+        setCode(code);
+    }
+
     public void setLanguage(Language language){
         this.language = language;
         //check for cached code
@@ -70,18 +80,7 @@ public class Module extends ObjBase {
                 throw new UnsupportedOperationException("unsupported language");
         }          
     }
-    
-//    @PrePersist
-//    protected void prePersist() {
-//        syncDependencies();
-//        //store code as plain string instead of script
-//    }
-//    
-//    @PreLoad
-//    protected void postLoad() {
-//        
-//    }
-    
+
     //TODO: test w/ @PostLoad also
     protected void syncDependencies(){
         //figure out dependencies declared in code 
@@ -106,10 +105,9 @@ public class Module extends ObjBase {
         return output;
     }
     
-
     public String getCode() {
         if (language == null) return cachedCode;
-        return code.toString();
+        return code == null ? null : code.toString();
     }
     
     @JsonIgnore

@@ -1,16 +1,12 @@
 package org.clothocad.core.communication.apollo;
 
-import com.fasterxml.jackson.core.JsonParseException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-import org.clothocad.core.communication.Channel;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ClientConnection;
-import org.clothocad.core.execution.Mind;
 import org.clothocad.core.util.JSON;
 import org.fusesource.stomp.jms.message.StompJmsMessage;
 
@@ -84,7 +80,7 @@ public class ClothoMessageConsumer
             }
         } catch (JMSException e) {
             e.printStackTrace();
-        }  catch (JsonParseException ex) {
+        }  catch (IOException ex) {
             ex.printStackTrace();
         }
     }

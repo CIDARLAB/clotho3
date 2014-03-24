@@ -1,40 +1,53 @@
 /**!
  * AngularJS file upload shim for HTML5 FormData
  * @author  Danial  <danial.farid@gmail.com>
- * @version 1.1.11
+ * @version 1.2.8
  */
 (function() {
 
 if (window.XMLHttpRequest) {
 	if (window.FormData) {
 		// allow access to Angular XHR private field: https://github.com/angular/angular.js/issues/1934
-		XMLHttpRequest = (function(origXHR) {
+		window.XMLHttpRequest = (function(origXHR) {
 			return function() {
 				var xhr = new origXHR();
-				xhr.send = (function(orig) {
-					return function() {
-						if (arguments[0] instanceof FormData && arguments[0].__setXHR_) {
-							var formData = arguments[0];
-							formData.__setXHR_(xhr);
+				xhr.setRequestHeader = (function(orig) {
+					return function(header, value) {
+						if (header === '__setXHR_') {
+							var val = value(xhr);
+							// fix for angular < 1.2.0
+							if (val instanceof Function) {
+								val(xhr);
+							}
+						} else {
+							orig.apply(xhr, arguments);
 						}
-						orig.apply(xhr, arguments);
 					}
-				})(xhr.send);
+				})(xhr.setRequestHeader);
 				return xhr;
 			}
-		})(XMLHttpRequest);
+		})(window.XMLHttpRequest);
 	} else {
-		XMLHttpRequest = (function(origXHR) {
+		var hasFlash = false;
+		try {
+		  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+		  if (fo) hasFlash = true;
+		} catch(e) {
+		  if (navigator.mimeTypes["application/x-shockwave-flash"] != undefined) hasFlash = true;
+		}
+		window.XMLHttpRequest = (function(origXHR) {
 			return function() {
 				var xhr = new origXHR();
 				var origSend = xhr.send;
 				xhr.__requestHeaders = [];
 				xhr.open = (function(orig) {
-					xhr.upload = {
-						addEventListener: function(t, fn, b) {
-							if (t == 'progress') {
-								xhr.__progress = fn;
-							}
+					if (!xhr.upload) xhr.upload = {};
+					xhr.upload.addEventListener = function(t, fn, b) {
+						if (t === 'progress') {
+							xhr.__progress = fn;
+						}
+						if (t === 'load') {
+							xhr.__load = fn;
 						}
 					};
 					return function(m, url, b) {
@@ -44,39 +57,52 @@ if (window.XMLHttpRequest) {
 				})(xhr.open);
 				xhr.getResponseHeader = (function(orig) {
 					return function(h) {
-						return xhr.__fileApiXHR ? xhr.__fileApiXHR.getResponseHeader(h) : orig.apply(xhr, [h]); 
+						return xhr.__fileApiXHR ? xhr.__fileApiXHR.getResponseHeader(h) : orig.apply(xhr, [h]);
 					}
 				})(xhr.getResponseHeader);
 				xhr.getAllResponseHeaders = (function(orig) {
 					return function() {
-						return xhr.__fileApiXHR ? xhr.__fileApiXHR.getAllResponseHeaders() : orig.apply(xhr); 
+						return xhr.__fileApiXHR ? xhr.__fileApiXHR.getAllResponseHeaders() : orig.apply(xhr);
 					}
 				})(xhr.getAllResponseHeaders);
 				xhr.abort = (function(orig) {
 					return function() {
-						return xhr.__fileApiXHR ? xhr.__fileApiXHR.abort() : (orig == null ? null : orig.apply(xhr)); 
+						return xhr.__fileApiXHR ? xhr.__fileApiXHR.abort() : (orig == null ? null : orig.apply(xhr));
 					}
 				})(xhr.abort);
-				xhr.send = function() {
-					if (arguments[0] != null && arguments[0].__isShim && arguments[0].__setXHR_) {
-						var formData = arguments[0];
-						if (arguments[0].__setXHR_) {
-							var formData = arguments[0];
-							formData.__setXHR_(xhr);
+				xhr.setRequestHeader = (function(orig) {
+					return function(header, value) {
+						if (header === '__setXHR_') {
+							var val = value(xhr);
+							// fix for angular < 1.2.0
+							if (val instanceof Function) {
+								val(xhr);
+							}
+						} else {
+							orig.apply(xhr, arguments);
 						}
+					}
+				})(xhr.setRequestHeader);
+
+				xhr.send = function() {
+					if (arguments[0] && arguments[0].__isShim) {
+						var formData = arguments[0];
 						var config = {
 							url: xhr.__url,
 							complete: function(err, fileApiXHR) {
-								Object.defineProperty(xhr, 'status', {get: function() {return fileApiXHR.status}});
-								Object.defineProperty(xhr, 'statusText', {get: function() {return fileApiXHR.statusText}});
+								if (!err) xhr.__load({type: 'load', loaded: xhr.__total, total: xhr.__total, target: xhr, lengthComputable: true});
+								if (fileApiXHR.status !== undefined) Object.defineProperty(xhr, 'status', {get: function() {return fileApiXHR.status}});
+								if (fileApiXHR.statusText !== undefined) Object.defineProperty(xhr, 'statusText', {get: function() {return fileApiXHR.statusText}});
 								Object.defineProperty(xhr, 'readyState', {get: function() {return 4}});
-								Object.defineProperty(xhr, 'response', {get: function() {return fileApiXHR.response}});
+								if (fileApiXHR.response !== undefined) Object.defineProperty(xhr, 'response', {get: function() {return fileApiXHR.response}});
 								Object.defineProperty(xhr, 'responseText', {get: function() {return fileApiXHR.responseText}});
 								xhr.__fileApiXHR = fileApiXHR;
 								xhr.onreadystatechange();
 							},
 							progress: function(e) {
+								e.target = xhr;
 								xhr.__progress(e);
+								xhr.__total = e.total;
 							},
 							headers: xhr.__requestHeaders
 						}
@@ -90,8 +116,11 @@ if (window.XMLHttpRequest) {
 								config.data[item.key] = item.val;
 							}
 						}
-						
+
 						setTimeout(function() {
+							if (!hasFlash) {
+								alert('Please install Adode Flash Player to upload files.');
+							}
 							xhr.__fileApiXHR = FileAPI.upload(config);
 						}, 1);
 					} else {
@@ -100,18 +129,13 @@ if (window.XMLHttpRequest) {
 				}
 				return xhr;
 			}
-		})(XMLHttpRequest);
+		})(window.XMLHttpRequest);
+		window.XMLHttpRequest.__hasFlash = hasFlash;
 	}
+	window.XMLHttpRequest.__isShim = true;
 }
 
 if (!window.FormData) {
-	var hasFlash = false;
-	try {
-	  var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
-	  if (fo) hasFlash = true;
-	} catch(e) {
-	  if (navigator.mimeTypes["application/x-shockwave-flash"] != undefined) hasFlash = true;
-	}
 	var wrapFileApi = function(elem) {
 		if (!elem.__isWrapped && (elem.getAttribute('ng-file-select') != null || elem.getAttribute('data-ng-file-select') != null)) {
 			var wrap = document.createElement('div');
@@ -121,9 +145,6 @@ if (!window.FormData) {
 			parent.insertBefore(wrap, elem);
 			parent.removeChild(elem);
 			wrap.appendChild(elem);
-			if (!hasFlash) {
-				wrap.appendChild(document.createTextNode('Flash is required'));
-			}
 			elem.__isWrapped = true;
 		}
 	};
@@ -148,19 +169,19 @@ if (!window.FormData) {
 			return function(e, fn, b, d) {
 				if (isFileChange(this, e)) {
 					wrapFileApi(this);
-					origAddEventListener.apply(this, [e, changeFnWrapper(fn), b, d]); 
+					origAddEventListener.apply(this, [e, changeFnWrapper(fn), b, d]);
 				} else {
 					origAddEventListener.apply(this, [e, fn, b, d]);
 				}
 			}
-		})(HTMLInputElement.prototype.addEventListener);		
+		})(HTMLInputElement.prototype.addEventListener);
 	}
 	if (HTMLInputElement.prototype.attachEvent) {
 		HTMLInputElement.prototype.attachEvent = (function(origAttachEvent) {
 			return function(e, fn) {
 				if (isFileChange(this, e)) {
 					wrapFileApi(this);
-					origAttachEvent.apply(this, [e, changeFnWrapper(fn)]); 
+					origAttachEvent.apply(this, [e, changeFnWrapper(fn)]);
 				} else {
 					origAttachEvent.apply(this, [e, fn]);
 				}
@@ -181,13 +202,18 @@ if (!window.FormData) {
 			__isShim: true
 		};
 	};
-	
+
 	(function () {
 		//load FileAPI
-		if (!window.FileAPI || !FileAPI.upload) {
-			var base = '', script = document.createElement('script'), allScripts = document.getElementsByTagName('script'), i, index, src;
-			if (window.FileAPI && window.FileAPI.jsPath) {
-				base = window.FileAPI.jsPath;
+		if (!window.FileAPI) {
+			window.FileAPI = {};
+		}
+		if (!FileAPI.upload) {
+			var jsUrl, basePath, script = document.createElement('script'), allScripts = document.getElementsByTagName('script'), i, index, src;
+			if (window.FileAPI.jsUrl) {
+				jsUrl = window.FileAPI.jsUrl;
+			} else if (window.FileAPI.jsPath) {
+				basePath = window.FileAPI.jsPath;
 			} else {
 				for (i = 0; i < allScripts.length; i++) {
 					src = allScripts[i].src;
@@ -196,20 +222,79 @@ if (!window.FormData) {
 						index = src.indexOf('angular-file-upload-shim.min.js');
 					}
 					if (index > -1) {
-						base = src.substring(0, index);
+						basePath = src.substring(0, index);
 						break;
 					}
 				}
 			}
 
-			if (!window.FileAPI || FileAPI.staticPath == null) {
-				FileAPI = {
-					staticPath: base
-				}
-			}
-	
-			script.setAttribute('src', base + "FileAPI.min.js");
+			if (FileAPI.staticPath == null) FileAPI.staticPath = basePath;
+			script.setAttribute('src', jsUrl || basePath + "FileAPI.min.js");
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
 	})();
-}})();
+}
+
+
+if (!window.FileReader) {
+	window.FileReader = function() {
+		var _this = this, loadStarted = false;
+		this.listeners = {};
+		this.addEventListener = function(type, fn) {
+			_this.listeners[type] = _this.listeners[type] || [];
+			_this.listeners[type].push(fn);
+		};
+		this.removeEventListener = function(type, fn) {
+			_this.listeners[type] && _this.listeners[type].splice(_this.listeners[type].indexOf(fn), 1);
+		};
+		this.dispatchEvent = function(evt) {
+			var list = _this.listeners[evt.type];
+			if (list) {
+				for (var i = 0; i < list.length; i++) {
+					list[i].call(_this, evt);
+				}
+			}
+		};
+		this.onabort = this.onerror = this.onload = this.onloadstart = this.onloadend = this.onprogress = null;
+
+		function constructEvent(type, evt) {
+			var e = {type: type, target: _this, loaded: evt.loaded, total: evt.total, error: evt.error};
+			if (evt.result != null) e.target.result = evt.result;
+			return e;
+		};
+		var listener = function(evt) {
+			if (!loadStarted) {
+				loadStarted = true;
+				_this.onloadstart && this.onloadstart(constructEvent('loadstart', evt));
+			}
+			if (evt.type === 'load') {
+				_this.onloadend && _this.onloadend(constructEvent('loadend', evt));
+				var e = constructEvent('load', evt);
+				_this.onload && _this.onload(e);
+				_this.dispatchEvent(e);
+			} else if (evt.type === 'progress') {
+				var e = constructEvent('progress', evt);
+				_this.onprogress && _this.onprogress(e);
+				_this.dispatchEvent(e);
+			} else {
+				var e = constructEvent('error', evt);
+				_this.onerror && _this.onerror(e);
+				_this.dispatchEvent(e);
+			}
+		};
+		this.readAsArrayBuffer = function(file) {
+			FileAPI.readAsBinaryString(file, listener);
+		}
+		this.readAsBinaryString = function(file) {
+			FileAPI.readAsBinaryString(file, listener);
+		}
+		this.readAsDataURL = function(file) {
+			FileAPI.readAsDataURL(file, listener);
+		}
+		this.readAsText = function(file) {
+			FileAPI.readAsText(file, listener);
+		}
+	}
+}
+
+})();

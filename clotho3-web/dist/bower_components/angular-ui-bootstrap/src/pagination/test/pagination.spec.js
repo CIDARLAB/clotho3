@@ -32,8 +32,7 @@ describe('pagination directive', function () {
     expect(element.hasClass('pagination')).toBe(true);
   });
 
-  it('contains one ul and num-pages + 2 li elements', function() {
-    expect(element.find('ul').length).toBe(1);
+  it('contains num-pages + 2 li elements', function() {
     expect(getPaginationBarSize()).toBe(7);
     expect(getPaginationEl(0).text()).toBe('Previous');
     expect(getPaginationEl(-1).text()).toBe('Next');
@@ -95,6 +94,34 @@ describe('pagination directive', function () {
     expect(getPaginationEl(-1).text()).toBe('Next');
   });
 
+  it('does not "break" when `total-items` is undefined', function() {
+    $rootScope.total = undefined;
+    $rootScope.$digest();
+
+    expect(getPaginationBarSize()).toBe(3); // Previous, 1, Next
+    expect(getPaginationEl(0)).toHaveClass('disabled');
+    expect(getPaginationEl(1)).toHaveClass('active');
+    expect(getPaginationEl(2)).toHaveClass('disabled');
+  });
+
+  it('does not "break" when `total-items` is negative', function() {
+    $rootScope.total = -1;
+    $rootScope.$digest();
+
+    expect(getPaginationBarSize()).toBe(3); // Previous, 1, Next
+    expect(getPaginationEl(0)).toHaveClass('disabled');
+    expect(getPaginationEl(1)).toHaveClass('active');
+    expect(getPaginationEl(2)).toHaveClass('disabled');
+  });
+
+  it('does not change the current page when `total-items` changes but is valid', function() {
+    $rootScope.currentPage = 1;
+    $rootScope.total = 18; // 2 pages
+    $rootScope.$digest();
+
+    expect($rootScope.currentPage).toBe(1);
+  });
+
   describe('`items-per-page`', function () {
     beforeEach(inject(function() {
       $rootScope.perpage = 5;
@@ -152,12 +179,17 @@ describe('pagination directive', function () {
   });
 
   describe('when `page` is not a number', function () {
-    it('handles string', function() {
+    it('handles numerical string', function() {
       updateCurrentPage('2');
       expect(getPaginationEl(2)).toHaveClass('active');
 
       updateCurrentPage('04');
       expect(getPaginationEl(4)).toHaveClass('active');
+    });
+    
+    it('defaults to 1 if non-numeric', function() {
+      updateCurrentPage('pizza');
+      expect(getPaginationEl(1)).toHaveClass('active');
     });
   });
 
@@ -239,8 +271,7 @@ describe('pagination directive', function () {
       $rootScope.$digest();
     }));
 
-    it('contains one ul and maxsize + 4 elements', function() {
-      expect(element.find('ul').length).toBe(1);
+    it('contains maxsize + 4 elements', function() {
       expect(getPaginationBarSize()).toBe($rootScope.maxSize + 4);
       expect(getPaginationEl(0).text()).toBe('Previous');
       expect(getPaginationEl(1).text()).toBe('...');
@@ -299,8 +330,7 @@ describe('pagination directive', function () {
       $rootScope.$digest();
     }));
 
-    it('contains one ul and num-pages + 4 li elements', function() {
-      expect(element.find('ul').length).toBe(1);
+    it('contains num-pages + 4 li elements', function() {
       expect(getPaginationBarSize()).toBe(9);
       expect(getPaginationEl(0).text()).toBe('First');
       expect(getPaginationEl(1).text()).toBe('Previous');
@@ -393,7 +423,7 @@ describe('pagination directive', function () {
       $rootScope.$digest();
     }));
 
-    it('contains one ul and num-pages li elements', function() {
+    it('contains num-pages li elements', function() {
       expect(getPaginationBarSize()).toBe(5);
       expect(getPaginationEl(0).text()).toBe('1');
       expect(getPaginationEl(-1).text()).toBe('5');
@@ -479,6 +509,22 @@ describe('pagination directive', function () {
 
     it('equals to total number of pages', function() {
       expect($rootScope.numpg).toBe(5);
+    });
+
+    it('changes when total number of pages change', function() {
+      $rootScope.total = 73; // 8 pages
+      $rootScope.$digest();
+      expect($rootScope.numpg).toBe(8);
+    });
+
+    it('shows minimun one page if total items are not defined and does not break binding', function() {
+      $rootScope.total = undefined;
+      $rootScope.$digest();
+      expect($rootScope.numpg).toBe(1);
+
+      $rootScope.total = 73; // 8 pages
+      $rootScope.$digest();
+      expect($rootScope.numpg).toBe(8);
     });
   });
 

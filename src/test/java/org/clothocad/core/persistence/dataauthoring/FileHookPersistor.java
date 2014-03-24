@@ -64,9 +64,14 @@ public class FileHookPersistor extends Persistor{
         }
     }
     
-    public void writeToFile(Map<String,Object> json){
+    public void writeToFile(Map<String,Object> json) {
         Path file = storageFolder.resolve(json.get("id").toString()+".json");
-        String content = JSON.serializeJSONMapForExternal(json, true);
+        final String content;
+        try {
+            content = JSON.serialize(json, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (file == null){
             log.warn("No id provided for json object: \n{}", content);
         }

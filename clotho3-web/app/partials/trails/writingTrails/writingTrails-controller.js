@@ -91,7 +91,7 @@ $clotho.extensions.controller('writingTrailsCtrl', function($compile, $scope, Cl
 	})
 
 })
-.controller('writingTrailsUICtrl', function(Clotho, $scope, $focus, $dialog) {
+.controller('writingTrailsUICtrl', function(Clotho, $scope, $focus, $modal) {
     $scope.videoDemo = {
         id : '<11 char videoID>',
         params : '<youtubeParamsObj or URL>',
@@ -111,19 +111,21 @@ $clotho.extensions.controller('writingTrailsCtrl', function($compile, $scope, Cl
     };
 
     $scope.showDialog = function() {
-        $dialog.messageBox('Demo Dialog', 'This is some simple text. It can contain <code>HTML</code>', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
-            .then(function() {
-                return $dialog.messageBox('Chaining', 'The $dialog and $focus services return promises so you can chain together UI elements based on their completion / response', [{label: "OK", cssClass: "btn-primary", result: true}]).open()
-            })
-            .then(function() {
-                return $focus.typeOutSearch("$focus demo")
-            })
+        $modal.messageBox('Demo Modal', 'This is some simple text. It can contain <code>HTML</code>', [{label: "OK", cssClass: "btn-primary", result: true}])
+	        .result
+          .then(function() {
+	          return $modal.messageBox('Chaining', 'The $modal and $focus services return promises so you can chain together UI elements based on their completion / response', [{label: "OK", cssClass: "btn-primary", result: true}])
+          })
+	        .result
+          .then(function() {
+              return $focus.typeOutSearch("$focus demo")
+          })
 
     };
 
     //demo video modal
     $scope.openVideo = function() {
-        $dialog.video('ivif214cQLE', {}).open();
+        $modal.video('ivif214cQLE', {});
     };
 
     $scope.schemas = [];

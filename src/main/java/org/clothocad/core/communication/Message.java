@@ -1,46 +1,41 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.communication;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.util.JSON;
+import org.clothocad.core.util.MapView;
 
 /**
- *
  * @author spaige
  */
-@Slf4j
 public class Message {
-    public Message(Channel channel, Object data){
-        this(channel, data, null);
+    private final Channel channel;
+    private final Object data;
+    private final String requestId;
+    private final Map<String, String> options;
+
+    @JsonProperty("channel")
+    public Channel getChannel() { return channel; }
+
+    @JsonProperty("data")
+    public Object getData() { return data; }
+
+    @JsonProperty("requestId")
+    public String getRequestId() { return requestId; }
+
+    @JsonProperty("options")
+    public Map<String, String> getOptions() { return options; }
+
+    public Message(Channel channel, Object data, String requestId){
+        this(channel, data, requestId, null);
     }
     
-
-    public Message(@JsonProperty("channel") Channel channel, 
-    @JsonProperty("data") Object data, @JsonProperty("requestId") String requestId){
+    public Message(@JsonProperty("channel") Channel channel,
+                   @JsonProperty("data") Object data,
+                   @JsonProperty("requestId") String requestId,
+                   @JsonProperty("options") Map<String, String> options) {
         this.channel = channel;
         this.data = data;
         this.requestId = requestId;
+        this.options = MapView.wrap(options);
     }
-
-    @JsonCreator
-    public Message(Map<String,Object> props){
-        this.channel = Channel.valueOf(props.get("channel").toString());
-        this.data = props.get("data");
-        this.options = (Map) props.get("options");
-        this.requestId = props.containsKey("requestId")? props.get("requestId").toString() : null;
-    }
-    
-    public Channel channel;
-    public Object data;
-    public Map<String,String> options;
-    public String requestId;
 }

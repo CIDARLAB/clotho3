@@ -25,7 +25,7 @@ public class TestConnection extends ClientConnection{
     @Override
     public void send(Message msg) {
         messages.add(msg);
-        messageDataByChannelAndId.put(msg.channel.name() + msg.requestId, msg.data);
+        messageDataByChannelAndId.put(msg.getChannel().name() + msg.getRequestId(), msg.getData());
     }
     
 }

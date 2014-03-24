@@ -26,6 +26,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.persistence;
 
 import com.mongodb.BasicDBObject;
+import java.io.IOException;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -103,7 +104,6 @@ public class Persistor{
         
         if (initializeBuiltins) initializeBuiltInSchemas();
         
-        
         converters = new Converters();       
     }
     
@@ -126,6 +126,7 @@ public class Persistor{
     
     public <T extends ObjBase> T get(Class<T> type, ObjectId id){
         T obj = connection.get(type, id);
+        if (obj == null) throw new EntityNotFoundException(id.toString());
         validate(obj);
         return obj;
     }
@@ -516,7 +517,6 @@ public class Persistor{
         Map<String,Object> convertedData = JSON.mappify(converted);
         return unifyObjectDescriptions(data, convertedData);
     }
-    
     public static Map<String,Object> unifyObjectDescriptions(Map<String,Object> sourceJSON, Map<String,Object> newJSON) {
         Set<String> exclude = new HashSet();
         exclude.add("schema");
@@ -550,7 +550,7 @@ public class Persistor{
         spec.put("name", selector);
         /* TODO: class & superclass discrimination
          * if (type != null) {
-            spec.put("schema", type);
+            spec.put(SCHEMA, type);
         }*/
 
         //name of something?
@@ -566,5 +566,5 @@ public class Persistor{
         //complain about ambiguity
         log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
-    } 
+    }
 }

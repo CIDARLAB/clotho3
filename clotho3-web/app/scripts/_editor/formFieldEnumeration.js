@@ -13,20 +13,23 @@ angular.module('clotho.editor')
 			var fulltext = "";
 
 			//todo - need BSON types from server (GH #99)
+			//todo - options for radio and select?
 			/*
 			 string -> test vs. textarea
-			 when use select?
-			 what to do for objects?
 			 id not editable
 			 */
 			var typeMap = {
 				'string' : 'text',
-				'boolean' : 'checkbox'
+				'boolean' : 'checkbox',
+				'select' : 'select',
+				'radio' : 'radio',
+				'object' : 'object'
 			};
 
 			angular.forEach(fields, function(field) {
 
-				var type = field.type || 'text';
+				//todo - better handling!
+				var type = typeMap[field.type] || field.type || 'text';
 				if (type == '?') field.type == 'text';
 				var required = field.required ? "required" : "";
 
@@ -35,13 +38,19 @@ angular.module('clotho.editor')
 				var inputText;
 
 				switch (type) {
-					case "textarea": {
-						inputText = '<textarea rows="2" ' + required + ' ng-model="sharable.'+field.name+'"></textarea>';
+					case 'object' : {
+						inputText = '<textarea json-edit rows="3" ' + required + ' ng-model="sharable.'+field.name+'"></textarea>';
 						break;
 					}
-					case "select": {
+					case 'radio' : {
+						angular.forEach(field.options, function(value, key) {
+							inputText += '<input type="radio" value="'+value+'" ng-model="sharable.'+field.name+'>' + value;
+						});
+						break;
+					}
+					case 'select': {
 						var optionsText = "";
-						//todo(low) - use ng-options + attach array to scope
+						//todo - use ng-options (what are options) + attach array to scope
 						angular.forEach(field.options, function(value, key) {
 							optionsText = optionsText + '<option value="'+value+'">'+ value + '</option>';
 						});
@@ -49,9 +58,6 @@ angular.module('clotho.editor')
 						inputText = '<select ' + required + ' ng-model="sharable.'+field.name+'">' + optionsText + '</select>';
 						break;
 					}
-					case "sharable": {
-					}
-					//todo - add filedrop support, and radio. checkbox works.
 					default: {
 						inputText = '<input type="' + type + '" ' + required + 'ng-model="sharable.'+field.name+'" >';
 						break;
@@ -80,7 +86,7 @@ angular.module('clotho.editor')
 					var schema = opts.schema || $scope.schema || {fields: []};
 					var sharable = opts.sharable || $scope.sharable || {schema : {fields: []}};
 
-					console.log(fields, schema, sharable);
+					//console.log(fields, schema, sharable);
 
 					var concatenatedFields = fields.concat(schema.fields);
 
@@ -91,7 +97,7 @@ angular.module('clotho.editor')
 						});
 					});
 
-					console.log(_.pluck(concatenatedFields, 'name'));
+					//console.log(_.pluck(concatenatedFields, 'name'));
 
 					var uniqueFields = _.uniq(concatenatedFields, function (field) {
 						return field.name;

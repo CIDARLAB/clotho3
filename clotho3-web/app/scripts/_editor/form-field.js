@@ -2,14 +2,14 @@ angular.module('clotho.editor')
 /**
  * @name formField
  *
- * @description Wrapper for form elements, adding bootstrap classes automatically. Also adds Labels and Help blocks. Must be recompiled so don't change internal contents and expect re-render.
+ * @description Wrapper for form elements, adding bootstrap classes automatically. Specifically handles according to element type, wrapping appropriately. Also adds Labels and Help blocks. Does not compile internal contents.
  *
  * @note The element declared as child of form-field is transcluded, ng-model delcarations will run into prototypical inheritance weirdness (i.e. if you don't declare in the form of "object.field", define as "$parent.object"). Updates to form controls within this directive will not an undefined model. Model should at least be declared as empty object.
  *
- * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName.
+ * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName. Can pass hide-label to hide label and just show the element and help, but will be overriden for input types that surround the input with the label (e.g. checkbox, radio)
  *
  * @example
- <form-field name="Long Input" help="Enter a short biography about yourself" removable="true">
+ <form-field name="Long Input" help="Enter a short biography about yourself" hide-label="false" removable="true">
  <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography"></textarea>
  </form-field>
 
@@ -23,7 +23,7 @@ angular.module('clotho.editor')
  </div>
 
  */
-	.directive('formField', function ($compile) {
+	.directive('formField', function () {
 
 		var template = '<div class="form-group" ng-form ng-transclude>' +
 			'</div>';
@@ -32,7 +32,7 @@ angular.module('clotho.editor')
 			restrict: 'E',
 			template: template,
 			replace: true,
-			transclude: true,
+			transclude: true, //only want element contents
 			require: ['^form', '^?clothoEditor'],
 			controller: function ($scope, $element, $attrs) {
 
@@ -45,6 +45,7 @@ angular.module('clotho.editor')
 				var passedName = attrs.name,
 					passedHelp = attrs.help,
 					removable = attrs.removableField,
+					hideLabel = attrs.hideLabel,
 					childElement = element.children();
 
 				if (childElement.length !== 1) {
@@ -80,10 +81,12 @@ angular.module('clotho.editor')
 					label.prepend(childElement);
 					var wrapper = angular.element('<div class="'+elemType+'"></div>');
 					element.append(wrapper);
+					hideLabel = false;
 				}
 
+				/*
+				//note - not supporting field removal for now
 				scope.removeField = angular.isDefined(editorCtrl) ? editorCtrl.removeField : angular.noop;
-
 				if (removable) {
 					var wrapper = angular.element('<div class="input-group"></div>');
 					var removeButton = angular.element('<span class="input-group-btn"><button class="btn btn-danger" type="button" ng-click="removeField(\''+removable+'\')"><span class="glyphicon glyphicon-trash"></span></button></span>');
@@ -92,9 +95,10 @@ angular.module('clotho.editor')
 					wrapper.append(removeButton);
 					element.append(wrapper);
 				}
+			 */
 
 				//add label if pass name
-				if (passedName) {
+				if (passedName && !hideLabel) {
 					element.prepend(label);
 				}
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.webapp')
-  .controller('MenuCtrl', function ($scope, $location, $timeout, Collector, PubSub, $keypress, Clotho) {
+  .controller('MenuCtrl', function ($scope, $location, $timeout, Collector, PubSub, $keypress, Clotho, $modal) {
 
 		$scope.modes = [
 			{"name" : "Editor", "path" : "/editor"},
@@ -53,7 +53,7 @@ angular.module('clotho.webapp')
 		$scope.loggedIn = false;
 		$scope.showLogin = function() {
 			//todo - refactor without dialog
-			$dialog.login().open().then(function(result) {
+			$modal.login().result.then(function(result) {
 				console.log(result);
 				if (result) {
 					$scope.username = result;

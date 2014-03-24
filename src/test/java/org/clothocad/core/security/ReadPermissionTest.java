@@ -20,6 +20,7 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.SecurityTestUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -79,7 +80,7 @@ public class ReadPermissionTest {
      * test read permission
      * @exception no exception expected
      */
-    @Test
+    @Ignore("not implemented yet") @Test
     public void testRead() {
         initAPI("0000");
         Map<String, Object> newObj = initObj();
@@ -102,7 +103,7 @@ public class ReadPermissionTest {
      *
      * @exception UnauthorizedException expected
      */
-    @Test(expected = UnauthorizedException.class)
+    @Ignore("not implemented yet") @Test(expected = UnauthorizedException.class)
     public void testEdit() {
         initAPI("0001");
         Map<String, Object> newObj = initObj();
@@ -124,7 +125,7 @@ public class ReadPermissionTest {
      *
      * @exception UnauthorizedException expected
      */
-    @Test(expected = UnauthorizedException.class)
+    @Ignore("not implemented yet") @Test(expected = UnauthorizedException.class)
     public void testDelete() {
         initAPI("0002");
         Map<String, Object> newObj = initObj();
@@ -149,7 +150,7 @@ public class ReadPermissionTest {
      *
      * @exception UnauthorizedException expected
      */
-    @Test(expected = UnauthorizedException.class)
+    @Ignore("not implemented yet") @Test(expected = UnauthorizedException.class)
     public void testEditPermission() {
         initAPI("0003");
         Map<String, Object> newObj = initObj();

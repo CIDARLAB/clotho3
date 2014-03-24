@@ -5,11 +5,9 @@
 package org.clothocad.core.schema;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import java.io.IOException;
 import java.util.Map;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.schema.Converter;
-import org.clothocad.core.schema.InferredSchema;
-import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.BasicPart;
@@ -43,7 +41,7 @@ public class ConverterTest {
     }
 
     @Test
-    public void testConvert() throws JsonParseException {
+    public void testConvert() throws JsonParseException, IOException {
         Converter<BasicPart> converter = new BasicPartConverter(p);
         Schema eugenePartSchema = new InferredSchema("eugene.dom.components.Part");
         Map<String, Object> eugeneJSON = JSON.deserializeObjectToMap("    {\n"

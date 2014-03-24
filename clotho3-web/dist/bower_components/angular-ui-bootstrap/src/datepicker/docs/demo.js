@@ -1,4 +1,4 @@
-var DatepickerDemoCtrl = function ($scope, $timeout) {
+var DatepickerDemoCtrl = function ($scope) {
   $scope.today = function() {
     $scope.dt = new Date();
   };
@@ -23,14 +23,18 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
   };
   $scope.toggleMin();
 
-  $scope.open = function() {
-    $timeout(function() {
-      $scope.opened = true;
-    });
+  $scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.opened = true;
   };
 
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1
   };
+
+  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
+  $scope.format = $scope.formats[0];
 };

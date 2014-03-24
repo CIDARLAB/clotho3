@@ -1,9 +1,13 @@
-$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
+$icon-font-path: "../bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
 
-@import 'sass-bootstrap/lib/bootstrap';
+@import 'bootstrap-sass/vendor/assets/stylesheets/bootstrap';
 
 body {
   padding: 20px;
+}
+
+.container {
+  width: 992px !important;
 }
 
 /* interaction */
@@ -27,6 +31,7 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   max-height: 700px; /*just in case... need to define with inline style*/
+  width: 100%;
 }
 
 div.inline {

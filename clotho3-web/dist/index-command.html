@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Clotho</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=1024, initial-scale=1">
+    <link rel="stylesheet" href="styles/main.css"/>
+    <script src="bower_components/jquery/jquery.js"></script>
+
+    <!-- note that angular is required for any clotho functionality -->
+    <script src="bower_components/angular/angular.js"></script>
+    <!-- note that lodash is required by several components -->
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+
+</head>
+<body>
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/json3/lib/json3.min.js"></script>
+<![endif]-->
+<div class="container">
+
+    <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
+        <div class="navbar navbar-default" style="margin-bottom: 0;">
+            <a class="navbar-brand" href="#">Clotho</a>
+
+            <ul class="nav navbar-nav">
+                <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
+            </ul>
+
+            <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
+                <div class="btn-group">
+                    <button class="btn navbar-btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="glyphicon glyphicon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="glyphicon glyphicon-trash"></i></button>
+                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i class="glyphicon glyphicon-refresh"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div clotho-command-bar></div>
+
+</div>
+
+<!--------
+SCRIPTS
+--------->
+
+
+<!--note - correct app based on the distribution, comments removed by build-->
+<script src="scripts/clotho-app-command.js"></script>
+
+
+<script src="scripts/clotho-core-module.js"></script>
+<!--note - remove all scripts below this for api-only build-->
+<script src="scripts/clotho-command-module.js"></script>
+
+</body>
+</html>

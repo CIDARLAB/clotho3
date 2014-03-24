@@ -2,7 +2,7 @@
 //todo - rewrite for autonomy
 angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, Clotho) {
 
-	var searchBarInput = ($('#clothoCommandBarInput'));
+	var searchBarInput = $('#clothoCommandBarInput');
 
 	var maxZ = function() {
 		return Math.max.apply(null,
@@ -27,6 +27,7 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 
 
 	var typeOut = function(element, string, model) {
+		console.log(element, string);
 		var inputsVal = {input: true, textarea : true, select: true},
 			valType = (!!inputsVal[angular.lowercase(element[0].nodeName)]) ? "val" : "text",
 			timeOut,
@@ -71,7 +72,8 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		return deferred.promise;
 	};
 
-	//can pass string or array
+	//can pass string
+	//todo - handle array of strings to input
 	var typeOutSearch = function(string, submit) {
 
 		string = angular.isArray(string) ? string : [string];
@@ -82,20 +84,26 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 			})
 			.then(function(unhighlight) {
 
-				//todo - handle array of strings to input
-
+				/*
 				var promise = $q.when(),
 					current;
 
 				while (current = string.shift()) {
+					console.log(current);
 					promise.then(function() {
+						console.log(current);
 						return typeOut(searchBarInput, current, 'display.query');
 					});
 				}
 
 				return promise.then(function() {
 					return unhighlight;
-			});
+				});
+				*/
+
+				return typeOut(searchBarInput, string[0], 'display.query').then(function() {
+					return unhighlight;
+				});
 			})
 			.then(function(unhighlight) {
 				return $timeout(function() {unhighlight()}, 600).then(function() {
@@ -112,15 +120,14 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 
 
 	var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
+	//nasty hack
+	backdrop.bind('click', function (e) {
+		e.preventDefault();
+		removeBackdrop();
+	});
 
 	//this is gross and hacky
 	var addBackdrop = function(zindex) {
-
-		/*backdrop.bind('click', function (e) {
-		 e.preventDefault();
-		 removeBackdrop();
-		 });*/
-
 		$document.find('body').append(backdrop.css("z-index", zindex || maxZ() + 1));
 		return $timeout(function() {backdrop.addClass('in')});
 	};
