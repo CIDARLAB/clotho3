@@ -45,9 +45,11 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 
 	//listen for position changes
 	$scope.$on('$routeUpdate', function(scope, next, current) {
-		// Minimize the current widget and maximize the new one
-		console.log(next, current);
 		$scope.activate(next.params.position);
+	});
+
+	$scope.$on('$destroy', function (scope, next, current) {
+		$location.search('position', null)
 	});
 
 	//kickoff
