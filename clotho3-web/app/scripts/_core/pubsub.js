@@ -30,7 +30,7 @@ angular.module('clotho.core').service('PubSub',
 			//split events passed in by a space
 			var eventSplitter = /\s+/;
 
-			var Debugger = new Debug('PubSub', '#cc5555');
+			var Debugger = new Debug('PubSub', '#55cccc');
 
 			/*********
 			 Internal Helpers
@@ -155,8 +155,28 @@ angular.module('clotho.core').service('PubSub',
 							}
 						});
 					}
-				})
+				});
+			};
 
+			/**
+			 @name PubSub.reject
+			 @description
+			 Cancel a callback, publish null on the topic
+			 @param topic {string} channel to publish on, can be multiple space-separated
+			*/
+			var reject = function (topic) {
+				_.forEach(splitTopics(topic), function (current) {
+					_.map(current, function (subscriber, index) {
+						//future - avoid $safeApply
+						$rootScope.$safeApply(function() {
+							subscriber.callback.apply(subscriber.ref, null);
+						});
+
+						if (subscriber.once == true) {
+							map[current].splice(index, 1);
+						}
+					});
+				});
 			};
 
 			/**
@@ -271,6 +291,7 @@ angular.module('clotho.core').service('PubSub',
 				once: once,
 				off: off,
 				destroy: destroy,
+				reject : reject,
 				clear: clear
 			}
 		}

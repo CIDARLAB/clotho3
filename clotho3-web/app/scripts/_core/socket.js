@@ -126,10 +126,11 @@ angular.module('clotho.core').service('Socket',
 
             var channel = obj.channel;
             var requestId = obj.requestId;
+	          var dataUndefined = angular.isUndefined(obj.data);
             var data = obj.data;
 
             // it's the ClientAPI method's responsibility to handle data appropriately.
-            if (typeof ClientAPI[channel] == 'function') {
+            if (angular.isFunction(ClientAPI[channel])) {
                 //Debugger.log("mapping to ClientAPI - " + channel);
                 ClientAPI[channel](data);
             }
@@ -142,10 +143,12 @@ angular.module('clotho.core').service('Socket',
             */
             // don't know what to do, so publish to PubSub
             else {
+	            //if data field is undefined, send to PubSub.reject to reject the promise.
+	            var command = dataUndefined ? 'reject' : 'trigger';
 	            if (requestId) {
-		            PubSub.trigger(channel+':'+requestId, data);
+		            PubSub[command](channel+':'+requestId, data);
 	            } else {
-		            PubSub.trigger(channel, data);
+		            PubSub[command](channel, data);
 	            }
             }
         };
