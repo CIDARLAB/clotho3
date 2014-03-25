@@ -59,9 +59,7 @@ angular.module('clotho.core')
 			messages[namespace] = [];
 			var debugFunctionality = {};
 
-			//todo - special handling for table
-
-			angular.forEach(['log', 'warn', 'error', 'debug', 'info', 'table'], function (term) {
+			angular.forEach(['log', 'warn', 'error', 'debug', 'info'], function (term) {
 				debugFunctionality[term] = function (msg) {
 
 					var x = new Date();
@@ -79,6 +77,18 @@ angular.module('clotho.core')
 					}
 				}
 			});
+
+			debugFunctionality.table = function (obj) {
+				$log.table(obj);
+			};
+
+			debugFunctionality.object = function (obj) {
+				if (angular.isObject(obj)) {
+					$log.log('%c' + JSON.stringify(obj, null, 2), 'color: '+ color +';')
+				} else {
+					$log.log('%c' + obj, 'color: '+ color +';');
+				}
+			};
 
 			return debugFunctionality;
 		}

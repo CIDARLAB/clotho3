@@ -49,7 +49,7 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 	});
 
 	$scope.$on('$destroy', function (scope, next, current) {
-		$location.search('position', null)
+		$location.search('position', null).replace();
 	});
 
 	//kickoff

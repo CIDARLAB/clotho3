@@ -421,18 +421,19 @@ function generateClothoAPI() {
      * @description
      * Returns all objects that match the fields provided in the spec.
      */
-    var query = function(obj, options) {
-        var callback = function(data) {
-            //store query
-            //todo
+    var query = function (obj, options) {
+	    var callback = function queryCallback(data) {
+		    console.groupCollapsed('Query Results for: ' + JSON.stringify(obj));
 
-            //store models
-            //future - when not sending whole model, extend what exists
-            angular.forEach(data, function(sharable) {
-                Collector.storeModel(sharable.id, sharable);
-            })
-        };
-        return fn.emitSubCallback('query', obj, callback, options);
+		    //store models
+		    //future - when not sending whole model, extend what exists
+		    angular.forEach(data, function (sharable) {
+			    Collector.storeModel(sharable.id, sharable);
+		    });
+
+		    console.groupEnd();
+	    };
+	    return fn.emitSubCallback('query', obj, callback, options);
     };
 
 

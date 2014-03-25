@@ -177,8 +177,6 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var say = function clientAPISay(data) {
 
-			console.log(data);
-
 			//parse message text (before extend i.e. null -> undefined)
 			if (angular.isString(data.text)) {
 				//ok
