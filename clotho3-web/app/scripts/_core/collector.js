@@ -10,8 +10,8 @@ angular.module('clotho.core').service('Collector',
     function generateCollector() {
 
         function broadcastModelUpdate(uuid, obj) {
-            PubSub.trigger("update", [uuid]);
-            PubSub.trigger("update:" + uuid, [angular.copy(obj)]);
+            PubSub.trigger("update", uuid);
+            PubSub.trigger("update:" + uuid, angular.copy(obj));
         }
 
 	      var Debugger = new Debug('Collector', '#55bb55');

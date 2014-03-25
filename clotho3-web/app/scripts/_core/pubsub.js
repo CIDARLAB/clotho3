@@ -125,16 +125,18 @@ angular.module('clotho.core').service('PubSub',
 			 @description
 			 Publish some data on a topic
 			 @param topic {string} channel to publish on, can be multiple space-separated
-			 @param args {array}  Array of arguments to apply to callback
+			 @param args {Array}  Array of arguments to apply to callback. If want to pass array, wrap as [<array>]
 			 */
 			var trigger = function (topic, args) {
 				//ensure arguments are array
 				if (_.isUndefined(args) || _.isEmpty(args)) {
 					args = null;
 				}
-				else if (!_.isArray(args)) {
+				/*else if (!_.isArray(args)) {
 					args = [args];
-				}
+				}*/
+				//HACK - wrap everything in array for apply to provide consistency for signature
+				args = [args];
 
 				//loop through each passed topic
 				_.forEach(splitTopics(topic), function (current) {

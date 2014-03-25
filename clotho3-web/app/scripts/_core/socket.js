@@ -143,9 +143,9 @@ angular.module('clotho.core').service('Socket',
             // don't know what to do, so publish to PubSub
             else {
 	            if (requestId) {
-		            PubSub.trigger(channel+':'+requestId, [data]);
+		            PubSub.trigger(channel+':'+requestId, data);
 	            } else {
-		            PubSub.trigger(channel, [data]);
+		            PubSub.trigger(channel, data);
 	            }
             }
         };

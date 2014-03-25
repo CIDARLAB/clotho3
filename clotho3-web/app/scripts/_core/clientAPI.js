@@ -78,7 +78,7 @@ angular.module('clotho.core').service('ClientAPI',
 		 *
 		 */
 		var broadcast = function clientAPIBroadcast(obj) {
-			PubSub.trigger(obj.channel, [obj.data]);
+			PubSub.trigger(obj.channel, obj.data);
 		};
 
 		/**
@@ -195,7 +195,7 @@ angular.module('clotho.core').service('ClientAPI',
 			angular.extend(defaults, data);
 			defaults.class = classMap[angular.lowercase(defaults.class)];
 
-			PubSub.trigger('activityLog', [defaults]);
+			PubSub.trigger('activityLog', defaults);
 		};
 
 		/**
@@ -245,7 +245,7 @@ angular.module('clotho.core').service('ClientAPI',
 		 * Publish list of versions for a given resource on 'revisions:<uuid>'
 		 */
 		var revisions = function clientAPIRevisions(uuid, data) {
-			PubSub.trigger('revisions:' + uuid, [data]);
+			PubSub.trigger('revisions:' + uuid, data);
 		};
 
 		/**
@@ -273,7 +273,7 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var autocomplete = function clientAPIAutocomplete(list) {
 			Debugger.log('autocomplete', list);
-			PubSub.trigger('autocomplete', [list]);
+			PubSub.trigger('autocomplete', list);
 		};
 
 		var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
@@ -283,7 +283,7 @@ angular.module('clotho.core').service('ClientAPI',
 			if (angular.isObject(obj.command_object) && obj.command_object.function_id) {
 				var id = obj.command_object.function_id;
 				Collector.storeModel('detail_' + id, obj);
-				PubSub.trigger('autocompleteDetail_' + id, [obj]);
+				PubSub.trigger('autocompleteDetail_' + id, obj);
 			}
 			else {
 				Debugger.warn('(autocompleteDetail)\tCould not extract id from object (possibly malformed)');

@@ -64,8 +64,9 @@ function generateClothoAPI() {
         var deferred = $q.defer(),
             requestId = Date.now().toString() + numberAPICalls.next();
 
-        if (!angular.isFunction(func))
-            func = angular.noop() ;
+        if (!angular.isFunction(func)) {
+					func = angular.noop;
+        }
 
 	      //timeout our requests at 5 seconds
 	      var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
@@ -310,7 +311,7 @@ function generateClothoAPI() {
      * Publish an event directly to PubSub, bypassing the socket and server.
      */
     var trigger = function clothoAPI_trigger(channel, data) {
-        PubSub.trigger(channel, [data]);
+        PubSub.trigger(channel, data);
     };
 
 
@@ -621,13 +622,19 @@ function generateClothoAPI() {
         fn.emit('alert', packaged);
     };
 
-    var autocomplete = function(query) {
-        var packaged = {
-            "query" : query
-        };
+    var autocomplete = function(query,  options) {
+      //todo - use $cacheFactory to cache searches
 
-        //todo - use angular $cacheFactory to cache searches (break out from this wrapper)
-        return fn.emitSubOnce('autocomplete', packaged);
+	    var callback = function(data) {
+		    //catch all, publish on autocomplete for now
+		    //todo - only publish if newer
+
+		    PubSub.trigger('autocomplete', data)
+	    };
+	    var packaged = {
+            "query" : query
+      };
+      return fn.emitSubCallback('autocomplete', packaged, callback, options);
     };
 
     var autocompleteDetail = function(uuid) {
