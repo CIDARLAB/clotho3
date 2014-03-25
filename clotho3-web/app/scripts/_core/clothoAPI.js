@@ -19,7 +19,7 @@
  */
 
 angular.module('clotho.core').service('Clotho',
-	function(Socket, Collector, PubSub, $window, $q, $rootScope, $location, $timeout) {
+	function(Socket, Collector, PubSub, Debug, $window, $q, $rootScope, $location, $timeout) {
 
 //attach to window, only instantiate once
 return ($window.$clotho.api) ? $window.$clotho.api : $window.$clotho.api = generateClothoAPI();
@@ -29,6 +29,8 @@ function generateClothoAPI() {
     /**********
        Set up
      **********/
+    var Debugger = new Debug('ClothoAPI', '#cc5555');
+
     //socket communication
     var fn = {};
 
@@ -60,30 +62,42 @@ function generateClothoAPI() {
 			};
 		});
 
-    fn.emitSubCallback = function(channel, data, func, options) {
-        var deferred = $q.defer(),
-            requestId = Date.now().toString() + numberAPICalls.next();
+	/**
+	 * @name fn.emitSubCallback
+	 * @param channel {String} API Channel
+	 * @param data {*} API Data
+	 * @param func {Function} Callback Function, run when data received from server
+	 * @param options {Object} API Options
+	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout
+	 */
+	fn.emitSubCallback = function (channel, data, func, options) {
+		var deferred = $q.defer(),
+			requestId = Date.now().toString() + numberAPICalls.next();
 
-        if (!angular.isFunction(func)) {
-					func = angular.noop;
-        }
+		if (!angular.isFunction(func)) {
+			func = angular.noop;
+		}
 
-	      //timeout our requests at 5 seconds
-	      var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
+		//timeout our requests at 5 seconds
+		var timeoutPromise = $timeout(function () {
+			deferred.reject(null)
+		}, 5000);
 
-        PubSub.once(channel+':'+requestId, function(data){
-	          $timeout.cancel(timeoutPromise);
-            deferred.resolve(data);
-            func(data);
-        }, '$clotho');
-        fn.emit(channel, data, requestId, options);
-        return deferred.promise;
-    };
+		//todo - reject promise if no data is sent over socket
+		PubSub.once(channel + ':' + requestId, function (data) {
+			$timeout.cancel(timeoutPromise);
+			deferred.resolve(data);
+			func(data);
+		}, '$clotho');
 
-    //if simply want a response and resolve promise, no further logic required
-    fn.emitSubOnce = function(channel, data, options) {
-        return fn.emitSubCallback(channel, data, angular.noop, options);
-    };
+		fn.emit(channel, data, requestId, options);
+		return deferred.promise;
+	};
+
+	//if simply want a response and resolve promise, no further logic required
+	fn.emitSubOnce = function (channel, data, options) {
+		return fn.emitSubCallback(channel, data, angular.noop, options);
+	};
 
 
 
@@ -625,14 +639,13 @@ function generateClothoAPI() {
     var autocomplete = function(query,  options) {
       //todo - use $cacheFactory to cache searches
 
+	    //catch all, publish on autocomplete for now
 	    var callback = function(data) {
-		    //catch all, publish on autocomplete for now
 		    //todo - only publish if newer
-
 		    PubSub.trigger('autocomplete', data)
 	    };
 	    var packaged = {
-            "query" : query
+        "query" : query
       };
       return fn.emitSubCallback('autocomplete', packaged, callback, options);
     };
