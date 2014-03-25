@@ -91,6 +91,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		} else {
 			createForEditor($scope.objectTypes[type].scaffold, type);
 		}
+		$scope.chooseSubtype = false;
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
