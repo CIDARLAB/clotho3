@@ -1,7 +1,7 @@
 <!--autocomplete -->
-<div id="clothoSearchbarAutocomplete" class="dropdown pull-left" ng-show="false" click-outside="display.hide('autocomplete'); display.undetail();" ng-init="display.genAutocompletePos()" click-outside-active="display.autocomplete" ng-style="display.autocompletePos" style="position: absolute">
+<div id="clothoSearchbarAutocomplete" class="dropdown" ng-show="display.autocomplete" click-outside="display.hide('autocomplete'); display.undetail();" click-outside-active="display.autocomplete">
 
-    <ul id="clothoSearchbarAutocompleteList" class="dropdown-menu col-xs-5 inline-block">
+    <ul id="clothoSearchbarAutocompleteList" class="dropdown-menu inline-block">
         <a class="close" ng-click="display.hide('autocomplete'); display.undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
         <!--| filter:{text:display.query}-->
         <li ng-repeat="item in (filtered = (autocomplete.autocompletions)) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
