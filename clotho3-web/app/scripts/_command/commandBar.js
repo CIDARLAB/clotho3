@@ -87,7 +87,8 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		};
 	};
 
-	// todo - should be CSS
+	/*
+	//note - now in css
 	display.genAutocompletePos = function() {
 		var target = getCommandBarInput()[0];
 		display.autocompletePos = {
@@ -95,6 +96,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 			top : (target.offsetTop + target.clientHeight)  + "px"
 		};
 	};
+	*/
 
 
 	display.detail = function(uuid) {

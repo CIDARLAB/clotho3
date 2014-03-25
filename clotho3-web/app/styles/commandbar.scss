@@ -4,10 +4,14 @@ Command Bar
 
 #clothoSearchbarAutocomplete {
   z-index: 1001;
+  left: 15px;
+  top: 38px;
+  position: absolute;
+  display: block;
 }
 
 #clothoSearchbarAutocompleteList {
-  width: 350px;
+  width: 315px;
   display: block;
 }
 
