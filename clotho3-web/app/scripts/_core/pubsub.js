@@ -125,18 +125,17 @@ angular.module('clotho.core').service('PubSub',
 			 @description
 			 Publish some data on a topic
 			 @param topic {string} channel to publish on, can be multiple space-separated
-			 @param args {Array}  Array of arguments to apply to callback. If want to pass array, wrap as [<array>]
+			 @param args {*}  Array of arguments to apply to callback.
 			 */
 			var trigger = function (topic, args) {
+
 				//ensure arguments are array
-				if (_.isUndefined(args) || _.isEmpty(args)) {
+				if (angular.isUndefined(args) || angular.isEmpty(args)) {
 					args = null;
-				}
-				/*else if (!_.isArray(args)) {
+				} else {
+					//HACK - wrap everything in array for apply to provide consistency for signature
 					args = [args];
-				}*/
-				//HACK - wrap everything in array for apply to provide consistency for signature
-				args = [args];
+				}
 
 				//loop through each passed topic
 				_.forEach(splitTopics(topic), function (current) {
@@ -166,6 +165,7 @@ angular.module('clotho.core').service('PubSub',
 			*/
 			var reject = function (topic) {
 				_.forEach(splitTopics(topic), function (current) {
+						Debugger.log('Reject on ' + current);
 					_.map(current, function (subscriber, index) {
 						//future - avoid $safeApply
 						$rootScope.$safeApply(function() {

@@ -10,7 +10,7 @@ angular.module('clotho.angularAdditions', [])
 		 * @returns {*|boolean|Boolean}
 		 */
 		ext.isEmpty = function(value) {
-			return (angular.isDefined(_) && _.isEmpty(value)) || (angular.isUndefined(value) || value === '' || value === null || value !== value);
+			return (angular.isDefined(_) && angular.isObject(value) && _.isEmpty(value)) || (angular.isUndefined(value) || value === '' || value === null || value !== value);
 		};
 		/**
 		 * @name angular.isScope

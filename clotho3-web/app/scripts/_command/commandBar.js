@@ -173,8 +173,9 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	};
 
 	var submit = function (query) {
-		if (!query)
+		if (!query) {
 			query = display.query;
+		}
 
 		/*
 		 Debugger.log(query);
@@ -193,7 +194,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 			return Clotho.submit(query).then(function(result){
 				display.query = '';
-				ClientAPI.say({text: result});
+				ClientAPI.say({text: result, class: 'success'});
 			});
 		}
 		else {

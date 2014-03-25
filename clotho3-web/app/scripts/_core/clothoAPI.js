@@ -86,6 +86,7 @@ function generateClothoAPI() {
 		//todo - reject promise if no data is sent over socket
 		PubSub.once(channel + ':' + requestId, function (data) {
 			$timeout.cancel(timeoutPromise);
+			if (angular.isEmpty(data)) { data = null; }
 			deferred.resolve(data);
 			func(data);
 		}, '$clotho');

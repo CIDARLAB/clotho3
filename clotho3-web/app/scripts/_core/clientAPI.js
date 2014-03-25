@@ -176,26 +176,45 @@ angular.module('clotho.core').service('ClientAPI',
 		 *
 		 */
 		var say = function clientAPISay(data) {
+
+			console.log(data);
+
+			//parse message text (before extend i.e. null -> undefined)
+			if (angular.isString(data.text)) {
+				//ok
+			} else if (angular.isNumber(data.text)) {
+				data.text = parseInt(data.text);
+			} else if (data.text === null) {
+				data.text = 'null';
+			}	else if (angular.isUndefined(data.text)) {
+				data.text = 'undefined';
+			} else if (data.text === true) {
+				data.text = 'true';
+			} else if (data.text === false) {
+				data.text = 'false';
+			}
+
 			var defaults = {
 				'class': 'muted',
 				'from': 'server',
 				'timestamp': Date.now().valueOf()
 			};
 
-			//alert-info reserved for client-initiated messages
+			data = angular.extend({}, defaults, data);
+
+			//parse class
 			var classMap = {
 				success: 'success',
 				warning: 'warning',
+				error : 'danger',
 				failure: 'danger',
 				normal: 'success',
 				muted: 'muted',
 				info: 'info'
 			};
+			data.class = classMap[angular.lowercase(data.class)];
 
-			angular.extend(defaults, data);
-			defaults.class = classMap[angular.lowercase(defaults.class)];
-
-			PubSub.trigger('activityLog', defaults);
+			PubSub.trigger('activityLog', data);
 		};
 
 		/**
