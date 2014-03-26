@@ -48,6 +48,13 @@ public class WrappedScriptEngine implements HackEngine {
     public ScriptContext getContext() {
         return engine.getContext();
     }
-    
-    
+
+    @Override
+    public void injectAPI(ScriptAPI api, ScriptContext context) {
+        if (engine instanceof HackEngine){
+            ((HackEngine) engine).injectAPI(api, context);
+        } else {
+            context.setAttribute("clotho", api, ScriptContext.ENGINE_SCOPE);
+        }
+    }
 }

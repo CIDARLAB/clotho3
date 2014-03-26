@@ -41,7 +41,6 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
-import org.clothocad.core.communication.ScriptAPI;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.execution.MetaEngine;
 import org.clothocad.core.util.FileUtils;

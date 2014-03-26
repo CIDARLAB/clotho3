@@ -23,6 +23,7 @@
  */
 package org.clothocad.core.communication;
 
+import org.clothocad.core.execution.ScriptAPI;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
