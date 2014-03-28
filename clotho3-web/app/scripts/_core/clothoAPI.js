@@ -796,7 +796,6 @@ function generateClothoAPI() {
         revert : revert,
         destroy : destroy,
         show : show,
-        show_old : show_old,
         say : say,
         log : log,
         alert : alert,

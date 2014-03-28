@@ -1,7 +1,7 @@
 //note - written using lodash internally
 
 angular.module('clotho.core').service('PubSub',
-	function ($rootScope, Debug) {
+	function ($rootScope, $filter, Debug) {
 
 		//see if already exists, don't re-instantiate
 		return (window.$clotho.$pubsub) ? window.$clotho.$pubsub : window.$clotho.$pubsub = generatePubSubObject();
@@ -73,7 +73,7 @@ angular.module('clotho.core').service('PubSub',
 
 			//register a subscriber, handle if scope, return unsubscriber function
 			function registerSubscriber (topic, subscriber) {
-				if (subscriber && !_.isEmpty(subscriber)) {
+				if (subscriber && !angular.isEmpty(subscriber)) {
 					if(!map[topic]) {
 						map[topic] = [];
 					}
@@ -88,17 +88,17 @@ angular.module('clotho.core').service('PubSub',
 
 					map[topic].push(subscriber);
 
-					return _.once(function () {
+					return angular.once(function () {
 						unregisterSubscriber(topic, subscriber);
 					});
 				} else {
-					return _.noop;
+					return angular.noop;
 				}
 			}
 
 			function unregisterSubscriber(topic, subscriber) {
-				var removed = _.remove(map[topic], function (sub) {
-					return _.isEqual(sub, subscriber);
+				var removed = angular.remove(map[topic], function (sub) {
+					return angular.equals(sub, subscriber);
 				});
 				return removed.length > 0;
 			}
@@ -114,7 +114,7 @@ angular.module('clotho.core').service('PubSub',
 
 			var logListeners = function () {
 				Debugger.log('LISTENERS:');
-				_.forEach(map, function (val, key) {
+				angular.forEach(map, function (val, key) {
 					Debugger.log(key);
 					Debugger.table(map[key])
 				});
@@ -138,12 +138,12 @@ angular.module('clotho.core').service('PubSub',
 				}
 
 				//loop through each passed topic
-				_.forEach(splitTopics(topic), function (current) {
+				angular.forEach(splitTopics(topic), function (current) {
 					//loop through each subscriber
 					Debugger.log('Publish on ' + current, args);
 					if (checkTopicHasSubs(current)) {
 
-						_.map(_.sortBy(map[current], 'priority'), function (subscriber, index) {
+						angular.forEach( $filter('orderBy')(map[current], 'priority') , function (subscriber, index) {
 							//future - avoid $safeApply
 							$rootScope.$safeApply(function() {
 								subscriber.callback.apply(subscriber.ref, args);
@@ -164,9 +164,9 @@ angular.module('clotho.core').service('PubSub',
 			 @param topic {string} channel to publish on, can be multiple space-separated
 			*/
 			var reject = function (topic) {
-				_.forEach(splitTopics(topic), function (current) {
-						Debugger.log('Reject on ' + current);
-					_.map(current, function (subscriber, index) {
+				angular.forEach(splitTopics(topic), function (current) {
+					Debugger.log('Reject on ' + current);
+					angular.forEach(map[current], function (subscriber, index) {
 						//future - avoid $safeApply
 						$rootScope.$safeApply(function() {
 							subscriber.callback.apply(subscriber.ref, null);
@@ -197,12 +197,12 @@ angular.module('clotho.core').service('PubSub',
 				one = one == true;
 
 				if (one) {
-					callback = _.once(callback);
+					callback = angular.once(callback);
 				}
 
 				var unsubscribers = [];
 
-				_.forEach(splitTopics(topic), function (current) {
+				angular.forEach(splitTopics(topic), function (current) {
 					unsubscribers.push(
 						registerSubscriber(current,
 							createSubscriber(callback, ref, priority, one)
@@ -211,7 +211,7 @@ angular.module('clotho.core').service('PubSub',
 				});
 
 				return function () {
-					_.forEach(unsubscribers, function (handle) {
+					angular.forEach(unsubscribers, function (handle) {
 						handle();
 					});
 				}
@@ -244,8 +244,8 @@ angular.module('clotho.core').service('PubSub',
 			 */
 			var off = function (topic, callback) {
 
-				var removed = _.remove(map[topic], function (sub) {
-					return _.isEqual(subscriber.callback, callback);
+				var removed = angular.remove(map[topic], function (subscriber) {
+					return angular.equals(subscriber.callback, callback);
 				});
 
 				return removed.length > 0;
@@ -260,9 +260,9 @@ angular.module('clotho.core').service('PubSub',
 			 * Removes all listeners for an associated reference. When pass a $scope to on(), destroy will automatically be set up on $scope.$destroy, so this is unneeded.
 			 */
 			var destroy = function (ref) {
-				_.forEach(map, function (topicArray, key) {
-					_.remove(topicArray, function (subscriber) {
-						return _.isEqual(parseRefId(ref), parseRefId(subscriber.ref));
+				angular.forEach(map, function (topicArray, key) {
+					angular.remove(topicArray, function (subscriber) {
+						return angular.equals(parseRefId(ref), parseRefId(subscriber.ref));
 					});
 				});
 			};
@@ -279,7 +279,7 @@ angular.module('clotho.core').service('PubSub',
 			 */
 			//remove all subscribers for given topic(s)
 			var clear = function (topic) {
-				_.forEach(splitTopics(topic), function (val, key) {
+				angular.forEach(splitTopics(topic), function (val, key) {
 					map[key].length = 0;
 				});
 			};

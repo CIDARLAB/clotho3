@@ -9,7 +9,7 @@ angular.module('clotho.angularAdditions', [])
 		 * @param {*} value
 		 * @returns {*|boolean|Boolean}
 		 */
-		ext.isEmpty = function(value) {
+		ext.isEmpty = function isEmpty(value) {
 			return (angular.isDefined(_) && angular.isObject(value) && _.isEmpty(value)) || (angular.isUndefined(value) || value === '' || value === null || value !== value);
 		};
 		/**
@@ -18,7 +18,7 @@ angular.module('clotho.angularAdditions', [])
 		 * @param {*} obj
 		 * @returns {*|$evalAsync|$watch|Function}
 		 */
-		ext.isScope = function(obj) {
+		ext.isScope = function isScope(obj) {
 			return obj && obj.$evalAsync && obj.$watch;
 		};
 		/**
@@ -27,7 +27,7 @@ angular.module('clotho.angularAdditions', [])
 		 * @param {Function} func The function to restrict.
 		 * @returns {Function} Returns the new restricted function.
 		 */
-		ext.once = function (func) {
+		ext.once = function once(func) {
 			var ran,
 				result;
 
@@ -44,6 +44,39 @@ angular.module('clotho.angularAdditions', [])
 				func = null;
 				return result;
 			};
+		};
+
+		/**
+		 * Removes all elements from an array that the callback returns truey for and returns an array of removed elements.
+		 * The callback is invoked with three arguments; (value, index, array).
+		 * @param {Array} array The array to modify
+		 * @param {Function} callback The function called per iteration
+		 * @returns {Array} Returns a new array of removed elements.
+		 */
+		ext.remove = function remove(array, callback) {
+			var index = -1,
+				length = array ? array.length : 0,
+				result = [];
+
+			while (++index < length) {
+				var value = array[index];
+				if (callback(value, index, array)) {
+					result.push(value);
+					array.splice.(index--, 1);
+					length--;
+				}
+			}
+			return result;
+		};
+
+		ext.map = function map(obj, iterator, context) {
+			var results = [];
+			angular.forEach(obj, function(value, index, list) {
+				if (angular.isFunction(iterator)) {
+					results.push(iterator.call(context, value, index, list));
+				}
+			});
+			return results;
 		};
 
 		angular.extend(angular, ext);
