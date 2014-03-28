@@ -166,7 +166,7 @@ angular.module('clotho.core').service('PubSub',
 			var reject = function (topic) {
 				_.forEach(splitTopics(topic), function (current) {
 						Debugger.log('Reject on ' + current);
-					_.map(current, function (subscriber, index) {
+					_.map(map[current], function (subscriber, index) {
 						//future - avoid $safeApply
 						$rootScope.$safeApply(function() {
 							subscriber.callback.apply(subscriber.ref, null);
