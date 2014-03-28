@@ -23,6 +23,7 @@
  */
 package org.clothocad.core.communication;
 
+import org.clothocad.core.execution.ScriptAPI;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -72,6 +73,7 @@ import org.clothocad.model.Person;
  * representations and synchronization models, so there is necessarily
  * interpretor logic in Router/ Communicator that handles this.
  *
+ * API methods should return their result, instead of sending the result as a side effect
  *
  * @author John Christopher Anderson
  */
@@ -91,16 +93,8 @@ public class ServerSideAPI {
         this.router = router;
     }
 
-    public final void autocomplete(String userText) {
-        router.sendMessage(
-            mind.getConnection(),
-            new Message(
-                Channel.autocomplete,
-                completer.getCompletions(userText),
-                null,
-                null
-            )
-        );
+    public final List<String> autocomplete(String userText) {
+        return completer.getCompletions(userText);
     }
 
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)

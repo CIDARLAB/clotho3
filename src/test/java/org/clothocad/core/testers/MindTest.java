@@ -7,7 +7,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ScriptAPI;
+import org.clothocad.core.execution.ScriptAPI;
 import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.execution.Mind;

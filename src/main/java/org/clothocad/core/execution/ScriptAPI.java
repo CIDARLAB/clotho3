@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.communication;
+package org.clothocad.core.execution;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import javax.script.ScriptException;
 import org.bson.types.ObjectId;
+import org.clothocad.core.communication.Router;
+import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.execution.Mind;

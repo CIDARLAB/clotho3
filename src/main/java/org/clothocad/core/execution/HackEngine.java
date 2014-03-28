@@ -23,4 +23,6 @@ public interface HackEngine {
     
     public void setContext(ScriptContext context);
     public ScriptContext getContext();
+    
+    public void injectAPI(ScriptAPI api, ScriptContext context);
 }
