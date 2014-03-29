@@ -92,18 +92,9 @@ public class ServerSideAPI {
         this.completer = new AutoComplete(persistor);
     }
 
-    public final void autocomplete(String userText) {
-        router.sendMessage(
-            mind.getConnection(),
-            new Message(
-                Channel.autocomplete,
-                completer.getCompletions(userText),
-                null,
-                null
-            )
-        );
+    public final List<String> autocomplete(String userText){
+        return completer.getCompletions(userText);
     }
-
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
         try {

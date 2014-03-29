@@ -69,7 +69,7 @@ public class Router {
             switch (request.getChannel()) {
                 case autocomplete:
                     System.out.println(data.toString());
-                    api.autocomplete(data.toString());
+                    response = api.autocomplete(data.toString());
                     break;
                 case autocompleteDetail:
                     api.autocompleteDetail(data.toString());
