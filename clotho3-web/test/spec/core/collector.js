@@ -1,86 +1,98 @@
-//todo - need to pull out localStorage service so not internal so can be tested
-
 describe('clotho.core Collector', function() {
-	var factory,
-		window;
+	var Collector,
+		clothoLocalStorage,
+		$window,
+		prefix,
+		mockStorage;
 
-	// excuted before each "it()" is run.
-	beforeEach(function() {
-		// load the module
+	beforeEach(function () {
 		module('clotho.core');
 
-		// inject your factory for testing
-		inject(function(Collector, $window) {
-			factory = Collector;
-			window = $window
+		inject(function (_Collector_, _clothoLocalStorage_, _$window_) {
+			Collector = _Collector_;
+			clothoLocalStorage = _clothoLocalStorage_;
+			$window = _$window_;
 		});
 
 		//this mocks localStorage
-		var store = {
-			"clotho_123456789": {"hey" : "there"},
-			"clotho_qwertyuiop": {"nothing" : "here"}
+		prefix = "clotho_";
+		mockStorage = {
+			"nonClothoItem" : "some Value for this item",
+			"clotho_123" : JSON.stringify({"hey" : "there"}),
+			"clotho_456" : JSON.stringify({"tester" : "object"})
 		};
 
-		spyOn(localStorage, 'getItem').andCallFake(function(key) {
-			return store[key];
+		spyOn($window.localStorage, 'getItem').and.callFake(function(key) {
+			return mockStorage[key];
 		});
 
-		spyOn(localStorage, 'setItem').andCallFake(function(key, value) {
-			return store[key] = value + '';
+		spyOn($window.localStorage, 'setItem').and.callFake(function(key, value) {
+			return mockStorage[key] = value;
 		});
 
-		spyOn(localStorage, 'clear').andCallFake(function() {
-			store = {};
+		spyOn($window.localStorage, 'removeItem').and.callFake(function(key) {
+			console.log(key);
+			delete mockStorage[key];
 		});
 
-		spyOn(Object, 'keys').andCallFake(function(value) {
-			var keys=[];
-
-			for(var key in store) {
-				keys.push(key);
+		Object.defineProperty($window.localStorage, 'length', {
+			get: function () {
+				console.log('length got called: ' + Object.keys(this).length);
+				return Object.keys(this).length - 2;
 			}
+		});
 
-			return keys;
+		spyOn($window.localStorage, 'key').and.callFake(function(index) {
+			console.log('want key ' + index);
+			var ordKeys = Object.keys(mockStorage).sort();
+			return ordKeys[index];
+		});
+
+		spyOn($window.localStorage, 'clear').and.callFake(function() {
+			for (var key in mockStorage) {
+				if (mockStorage.hasOwnProperty(key)) {
+					delete mockStorage[key];
+				}
+			}
 		});
 	});
 
 
-	it('should should return the whole collector object without arguments', function() {
-		expect(angular.isObject(factory.collector)).toBe(true);
+	it('should should return the whole collector object', function() {
+		expect(angular.isObject(Collector.collector)).toBe(true);
+	});
+
+	describe('#storeModel', function() {
+
+		it('should have a storeModel function', function() {
+			expect(angular.isFunction(Collector.storeModel)).toBe(true);
+		});
+
+		it('should add an item when calling storeModel and retrieve it with retrieveModel', function() {
+			var myObj = {hi: 'there'};
+			Collector.storeModel('12849124219', myObj);
+
+			expect(Collector.retrieveModel('12849124219')).toEqual(myObj);
+		});
+
 	});
 
 
 	describe('#retrieveModel', function() {
 
 		it('should have a retrieveModel function', function() {
-			expect(angular.isFunction(factory.retrieveModel)).toBe(true);
+			expect(angular.isFunction(Collector.retrieveModel)).toBe(true);
 		});
 
-		it('should return items by key when call retrieveModel', function() {
-			var result = factory.retrieveModel('123456789');
-
-			expect(angular.isObject(result)).toBe(true);
-		});
 
 		it('should prefix a key with clotho_', function() {
-			var direct = window.localStorage.getItem('clotho_qwertyuiop');
-			var indirect = factory.retrieveModel('qwertyuiop');
-			expect(indirect).toEqual(direct);
-		});
-
-	});
-
-	describe('#storeModel', function() {
-
-		it('should have a storeModel function', function() {
-			expect(angular.isFunction(factory.storeModel)).toBe(true);
-		});
-
-		it('should add an item when calling storeModel and retrieve it with retrieveModel', function() {
-			var myObj = {hi: 'there'};
-			factory.storeModel('12849124219', myObj);
-
-			expect(factory.retrieveModel('12849124219')).toEqual(myObj);
+			var model = {myData : "is so hot"};
+			Collector.storeModel('123', model);
+			var direct = $window.localStorage.getItem('clotho_123');
+			var indirect = Collector.retrieveModel('123');
+			expect(angular.isObject(indirect)).toBe(true);
+			expect(angular.isString(direct)).toBe(true);
+			expect(JSON.stringify(indirect)).toEqual(direct);
 		});
 
 	});

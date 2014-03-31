@@ -333,7 +333,15 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'karma.conf.js',
         singleRun: true
-      }
+      },
+	    api : {
+		    configFile: 'karma-api.conf.js',
+		    singleRun: true
+	    },
+	    command : {
+		    configFile: 'karma-command.conf.js',
+		    singleRun: true
+	    }
     },
     cdnify: {
       dist: {
