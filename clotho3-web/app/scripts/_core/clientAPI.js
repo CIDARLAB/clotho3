@@ -5,19 +5,13 @@
  * This is the client Clotho API - commands issued BY the server to be run on the client
  */
 angular.module('clotho.core').service('ClientAPI',
-	function (PubSub, Collector, Debug, $q, $templateCache, $http, $rootScope, $location, $compile) {
+	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $compile) {
 
 		var Debugger = new Debug('ClientAPI', '#dd99dd');
 
-		//todo - verify this works and retrieves the service properly
-		var interfaceModulePresent = false,
-			$modal;
-		try {
-			angular.module('clotho.interface');
-			interfaceModulePresent = true;
-			$modal = angular.injector('clotho.interface').get('$modal');
-		} catch (err) {
-			// not present
+		var $modal;
+		if ($injector.has('$modal')) {
+			$modal = $injector.get('$modal');
 		}
 
 		/**
@@ -41,7 +35,7 @@ angular.module('clotho.core').service('ClientAPI',
 		 * @param uuid UUID of sharable to edit, opens in modal
 		 */
 		var edit = function (uuid) {
-			if (interfaceModulePresent) {
+			if (angular.isDefined($modal)) {
 				var dialog_opts = {
 					backdrop: true,
 					keyboard: true,
@@ -228,7 +222,7 @@ angular.module('clotho.core').service('ClientAPI',
 
 			PubSub.trigger('serverAlert');
 
-			if (interfaceModulePresent) {
+			if (angular.isDefined($modal)) {
 				$rootScope.$safeApply($modal.serverAlert(msg)
 					.result
 					.then(function (result) {
@@ -236,7 +230,7 @@ angular.module('clotho.core').service('ClientAPI',
 					})
 				);
 			} else {
-				window.alert(msg);
+				$window.alert(msg);
 			}
 		};
 

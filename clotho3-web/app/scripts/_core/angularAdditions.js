@@ -10,16 +10,39 @@ angular.module('clotho.angularAdditions', [])
 		 * @returns {*|boolean|Boolean}
 		 */
 		ext.isEmpty = function isEmpty(value) {
-			return (angular.isDefined(_) && angular.isObject(value) && _.isEmpty(value)) || (angular.isUndefined(value) || value === '' || value === null || value !== value);
+			//can't check if _ defined with angular because throws ReferenceError
+			try {
+				return _.isEmpty(value)
+			} catch (err) {
+				if (angular.isNumber(value)) {
+					return value === value;
+				}
+				else if (angular.isObject(value)) {
+					if (value.length === 0) {
+						return true;
+					} else {
+						for (var key in value) {
+							if (value.hasOwnProperty(key)) {
+								return false;
+							}
+						}
+						return true;
+					}
+				}
+				else if (angular.isUndefined(value) || value === null || value.length == 0) {
+					return true;
+				}
+				return false;
+			}
 		};
 		/**
 		 * @name angular.isScope
 		 * @description Determines whether an object is an angular $scope
 		 * @param {*} obj
-		 * @returns {*|$evalAsync|$watch|Function}
+		 * @returns {Boolean}
 		 */
 		ext.isScope = function isScope(obj) {
-			return obj && obj.$evalAsync && obj.$watch;
+			return !!obj && angular.isFunction(obj.$evalAsync) && angular.isFunction(obj.$watch);
 		};
 		/**
 		 * @name angular.once
@@ -51,18 +74,21 @@ angular.module('clotho.angularAdditions', [])
 		 * The callback is invoked with three arguments; (value, index, array).
 		 * @param {Array} array The array to modify
 		 * @param {Function} callback The function called per iteration
+		 * @param {*} context `this`
 		 * @returns {Array} Returns a new array of removed elements.
 		 */
-		ext.remove = function remove(array, callback) {
+		ext.remove = function remove(array, callback, context) {
 			var index = -1,
 				length = array ? array.length : 0,
 				result = [];
 
+			context = context || null;
+
 			while (++index < length) {
 				var value = array[index];
-				if (callback(value, index, array)) {
-					result.push(value);
-					array.splice.(index--, 1);
+				if (angular.isUndefined(value) || callback.call(context, value, index, array)) {
+					angular.isDefined(value) && result.push(value);
+					array.splice(index--, 1);
 					length--;
 				}
 			}

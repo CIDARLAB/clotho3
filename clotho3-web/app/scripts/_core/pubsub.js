@@ -1,10 +1,10 @@
 //note - written using lodash internally
 
 angular.module('clotho.core').service('PubSub',
-	function ($rootScope, $filter, Debug) {
+	function ($window, $rootScope, $filter, Debug) {
 
 		//see if already exists, don't re-instantiate
-		return (window.$clotho.$pubsub) ? window.$clotho.$pubsub : window.$clotho.$pubsub = generatePubSubObject();
+		return ($window.$clotho.$pubsub) ? $window.$clotho.$pubsub : $window.$clotho.$pubsub = generatePubSubObject();
 
 		function generatePubSubObject() {
 			/*****
@@ -112,7 +112,7 @@ angular.module('clotho.core').service('PubSub',
 			 Functions
 			 **********/
 
-			var logListeners = function () {
+			var logListeners = function pubsub_logListeners () {
 				Debugger.log('LISTENERS:');
 				angular.forEach(map, function (val, key) {
 					Debugger.log(key);
@@ -127,7 +127,7 @@ angular.module('clotho.core').service('PubSub',
 			 @param topic {string} channel to publish on, can be multiple space-separated
 			 @param args {*}  Array of arguments to apply to callback.
 			 */
-			var trigger = function (topic, args) {
+			var trigger = function pubsub_trigger (topic, args) {
 
 				//ensure arguments are array
 				if (angular.isUndefined(args) || angular.isEmpty(args)) {
@@ -163,7 +163,7 @@ angular.module('clotho.core').service('PubSub',
 			 Cancel a callback, publish null on the topic
 			 @param topic {string} channel to publish on, can be multiple space-separated
 			*/
-			var reject = function (topic) {
+			var reject = function pubsub_reject (topic) {
 				angular.forEach(splitTopics(topic), function (current) {
 					Debugger.log('Reject on ' + current);
 					angular.forEach(map[current], function (subscriber, index) {
@@ -189,10 +189,10 @@ angular.module('clotho.core').service('PubSub',
 			 @param ref {string} context for this, or $scope (will automatically set up $destroy listener), or reference ID to be used in PubSub.destroy()
 			 @param priority {number} Priority to run function at. default is 100. Lower gets priority.
 			 @param one {boolean} Flag to run the callback only once
-			 @return handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
+			 @return {Function} handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
 			 */
 			//note - ref is also context for this in callback
-			var on = function (topic, callback, ref, priority, one) {
+			var on = function pubsub_on (topic, callback, ref, priority, one) {
 				ref = ref || null;
 				one = one == true;
 
@@ -210,11 +210,11 @@ angular.module('clotho.core').service('PubSub',
 					);
 				});
 
-				return function () {
+				return (function pubsuub_unsubscribe() {
 					angular.forEach(unsubscribers, function (handle) {
 						handle();
 					});
-				}
+				});
 			};
 
 			/**
@@ -227,7 +227,7 @@ angular.module('clotho.core').service('PubSub',
 			 * @param priority {number} Priority to run function at. default is 100. Lower gets priority.
 			 *
 			 */
-			var once = function (topic, callback, ref, priority) {
+			var once = function pubsub_once(topic, callback, ref, priority) {
 				on(topic, callback, ref, priority, true);
 			};
 
@@ -242,13 +242,13 @@ angular.module('clotho.core').service('PubSub',
 			 handle(); //unsubscribe
 
 			 */
-			var off = function (topic, callback) {
+			var off = function pubsub_off (topic, callback) {
 
 				var removed = angular.remove(map[topic], function (subscriber) {
 					return angular.equals(subscriber.callback, callback);
 				});
 
-				return removed.length > 0;
+				return (removed.length > 0);
 			};
 
 			/**
@@ -259,7 +259,7 @@ angular.module('clotho.core').service('PubSub',
 			 * @description
 			 * Removes all listeners for an associated reference. When pass a $scope to on(), destroy will automatically be set up on $scope.$destroy, so this is unneeded.
 			 */
-			var destroy = function (ref) {
+			var destroy = function pubsub_destroy(ref) {
 				angular.forEach(map, function (topicArray, key) {
 					angular.remove(topicArray, function (subscriber) {
 						return angular.equals(parseRefId(ref), parseRefId(subscriber.ref));
@@ -278,7 +278,7 @@ angular.module('clotho.core').service('PubSub',
 			 * Does nothing if no topic passed.
 			 */
 			//remove all subscribers for given topic(s)
-			var clear = function (topic) {
+			var clear = function pubsub_clear (topic) {
 				angular.forEach(splitTopics(topic), function (val, key) {
 					map[key].length = 0;
 				});

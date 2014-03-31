@@ -20,7 +20,7 @@ angular.module('clotho.interface').directive('uiMarkdown', function () {
 	var showdownPromise = $clotho.extensions.mixin('bower_components/showdown/src/showdown.js').then(function() {
 		converter = new Showdown.converter();
 	});
-	
+
 	return {
 		restrict: 'EA',
 		link: function (scope, element, attrs) {

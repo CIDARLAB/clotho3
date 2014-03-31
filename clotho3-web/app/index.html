@@ -37,7 +37,7 @@
     <!-- /process -->
 
 </head>
-<body>
+<body ng-app="clothoRoot">
 <!--[if lt IE 9]>
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
@@ -129,6 +129,7 @@ dependencies: none
 <script src="scripts/_core/debug.js"></script>
 <script src="scripts/_core/clothoAPI.js"></script>
 <script src="scripts/_core/clientAPI.js"></script>
+<script src="scripts/_core/clothoLocalStorage.js"></script>
 <script src="scripts/_core/collector.js"></script>
 <script src="scripts/_core/pubsub.js"></script>
 <script src="scripts/_core/socket.js"></script>
@@ -141,7 +142,7 @@ dependencies: none
 <!--
 name: clotho.commandbar
 function: CommandBar and related directives, services, etc.
-dependencies: clotho.core
+dependencies: clotho.core, jQuery, Lodash
 -->
 <script src="scripts/_command/_kickoff.js"></script>
 <script src="scripts/_command/commandBar.js"></script>

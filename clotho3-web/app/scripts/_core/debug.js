@@ -22,18 +22,20 @@ angular.module('clotho.core')
  * debugging service used across app
  *
  * @usage
- * new Debug(<namespace (defaults to anonymous)>, <hex_color (optional)>);
+ * var Debugger = new Debug(<namespace (defaults to anonymous)>, <hex_color (optional)>);
  * ...
- * Debug.log('heres a log message');
- * Debug.info('heres some info');
- * Debug.warn('heres a warning');
- * Debug.error('heres an error');
- * Debug.debug('heres some debugging');
- * Debug.table(myObject, fieldsToPluckAsArray);
+ * Debugger.log('heres a log message');
+ * Debugger.info('heres some info');
+ * Debugger.warn('heres a warning');
+ * Debugger.error('heres an error');
+ * Debugger.debug('heres some debugging');
+ * Debugger.table(myObject, fieldsToPluckAsArray);
+ * Debugger.$log //patch through to angular $log service
+ * Debugger.console // direct access to console
  *
  * // Will output message under namespace given, with color given
  */
-	.factory('Debug', function($log) {
+	.factory('Debug', function($log, $window) {
 
 		//set to false to disable all debugging
 		var disableAll = false;
@@ -68,7 +70,7 @@ angular.module('clotho.core')
 					//collect all messages
 					messages[namespace].push({
 						message : arguments,
-						date : readableDate
+						time : x.valueOf()
 					});
 
 					//add functionality
@@ -78,17 +80,26 @@ angular.module('clotho.core')
 				}
 			});
 
-			debugFunctionality.table = function (obj) {
-				$log.table(obj);
-			};
+			angular.forEach(['table'], function (term) {
+				debugFunctionality[term] = $window.console[term];
+			});
 
 			debugFunctionality.object = function (obj) {
+				messages[namespace].push({
+					message : obj,
+					time : Date.now().valueOf()
+				});
+
 				if (angular.isObject(obj)) {
 					$log.log('%c' + JSON.stringify(obj, null, 2), 'color: '+ color +';')
 				} else {
 					$log.log('%c' + obj, 'color: '+ color +';');
 				}
 			};
+
+			//for strings to be interpolated etc.
+			debugFunctionality.$log = $log;
+			debugFunctionality.console = $window.console || {};
 
 			return debugFunctionality;
 		}

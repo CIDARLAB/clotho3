@@ -135,6 +135,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	});
 });
 
-angular.element(document).ready(function() {
-	angular.bootstrap(document, ['clothoRoot']);
-});
+/*
+ angular.element(document).ready(function() {
+ angular.bootstrap(document, ['clothoRoot']);
+ });
+ */

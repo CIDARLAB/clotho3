@@ -7,6 +7,8 @@ angular.module('clothoRoot', ['clotho.core', 'clotho.commandbar'])
 	Clotho.submit("clotho.run('clientSetup', [])");
 });
 
+/*
 angular.element(document).ready(function() {
 	angular.bootstrap(document, ['clothoRoot']);
 });
+*/

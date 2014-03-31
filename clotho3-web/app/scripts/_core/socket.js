@@ -5,7 +5,7 @@
  */
 
 angular.module('clotho.core').service('Socket',
-	function($window, $q, PubSub, ClientAPI, Debug) {
+	function($window, $q, $log, PubSub, ClientAPI, Debug) {
 
 	//note - ensuring page-wide singleton
 	return ($window.$clotho.$socket) ?
@@ -64,7 +64,7 @@ angular.module('clotho.core').service('Socket',
 	    }
 
 	    socket.onerror = function(err) {
-		    Debugger.error(err);
+		    Debugger.error('socket error', err);
 	    };
 
       socket.onclose = function(evt) {
