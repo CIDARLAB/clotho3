@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
+import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
@@ -37,9 +38,13 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 SecurityUtils.setSecurityManager(securityManager);
 
                 //test-specific setup
+                //delete all data BEFORE the persistor starts  
+                
+                ClothoConnection connection = injector.getInstance(ClothoConnection.class);
+                connection.deleteAll();
+                
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-                persistor.deleteAll();
                 realm.deleteAll();
                 TestUtils.setupTestData(persistor);
                 TestUtils.setupTestUsers(realm);
