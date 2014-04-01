@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.util;
 
 import com.google.inject.Guice;
@@ -41,9 +37,13 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 SecurityUtils.setSecurityManager(securityManager);
 
                 //test-specific setup
+                //delete all data BEFORE the persistor starts  
+                
+                ClothoConnection connection = injector.getInstance(ClothoConnection.class);
+                connection.deleteAll();
+                
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-                persistor.deleteAll();
                 realm.deleteAll();
                 TestUtils.setupTestData(persistor);
                 TestUtils.setupTestUsers(realm);
