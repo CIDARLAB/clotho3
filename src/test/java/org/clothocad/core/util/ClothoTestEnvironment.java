@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
+import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
