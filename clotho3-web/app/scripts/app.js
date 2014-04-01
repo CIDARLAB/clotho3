@@ -116,14 +116,13 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.otherwise({
 		redirectTo:'/'
 	});
-	//routes go in here
 
 })
 .run(function($rootScope, $route, $window, Clotho) {
 
 	/****** Init ******/
 
-	//sort of init() function with server (assumes WebSocket is set up)
+	//sort of init() function with server, for easier scripting
 	Clotho.submit("clotho.run('clientSetup', [])");
 
 	/****** Config *****/
