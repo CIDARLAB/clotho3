@@ -4,6 +4,4 @@ angular.module('clotho.webapp').controller('TrailsCtrl', function ($scope, Cloth
 	Clotho.query({schema : "Trail"}).then(function(result) {
 		$scope.trails = result;
 	});
-
-	$scope.base64icon = base64icon;
 });

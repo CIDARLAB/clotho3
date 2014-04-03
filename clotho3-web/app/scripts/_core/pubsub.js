@@ -1,10 +1,10 @@
 //note - written using lodash internally
 
 angular.module('clotho.core').service('PubSub',
-	function ($rootScope) {
+	function ($window, $rootScope, $filter, Debug) {
 
 		//see if already exists, don't re-instantiate
-		return (window.$clotho.$pubsub) ? window.$clotho.$pubsub : window.$clotho.$pubsub = generatePubSubObject();
+		return ($window.$clotho.$pubsub) ? $window.$clotho.$pubsub : $window.$clotho.$pubsub = generatePubSubObject();
 
 		function generatePubSubObject() {
 			/*****
@@ -29,6 +29,8 @@ angular.module('clotho.core').service('PubSub',
 
 			//split events passed in by a space
 			var eventSplitter = /\s+/;
+
+			var Debugger = new Debug('PubSub', '#55cccc');
 
 			/*********
 			 Internal Helpers
@@ -71,7 +73,7 @@ angular.module('clotho.core').service('PubSub',
 
 			//register a subscriber, handle if scope, return unsubscriber function
 			function registerSubscriber (topic, subscriber) {
-				if (subscriber && !_.isEmpty(subscriber)) {
+				if (subscriber && !angular.isEmpty(subscriber)) {
 					if(!map[topic]) {
 						map[topic] = [];
 					}
@@ -86,17 +88,17 @@ angular.module('clotho.core').service('PubSub',
 
 					map[topic].push(subscriber);
 
-					return _.once(function () {
+					return angular.once(function () {
 						unregisterSubscriber(topic, subscriber);
 					});
 				} else {
-					return _.noop;
+					return angular.noop;
 				}
 			}
 
 			function unregisterSubscriber(topic, subscriber) {
-				var removed = _.remove(map[topic], function (sub) {
-					return _.isEqual(sub, subscriber);
+				var removed = angular.remove(map[topic], function (sub) {
+					return angular.equals(sub, subscriber);
 				});
 				return removed.length > 0;
 			}
@@ -110,11 +112,11 @@ angular.module('clotho.core').service('PubSub',
 			 Functions
 			 **********/
 
-			var logListeners = function () {
-				console.log('PUBSUB - Listeners');
-				_.forEach(map, function (val, key) {
-					console.log(key);
-					console.table(map[key])
+			var logListeners = function pubsub_logListeners () {
+				Debugger.log('LISTENERS:');
+				angular.forEach(map, function (val, key) {
+					Debugger.log(key);
+					Debugger.table(map[key])
 				});
 			};
 
@@ -123,24 +125,25 @@ angular.module('clotho.core').service('PubSub',
 			 @description
 			 Publish some data on a topic
 			 @param topic {string} channel to publish on, can be multiple space-separated
-			 @param args {array}  Array of arguments to apply to callback
+			 @param args {*}  Array of arguments to apply to callback.
 			 */
-			var trigger = function (topic, args) {
+			var trigger = function pubsub_trigger (topic, args) {
+
 				//ensure arguments are array
-				if (_.isUndefined(args) || _.isEmpty(args)) {
+				if (angular.isUndefined(args) || angular.isEmpty(args)) {
 					args = null;
-				}
-				else if (!_.isArray(args)) {
+				} else {
+					//HACK - wrap everything in array for apply to provide consistency for signature
 					args = [args];
 				}
 
 				//loop through each passed topic
-				_.forEach(splitTopics(topic), function (current) {
+				angular.forEach(splitTopics(topic), function (current) {
 					//loop through each subscriber
-					console.log('PUBSUB - Publish on ' + current, args);
+					Debugger.log('Publish on ' + current, args);
 					if (checkTopicHasSubs(current)) {
 
-						_.map(_.sortBy(map[current], 'priority'), function (subscriber, index) {
+						angular.forEach( $filter('orderBy')(map[current], 'priority') , function (subscriber, index) {
 							//future - avoid $safeApply
 							$rootScope.$safeApply(function() {
 								subscriber.callback.apply(subscriber.ref, args);
@@ -151,8 +154,29 @@ angular.module('clotho.core').service('PubSub',
 							}
 						});
 					}
-				})
+				});
+			};
 
+			/**
+			 @name PubSub.reject
+			 @description
+			 Cancel a callback, publish null on the topic
+			 @param topic {string} channel to publish on, can be multiple space-separated
+			*/
+			var reject = function pubsub_reject (topic) {
+				angular.forEach(splitTopics(topic), function (current) {
+					Debugger.log('Reject on ' + current);
+					angular.forEach(map[current], function (subscriber, index) {
+						//future - avoid $safeApply
+						$rootScope.$safeApply(function() {
+							subscriber.callback.apply(subscriber.ref, null);
+						});
+
+						if (subscriber.once == true) {
+							map[current].splice(index, 1);
+						}
+					});
+				});
 			};
 
 			/**
@@ -165,20 +189,20 @@ angular.module('clotho.core').service('PubSub',
 			 @param ref {string} context for this, or $scope (will automatically set up $destroy listener), or reference ID to be used in PubSub.destroy()
 			 @param priority {number} Priority to run function at. default is 100. Lower gets priority.
 			 @param one {boolean} Flag to run the callback only once
-			 @return handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
+			 @return {Function} handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
 			 */
 			//note - ref is also context for this in callback
-			var on = function (topic, callback, ref, priority, one) {
+			var on = function pubsub_on (topic, callback, ref, priority, one) {
 				ref = ref || null;
 				one = one == true;
 
 				if (one) {
-					callback = _.once(callback);
+					callback = angular.once(callback);
 				}
 
 				var unsubscribers = [];
 
-				_.forEach(splitTopics(topic), function (current) {
+				angular.forEach(splitTopics(topic), function (current) {
 					unsubscribers.push(
 						registerSubscriber(current,
 							createSubscriber(callback, ref, priority, one)
@@ -186,11 +210,11 @@ angular.module('clotho.core').service('PubSub',
 					);
 				});
 
-				return function () {
-					_.forEach(unsubscribers, function (handle) {
+				return (function pubsuub_unsubscribe() {
+					angular.forEach(unsubscribers, function (handle) {
 						handle();
 					});
-				}
+				});
 			};
 
 			/**
@@ -203,7 +227,7 @@ angular.module('clotho.core').service('PubSub',
 			 * @param priority {number} Priority to run function at. default is 100. Lower gets priority.
 			 *
 			 */
-			var once = function (topic, callback, ref, priority) {
+			var once = function pubsub_once(topic, callback, ref, priority) {
 				on(topic, callback, ref, priority, true);
 			};
 
@@ -218,13 +242,13 @@ angular.module('clotho.core').service('PubSub',
 			 handle(); //unsubscribe
 
 			 */
-			var off = function (topic, callback) {
+			var off = function pubsub_off (topic, callback) {
 
-				var removed = _.remove(map[topic], function (sub) {
-					return _.isEqual(subscriber.callback, callback);
+				var removed = angular.remove(map[topic], function (subscriber) {
+					return angular.equals(subscriber.callback, callback);
 				});
 
-				return removed.length > 0;
+				return (removed.length > 0);
 			};
 
 			/**
@@ -235,10 +259,10 @@ angular.module('clotho.core').service('PubSub',
 			 * @description
 			 * Removes all listeners for an associated reference. When pass a $scope to on(), destroy will automatically be set up on $scope.$destroy, so this is unneeded.
 			 */
-			var destroy = function (ref) {
-				_.forEach(map, function (topicArray, key) {
-					_.remove(topicArray, function (subscriber) {
-						return _.isEqual(parseRefId(ref), parseRefId(subscriber.ref));
+			var destroy = function pubsub_destroy(ref) {
+				angular.forEach(map, function (topicArray, key) {
+					angular.remove(topicArray, function (subscriber) {
+						return angular.equals(parseRefId(ref), parseRefId(subscriber.ref));
 					});
 				});
 			};
@@ -254,8 +278,8 @@ angular.module('clotho.core').service('PubSub',
 			 * Does nothing if no topic passed.
 			 */
 			//remove all subscribers for given topic(s)
-			var clear = function (topic) {
-				_.forEach(splitTopics(topic), function (val, key) {
+			var clear = function pubsub_clear (topic) {
+				angular.forEach(splitTopics(topic), function (val, key) {
 					map[key].length = 0;
 				});
 			};
@@ -267,6 +291,7 @@ angular.module('clotho.core').service('PubSub',
 				once: once,
 				off: off,
 				destroy: destroy,
+				reject : reject,
 				clear: clear
 			}
 		}

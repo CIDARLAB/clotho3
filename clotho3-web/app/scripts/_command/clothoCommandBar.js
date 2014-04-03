@@ -21,8 +21,44 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 
 			$scope.$watch('display.query', function(newValue, oldValue) {
 				 $scope.display.autocomplete = !!newValue;
-				 if (!!newValue) {
+				 if (!!newValue && angular.isString(newValue)) {
 					 Clotho.autocomplete($scope.display.query).then(function(data) {
+						 var stub = [
+							 {
+								 "uuid": "1234567890",
+								 "text": "This is a command",
+								 "value": "clotho.run('rlaksd', ['sadfjsklsdf']);",
+								 "command": {
+									 "channel": "run",
+									 "functionId": "rlaksd",
+									 "args": ["sadfjsklsd"]
+								 },
+								 "type": "command"
+							 },
+							 {
+								 "uuid": "qwertyuiop",
+								 "text": "This is a phrase",
+								 "value": "This is a phrase",
+								 "type": "phrase"
+							 },
+							 {
+								 "uuid": "817924532",
+								 "text": "Reverse Complement pca1502",
+								 "value": "clotho.run('sdfsadg', '23tg3e2q');",
+								 "command": {
+									 "channel": "run",
+									 "functionId": "sdfsadg",
+									 "args": ["23tg3e2q"]
+								 },
+								 "type": "command"
+							 },
+							 {
+								 "uuid": "xxxxxxxxxxxx",
+								 "text": "Reverse complement this",
+								 "value": "Reverse complement this",
+								 "type": "phrase"
+							 }
+						 ];
 					  $scope.autocomplete.autocompletions = data;
 					 });
 				 }
@@ -45,8 +81,7 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 							queriesLen
 							);
 
-				console.log($scope.prevSubmittedIndex);
-
+				//console.log($scope.prevSubmittedIndex);
 
 				CommandBar.setQuery($scope.display.queryHistory[$scope.prevSubmittedIndex]);
 
@@ -90,7 +125,7 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 							0
 							);
 
-				console.log($scope.prevSubmittedIndex);
+				//console.log($scope.prevSubmittedIndex);
 
 				CommandBar.setQuery($scope.display.queryHistory[$scope.prevSubmittedIndex]);
 

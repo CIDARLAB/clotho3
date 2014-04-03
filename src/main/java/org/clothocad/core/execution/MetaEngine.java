@@ -24,7 +24,6 @@ import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.communication.ScriptAPI;
 import org.mozilla.javascript.RhinoException;
 
 /**
@@ -32,6 +31,7 @@ import org.mozilla.javascript.RhinoException;
  * @author spaige
  */
 public class MetaEngine {
+    public static final String API_NAME = "clotho";
     
     @NotSaved
     private Map<Language,ScriptContext> contexts = new HashMap<>();
@@ -76,7 +76,7 @@ public class MetaEngine {
         ScriptContext context = getContext(language);
         HackEngine engine = getEngine(language);
         
-        injectAPI(api, context);
+        engine.injectAPI(api, context);
         try{
             return engine.eval(script, context);          
         }
@@ -103,9 +103,9 @@ public class MetaEngine {
         return new WrappedScriptEngine(engines.get(language));
     }
 
-    private void injectAPI(ScriptAPI api, ScriptContext context) {
-        context.setAttribute("clotho", api, ScriptContext.ENGINE_SCOPE);
-    }
+    //private void injectAPI(ScriptAPI api, ScriptContext context) {
+    //    context.setAttribute("clotho", api, ScriptContext.ENGINE_SCOPE);
+    //}
 
     public Object get(String token) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -132,7 +132,7 @@ public class MetaEngine {
     
     public Object invoke(Function module, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException{
        HackEngine engine = getEngine(module.getLanguage());
-       injectAPI(api, engine.getContext());
+       engine.injectAPI(api, engine.getContext());
        loadAsGlobal(module, api);
        
        return engine.invokeFunction(idToName(module.getUUID()), args.toArray());
@@ -141,7 +141,7 @@ public class MetaEngine {
     
     public Object invoke(Module module, String methodName, List args, ScriptAPI api) throws ScriptException, NoSuchMethodException{
        HackEngine engine = getEngine(module.getLanguage());
-       injectAPI(api, engine.getContext());
+       engine.injectAPI(api, engine.getContext());
        loadAsGlobal(module, api);
     
        Object thiz = engine.getContext().getBindings(ScriptContext.ENGINE_SCOPE).get(idToName(module.getUUID()));
@@ -153,7 +153,7 @@ public class MetaEngine {
         try {
             HackEngine engine = getEngine(Language.JAVASCRIPT);
             ScriptContext context = engine.getContext();
-            injectAPI(api,context);
+            engine.injectAPI(api,context);
             
             //eval dependencies
             //XXX: this is terrible terrible, change to module pattern that returns a function

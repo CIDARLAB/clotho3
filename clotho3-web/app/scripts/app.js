@@ -116,14 +116,13 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.otherwise({
 		redirectTo:'/'
 	});
-	//routes go in here
 
 })
 .run(function($rootScope, $route, $window, Clotho) {
 
 	/****** Init ******/
 
-	//sort of init() function with server (assumes WebSocket is set up)
+	//sort of init() function with server, for easier scripting
 	Clotho.submit("clotho.run('clientSetup', [])");
 
 	/****** Config *****/
@@ -135,6 +134,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	});
 });
 
-angular.element(document).ready(function() {
-	angular.bootstrap(document, ['clothoRoot']);
-});
+/*
+ angular.element(document).ready(function() {
+ angular.bootstrap(document, ['clothoRoot']);
+ });
+ */

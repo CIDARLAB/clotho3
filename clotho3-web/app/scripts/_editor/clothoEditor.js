@@ -8,7 +8,9 @@
  *
  *
  */
-angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $compile, $parse, $http, $templateCache, $filter, $q) {
+angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $compile, $parse, $http, $templateCache, $filter, $q, Debug) {
+
+	var Debugger = new Debug('Editor', '#dd44dd');
 
 	return {
 		restrict: 'A',
@@ -32,57 +34,14 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 			//for testing, easily log scope
 			$scope.logScope = function () {
-				console.log($scope);
+				Debugger.log($scope);
 			};
-
-
-			/** config **/
-			$scope.schema = {}; //todo - remove
 
 			//scoped variables for including templates
 			$scope._objBaseFields = 'views/_editor/_baseFields.html';
 			$scope._formActions = 'views/_editor/_formActions.html';
 
 			/** model **/
-
-				//process input sharable to see if object, or id string
-			$scope.processInputSharable = function (sharable) {
-
-				$scope.sharable = {};
-				console.log(sharable);
-
-				if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
-					console.log('sharable object passed');
-					$scope.id = sharable.id;
-					$scope.sharable = sharable;
-				}
-				else if (angular.isString(sharable)) {
-					//if its a string, call clotho.get()
-					console.log('passed a string, assuming a valid ID: ' + sharable);
-					$scope.id = sharable;
-				} else {
-					console.log('sharable must be an object or a string, you passed: ', sharable);
-					//todo - better exit if nothing present
-					$scope.id = '';
-					$scope.sharable = {};
-				}
-
-
-				//if its a string, it's an ID so get it, otherwise just return a wrapper promise for the object
-				var getObj = (angular.isEmpty($scope.sharable) && $scope.id != '') ? Clotho.get($scope.id) : $q.when($scope.sharable);
-
-				getObj.then(function (result) {
-
-					$scope.sharable = result;
-
-					$scope.type = $scope.determineType(result);
-					$scope.getPartialAndCompile($scope.type, result);
-				});
-
-			};
-
-			//init with input sharable
-			$scope.processInputSharable($scope.inputSharable);
 
 			/*********
 			 COMPILATION
@@ -155,17 +114,63 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					}
 					default :
 					{
-						console.log('unknown type');
+						Debugger.log('empty or unknown type passed');
 						$element.html('<p class="text-center">Please select an Object</p>');
 
 					}
 				}
 			};
 
+			//process input sharable to see if object, or id string
+			$scope.processInputSharable = function (sharable) {
+
+				$scope.sharable = {};
+
+				if (angular.isEmpty(sharable)) {
+					Debugger.log('sharable is undefined / empty');
+					$scope.getPartialAndCompile();
+					return;
+				}
+
+				Debugger.debug('processing sharable: ', sharable);
+
+				if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
+					Debugger.log('sharable object passed');
+					$scope.id = sharable.id;
+					$scope.sharable = sharable;
+				}
+				else if (angular.isString(sharable)) {
+					//if its a string, call clotho.get()
+					Debugger.log('passed a string, assuming a valid ID: ' + sharable);
+					$scope.id = sharable;
+				} else {
+					Debugger.warn('sharable must be an object or a string, you passed: ', sharable);
+					//todo - better exit if nothing present
+					$scope.id = '';
+					$scope.sharable = {};
+				}
+
+
+				//if its a string, it's an ID so get it, otherwise just return a wrapper promise for the object
+				var getObj = (angular.isEmpty($scope.sharable) && $scope.id != '') ? Clotho.get($scope.id) : $q.when($scope.sharable);
+
+				getObj.then(function (result) {
+
+					$scope.sharable = result;
+
+					$scope.type = $scope.determineType(result);
+					$scope.getPartialAndCompile($scope.type, result);
+				});
+
+			};
+
+			//init with input sharable
+			$scope.processInputSharable($scope.inputSharable);
+
 			//controller API
 			return {
 				removeField: function (name) {
-					console.log('removing key ' + name);
+					Debugger.log('removing key ' + name);
 					delete $scope.sharable[name];
 				}
 			}
@@ -234,7 +239,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					});
 
 					scope.$watch('editMode', function (newval, oldval) {
-						console.log('edit mode: ', newval);
+						Debugger.log('edit mode: ', newval);
 					});
 
 				}

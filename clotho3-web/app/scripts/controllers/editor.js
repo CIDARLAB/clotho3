@@ -11,7 +11,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	//init()
 	//todo - test
 	var queryResult = $route.current.locals.queryResult;
-	console.log('query result', queryResult);
+	queryResult && console.log('query result', queryResult);
 	if (angular.isDefined(queryResult) && queryResult.length) {
 		$scope.editable = queryResult[0];
 	} else {
@@ -90,6 +90,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 			$scope.chooseSubtype = !$scope.chooseSubtype;
 		} else {
 			createForEditor($scope.objectTypes[type].scaffold, type);
+			$scope.chooseSubtype = false;
 		}
 	};
 

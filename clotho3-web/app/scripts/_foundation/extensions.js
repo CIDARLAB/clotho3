@@ -126,7 +126,7 @@ angular.module('clotho.extensions', [])
 	 * @description Will download URLs only once
 	 *
 	 * @param urls URLs of dependencies. Only downloaded if hasn't been already
-	 * @returns {promise} Element Promise to be fulfilled on successful addition, value is element
+	 * @returns {Promise} Promise to be fulfilled on successful addition, value is urls passed
 	 */
 	$clotho.extensions.mixin = function(urls) {
 
