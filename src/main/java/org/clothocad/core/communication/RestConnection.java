@@ -25,8 +25,13 @@ public class RestConnection extends ClientConnection {
     
     @Override
     public void send(Message msg) {
-        jsonResult = JSON.serialize(msg);
-        this.done = true;
+        try {
+            jsonResult = JSON.serialize(msg);
+            this.done = true;
+        } catch (IOException e) {
+            jsonResult = e.toString();
+            // jsonResult = "Error";
+        }
     }
     
     public boolean isDone() {
