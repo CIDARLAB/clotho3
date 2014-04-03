@@ -68,8 +68,18 @@ public class Router {
         try {
             switch (request.getChannel()) {
                 case autocomplete:
-                    System.out.println(data.toString());
-                    response = api.autocomplete(data.toString());
+                    //response = JSON.mappify(api.autocomplete(data.toString()));
+                    List<String> output = api.autocomplete(data.toString());
+                    Object[] y= new Object[output.size()];
+                    for(int i = 0; i <output.size(); i++){
+                        HashMap<String, String> x = new HashMap<String,String>();
+                        x.put("uuid", "090909");
+                        x.put("text", output.get(i));
+                        x.put("value", "This is value");
+                        x.put("type", "phrase");
+                        y[i] = x;
+                    }
+                    response = y;
                     break;
                 case autocompleteDetail:
                     api.autocompleteDetail(data.toString());

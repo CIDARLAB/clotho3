@@ -93,6 +93,8 @@ public class ServerSideAPI {
     }
 
     public final List<String> autocomplete(String userText){
+        List<String> completions = completer.getCompletions(userText);
+
         return completer.getCompletions(userText);
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)

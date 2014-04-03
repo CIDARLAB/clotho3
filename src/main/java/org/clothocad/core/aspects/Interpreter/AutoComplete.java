@@ -98,7 +98,7 @@ public class AutoComplete {
         try {
             if(wordBank==null) {
                 Tuple[] temp = persistor.getTuplesMongo();
-                System.out.println("Temp size: " + temp.length);
+                //System.out.println("Temp size: " + temp.length);
                 //String sfile = FileUtils.readFile("wordbank.txt");
                 //List listy = JSON.deserializeList(sfile);
                 //if (listy == null) return new HashSet<>(); //XXX
