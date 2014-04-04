@@ -30,10 +30,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 
@@ -90,6 +94,9 @@ public final class Mind
 
     public Mind() {
         engine = getEngine();
+        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR); //JCA added 4/3/14
+        trie.put("mindtest1", "c7bbdabf-9c72-46ce-9d1b-61fde964d529");
+        trie.put("mindtrap", "2ebe5554-1819-4ec0-9e56-b8b43a849460");
     }
 
     /**
@@ -216,4 +223,17 @@ public final class Mind
         }
         return out;
     }
+    
+    //*****Start JCA section for dealing with autocomplete/disambiguation
+    public List<String> getMindCompletions(String query) {
+        SortedMap<String, String> subTrie = trie.prefixMap(query);
+        List<String> options = new ArrayList<>();
+        for (Map.Entry<String, String> entry : subTrie.entrySet()) {
+            options.add(entry.getKey());
+        }
+        return options;
+    }
+    
+
+    private Trie<String, String> trie;
 }

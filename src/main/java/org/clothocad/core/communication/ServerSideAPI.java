@@ -102,14 +102,15 @@ public class ServerSideAPI {
         //Grab the last word fragment up to the cursor position
         String[] words = userText.substring(0, cursorIndex).split("\\s+");
         String lastWord = words[words.length-1];
-
-        //Fetch the word suggestions with the last word as root
-        List<String> completions = completer.getCompletions(lastWord);
         
-        //TODO: Add the Mind's completions
+        //Fetch any words in the Mind's <String,String> Trie
+        List<String> comps = mind.getMindCompletions(lastWord);
         
+        //Add the word suggestions from the global Trie
+        List<String> globalComps = completer.getCompletions(lastWord);
+        comps.addAll(globalComps);
         
-        return completions;
+        return comps;
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
@@ -124,7 +125,19 @@ public class ServerSideAPI {
     }
 
     public final Object submit(String command) {
-        //Resolve the arguments to a command string
+        //Resolve the commands to Sharables
+        System.out.println("The command for submit is: " + command);
+        String[] tokens = command.split("\\s+");
+        for(String token : tokens) {
+            String uuid = null;
+            //See if the Mind has a unique word for that token
+            List<String> uuids = mind.getMindCompletions(token);
+            if(uuids.size() == 1) {
+                uuid = uuids.get(0);
+            }
+        }
+        
+        //Run the command assuming it's javascript
         //say(command, Severity.MUTED, null, true);
         try {
             Object returnValue = mind.runCommand(command, getScriptAPI());

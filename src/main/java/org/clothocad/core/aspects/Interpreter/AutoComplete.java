@@ -69,7 +69,7 @@ public class AutoComplete {
         //System.out.println("Size of subtrie: " + subTrie.size());
         List<String> options = new ArrayList<>();
         for (Map.Entry<String, String> entry : subTrie.entrySet()) {
-            options.add(entry.getValue());
+            options.add(entry.getKey());
         }
         return options;
     }
