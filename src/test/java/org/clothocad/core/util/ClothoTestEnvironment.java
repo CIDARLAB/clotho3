@@ -27,7 +27,8 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 override.setProperty("dbname", "testClotho");
                 return Guice.createInjector(
                     new ClothoTestModule(override),
-                    new MongoDBModule()
+                    //Test Module flushes database for clean environment
+                    new MongoDBTestModule()
                 );
             }
 
@@ -37,12 +38,6 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                     injector.getInstance(SecurityManager.class);
                 SecurityUtils.setSecurityManager(securityManager);
 
-                //test-specific setup
-                //delete all data BEFORE the persistor starts  
-                
-                ClothoConnection connection = injector.getInstance(ClothoConnection.class);
-                connection.deleteAll();
-                
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ClothoRealm realm = injector.getInstance(ClothoRealm.class);
                 realm.deleteAll();
