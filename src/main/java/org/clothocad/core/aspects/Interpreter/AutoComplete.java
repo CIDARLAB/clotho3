@@ -65,8 +65,6 @@ public class AutoComplete {
      * Extracting options from the Trie
      */
     public List<String> getCompletions(String subString) {
-        subString = subString.substring(7, subString.length()-1);
-        //The above is needed because the subString is in the format {query=[subString]}
         SortedMap<String, String> subTrie = trie.prefixMap(subString);
         //System.out.println("Size of subtrie: " + subTrie.size());
         List<String> options = new ArrayList<>();

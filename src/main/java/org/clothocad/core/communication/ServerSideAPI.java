@@ -93,9 +93,23 @@ public class ServerSideAPI {
     }
 
     public final List<String> autocomplete(String userText){
-        List<String> completions = completer.getCompletions(userText);
+        //This is needed because the subString is in the format {query=[subString]}
+        userText = userText.substring(7, userText.length()-1);
+        
+        //TODO: This should be changed to an int provided from the client
+        int cursorIndex = userText.length();  
 
-        return completer.getCompletions(userText);
+        //Grab the last word fragment up to the cursor position
+        String[] words = userText.substring(0, cursorIndex).split("\\s+");
+        String lastWord = words[words.length-1];
+
+        //Fetch the word suggestions with the last word as root
+        List<String> completions = completer.getCompletions(lastWord);
+        
+        //TODO: Add the Mind's completions
+        
+        
+        return completions;
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
