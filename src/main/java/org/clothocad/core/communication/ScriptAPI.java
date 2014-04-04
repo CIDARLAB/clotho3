@@ -100,7 +100,10 @@ public class ScriptAPI {
     public void say(String text){
         api.say(text);
     }
-    
+
+    public boolean login(String username, String password){
+        return api.login(username, password);
+    }
     
     //XXX: augh, would be best if we had scriptengines that could treat maps as native objects
     //TODO: handle multiple languages
