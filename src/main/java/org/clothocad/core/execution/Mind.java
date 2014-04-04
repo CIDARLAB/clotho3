@@ -95,8 +95,8 @@ public final class Mind
     public Mind() {
         engine = getEngine();
         trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR); //JCA added 4/3/14
-        trie.put("mindtest1", "c7bbdabf-9c72-46ce-9d1b-61fde964d529");
-        trie.put("mindtrap", "2ebe5554-1819-4ec0-9e56-b8b43a849460");
+        trie.put("mindtest1", "533e28679e7d657d78b6eb83");
+        trie.put("mindtrap", "533e28689e7d657d78b6ebf7");
     }
 
     /**
@@ -234,6 +234,14 @@ public final class Mind
         return options;
     }
     
+    public String getSharableId(String query) {
+        SortedMap<String, String> subTrie = trie.prefixMap(query);
+        if(subTrie.size()==1) {
+            return subTrie.get(subTrie.lastKey());
+        } else {
+            return null;
+        }
+    }
 
     private Trie<String, String> trie;
 }
