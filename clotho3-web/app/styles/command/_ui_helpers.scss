@@ -1,0 +1,20 @@
+.scrollable {
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 700px; /*just in case... need to define with inline style*/
+  width: 100%;
+}
+
+div.inline {
+  display: inline;
+}
+div.inline-block {
+  display: inline-block;
+}
+.top {
+  margin-top: 0;
+}
+.bottom {
+  margin-bottom: 0;
+}

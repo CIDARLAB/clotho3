@@ -1,0 +1,7 @@
+#clotho_commandBar {}
+
+#clotho_commandBarWrapper {
+  @extend .navbar;
+  @extend .navbar-default;
+  padding: 8px 15px;
+}

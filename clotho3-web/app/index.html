@@ -8,17 +8,13 @@
     <meta name="viewport" content="width=1024, initial-scale=1">
 
     <!-- process:remove:api -->
-    <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/bootstrapAdds.css">
-    <link rel="stylesheet" href="css/commandbar.css">
+    <!-- build:css({.tmp,app}) styles/command.css -->
+    <link rel="stylesheet" href="css/command.css">
     <!-- endbuild -->
     <!-- /process -->
     <!-- process:remove:api,command -->
-    <!-- build:css({.tmp,app}) styles/webapp.css -->
-    <link rel="stylesheet" href="css/constructionfile.css">
-    <link rel="stylesheet" href="css/images.css">
-    <link rel="stylesheet" href="css/trails.css">
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="css/main.css">
     <!-- endbuild -->
     <!-- /process -->
 
@@ -42,6 +38,14 @@
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
+
+<!-- process:remove:command,api -->
+<!-- terminal aside for webapp... note not ready for prime time yet... need to make command bar styles more accessible -->
+<!--
+<div terminal-aside-trigger></div>
+<div terminal-aside aside-content-url="'views/_command/terminal.html'"></div>
+-->
+<!-- /process -->
 
 <!-- process:remove:api -->
 <div class="container">
@@ -197,8 +201,9 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/html5/fileUpload.js"></script>
 <script src="scripts/_interface/angular-ui/modal-ext.js"></script>
 <script src="scripts/_interface/clotho/sharable.js"></script>
-<script src="scripts/_interface/elements/hintButton.js"></script>
+<script src="scripts/_interface/elements/aside.js"></script>
 <script src="scripts/_interface/elements/closeable.js"></script>
+<script src="scripts/_interface/elements/hintButton.js"></script>
 <script src="scripts/_interface/events/uiEvent.js"></script>
 <script src="scripts/_interface/events/restrictInput.js"></script>
 <script src="scripts/_interface/events/clickOutside.js"></script>
@@ -210,7 +215,7 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/filters/stringEnds.js"></script>
 <script src="scripts/_interface/filters/unique.js"></script>
 <script src="scripts/_interface/html5/contentEditable.js"></script>
-<!--todo - remove commandBar dependence-->
+<!--todo - remove commandBar dependence, move into separate module e.g. webapp-->
 <script src="scripts/_interface/interaction/focus.js"></script>
 <script src="scripts/_interface/jquery-ui/jqSortable.js"></script>
 <script src="scripts/_interface/parsers/uiMarkdown.js"></script>

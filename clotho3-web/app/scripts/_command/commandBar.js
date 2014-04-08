@@ -23,7 +23,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	};
 
 	var getCommandBarLogButton = function () {
-		return angular.element($document[0].getElementById('clothoCommandBarLogButton'));
+		return angular.element($document[0].getElementById('clotho_logButton'));
 	};
 
 	var focusInput = function() {
