@@ -241,6 +241,19 @@ public class RouterTest {
         assertEquals(data, 42);
     }
     
+    
+    @Test
+    public void scriptedGet() throws IOException{
+        TestConnection connection = new TestConnection("test");
+        sendMessage(new Message(Channel.submit, "clotho.get(\"bb99191e810c19729de860fe\")", "1"), connection);
+        //make sure that sub-objects contain expected properties
+        Map<String,Object> data = (Map) connection.messageDataByChannelAndId.get(Channel.submit.name()+"1");
+        assertNotNull(data);
+        assertTrue(data.containsKey("contents"));
+        assertTrue(data.get("contents") instanceof List);
+        assertTrue( ((Map) ((List) data.get("contents")).get(0)).containsKey("pages"));
+    }
+
     //TODO:
     public void testConstructFunctionStreamlined() {
         String script = 

@@ -30,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
+import org.bson.BSONObject;
+import org.bson.LazyBSONList;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
@@ -365,15 +367,41 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
         @Override
         public Map<String,Object> map(DBObject result) {
-            BasicDBObject basicResult = new BasicDBObject();
-            basicResult.putAll(result);
-            Map<String,Object> resultMap = basicResult.toMap();
+            Map<String,Object> resultMap = toMap(result);
+            //recurse on any sub objects
+            for (String key : resultMap.keySet()){
+                 Object value = resultMap.get(key);
+                 if (value instanceof LazyBSONList){
+                     //convert members
+                     List convertedList = new ArrayList();
+                     for (Object element : (List) value){
+                         if (element instanceof DBObject){
+                             convertedList.add(map((DBObject) element));
+                         } else {
+                             convertedList.add(element);
+                         }
+                     }
+                     resultMap.put(key,convertedList);
+                     
+                 }
+                 else if (value instanceof DBObject){
+                     resultMap.put(key, map((DBObject) value));
+                 }
+            }
             return demongifyIdField(resultMap);
+        }
+        
+        //some dbobjects don't support toMap
+        private Map<String,Object> toMap(BSONObject dbObject){
+            BasicDBObject basicResult = new BasicDBObject();
+            basicResult.putAll(dbObject);
+            Map<String,Object> resultMap = basicResult.toMap();
+            return resultMap;
         }
         
         private static DemongifyHandler instance;
         
-        public static DemongifyHandler get(){
+          public static DemongifyHandler get(){
             if (instance == null){
                 instance = new DemongifyHandler();
             }
