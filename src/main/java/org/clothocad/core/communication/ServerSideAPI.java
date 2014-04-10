@@ -55,14 +55,15 @@ import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.execution.Mind;
+import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
 import static org.clothocad.core.ReservedFieldNames.*;
-import org.clothocad.core.execution.ScriptAPI;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -612,6 +613,27 @@ public class ServerSideAPI {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public Object
+    run2(final String name, final List<Object> args) {
+        final Map<String, Object> funcJSON =
+            persistor.getAsJSON(persistor.resolveSelector(name, true));
+        return SubprocessExec.run(
+            this,
+            funcJSON,
+            args,
+            new SubprocessExec.EventHandler() {
+                @Override public void onFail(final String standardError) {
+                    say(standardError, Severity.FAILURE);
+                }
+
+                @Override public void onSuccess(final String standardError) {
+                    if (!standardError.isEmpty())
+                        say(standardError, Severity.NORMAL);
+                }
+            }
+        );
     }
 
     //TODO: needs serious cleaning up
