@@ -49,6 +49,7 @@ import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.BuiltInSchema;
@@ -126,14 +127,44 @@ public class ServerSideAPI {
 
     public final Object submit(String command) {
         //Resolve the commands to Sharables
-        System.out.println("The command for submit is: " + command);
+        System.out.println("The command submitted is: " + command);
         String[] tokens = command.split("\\s+");
+        for(String str : tokens) {
+            System.out.println("token: " + str);
+        }
+        
+        //Create a store for UUIDs resolved from the tokens
+        List<String> ids = new ArrayList<String>();
+        
+        //Scan through each token and pull out unique ids
         for(String token : tokens) {
-            String uuid = null;
             //See if the Mind has a unique word for that token
-            List<String> uuids = mind.getMindCompletions(token);
-            if(uuids.size() == 1) {
-                uuid = uuids.get(0);
+            String uuid = mind.getSharableId(token);
+            if(uuid!=null) {
+                ids.add(uuid);
+                continue;
+            }
+            
+            //See if the global Trie has a unique word for that token
+            List<String> completions = completer.getCompletions(token);
+            if(completions.size()==1) {
+                uuid = completions.get(0);
+                ids.add(uuid);
+                continue;
+            }
+            
+        }
+        
+        //Retrieve the Sharable associated with each found id
+        List<Sharable> shars = new ArrayList<Sharable>();
+        for(String id : ids) {
+            try {
+                ObjBase obj = (ObjBase) get(new ObjectId(id));
+                Sharable shar = (Sharable) obj;
+                shars.add(shar);
+            } catch(Exception err) {
+                System.out.println("Failure of submit to pull uuid: " + id);
+                err.printStackTrace();
             }
         }
         
