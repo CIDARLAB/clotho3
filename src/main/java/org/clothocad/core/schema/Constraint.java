@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.schema;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,7 @@ public class Constraint {
     
     @Getter
     @Setter
+    @JsonIgnore
     protected String constraint;
     
     private static final Map<String, Class> annotations;

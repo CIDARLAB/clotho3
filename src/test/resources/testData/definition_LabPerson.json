@@ -1,6 +1,6 @@
 {
     "schema": "BuiltInSchema",
-    "id": "52310822c2e67bf02c9c21f1",
+    "id": "LabPerson",
     "superClass" : "Person",
     "name": "LabPerson",
     "description": "Anderson Lab Personnel schema. Needs to be changed so a subclass of Person.",

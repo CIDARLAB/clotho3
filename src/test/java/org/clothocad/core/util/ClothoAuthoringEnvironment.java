@@ -16,7 +16,7 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
 import org.clothocad.core.persistence.dataauthoring.FileHookPersistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
 
 /**
@@ -32,7 +32,7 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
                 override.setProperty("dbname", "authoringenv");
                 return Guice.createInjector(
                     new ClothoAuthoringModule(override),
-                    new MongoDBModule()
+                    new JongoModule()
                 );
             }
 

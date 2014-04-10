@@ -4,7 +4,7 @@
  */
 package org.clothocad.core.schema;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -12,16 +12,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.persistence.Add;
-import org.clothocad.core.persistence.Adds;
+import org.clothocad.core.persistence.annotations.Add;
+import org.clothocad.core.persistence.annotations.Adds;
 import org.clothocad.core.persistence.DBClassLoader;
-import org.clothocad.core.persistence.DBOnly;
+import org.clothocad.core.persistence.jackson.JSONViews;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.model.Person;
 
 /**
@@ -46,7 +47,7 @@ public abstract class Schema extends SharableObjBase {
     @Inject
     public static  DBClassLoader cl = null;
     
-    @DBOnly
+    @JsonView(JSONViews.Internal.class)
     protected byte[] classData;
     protected Map<String, ObjectId> dependencies;
     protected String source;
@@ -68,7 +69,7 @@ public abstract class Schema extends SharableObjBase {
     //can get bytecode from functions? 
    
     public String getBinaryName(){
-        return BASE_PACKAGE_BINARY + "C"+ this.getUUID();
+        return this.getId().toString();
     }
     
     public static String getBinaryName(ObjectId id){
@@ -85,23 +86,23 @@ public abstract class Schema extends SharableObjBase {
     }
     
     public static String extractIdFromClassName(String className){
-        String[] a =  className.split("\\.");
-        return a[a.length-1].substring(1);
+        return className;
     }
     
     public static boolean isSchemaClassName(String className){
+        //XXX: needs to go away when schema class names become normal class names
         //Router router = Router.get();
         //if persistor is null, we're in bootstrapping, so don't bother
         /*if (router.getPersistor() == null) return false;
         if (router.getPersistor().resolveSchemaFromClassName(className) != null){
             return true;
         }*/
-        return ObjectId.isValid(extractIdFromClassName(className));
+        return true;
     }  
 
     public boolean childOf(Schema schema) {
         if (schema == null || superClass == null) return false;
-        if (schema.getUUID().equals(superClass.getUUID())) return true;
+        if (schema.getId().equals(superClass.getId())) return true;
         return (childOf(schema.superClass));
     }
 }

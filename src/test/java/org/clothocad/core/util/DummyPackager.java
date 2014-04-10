@@ -7,6 +7,7 @@ package org.clothocad.core.util;
 import java.util.List;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.Language;
 
 /**
@@ -20,6 +21,7 @@ public class DummyPackager extends Function {
     
     public DummyPackager(String name){
         setName(name);
+        setId(new ObjectId(name));
         dependencies = new Module[0];
         description = "A module packager";
         language = Language.JAVA;    

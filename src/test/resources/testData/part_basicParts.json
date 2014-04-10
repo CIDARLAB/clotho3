@@ -1,256 +1,256 @@
 [
   {
-	  "schema" : "BasicPart", 	  "name":"jtk2009",
+	  "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2009",
     "shortdescription":"[rbs.Wbbl]",
     "sequence":"ctagactgaagaacattgaaatggtatatataataatcgtttcccacggacatgaagactacatcaaaaaattactcgaaaatcttaatgctgacgatgagcactacaagattatcgtacgcgacaacaaagactctctattattgaaacaaatatgccagcattatgcaggcctggactatattagtggaggtgtatacggctttggtcataataataatattgcggtggcgtatgtaaaggaaaaatatagacccgcagatgatgattacattttgtttttgaatcccgatatcatcatgaagcatgatgatttgctgacatatattaaatatgtcgaaagtaagcgttatgcttttagtacattatgcctgttccgagatgaagcgaaatctttacatgattattccgtaagaaaatttcctgtgctttctgattttattgtgtcatttatgttagggattaataaaacaaaaattcctaaagaaagtatctattctgatacggttgttgattggtgcgcaggatcatttatgctggtacgtttttcagattttgtgcgtgtaaatggcttcgatcaaggttactttatgtactgtgaagatattgacctgtgcttgaggcttagcctggctggtgtcagacttcattatgttcccgcttttcatgcgatacattatgctcatcatgacaatcgaagttttttttcaaaagccttcagatggcacttaaaaagtacttttagatatttagccagaaaacgtattttatcaaatcgcaactttgatcgaatttCATCAGTTTTTCACCCGTAagatctCGAgaattga"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2023",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2023",
     "shortdescription":"{FLP-noEco}",
     "sequence":"GATCTGAAAGAGTGGAAAAcgtagtATGCCACAATTTGATATATTATGTAAAACACCACCTAAGGTGCTTGTTCGTCAGTTTGTGGAAAGGTTTGAAAGACCTTCAGGTGAGAAAATAGCATTATGTGCTGCTGAACTAACCTATTTATGTTGGATGATTACACATAACGGAACAGCAATCAAGAGAGCCACATTCATGAGCTATAATACTATCATAAGCAATTCGTTGAGTTTCGATATTGTCAATAAATCACTCCAGTTTAAATACAAGACGCAAAAAGCAACAATTTTGGAAGCCTCATTAAAGAAATTGATTCCTGCTTGGGAATTTACAATTATTCCTTACTATGGACAAAAACATCAATCTGATATCACTGATATTGTAAGTAGTTTGCAATTACAGTTCGAATCATCGGAAGAAGCAGATAAGGGAAATAGCCACAGTAAAAAAATGCTTAAAGCACTTCTAAGTGAGGGTGAAAGCATCTGGGAGATCACTGAGAAAATACTAAATTCGTTTGAGTATACTTCGAGATTTACAAAAACAAAAACTTTATACCAATTCCTCTTCCTAGCTACTTTCATCAATTGTGGAAGATTCAGCGATATTAAGAACGTTGATCCGAAATCATTTAAATTAGTCCAAAATAAGTATTTGGGAGTAATAATCCAGTGTTTAGTGACAGAGACAAAGACAAGCGTTAGTAGGCACATATACTTCTTTAGCGCAAGGGGTAGGATCGATCCACTTGTATATTTGGATGAATTTTTGAGGAAcTCTGAACCAGTCCTAAAACGAGTAAATAGGACCGGCAATTCTTCAAGCAATAAACAGGAATACCAATTATTAAAAGATAACTTAGTCAGATCGTACAATAAAGCTTTGAAGAAAAATGCGCCTTATTCAATCTTTGCTATAAAAAATGGCCCAAAATCTCACATTGGAAGACATTTGATGACCTCATTTCTTTCAATGAAGGGCCTAACGGAGTTGACTAATGTTGTGGGAAATTGGAGCGATAAGCGTGCTTCTGCCGTGGCCAGGACAACGTATACTCATCAGATAACAGCAATACCTGATCACTACTTCGCACTAGTTTCTCGGTACTATGCATATGATCCAATATCAAAGGAAATGATAGCATTGAAGGATGAGACTAATCCAATTGAGGAGTGGCAGCATATAGAACAGCTAAAGGGTAGTGCTGAAGGAAGCATACGATACCCCGCATGGAATGGGATAATATCACAGGAGGTACTAGACTACCTTTCATCCTACATAAATAGACGCATATAAG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2028",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2028",
     "shortdescription":"{FLP}",
     "sequence":"GATCTGAAAGAGTGGAAAAcgtagtATGCCACAATTTGATATATTATGTAAAACACCACCTAAGGTGCTTGTTCGTCAGTTTGTGGAAAGGTTTGAAAGACCTTCAGGTGAGAAAATAGCATTATGTGCTGCTGAACTAACCTATTTATGTTGGATGATTACACATAACGGAACAGCAATCAAGAGAGCCACATTCATGAGCTATAATACTATCATAAGCAATTCGTTGAGTTTCGATATTGTCAATAAATCACTCCAGTTTAAATACAAGACGCAAAAAGCAACAATTTTGGAAGCCTCATTAAAGAAATTGATTCCTGCTTGGGAATTTACAATTATTCCTTACTATGGACAAAAACATCAATCTGATATCACTGATATTGTAAGTAGTTTGCAATTACAGTTCGAATCATCGGAAGAAGCAGATAAGGGAAATAGCCACAGTAAAAAAATGCTTAAAGCACTTCTAAGTGAGGGTGAAAGCATCTGGGAGATCACTGAGAAAATACTAAATTCGTTTGAGTATACTTCGAGATTTACAAAAACAAAAACTTTATACCAATTCCTCTTCCTAGCTACTTTCATCAATTGTGGAAGATTCAGCGATATTAAGAACGTTGATCCGAAATCATTTAAATTAGTCCAAAATAAGTATTTGGGAGTAATAATCCAGTGTTTAGTGACAGAGACAAAGACAAGCGTTAGTAGGCACATATACTTCTTTAGCGCAAGGGGTAGGATCGATCCACTTGTATATTTGGATGAATTTTTGAGGAACTCTGAACCAGTCCTAAAACGAGTAAATAGGACCGGCAATTCTTCAAGCAATAAACAGGAATACCAATTATTAAAAGATAACTTAGTCAGATCGTACAATAAAGCTTTGAAGAAAAATGCGCCTTATTCAATCTTTGCTATAAAAAATGGCCCAAAATCTCACATTGGAAGACATTTGATGACCTCATTTCTTTCAATGAAGGGCCTAACGGAGTTGACTAATGTTGTGGGAAATTGGAGCGATAAGCGTGCTTCTGCCGTGGCCAGGACAACGTATACTCATCAGATAACAGCAATACCTGATCACTACTTCGCACTGGTTTCTCGGTACTATGCATATGATCCAATATCAAAGGAAATGATAGCATTGAAGGATGAGACTAATCCAATTGAGGAGTGGCAGCATATAGAACAGCTAAAGGGTAGTGCTGAAGGAAGCATACGATACCCCGCATGGAATGGGATAATATCACAGGAGGTACTAGACTACCTTTCATCCTACATAAATAGACGCATATAAG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2029",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2029",
     "shortdescription":"{ColE1 5' FRT}{AraC-pBad}{FLP}{dbl term}{FRT}",
     "sequence":"GATCTgataatctcatgaccaaaatcccttaacgtgagttttcgttccactgagcgtcagaccccgtagaaaagatcaaaggatcttcttgagatcctttttttctgcgcgtaatctgctgcttgaagttcctatactttctagagaataggaacttcgcaaacaaaaaaaccaccgctaccagcggtggtttgtttgccggatcaagagctaccaactctttttccgaaggtaactggcttcagcagagcgcagataccaaatactgtccttctagtgtagccgtagttaggccaccacttcaagaactctgtagcaccgcctacatacctcgctctgctaatcctgttaccagtggctgctgccagtggcgataagtcgtgtcttaccgggttggactcaagacgatagttaccggataaggcgcagcggtcgggctgaacggggggttcgtgcacacagcccagcttggagcgaacgacctacaccgaactgagatacctacagcgtgagctatgagaaagcgccacgcttcccgaagggagaaaggcggacaggtatccggtaagcggcagggtcggaacaggagagcgcacgagggagcttccagggggaaacgcctggtatctttatagtcctgtcgggtttcgccacctctgacttgagcgtcgatttttgtgatgctcgtcaggggggcggagcctatggaaaaacgccagcaacgcggcctttttacggatctctatgctactccatcgagccgtcaattgtctgattcgttaccaattatgacaacttgacggctacatcattcactttttcttcacaaccggcacggaactcgctcgggctggccccggtgcattttttaaatacccgcgagaaatagagttgatcgtcaaaaccaacattgcgaccgacggtggcgataggcatccgggtggtgctcaaaagcagcttcgcctggctgatacgttggtcctcgcgccagcttaagacgctaatccctaactgctggcggaaaagatgtgacagacgcgacggcgacaagcaaacatgctgtgcgacgctggcgatatcaaaattgctgtctgccaggtgatcgctgatgtactgacaagcctcgcgtacccgattatccatcggtggatggagcgactcgttaatcgcttccatgcgccgcagtaacaattgctcaagcagatttatcgccagcagctccgaatagcgcccttccccttgcccggcgttaatgatttgcccaaacaggtcgctgaaatgcggctggtgcgcttcatccgggcgaaagaaccccgtattggcaaatattgacggccagttaagccattcatgccagtaggcgcgcggacgaaagtaaacccactggtgataccattcgcgagcctccggatgacgaccgtagtgatgaatctctcctggcgggaacagcaaaatatcacccggtcggcaaacaaattctcgtccctgatttttcaccaccccctgaccgcgaatggtgagattgagaatataacctttcattcccagcggtcggtcgataaaaaaatcgagataaccgttggcctcaatcggcgttaaacccgccaccagatgggcattaaacgagtatcccggcagcaggggatcattttgcgcttcagccatacttttcatactcccgccattcagagaagaaaccaattgtccatattgcatcagacattgccgtcactgcgtcttttactggctcttctcgctaaccaaaccggtaaccccgcttattaaaagcattctgtaacaaagcgggaccaaagccatgacaaaaacgcgtaacaaaagtgtctataatcacggcagaaaagtccacattgattatttgcacggcgtcacactttgctatgccatagcatttttatccataagattagcggatcttacctgacgctttttatcgcaactctCTACTGTTTCTCCATACCCggatctGAAAGAGTGGAAAAcgtagtATGCCACAATTTGATATATTATGTAAAACACCACCTAAGGTGCTTGTTCGTCAGTTTGTGGAAAGGTTTGAAAGACCTTCAGGTGAGAAAATAGCATTATGTGCTGCTGAACTAACCTATTTATGTTGGATGATTACACATAACGGAACAGCAATCAAGAGAGCCACATTCATGAGCTATAATACTATCATAAGCAATTCGTTGAGTTTCGATATTGTCAATAAATCACTCCAGTTTAAATACAAGACGCAAAAAGCAACAATTTTGGAAGCCTCATTAAAGAAATTGATTCCTGCTTGGGAATTTACAATTATTCCTTACTATGGACAAAAACATCAATCTGATATCACTGATATTGTAAGTAGTTTGCAATTACAGTTCGAATCATCGGAAGAAGCAGATAAGGGAAATAGCCACAGTAAAAAAATGCTTAAAGCACTTCTAAGTGAGGGTGAAAGCATCTGGGAGATCACTGAGAAAATACTAAATTCGTTTGAGTATACTTCGAGATTTACAAAAACAAAAACTTTATACCAATTCCTCTTCCTAGCTACTTTCATCAATTGTGGAAGATTCAGCGATATTAAGAACGTTGATCCGAAATCATTTAAATTAGTCCAAAATAAGTATTTGGGAGTAATAATCCAGTGTTTAGTGACAGAGACAAAGACAAGCGTTAGTAGGCACATATACTTCTTTAGCGCAAGGGGTAGGATCGATCCACTTGTATATTTGGATGAATTTTTGAGGAAcTCTGAACCAGTCCTAAAACGAGTAAATAGGACCGGCAATTCTTCAAGCAATAAACAGGAATACCAATTATTAAAAGATAACTTAGTCAGATCGTACAATAAAGCTTTGAAGAAAAATGCGCCTTATTCAATCTTTGCTATAAAAAATGGCCCAAAATCTCACATTGGAAGACATTTGATGACCTCATTTCTTTCAATGAAGGGCCTAACGGAGTTGACTAATGTTGTGGGAAATTGGAGCGATAAGCGTGCTTCTGCCGTGGCCAGGACAACGTATACTCATCAGATAACAGCAATACCTGATCACTACTTCGCACTGGTTTCTCGGTACTATGCATATGATCCAATATCAAAGGAAATGATAGCATTGAAGGATGAGACTAATCCAATTGAGGAGTGGCAGCATATAGAACAGCTAAAGGGTAGTGCTGAAGGAAGCATACGATACCCCGCATGGAATGGGATAATATCACAGGAGGTACTAGACTACCTTTCATCCTACATAAATAGACGCATATAAggatctccaggcatcaaataaaacgaaaggctcagtcgaaagactgggcctttcgttttatctgttgtttgtcggtgaacgctctctactagagtcacactggctcaccttcgggtgggcctttctgcgtttataggatctgcgaagttcctatactttctagagaataggaacttcG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2031",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2031",
     "shortdescription":"{ChaI}",
     "sequence":"GATCTcagatcgtcgaaccaactgtggccttcacggctgtgcttgataaaaaccttgttcttgaaaacggcgacacactgatcccgaacaagattctcatcaactacggcggcggctacaacgataagactgggatcttcacggcgcccaagagtggaatctaccacttgggagtgcatgcacagacctcccttcaatccaacttgtggctagctctctaccacaatgacaattacgtcttttccatatacggacgtcaaactgaatactcggatgggggagcaaacgcggccattctgccactgaagaaaggcgacaaggtccacgtgaaagctcgcgataaatcatcccttctgggcagacctgacaacatctacaccaccttcactggcttccgcctgggtccgctacgagaggacgacagcgagtgaG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2032",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2032",
     "shortdescription":"{Kps_P 5' UTR}",
     "sequence":"GATCTccagctcaaccggagataatcaccactgttatttttctatttaataataatctcctgaaaaacagatatagcaaaaatacaatccggccagatttaattccgcattcattaccagaaataatcaacatcacaactatcatatcattcaatagtcaccgctaaaattttattattttcctcttctttacatagaaattgtcaacctgtttattatgcctctttaaatagttaatcacaaaacaacatcaccattatttacgtgttttatttattaataacatggtcatacgttctttttttacgaggaaataatcaattgataaattgtttttggtcttgatagtcaagtgagaaacattttaataaatgataaaaatcctaaattccttgttcataatgtaggggtgtgttaaataggtgggcaaaatttggttccccttctcgcctgtaatattgcagcatcttcgcacctccatgagacattgcgacttaataagaaggtgataagtcctgcatataagcatggactgaccatggttttatattcattaaaaattttgttacaacccattgatttagcataaataaaG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2033",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2033",
     "shortdescription":"{Kps_P 3' UTR}",
     "sequence":"GATCTtatagtgggttcgggtttgttgtgactgtggcattatttccgtgcaaaggagctgatatgtctgaaagacatttacctgatgaccagagcagtactatcgagccatatctaattacctctgttcgccagactctggcagaacaaggcgcagcattacaaaacttgtctaaacaactggattccgggcagtaccagcgtgtccttaatttgataatgaactgtaaagggcacgttattctttcgggaatgggtaaatcagggcatgtcggtcgtaaaatgtcagcgacgctggcctctacgggtacgcctagtttctttattcatcctgcagaagctttccatggcgatctgggcatgattacgccttacgatcttctgatccttatttctgccagcggtgaaacggatgaaatcctcaagcG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2034",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2034",
     "shortdescription":"{NeuC 5' UTR}",
     "sequence":"GATCTggacaatgccaggaaaacaagatataattatggtatcttttgttcttacagtattaacaatttcatgaaggtccttccctcctgttgaacaaaaaataaactcaatattaataaaagtgaaaaaacaaacaaagtcatcaggatagaatacaactatcttttcatctaaatttttttttacaaactcttgtagagaattatccaagcagcaaaaaaataaatcatatgaatcaacatctatctgctcaaaaatatttttcaaagctaaaaaatgagaatcataacgaaagacaaaacaaagcactttttttctagtcataactggtggtacattccgggatgtcataaaaatctttgtaatctttattttttgatttaataaaatccttaataattctaacagcattaattaaagcattttctttaaaataaggattactagatgactgtacaacactaataaatttttcatcttgagatatatttatccctctgacgattgcatttttttcaacgggtacatctattacactggG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2035",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2035",
     "shortdescription":"{NeuC 3' UTR}",
     "sequence":"GATCTtcatttaacaatctccgctatttcgttttctaatactgtatacccattactattaaaatgtaagccatcataagtatacattttatttagattgccataagagtcttttaaaacgtgatccaagctaataaacttcgcaaaatctacattctctcgaagataagaatttaaatcattaattattctattatctcgatcaatacgcccaaaaacaggaggaaccgacaataaataaatttttgatgcagcatttttcttctttatatactggcatgttttcttcaaataccacaatgtgtcttcttttttccaatcactaacaactatatcattagttccaaaaaagatgaaaacaaactctccgaaattaacaatcagctctttctcaataatatattcatagtactccttcgagtttataccagcgatacctaagttattaacttctatatcatttattttttttacgtcccaataatcaaacagcgagG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2036",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2036",
     "shortdescription":"{Neu_P 5' UTR}",
     "sequence":"GATCTggtatagatcgtcctgatagtgggaacattattacagaacataaaatttcatggcccgttggattggctggtggatttcaaggaagtttaaccggtcgtgaaaatgttaaatttgttgcccgactatatgcaaaacgcgatgagttaaatgagagggttgattttgttgaagagttttccgaactcggaaaatatttcgatatgcccattaaaacttattcttctggcatgaggtcaaggttagcttttggattaagtatggcttttaaattcgactattatcttattgatgaaatcactgctgttggagacgcaaagtttaaaaagaaatgttcagatatattcgataaaataagagaaaaatctcatttaataatggtgtcacatagtgaacgagctttaaaggagtattgtgatgttgctatttatcttaacaaagaggggcaaggtaaattttataaaaatgttacggaagccattgctgattacaaaaaagacctatagtggttacattccaatattatgccttggG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2037",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2037",
     "shortdescription":"{Neu_P 3' UTR}",
     "sequence":"GATCTaatatttaactgagacatatcatgagtaaaaagttaataatatttggtgcgggtggtttttcaaaatctataattgacagcttaaatcataaacattacgagttaataggatttatcgataaatataaaagtggttatcatcaatcatatccaatattaggtaatgatattgcagacatcgagaataaggataattattattattttattgggataggcaaaccatcaactaggaagcactatttaaacatcataagaaaacataatctacgcttaattaacattatagataaaactgctattctatcaccaaatattatactgggtgatggaatttttattggtaaaatgtgtatacttaaccgtgatactagaatacatgatgccgttgtaataaatactaggagtttaattgaacatggtaatgaaataggctgctgtagcaatatctctactaatgttgtacttaatggtgatgtttctgttggagaagaaacttttgttggtagctgtactgttgtaaatggcG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2038",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2038",
     "shortdescription":"{NeuS 5' UTR}",
     "sequence":"gatctctcccgatgccggaactattacgccacgcaaaagcggtggtgacgattaacagtacggcggggatctctgcactgattcataacaaaccactcaaagtgatgggcaatgccctgtacgacatcaagggcttgacgtatcaagggcatttgcaccagttctggcaggccgattttaaaccggatatgaaactgtttaagaagtttcgggggtatttattgatgaagacgcaggttaattgggtttattatggggggaacacaacaaactgccaacataatatatattaaatttcaagtcaatatcttttgaattttaagtagccaaaaaatcatttccatcctcttcaaagaaaagtaacataaaggtaataaaacatactactttaagatttaattttacgactggtactgtaatagaatataaaatgtagcttttattactcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2039",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2039",
     "shortdescription":"{NeuS 3' UTR}",
     "sequence":"gatctatgaagaaaataatttattatttatttgttcaacaataatttttggcatctcagtatttttttcagttgccaaaacaataagatagttacttctcttgctaaatttttgtacaaatgactcagctttttttaattgccccaggttactaattataaaaatatttttactttttatttttaacggtgatagtagctcttcagccttgtttttagaattaaaaaaccatgagtcacggaaaaacccaattggatttacaaataatttcctcaacttctttaaactagcatcaaatatcatctttcttataccttaataaaactttatggatttttttcaatgtttttattttttttggtcctaatgagaaaaagaaattaaaaaagatcaaaaacaatataatcaatgtg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2055",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2055",
     "shortdescription":"{GalE 5' UTR}",
     "sequence":"gatctattctcgatgaaccactacaggggcttgatccgctgaatcgccagcttatccgccgttttgttgatgtgctgattagcgaaggtgaaacgcaattgttgtttgtttcgcaccacgctgaagatgcgcctgcctgtattacccatcgtcttgagttcgtgccggacggtggactctatcgctatgtgctgacaaaaatatattgagtcggtagtgctgaccttgccggaggcggccttagcaccctctccggccaacggttcgacgcatgcaggcatgaaaccgcgtcttttttcagataaaaagcgcaatcattcataaaccctctgttttataatcacttaatcgcgcataaaaaacggctaaattcttgtgtaaacgattccactaatttattccatgtcacacttttcgcatctttgttatgctatggttatttcataccataagcctaatggagcgaattatgagagttctggttaccggtggtag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2056",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2056",
     "shortdescription":"{GalE 3' UTR}",
     "sequence":"gatctacactcgatgaaatggcgcaggacacctggcactggcagtcacgccatccacagggatatcccgattaaggaacgaccatgacgcaatttaatcccgttgatcatccacatcgccgctacaacccgctcaccgggcaatggattctggtttcaccgcaccgcgctaagcgcccctggcagggggcgcaggaaacgccagccaaacaggtgttacctgcgcacgatccagattgcttcctctgcgcaggtaatgtgcgggtgacaggcgataaaaaccccgattacaccgggacttacgttttcactaatgactttgcggctttgatgtctgacacgccagatgcgccagaaagtcacgatccgctgatgcgttgccagagcgcgcgcggcaccagccgggtgatctgcttttcaccggatcacagtaaaacgctgccagagctcagcgttgcagcattgacggaaatcgtcaaaacctggcaggagcaag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2057",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2057",
     "shortdescription":"{WecA 5' UTR}",
     "sequence":"gatcttggcaatgaccaagaccaatgacgatttcttcgaaatgatgaaacgctcataaatttgtcttatgccaaaaacgccacgtgtttacgtggcgttttgcttttatatctgtaatcttaatgccgcgctggcgatgttaggaaaattcctggaatttgctggcatgttatgcaatttgcatatcaaatggttaatttttgcacaggactggtgggtttggaacggactttcccttctgaataaaggtcttcgtggttatacttctgctaataattttctctgagagcatgcattgtgaatttactgacagtgagtactgatctcatcagtatttttttattcacgacactgtttctgttttttgcccgtaaggtggcaaaaaaagtcggtttagtggataaaccaaacttccgcag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2058",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2058",
     "shortdescription":"{WecA 3' UTR}",
     "sequence":"gatctggtggcagccccaatttaaccaaataaatgaggatgtgatgacacaaccaatgcctgggaaaccggccgaagacgctgaaaatgaactggatattcgtgggttgtttcgtaccttgtgggctgggaagctatggattattggcatggggctggcgtttgcgttaatcgcgctggcgtatacgttttttgctcgtcaggagtggagctcgacggcgattaccgatcgtccaacggtgaatatgctggggggatattactcgcagcagcaatttttgcgtaacctggatgtccgttcaaacatggcttctgccgaccaaccatcggtcatggacgaagcctataaagagtttgttatgcaactggcctcgtgggatacccgcagagagttctggctgcaaaccgactattg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2059",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2059",
     "shortdescription":"{NeuC}",
     "sequence":"gatctgaaatagcggagattgttaaatgaaaaaaatattatacgtaactggatctagagctgaatatggaatagttcggagacttttgacaatgctaagagaaactccagaaatacagcttgatttggcagttacaggaatgcattgtgataatgcgtatggaaatacaatacatattatagaacaagataattttaatattatcaaggttgtggatataaatatcaatacaacttcacatactcacattctccattcaatgagtgtttgcctcaattcgtttggtgattttttttcaaataacacatatgatgcggttatggttttaggcgatagatatgaaatattttcagtcgctatcgcagcatcaatgcataatattccattaattcatattcatggtggtgaaaagacattagctaattatgatgagtttattaggcattcaattactaaaatgagtaaactccatcttacttctacagaagagtataaaaaacgagtaattcaactaggtgaaaagcctggtagtgtgtttaatattggttctcttggtgcagaaaatgctctttcattgcatttaccaaataagcaggagttggaactaaaatatggttcactgttaaaacggtactttgttgtagtattccatcctgaaacactttccacgcagtcggttaatgatcaaatagatgagttattgtcagcgatttctttttttaaaaatactcacgactttatttttattggcagtaacgctgacactggttctgatataattcagagaaaagtaaaatatttttgcaaagagtataagttcagatatttgatttctattcgttcagaagattatttggcaatgattaaatactcttgtgggctaattgggaactcctcctctggtttaattgaggttccatctttaaaagttgcaacaattaacattggtgataggcagaaaggccgtgttcgtggagccagtgtaatagatgtacccgttgaaaaaaatgcaatcgtcagagggataaatatatctcaagatgaaaaatttattagtgttgtacagtcatctagtaatccttattttaaagaaaatgctttaattaatgctgttagaattattaaggattttattaaatcaaaaaataaagattacaaagatttttatgacatcccggaatgtaccaccagttatgactagg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2060",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2060",
     "shortdescription":"{GalE}",
     "sequence":"gatcttaagcctaatggagcgaattatgagagttctggttaccggtggtagcggttacattggaagtcatacctgtgtgcaattactgcaaaacggtcatgatgtcatcattcttgataacctctgtaacagtaagcgcagcgtactgcctgttatcgagcgtttaggcggcaaacatccaacgtttgttgaaggcgatattcgtaacgaagcgttgatgaccgagatcctgcacgatcacgctatcgacaccgtgatccacttcgccgggctgaaagccgtgggcgaatcggtacaaaaaccgctggaatattacgacaacaatgtcaacggcactctgcgcctgattagcgccatgcgcgccgctaacgtcaaaaactttatttttagctcctccgccaccgtttatggcgatcagcccaaaattccatacgttgaaagcttcccgaccggcacaccgcaaagcccttacggcaaaagcaagctgatggtggaacagatcctcaccgatctgcaaaaagcccagccggactggagcattgccctgctgcgctacttcaacccggttggcgcgcatccgtcgggcgatatgggcgaagatccgcaaggcattccgaataacctgatgccatacatcgcccaggttgctgtaggccgtcgcgactcgctggcgatttttggtaacgattatccgaccgaagatggtactggcgtacgcgattacatccacgtaatggatctggcggacggtcacgtcgtggcgatggaaaaactggcgaacaagccaggcgtacacatctacaacctcggcgctggcgtaggcaacagcgtgctggacgtggttaatgccttcagcaaagcctgcggcaaaccggttaattatcattttgcaccgcgtcgcgagggcgaccttccggcctactgggcggacgccagcaaagccgaccgtgaactgaactggcgcgtaacgcgcacactcgatgaaatggcgcaggacacctggcactggcagtcacgccatccacagggatatcccgattaag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2061",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2061",
     "shortdescription":"{WecA}",
     "sequence":"gatcttttctctgagagcatgcattgtgaatttactgacagtgagtactgatctcatcagtatttttttattcacgacactgtttctgttttttgcccgtaaggtggcaaaaaaagtcggtttagtggataaaccaaacttccgcaaacgtcaccagggattgatacctctcgttggggggatttcggtttacgcagggatttgcttcacgttcggaattgtcgattactatattccgcatgcatctctctatctcgcttgtgccggtgtgcttgttttcattggcgcgctggatgaccgttttgatatcagcgtaaaaatccgtgccaccatacaggccgctgttggcattgttatgatggtgttcggcaagctttatctcagtagcctgggttatatctttggctcctgggagatggtgctcggaccgtttggttacttcctgacgctatttgccgtctgggcggccattaatgcgttcaacatggttgatggcattgatggcttgctgggcgggttgtcctgcgtctcgtttgcagcaatcggtatgattttgtggttcgacgggcaaaccagcctcgcaatctggtgctttgcgatgatcgccgccatcctgccatacatcatgcttaaccttggtatcctgggtcgccgctacaaagtctttatgggtgatgcgggcagtacgctgattggttttaccgttatctggaccctgctcgaaacgacccagggcaaaacccatcccatcagcccggttaccgctttgtggataatcgccattccgctaatggatatggtggcgattatgtaccgtcgcctgcgtaaaggcatgagcccattctctcctgaccgtcagcatattcaccatttgatcatgcgtgccgggtttacttcccgtcaggcgtttgtgctgattacccttgccgcagcactgctcgcttccattggcgtgctggcagaatattctcattttgtcccggagtgggtcatgctggtgctctttttgctagcattcttcctctatggatattgcattaagcgtgcctggaaagttgctcgctttattaagcgcgtaaaacgcagactgcgtagaaatcgtggtggcagccccaatttaaccaaataag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2077",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2077",
     "shortdescription":"{O7 Tag 5'}",
     "sequence":"gatctctcctggaacaccgttgatgtggtgaccgccgcgggcaccccggtaatgtcgaaaaccggacacgcctttattaaagaacgtatgcgcaaggaagacgccatctacggtggcgaaatgagcgcccaccactatttccgtgatttcgcttactgcgacacgggcatgatcccgtggctgctggtggccgaactggtgtgtctgaaaggaaaaacgctgggcgaactggtgcgcgaccggatggcggcgtttccggcaagcggtgagatcaacagcaaactggcgcaccccgttgaggcgattaatcgcgtcgaacagcattttagccgcgaggcgctggcggtggatcgcaccgatggcatcagcatgacctttgccgactggcgctttaacctgcggctcctcaacaccgaaccggtggtgcggttgaatgtggaatcgcgcggtgatgtaccgctgatggaagaaaagacaaaacttatccttgagttactgaacaagtaattcagg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2078",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2078",
     "shortdescription":"{O7 Tag 3'}",
     "sequence":"gatctacggaaaagatgagatatccggtgtggtatagccaaggtaatgctattcagtatctctatgagtgagttaacatctataccacatttaagccgcacacttcgcggtgaccaccccctgacaggagtaaacaatgtcaaagcaacagatcggcgtcgtcggtatggcagtgatggggcgcaacctcgcgctcaacatcgaaagtcgtggttataccgtctctattttcaaccgttcccgtgaaaagcaggaagaagtgattgccgaaaatccaggcaagaaactggttccttactatacggtgaaagagtttgttgaatctctggaaacgcctcgtcgcatcctgttaatggtgaaagcaggtgcaggcacggatgctgctattgattccctcaagccatacctcgataaaggtgacatcatcattgatggtggtaataccttcttccaggacaccattcgtcgtaaccgtgagctttctg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2079",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2079",
     "shortdescription":"{ManB 5' UTR}",
     "sequence":"gatctggtttccagacgcgattcagtacaaaatgtaaaaaatattgttcagcatcttgatttgtcaggacgtaaagaacataaagaacatagggaagtattcaagtcatggggacgatgtgactccatagatagtagcgaaaagtaccactatcaggtcaaacgaataacagttaatccaagtgaaaaattatcgttgcaattacatcatcaccgtgcggaacattgggttgttgtaatggggattgctaaacttacagttgcagaagaaataaaaattttaaaagagaatgagtctgtatatattcctgcaggtattaagcatagtttggaaaatattgggacaataccacttgtgttaatagaagtttggaccggttcttatcttgctgatgatgatatccttcgatttgaagattgatatggtagagcttagaaatagagagtcttaataatgctaacttgctttaaagcttatgatattcgcgggaaactaggcgaagaactgaag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2080",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2080",
     "shortdescription":"{ManB 3' UTR}",
     "sequence":"gatcttaccgctgatggaagaaaagacaaaacttatccttgagttactgaacaagtaattcagtaatttcatataaatggtttttaaaaaacggaaaagatgagatatccggtgtggtatagccaaggtaatgctattcagtatctctatgagtgagttaacatctataccacatttaagccgcacacttcgcggtgaccaccccctgacaggagtaaacaatgtcaaagcaacagatcggcgtcgtcggtatggcagtgatggggcgcaacctcgcgctcaacatcgaaagtcgtggttataccgtctctattttcaaccgttcccgtgaaaagcaggaagaagtgattgccgaaaatccaggcaagaaactggttccttactatacggtgaaagagtttgttgaatctctggaaacgcctcgtcgcatcctgttaatggtgaaagcaggtgcaggcacggatgctgctattgattccctcaagccg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2081",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2081",
     "shortdescription":"{ManB}",
     "sequence":"gatctgagcttagaaatagagagtcttaataatgctaacttgctttaaagcttatgatattcgcgggaaactaggcgaagaactgaatgaagatatcgcctggcgcattgggcgtgcctatggcgaatttctcaaaccgaaaaccattgtgttaggcggtgatgtccgcctcaccagcgaaaccttaaaactggcgctggcgaaaggtttacaggatgcgggcgtcgatgtgctggatatcggtatgtccggcaccgaagagatttatttcgccacgttccatctcggcgtggatggtggcattgaagttaccgccagccataatccgatggattataacggcatgaaactcgtgcgcgagggggctcgcccgatcagcggggataccggactgcgcgatgtccagcgtctggcagaagccaacgacttccctcccgttgatgaaaccaaacgcggtcgttatcagcaaatcaatctgcgtgacgcttacgttgatcacctgttcggttatatcaacgtcaaaaacctcacgccgctcaagctggtgattaactccgggaatggcgcggcggggccggtggtggacgccattgaagcccgctttaaagccctcggcgcaccggtggaattaatcaaagtacacaacacgccggacggcaatttccccaacggtattcctaacccgttgctgccggaatgccgcgacgacacccgtaatgcggtcatcaaacacggcgcggatatgggcattgcctttgatggcgattttgaccgctgtttcctgtttgacgaaaaagggcagtttatcgagggctactacattgtcggcctgctggcagaagcattcctcgaaaaaaatcccggcgcgaagatcatccacgatccgcgtctctcctggaacaccgttgatgtggtgaccgccgcgggcaccccggtaatgtcgaaaaccggacacgcctttattaaagaacgtatgcgcaaggaagacgccatctacggtggcgaaatgagcgcccaccactatttccgtgatttcgcttactgcgacacgggcatgatcccgtggctgctggtggccgaactggtgtgtctgaaaggaaaaacgctgggcgaactggtgcgcgaccggatggcggcgtttccggcaagcggtgagatcaacagcaaactggcgcaccccgttgaggcgattaatcgcgtcgaacagcattttagccgcgaggcgctggcggtggatcgcaccgatggcatcagcatgacctttgccgactggcgctttaacctgcggctcctcaacaccgaaccggtggtgcggttgaatgtggaatcgcgcggtgatgtaccgctgatggaagaaaagacaaaacttatccttgagttactgaacaagtaag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2087",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2087",
     "shortdescription":"{Upp 5' UTR}",
     "sequence":"gatctcacatggcgaccagatcaataccaatggtgtcgtgacgttttaagtccattgccagacgcagcttggtacctacgccgtcagtgccagaaaccagcacgggttcacgatatttttgcggcaatgcacacagcgcaccgaagccgcccagaccgcccatcacttccggacgacgcgttttcttcactacgcctttgattcttccaaccagagcattacccgcgtcaatatcaacaccggcatctttgtagctaagagaggttttatcggtcactgcttgggtccccacgcgttacttgcggtagaaaaataaaattcggcgcaattctaacagggaaagcaaacgtttgcgagactgctttacacaacctttttgcacgtcttttccccaggcgcgcggcgaaagaagacttgtgccagggtaaaggttagttttcggatggaataatcttctttcataaccatctgaatataaaataactttatctcaaaccgttatcattttgactaaagtcaacgaaaagaatattgcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2088",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2088",
     "shortdescription":"{Upp 3' UTR}",
     "sequence":"gatctgagtaaagcgcctataacacataatacagaggataatactatgacgcgccgtgctatcggggtgagtgaaagaccgccacttttacagacaatcccgcttagtttgcaacatttgttcgccatgtttggtgcaaccgtcctggtgcccgtcttatttcatattaacccggcgactgtactgttatttaacggtattggaacgctgctgtatctcttcatctgtaaagggaaaattccggcttatcttggttccagctttgcctttatttcaccggtattgttactgttgccgttagggtatgaagtcgcgctgggcggctttattatgtgcggcgtgctgttctgcctggtttcttttatcgtgaagaaagcggggaccggctggctggacgtgctgtttccacctgcggcaatg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2091",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2091",
     "shortdescription":"{Upp 5' UTR M}",
     "sequence":"gatctcgaccttttcaatcaactccagcactgacttcacgtaaatgcgggtcggtgccagcagatgatcggctaatggcttaccatcaagttcggtggtttgcggatcacaaccgctgacttcaagaattttgcgcaccagcgaatagccgttcgagtgtggaccgctggaaccgagtgcaatcagcacatcgccgtcgctgactttagagccgtcgatgatttctgatttttctaccacgccaacgcagaaacccgcgacatcgtaatcctcaccgtgatacatccccggcatttctgccgtttcgccacccaccagtgaacagcctgattgcagacaaccttccgcaatgccgctgatcaccgctgaagcggtatcaacatccagttttccggttgcgtaatagtcgaggaaaaacagcggctctgcaccttgcaccaccaggtcattaacgcacatggcgaccagatcaataccaatggtgtcgtgacgttttaagtccattgccagacgcagcttggtacctacgccgtcagtgccagaaaccagcacgggttcacgatatttttgcggcaatgcacacagcgcaccgaagccgcccagaccgcccatcacttccggacgacgcgttttcttcactacgcctttgattcttccaaccagagcattacccgcgtcaatatcaacaccggcatctttgtagctaagagaggttttatcggtcactgcttgggtccccacgcgttacttgcggtagaaaaataaaattcggcgcaattctaacagggaaagcaaacgtttgcgagactgctttacacaacctttttgcacgtcttttccccaggcgcgcggcgaaagaagacttgtgccagggtaaaggttagttttcggatggaataatcttctttcataaccatctgaatataaaataactttatctcaaaccgttatcattttgactaaagtcaacgaaaagaatattgcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2092",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2092",
     "shortdescription":"{Upp 5' UTR L}",
     "sequence":"gatctggcgttttcgtgcattttcagacgaccatcggcaaaccagctaatcaccagtggataaatggcgtgttcctgggtttgcacgcgggcggtgatgtcatcttccgaatcaccagcaaataccgggactttcgcctgtaaaataaccgggccaccgtccagttcatcggtgacgaaatgcaccgatgtaccgtgctcttcatcgccattttccagcgcctgacgatgggtgtgtaatccgggatatttcggcagcagagaagggtgaatgttcagcaaacgcccggcatagtgggagacaaacgccgggctgagaatgcgcataaaaccagccagcacgaccacatcgggtgcgtacatgtcgatttcatgaatcaactcccggtcataggcttcacgactgtcaaacgcgctggcgatgagcgtatgcgttgcaatacccgcctggcgggcgcgttcaaggccgaacgcgtcggccttattgctgaaaactgcccgtacggtgcctttaattttgttggttttacaggcgtcaataattgcctgtaaattacttccgttgccggaaataagcaccacaatattcattattcgataaccacgcgttgttcggaatcagaggctttgatgataccgattttccacgcgttttcaccgttggcattgagcagggcgagggctttgtccacttccggagcaggcagggcaataatcatcccgacgccgcagttgaaggtgcgatacatttcatggtgctcaacgttacctgccgtttgcagccagttgaacacttccggccactgccaggaagattcatcaatcactgcctgagtattatctggcaatacgcgcggaatgttttcccagaagccgccgccggtcaggtgcgcaatggcatgcacatcgaccttttcaatcaactccagcactgacttcacgtaaatgcgggtcggtgccagcagatgatcggctaatggcttaccatcaagttcggtggtttgcggatcacaaccgctgacttcaagaattttgcgcaccagcgaatagccgttcgagtgtggaccgctggaaccgagtgcaatcagcacatcgccgtcgctgactttagagccgtcgatgatttctgatttttctaccacgccaacgcagaaacccgcgacatcgtaatcctcaccgtgatacatccccggcatttctgccgtttcgccacccaccagtgaacagcctgattgcagacaaccttccgcaatgccgctgatcaccgctgaagcggtatcaacatccagttttccggttgcgtaatagtcgaggaaaaacagcggctctgcaccttgcaccaccaggtcattaacgcacatggcgaccagatcaataccaatggtgtcgtgacgttttaagtccattgccagacgcagcttggtacctacgccgtcagtgccagaaaccagcacgggttcacgatatttttgcggcaatgcacacagcgcaccgaagccgcccagaccgcccatcacttccggacgacgcgttttcttcactacgcctttgattcttccaaccagagcattacccgcgtcaatatcaacaccggcatctttgtagctaagagaggttttatcggtcactgcttgggtccccacgcgttacttgcggtagaaaaataaaattcggcgcaattctaacagggaaagcaaacgtttgcgagactgctttacacaacctttttgcacgtcttttccccaggcgcgcggcgaaagaagacttgtgccagggtaaaggttagttttcggatggaataatcttctttcataaccatctgaatataaaataactttatctcaaaccgttatcattttgactaaagtcaacgaaaagaatattgcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2099",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2099",
     "shortdescription":"{ChiF}",
     "sequence":"gatctgctggtggg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2100",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2100",
     "shortdescription":"{ChiFx3}",
     "sequence":"gatctgctggtgggctggtgggctggtggg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2101",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2101",
     "shortdescription":"{ChiR}",
     "sequence":"gatctccaccagcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2102",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2102",
     "shortdescription":"{ChiRx3}",
     "sequence":"gatctccaccagcccaccagcccaccagcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2120",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2120",
     "shortdescription":"{Tev_left_H40Y}",
     "sequence":"gatctatttatgaaaagcggaatttatcagattaaaaatactttaaacaataaagtatatgtaggaagtgctaaagattttgaaaagagatggaagaggcattttaaagatttagaaaaaggatgctattcttctataaaacttcagaggtcttttaacaaacatggtaatgtgtttgaatgttctattttggaagaaattccatatgagaaagatttgattattgaacgagaaaatttttggattaaagagcttaattctaaaattaatggatacaatattgctgatgcaacgtttggtgatacatgttctacgcatccattaaaagaagaaattattaagaaacgttctgaaactgttaaagctaagatgcttaaacttggacctgatggtcggaaagctctttacagtaaacccg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2121",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2121",
     "shortdescription":"{pSC101_Ts}",
     "sequence":"gatcttcagatccttccgtatttagccagtatgttctctagtgtggttcgttgtttttgcgtgagccatgagaacgaaccattgagatcatacttactttgcatgtcactcaaaaattttgcctcaaaactggtgagctgaatttttgcagttaaagcatcgtgtagtgtttttcttagtccgttacgtaggtaggaatctgatgtaatggttgttggtattttgtcaccattcatttttatctggttgttctcaagttcggttacgagatccatttgtctatctagttcaacttggaaaatcaacgtatcagtcgggcggcctcgcttatcaaccaccaatttcatattgctgtaagtgtttaaatctttacttattggtttcaaaacccattggttaagccttttaaactcatggtagttattttcaagcattaacatgaacttaaattcatcaaggctaatctctatatttgccttgtgagttttcttttgtgttagttcttttaataaccactcataaatcctcatagagtatttgttttcaaaagacttaacatgttccagattatattttatgaatttttttaactggaaaagataaggcaatatctcttcactaaaaactaattctaatttttcgcttgagaacttggcatagtttgtccactggaaaatctcaaagcctttaaccaaaggattcctgatttccacagttctcgtcatcagctctctggttgctttagctaatacaccataagcattttccctactgatgttcatcatctgagcgtattggttataagtgaacgataccgtccgttctttccttgtagggttttcaatcgtggggttgagtagtgccacacagcataaaattagcttggtttcatgctccgttaagtcatagcgactaatcgctagttcatttgctttgaaaacaactaattcagacatacatctcaattggtctaggtgattttaatcactataccaattgagatgggctagtcaatgataattactagtccttttcctttgagttgtgggtatctgtaaattctgctagacctttgctggaaaacttgtaaattctgctagaccctctgtaaattccgctagacctttgtgtgttttttttgtttatattcaagtggttataatttatagaataaagaaagaataaaaaaagataaaaagaatagatcccagccctgtgtataactcactactttagtcagttccgcagtattacaaaaggatgtcgcaaacgctgtttgctcctctacaaaacagaccttaaaaccctaaaggcttaagtagcaccctcgcaagctcggttgcggccgcaatcgggcaaatcgctgaatattccttttgtctccgaccatcaggcacctgagtcgctgtctttttcgtgacattcagttcgctgcgctcacggctctggcagtgaatgggggtaaatggcactacaggcgccttttatggattcatgcaaggaaactacccataatacaagaaaagcccgtcacgggcttctcagggcgttttatggcgggtctgctatgtggtgctatctgactttttgctgttcagcagttcctgccctctgattttccagtctgaccacttcggattatcccgtgacaggtcattcagactggctaatgcacccagtaaggcagcggtatcatcaacg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2122",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2122",
     "shortdescription":"{pSC101_Ts - AmpR}",
     "sequence":"gatcttcagatccttccgtatttagccagtatgttctctagtgtggttcgttgtttttgcgtgagccatgagaacgaaccattgagatcatacttactttgcatgtcactcaaaaattttgcctcaaaactggtgagctgaatttttgcagttaaagcatcgtgtagtgtttttcttagtccgttacgtaggtaggaatctgatgtaatggttgttggtattttgtcaccattcatttttatctggttgttctcaagttcggttacgagatccatttgtctatctagttcaacttggaaaatcaacgtatcagtcgggcggcctcgcttatcaaccaccaatttcatattgctgtaagtgtttaaatctttacttattggtttcaaaacccattggttaagccttttaaactcatggtagttattttcaagcattaacatgaacttaaattcatcaaggctaatctctatatttgccttgtgagttttcttttgtgttagttcttttaataaccactcataaatcctcatagagtatttgttttcaaaagacttaacatgttccagattatattttatgaatttttttaactggaaaagataaggcaatatctcttcactaaaaactaattctaatttttcgcttgagaacttggcatagtttgtccactggaaaatctcaaagcctttaaccaaaggattcctgatttccacagttctcgtcatcagctctctggttgctttagctaatacaccataagcattttccctactgatgttcatcatctgagcgtattggttataagtgaacgataccgtccgttctttccttgtagggttttcaatcgtggggttgagtagtgccacacagcataaaattagcttggtttcatgctccgttaagtcatagcgactaatcgctagttcatttgctttgaaaacaactaattcagacatacatctcaattggtctaggtgattttaatcactataccaattgagatgggctagtcaatgataattactagtccttttcctttgagttgtgggtatctgtaaattctgctagacctttgctggaaaacttgtaaattctgctagaccctctgtaaattccgctagacctttgtgtgttttttttgtttatattcaagtggttataatttatagaataaagaaagaataaaaaaagataaaaagaatagatcccagccctgtgtataactcactactttagtcagttccgcagtattacaaaaggatgtcgcaaacgctgtttgctcctctacaaaacagaccttaaaaccctaaaggcttaagtagcaccctcgcaagctcggttgcggccgcaatcgggcaaatcgctgaatattccttttgtctccgaccatcaggcacctgagtcgctgtctttttcgtgacattcagttcgctgcgctcacggctctggcagtgaatgggggtaaatggcactacaggcgccttttatggattcatgcaaggaaactacccataatacaagaaaagcccgtcacgggcttctcagggcgttttatggcgggtctgctatgtggtgctatctgactttttgctgttcagcagttcctgccctctgattttccagtctgaccacttcggattatcccgtgacaggtcattcagactggctaatgcacccagtaaggcagcggtatcatcaacggggtctgacgctcagtggaacgaaaactcacgttaagggattttggtcatgagattatcaaaaaggatcttcacctagatccttttaaattaaaaatgaagttttaaatcaatctaaagtatatatgagtaaacttggtctgacagttaccaatgcttaatcagtgaggcacctatctcagcgatctgtctatttcgttcatccatagttgcctgactccccgtcgtgtagataactacgatacgggagggcttaccatctggccccagtgctgcaatgataccgcgagacccacgctcaccggctccagatttatcagcaataaaccagccagccggaagggccgagcgcagaagtggtcctgcaactttatccgcctccatccagtctattaattgttgccgggaagctagagtaagtagttcgccagttaatagtttgcgcaacgttgttgccattgctacaggcatcgtggtgtcacgctcgtcgtttggtatggcttcattcagctccggttcccaacgatcaaggcgagttacatgatcccccatgttgtgcaaaaaagcggttagctccttcggtcctccgatcgttgtcagaagtaagttggccgcagtgttatcactcatggttatggcagcactgcataattctcttactgtcatgccatccgtaagatgcttttctgtgactggtgagtactcaaccaagtcattctgagaatagtgtatgcggcgaccgagttgctcttgcccggcgtcaatacgggataataccgcgccacatagcagaactttaaaagtgctcatcattggaaaacgttcttcggggcgaaaactctcaaggatcttaccgctgttgagatccagttcgatgtaacccactcgtgcacccaactgatcttcagcatcttttactttcaccagcgtttctgggtgagcaaaaacaggaaggcaaaatgccgcaaaaaagggaataagggcgacacggaaatgttgaatactcatactcttcctttttcaatattattgaagcatttatcagggttattgtctcatgagcggatacatatttgaatgtatttagaaaaataaacaaataggggttccgcgcacatttccccgaaaagtgccacctgg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2123",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2123",
     "shortdescription":"{I-SceI Site F}",
     "sequence":"gatctattaccctgttatccctag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2124",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2124",
     "shortdescription":"{I-SceI Site R}",
     "sequence":"gatcttagggataacagggtaatg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2125",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2125",
     "shortdescription":"{I-CreII Site F}",
     "sequence":"gatctcaacattgtagctgctcatggttactttggtg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2126",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2126",
     "shortdescription":"{I-CreII Site R}",
     "sequence":"gatctaccaaagtaaccatgagcagctacaatgttgg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2130",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2130",
     "shortdescription":"{I-SceI Left Half}",
     "sequence":"gatctatgcacatgaagaacatcaaaaagaaccaggtaatgaacctgggtccgaactctaaactgctgaaagaatacaaatcccaactgatcgaactgaacatcgaacagttcgaagcaggtatcggtctgattctgggtgatgcgtacattcgttctcgtgatgaaggtaaaacctactgtatgcagttcgagtggaagaacaaagcatacatggaccacgtatgtctgctgtacgatcagtgggtactgtccccaccgcacaagaaagaacgtgttaaccacctgggtaatctggtaatcacctggggcgcacagactttcaaacaccaagcttgcggccgcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2131",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2131",
     "shortdescription":"{I-SceI Right Half}",
     "sequence":"gatctaagctttcaacaaactggctaacctgttcatcgttaacaacaagaaaaccattccgaacaacctggttgaaaactacctgaccccgatgtccctggcatactggttcatggacgatggtggtaaatgggattacaacaaaaactctaccaacaaatctatcgtactgaacacccagtctttcactttcgaagaagtagaatacctggttaagggtctgcgtaacaaattccaactgaactgttacgtgaaaatcaacaagaacaaaccgatcatctacatcgactctatgtcttacctgatcttctacaacctgattaaaccgtacctgattccgcagatgatgtacaaactgccgaacactatcagctccgaaactttcctgaaataag"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2133",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2133",
     "shortdescription":"{pLtetO-1}",
     "sequence":"gatcttccctatcagtgatagagattgacatccctatcagtgatagagatactgagcacatcagcaggacgcactgaccg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2134",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2134",
     "shortdescription":"{rbs.I-SceI}",
     "sequence":"GATCTacacaggaaacaggatctATGCACATGAAGAACATCAAAAAGAACCAGGTAATGAACCTGGGTCCGAACTCTAAACTGCTGAAAGAATACAAATCCCAACTGATCGAACTGAACATCGAACAGTTCGAAGCAGGTATCGGTCTGATTCTGGGTGATGCGTACATTCGTTCTCGTGATGAAGGTAAAACCTACTGTATGCAGTTCGAGTGGAAGAACAAAGCATACATGGACCACGTATGTCTGCTGTACGATCAGTGGGTACTGTCCCCACCGCACAAGAAAGAACGTGTTAACCACCTGGGTAATCTGGTAATCACCTGGGGCGCACAGACTTTCAAACACCAAGCTTTCAACAAACTGGCTAACCTGTTCATCGTTAACAACAAGAAAACCATTCCGAACAACCTGGTTGAAAACTACCTGACCCCGATGTCCCTGGCATACTGGTTCATGGACGATGGTGGTAAATGGGATTACAACAAAAACTCTACCAACAAATCTATCGTACTGAACACCCAGTCTTTCACTTTCGAAGAAGTAGAATACCTGGTTAAGGGTCTGCGTAACAAATTCCAACTGAACTGTTACGTGAAAATCAACAAGAACAAACCGATCATCTACATCGACTCTATGTCTTACCTGATCTTCTACAACCTGATTAAACCGTACCTGATTCCGCAGATGATGTACAAACTGCCGAACACTATCAGCTCCGAAACTTTCCTGAAATAAG"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2136",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2136",
     "shortdescription":"{rbs.TetR.term}",
     "sequence":"gatctcaaaaattaggaattaatgatgtctagattagataaaagtaaagtgattaacagcgcattagagctgcttaatgaggtcggaatcgaaggtttaacaacccgtaaactcgcccagaagctaggtgtagagcagcctacattgtattggcatgtaaaaaataagcgggctttgctcgacgccttagccattgagatgttagataggcaccatactcacttttgccctttagaaggggaaagctggcaagattttttacgtaataacgctaaaagttttagatgtgctttactaagtcatcgcgatggagcaaaagtacatttaggtacacggcctacagaaaaacagtatgaaactctcgaaaatcaattagcctttttatgccaacaaggtttttcactagagaatgcattatatgcactcagcgctgtggggcattttactttaggttgcgtattggaagatcaagagcatcaagtcgctaaagaagaaagggaaacacctactactgatagtatgccgccattattacgacaagctatcgaattatttgatcaccaaggtgcagagccagccttcttattcggccttgaattgatcatatgcggattagaaaaacaacttaaatgtgaaagtgggtcttaaaagcagcataacctttttccgtgatggtaacttcacggtaaccaagatgtcgagttaaccaccctttagattcataaagcgaaaataatgcggctccaacgtacccacctaaatggaaacggatcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2140",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2140",
     "shortdescription":"{NeuS3}",
     "sequence":"gatctgatccataaagttttattaaggtataagaaagatgatatttgatgctagtttaaagaagttgaggaaattatttgtaaatccaattgggtttttccgtgactcatggttttttaattctaaaaacaaggctgaagagctactatcaccgttaaaaataaaaagtaaaaatatttttataattagtaacctggggcaattaaaaaaagctgagtcatttgtacaaaaatttagcaagagaagtaactatcttattgttttggcaactgaaaaaaatactgagatgccaaaaattattgttgaacaaataaataataaattattttcttcatacaaggtactattcattccaactttcccaaatgttttttcacttaaaaaggttatatggttttataacgtatataattatttagttttaaattcaaaagctaaagatgcttattttatgagctatgcgcaacattatgcaatcttcgtatatttgttcaaaaaaaataatataagatgttcattaattgaagaggggacagggacttataaaaccgaaaaagaaaacccagtagtaaatattaatttttattcagagattattaattcaattatcttgttccattatccagatttgaaatttgaaaatgtatacggtacatatccaattttgcttaagaaaaaatttaatgcgcaaaaatttgttgagtttaaaggtgctccatcagttaaatcatcaaccagaatagataatgttatccataaatattctataactagagatgatataatatatgcaaatcaaaagtatttgattgaacatacattatttgcggattcgttaatttctatcttacttagaatagataagcctgataatgcaagaatatttataaaacctcaccctaaagagcctaaaaaaaatattaatgcaattcaaaaggcaataaaaaaggcaaaatgtcgtgacataattcttataacagagccagactttttaatagagccggtaataaaaaaagcaaaaataaaacacttaattggattaacatcatcttctttggtatatgcacctttagtttctaaaagatgtcagtcttattcaatagcgcctcttatgataaagttgtgtgataatgataaatcccaaaaagggattaatacgctgcgtctccatttcgatattttaaagaattttgataatgttaaaatattatcggatgatataacatctccctctttgcacgataaaaggattttcttgggggagtaataaaagctacattctatatctattacagtaccagccgggtctcgaattgg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2148",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2148",
     "shortdescription":"{Kps 3' 500bp}",
     "sequence":"gatctaaacggatgaaatcctcaagctagttccttcactgaaaaatttcggcaaccgaattatcgccattaccaataatggaaattccacgctggcgaaaaatgctgatgccgtgctggaactccatatggcgaatgaaacctgcccgaataatcttgcaccaacaacgtctaccacgctgacgatggcgatcggcgatgcgctggcgattgccatgatccgccaacgcaaatttatgccgaatgattttgcgcgctatcacccgggcggttcattaggtcgtcgcctgctgacccgcgttgctgatgtcatgcaacatgatgttcctgcggtacagctggatgcgtcatttaaaaccgtgattcaacgtatcaccagcggatgccagggaatggtgatggtagaagacgcagaaggtgggctagcgggcattatcaccgacggtgacctgcgtcgctttatggaaaaagaggattctctgacatccgccacggctgcgcagatgatgacacgtgaaccgctgacgctaccggaagacaccatgatcg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2149",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2149",
     "shortdescription":"{Kps far 5' 500bp}",
     "sequence":"gatctATGGCGCTGGTTGACTGTATGCGTAAATTGCTGACCATCCTGAACGCAATGCTCAGAAAGAACGAAGAGTGAAATGAATCGTAGCATCATGTTGCTCCATAATTTTTACGTTCAAGACAGTTGATTATCGGCGCATATGACTCAAAAAGAGCCTGATGATTGCCTCTTTTCCATAGGCTCTTTCTCTGAAGTGAAGGAAGGCCCGGAAGAAAGCACTCGCTGGCATACGTGACTCCAGCTCAACCGGAGATAATCACCATTATTATTTTTCTATTTAATAATAATCTCCTGAAAAATAGATATAGCAAAAATACAATCCGGCCAGATTTAATTCCGCATTCATTACCAGAAATAATCAACACTACAACTATTATATCATTCAATAGTCACCGCg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2150",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2150",
     "shortdescription":"{Kps 3kb landing pad}",
     "sequence":"gatctatggcgctggttgactgtatgcgtaaattgctgaccatcctgaacgcaatgctcagaaagaacgaagagtgaaatgaatcgtagcatcatgttgctccataatttttacgttcaagacagttgattatcggcgcatatgactcaaaaagagcctgatgattgcctcttttccataggctctttatctgaagtgaaggaaggcccggaagaaagcactcgctggcatacgtgactccagctcaaccggagataatcaccactgttatttttctatttaataataatctcctgaaaaacagatatagcaaaaatacaatccggccagatttaattccgcattcattaccagaaataatcaacatcacaactatcatatcattcaatagtcaccgctaaaattttattattttcctcttctttacatagaaattgtcaacctgtttattatgcctctttaaatagttaatcacaaaacaacatcaccattatttacgtgttttatttattaataacatggtcatacgttctttttttacgaggaaataatcaattgataaattgtttttggtcttgatagtcaagtgagaaacattttaataaatgataaaaatcctaaattccttgttcataatgtaggggtgtgttaaataggtgggcaaaatttggttccccttctcgcctgtaatattgcagcatcttcgcacctccatgagacattgcgacttaataagaaggtgataagtcctgcatataagcatggactgaccatggttttatattcattaaaaattttgttacaacccattgatttagcataaataaattatagtgggttcgggtttgttgtgactgtggcattatttccgtgcaaaggagctgatatgtctgaaagacatttacctgatgaccagagcagtactatcgagccatatctaattacctctgttcgccagactctggcagaacaaggcgcagcattacaaaacttgtctaaacaactggattccgggcagtaccagcgtgtccttaatttgataatgaactgtaaagggcacgttattctttcgggaatgggtaaatcagggcatgtcggtcgtaaaatgtcagcgacgctggcctctacgggtacgcctagtttctttattcatcctgcagaagctttccatggcgatctgggcatgattacgccttacgatcttctgatccttatttctgccagcggtgaaacggatgaaatcctcaagctagttccttcactgaaaaatttcggcaaccgaattatcgccattaccaataatggaaattccacgctggcgaaaaatgctgatgccgtgctggaactccatatggcgaatgaaacctgcccgaataatcttgcaccaacaacgtctaccacgctgacgatggcgatcggcgatgcgctggcgattgccatgatccgccaacgcaaatttatgccgaatgattttgcgcgctatcacccgggcggttcattaggtcgtcgcctgctgacccgcgttgctgatgtcatgcaacatgatgttcctgcggtacagctggatgcgtcatttaaaaccgtgattcaacgtatcaccagcggatgccagggaatggtgatggtagaagacgcagaaggtgggctagcgggcattatcaccgacggtgacctgcgtcgctttatggaaaaagaggattctctgacatccgccacggctgcgcagatgatgacacgtgaaccgctgacgctaccggaagacaccatgatcattgaagcggaagaaaaaatgcaaaaacaccgtgtctcaacgttattggtgaccaacaaggcaaataaagtcactggccttgtgcgcattttcgactaattaagcaacggggttcgagaggttagtctctcattgagtttgcgccccactgaaactttgataatcgttacatgttgataaaagtgaagtctgccgtatcctggatgcgtgctcgtctgtctgccatctcactggcagatatccaaaaacacctggcgaaaatcatcattctggcaccgatggcgatgctgctgatctatctggctatcttcagccagcctcgctatatgagcgagtcgaaagtcgccattaaacgctcggatgatttaaacagcggcagcctgaattttggtctgcttctgggtgcctctaaccccagttccgcagaagatgctttgtatctgaaagagtacatcaactcgccggatatgctggcggcgctggataagcaactaaattttcgtgaagcatttagccacagcgggctcgattttcttaatcatcttagcaaggatgaaaccgcagaaggattcctgaagtactacaaggaccgtatcaacgtctcgtatgacgataaaaccggattactgaatattcagacgcagggctttagcccggagtttgcgcttaagtttaaccagaccgtgctgaaagagtcagagcgctttatcaatgagatgtcacatcgcatcgcgcgtgaccagcttgcctttgcagaaacggagatggaaaaggcacgccagcgtctggacgccagcaaagcggaattgctctcttatcaggacaacaacaacgttctg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2151",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2151",
     "shortdescription":"{Kps 2.5kb landing pad}",
     "sequence":"gatctgtcaacctgtttattatgcctctttaaatagttaatcacaaaacaacatcaccattatttacgtgttttatttattaataacatggtcatacgttctttttttacgaggaaataatcaattgataaattgtttttggtcttgatagtcaagtgagaaacattttaataaatgataaaaatcctaaattccttgttcataatgtaggggtgtgttaaataggtgggcaaaatttggttccccttctcgcctgtaatattgcagcatcttcgcacctccatgagacattgcgacttaataagaaggtgataagtcctgcatataagcatggactgaccatggttttatattcattaaaaattttgttacaacccattgatttagcataaataaattatagtgggttcgggtttgttgtgactgtggcattatttccgtgcaaaggagctgatatgtctgaaagacatttacctgatgaccagagcagtactatcgagccatatctaattacctctgttcgccagactctggcagaacaaggcgcagcattacaaaacttgtctaaacaactggattccgggcagtaccagcgtgtccttaatttgataatgaactgtaaagggcacgttattctttcgggaatgggtaaatcagggcatgtcggtcgtaaaatgtcagcgacgctggcctctacgggtacgcctagtttctttattcatcctgcagaagctttccatggcgatctgggcatgattacgccttacgatcttctgatccttatttctgccagcggtgaaacggatgaaatcctcaagctagttccttcactgaaaaatttcggcaaccgaattatcgccattaccaataatggaaattccacgctggcgaaaaatgctgatgccgtgctggaactccatatggcgaatgaaacctgcccgaataatcttgcaccaacaacgtctaccacgctgacgatggcgatcggcgatgcgctggcgattgccatgatccgccaacgcaaatttatgccgaatgattttgcgcgctatcacccgggcggttcattaggtcgtcgcctgctgacccgcgttgctgatgtcatgcaacatgatgttcctgcggtacagctggatgcgtcatttaaaaccgtgattcaacgtatcaccagcggatgccagggaatggtgatggtagaagacgcagaaggtgggctagcgggcattatcaccgacggtgacctgcgtcgctttatggaaaaagaggattctctgacatccgccacggctgcgcagatgatgacacgtgaaccgctgacgctaccggaagacaccatgatcattgaagcggaagaaaaaatgcaaaaacaccgtgtctcaacgttattggtgaccaacaaggcaaataaagtcactggccttgtgcgcattttcgactaattaagcaacggggttcgagaggttagtctctcattgagtttgcgccccactgaaactttgataatcgttacatgttgataaaagtgaagtctgccgtatcctggatgcgtgctcgtctgtctgccatctcactggcagatatccaaaaacacctggcgaaaatcatcattctggcaccgatggcgatgctgctgatctatctggctatcttcagccagcctcgctatatgagcgagtcgaaagtcgccattaaacgctcggatgatttaaacagcggcagcctgaattttggtctgcttctgggtgcctctaaccccagttccgcagaagatgctttgtatctgaaagagtacatcaactcgccggatatgctggcggcgctggataagcaactaaattttcgtgaagcatttagccacagcgggctcgattttcttaatcatcttagcaaggatgaaaccgcagaaggattcctgaagtactacaaggaccgtatcaacgtctcgtatgacgataaaaccggattactgaatattcagacgcagggctttagcccggagtttgcgcttaagtttaaccagaccgtgctgaaagagtcagagcgctttatcaatgagatgtcacatcgcatcgcgcgtgaccagcttgcctttgcagaaacggagatggaaaaggcacgccagcgtctggacgccagcaaagcggaattgctctcttatcaggacaacaacaacgttctg"
   },
   {
-    "schema" : "BasicPart", 	  "name":"jtk2152",
+    "schema":"org.clothocad.model.BasicPart", 	  "name":"jtk2152",
     "shortdescription":"{rbs.bplA}",
     "sequence":"gatctcacacaggacgtggtgctatgagtaaaacaacaccgactaaagacagtattcgtgcagagtttgaagagcttgtcgagaaagattcattctggtcgaagtttgtcggctctcaatttgtctcgatgctgacattgtttattacccagattgtctacaggtgctttcagtatgccgatgcggcgctggctgaaggctttatatcgaccgcgacgcggcgttcctctatcctggcagcggcagaaacgaatagttacgttggtaccaagccaacaccgtcatcggggatgattgagatcaccgccacaagtgaagatgccccagcggtaatccccaaaaacatgcctttaatatctgacgaccagtacccttacatgactatggatgtatgcaggttggttgacggcaccggtacggtagaagtggcacagttggaaatccaggaggtgacatataccgttacggcagccaaagaatttctggaagtcgtgttatcaaaggctctcactgctgtctgctataagctggaagtattcgtgacgaccgatggtaagaccacgcagtggtcttccagcactatgttccggttagccggtagtaaaagccaggtctacgttgagttttataaaccatccgagcagttgggggttcgattcggcgatgggctaattgggcaaataccgccagaaggctcgacaattacgcttaaggtatggtgcaccaacggcgatataaccctggttgctggccaaaacctgacgcctgtcgattctgcggctaatttagctaatttgatttcagttaagacaacgacacctataaccgcaggtaccgatgccgaaacaacggagatcacacgtaaccgtgcacaatattaccttgcctatgatgatcaggtcgtatggggcggggactatacgtattttctggtgcgtaacatcccgggactgtcctgggtaaaggcatggggcgagggtcagcaagaaaaattagatggtgcttataatgttcagaatatcaataagatatttatttcaggatggcatccaaacaaaagccagtcagagcttgaagaaatgatcctggctgcctttaagaaggtgccgaatgagttgaacaagaaattctcgtataaagaggtcagaaaactaccctttaagatcaccatcaccgggcggatatcggcaagcctgaccattgagaacgtgactgatgagctgaagtcggcactggaaacaaaatttgggcgtgactcaactttctttgatccgaaccgtgtcggcaagtacatcctaatcaagaaaaaagacgtttgggcatttatcgaaacgctgggttatttccgcgacttttatctggaatttgtcgagtggaatgagtccaacggcttttacgatttcgtttatctggatacagaaaactccacctttaatatttcgtatgaggaggagtgag"
   }

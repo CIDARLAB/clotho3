@@ -4,13 +4,10 @@
  */
 package org.clothocad.model;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 
 /**

@@ -2,10 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.persistence;
+package org.clothocad.core.persistence.annotations;
 
-import com.github.jmkgreen.morphia.annotations.Embedded;
-import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
