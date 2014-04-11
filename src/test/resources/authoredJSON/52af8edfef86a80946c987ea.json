@@ -1,5 +1,5 @@
 {
-  "schema" : "BasicPart",
+  "schema" : "org.clothocad.model.BasicPart",
   "name" : "jtk2032",
   "shortdescription" : "{Kps_P 5' UTR}",
   "sequence" : "GATCTccagctcaaccggagataatcaccactgttatttttctatttaataataatctcctgaaaaacagatatagcaaaaatacaatccggccagatttaattccgcattcattaccagaaataatcaacatcacaactatcatatcattcaatagtcaccgctaaaattttattattttcctcttctttacatagaaattgtcaacctgtttattatgcctctttaaatagttaatcacaaaacaacatcaccattatttacgtgttttatttattaataacatggtcatacgttctttttttacgaggaaataatcaattgataaattgtttttggtcttgatagtcaagtgagaaacattttaataaatgataaaaatcctaaattccttgttcataatgtaggggtgtgttaaataggtgggcaaaatttggttccccttctcgcctgtaatattgcagcatcttcgcacctccatgagacattgcgacttaataagaaggtgataagtcctgcatataagcatggactgaccatggttttatattcattaaaaattttgttacaacccattgatttagcataaataaaG",

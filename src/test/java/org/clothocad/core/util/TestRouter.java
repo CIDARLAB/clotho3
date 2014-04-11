@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ClientConnection;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 
 /**
@@ -31,7 +31,7 @@ public class TestRouter extends Router {
     public void receiveMessage(ClientConnection connection, Message request) {
         if (request.getChannel() == Channel.reloadModels){
             Map<String,Object> query = new HashMap<>();
-            query.put("className", "org.clothocad.core.schema.BuiltInSchema");
+            query.put("schema", "org.clothocad.core.schema.BuiltInSchema");
             List<Map<String,Object>> results = persistor.findAsBSON(query);
             List ids = new ArrayList();
             for (Map<String,Object> result : results){

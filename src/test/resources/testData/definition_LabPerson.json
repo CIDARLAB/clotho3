@@ -1,7 +1,7 @@
 {
-    "schema": "BuiltInSchema",
-    "id": "52310822c2e67bf02c9c21f1",
-    "superClass" : "Person",
+    "schema": "org.clothocad.core.schema.ClothoSchema",
+    "id": "LabPerson",
+    "superClass" : "org.clothocad.model.Person",
     "name": "LabPerson",
     "description": "Anderson Lab Personnel schema. Needs to be changed so a subclass of Person.",
     "language": "JAVA",

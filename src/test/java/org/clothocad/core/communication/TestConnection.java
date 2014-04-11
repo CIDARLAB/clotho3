@@ -5,9 +5,9 @@
 package org.clothocad.core.communication;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import org.clothocad.core.communication.Message;
-import org.clothocad.core.communication.ClientConnection;
+import java.util.Map;
 
 /**
  *
@@ -20,10 +20,12 @@ public class TestConnection extends ClientConnection{
     }
 
     public List<Message> messages = new ArrayList<>();
+    public Map<String, Object> messageDataByChannelAndId= new HashMap<>();
     
     @Override
     public void send(Message msg) {
         messages.add(msg);
+        messageDataByChannelAndId.put(msg.getChannel().name() + msg.getRequestId(), msg.getData());
     }
     
 }

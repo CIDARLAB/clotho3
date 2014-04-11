@@ -4,12 +4,12 @@
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.clothocad.core.persistence.Add;
+import org.clothocad.core.persistence.annotations.Add;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 /**
  *
@@ -21,7 +21,7 @@ public class CompositePart extends Part {
 
     @Getter
     @Setter
-    @Reference
+    @ReferenceCollection
     private List<Part> composition;
         
     private static final PartType partType= PartType.COMPOSITE;

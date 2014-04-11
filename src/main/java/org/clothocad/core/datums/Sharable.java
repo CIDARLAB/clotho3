@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.datums;
 
-import org.bson.types.ObjectId;
 import org.clothocad.model.Person;
 
 /**

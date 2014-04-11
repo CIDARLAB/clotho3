@@ -27,19 +27,13 @@ import static com.google.common.collect.Sets.newHashSet;
 import com.mongodb.BasicDBObject;
 import java.util.Set;
 import org.bson.BSONObject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.persistence.DBClassLoader;
-import org.clothocad.core.persistence.mongodb.MongoDBConnection;
-import org.clothocad.core.schema.Access;
-import org.clothocad.core.schema.ClothoSchema;
-import org.clothocad.core.schema.JavaSchema;
-import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.TestUtils;
-import static org.objectweb.asm.Opcodes.*;
 
 /**
  * @author John Christopher Anderson
@@ -62,7 +56,7 @@ public class SchemaATest {
         persistor.save(serial.toMap());
         ObjBase feature = persistor.get(schema.getEnclosedClass(cl), new ObjectId((String) serial.get("_id")));
         System.out.println(feature.toString());
-        System.out.println("Id is: " + feature.getUUID());
+        System.out.println("Id is: " + feature.getId());
         testObjBase(feature);
     }
 
@@ -95,7 +89,7 @@ public class SchemaATest {
 //            System.out.println(converted.toJSON()); 
             
             
-            if(!converted.getUUID().equals(schema.getUUID())) {
+            if(!converted.getId().equals(schema.getId())) {
                 return false;
             }
             
@@ -116,7 +110,7 @@ public class SchemaATest {
             ObjBase converted = null; //TODO: deserialize here 
             
             
-            if(obj.getUUID().equals(converted.getUUID())) {
+            if(obj.getId().equals(converted.getId())) {
                 return false;
             }
             

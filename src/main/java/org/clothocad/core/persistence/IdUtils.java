@@ -6,8 +6,8 @@ package org.clothocad.core.persistence;
 
 import java.util.Map;
 import javax.inject.Inject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.Schema;
 

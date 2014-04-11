@@ -2,7 +2,7 @@
   "name" : "testModule2",
   "id" : "522f4b5c9f915de6a1023297",
   "language" : "JAVASCRIPT",
-  "schema" : "Module",
+  "schema" : "org.clothocad.core.datums.Module",
   "dependencies" : [ "522af4b4b22548ae323e4475" ],
   "code" : "(function f() {var my = {}; my.moduleMethod = testModule.moduleMethod; return my;}());"
 }

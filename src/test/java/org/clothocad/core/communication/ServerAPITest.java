@@ -12,12 +12,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.bson.types.ObjectId;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ServerSideAPI;
+import static org.clothocad.core.ReservedFieldNames.*;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.TestUtils;
 import org.junit.After;
@@ -46,7 +45,7 @@ public class ServerAPITest {
 
     @BeforeClass
     public static void setUpClass() {
-        Injector injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        Injector injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
         mind = new Mind();
@@ -72,7 +71,7 @@ public class ServerAPITest {
     @Test
     public void get() {
         Map<String, Object> result = api.get(ids.get(2));
-    new ObjectId(((List)result.get("composition")).get(0).toString());
+        new ObjectId(((List)result.get("composition")).get(0).toString());
 
     }
 
@@ -87,6 +86,7 @@ public class ServerAPITest {
 
     @Test
     public void set() {
+        //TODO!
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ServerAPITest {
         newPart.put("description", "previously unsaved test part");
         newPart.put("sequence", "CCCCCCCCCCCCCCCCCCCCCCCC");
         newPart.put("format", "FreeForm");
-        newPart.put("id", id.toString());
+        newPart.put(ID, id.toString());
 
         ObjectId createdId = api.create(newPart);
 
@@ -143,7 +143,7 @@ public class ServerAPITest {
         ObjectId id = new ObjectId();
 
         Map<String, Object> obj = new HashMap();
-        obj.put("id", id);
+        obj.put(ID, id);
 
         api.create(obj);
         api.create(obj);
@@ -151,7 +151,7 @@ public class ServerAPITest {
         assertEquals(ServerSideAPI.Severity.FAILURE, ((Map) connection.messages.get(2).getData()).get("class"));
 
         obj = new HashMap();
-        obj.put("_id", id);
+        obj.put(ID, id);
         
         api.create(obj);
         
@@ -178,17 +178,15 @@ public class ServerAPITest {
 
     @Test
     public void query() throws JsonParseException {
-        //TODO: switch back to Part, implement schema set
+        //TODO: implement schema set
         TestConnection connection = new TestConnection("test");
         mind.setConnection(connection);
 
         //filter out unseen results
         Map<String, Object> query = new HashMap<>();
-        query.put("schema", "Part");
+        query.put("schema", "org.clothocad.model.Part");
         
         List<Map<String, Object>> results = api.query(query);
-        assertEquals(55, results.size());
-        //assertEquals(3, results.size());
         Set<String> names = new HashSet();
 
         for (Map<String, Object> result : results) {
@@ -198,7 +196,6 @@ public class ServerAPITest {
         assertTrue(names.contains("Test Part 1"));
         assertTrue(names.contains("Test Part 2"));
         assertTrue(names.contains("Test Part 3"));
-        assertTrue(names.contains("B0015"));
         
         //assert that sequence is either in the database or embedded
     }

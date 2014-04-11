@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2058",
+  "shortdescription" : "{WecA 3' UTR}",
+  "sequence" : "gatctggtggcagccccaatttaaccaaataaatgaggatgtgatgacacaaccaatgcctgggaaaccggccgaagacgctgaaaatgaactggatattcgtgggttgtttcgtaccttgtgggctgggaagctatggattattggcatggggctggcgtttgcgttaatcgcgctggcgtatacgttttttgctcgtcaggagtggagctcgacggcgattaccgatcgtccaacggtgaatatgctggggggatattactcgcagcagcaatttttgcgtaacctggatgtccgttcaaacatggcttctgccgaccaaccatcggtcatggacgaagcctataaagagtttgttatgcaactggcctcgtgggatacccgcagagagttctggctgcaaaccgactattg",
+  "id" : "534733c744ae01bbcfa3e4c9"
+}

@@ -1,4 +1,4 @@
-{   "schema": "Function",
+{   "schema":"org.clothocad.core.datums.Function",
     "id": "5240f6a0c2e6fa3eccdcf943",
     "name": "consoleTest",
     "code": "function() { console.log('log testing'); return 'This worked!' };",

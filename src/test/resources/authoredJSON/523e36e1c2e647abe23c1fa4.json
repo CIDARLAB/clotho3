@@ -1,5 +1,5 @@
 {
-  "schema" : "Module",
+  "schema" : "org.clothocad.core.datums.Module",
   "name" : "DNA",
   "language" : "JAVASCRIPT",
   "id" : "523e36e1c2e647abe23c1fa4",

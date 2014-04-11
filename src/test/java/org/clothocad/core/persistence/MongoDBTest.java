@@ -1,17 +1,14 @@
 
 package org.clothocad.core.persistence;
 
-import org.clothocad.model.FreeForm;
-import com.google.inject.Guice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-import java.util.Random;
 
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,15 +16,13 @@ import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
-import java.util.Collection;
-import org.clothocad.core.persistence.ClothoConnection;
-import org.clothocad.core.persistence.mongodb.MongoDBConnection;
+import java.util.Map;
+import static org.clothocad.core.ReservedFieldNames.*;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.jongo.JongoConnection;
 import org.clothocad.core.util.TestUtils;
-import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
-import org.clothocad.model.Part;
-import org.clothocad.model.Person;
 import org.junit.After;
 
 public class MongoDBTest {
@@ -36,7 +31,8 @@ public class MongoDBTest {
     
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
-        conn = TestUtils.getDefaultTestInjector().getInstance(MongoDBConnection.class);
+        conn = TestUtils.getDefaultTestInjector().getInstance(JongoConnection.class);
+        conn.connect();
     }
     
     @Before
@@ -49,7 +45,7 @@ public class MongoDBTest {
     
     public static void saveAndGet(ObjBase o){
         conn.save(o);
-        ObjectId id = o.getUUID();
+        ObjectId id = o.getId();
         Class c = o.getClass();
         o = null;
         conn.get(c, id);
@@ -61,7 +57,7 @@ public class MongoDBTest {
         //simple data class
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         conn.save(i);
-        ObjectId id = i.getUUID();
+        ObjectId id = i.getId();
         i = null;
         BasicDBObject query = new BasicDBObject("name", "Test institution");
         i =  conn.get(Institution.class, id);
@@ -77,30 +73,31 @@ public class MongoDBTest {
         
         conn.save(i);
         conn.save(lab);
-        ObjectId id = lab.getUUID();
+        ObjectId id = lab.getId();
         
         lab = null;
         
         lab = conn.get(Lab.class, id);
         
-        assertEquals(i.getUUID(),lab.getInstitution().getUUID());
+        assertEquals(i.getId(),lab.getInstitution().getId());
     }
     @Test
+    //id is non-null after saving
     public void testIdAssociation(){
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
-        assertNull(i.getUUID());
+        assertNull(i.getId());
         conn.save(i);
-        assertNotNull(i.getUUID());
+        assertNotNull(i.getId());
     }
     
     @Test 
     public void testGetById(){
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
-        ObjectId id = ObjectId.get();
-        i.setUUID(id);
+        ObjectId id = new ObjectId();
+        i.setId(id);
         conn.save(i);
         Institution j = conn.get(Institution.class, id);
-        assertEquals(i.getUUID(), j.getUUID());
+        assertEquals(i.getId(), j.getId());
         assertEquals(i.getCity(), j.getCity());
         assertEquals(i.getCountry(), j.getCountry());
         assertEquals(i.getState(), j.getState());
@@ -122,5 +119,17 @@ public class MongoDBTest {
     //TODO
     public void testSimpleSuperAndSubClass(){
  
+    }
+    
+    //Test that returned maps have  field instead of "_id"
+    @Test
+    public void testIdFieldName(){
+        Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
+        ObjectId id = new ObjectId();
+        i.setId(id);
+        conn.save(i);
+        Map<String,Object> map = conn.getAsBSON(id);
+        assertTrue(map.containsKey(ID));
+        assertFalse(map.containsKey("_id"));
     }
 }

@@ -1,0 +1,15 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "534733c844ae01bbcfa3e4f0",
+  "name" : "useLodash",
+  "dateCreated" : null,
+  "visibility" : null,
+  "code" : "function() {return _.map([1,2,3],function(i){return i+1;});};",
+  "dependencies" : null,
+  "language" : "JAVASCRIPT",
+  "author" : null,
+  "args" : null,
+  "tests" : null,
+  "children" : [ ],
+  "deleted" : false
+}

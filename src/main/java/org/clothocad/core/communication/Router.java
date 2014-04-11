@@ -1,25 +1,28 @@
 package org.clothocad.core.communication;
 
+import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
 import static org.clothocad.core.communication.Channel.submit;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import lombok.extern.slf4j.Slf4j;
-import lombok.Getter;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.JSON;
@@ -70,9 +73,6 @@ public class Router {
                 case autocomplete:
                     response = api.autocomplete(data.toString());
                     break;
-                case autocompleteDetail:
-                    api.autocompleteDetail(data.toString());
-                    break;
                 case submit:
                     response = api.submit(data.toString());
                     break;
@@ -80,9 +80,7 @@ public class Router {
                     api.clear();
                     break;
                 case login:
-                    
                     Map map = (Map) data;
-                    
                     response = api.login(map.get("username").toString(), map.get("password").toString());
                     break;
                 case logout:
@@ -130,17 +128,17 @@ public class Router {
                     
                 //TODO:
                 case getAll:
-                    response = api.getAll((List) data);
+                    response = api.getAll(asList(data));
                     break;
                 case createAll:
-                    response = api.createAll((List) data);
+                    response = api.createAll(asList(data));
                     break;
                 case destroyAll:
-                    api.destroyAll((List) data);
+                    api.destroyAll(asList(data));
                     response = Void.TYPE;
                     break;
                 case setAll:
-                    api.setAll((List) data);
+                    api.setAll(asList(data));
                     response = Void.TYPE;
                     break;
                 case queryOne:
@@ -254,7 +252,7 @@ public class Router {
         
         Map<String,Object> query = new HashMap();
         query.put("username", username);
-        query.put("className", Mind.class.getCanonicalName());
+        query.put("schema", Mind.class.getCanonicalName());
         try{
             Iterable<ObjBase> minds = persistor.find(query);
 
@@ -272,6 +270,20 @@ public class Router {
             ex.printStackTrace();
             throw ex;
         }
+    }
+    
+    
+    //TODO: make everything in the API use iterators instead of lists
+    private static List asList(Object o){
+        //iterator case
+        if (Iterator.class.isInstance(o)){
+            return Lists.newArrayList((Iterator) o);
+        } else if (Iterable.class.isInstance(o)){
+            return Lists.newArrayList((Iterable) o);
+        } else if (o instanceof Object[]){
+            return Arrays.asList((Object []) o);
+        }
+        throw new UnsupportedOperationException("Couldn't convert argument to a List");
     }
 
 }

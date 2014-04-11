@@ -26,7 +26,6 @@ package org.clothocad.core.datums;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.bson.types.ObjectId;
 import org.clothocad.core.settings.Settings;
 
 /**
@@ -38,7 +37,7 @@ public class Doo
         if(parent == null) {
             parentDooId = null;
         } else {
-            parentDooId = parent.getUUID();
+            parentDooId = parent.getId();
         }
         savePolicy = saveit;
         save();

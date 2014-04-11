@@ -7,8 +7,9 @@ package org.clothocad.core.util;
 import java.net.UnknownHostException;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.clothocad.core.persistence.mongodb.ClothoMapper;
-import org.clothocad.core.persistence.mongodb.MongoDBConnection;
+import org.clothocad.core.persistence.DBClassLoader;
+import org.clothocad.core.persistence.jongo.JongoConnection;
+
 
 /**
  * A simple way to guarantee that the database will be flushed completely
@@ -16,11 +17,11 @@ import org.clothocad.core.persistence.mongodb.MongoDBConnection;
  * 
  * @author spaige
  */
-public class TestEnvConnection extends MongoDBConnection {
+public class TestEnvConnection extends JongoConnection {
 
     @Inject
-    public TestEnvConnection(@Named("dbport") int port, @Named("dbhost")String host, @Named("dbname") String dbName, ClothoMapper mapper) {
-        super(port, host, dbName, mapper);
+    public TestEnvConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbName, DBClassLoader dbClassLoader) throws UnknownHostException {
+        super(port, host, dbName, dbClassLoader);
         try {
             this.connect();
         } catch (UnknownHostException ex) {

@@ -1,0 +1,16 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "binaryName" : "org.clothocad.model.ServerTrailDeprecated",
+  "c" : "org.clothocad.model.ServerTrailDeprecated",
+  "name" : "ServerTrailDeprecated",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.util.List",
+    "name" : "contents",
+    "type" : "array",
+    "reference" : false
+  } ],
+  "_id" : "{new=false}",
+  "id" : "org.clothocad.model.ServerTrailDeprecated"
+}

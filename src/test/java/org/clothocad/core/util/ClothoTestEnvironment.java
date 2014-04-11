@@ -8,8 +8,8 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
 import org.clothocad.core.persistence.ClothoConnection;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 
@@ -28,7 +28,7 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 return Guice.createInjector(
                     new ClothoTestModule(override),
                     //Test Module flushes database for clean environment
-                    new MongoDBTestModule()
+                    new JongoTestModule()
                 );
             }
 
