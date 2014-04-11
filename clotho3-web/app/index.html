@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=1024, initial-scale=1">
 
-    <!-- process:remove:api -->
+    <!-- process:remove:api,dist -->
     <!-- build:css({.tmp,app}) styles/command.css -->
     <link rel="stylesheet" href="css/command.css">
     <!-- endbuild -->
@@ -49,7 +49,9 @@
 
 <!-- process:remove:api -->
 <div class="container">
+<!-- /process -->
 
+    <!-- process:remove:command,api -->
     <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
         <div class="navbar navbar-default" style="margin-bottom: 0;">
             <a class="navbar-brand" href="#">Clotho</a>
@@ -67,6 +69,7 @@
             </div>
         </div>
     </div>
+    <!-- /process -->
 
     <div clotho-command-bar></div>
 
@@ -279,12 +282,12 @@ dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/controllers/_kickoff-webapp.js"></script>
 <script src="scripts/controllers/home.js"></script>
+<script src="scripts/controllers/menu.js"></script>
 <script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/team.js"></script>
 <script src="scripts/controllers/browser.js"></script>
 <script src="scripts/controllers/editor.js"></script>
 <script src="scripts/controllers/trails.js"></script>
-<script src="scripts/controllers/menu.js"></script>
 <script src="scripts/controllers/trail.js"></script>
 <script src="scripts/controllers/trails.js"></script>
 <script src="scripts/controllers/widgets.js"></script>

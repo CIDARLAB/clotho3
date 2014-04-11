@@ -4,6 +4,9 @@ $icon-font-path: "../bower_components/sass-bootstrap/fonts/";
 
 @import 'base';
 
+//import directly so don't duplicate bootstrap
+@import 'commandbar';
+
 @import 'constructionfile';
 @import 'editor';
 @import 'trails';
