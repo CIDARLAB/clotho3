@@ -153,6 +153,7 @@ public class Router {
                     break;
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());
+                    response = Void.TYPE;
                     break;
             }
             
