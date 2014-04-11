@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Nina",
+  "nickName" : "Nina",
+  "surName" : "DiPrimio",
+  "name" : "ndiprimio",
+  "emailAddress" : "ndiprimio@gmail.com",
+  "icon" : "nina_diprimio.png",
+  "imgUrl" : "",
+  "startDate" : "2011-01-12",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2011-01-12",
+  "isManagement" : false,
+  "role" : "Postdoc",
+  "biography" : "",
+  "title" : "Stress and Load, Glucaric Acid Biosynthesis",
+  "description" : "",
+  "social" : "",
+  "id" : "53471aed44ae3f0e331ca080"
+}

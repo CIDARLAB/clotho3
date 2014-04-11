@@ -1,6 +1,6 @@
 {
   "id" : "cc2f87dec2e6d9c71a57af13",
-  "schema" : "ClothoSchema",
+  "schema" : "org.clothocad.core.schema.ClothoSchema",
   "language" : "JSONSCHEMA",
   "name" : "Chapter",
   "description" : "Unit within Trails, containing Pages or a TrailTransclude (you must define one, and only one)",
