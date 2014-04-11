@@ -94,7 +94,6 @@ public class Router {
                 case learn:
                     api.learn(data);
                     break;
-
                 case log:
                     api.log(data.toString());
                     break;
@@ -125,8 +124,6 @@ public class Router {
                 case query:
                     response = api.query(JSON.mappify(data));
                     break;
-                    
-                //TODO:
                 case getAll:
                     response = api.getAll(asList(data));
                     break;
@@ -155,7 +152,7 @@ public class Router {
                     api.unlisten(data.toString());
                     break;
                 default:
-                    log.warn("Unknown channel {}", request.getChannel());
+                    log.warn("Unimplemented channel {}", request.getChannel());
                     break;
             }
             
