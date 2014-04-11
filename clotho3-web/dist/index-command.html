@@ -6,8 +6,14 @@
     <title>Clotho</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=1024, initial-scale=1">
-    <link rel="stylesheet" href="styles/main.css"/>
+
+    <!-- process:remove:api,dist -->
+    <link rel="stylesheet" href="styles/command.css"/>
+    <!-- /process -->
+
+    <!-- process:remove:api -->
     <script src="bower_components/jquery/jquery.js"></script>
+    <!-- /process -->
 
     <!-- note that angular is required for any clotho functionality -->
     <script src="bower_components/angular/angular.js"></script>
@@ -15,34 +21,20 @@
     <script src="bower_components/lodash/dist/lodash.js"></script>
 
 </head>
-<body>
+<body ng-app="clothoRoot">
 <!--[if lt IE 9]>
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
+
+<!-- process:remove:api -->
 <div class="container">
-
-    <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
-        <div class="navbar navbar-default" style="margin-bottom: 0;">
-            <a class="navbar-brand" href="#">Clotho</a>
-
-            <ul class="nav navbar-nav">
-                <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
-            </ul>
-
-            <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
-                <div class="btn-group">
-                    <button class="btn navbar-btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="glyphicon glyphicon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="glyphicon glyphicon-trash"></i></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i class="glyphicon glyphicon-refresh"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- /process -->
 
     <div clotho-command-bar></div>
 
 </div>
+<!-- /process -->
 
 <!--------
 SCRIPTS
@@ -50,12 +42,19 @@ SCRIPTS
 
 
 <!--note - correct app based on the distribution, comments removed by build-->
+
+<!-- process:remove:dist,api -->
 <script src="scripts/clotho-app-command.js"></script>
+<!-- /process -->
 
 
 <script src="scripts/clotho-core-module.js"></script>
+
+
+<!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
 <script src="scripts/clotho-command-module.js"></script>
+<!-- /process -->
 
 </body>
 </html>
