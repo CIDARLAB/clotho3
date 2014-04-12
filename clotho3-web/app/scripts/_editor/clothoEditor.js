@@ -8,7 +8,7 @@
  *
  *
  */
-angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $compile, $parse, $http, $templateCache, $filter, $q, Debug) {
+angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $compile, $parse, $http, $templateCache, $filter, $q, Debug, ClothoSchemas) {
 
 	var Debugger = new Debug('Editor', '#dd44dd');
 
@@ -47,78 +47,26 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			 COMPILATION
 			 **********/
 
-				//todo - deprecate. needs to be generic to handle all schemas so don't need a switch for each schema name
-				//(or rename all templates and remove this method)
-			$scope.determineType = function (obj) {
-				function endsWith(str, suffix) {
-					return str.indexOf(suffix, str.length - suffix.length) !== -1;
-				}
-
-				if (angular.isUndefined(obj) || angular.isEmpty(obj)) {
-					return 'undefined';
-				}
-
-				var schema = angular.lowercase(obj.schema);
-
-				if (endsWith(schema, 'schema'))
-					return 'schema';
-
-				if (endsWith(schema, 'function')) {
-					return 'function';
-				}
-
-				//default, even if empty
-				return 'sharable';
-			};
-
 			// should check for custom template and use if exists. otherwise, do the form generation for the generic
 			$scope.getPartialAndCompile = function (type, obj) {
 				$scope.showJsonEditor = false;
 
-				//todo - just $http the suspected path based on schema, use error clause to default to generic sharable editor
+				//todo - handle instance-specific templates
 
-				switch (angular.lowercase(type)) {
-					case 'function' :
-					{
-
-						$http.get('views/_editor/function.html', {cache: $templateCache})
-							.success(function (data) {
-								var el = $compile(data)($scope);
-								$element.html(el);
-							});
-
-						break;
-					}
-					case 'schema' :
-					{
-
-						$http.get('views/_editor/schema.html', {cache: $templateCache})
-							.success(function (data) {
-								var el = $compile(data)($scope);
-								$element.html(el);
-							});
-
-						break;
-					}
-					case 'sharable' :
-					{
-
-						$http.get('views/_editor/sharable.html', {cache: $templateCache})
-							.then(function (result) {
-								var el = $compile(result.data)($scope);
-								$element.html(el);
-							});
-
-						break;
-
-					}
-					default :
-					{
-						Debugger.log('empty or unknown type passed');
-						$element.html('<p class="text-center">Please select an Object</p>');
-
-					}
+				if (angular.isEmpty(type)) {
+					$element.html('<p class="text-center">Please select an Object</p>');
+					return;
 				}
+
+				$http.get(ClothoSchemas.sharableTypes[type].editor_template_url, {cache: $templateCache})
+				.success(function (data) {
+					var el = $compile(data)($scope);
+					$element.html(el);
+				})
+				.error(function (data) {
+					Debugger.error('Could not retrieve template for type ' + type);
+					$element.html('<p class="text-center">Please select an Object</p>');
+				});
 			};
 
 			//process input sharable to see if object, or id string
@@ -136,7 +84,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 				if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
 					Debugger.log('sharable object passed');
-					$scope.id = sharable.id;
+					$scope.id = sharable.id | '';
 					$scope.sharable = sharable;
 				}
 				else if (angular.isString(sharable)) {
@@ -155,11 +103,8 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 				var getObj = (angular.isEmpty($scope.sharable) && $scope.id != '') ? Clotho.get($scope.id) : $q.when($scope.sharable);
 
 				getObj.then(function (result) {
-
 					$scope.sharable = result;
-
-					$scope.type = $scope.determineType(result);
-					$scope.getPartialAndCompile($scope.type, result);
+					$scope.getPartialAndCompile(ClothoSchemas.determineType(result), result);
 				});
 
 			};
@@ -170,6 +115,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			//controller API
 			return {
 				removeField: function (name) {
+					Debugger.warn('(DEPRECATED) - removing fields from sharables is not supported');
 					Debugger.log('removing key ' + name);
 					delete $scope.sharable[name];
 				}

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $route, $location, Clotho) {
+angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $route, $location, Clotho, ClothoSchemas) {
 
 	// todo - better handle dynamic routing
 	// note - could use search param, and set reloadOnSearch to false
@@ -22,42 +22,14 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 
 	//data
 
-	$scope.objectTypes = {
-		"Instance" : {
-			readable : "Instance"
-		},
-		"Function": {
-			readable : "Function",
-			scaffold : {
-				schema: "Function",
-				language: "JSONSCHEMA"
-			}
-		},
-		"Schema": {
-			readable : "Schema",
-			scaffold : {
-				schema: "ClothoSchema",
-				language: "JSONSCHEMA"
-			}
-		},
-		"View" :  {
-			readable : "View",
-			scaffold : {
-				schema: "View",
-				language: "JSONSCHEMA"
-			}
-		}
-	};
+	$scope.objectTypes = ClothoSchemas.sharableTypes;
 
-	//todo - move this to angular-global value, since used multiple places
 	$scope.schemas = [];
-	Clotho.query({"schema": "Schema"}).then(function (schemas) {
+	ClothoSchemas.retrievedSchemas.then(function (schemas) {
 		$scope.schemas = schemas;
-		_.remove($scope.schemas, function (schema) {
-			return !!$scope.objectTypes[schema.name];
-		});
 	});
 
+	//future - phase out (may be able to already)
 	$scope.allInstances = [];
 	Clotho.query({}).then(function (data) {
 		_.each(data, function (item) {
@@ -76,26 +48,17 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		})
 	};
 
-	function createForEditor (scaffold, type) {
-		Clotho.create(scaffold)
-		.then(function (id) {
-			console.log('created object of type ' + type + ' with id: ' + id);
-			$scope.editable = id;
-			$scope.editModePass = true;
-		});
-	}
-
 	$scope.createNew = function (type) {
 		if (type == 'Instance') {
 			$scope.chooseSubtype = !$scope.chooseSubtype;
 		} else {
-			createForEditor($scope.objectTypes[type].scaffold, type);
+			$scope.editable = ClothoSchemas.createScaffold(type);
 			$scope.chooseSubtype = false;
 		}
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
-		createForEditor({schema: model, language: "JSONSCHEMA"}, label);
+		$scope.editable = ClothoSchemas.createScaffold(model);
 		$scope.chooseSubtype = false;
 	};
 

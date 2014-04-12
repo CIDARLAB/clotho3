@@ -1,7 +1,7 @@
 //todo - handle loading of markdown, codemirror, etc.
 //todo - handle initial coloring of code based on language
 
-angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader) {
+angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas) {
 
 	$scope.langTypes = [
 		{name:'JavaScript', value:'JAVASCRIPT'},
@@ -30,8 +30,9 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		{name:'number', type : "number", category:'Primitive', javaType : "java.lang.Long", reference: false},
 		{name:'boolean', type : "boolean", category:'Primitive', javaType : "java.lang.Boolean", reference: false}
 	];
-	Clotho.query({schema:"Schema"}).then(function(data){
-		angular.forEach(data, function(schema){
+
+	ClothoSchemas.retrievedSchemas.then(function (schemas) {
+		angular.forEach(schemas, function(schema){
 			$scope.paramTypes.push(angular.extend(schema, {category:'Schema'}));
 		});
 	});

@@ -1,8 +1,9 @@
-angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope, Clotho) {
+angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope, Clotho, ClothoSchemas) {
 
 	$scope.schemas = [];
-	Clotho.query({"schema": "Schema"}).then(function(data) {
-		$scope.schemas = data;
+
+	ClothoSchemas.retrievedSchemas.then(function (schemas) {
+		$scope.schemas = schemas;
 	});
 
 	$scope.clothoFunctions = [];
@@ -10,24 +11,11 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		$scope.clothoFunctions = data;
 	});
 
-	$scope.accessTypes = [
-		{name:'Public', value:'PUBLIC'},
-		{name:'Private', value:'PRIVATE'},
-		{name:'Read Only', value:'READONLY'}
-	];
+	$scope.accessTypes = ClothoSchemas.accessTypes;
 
-	$scope.constraintTypes = [
-		{name:'RegExp', value:'regex'},
-		{name: 'Not Null', value: 'notnull'}
-	];
+	$scope.constraintTypes = ClothoSchemas.constraintTypes;
 
-	$scope.primitiveToJava = {
-		"string" : "java.lang.String",
-		"number" : "java.lang.Long",
-		"boolean" : "java.lang.Boolean",
-		"object" : "java.util.HashMap",
-		"array" : "java.util.List"
-	};
+	$scope.primitiveToJava = ClothoSchemas.primitiveToJava;
 
 	$scope.findSpacesRegExp = /\s/ig;
 
