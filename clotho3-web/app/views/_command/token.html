@@ -1,4 +1,4 @@
-<div class="clothoTokenWrap" ng-class="{'active' : selected}">
+<div class="clothoTokenWrap" ng-class="{'active' : tokenActive}">
     <span class="clothoTokenText">{{model.name || model}}</span>
-    <span class="clothoTokenClose" ng-click="removeToken($event)" ng-show="selected">&times;</span>
+    <span class="clothoTokenClose" ng-click="removeToken($event)" ng-show="tokenActive">&times;</span>
 </div>

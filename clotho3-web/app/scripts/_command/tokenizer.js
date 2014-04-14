@@ -48,7 +48,9 @@ angular.module('clotho.commandbar')
 
 		ClothoTokenCollection.prototype.removeActiveToken = function () {
 			if (this.isActive()) {
-				return this.tokens.splice(this.currentSelectedIndex, 1);
+				var toReturn =  this.tokens.splice(this.currentSelectedIndex, 1);
+				this.unsetActive();
+				return toReturn;
 			} else {
 				return false;
 			}
@@ -66,6 +68,14 @@ angular.module('clotho.commandbar')
 
 		ClothoTokenCollection.prototype.setLastActive = function (index) {
 			this.setActive(this.tokens.length - 1);
+		};
+
+		ClothoTokenCollection.prototype.setPrevActive = function (index) {
+			this.currentSelectedIndex = (this.currentSelectedIndex > 0 ? this.currentSelectedIndex : this.tokens.length) - 1;
+		};
+
+		ClothoTokenCollection.prototype.setNextActive = function (index) {
+			this.currentSelectedIndex = (this.currentSelectedIndex + 1) % this.tokens.length;
 		};
 
 		ClothoTokenCollection.prototype.unsetActive = function (index) {
@@ -88,19 +98,20 @@ angular.module('clotho.commandbar')
 		return {
 			restrict: 'E',
 			replace: true,
-			require: 'ngModel',
-			scope: {
-				model : '=ngModel',
-				placeholder: "@?",
-				startingTags: '=?'
-			},
+			require: 'ngModel', //avoid isolate scope so model propagates correctly
 			templateUrl: "views/_command/tokenizer.html",
 			controller: function clothoTokenizerCtrl($scope, $element, $attrs) {
 
 			},
 			link: function clothoTokenizerLink(scope, element, attrs, ngModelCtrl) {
 
-				scope.tokenCollection = new clothoTokenCollectionFactory(scope.startingTags);
+				scope.placeholder = attrs.placeholder;
+
+				var startingTags = $parse(attrs.startingTags)(scope);
+
+
+
+				scope.tokenCollection = new clothoTokenCollectionFactory(startingTags);
 
 				function updateModel () {
 					console.log('updating model', scope.tokenCollection.tokens);
@@ -108,15 +119,21 @@ angular.module('clotho.commandbar')
 					console.log(ngModelCtrl);
 				}
 
+				scope.$watchCollection('tokenCollection.tokens', function () {
+					console.log('COLLECTION CHANGED');
+					updateModel();
+				});
+
 				scope.addToken = function (item) {
 					console.log('TOKENIZER_LINK adding token', item);
 					scope.tokenCollection.addToken(item);
-					updateModel();
+					//updateModel();
 				};
 
 				scope.removeToken = function (index, model) {
+					console.log('TOKENIZER_LINK removing token', index);
 					scope.tokenCollection.removeToken(index);
-					updateModel();
+					//updateModel();
 				};
 
 				scope.tokenActive = function (index) {
@@ -239,25 +256,19 @@ angular.module('clotho.commandbar')
 
 					//backspace
 					if (evt.which === 8) {
-
-						console.log('SELECT token collection', scope.tokenCollection);
-
 						if (scope.query.length) {
 							scope.$apply(function () {
 								scope.query = scope.query.substring(0, scope.query.length - 1);
 							});
 						} else {
 							if (scope.tokenCollection) {
-								var colLength = scope.tokenCollection.tokens.length - 1;
-								if (scope.tokenCollection.isActive(colLength)) {
-									console.log('last already active, splicing');
+								if (scope.tokenCollection.isActive()) {
 									scope.tokenCollection.removeActiveToken();
 								} else {
-									console.log('selecting last token');
 									scope.tokenCollection.setLastActive();
 								}
 							}
-							scope.$parent.$digest();
+							scope.$digest();
 						}
 					}
 					//down
@@ -274,11 +285,13 @@ angular.module('clotho.commandbar')
 					}
 					//left
 					else if (evt.which === 37) {
-						//todo - token select prev
+						scope.tokenCollection.setPrevActive();
+						scope.$digest();
 					}
 					//right
 					else if (evt.which === 39) {
-						//todo - token select next
+						scope.tokenCollection.setNextActive();
+						scope.$digest();
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
@@ -296,8 +309,15 @@ angular.module('clotho.commandbar')
 					}
 				});
 
-				element.bind('blur', function () {
+				element.on('blur', function () {
 					scope.hasFocus = false;
+					scope.$apply(function () {
+						scope.tokenCollection.unsetActive();
+					});
+				});
+
+				element.on('focus', function () {
+					scope.hasFocus = true;
 				});
 
 				//init()
@@ -394,6 +414,7 @@ angular.module('clotho.commandbar')
 				tokenCollection : '=',
 				tokenIndex : '=',
 				tokenActive : '=',
+				model : '=ngModel',
 				onRemove : '&?'
 			},
 			controller: function clothoTokenCtrl($scope, $element, $attrs) {
@@ -401,10 +422,8 @@ angular.module('clotho.commandbar')
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
-				scope.model = scope.tokenCollection.getToken(scope.tokenIndex);
-
 				element.on('click', function (evt) {
-					if (scope.tokenCollection.isActive(scope.tokenIndex)) {
+					if (scope.tokenActive) {
 						console.log('sharable object', scope.fullSharable);
 						scope.tokenCollection.unsetActive(scope.tokenIndex);
 					} else {
@@ -416,11 +435,6 @@ angular.module('clotho.commandbar')
 					evt.preventDefault();
 					scope.onRemove({$model : scope.model});
 				};
-
-				scope.$watch('tokenActive', function (newval, oldval) {
-					console.log('token active: ', newval);
-					scope.selected = newval;
-				});
 
 				//todo - styling based on whether ambiguous
 
