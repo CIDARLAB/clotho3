@@ -21,95 +21,27 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 
 			$scope.$watch('display.query', function(newValue, oldValue) {
 				 $scope.display.autocomplete = !!newValue;
-				 if (!!newValue) {
+				 if (!!newValue && angular.isString(newValue)) {
 					 Clotho.autocomplete($scope.display.query).then(function(data) {
 					  $scope.autocomplete.autocompletions = data;
 					 });
 				 }
 			});
 
-			//todo - rewrite
 			//$scope.currentSelected = 1; //assumes that a.close is present and is first child
-			$scope.prevSubmittedIndex = false;
+			$scope.activeIndex = false;
 			$scope.selectAutoNext = function($event) {
-				//temporary - next submitted command
 				$event.preventDefault();
-				var queriesLen = $scope.display.queryHistory.length -1;
+				$scope.activeIndex = ($scope.activeIndex + 1) % $scope.display.queryHistory.length;
 
+				CommandBar.setQuery($scope.display.queryHistory[$scope.activeIndex]);
 
-				$scope.prevSubmittedIndex =
-					(!$scope.prevSubmittedIndex) ?
-						0 :
-						(   ($scope.prevSubmittedIndex < queriesLen ) ?
-							$scope.prevSubmittedIndex + 1 :
-							queriesLen
-							);
-
-				console.log($scope.prevSubmittedIndex);
-
-
-				CommandBar.setQuery($scope.display.queryHistory[$scope.prevSubmittedIndex]);
-
-
-				/*if (!$scope.display.autocomplete && $scope.display.query) {
-				 $scope.display.show('autocomplete');
-				 $scope.currentSelected = 1;
-				 }
-
-
-				 if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
-				 console.log($scope.currentSelected);
-				 $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
-
-				 if ($scope.currentSelected <= $scope.autocomplete.autocompletions.length)
-				 $scope.currentSelected += 1;
-
-				 console.log($scope.currentSelected);
-
-
-				 var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
-				 CommandBar.setQuery(current.scope().item);
-				 $scope.display.detail(current.scope().item.uuid);
-				 current.addClass('active');
-				 }*/
 			};
 			$scope.selectAutoPrev = function($event) {
-
-				//temporary -- previous submitted command
 				$event.preventDefault();
-				var queriesLen = $scope.display.queryHistory.length -1;
+				$scope.activeIndex = ($scope.activeIndex ? $scope.activeIndex : $scope.display.queryHistory.length) - 1;
 
-				$scope.prevSubmittedIndex =
-					(!!$scope.prevSubmittedIndex) ?
-						(   ($scope.prevSubmittedIndex > 0) ?
-							queriesLen :
-							0
-							) :
-						(   ($scope.display.queryHistory.length) ?
-							queriesLen :
-							0
-							);
-
-				console.log($scope.prevSubmittedIndex);
-
-				CommandBar.setQuery($scope.display.queryHistory[$scope.prevSubmittedIndex]);
-
-
-
-				/*if ($scope.display.autocomplete && $scope.autocomplete.autocompletions.length) {
-				 console.log($scope.currentSelected);
-
-				 $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')').removeClass('active');
-				 if ($scope.currentSelected > 1)
-				 $scope.currentSelected -= 1;
-
-				 console.log($scope.currentSelected);
-
-				 var current = $('#clothoSearchbarAutocompleteList li:nth-child('+$scope.currentSelected+')');
-				 CommandBar.setQuery(current.scope().item);
-				 $scope.display.detail(current.scope().item.uuid);
-				 current.addClass('active');
-				 }*/
+				CommandBar.setQuery($scope.display.queryHistory[$scope.activeIndex]);
 			};
 
 			$scope.fullPageLog = function() {
@@ -147,7 +79,6 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 			};
 
 			scope.aboutClotho = function() {
-				//$window.open('http://www.clothocad.org/index.php/background/', 'aboutClotho');
 				$location.path('/about')
 			};
 

@@ -1,31 +1,31 @@
-<nav role="navigation">
+<nav id="clotho_commandBar" role="navigation">
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="navbar navbar-default" style="padding: 8px 15px;">
+    <div id="clotho_commandBarWrapper">
 
         <!--input-->
-        <!--hack -- float -->
-        <div class="input-group col-xs-4" style="padding-left: 0px; float: left;">
+        <div id="clotho_command_inputWrapper">
             <!--todo - add these attributes via directive -->
-            <input id="clothoCommandBarInput" class="form-control" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext($event)','up':'selectAutoPrev($event)','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
-            <span class="input-group-btn">
-                <button class="btn btn-default" id="searchBarSubmit" ng-click="submit(display.query)">Submit</button>
+            <input id="clotho_command_input" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" ng-model="display.query" ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext($event)','up':'selectAutoPrev($event)','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
+            <span id="clotho_command_submitWrapper">
+                <button type="button" id="clotho_command_submit" ng-click="submit(display.query)">Submit</button>
             </span>
         </div>
 
         <!--autocomplete -->
         <!--todo - use directive-->
-        <div id="clothoSearchbarAutocomplete" class="dropdown pull-left" ng-show="display.autocomplete" click-outside="display.hide('autocomplete'); display.undetail();" ng-init="display.genAutocompletePos()" click-outside-active="display.autocomplete" ng-style="display.autocompletePos" style="position: absolute">
-            <ul id="clothoSearchbarAutocompleteList" class="dropdown-menu col-xs-5 inline-block">
-                <a class="close" ng-click="display.hide('autocomplete'); display.undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
+        <div id="clotho_command_autocomplete" ng-show="display.autocomplete" click-outside="display.hide('autocomplete'); display.undetail();" ng-init="display.genAutocompletePos()" click-outside-active="display.autocomplete" ng-style="display.autocompletePos">
+            <ul id="clotho_command_autocompleteList">
+                <a id="clotho_command_autocompleteListClose" ng-click="display.hide('autocomplete'); display.undetail()">&times;</a>
                 <!--| filter:{text:display.query}-->
                 <li ng-repeat="item in (filtered = (autocomplete.autocompletions)) | limitTo:10" ng-class="{'disabled': item.type == 'phrase'}">
-                    <a class="clothoSearchbarAutocompleteListItem" ng-click="setQuery(item, $event)" ng-mouseenter="display.detail(item.uuid)" >{{item.text}}</a>
+                    <a class="clotho_command_autocompleteItem" ng-click="setQuery(item, $event)" ng-mouseenter="display.detail(item.uuid)" >{{item.text}}</a>
                 </li>
 
                 <li ng-if="!filtered.length" class="disabled"><a><i class="glyphicon glyphicon-exclamation-sign"></i> No results...</a></li>
             </ul>
-            <div id="clothoSearchbarAutocompleteDetail" class="popover inline" ng-show="display.autocompleteDetail" ng-cloak>
+            <!-- todo - major rewrite of detail -->
+            <div id="clotho_command_autcompleteDetail" ng-show="display.autocompleteDetail" ng-cloak>
                 <div class="popover-content">
                     <a class="close" ng-click="display.undetail()" style="position: absolute; top: 0; right: 5px;">&times;</a>
                     <div style="margin-bottom: 10px;">
@@ -47,18 +47,17 @@
 
 
         <!--log-->
-        <div class="inline-block navbar-left" style="position:relative; margin-left: 10px;" ng-init="display.genLogPos()"
-                click-outside="display.hide('log');" click-outside-active="display.log">
-            <button id="clothoCommandBarLogButton" class="btn btn-default"
-                    ng-click="display.toggle('log'); log.unread = null">
+        <div id="clotho_logButtonContainer" ng-init="display.genLogPos()" click-outside="display.hide('log');" click-outside-active="display.log">
+            <button id="clotho_logButton" ng-click="display.toggle('log'); log.unread = 0">
                 <i class="glyphicon glyphicon-tasks" style="top: 3px;"></i>
-                <span class="badge badge-info" ng-if="log.unread">{{ log.unread }}</span>
+                <span class="badge badge-info" ng-if="log.unread > 0">{{ log.unread }}</span>
             </button>
 
-            <div id="clothoSearchbarLog" class="popover bottom" style="position: absolute;" ng-show="display.log" ng-style="display.logpos" >
+            <div id="clotho_log" ng-show="display.log" ng-style="display.logpos" >
                 <div class="arrow"></div>
                 <h3 class="popover-title">
                     Activity Log
+
                     <button class="btn btn-warning dropdown-toggle pull-right" ng-click="display.log = false" style="margin-top: -6px">
                         <i class="glyphicon glyphicon-remove"></i>
                     </button>
@@ -68,7 +67,7 @@
 
                 </h3>
 
-                <div class="scrollable popover-content" style="max-height: 400px;">
+                <div id="clotho_logEntries">
                     <div log-entries="log.entries"></div>
                 </div>
             </div>
@@ -76,7 +75,7 @@
 
 
         <!--log snippet-->
-        <div id="clothoSearchbarLogSnippet" class="navbar-left inline alert alert-{{log.entries[0].class}}"  style="margin-right: 10px;" ng-show="display.logSnippet" ng-mouseenter="log.cancelLogTimeout()" ng-mouseleave="log.startLogTimeout()">
+        <div id="clotho_logSnippet" class="alert alert-{{log.entries[0].class}}" ng-show="display.logSnippet" ng-mouseenter="log.cancelLogTimeout()" ng-mouseleave="log.startLogTimeout()">
             <small>{{log.entries[0].text}}</small>
         </div>
 
@@ -84,17 +83,14 @@
         <!--help buttons-->
         <div class="btn-group nav navbar-right">
             <button class="btn btn-default" ng-click="newPage()" alt="New Page"><i class="glyphicon glyphicon-file"></i></button>
-            <!--<button class="btn" ng-click="newWorkspace()" alt="New Workspace"><i class="glyphicon glyphicon-plus"></i></button>-->
             <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
-            <a class="btn btn-default dropdown dropdown-toggle" style="padding-left: 12px; padding-right: 12px;"
-                    id="searchbar_helpbutton"><i class="glyphicon glyphicon-question-sign"></i></a>
-            <ul class="dropdown-menu">
+            <a class="btn btn-default dropdown-toggle" ng-click="showHelpDropdown = !showHelpDropdown" style="padding-left: 12px; padding-right: 12px;" id="commandbar_helpbutton"><i class="glyphicon glyphicon-question-sign"></i></a>
+            <ul class="dropdown-menu" ng-style="{'display' : showHelpDropdown ? 'block' : 'none'}">
                 <li><a ng-click="showMeHow()" tabindex="-1"><i class="glyphicon glyphicon-eye-open"></i> Show me how</a></li>
                 <li><a ng-click="aboutClotho()" tabindex="-1"><i class="clotho-icon"></i> About Clotho</a></li>
                 <li><a ng-click="teamClotho()" tabindex="-1"><i class="glyphicon glyphicon-user"></i> The Clotho Team</a></li>
-                <!--<li><a ng-click="toggleTooltips()" tabindex="-1"><i class="glyphicon glyphicon-tag"></i> Toggle Tooltips</a></li>-->
             </ul>
         </div>
 
-    </div><!-- /.navbar-collapse -->
+    </div>
 </nav>
