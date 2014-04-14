@@ -1,27 +1,22 @@
 package org.clothocad.webserver.jetty;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.BufferedReader;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Collection;
 
 import org.clothocad.core.communication.*;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.execution.Mind;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
 import org.clothocad.core.util.JSON;
-import org.clothocad.core.datums.ObjBase;
 
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.SecurityUtils;
-import org.bson.types.ObjectId;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
 /**
  *
@@ -32,34 +27,42 @@ public class RestApi extends HttpServlet {
 
     private static Router router;
     private static Message m;
+    private static Message loginMessage, logoutMessage;
+    private static Map<String, String> loginMap;
     private static RestConnection rc = new RestConnection("RestConnection");
-    // TODO:
-    // Set
     // Test set with following url , change sequence: https://localhost:8443/rest/52410adf50763ce31f941915
 
-    // http://aaronparecki.com/articles/2012/07/29/1/oauth2-simplified
     // http://stackoverflow.com/questions/15051712/how-to-do-authentication-with-a-rest-api-right-browser-native-clients
+    // http://shiro-user.582556.n2.nabble.com/Shiro-and-RESTful-web-services-td5539212.html
+    // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
+    // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
 
-    // write create api endpoint
-    // request body json for set/create
+    // should i login through router & then logout?
+
     // look into http authentication
 
     // http://shiro.apache.org/
-    // 2 methods:
-    // pass request to serversideapi w/ mind obj
-    // post : change value of shareable with new val
     public RestApi(Router router) {
         this.router = router;
     }
-
 
     protected void doGet(HttpServletRequest request, 
     	HttpServletResponse response) throws ServletException, IOException {
 
     	response.setContentType("application/json");
 
+        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
+
+        if (unamePass != null) {
+            loginMap = new HashMap<String, String>();
+            loginMap.put("username", unamePass[0]);
+            loginMap.put("password", unamePass[1]);
+            loginMessage = new Message(Channel.login, loginMap, null, null);
+            this.router.receiveMessage(this.rc, loginMessage);
+        }
+
     	String id = request.getPathInfo().split("/")[1];
-        
+
         // We build our new message
         m = new Message(Channel.get, id, null, null);
 
@@ -67,6 +70,11 @@ public class RestApi extends HttpServlet {
         this.router.receiveMessage(this.rc, m);
 
         String result = this.rc.getResult().toString();
+
+        if (unamePass != null) {
+            logoutMessage = new Message(Channel.logout, loginMap, null, null);
+            this.router.receiveMessage(this.rc, logoutMessage);
+        }
         
         response.getWriter().write(result);
 
@@ -82,6 +90,16 @@ public class RestApi extends HttpServlet {
 
         response.setContentType("application/json");
 
+        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
+
+        if (unamePass != null) {
+            loginMap = new HashMap<String, String>();
+            loginMap.put("username", unamePass[0]);
+            loginMap.put("password", unamePass[1]);
+            loginMessage = new Message(Channel.login, loginMap, null, null);
+            this.router.receiveMessage(this.rc, loginMessage);
+        }
+
         String id = request.getPathInfo().split("/")[1];
 
         // We build our new message
@@ -91,6 +109,11 @@ public class RestApi extends HttpServlet {
         this.router.receiveMessage(this.rc, m);
 
         String result = this.rc.getResult().toString();
+
+        if (unamePass != null) {
+            logoutMessage = new Message(Channel.logout, loginMap, null, null);
+            this.router.receiveMessage(this.rc, logoutMessage);
+        }
 
         response.getWriter().write(result);
 
@@ -103,14 +126,21 @@ public class RestApi extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, 
         HttpServletResponse response) throws ServletException, IOException {
-        // Params for set: Id of object, new fields you want to update
-        // Put new parameters as json in the request body.
 
         response.setContentType("application/json");
 
-        // Need to add checks for id
+        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
+
+        if (unamePass != null) {
+            loginMap = new HashMap<String, String>();
+            loginMap.put("username", unamePass[0]);
+            loginMap.put("password", unamePass[1]);
+            loginMessage = new Message(Channel.login, loginMap, null, null);
+            this.router.receiveMessage(this.rc, loginMessage);
+        }
+
         String id = request.getPathInfo().split("/")[1];
-        
+
         Map<String, String> p = getRequestBody(request.getReader());
         p.put("id", id);
 
@@ -121,7 +151,12 @@ public class RestApi extends HttpServlet {
         this.router.receiveMessage(this.rc, m);
 
         // Get the result & check to see if it was successful/if it failed
-        String result = this.rc.getResult().toString();;
+        String result = this.rc.getResult().toString();
+
+        if (unamePass != null) {
+            logoutMessage = new Message(Channel.logout, loginMap, null, null);
+            this.router.receiveMessage(this.rc, logoutMessage);
+        }
         
         response.getWriter().write(result);
 
@@ -152,5 +187,16 @@ public class RestApi extends HttpServlet {
         }
 
         return map;
+    }
+
+    private String[] getBasicAuth(String authHeader) {
+        try {
+            String credentials = new String(Base64.decodeBase64(authHeader), "UTF-8");
+            return credentials.split(":");
+        } catch (UnsupportedEncodingException uee) {
+            return null;
+        } catch (NullPointerException nee) {
+            return null;
+        }
     }
 }
