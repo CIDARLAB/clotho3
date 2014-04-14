@@ -1,9 +1,9 @@
 <div class="clothoTokenizerWrap" ng-click="focusInput()">
     <div class="clothoTokenizerTokens">
-        <clotho-token ng-repeat="token in tokens track by $index" ng-model="token" on-remove="removeToken($index, model)"></clotho-token>
+        <clotho-token ng-repeat="token in tokenCollection.tokens track by $index" token-collection="tokenCollection" token-index="$index" token-active="tokenCollection.isActive($index)" on-remove="removeToken($index, $model)"></clotho-token>
     </div>
 
     <div class="clothoTokenizerAutocompleteWrap clothoAutocompleteWrap">
-        <input type="text" clotho-autocomplete placeholder="{{placeholder}}" class="clothoAutocomplete" ng-model="query" autocomplete-on-select="addToken($item)">
+        <input type="text" clotho-autocomplete placeholder="{{placeholder}}" class="clothoAutocomplete" ng-model="query" token-collection="tokenCollection" autocomplete-on-select="addToken($item)">
     </div>
 </div>
