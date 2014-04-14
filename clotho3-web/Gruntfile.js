@@ -405,7 +405,7 @@ module.exports = function (grunt) {
 		  },
 		  clothoProdServer: {
 			  //todo - update to proper server etc (currently just uses /dist/)
-			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
 			  }
@@ -495,7 +495,7 @@ module.exports = function (grunt) {
 		'watch'
 	]);
 
-	grunt.registerTask('dev2', [
+	grunt.registerTask('prod', [
 		'shell:mongo',
 		'shell:clothoProdServer',
 		'clean:server',
