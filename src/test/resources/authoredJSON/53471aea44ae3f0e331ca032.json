@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2148",
+  "shortdescription" : "{Kps 3' 500bp}",
+  "sequence" : "gatctaaacggatgaaatcctcaagctagttccttcactgaaaaatttcggcaaccgaattatcgccattaccaataatggaaattccacgctggcgaaaaatgctgatgccgtgctggaactccatatggcgaatgaaacctgcccgaataatcttgcaccaacaacgtctaccacgctgacgatggcgatcggcgatgcgctggcgattgccatgatccgccaacgcaaatttatgccgaatgattttgcgcgctatcacccgggcggttcattaggtcgtcgcctgctgacccgcgttgctgatgtcatgcaacatgatgttcctgcggtacagctggatgcgtcatttaaaaccgtgattcaacgtatcaccagcggatgccagggaatggtgatggtagaagacgcagaaggtgggctagcgggcattatcaccgacggtgacctgcgtcgctttatggaaaaagaggattctctgacatccgccacggctgcgcagatgatgacacgtgaaccgctgacgctaccggaagacaccatgatcg",
+  "id" : "53471aea44ae3f0e331ca032"
+}

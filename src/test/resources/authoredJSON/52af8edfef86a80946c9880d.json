@@ -1,5 +1,5 @@
 {
-  "schema" : "BasicPart",
+  "schema" : "org.clothocad.model.BasicPart",
   "name" : "jtk2130",
   "shortdescription" : "{I-SceI Left Half}",
   "sequence" : "gatctatgcacatgaagaacatcaaaaagaaccaggtaatgaacctgggtccgaactctaaactgctgaaagaatacaaatcccaactgatcgaactgaacatcgaacagttcgaagcaggtatcggtctgattctgggtgatgcgtacattcgttctcgtgatgaaggtaaaacctactgtatgcagttcgagtggaagaacaaagcatacatggaccacgtatgtctgctgtacgatcagtgggtactgtccccaccgcacaagaaagaacgtgttaaccacctgggtaatctggtaatcacctggggcgcacagactttcaaacaccaagcttgcggccgcg",

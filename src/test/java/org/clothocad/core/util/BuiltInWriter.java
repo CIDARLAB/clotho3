@@ -14,11 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.testers.ClothoTestModule;
@@ -36,12 +35,11 @@ public class BuiltInWriter {
         
         Injector injector = Guice.createInjector(
                 new ClothoTestModule(),
-                new MongoDBModule());
+                new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         
         schemas = new ArrayList<>();
         
-        List<Map<String,Object>> data = new ArrayList<>();
         Reflections models = new Reflections("org.clothocad");
 
         for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
@@ -50,22 +48,17 @@ public class BuiltInWriter {
             }
         }
         
-        for (BuiltInSchema schema : schemas){
-            data.add(persistor.toJSON(schema));
-        }
-        
-        String content = JSON.serialize(data);
         Path file = Paths.get("builtins.json");
         try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)){
-            writer.write(content);
+            writer.write(JSON.serializeForExternal(schemas));
         } catch (IOException ex) {
             ex.printStackTrace();
         }        
     }
     
-    private static void makeBuiltIns(Class<? extends ObjBase> c, Schema superSchema, Reflections ref){
+    private static void makeBuiltIns(Class<? extends ObjBase> c, BuiltInSchema superSchema, Reflections ref){
         BuiltInSchema builtIn = new BuiltInSchema(c, superSchema);
-        builtIn.setUUID(new ObjectId());
+        builtIn.setId(new ObjectId());
         schemas.add(builtIn);
         
         for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){

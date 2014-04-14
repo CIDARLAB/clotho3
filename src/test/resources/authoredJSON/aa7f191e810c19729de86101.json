@@ -1,7 +1,7 @@
 {
   "name" : "revcomp",
   "type" : "function",
-  "schema" : "Function",
+  "schema" : "org.clothocad.core.datums.Function",
   "id" : "aa7f191e810c19729de86101",
   "code" : "function(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c', A : 'T', T : 'A', C : 'G', G : 'C' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]});  };",
   "language" : "JAVASCRIPT",

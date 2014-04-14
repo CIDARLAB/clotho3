@@ -2,7 +2,7 @@
   "name" : "reverse",
   "id" : "5232624a7054e77e5d370961",
   "language" : "JAVASCRIPT",
-  "schema" : "Function",
+  "schema" : "org.clothocad.core.datums.Function",
   "args" : [ {
     "type" : "string",
     "name" : "str"

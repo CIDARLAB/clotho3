@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.util;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.model.FreeForm;
@@ -111,7 +112,7 @@ public class TestUtils {
     }
 
     public static Injector getDefaultTestInjector() {
-        return Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        return Guice.createInjector(new ClothoTestModule(), new JongoModule());
     }
 
     public static List<ObjectId> setupTestData(Persistor persistor) {
@@ -144,10 +145,20 @@ public class TestUtils {
         
         ObjectId eugeneID = persistor.save(eugenePart);
 
-        return Arrays.asList(part1.getUUID(), part2.getUUID(), part3.getUUID(), eugeneID);
+        return Arrays.asList(part1.getId(), part2.getId(), part3.getId(), eugeneID);
     }
 
     public static void setupTestUsers(ClothoRealm realm) {
         realm.addAccount("testuser", "password");
+    }
+    
+    public static Map<String, Object> serializeForExternalAsMap(Object o){
+        String serialized = JSON.serializeForExternal(o);
+        try {
+            return JSON.deserializeObjectToMap(serialized);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
-    "id" : "cc2f87dec2e6d9c71a57af12",
-    "schema": "ClothoSchema",
+    "id" : "TrailTransclude",
+    "schema":"org.clothocad.core.schema.ClothoSchema",
     "language": "JSONSCHEMA",
     "name": "TrailTransclude",
     "description": "Alternative to Page, transclude the Chapters of another Trail (whose id must be listed in Trail.dependencies)",

@@ -1,5 +1,5 @@
 {
-  "schema" : "Function",
+  "schema" : "org.clothocad.core.datums.Function",
   "id" : "523e3b4cc2e6967acacb1721",
   "dependencies" : [ "523e36e1c2e647abe23c1fa4" ],
   "args" : [ {

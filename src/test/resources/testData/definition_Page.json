@@ -1,6 +1,6 @@
 {
-    "id" : "cc2f87dec2e6d9c71a57af11",
-    "schema": "ClothoSchema",
+    "id" : "Page",
+    "schema":"org.clothocad.core.schema.ClothoSchema",
     "language": "JSONSCHEMA",
     "name": "Page",
     "description": "Defines the content for each unit of a Trail. A page is an an object, as defined below. Javascript / CSS can be added via (ordered by load time): mixin, css, script, <render content>, onload. You can define a controller, and dictionary for interpolation on the page. Content fields are added in the order they are defined in the contents array, and can be: text, video, markdown, wiki, template, quiz",

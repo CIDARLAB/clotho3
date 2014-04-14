@@ -6,7 +6,7 @@
         <!--input-->
         <div id="clotho_command_inputWrapper">
             <!--todo - add these attributes via directive -->
-            <input id="clotho_command_input" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" ng-model="display.query" ng-required ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext($event)','up':'selectAutoPrev($event)','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
+            <input id="clotho_command_input" name="searchBar" type="text" placeholder="Enter Command or Search Term" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off" ng-model="display.query" ui-keypress="{'enter':'submit(display.query)'}" ui-keydown="{'down':'selectAutoNext($event)','up':'selectAutoPrev($event)','esc':'display.hide(\'autocomplete\'); display.undetail()'}">
             <span id="clotho_command_submitWrapper">
                 <button type="button" id="clotho_command_submit" ng-click="submit(display.query)">Submit</button>
             </span>
@@ -84,9 +84,8 @@
         <div class="btn-group nav navbar-right">
             <button class="btn btn-default" ng-click="newPage()" alt="New Page"><i class="glyphicon glyphicon-file"></i></button>
             <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
-            <a class="btn btn-default dropdown dropdown-toggle" style="padding-left: 12px; padding-right: 12px;"
-                    id="searchbar_helpbutton"><i class="glyphicon glyphicon-question-sign"></i></a>
-            <ul class="dropdown-menu">
+            <a class="btn btn-default dropdown-toggle" ng-click="showHelpDropdown = !showHelpDropdown" style="padding-left: 12px; padding-right: 12px;" id="commandbar_helpbutton"><i class="glyphicon glyphicon-question-sign"></i></a>
+            <ul class="dropdown-menu" ng-style="{'display' : showHelpDropdown ? 'block' : 'none'}">
                 <li><a ng-click="showMeHow()" tabindex="-1"><i class="glyphicon glyphicon-eye-open"></i> Show me how</a></li>
                 <li><a ng-click="aboutClotho()" tabindex="-1"><i class="clotho-icon"></i> About Clotho</a></li>
                 <li><a ng-click="teamClotho()" tabindex="-1"><i class="glyphicon glyphicon-user"></i> The Clotho Team</a></li>

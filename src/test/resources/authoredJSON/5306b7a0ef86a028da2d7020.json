@@ -1,11 +1,18 @@
 {
+  "schema" : "org.clothocad.core.datums.Function",
   "id" : "5306b7a0ef86a028da2d7020",
-  "schema" : "Function",
+  "name" : "spaceout",
+  "dateCreated" : null,
+  "visibility" : null,
+  "code" : "function (str) {return str.split('').join(' ');};",
+  "dependencies" : null,
+  "language" : "JAVASCRIPT",
+  "author" : null,
   "args" : [ {
     "name" : "str",
     "type" : "string"
   } ],
-  "name" : "spaceout",
-  "code" : "function (str) {return str.split('').join(' ');};",
-  "language" : "JAVASCRIPT"
+  "tests" : null,
+  "children" : [ ],
+  "deleted" : false
 }

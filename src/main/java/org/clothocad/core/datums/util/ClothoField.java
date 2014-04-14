@@ -24,32 +24,32 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
-import com.github.jmkgreen.morphia.mapping.MappingException;
-import com.google.common.collect.ImmutableMap;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.util.StdConverter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
-import org.clothocad.core.datums.Function;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.persistence.Add;
-import org.clothocad.core.persistence.Rename;
-import org.clothocad.core.persistence.Replace;
-import org.clothocad.core.persistence.mongodb.ClothoMappedField;
+import org.clothocad.core.persistence.annotations.Reference;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
+import org.clothocad.core.persistence.annotations.Rename;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.Constraint;
-import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -58,7 +58,6 @@ import org.slf4j.LoggerFactory;
 
 @Getter
 @Setter
-@Add(provider="getType", name="javaType")
 public class ClothoField {
     
     private ClothoField() {}
@@ -73,6 +72,7 @@ public class ClothoField {
         
         type = field.getType();
         reference = field.getAnnotation(Reference.class) != null;
+        referenceCollection = field.getAnnotation(ReferenceCollection.class) != null;
         
         //TODO: access, validate
         
@@ -95,15 +95,16 @@ public class ClothoField {
 
     private String name;
     
-    //TODO: let replace reference another class
-    @Replace(encoder="jsonifyFieldType", decoder="decodeFieldType")
     private Class<?> type;
     private Type subtype;
     private String example;   //A string representation/explanation of an expected value
     private Access access;  
     private boolean reference;
-    
-    @Replace(encoder="prettyPrintConstraints", decoder="decodeConstraints")
+    private boolean referenceCollection;
+
+//XXX: disabling constraints for now because the current approach is awful    
+/*    @JsonSerialize(using=ConstraintsSerializer.class)
+    @JsonDeserialize(converter = ConstraintsConverter.class)
     private Set<Constraint>  constraints;
     
     public Map prettyPrintConstraints(){
@@ -118,7 +119,7 @@ public class ClothoField {
         }
         return output;
     }
-    
+  */  
     //metadata
     private String description;
     
@@ -135,7 +136,7 @@ public class ClothoField {
         if (s.length() == 0) return s;
         return s.substring(0,1).toUpperCase() + s.substring(1);
     }
-    
+    /*
     public String jsonifyFieldType(){
         Class c = this.type;
         
@@ -183,11 +184,13 @@ public class ClothoField {
         }
         this.constraints = realConstraints;
     }
-    
+    */
     public Class<?> getType(){
-        return wrap(type);
+        return type;
     }
   
+    /*
+    //after switch to jongo, this shouldn't be necessary
     //Morphia can't decode primitive classes
     //http://stackoverflow.com/questions/1704634/simple-way-to-get-wrapper-class-type-in-java
     // safe because both Long.class and long.class are of type Class<Long>
@@ -205,7 +208,7 @@ public class ClothoField {
             .put(long.class, Long.class)
             .put(short.class, Short.class)
             .put(void.class, Void.class)
-            .build();
+            .build();*/
     //Constraints
     
     //#
@@ -244,12 +247,86 @@ public class ClothoField {
                     } else if (paramType instanceof Class) {
                         return (Class) paramType;
                     } else {
-                        throw new MappingException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
+                        throw new RuntimeException("Unknown type... pretty bad... call for help, wave your hands... yeah!");
                     }
                 }
             }
         }
         return null;
     }
+    
+    public static class ConstraintsSerializer extends JsonSerializer<Set<Constraint>> {
+
+        @Override
+        public void serialize(Set<Constraint> value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+            if (value == null) return;
+            //start object
+            jgen.writeStartObject();
+            //for each constraint in set
+            for (Constraint constraint : value){
+                //write constraint
+                jgen.writeObjectField(constraint.getConstraint(), constraint);
+            }
+            //end object
+            jgen.writeEndObject();
+        }
+
+        @Override
+        public void serializeWithType(Set<Constraint> value, JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException, JsonProcessingException {
+            serialize(value, jgen, provider);
+        }
+    }
+    
+    
+    public static class ConstraintsConverter extends StdConverter<Map<String,Object>,Set<Constraint>> {
+        @Override
+        public Set<Constraint> convert(Map<String, Object> value) {
+            Set<Constraint> output = new HashSet<>();
+            for (String name : value.keySet()){
+                Constraint constraint = new Constraint(name, value.get(name));
+            }
+            return output;
+        }
+    }
+    
+    /*public static class ConstraintsDeserializer extends JsonDeserializer<Set<Constraint>> implements ContextualDeserializer{
+        private BeanProperty property;
+        
+        @Override
+        public Set<Constraint> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            if (jp.getCurrentToken().equals (JsonToken.START_OBJECT)){
+                Set<Constraint> output = new HashSet<>();
+                while (!jp.getCurrentToken().equals(JsonToken.END_OBJECT)){
+                    //this should be the field name
+                    JsonToken token = jp.nextToken();
+                    if (!token.equals(JsonToken.VALUE_STRING)){
+                        throw new JsonMappingException("Expected constraint name");
+                    }
+                    String name = jp.getCurrentName();
+                    
+                    //this should be the value; and should be an object
+                    token = jp.nextToken();
+                    if (!token.equals(JsonToken.START_OBJECT)){
+                        throw new JsonMappingException("Expected constraint body");
+                    }
+                    Map<String,Object> values = ctxt.deserializerInstance(null, reference)
+                    
+                    Constraint constraint = new Constraint(name, values);
+                    output.add(constraint);
+                    
+                    //move to next key-value pair or end of set
+                    jp.nextToken();
+                }
+                return output;               
+            }
+            else throw new JsonMappingException("Expected START_OBJECT beginning constraints set");
+        }
+
+        @Override
+        public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
+            this.property = property;
+        }
+        
+    }*/
     
 }

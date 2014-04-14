@@ -1,5 +1,5 @@
 {
-    "schema": "Function",
+    "schema":"org.clothocad.core.datums.Function",
     "id": "5240fcccc2e6fa3eccdcf944",
     "name": "clothoLoadTest",
     "code": "function() {\nvar DNA = clotho.load('DNA');\nreturn DNA.revcomp('acgtacg');\n};",

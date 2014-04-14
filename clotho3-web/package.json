@@ -52,7 +52,7 @@
     "grunt-open": "~0.2.2",
     "grunt-git": "~0.2.3",
     "grunt-bower-install": "~0.8.0",
-    "grunt-processhtml": "~0.2.7",
+    "grunt-processhtml": "~0.3.2",
     "grunt-uncss": "~0.2.0"
   },
   "repository": {

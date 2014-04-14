@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Angel",
+  "nickName" : "Angel",
+  "surName" : "Asante",
+  "name" : "aasanntee",
+  "emailAddress" : "aasanntee@gmail.com",
+  "icon" : "angel_asante.png",
+  "imgUrl" : "",
+  "startDate" : "2010-06-01",
+  "endDate" : "2011-08-01",
+  "currentLocation" : "UC Berkeley Undergraduate",
+  "current" : false,
+  "dateCreated" : "2010-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "534733c944ae01bbcfa3e51a"
+}

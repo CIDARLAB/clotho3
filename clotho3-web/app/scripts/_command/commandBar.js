@@ -204,6 +204,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 	/****** listeners *****/
 
+	//called by clientAPI.say(), so will be called indirectly in submit a few lines above
 	Clotho.listen("activityLog", function (data) {
 		receiveMessage(data);
 	}, 'searchbar');

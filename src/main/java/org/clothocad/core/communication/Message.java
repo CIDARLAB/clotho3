@@ -25,6 +25,10 @@ public class Message {
     @JsonProperty("options")
     public Map<String, String> getOptions() { return options; }
 
+    public Message(Channel channel, Object data, String requestId){
+        this(channel, data, requestId, null);
+    }
+    
     public Message(@JsonProperty("channel") Channel channel,
                    @JsonProperty("data") Object data,
                    @JsonProperty("requestId") String requestId,

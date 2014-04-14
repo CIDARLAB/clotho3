@@ -9,7 +9,6 @@ angular.module('clotho.webapp')
 			{"name" : "Browser", "path" : "/browser"}
 		];
 
-
 		$scope.$watch(function () {
 			return $location.path();
 		}, function (newValue, oldValue) {
@@ -41,7 +40,6 @@ angular.module('clotho.webapp')
 			//note: $location.path().replace() will avoid creation of page in history
 		};
 
-
 		$scope.clearStorage = function() {Collector.clearStorage()};
 		$scope.logListeners = function() {PubSub.logListeners()};
 
@@ -52,7 +50,6 @@ angular.module('clotho.webapp')
 
 		$scope.loggedIn = false;
 		$scope.showLogin = function() {
-			//todo - refactor without dialog
 			$modal.login().result.then(function(result) {
 				console.log(result);
 				if (result) {
@@ -60,7 +57,6 @@ angular.module('clotho.webapp')
 					$scope.loggedIn = true;
 				}
 			});
-
 		};
 
 		$scope.hideNavBar = true;

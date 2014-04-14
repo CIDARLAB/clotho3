@@ -4,6 +4,8 @@
  */
 package org.clothocad.core.execution;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.NullSerializer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,12 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.script.ScriptException;
-import org.bson.types.ObjectId;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
-import org.clothocad.core.execution.Mind;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
@@ -26,6 +27,8 @@ import org.mozilla.javascript.NativeObject;
  * @author spaige
  */
 //XXX: actually JavaScriptAPI
+//this class should never be serialized
+@JsonSerialize(using = NullSerializer.class)
 public class ScriptAPI {
     ServerSideAPI api;
     Mind mind;
@@ -96,7 +99,11 @@ public class ScriptAPI {
         }
         
         //some kind of circular dependency detection would be good
-        return mind.getEngine().eval(module.getCodeToLoad(), module.getLanguage(), this);
+        try{
+            return mind.getEngine().eval(module.getCodeToLoad(), module.getLanguage(), this);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load module "+module.getName()+" because of error: " +e.toString(),e);
+        }
     }
     
     public void say(String text){

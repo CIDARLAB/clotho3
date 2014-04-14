@@ -13,7 +13,7 @@
     <script src="bower_components/lodash/dist/lodash.js"></script>
 
 </head>
-<body>
+<body ng-app="clothoRoot">
 <!--[if lt IE 9]>
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
@@ -25,7 +25,10 @@ SCRIPTS
 
 
 <!--note - correct app based on the distribution, comments removed by build-->
+
+<!-- process:remove:dist,command -->
 <script src="scripts/clotho-app-api.js"></script>
+<!-- /process -->
 
 
 <script src="scripts/clotho-core-module.js"></script>
