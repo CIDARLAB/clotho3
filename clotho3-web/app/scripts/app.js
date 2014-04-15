@@ -94,6 +94,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	})
 
 
+.when('/test/tokenizer', {
+  templateUrl: 'views/test/tokenizer.html',
+  controller: 'TestTokenizerCtrl'
+})
 	.otherwise({
 		redirectTo:'/'
 	});

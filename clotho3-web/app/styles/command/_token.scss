@@ -1,0 +1,24 @@
+.clothoTokenWrap {
+  @extend .label;
+  @extend .label-info;
+  display: inline-block;
+  padding: 4px 8px;
+  margin: 3px;
+}
+
+.clothoTokenText, .clothoTokenClose {
+  line-height: 14px;
+}
+
+.clothoTokenText {
+
+}
+
+.clothoTokenClose {
+  cursor: pointer;
+  padding-left: 5px;
+  font-weight: bold;
+  color: black;
+  text-shadow: 0 1px 0 white;
+  opacity: 0.2;
+}
