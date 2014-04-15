@@ -22,6 +22,7 @@ package org.clothocad.core.aspects.Interpreter;
 
 import groovy.lang.Tuple;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +41,10 @@ public class AutoComplete {
     /* AutoComplete Contructor */
     public AutoComplete () {
         
-        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
+        trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
         //Load up the words from the word bank into the Trie
         for(String word : getWordBank()) {
-            trie.put(word, word);
+            trie.put(word, map.get(word));
         }
 
     }
@@ -52,9 +53,10 @@ public class AutoComplete {
      */
     public AutoComplete(Persistor persistorMongo) {
         persistor = persistorMongo;
-        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
+        trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
+        map = new HashMap();
         for(String word: getWordBank()){
-            trie.put(word,word);
+            trie.put(word,map.get(word));
         }
     }
 
@@ -65,10 +67,10 @@ public class AutoComplete {
      * Extracting options from the Trie
      */
     public List<String> getCompletions(String subString) {
-        SortedMap<String, String> subTrie = trie.prefixMap(subString);
+        SortedMap<String, Object> subTrie = trie.prefixMap(subString);
         //System.out.println("Size of subtrie: " + subTrie.size());
         List<String> options = new ArrayList<>();
-        for (Map.Entry<String, String> entry : subTrie.entrySet()) {
+        for (Map.Entry<String, Object> entry : subTrie.entrySet()) {
             options.add(entry.getKey());
         }
         return options;
@@ -108,7 +110,9 @@ public class AutoComplete {
                 for(int i = 0; i< temp.length;i++){
                     if (temp[i].get(0) != null){
                         String str = temp[i].get(0).toString();
+                        Object uuid = temp[i].get(1);
                         wordBank.add(str);
+                        map.put(str,uuid);
                     }
                 }
                 return wordBank;
@@ -120,7 +124,15 @@ public class AutoComplete {
         return wordBank;
     }
 
-    private Trie<String, String> trie;
+    private Trie<String, Object> trie;
     transient private Set<String> wordBank;
+    private HashMap map;
+    
+    public Object getUUID(String key){
+
+        Object output = trie.selectValue(key);
+        
+        return output;
+    }
     
 }

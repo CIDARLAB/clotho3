@@ -123,7 +123,9 @@ public class ServerSideAPI {
         }
 
     }
-
+    public Object getID(String input){
+        return completer.getUUID(input);
+    }
     public final Object submit(String command) {
         //Resolve the commands to Sharables
         System.out.println("The command for submit is: " + command);

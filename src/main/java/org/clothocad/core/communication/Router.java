@@ -73,7 +73,7 @@ public class Router {
                     Object[] y= new Object[output.size()];
                     for(int i = 0; i <output.size(); i++){
                         HashMap<String, String> x = new HashMap<String,String>();
-                        x.put("uuid", "090909");
+                        x.put("uuid", api.getID(output.get(i)).toString());
                         x.put("text", output.get(i));
                         x.put("value", "This is value");
                         x.put("type", "phrase");
