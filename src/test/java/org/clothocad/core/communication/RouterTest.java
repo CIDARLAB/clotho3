@@ -8,15 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.SecurityUtils;
-import org.bson.types.ObjectId;
-import org.clothocad.core.communication.Channel;
-import org.clothocad.core.communication.ClientConnection;
-import org.clothocad.core.communication.Message;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.apache.shiro.mgt.SecurityManager;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.persistence.jongo.JongoModule;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -42,9 +39,12 @@ public class RouterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         router = injector.getInstance(Router.class);
-        SecurityUtils.setSecurityManager(new DefaultSecurityManager());
+        SecurityManager securityManager = injector.getInstance(SecurityManager.class);
+        SecurityUtils.setSecurityManager(securityManager);
+        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
+        TestUtils.setupTestUsers(realm);
     }
 
     @AfterClass
@@ -116,23 +116,24 @@ public class RouterTest {
     @Test
     public void query() throws IOException {
         Map<String, Object> query = new HashMap<>();
-        query.put("schema", "Part");
+        query.put("schema", "org.clothocad.model.Part");
         TestConnection connection = new TestConnection("queryTest");
         Message message = new Message(Channel.query, query, "3", null);
         sendMessage(message, connection);
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(55, ((List) returnMessage.getData()).size());
+        int size = ((List) returnMessage.getData()).size();
+        assertNotEquals(0, size);
         //assertEquals(3, ((List) returnMessage.data).size());
         
         connection = new TestConnection("queryTest2");
         query = new HashMap<>();
-        query.put("schema", "BasicPart");
+        query.put("schema", "org.clothocad.model.BasicPart");
         message = new Message(Channel.query, query, "4", null);
         sendMessage(message, connection);
         returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
-        assertEquals(54, ((List) returnMessage.getData()).size());
+        assertNotEquals(0, ((List) returnMessage.getData()).size());
     }
 
     
@@ -159,7 +160,6 @@ public class RouterTest {
             } catch (EntityNotFoundException e) {}
         }
     }
-    
     
     @Test
     public void setAll() throws IOException {
@@ -196,7 +196,7 @@ public class RouterTest {
                   "var data = {};\n"
                 + "data.name = \"reverse1\";\n"
                 + "data.language = \"JAVASCRIPT\";\n"
-                + "data.schema = \"Function\";\n"
+                + "data.schema = \"org.clothocad.core.datums.Function\";\n"
                 + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
                 + "data.arguments = [{name:'sequence', type:'String'}];\n"
                 + "\n"
@@ -205,17 +205,53 @@ public class RouterTest {
                 + "clotho.run(\"reverse1\", [\"AAACCC\"]);";
         TestConnection connection = new TestConnection("constructFunction");
         
-        sendMessage(
-            new Message(
-                Channel.submit,
-                script,
-                "6",
-                null
-            ),
-            connection
-        );
+        sendMessage(new Message(Channel.submit, script, "6"), connection);
         
         assertEquals("CCCAAA", connection.messages.get(1).getData());
+        
+    }
+
+        
+    //Test for persisting values in the scripting environment
+    
+    @Test
+    public void mindPersistenceTest()  throws IOException {
+        TestConnection connection = new TestConnection("persistenceTest");
+        Map<String,String> credentials = new HashMap<>();
+        credentials.put("username", "testuser");
+        credentials.put("password", "password");
+        
+        //login as testuser
+        sendMessage(new Message(Channel.login, credentials, "7"), connection);
+        Object data = connection.messageDataByChannelAndId.get(Channel.login.name()+"7");
+        assertTrue((Boolean) data);
+        //set value
+        sendMessage(new Message(Channel.submit, "var persistMe = 42 ", "8"), connection);
+        //logout
+        sendMessage(new Message(Channel.logout, "", "9"), connection);
+        //check that value is not available to anonymous user
+        sendMessage(new Message(Channel.submit, "persistMe", "9"), connection);
+        data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"9");
+        assertNotEquals(data, 42);
+        //login again as testuser
+        sendMessage(new Message(Channel.login, credentials, "10"), connection);
+        //check value is available again
+        sendMessage(new Message(Channel.submit, "persistMe", "11"), connection);
+        data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"11");
+        assertEquals(data, 42);
+    }
+    
+    
+    @Test
+    public void scriptedGet() throws IOException{
+        TestConnection connection = new TestConnection("test");
+        sendMessage(new Message(Channel.submit, "clotho.get(\"bb99191e810c19729de860fe\")", "1"), connection);
+        //make sure that sub-objects contain expected properties
+        Map<String,Object> data = (Map) connection.messageDataByChannelAndId.get(Channel.submit.name()+"1");
+        assertNotNull(data);
+        assertTrue(data.containsKey("contents"));
+        assertTrue(data.get("contents") instanceof List);
+        assertTrue( ((Map) ((List) data.get("contents")).get(0)).containsKey("pages"));
     }
 
     //TODO:
@@ -229,15 +265,10 @@ public class RouterTest {
                 + "\n"
                 + "reverse(\"AAACCC\");";
     }
-    
-    
-    
-    
-    private void sendMessage(Message message, ClientConnection connection)
-    throws IOException {
-        router.receiveMessage(
-            connection,
-            JSON.mapper.readValue(JSON.serialize(message), Message.class)
-        );
+
+    private void sendMessage(Message message, ClientConnection connection) throws IOException {
+        String stringMessage = JSON.serializeForExternal(message);
+        message = JSON.mapper.readValue(stringMessage, Message.class);
+        router.receiveMessage(connection, message);
     }
 }

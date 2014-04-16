@@ -7,7 +7,6 @@ package org.clothocad.core.datums;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.clothocad.model.Person;
 
 /**
@@ -29,11 +28,6 @@ public abstract class SharableObjBase extends ObjBase implements Sharable {
     
     @Getter @Setter
     private Person author;
-    
-    @Override
-    public ObjectId getId() {
-        return getUUID();
-    }
 
     @Getter @Setter
     private String description, icon;

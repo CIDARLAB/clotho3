@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2034",
+  "shortdescription" : "{NeuC 5' UTR}",
+  "sequence" : "GATCTggacaatgccaggaaaacaagatataattatggtatcttttgttcttacagtattaacaatttcatgaaggtccttccctcctgttgaacaaaaaataaactcaatattaataaaagtgaaaaaacaaacaaagtcatcaggatagaatacaactatcttttcatctaaatttttttttacaaactcttgtagagaattatccaagcagcaaaaaaataaatcatatgaatcaacatctatctgctcaaaaatatttttcaaagctaaaaaatgagaatcataacgaaagacaaaacaaagcactttttttctagtcataactggtggtacattccgggatgtcataaaaatctttgtaatctttattttttgatttaataaaatccttaataattctaacagcattaattaaagcattttctttaaaataaggattactagatgactgtacaacactaataaatttttcatcttgagatatatttatccctctgacgattgcatttttttcaacgggtacatctattacactggG",
+  "id" : "53471aea44ae3f0e331ca00b"
+}

@@ -25,7 +25,7 @@ abstract public class AbstractScriptAPI implements DefunctScriptAPI {
 
     protected Function getFunctionByName(String functionName){
         BSONObject query = new BasicBSONObject("name", functionName);
-        query.put("className","org.clothocad.core.execution.Function");
+        query.put("schema","org.clothocad.core.execution.Function");
         
         return connection.getOne(Function.class, query.toMap());
     }

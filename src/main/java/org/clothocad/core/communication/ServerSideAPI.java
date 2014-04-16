@@ -27,7 +27,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,8 +40,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.bson.types.ObjectId;
 import org.clothocad.core.aspects.Interpreter.AutoComplete;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
@@ -50,13 +47,15 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
+import static org.clothocad.core.ReservedFieldNames.*;
+import org.clothocad.core.execution.ScriptAPI;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -73,6 +72,7 @@ import org.clothocad.model.Person;
  * representations and synchronization models, so there is necessarily
  * interpretor logic in Router/ Communicator that handles this.
  *
+ * API methods should return their result, instead of sending the result as a side effect
  *
  * @author John Christopher Anderson
  */
@@ -116,7 +116,7 @@ public class ServerSideAPI {
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
         try {
-            Map<String, Object> msg = JSON.deserializeObject("{\"channel\":\"autocompleteDetail\",\"data\":{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"command\":\"clotho.run('230sdv-232', '18919e-18')\",\"versions\":[{\"uuid\":\"uuid123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"uuid\":\"uuid_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"uuid\":\"uuid456\",\"text\":\"pBca 1256\",\"author\":{\"uuid\":\"uuid_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
+            Map<String, Object> msg = JSON.deserializeObjectToMap("{\"channel\":\"autocompleteDetail\",\"data\":{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"command\":\"clotho.run('230sdv-232', '18919e-18')\",\"versions\":[{\"uuid\":\"uuid123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"uuid\":\"uuid_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"uuid\":\"uuid456\",\"text\":\"pBca 1256\",\"author\":{\"uuid\":\"uuid_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
             return msg.get("data").toString();
         } catch (JsonParseException ex) {
             ex.printStackTrace();
@@ -543,45 +543,6 @@ public class ServerSideAPI {
 
     public List<Map<String, Object>> query(Map<String, Object> spec) {
         List<Map<String, Object>> objs;
-        //in case we are handed an immutable map, make a copy
-        spec = new HashMap(spec);
-
-        //XXX: demo hack to resolve schema smartly
-        if (spec.containsKey("schema")) {
-            //figure out what the schema actually is
-            try {
-                Map<String, Object> schema = persistor.getAsJSON(persistor.resolveSelector(spec.get("schema").toString(), false));
-                String binaryName = (String) schema.get("binaryName"); //try and fallback to name name?
-                //if (schemaName == null || ){ 
-                //    schemaName = schema.get("name").toString();
-                //}
-                String textName = (String) schema.get("name");
-                
-                if (!(schema instanceof BuiltInSchema)) textName = (String) schema.get("name");
-                
-                spec.remove("schema");
-                if (binaryName != null && textName != null){
-                    Map<String,Object> query = new HashMap();
-                    List<String> names = new ArrayList<>();
-                    names.add(textName);
-                    names.add(binaryName);
-                    query.put("$in", names);
-                    spec.put("className", query);
-                } else if (binaryName != null){
-                    spec.put("className", binaryName);
-                } else if (textName != null){
-                    spec.put("className", textName);
-                } else {
-                    spec.put("className", ((ObjBase) schema).getUUID());
-                }
-            } catch (EntityNotFoundException e) {
-                //maybe already full name?
-                logAndSayError(String.format("No schema found for selector %s", spec.get("schema").toString()), e);
-                objs = new ArrayList<>();
-                return objs;
-            }
-        }
-
         try {
             //Relay the query to Persistor and return the hits
             objs = persistor.findAsBSON(spec);
@@ -592,7 +553,6 @@ public class ServerSideAPI {
             e.printStackTrace();
             return new ArrayList<>();
         }
-
     }
 
     //TODO: needs serious cleaning up
@@ -611,8 +571,73 @@ public class ServerSideAPI {
             return null;
         }
 
-        if (data.containsKey("id"))
-            return runWithId(data, args);
+        if (data.containsKey(ID)) {
+            //XXX:(ugh ugh) end-run if *Function
+            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
+            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
+                try {
+                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+
+                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
+                } catch (ScriptException e) {
+                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
+                    return Void.TYPE;
+                } catch (NoSuchMethodException ex) {
+                    logAndSayError("No such function found", ex);
+                    return Void.TYPE;
+                }
+            }
+            //XXX: this whole function is still a mess
+            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
+                try {
+                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
+
+                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
+                } catch (ScriptException e) {
+                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
+                    return Void.TYPE;
+                } catch (NoSuchMethodException ex) {
+                    logAndSayError("No such method found", ex);
+                    return Void.TYPE;
+                }
+            }
+
+            //resolve any references
+            for (int i = 0; i < args.size(); i++) {
+                try {
+                    ObjectId id = new ObjectId(args.get(i).toString());
+                    args.set(i, persistor.get(ObjBase.class, id));
+                } catch (EntityNotFoundException e) {
+                }
+            }
+            //reflectively (ugh) run function of instance
+            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
+
+            Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
+            Object result = method.invoke(instance, args.toArray());
+            if (method.getReturnType().equals(Void.TYPE)) {
+                return Void.TYPE;
+            }
+            List<Object> results = new ArrayList<>();
+            if (result instanceof Iterable) {
+                for (Object r : ((Iterable) result)) {
+                    if (r instanceof ObjBase) {
+                        results.add(persistor.save((ObjBase) r));
+                    } else {
+                        results.add(r);
+                    }
+                }
+            } else {
+                if (result instanceof ObjBase) {
+                    results.add(persistor.save((ObjBase) result));
+                } else {
+                    results.add(result);
+                }
+            }
+            Message message = new Message(Channel.run, results, requestId, null);
+            send(message);
+            return Void.TYPE;
+        }
 
         Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
         List arguments;
@@ -624,15 +649,20 @@ public class ServerSideAPI {
             logAndSayError("malformed arguments", ex);
             return Void.TYPE;
         }
-        final Object result = mind.evalFunction(
-            function.getCode(),
-            function.getName(),
-            arguments,
-            getScriptAPI()
-        );
-        if (!result.equals(Void.TYPE))
-            send(new Message(Channel.run, result, requestId, null));
+        Object result = run(function, arguments);
+        if (!result.equals(Void.TYPE)) {
+            Message message = new Message(Channel.run, result, requestId, null);
+            send(message);
+        }
+
         return Void.TYPE;
+
+    }
+
+    public final Object run(Function function, List<Object> args) throws ScriptException {
+
+
+        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
     }
 
     /**
@@ -845,7 +875,7 @@ public class ServerSideAPI {
      */
     public static final String replaceWidgetId(String script, String widgetIdPrefix) {
         try {
-            return XMLParser.addPrefixToTagAttribute(script, "id", widgetIdPrefix);
+            return XMLParser.addPrefixToTagAttribute(script, ID, widgetIdPrefix);
         } catch (Exception ex) {
             log.error("", ex);
         }
@@ -870,93 +900,5 @@ public class ServerSideAPI {
 
     private ScriptAPI getScriptAPI() {
         return new ScriptAPI(mind, persistor, router, requestId);
-    }
-
-    //XXX: this whole function is still a mess
-    private final Object
-    runWithId(final Map<String, Object> data, final List<Object> args)
-    throws IllegalAccessException, InvocationTargetException {
-        final String dataId = data.get("id").toString();
-        final Map<String, Object> functionData =
-            persistor.getAsJSON(persistor.resolveSelector(dataId, true));
-        if (functionData.containsKey("schema")) {
-            final String functionDataSchema = functionData.get("schema").toString();
-            //XXX:(ugh ugh) end-run if object identified by id field has a schema named *Function
-            final ScriptAPI scriptAPI = getScriptAPI();
-            try {
-                if (functionDataSchema.endsWith("Function")) {
-                    final Function function = persistor.get(Function.class, persistor.resolveSelector(dataId, true));
-                    return mind.invoke(function, args, scriptAPI);
-                }
-                if (functionDataSchema.endsWith("Module")) {
-                    final Module module = persistor.get(Module.class, persistor.resolveSelector(dataId, true));
-                    return mind.invokeMethod(module, data.get("function").toString(), args, scriptAPI);
-                }
-            } catch (ScriptException e) {
-                logAndSayError("Script Exception thrown: " + e.getMessage(), e);
-            } catch (NoSuchMethodException ex) {
-                logAndSayError("No such function found", ex);
-            }
-            return Void.TYPE;
-        }
-        final List<Object> newArgs = new ArrayList<Object>();
-        for (final Object arg : args)
-            newArgs.add(mungeArg(arg));
-        //reflectively (ugh) run function of instance
-        final ObjBase instance = persistor.get(
-            ObjBase.class,
-            persistor.resolveSelector(dataId, false)
-        );
-        final Method method = ReflectionUtils.findMethodNamed(
-            data.get("function").toString(),
-            newArgs.size(),
-            instance.getClass()
-        );
-        if (!method.getReturnType().equals(Void.TYPE))
-            send(new Message(
-                Channel.run,
-                persistor.toJSON(extractResults(method.invoke(
-                    instance,
-                    newArgs.toArray()
-                ))),
-                requestId,
-                null
-            ));
-        return Void.TYPE;
-    }
-
-    /* TODO: explain what this does */
-    private final Object mungeArg(final Object obj) {
-        try {
-            return persistor.get(
-                ObjBase.class,
-                new ObjectId(obj.toString())
-            );
-        } catch (IllegalArgumentException e) {
-            return obj;
-        }
-    }
-
-    private final List<Object> extractResults(Object result) {
-        final Iterable iter;
-        try {
-            iter = (Iterable) result;
-        } catch (ClassCastException e) {
-            return Arrays.asList(trySave(result));
-        }
-        final List<Object> out = new ArrayList<Object>();
-        for (final Object r : iter)
-            out.add(trySave(r));
-        return out;
-    }
-
-    private final Object trySave(Object result) {
-        final ObjBase objresult;
-        try {
-            objresult = (ObjBase) result;
-        } catch (ClassCastException e) {
-            return result;
-        }
-        return persistor.save(objresult);
     }
 }

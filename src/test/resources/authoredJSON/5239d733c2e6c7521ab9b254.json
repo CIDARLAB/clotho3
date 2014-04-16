@@ -1,5 +1,5 @@
 {
-  "schema" : "Function",
+  "schema" : "org.clothocad.core.datums.Function",
   "id" : "5239d733c2e6c7521ab9b254",
   "name" : "randomSequence",
   "language" : "JAVASCRIPT",

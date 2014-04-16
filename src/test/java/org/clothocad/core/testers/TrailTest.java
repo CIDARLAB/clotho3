@@ -2,11 +2,11 @@ package org.clothocad.core.testers;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bson.types.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Proctor.Module;
 import org.clothocad.core.aspects.Proctor.Paver;
 import org.clothocad.core.aspects.Proctor.TemplatePaver;
+import org.clothocad.core.datums.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.execution.Mind;
@@ -45,11 +45,11 @@ public class TrailTest {
         
         //Save then re-retrieve the trail
         persistor.save(trail);
-        ObjectId uuid = trail.getUUID();
+        ObjectId uuid = trail.getId();
         ServerTrailDeprecated result = persistor.get(ServerTrailDeprecated.class, uuid);
         assert(result.getName().equals("First Biosafety Module"));
         
-        //var trails = clotho.query({"className":"org.clothocad.model.Trail"});
+        //var trails = clotho.query({"schema":"org.clothocad.model.Trail"});
         //var trail = clotho.get('51c20034507659b64be65a3b');
         //clotho.startTrail('51c20034507659b64be65a3b');
         

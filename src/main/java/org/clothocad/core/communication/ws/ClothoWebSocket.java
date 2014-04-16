@@ -17,19 +17,20 @@ import org.clothocad.core.util.JSON;
 import org.eclipse.jetty.websocket.WebSocket;
 
 @Slf4j
-public class ClothoWebSocket 
-	extends ClientConnection 
-	implements WebSocket.OnTextMessage {
+public class ClothoWebSocket
+        extends ClientConnection
+        implements WebSocket.OnTextMessage {
 
-	private WebSocket.Connection connection;
-        
-            private Subject subject;
+    private WebSocket.Connection connection;
+    private Subject subject;
     private final Router router;
 
     private class CallRouter implements Callable {
+
         private final Message message;
         private final ClientConnection connection;
-        CallRouter(ClientConnection connection, Message message){
+
+        CallRouter(ClientConnection connection, Message message) {
             this.message = message;
             this.connection = connection;
         }
@@ -39,24 +40,23 @@ public class ClothoWebSocket
             router.receiveMessage(connection, message);
             return null;
         }
-        
     }
-	
-	public ClothoWebSocket(String id, Router router) {
-		super(id);
-                this.router = router;
-	}
-	
-	@Override
-	public void onClose(int closeCode, String message) {
-	}
+
+    public ClothoWebSocket(String id, Router router) {
+        super(id);
+        this.router = router;
+    }
+
+    @Override
+    public void onClose(int closeCode, String message) {
+    }
 
     @Override
     public void send(Message msg) {
         try {
-            final String s = JSON.serialize(msg);
-            connection.sendMessage(s);
-            log.trace("sent: {}", s);
+            String messageString = JSON.serializeForExternal(msg);
+            connection.sendMessage(messageString);
+            log.trace("sent: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
         }
@@ -73,34 +73,31 @@ public class ClothoWebSocket
         } catch (JsonMappingException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
-        }   catch (Exception ex) {
-                throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
     }
 
-	public boolean isOpen() {
-		return connection.isOpen();
-	}
+    public boolean isOpen() {
+        return connection.isOpen();
+    }
 
-	@Override
-	public void onOpen(Connection connection) {
-		this.connection = connection;
-                //Close out after 1 hour idle time
-                connection.setMaxIdleTime(3600000); 
+    @Override
+    public void onOpen(Connection connection) {
+        this.connection = connection;
+        //Close out after 1 hour idle time
+        connection.setMaxIdleTime(3600000);
 
-		subject = SecurityUtils.getSubject();
-		
-	}
-        
-    
+        subject = SecurityUtils.getSubject();
+
+    }
+
     @Override
     public void deregister(Channel channel, String requestId) {
-        Map<String, String> message = new HashMap<>();
-        message.put("channel", channel.toString());
-        message.put("requestId", requestId);
+        String messageString = String.format("{\"channel\": \"%s\", \"requestId\": \"%s\"}", channel, requestId);
         try {
-            connection.sendMessage(JSON.serialize(message));
-            log.trace("sent deregister: {}", JSON.serialize(message));
+            connection.sendMessage(messageString);
+            log.trace("sent deregister: {}", messageString);
         } catch (IOException ex) {
             log.error("cannot send deregister message:{}", ex.getMessage());
         }

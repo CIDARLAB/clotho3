@@ -1,11 +1,18 @@
 {
+  "schema" : "org.clothocad.core.datums.Function",
   "id" : "52771d65c2e6720c8f68ac24",
-  "schema" : "Function",
+  "name" : "lowercase",
+  "dateCreated" : null,
+  "visibility" : null,
+  "code" : "function (str) {return str.toLowerCase();};",
+  "dependencies" : null,
+  "language" : "JAVASCRIPT",
+  "author" : null,
   "args" : [ {
     "name" : "str",
     "type" : "string"
   } ],
-  "name" : "lowercase",
-  "code" : "function (str) {return str.toLowerCase();};",
-  "language" : "JAVASCRIPT"
+  "tests" : null,
+  "children" : [ ],
+  "deleted" : false
 }

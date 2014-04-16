@@ -22,12 +22,12 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import com.github.jmkgreen.morphia.annotations.Reference;
+import org.clothocad.core.persistence.annotations.Reference;
 import java.awt.Color;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.SharableObjBase;
 
 /**
@@ -259,7 +259,7 @@ public class Feature extends SharableObjBase {
     JOptionPane.showMessageDialog( null, "That sequence is pretty far from the original, I count " + Ncount + " differences.  You should make a new feature instead, or check the alignment of the new sequence.", "Error", JOptionPane.ERROR_MESSAGE );
     return false;
     }
-    _featDatum._seqID = new NucSeq( nu ).getUUID();
+    _featDatum._seqID = new NucSeq( nu ).getId();
     return true;
     }
      */
@@ -329,8 +329,8 @@ public class Feature extends SharableObjBase {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        _featDatum._noteLinks.remove(item.getUUID());
-                        item.removeFeatureRelay(Feature.this.getUUID());
+                        _featDatum._noteLinks.remove(item.getId());
+                        item.removeFeatureRelay(Feature.this.getId());
                         setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.NOTE_LINKED);
                     }
                 };
@@ -338,14 +338,14 @@ public class Feature extends SharableObjBase {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        _featDatum._noteLinks.add(item.getUUID());
+                        _featDatum._noteLinks.add(item.getId());
                         item.addFeatureRelay(Feature.this);
                         setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.NOTE_LINKED);
                     }
                 };
                 addUndo(undo, redo);
 
-                _featDatum._noteLinks.add(item.getUUID());
+                _featDatum._noteLinks.add(item.getId());
                 item.addFeatureRelay(this);
                 setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.NOTE_LINKED);
                 return true;
@@ -357,8 +357,8 @@ public class Feature extends SharableObjBase {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        _featDatum._familyLinks.remove(fitem.getUUID());
-                        fitem.removeFeatureRelay(Feature.this.getUUID());
+                        _featDatum._familyLinks.remove(fitem.getId());
+                        fitem.removeFeatureRelay(Feature.this.getId());
                         setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.FAMILY_TO_FEATURE);
                     }
                 };
@@ -366,14 +366,14 @@ public class Feature extends SharableObjBase {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        _featDatum._familyLinks.add(fitem.getUUID());
+                        _featDatum._familyLinks.add(fitem.getId());
                         fitem.addFeatureRelay(Feature.this);
                         setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.FAMILY_TO_FEATURE);
                     }
                 };
                 addUndo(fundo, fredo);
 
-                _featDatum._familyLinks.add(fitem.getUUID());
+                _featDatum._familyLinks.add(fitem.getId());
                 fitem.addFeatureRelay(this);
                 setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.FAMILY_TO_FEATURE);
                 return true;
@@ -420,7 +420,7 @@ public class Feature extends SharableObjBase {
      * @return a UUID String
      */
     public ObjectId getAuthorUUID() {
-        return author.getUUID();
+        return author.getId();
     }
 
 

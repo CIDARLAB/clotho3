@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "David",
+  "nickName" : "David",
+  "surName" : "Sukovich",
+  "name" : "d.sukovich",
+  "emailAddress" : "d.sukovich@gmail.com",
+  "icon" : "david_sukovich.png",
+  "imgUrl" : "",
+  "startDate" : "2012-03-01",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2012-03-01",
+  "isManagement" : false,
+  "role" : "Postdoc",
+  "biography" : "",
+  "title" : "DNA-Linked Enzyme-Coupled Assays",
+  "description" : "",
+  "social" : "",
+  "id" : "53471aed44ae3f0e331ca083"
+}

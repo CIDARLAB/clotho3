@@ -6,7 +6,7 @@ package org.clothocad.core.execution;
 
 import java.util.Collection;
 import java.util.Set;
-import org.bson.types.ObjectId;
+import org.clothocad.core.datums.ObjectId;
 
 /**
  *
@@ -22,5 +22,4 @@ public interface Script{
     public String modularizeFunction(String code);
     
     public String encapsulateModule(String code, String setupCode);
-    
 }

@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import org.bson.types.ObjectId;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.IdUtils;
 
 /**

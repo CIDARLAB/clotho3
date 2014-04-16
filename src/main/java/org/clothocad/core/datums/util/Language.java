@@ -36,13 +36,10 @@ public enum Language {
     JAVA("Java", Arrays.asList(new String[]{"java"})),
     JSONSCHEMA("JSON Schema", Arrays.asList(new String[]{}));
     
-    private Language(final String s, final List<String> strList){stringValue=s; extensions=strList;}
-    
-    @Override
-    public String toString() {return stringValue;}
+    private Language(final String s, final List<String> strList){prettyName=s; extensions=strList;}
     
     public List<String> extensions() {return extensions;}
-    private final String stringValue;
+    public final String prettyName;
     private final List<String> extensions;
 
 }

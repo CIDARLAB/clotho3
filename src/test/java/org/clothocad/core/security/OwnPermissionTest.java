@@ -16,7 +16,7 @@ import org.apache.shiro.subject.Subject;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.SecurityTestUtils;
 import org.junit.Ignore;
@@ -49,7 +49,7 @@ public class OwnPermissionTest {
      * @param id String format id of ServerSideAPI
      */
     public void initAPI(String id) {
-        injector = Guice.createInjector(new ClothoTestModule(), new MongoDBModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         //ServerSideAPI api = new DummyAPI(persistor);
         api = new ServerSideAPI(null, persistor, null, id);

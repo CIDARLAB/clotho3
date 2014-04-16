@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.mongodb.MongoDBModule;
+import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.util.JSON;
 
 //Start then navigate to:  http://localhost:8080/#/
@@ -16,7 +16,7 @@ public class ClothoStarter extends AbstractClothoStarter {
             @Override public Injector
             getInjector(Properties config) {
                 return Guice.createInjector(
-                    new ClothoModule(config), new MongoDBModule()
+                    new ClothoModule(config), new JongoModule()
                 );
             }
 
