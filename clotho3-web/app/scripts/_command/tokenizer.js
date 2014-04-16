@@ -14,41 +14,70 @@ angular.module('clotho.commandbar')
 			}
 		}
 
-		//todo - check ambiguous, check valid
+		ClothoToken.prototype.isAmbiguous = function () {
+			//todo
+		};
+
+		ClothoToken.prototype.isValid = function () {
+			//todo
+		};
 
 		return ClothoToken
 
 	})
 	.factory('clothoTokenCollectionFactory', function (clothoTokenFactory) {
 
-		//fixme - incorporate clothoTokenFactory
-
 		function ClothoTokenCollection (startingTokens) {
 
-			//todo - check initial tokens valid
-			this.tokens = angular.isArray(startingTokens) ? startingTokens : [];
+			this.tokens = [];
 			this.currentSelectedIndex = -1;
+
+			//todo - test initial tokens
+
+			if (angular.isArray(startingTokens)) {
+				angular.forEach(startingTokens, function (token) {
+					this.addToken(token);
+				});
+			}
 		}
 
+		//add a token, pass arguments through to clothoTokenFactory
+		ClothoTokenCollection.prototype.addToken = function () {
+			this.tokens.push(new clothoTokenFactory(arguments));
+		};
+
+		ClothoTokenCollection.prototype.inRange = function (index) {
+			return index > -1 && index < this.tokens.length;
+		};
+
+		//get token at given index
 		ClothoTokenCollection.prototype.getToken = function (index) {
 			return this.tokens[index];
 		};
 
+		//return index of token
 		ClothoTokenCollection.prototype.indexOf = function (token) {
 			return this.tokens.indexOf(token);
 		};
 
-		ClothoTokenCollection.prototype.addToken = function (token) {
-			this.tokens.push(token);
-		};
-
+		//remove token at given index, return it if removed, otherwise false
 		ClothoTokenCollection.prototype.removeToken = function (index) {
-			return this.tokens.splice(index, 1);
+			if (this.inRange(index)) {
+				return this.tokens.splice(index, 1);
+			} else {
+				return false;
+			}
 		};
 
+		//remove all tokens
+		ClothoTokenCollection.prototype.removeAll = function () {
+			this.tokens.length = 0;
+		};
+
+		//remove active token if set and return it, otherwise return false
 		ClothoTokenCollection.prototype.removeActiveToken = function () {
 			if (this.isActive()) {
-				var toReturn =  this.tokens.splice(this.currentSelectedIndex, 1);
+				var toReturn =  this.removeToken(this.currentSelectedIndex);
 				this.unsetActive();
 				return toReturn;
 			} else {
@@ -56,32 +85,37 @@ angular.module('clotho.commandbar')
 			}
 		};
 
-		ClothoTokenCollection.prototype.removeAll = function () {
-			this.tokens.length = 0;
-		};
-
+		//set token at given index to be active
 		ClothoTokenCollection.prototype.setActive = function (index) {
-			if (index > -1 && index < this.tokens.length) {
+			if (this.inRange(index)) {
 				this.currentSelectedIndex = index;
+				return index;
+			} else {
+				return false;
 			}
 		};
 
+		//set token at last position to be active
 		ClothoTokenCollection.prototype.setLastActive = function (index) {
 			this.setActive(this.tokens.length - 1);
 		};
 
+		//set previous token active, based on current active, otherwise last
 		ClothoTokenCollection.prototype.setPrevActive = function (index) {
 			this.currentSelectedIndex = (this.currentSelectedIndex > 0 ? this.currentSelectedIndex : this.tokens.length) - 1;
 		};
 
+		//set next token active, based on current active, otherwise first
 		ClothoTokenCollection.prototype.setNextActive = function (index) {
 			this.currentSelectedIndex = (this.currentSelectedIndex + 1) % this.tokens.length;
 		};
 
+		//unset active token
 		ClothoTokenCollection.prototype.unsetActive = function (index) {
 			this.currentSelectedIndex = -1;
 		};
 
+		//check if token is active, at index when passed, otherwise if any is active
 		ClothoTokenCollection.prototype.isActive = function (index) {
 			if (angular.isDefined(index)) {
 				return this.currentSelectedIndex == index;
