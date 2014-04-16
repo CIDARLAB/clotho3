@@ -1,12 +1,14 @@
 //rename directive
 
-angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, $timeout, $q, $document) {
+angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
 		dateFilter : 'mediumTime',
 		timeFilter : 'timestamp'
 	};
+
+	var Debugger = new Debug('Command Bar', "#ffbb55");
 
 	/******* elements ******/
 
@@ -21,7 +23,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	};
 
 	var getCommandBarLogButton = function () {
-		return angular.element($document[0].getElementById('clothoCommandBarLogButton'));
+		return angular.element($document[0].getElementById('clotho_logButton'));
 	};
 
 	var focusInput = function() {
@@ -85,7 +87,8 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		};
 	};
 
-	// todo - should be CSS
+	/*
+	//note - now in css
 	display.genAutocompletePos = function() {
 		var target = getCommandBarInput()[0];
 		display.autocompletePos = {
@@ -93,6 +96,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 			top : (target.offsetTop + target.clientHeight)  + "px"
 		};
 	};
+	*/
 
 
 	display.detail = function(uuid) {
@@ -145,7 +149,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	function receiveMessage (data) {
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
 		log.entries.unshift(data);
-		console.log(log.entries);
+		Debugger.log('LOG - entries: ', log.entries);
 		display.show('logSnippet');
 		log.startLogTimeout();
 	}
@@ -163,19 +167,20 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	};
 
 	var execute = function (command) {
-		console.log("this would be run: " + command);
+		Debugger.log("execute called (not implemented) " + command);
 		display.hide('autocomplete');
 		display.undetail();
 	};
 
 	var submit = function (query) {
-		if (!query)
+		if (!query) {
 			query = display.query;
+		}
 
 		/*
-		 console.log(query);
-		 console.log(display.queryHistory);
-		 console.log(log.entries)
+		 Debugger.log(query);
+		 Debugger.log(display.queryHistory);
+		 Debugger.log(log.entries)
 		 */
 
 		if (!!query) {
@@ -189,7 +194,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 			return Clotho.submit(query).then(function(result){
 				display.query = '';
-				ClientAPI.say({text: result});
+				ClientAPI.say({text: result, class: 'success'});
 			});
 		}
 		else {
@@ -199,6 +204,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 	/****** listeners *****/
 
+	//called by clientAPI.say(), so will be called indirectly in submit a few lines above
 	Clotho.listen("activityLog", function (data) {
 		receiveMessage(data);
 	}, 'searchbar');

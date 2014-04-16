@@ -21,6 +21,9 @@
 		"dictString": "My String",
 		"dictObject": {
 			"myKey": "myValue"
+		},
+		"myPerson" : {
+			"type" : "Person"
 		}
 	},
 

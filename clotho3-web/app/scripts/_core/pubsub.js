@@ -1,304 +1,298 @@
+//note - written using lodash internally
+
 angular.module('clotho.core').service('PubSub',
-	function($rootScope) {
+	function ($window, $rootScope, $filter, Debug) {
 
-    /* ABOUT
-     // Purpose
-         - singleton pub/sub message queue for broadcasting messages between controllers & interacting with server
-         - reduce reliance on $rootScope.$broadcast b/c bubbles and slows over large projects
+		//see if already exists, don't re-instantiate
+		return ($window.$clotho.$pubsub) ? $window.$clotho.$pubsub : $window.$clotho.$pubsub = generatePubSubObject();
 
-     // Notes
-        - using pub/sub requires calling unsubscribe on $destroy -- need to register watchers to do this
-     */
+		function generatePubSubObject() {
+			/*****
+			 CONFIG
+			 *******/
 
-    /**
-     * future -- decide API later
-     *
-     * API -- STANDARD MESSAGES
-     *
-     * model_destroy (uuid, model) -- model removed from collector
-     * update (uuid, model) -- model is changed ---- use for listening to any model change
-     * update:[uuid] (model -- model with <uuid> is changed ---- use for listening for a specific model
-     * model_request (uuid) -- model is requested from server
-     * model_save (uuid, model) -- model successfully saved to server
-     * model_error (uuid, model, xhr) -- saving a model to server fails
-     *
-     * collector_reset () -- collector is reset (all models deleted)
-     *
-     * route_change (route, params) -- fired when route changes
-     * route:[name] (params) -- fired when a specific route is matched
-     *
-     */
+			/*format:
 
-    /*TODO - rewrite into PubSub2 with goals:
+			{
+				topic : [
+					{
+						callback : <function>
+						once : <boolean>
+						ref : <ref>,
+						priority : <number>
+					}
+				],
+				...
+			}
+			*/
+			var map = {};
 
-     - Track Multiple callbacks for each event
-     - Track reference for each callback
-     - On() Pass multiple events, space-separated
-     - Once() via Flag for Boolean 'once'
-     - deregistration returned as function to invoke later
-        - e.g. return removeFromArray(array, val)
+			//split events passed in by a space
+			var eventSplitter = /\s+/;
 
-        e.g.
+			var Debugger = new Debug('PubSub', '#55cccc');
 
-        var off = $scope.$on('$stateChangeStart', function(e) {
-            e.preventDefault();
-            off();
-        });
+			/*********
+			 Internal Helpers
+			 **********/
 
+			//convert space-separated topic list into array
+			function splitTopics (topic) {
+				if (!topic) {
+					return [];
+				}
+				else if (topic == 'all') {
+					return Object.keys(map);
+				}
+				else {
+					return topic.split(eventSplitter);
+				}
+			}
 
-     - Each() (unexposed) to handle multiple/single items the same way
-     - Off() by handle (event, specific callback)
-     - Destroy() by reference
-     - Clear() by event
+			function checkTopicExists(topic) {
+				return map.hasOwnProperty(topic);
+			}
 
-     */
+			function checkTopicHasSubs(topic) {
+				return checkTopicExists(topic) && map[topic].length > 0;
+			}
 
+			//create subscriber object
+			function createSubscriber (callback, ref, priority, once) {
+				if (!angular.isFunction(callback)) {
+					return null;
+				}
 
+				return {
+					callback : callback,
+					ref : ref || null,
+					priority : parseInt(priority) || 100,
+					once : (once == true)
+				};
+			}
 
+			//register a subscriber, handle if scope, return unsubscriber function
+			function registerSubscriber (topic, subscriber) {
+				if (subscriber && !angular.isEmpty(subscriber)) {
+					if(!map[topic]) {
+						map[topic] = [];
+					}
 
-    //see if already exists, don't re-instantiate
-    return (window.$clotho.$pubsub) ? window.$clotho.$pubsub : window.$clotho.$pubsub = generatePubSubObject();
+					//if ref is scope, register destroy
+					var ref = subscriber.ref;
+					if (angular.isScope(ref)) {
+						ref.$on('$destroy', function() {
+							destroy(parseRefId(ref));
+						});
+					}
 
-    function generatePubSubObject() {
-        /***** CONFIG ****/
+					map[topic].push(subscriber);
 
-        // hash of listeners
-        // listeners[topic] -> [ [fn, flag], [fn, flag], ... ]
-        // where flag is true or false... true to delete after run
-        var listeners = {};
+					return angular.once(function () {
+						unregisterSubscriber(topic, subscriber);
+					});
+				} else {
+					return angular.noop;
+				}
+			}
 
-        //record handles for each reference (i.e. in Angular, $scope.$id)
-        var references = {};
+			function unregisterSubscriber(topic, subscriber) {
+				var removed = angular.remove(map[topic], function (sub) {
+					return angular.equals(sub, subscriber);
+				});
+				return removed.length > 0;
+			}
 
-        //split events passed in by a space
-        var eventSplitter = /\s+/;
+			//special handling for scopes
+			function parseRefId(ref) {
+				return angular.isScope(ref) ? ref.$id : ref;
+			}
 
+			/*********
+			 Functions
+			 **********/
 
-        /***** HELPERS *****/
+			var logListeners = function pubsub_logListeners () {
+				Debugger.log('LISTENERS:');
+				angular.forEach(map, function (val, key) {
+					Debugger.log(key);
+					Debugger.table(map[key])
+				});
+			};
 
-        //track listeners for a given reference
-        var addToRef = function(ref, handle) {
-            if(!references[ref]) {
-                references[ref] = [];
-            }
-            references[ref].push(handle);
-        };
+			/**
+			 @name PubSub.trigger
+			 @description
+			 Publish some data on a topic
+			 @param topic {string} channel to publish on, can be multiple space-separated
+			 @param args {*}  Array of arguments to apply to callback.
+			 */
+			var trigger = function pubsub_trigger (topic, args) {
 
-        //internal method to add callback to listeners, used in subscribe
-        var addToTopic = function(topic, callback, ref, one) {
-            if(!listeners[topic]) {
-                listeners[topic] = [];
-            }
+				//ensure arguments are array
+				if (angular.isUndefined(args) || angular.isEmpty(args)) {
+					args = null;
+				} else {
+					//HACK - wrap everything in array for apply to provide consistency for signature
+					args = [args];
+				}
 
-            listeners[topic].push([callback, one]);
+				//loop through each passed topic
+				angular.forEach(splitTopics(topic), function (current) {
+					//loop through each subscriber
+					Debugger.log('Publish on ' + current, args);
+					if (checkTopicHasSubs(current)) {
 
-            var handle = [topic, callback];
-            if (ref && typeof ref != 'undefined') {
+						angular.forEach( $filter('orderBy')(map[current], 'priority') , function (subscriber, index) {
+							//future - avoid $safeApply
+							$rootScope.$safeApply(function() {
+								subscriber.callback.apply(subscriber.ref, args);
+							});
 
-                if (angular.isScope(ref)) {
-                    ref.$on('$destroy', function() {
-                        destroy(ref.$id)
-                    });
+							if (subscriber.once == true) {
+								map[current].splice(index, 1);
+							}
+						});
+					}
+				});
+			};
 
-                    addToRef(ref.$id, handle);
-                } else {
-                    addToRef(ref, handle);
-                }
-            }
-            return handle;
-        };
+			/**
+			 @name PubSub.reject
+			 @description
+			 Cancel a callback, publish null on the topic
+			 @param topic {string} channel to publish on, can be multiple space-separated
+			*/
+			var reject = function pubsub_reject (topic) {
+				angular.forEach(splitTopics(topic), function (current) {
+					Debugger.log('Reject on ' + current);
+					angular.forEach(map[current], function (subscriber, index) {
+						//future - avoid $safeApply
+						$rootScope.$safeApply(function() {
+							subscriber.callback.apply(subscriber.ref, null);
+						});
 
-        //internal method to remove a callback from a given topic
-        var removeFromTopic = function(handle) {
+						if (subscriber.once == true) {
+							map[current].splice(index, 1);
+						}
+					});
+				});
+			};
 
-            var t = handle[0];
+			/**
+			 @name PubSub.on
+			 @description
+			 Register a callback to a topic
 
-            listeners[t] && angular.forEach(listeners[t], function(array, idx){
-                if(array[0] == handle[1]){
-                    //console.log("splicing - " + t);
-                    listeners[t].splice(idx, 1);
-                } else {
-                    //console.log("not splicing: " + t);
-                    //console.log(array[0]);
-                    //console.log(handle[1]);
+			 @param topic {string} channel to subscribe to. Can pass in multiple, space-separated.
+			 @param callback {function} handler event. Will be called on publish event to given topic, passed args from publish
+			 @param ref {string} context for this, or $scope (will automatically set up $destroy listener), or reference ID to be used in PubSub.destroy()
+			 @param priority {number} Priority to run function at. default is 100. Lower gets priority.
+			 @param one {boolean} Flag to run the callback only once
+			 @return {Function} handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
+			 */
+			//note - ref is also context for this in callback
+			var on = function pubsub_on (topic, callback, ref, priority, one) {
+				ref = ref || null;
+				one = one == true;
 
-                }
-            });
-        };
+				if (one) {
+					callback = angular.once(callback);
+				}
 
-        //testing - log listeners
-        var logListeners = function() {
-            console.log(listeners);
-        };
+				var unsubscribers = [];
 
+				angular.forEach(splitTopics(topic), function (current) {
+					unsubscribers.push(
+						registerSubscriber(current,
+							createSubscriber(callback, ref, priority, one)
+						)
+					);
+				});
 
-        /***** FUNCTIONS ******/
+				return (function pubsuub_unsubscribe() {
+					angular.forEach(unsubscribers, function (handle) {
+						handle();
+					});
+				});
+			};
 
-        /**
-         @name PubSub.trigger
-         @description
-         Publish some data on a topic
-         @param topic {string} channel to publish on, can be multiple space-separated
-         @param args {array}  Array of arguments to apply
+			/**
+			 * @name PubSub.once
+			 * @description
+			 * Register a callback to a topic only a single time
+			 * @param topic {string}
+			 * @param callback {function}
+			 * @param ref {string} context for this, or $scope (will automatically set up $destroy listener), or reference ID to be used in PubSub.destroy()
+			 * @param priority {number} Priority to run function at. default is 100. Lower gets priority.
+			 *
+			 */
+			var once = function pubsub_once(topic, callback, ref, priority) {
+				on(topic, callback, ref, priority, true);
+			};
 
-         note: optimized using invoke(undef) : http://jsperf.com/apply-vs-call-vs-invoke
-         */
-        var trigger = function(topic, args) {
-	          var topics = topic.split(eventSplitter);
-		        //ensure arguments are array
-	          if (angular.isUndefined(args) || angular.isEmpty(args)) {
-		          args = null;
-	          }
-	          else if (!angular.isArray(args)) {
-		          args = [args];
-		        }
-            angular.forEach(topics, function(curTopic) {
-                // testing
-                // console.log("PUBSUB\tpublish on " + curTopic + " " + args);
-                listeners[curTopic] && angular.forEach(listeners[curTopic], function(array, idx) {
-										//todo - avoid $safeApply
-	                  $rootScope.$safeApply(function() {
-		                  array[0].apply(null, args);
-	                  });
+			/**
+			 @name PubSub.off
+			 @param topic {string}
+			 @param callback {function}
+			 @description
+			 Disconnect specific callback function from topic. Note, however, you usually would do this by running the function returned by on()
 
-                    if (array[1]) {
-                        //console.log("splicing inside trigger: " + curTopic);
-                        //console.log(array[0]);
-                        listeners[curTopic].splice(idx, 1);
-                    } else {
-                        //console.log("not splicing in trigger: " + curTopic);
-                    }
-                });
-            });
-        };
+			 e.g. var handle = PubSub.on( "someTopic", function(){} );
+			 handle(); //unsubscribe
 
-        /**
-         @name PubSub.on
-         @description
-         Register a callback to a topic
+			 */
+			var off = function pubsub_off (topic, callback) {
 
-         @param topic {string} channel to subscribe to. Can pass in multiple, space-separated.
-         @param callback {function} handler event. Will be called on publish event to given topic, passed args from publish
-         @param ref {string} $scope.$id (or other name), which when destroyed should delete its associated listeners. Avoid passing in objects.
-         @param one {boolean} Flag to run the callback only once
-         @return handle to pass into unsubscribe. If multiple events are passed in, an array is returned.
-         */
-        // future - rewrite, handle return multiple events better (no if, smarter return)
-        var on = function(topic, callback, ref, one) {
-            ref = ref || null;
-            one = one || false;
+				var removed = angular.remove(map[topic], function (subscriber) {
+					return angular.equals(subscriber.callback, callback);
+				});
 
-            //handle space-separated events names
-            if (eventSplitter.test(topic)) {
-                var handles = [];
-                var topics = topic.split(eventSplitter);
-                angular.forEach(topics, function(curTopic) {
-                    var handle = addToTopic(curTopic, callback, ref, one);
-                    handles.push(handle);
-                });
-                return handles;
-            } else {
-                //console.log(callback);
-                return addToTopic(topic, callback, ref, one);
-            }
-        };
+				return (removed.length > 0);
+			};
 
-        /**
-         * @name PubSub.once
-         * @description
-         * Register a callback to a topic only a single time
-         * @param topic {string}
-         * @param callback {function}
-         * @param ref {string} $scope.$id (or other name), which when destroyed should delete its associated listeners. Avoid passing in objects.
-         *
-         */
-        var once = function(topic, callback, ref) {
-            on(topic, callback, ref, true);
-        };
+			/**
+			 * @name PubSub.destroy
+			 *
+			 * @param ref {string|object} Remove all listeners with a given reference (same object passed on on())
+			 *
+			 * @description
+			 * Removes all listeners for an associated reference. When pass a $scope to on(), destroy will automatically be set up on $scope.$destroy, so this is unneeded.
+			 */
+			var destroy = function pubsub_destroy(ref) {
+				angular.forEach(map, function (topicArray, key) {
+					angular.remove(topicArray, function (subscriber) {
+						return angular.equals(parseRefId(ref), parseRefId(subscriber.ref));
+					});
+				});
+			};
 
-        /**
-         @name PubSub.off
-         @description
-         Disconnect subscribed function from topic
-         @param handle {array} return value from a subscribe() call
+			/**
+			 * @name PubSub.clear
+			 *
+			 * @param topic {string} Topic to clear, can be space-separated list
+			 *
+			 * @description
+			 * Clears all listeners in a topic.
+			 * Clears all listeners if "all" is passed.
+			 * Does nothing if no topic passed.
+			 */
+			//remove all subscribers for given topic(s)
+			var clear = function pubsub_clear (topic) {
+				angular.forEach(splitTopics(topic), function (val, key) {
+					map[key].length = 0;
+				});
+			};
 
-         e.g. var handle = PubSub.subscribe( "someTopic", function(){} );
-         PubSub.unsubscribe(handle)
-
-         -NOTE: for large PubSub systems, may want to do this another way... right now, loop through array of subscribers on a topic, see if callback matches, splice it out if does. Appears to be how this is commonly done.
-         */
-        var off = function(handle) {
-            //handle multiple handles being passed in
-            if (angular.isArray(handle[0])) {
-                angular.forEach(handle, function(curHandle) {
-                    removeFromTopic(curHandle);
-                });
-            }
-            else {
-                removeFromTopic(handle);
-            }
-        };
-
-        /**
-         * @name PubSub.destroy
-         *
-         * @param ref {string|object} $scope.$id (or other string) which when destroyed should remove its associated listeners. Can pass object, but slower so should be avoided.
-         *
-         * @description
-         * Removes all listeners for an associated reference (i.e. in Angular, $scope.$id)
-         * E.g. $scope.$on('$destroy', Clotho.silence($scope.$id));
-         */
-        var destroy = function(ref) {
-
-            //console.log(references);
-            //console.log(ref);
-
-            var ref_handles = references[ref];
-            //console.log(ref_handles);
-
-            angular.forEach(ref_handles, function(handle) {
-                //console.log(handle);
-                removeFromTopic(handle);
-            });
-
-            //clean up ref map
-            references[ref] = [];
-        };
-
-        /**
-         * @name PubSub.clear
-         *
-         * @param topic {string} Topic to clear, can be space-separated list
-         *
-         * @description
-         * Clears all listeners a topic.
-         * Clears all listeners if "all" is passed.
-         * Does nothing if no topic passed.
-         */
-        var clear = function(topic) {
-            if (topic == "all") {
-                listeners = {};
-                references = {};
-            }
-
-            var topics = topic.split(eventSplitter);
-            angular.forEach(topics, function(curTopic) {
-                listeners[curTopic] = [];
-            });
-
-            //todo - clean up references array also --- this is tricky
-
-        };
-
-
-        return {
-            logListeners : logListeners,
-            trigger: trigger,
-            on : on,
-            once : once,
-            off : off,
-            destroy : destroy,
-            clear : clear
-        }
-    }
-});
+			return {
+				logListeners: logListeners,
+				trigger: trigger,
+				on: on,
+				once: once,
+				off: off,
+				destroy: destroy,
+				reject : reject,
+				clear: clear
+			}
+		}
+	});

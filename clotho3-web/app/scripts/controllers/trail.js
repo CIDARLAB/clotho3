@@ -1,13 +1,10 @@
-angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route, $timeout, Clotho, Trails, $keypress) {
+angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route, $timeout, Clotho, Trails, $keypress, $location) {
 
 	//inherited from $routeProvider.resolve clause in application.js
 	$scope.id = $route.current.params.id;
 	$scope.trail = $route.current.locals.trail;
 
 	$scope.activate = function(indices) {
-
-		console.log(indices);
-
 		//if passed nothing
 		if (!indices || !angular.isString(indices)) return;
 
@@ -16,12 +13,13 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 
 		$scope.current = indices;
 		$scope.currentPage = Trails.extractPage($scope.trail, $scope.current);
-		//$scope.content = Trails.loadPage(page, $scope);
-	};
 
-	$scope.home = function() {
-		$scope.content = $scope.trail.description;
-		$scope.current = undefined;
+		//if page doesn't exist, re-route to start
+		if (angular.isEmpty($scope.currentPage)) {
+			$scope.activate('0-0');
+		}
+
+		$location.search('position', $scope.current);
 	};
 
 	$scope.favorite = function() {
@@ -45,7 +43,15 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 
 	$keypress.on('keydown', {'alt-right' : 'next()', 'alt-left' : 'prev()'}, $scope);
 
+	//listen for position changes
+	$scope.$on('$routeUpdate', function(scope, next, current) {
+		$scope.activate(next.params.position);
+	});
+
+	$scope.$on('$destroy', function (scope, next, current) {
+		$location.search('position', null).replace();
+	});
+
 	//kickoff
-	console.log($route.current.params);
 	$scope.activate($route.current.params.position || '0-0');
 });

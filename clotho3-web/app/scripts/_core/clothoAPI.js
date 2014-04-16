@@ -19,7 +19,7 @@
  */
 
 angular.module('clotho.core').service('Clotho',
-	function(Socket, Collector, PubSub, $window, $q, $rootScope, $location, $timeout) {
+	function(Socket, Collector, PubSub, Debug, $window, $q, $rootScope, $location, $timeout) {
 
 //attach to window, only instantiate once
 return ($window.$clotho.api) ? $window.$clotho.api : $window.$clotho.api = generateClothoAPI();
@@ -29,9 +29,12 @@ function generateClothoAPI() {
     /**********
        Set up
      **********/
+    var Debugger = new Debug('ClothoAPI', '#cc5555');
+
     //socket communication
     var fn = {};
 
+		//note that angular.toJson will strip $-prefixed keys, so should be avoided
     fn.send = function(pkg) {
         Socket.send(angular.toJson(pkg));
     };
@@ -49,29 +52,53 @@ function generateClothoAPI() {
 
     //helper functions
 
-    fn.emitSubCallback = function(channel, data, func, options) {
-        var deferred = $q.defer(),
-            requestId = Date.now().toString();
+		//pending ES6
 
-        if (!angular.isFunction(func))
-            func = angular.noop() ;
+		var numberAPICalls = new (function () {
+			var commandNum = 0;
+			this.next = function () {
+				commandNum += 1;
+				return commandNum.toString();
+			};
+		});
 
-	      //timeout our requests at 5 seconds
-	      var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
+	/**
+	 * @name fn.emitSubCallback
+	 * @param channel {String} API Channel
+	 * @param data {*} API Data
+	 * @param func {Function} Callback Function, run when data received from server
+	 * @param options {Object} API Options
+	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout
+	 */
+	fn.emitSubCallback = function (channel, data, func, options) {
+		var deferred = $q.defer(),
+			requestId = Date.now().toString() + numberAPICalls.next();
 
-        PubSub.once(channel+':'+requestId, function(data){
-	          $timeout.cancel(timeoutPromise);
-            deferred.resolve(data);
-            func(data);
-        }, '$clotho');
-        fn.emit(channel, data, requestId, options);
-        return deferred.promise;
-    };
+		if (!angular.isFunction(func)) {
+			func = angular.noop;
+		}
 
-    //if simply want a response and resolve promise, no further logic required
-    fn.emitSubOnce = function(channel, data, options) {
-        return fn.emitSubCallback(channel, data, angular.noop, options);
-    };
+		//timeout our requests at 5 seconds
+		var timeoutPromise = $timeout(function () {
+			deferred.reject(null)
+		}, 5000);
+
+		//todo - reject promise if no data is sent over socket
+		PubSub.once(channel + ':' + requestId, function (data) {
+			$timeout.cancel(timeoutPromise);
+			if (angular.isEmpty(data)) { data = null; }
+			deferred.resolve(data);
+			func(data);
+		}, '$clotho');
+
+		fn.emit(channel, data, requestId, options);
+		return deferred.promise;
+	};
+
+	//if simply want a response and resolve promise, no further logic required
+	fn.emitSubOnce = function (channel, data, options) {
+		return fn.emitSubCallback(channel, data, angular.noop, options);
+	};
 
 
 
@@ -104,6 +131,18 @@ function generateClothoAPI() {
         var cred = {username: username, password: password};
         return fn.emitSubOnce('login', cred);
     };
+
+		/**
+		 * @name Clotho.logout
+		 *
+		 * @description
+		 * Logout of Clotho
+		 *
+		 * @returns {Promise} result of login
+		 */
+		var logout = function clothoAPI_logout() {
+			return fn.emitSubOnce('logout', '');
+		};
 
     /**
      * @name Clotho.get
@@ -287,7 +326,7 @@ function generateClothoAPI() {
      * Publish an event directly to PubSub, bypassing the socket and server.
      */
     var trigger = function clothoAPI_trigger(channel, data) {
-        PubSub.trigger(channel, [data]);
+        PubSub.trigger(channel, data);
     };
 
 
@@ -301,6 +340,7 @@ function generateClothoAPI() {
      * Destroys listener functions associated with a given reference
      *
      */
+	   //todo - deprecate
     var silence = function clothoAPI_silence(reference) {
         PubSub.destroy(reference);
     };
@@ -381,18 +421,19 @@ function generateClothoAPI() {
      * @description
      * Returns all objects that match the fields provided in the spec.
      */
-    var query = function(obj, options) {
-        var callback = function(data) {
-            //store query
-            //todo
+    var query = function (obj, options) {
+	    var callback = function queryCallback(data) {
+		    console.groupCollapsed('Query Results for: ' + JSON.stringify(obj));
 
-            //store models
-            //future - when not sending whole model, extend what exists
-            angular.forEach(data, function(sharable) {
-                Collector.storeModel(sharable.id, sharable);
-            })
-        };
-        return fn.emitSubCallback('query', obj, callback, options);
+		    //store models
+		    //future - when not sending whole model, extend what exists
+		    angular.forEach(data, function (sharable) {
+			    Collector.storeModel(sharable.id, sharable);
+		    });
+
+		    console.groupEnd();
+	    };
+	    return fn.emitSubCallback('query', obj, callback, options);
     };
 
 
@@ -597,13 +638,18 @@ function generateClothoAPI() {
         fn.emit('alert', packaged);
     };
 
-    var autocomplete = function(query) {
-        var packaged = {
-            "query" : query
-        };
+    var autocomplete = function(query,  options) {
+      //todo - use $cacheFactory to cache searches
 
-        //todo - use angular $cacheFactory to cache searches (break out from this wrapper)
-        return fn.emitSubOnce('autocomplete', packaged);
+	    //catch all, publish on autocomplete for now
+	    var callback = function(data) {
+		    //todo - only publish if newer
+		    PubSub.trigger('autocomplete', data)
+	    };
+	    var packaged = {
+        "query" : query
+      };
+      return fn.emitSubCallback('autocomplete', packaged, callback, options);
     };
 
     var autocompleteDetail = function(uuid) {
@@ -740,6 +786,7 @@ function generateClothoAPI() {
     return {
         //api
         login : login,
+        logout : logout,
         get : get,
         set : set,
         query : query,
@@ -749,7 +796,6 @@ function generateClothoAPI() {
         revert : revert,
         destroy : destroy,
         show : show,
-        show_old : show_old,
         say : say,
         log : log,
         alert : alert,
@@ -757,6 +803,11 @@ function generateClothoAPI() {
         recent: recent,
         notify : notify,
         gradeQuiz : gradeQuiz,
+
+		    //searchbar
+		    submit: submit,
+		    autocomplete : autocomplete,
+		    autocompleteDetail : autocompleteDetail,
 
         //toolkit
         watch : watch,
@@ -768,12 +819,7 @@ function generateClothoAPI() {
         on : on,
         once : once,
         off : off,
-        share : share,
-
-        //searchbar
-        submit: submit,
-        autocomplete : autocomplete,
-        autocompleteDetail : autocompleteDetail
+        share : share
 
     }
 

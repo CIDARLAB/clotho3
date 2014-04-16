@@ -69,9 +69,12 @@ angular.module('clotho.utils', ['clotho.core'])
 		//todo - clean up
 		var downloadSchemaDependencies = function (schema) {
 
-			//initial check
+			//initial checks
+			if (angular.isUndefined(schema)) {
+				return $q.when();
+			}
 			if (!schema.superClass) {
-				return schema
+				return $q.when(schema);
 			}
 
 			var finalSchema = angular.copy(schema);

@@ -6,17 +6,39 @@
     <title>Clotho</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=1024, initial-scale=1">
+    <!-- process:remove:api,command -->
     <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/webapp.css"/>
+    <!-- /process -->
+
+    <!-- process:remove:api -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <!-- /process -->
+
+    <!-- note that angular is required for any clotho functionality -->
+    <script src="bower_components/angular/angular.js"></script>
+    <!-- note that lodash is required by several components -->
+    <script src="bower_components/lodash/dist/lodash.js"></script>
 
 </head>
-<body>
+<body ng-app="clothoRoot">
 <!--[if lt IE 9]>
 <script src="bower_components/es5-shim/es5-shim.js"></script>
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
-<div class="container">
 
+<!-- process:remove:command,api -->
+<!-- terminal aside for webapp... note not ready for prime time yet... need to make command bar styles more accessible -->
+<!--
+<div terminal-aside-trigger></div>
+<div terminal-aside aside-content-url="'views/_command/terminal.html'"></div>
+-->
+<!-- /process -->
+
+<!-- process:remove:api -->
+<div class="container">
+<!-- /process -->
+
+    <!-- process:remove:command,api -->
     <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
         <div class="navbar navbar-default" style="margin-bottom: 0;">
             <a class="navbar-brand" href="#">Clotho</a>
@@ -34,38 +56,52 @@
             </div>
         </div>
     </div>
+    <!-- /process -->
 
+<!-- process:remove:api -->
     <div clotho-command-bar></div>
 
 </div>
+<!-- /process -->
+
+<!-- process:remove:command,api -->
 <!-- note - ignore main content for stripped down versions -->
 <div id="clothoAppNgView" ng-view ng-cloak></div>
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
 
+<!-- /process -->
 
 <!--------
 SCRIPTS
 --------->
 
-<script src="bower_components/jquery/jquery.js"></script>
-<script src="bower_components/angular/angular.js"></script>
-<script src="bower_components/lodash/dist/lodash.js"></script>
+<!-- process:remove:command,api -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
 <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
 
 <script src="scripts/clotho-angular-modules.js"></script>
+<!-- /process -->
 
 
 <!--note - correct app based on the distribution, comments removed by build-->
+
+<!-- process:remove:command,api -->
 <script src="scripts/clotho-app.js"></script>
+<!-- /process -->
 
 
 <script src="scripts/clotho-core-module.js"></script>
+
+
+<!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
 <script src="scripts/clotho-command-module.js"></script>
+<!-- /process -->
+
+<!-- process:remove:api,command -->
 <!--note - remove all scripts below this for command-only build-->
 
 <script src="scripts/clotho-foundation-module.js"></script>
@@ -90,6 +126,7 @@ SCRIPTS
 
 <script src="scripts/clotho-webapp-module.js"></script>
 
+<!-- /process -->
 
 </body>
 </html>

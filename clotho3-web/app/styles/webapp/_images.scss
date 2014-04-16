@@ -1,0 +1,53 @@
+img {
+  max-width: 100%;
+}
+
+/*******
+img highlights
+********/
+
+.hoverFade {
+  opacity: 1;
+  transition: opacity 0.15s linear;
+}
+.hoverFade:hover {
+  opacity: 0.7;
+}
+
+//shadowbox
+
+.shadowBox
+{
+  position:relative;
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  margin: 10px 0;
+}
+
+.shadowBox.hover:hover {
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 0, 0, 0.2) inset;
+  transition: box-shadow 0.15s linear;
+}
+
+.shadowBox.background {
+  margin: 20px 0;
+}
+
+.shadowBox.background:before, .shadowBox.background:after
+{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  box-shadow:0 0 20px rgba(0,0,0,0.8);
+  top:0;
+  bottom:0;
+  left:10px;
+  right:10px;
+  border-radius:100px / 10px;
+}
+
+.shadowBox.background:after
+{
+  right:10px;
+  left:auto;
+  transform:skew(8deg) rotate(3deg);
+}

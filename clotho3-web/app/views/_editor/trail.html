@@ -1,8 +1,8 @@
 <div ng-controller="Editor_TrailCtrl">
     <legend>Trail Editor</legend>
-    <div class="ng-cloak">
+    <fieldset class="ng-cloak" ng-disabled="!editMode">
 
-        <div ng-include="_objBaseFields"></div>
+    <div ng-include="_objBaseFields"></div>
 
         <form-field name="contents">
             <textarea json-edit ng-model="sharable.contents"></textarea>
@@ -10,6 +10,7 @@
 
         <alert type="warning">Forthcoming...</alert>
 
-        <div ng-include="_formActions"></div>
-    </div>
+    </fieldset>
+
+    <div ng-include="_formActions"></div>
 </div>

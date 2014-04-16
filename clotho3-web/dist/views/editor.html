@@ -1,31 +1,30 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-9">
-            <form clotho-editor ng-model="editable" class="form-horizontal well"></form>
+        <div class="col-sm-9">
+            <form clotho-editor ng-model="editable" edit-mode="editModePass" class="form-horizontal well"></form>
         </div>
 
-        <div class="col-md-3">
-            <div class="well">
-                <h5>Select an Object</h5>
-                <div class="form-group">
-                    <select ng-model="editable" class="form-control"
-                            ng-options="c.id as c.name group by c.schema for c in editableList"></select>
+        <div class="col-sm-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h5>Create new...</h5>
                 </div>
-
-                <h5>Create from Schema</h5>
-                <!--popover induces isolate scope, need to call $parent.selected in ngModel, see angular issue https://github.com/angular/angular.js/issues/1924 -->
-                <input type="text" style="width: 100%; margin: 5px 0;" ng-model="$parent.selected" typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10" popover="Type and select a schema to create an object with pre-determined fields" popover-title="Choose a Schema" popover-trigger="focus">
-                <button class="btn" ng-click="createNewObject()" ng-disabled="!selected">Create</button>
+                <div class="list-group">
+                    <a class="list-group-item" ng-repeat="(type, obj) in objectTypes" ng-click="createNew(type)" ng-class="{'list-group-item-info' : (type == 'Instance' && chooseSubtype)}">{{ obj.readable }}</a>
+                </div>
+                <div ng-if="chooseSubtype" class="list-group-item" ng-class="{'list-group-item-warning' : !selectedSubtype.length}">
+                    <label for="chooseSubtype">Instance Type</label>
+                    <input id="chooseSubtype" type="text" class="form-control" ng-model="selectedSubtype" typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10" typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';" popover="Type and select a schema to create an object with pre-determined fields" popover-title="Choose a Schema" popover-trigger="focus" popover-append-to-body="true">
+                </div>
             </div>
 
-            <div class="well">
-                <h5>Select an Schema</h5>
-                <div class="form-group">
-                    <select ng-model="editable" class="form-control"
-                            ng-options="c.id as c.name for c in schemas | orderBy:'name'"></select>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5>Edit Existing...</h5>
                 </div>
-                <h5>Create a new Schema</h5>
-                <button class="btn" ng-click="createNewSchema()">Create New</button>
+                <div class="panel-body">
+                    <input id="chooseInstance" type="text" class="form-control" ng-model="selectedInstance" typeahead="c.id as c.name for c in allInstances | filter:{name:$viewValue} | limitTo:10" typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';" popover="Type to search for an Instance to edit" popover-trigger="focus">
+                </div>
             </div>
         </div>
 

@@ -1,25 +1,11 @@
 angular.module('clotho.trails')
-	.config(function() {
-		//todo - move to $script or $clotho.extensions.script()
-		//load the Youtube API
-		var tag = document.createElement('script');
-		tag.src = "//www.youtube.com/iframe_api";
-		var firstScriptTag = document.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-	})
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
 		var api_ready = $q.defer();
-		$rootScope.$watch(function() {
-			return angular.isDefined($window.YT) && $window.YT.loaded == 1;
-		},function(newval) {
-			if (!!newval) {
-				api_ready.resolve();
-			} else {
-				//note - force a digest after some time if api not ready, hopefully ready by then
-				$timeout(angular.noop, 500);
-			}
-		});
+		$window.onYouTubePlayerReady = function () {
+			api_ready.resolve();
+		};
+		$clotho.extensions.script('//www.youtube.com/iframe_api');
 
 	/**
 	 * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work.
@@ -43,7 +29,14 @@ angular.module('clotho.trails')
 	};
 
 	var info = function getYoutubeInfo (videoId) {
-		return $http.get('https://gdata.youtube.com/feeds/api/videos/'+videoId+'?v=2&prettyprint=true&alt=jsonc')
+		return $http.get('https://gdata.youtube.com/feeds/api/videos/'+videoId+'?&alt=json')
+			.then(function (data) {
+				return data.data
+			})
+	};
+
+	var playlist = function getYoutubePlaylist (playlistId) {
+		return $http.get('http://gdata.youtube.com/feeds/api/playlists/'+playlistId+'?alt=json')
 			.then(function (data) {
 				return data.data
 			})
@@ -53,6 +46,7 @@ angular.module('clotho.trails')
 		readyPromise : api_ready.promise,
 		extract : extract,
 		thumbnail : thumbnail,
-		info : info
+		info : info,
+		playlist : playlist
 	}
 });

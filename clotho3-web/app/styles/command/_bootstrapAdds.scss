@@ -1,0 +1,22 @@
+/* Bootstrap add-ons */
+
+.alert-muted {
+  color: #555555;
+  background-color: #eeeeee;
+  border-color: #cfcfcf;
+}
+
+.glyphicon-white {
+  color: #fff;
+}
+
+.clotho-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background: url('../../images/iconSlice.png') no-repeat -3px 0px;
+}

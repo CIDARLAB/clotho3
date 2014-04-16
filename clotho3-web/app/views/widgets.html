@@ -1,7 +1,9 @@
 <div class="container">
 
+    <!-- clotho directives -->
+
     <clotho-modal title="testModal" open="true">
-        <p>Here is some content... no data binding yet, just transclusion</p>
+        <p ng-init="myModalModel = 'interpolate me'">Here is some content... no data binding yet, just transclusion: here is a binding (not compiled): {{ myModalModel }}</p>
     </clotho-modal>
 
     <div class="panel panel-default">
@@ -31,6 +33,8 @@
             </div>
         </div>
     </div>
+
+    <!-- widgets -->
 
     <div class="jumbotron">
         <p>

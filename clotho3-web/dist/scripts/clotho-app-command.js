@@ -1,1 +1,1 @@
-"use strict";angular.module("clothoRoot",["clotho.core","clotho.commandbar"]).run(["Clotho",function(a){a.submit("clotho.run('clientSetup', [])")}]),angular.element(document).ready(function(){angular.bootstrap(document,["clothoRoot"])});
+"use strict";angular.module("clothoRoot",["clotho.core","clotho.commandbar"]).run(["Clotho",function(a){a.submit("clotho.run('clientSetup', [])")}]);
