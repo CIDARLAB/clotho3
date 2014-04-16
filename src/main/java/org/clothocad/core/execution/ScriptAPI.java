@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.script.ScriptException;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.communication.ServerSideAPI.Severity;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjectId;
@@ -107,7 +108,7 @@ public class ScriptAPI {
     }
     
     public void say(String text){
-        api.say(text);
+        api.say(text, Severity.NORMAL);
     }
 
     public boolean login(String username, String password){

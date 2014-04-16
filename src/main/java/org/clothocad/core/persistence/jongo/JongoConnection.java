@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.DBClassLoader;
+import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.CredentialStore;
 import org.clothocad.core.util.JSON;
 import org.jongo.ResultHandler;
@@ -186,52 +188,49 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public Map<String, Object> getAsBSON(ObjectId uuid) {
-        return data.findOne("{_id:#}", uuid.toString()).map(DemongifyHandler.get());
+        return getAsBSON(uuid, null);
+    }
+    
+    @Override
+    public Map<String, Object> getAsBSON(ObjectId uuid, Set<String> filter) {
+        return data.findOne("{_id:#}", uuid.toString()).projection(generateProjection(filter)).map(DemongifyHandler.get());
     }
 
     @Override
     public List<ObjBase> get(Map query) {
-        bindClassLoader();
-        return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).as(ObjBase.class));
+        return get(query, Persistor.SEARCH_MAX);
     }
 
+    
     @Override
-    public List<ObjBase> get(String name) {
+    public List<ObjBase> get(Map query, int hitmax) {
         bindClassLoader();
-        return Lists.newArrayList(data.resolvingFind("{name:#}", name).as(ObjBase.class));
+        return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).limit(hitmax).as(ObjBase.class));
     }
 
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
+        return get(type, query, Persistor.SEARCH_MAX);
+    }
+    
+    
+    @Override
+    public <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax) {
         bindClassLoader();
-        return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).as(type));
+        return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).limit(hitmax).as(type));
     }
 
     @Override
-    public <T extends ObjBase> List<T> get(Class<T> type, String name) {
-        bindClassLoader();
-        return Lists.newArrayList(data.resolvingFind("{name:#}", name).as(type));
-
+    public List<Map<String, Object>> getAsBSON(Map query) {    
+        return getAsBSON(query, Persistor.SEARCH_MAX, null);
     }
-
+    
+    
     @Override
-    public List<Map<String, Object>> getAsBSON(Map query) {
-        return Lists.newArrayList(data.find(serialize(mongifyIdField(query))).map(DemongifyHandler.get()));
-    }
-
-    @Override
-    public List<Map<String, Object>> getAsBSON(String name) {
-        return getAsBSON(new BasicDBObject("name", name).toMap());
-    }
-
-    @Override
-    public <T extends ObjBase> List<Map<String, Object>> getAsBSON(Class<T> type, Map query) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    @Override
-    public <T extends ObjBase> List<Map<String, Object>> getAsBSON(Class<T> type, String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Map<String, Object>> getAsBSON(Map query, int hitmax, Set<String> filter) {
+        return Lists.newArrayList(data.find(serialize(mongifyIdField(query)))
+                .limit(hitmax).projection(generateProjection(filter))
+                .map(DemongifyHandler.get()));
     }
 
     @Override
@@ -241,29 +240,12 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     }
 
     @Override
-    public <T extends ObjBase> T getOne(Class<T> type, String name) {
-        bindClassLoader();
-        return data.resolvingFindOne("{name:#}", name).as(type);
-    }
-
-    @Override
     public Map<String, Object> getOneAsBSON(Map query) {
-        return data.findOne(serialize(mongifyIdField(query))).map(DemongifyHandler.get());
+        return getOneAsBSON(query, null);
     }
-
     @Override
-    public Map<String, Object> getOneAsBSON(String name) {
-        return getOneAsBSON(new BasicDBObject("name", name).toMap());
-    }
-
-    @Override
-    public <T extends ObjBase> Map<String, Object> getOneAsBSON(Class<T> type, Map query) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <T extends ObjBase> Map<String, Object> getOneAsBSON(Class<T> type, String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Map<String, Object> getOneAsBSON(Map query, Set<String> filter) {
+        return data.findOne(serialize(mongifyIdField(query))).projection(generateProjection(filter)).map(DemongifyHandler.get());
     }
 
     @Override
@@ -361,6 +343,18 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         // this may not be the right place to do this - not sure if better to do this on thread spawn always
         //classloader is singleton that delegates to root classloader, so no classloader hairiness should happen
         Thread.currentThread().setContextClassLoader(classLoader);
+    }
+    
+    private String generateProjection(Set<String> fields){
+        if (fields == null) return "{}";
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        for (String field: fields){
+            builder.append(String.format("%s:1, ", field));
+        }
+        builder.append("}");
+        
+        return builder.toString();
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
