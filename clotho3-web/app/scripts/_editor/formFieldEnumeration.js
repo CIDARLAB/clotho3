@@ -39,7 +39,7 @@ angular.module('clotho.editor')
 
 				switch (type) {
 					case 'object' : {
-						inputText = '<textarea json-edit rows="3" ' + required + ' ng-model="sharable.'+field.name+'"></textarea>';
+						inputText = '<textarea json-edit="sharable.'+field.name+'" rows="3" ' + required + '></textarea>';
 						break;
 					}
 					case 'radio' : {
