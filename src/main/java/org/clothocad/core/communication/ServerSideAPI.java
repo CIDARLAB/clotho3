@@ -83,12 +83,17 @@ public class ServerSideAPI {
     private final Persistor persistor;
     private final String requestId;
     private final Mind mind;
+    private final MessageOptions options;
 
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
+        this(mind, persistor, router, requestId, new MessageOptions());
+    }    
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
+        this.options = options;
     }
 
     public final List<String> autocomplete(String userText) {
@@ -177,28 +182,6 @@ public class ServerSideAPI {
         say("The mind has been cleared", Severity.SUCCESS);
     }
 
-    public final void say(Object obj) {
-        if (obj instanceof String) {
-            say((String) obj);
-            return;
-        }
-        Map<String, Object> json = JSON.mappify(obj);
-        Severity severity = json.containsKey("severity")
-                ? Severity.valueOf(json.get("severity").toString())
-                : Severity.NORMAL;
-        String recipients = json.containsKey("recipients")
-                ? json.get("recipients").toString()
-                : null;
-        boolean isUser = json.containsKey("isUser")
-                ? Boolean.parseBoolean(json.get("isUser").toString())
-                : false;
-        say(json.get("message").toString(), severity, recipients, isUser);
-    }
-
-    public final void say(String message) {
-        say(message, Severity.NORMAL, null, false);
-    }
-
     /**
      *
      * @param message
@@ -216,7 +199,9 @@ public class ServerSideAPI {
     }
 
     protected void say(String message, Severity severity, String recipients, boolean isUser) {
-
+        //if say is turned off in options, send nothing
+        if (options.isMute()) return;
+        
         //Resolve the recipients
         //XXX: doesn't currently handle multiple recipients
         //List<Sharable> listUsers = resolveToExistentSharablesList(recipients);
@@ -260,7 +245,7 @@ public class ServerSideAPI {
         System.out.println("I need to put this in your notebook, but i'm not implemented");
         //These have the same structure as a say, but they are stored.
 
-        say("I've stored your note (but not really): " + message);
+        say("I've stored your note (but not really): " + message, Severity.MUTED);
     }
 
     protected void send(Message message) {
@@ -287,7 +272,7 @@ public class ServerSideAPI {
 
     public Map<String, Object> get(ObjectId id) {
         try {
-            Map<String, Object> out = persistor.getAsJSON(id);
+            Map<String, Object> out = persistor.getAsJSON(id, options.getPropertiesFilter());
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
 
@@ -483,7 +468,7 @@ public class ServerSideAPI {
         List<Map<String, Object>> objs;
         try {
             //Relay the query to Persistor and return the hits
-            objs = persistor.findAsBSON(spec);
+            objs = persistor.findAsBSON(spec, options.getPropertiesFilter(), options.getMaxResults());
             say("Found " + objs.size() + " objects that satisfy your query", Severity.SUCCESS);
             return objs;
         } catch (Exception e) {
@@ -505,7 +490,7 @@ public class ServerSideAPI {
         try {
             args = (List) data.get("args");
         } catch (ClassCastException e) {
-            say("Arguments must be a list or array");
+            say("Arguments must be a list or array", Severity.WARNING);
             return null;
         }
 
@@ -516,7 +501,7 @@ public class ServerSideAPI {
                 try {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
+                    return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -530,7 +515,7 @@ public class ServerSideAPI {
                 try {
                     Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -600,7 +585,7 @@ public class ServerSideAPI {
     public final Object run(Function function, List<Object> args) throws ScriptException {
 
 
-        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
+        return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }
 
     /**
@@ -837,6 +822,6 @@ public class ServerSideAPI {
     }
 
     private ScriptAPI getScriptAPI() {
-        return new ScriptAPI(mind, persistor, router, requestId);
+        return new ScriptAPI(mind, persistor, router, requestId, options);
     }
 }
