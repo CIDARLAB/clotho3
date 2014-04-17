@@ -222,17 +222,19 @@ angular.module('clotho.interface').controller('DialogEditController', function($
 
 
 /*
-Todo - transclude contents, so that can be compiled
 todo - try including in $modal $delegate directly and transcluding
+
+If pass an ID, clotho-show of that id. If no id, then just a modal for transluded content
+simply pass true to 'open' and will open a modal right off the bat
  */
 
 angular.module('clotho.interface')
 	.directive('clothoModal', function ($modal, $parse) {
 		return {
 			restrict : 'E',
-			transclude : 'element',
+			transclude : 'true',
 			scope: {
-				id : '@',
+				id : '@?',
 				open : '@',
 				onClose : '=?',
 				onOpen : '=?',
@@ -241,18 +243,12 @@ angular.module('clotho.interface')
 			},
 			link: function (scope, element, attrs, nullCtrl, transclude) {
 
-				var modal, transcludedDom;
-
-				//fixme - ugly hack to get HTML, but doesn't actually transclude
-				transclude(scope, function (clone) {
-					console.log(clone);
-					transcludedDom = clone[0].innerHTML;
-				});
+				var modal;
 
 				scope.$watch(function () {
 						return $parse(attrs.open);
-					}, function (newval) {
-						if (!!newval) {
+					}, function (newval, oldval) {
+						if (newval != oldval && !!newval) {
 							modal = $modal.open({
 								backdrop: true,
 								backdropFade: true,
@@ -265,8 +261,7 @@ angular.module('clotho.interface')
 										return {
 											showId : scope.id || '',
 											title : scope.title || '',
-											model : scope.model | {},
-											transclude : transcludedDom
+											model : scope.model | {}
 										}
 									}
 								}
@@ -290,7 +285,6 @@ angular.module('clotho.interface')
 
 		$scope.title = model.title;
 		$scope.model = model.model;
-		$scope.transclude = model.transclude;
 
 		//if show Id present, use a clotho-show
 		$scope.showId = model.showId;
