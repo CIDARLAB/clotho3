@@ -501,7 +501,7 @@ public class ServerSideAPI {
                 try {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
+                    return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -515,7 +515,7 @@ public class ServerSideAPI {
                 try {
                     Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -585,7 +585,7 @@ public class ServerSideAPI {
     public final Object run(Function function, List<Object> args) throws ScriptException {
 
 
-        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
+        return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }
 
     /**
@@ -822,6 +822,6 @@ public class ServerSideAPI {
     }
 
     private ScriptAPI getScriptAPI() {
-        return new ScriptAPI(mind, persistor, router, requestId);
+        return new ScriptAPI(mind, persistor, router, requestId, options);
     }
 }

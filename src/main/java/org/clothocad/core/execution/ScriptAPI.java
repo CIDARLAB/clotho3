@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.script.ScriptException;
+import org.clothocad.core.communication.MessageOptions;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.communication.ServerSideAPI.Severity;
@@ -36,8 +37,8 @@ public class ScriptAPI {
     Persistor persistor;
     
     
-    public ScriptAPI(Mind mind, Persistor persistor, Router router, String requestId){
-        api = new ServerSideAPI(mind, persistor, router, requestId);
+    public ScriptAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options){
+        api = new ServerSideAPI(mind, persistor, router, requestId, options);
         this.mind = mind;
         this.persistor = persistor;
     }
