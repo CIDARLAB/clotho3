@@ -129,6 +129,16 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 				},
 				post: function postLink(scope, iElement, iAttrs, controllers) {
 
+					scope.isValidJson = function (model) {
+						var flag = true;
+						try {
+							angular.fromJson(model);
+						} catch (err) {
+							flag = false;
+						}
+						return flag;
+					};
+
 					/* config */
 
 					scope.formCtrl = controllers[1];
@@ -149,8 +159,12 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					};
 
 					scope.save = function () {
-						Clotho.set(scope.sharable);
-						scope.editMode = false;
+						if (!scope.isValidJson(scope.sharable)) {
+							Clotho.alert('Your JSON is invalid... please fix it');
+						} else {
+							Clotho.set(scope.sharable);
+							scope.editMode = false;
+						}
 					};
 
 					scope.discard = function () {
@@ -187,11 +201,6 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					scope.$watch('editMode', function (newval, oldval) {
 						Debugger.log('edit mode: ', newval);
 					});
-
-					scope.$watch('sharable', function (newval, oldval) {
-						Debugger.log('sharable updated ', newval);
-					});
-
 				}
 			}
 		}
