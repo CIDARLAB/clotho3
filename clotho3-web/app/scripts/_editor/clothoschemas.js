@@ -3,6 +3,7 @@
 angular.module('clotho.editor')
   .service('ClothoSchemas', function EditorSchemas(Clotho, $q) {
 
+		var SCHEMA_ALL = 'org.clothocad.core.schema.Schema';
 		var SCHEMA_BUILTIN = 'org.clothocad.core.schema.BuiltInSchema';
 		var SCHEMA_CLOTHOSCHEMA = 'org.clothocad.core.schema.ClothoSchema';
 
@@ -64,28 +65,12 @@ angular.module('clotho.editor')
 
 		/* QUERIES */
 
-		//hold our query promises
-		var schemaQueries = {};
-
-		//query for built-in schemas, removing instances in sharableTypes
-		schemaQueries.builtIn = Clotho.query({"schema": SCHEMA_BUILTIN})
+		Clotho.query({"schema" : SCHEMA_ALL})
 		.then(function (resultSchemas) {
 			_.remove(resultSchemas, function (schema) {
 				return !!sharableTypes[schema.name];
 			});
-			return resultSchemas;
-		});
-
-		//query for clothoSchemas
-		schemaQueries.clothoSchemas = Clotho.query({"schema": SCHEMA_CLOTHOSCHEMA});
-
-		//get them all, resolve promise
-		$q.all(schemaQueries).then(function (results) {
-			var allSchemas = [];
-			angular.forEach(results, function (schemas, type) {
-				allSchemas.concat(schemas);
-			});
-			retrievedSchemas.resolve(allSchemas);
+				retrievedSchemas.resolve(resultSchemas)
 		});
 
 		/* FUNCTIONALITY */
@@ -99,6 +84,16 @@ angular.module('clotho.editor')
 		function isSchema (sharable) {
 			var sharableSchema = determineSchema(sharable);
 			return sharableSchema == SCHEMA_BUILTIN || sharableSchema == SCHEMA_CLOTHOSCHEMA;
+		}
+
+		//determine if schemas is a built in schema
+		function isBuiltIn (sharable) {
+			return determineSchema(sharable) == SCHEMA_BUILTIN;
+		}
+
+		//determine if a schema is a Clotho written schema
+		function isClothoSchema (sharable) {
+			return determineSchema(sharable) == SCHEMA_CLOTHOSCHEMA;
 		}
 
 		function isFunction (sharable) {
@@ -141,6 +136,9 @@ angular.module('clotho.editor')
 			primitiveToJava : primitiveToJava,
 
 			isSchema : isSchema,
+			isBuiltIn : isBuiltIn,
+			isClothoSchema : isClothoSchema,
+
 			determineType : determineType,
 			determineSchema : determineSchema,
 			createScaffold : createScaffold

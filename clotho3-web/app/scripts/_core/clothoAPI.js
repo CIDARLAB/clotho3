@@ -151,6 +151,9 @@ function generateClothoAPI() {
      * @param {object} options
      * @param {boolean=} synchronous   Default false for async, true to return value synchronously
      *
+     * @option
+     * "filter": [<list of field names>]
+     *
      * @description
      * Request a Sharable from the server. Returns the object description for the selected objects. If a selector is ambiguous, clotho will return the first one returned by MongoDB - which is basically arbitrary. Clotho will send an error message on the 'say' channel if an object could not be retrieved.
      *
@@ -417,6 +420,9 @@ function generateClothoAPI() {
      * @param options Options, e.g. fields to return
      *
      * @example To get all schemas, Clotho.query({"schema" : "Schema"})
+     *
+     * @option
+     * "maxResults": <integer>
      *
      * @description
      * Returns all objects that match the fields provided in the spec.

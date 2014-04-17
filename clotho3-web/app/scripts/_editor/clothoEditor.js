@@ -188,6 +188,10 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 						Debugger.log('edit mode: ', newval);
 					});
 
+					scope.$watch('sharable', function (newval, oldval) {
+						Debugger.log('sharable updated ', newval);
+					});
+
 				}
 			}
 		}

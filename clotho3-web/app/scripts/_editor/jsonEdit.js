@@ -1,52 +1,90 @@
 'use strict';
 
+/*
+example usage: <textarea json-edit="myObject" rows="8" class="form-control"></textarea>
+
+jsonEditing is a string which we edit in a textarea. we try parsing to JSON with each change. when it is valid, propagate model changes via ngModelCtrl
+
+use isolate scope to prevent model propagation when invalid - will update manually. cannot replace with template, or will override ngModelCtrl, and not hide behind facade
+
+will override element type to textarea and add own attribute ngModel tied to jsonEditing
+ */
+
 angular.module('clotho.editor')
 	.directive('jsonEdit', function () {
 		return {
 			restrict: 'A',
 			require: 'ngModel',
+			templateUrl: 'views/_editor/json-edit.html',
+			replace : true,
 			scope: {
-				model : '=ngModel'
+				model: '=jsonEdit'
 			},
-			link: function(scope, element, attrs, ngModelCtrl) {
+			link: function (scope, element, attrs, ngModelCtrl) {
 
-				function fromUser(text) {
+				function setEditing (value) {
+					scope.jsonEditing = angular.copy(JSON2String(value));
+				}
+
+				function updateModel (value) {
+					scope.model = string2JSON(value);
+				}
+
+				function setValid() {
+					ngModelCtrl.$setValidity('json', true);
+				}
+
+				function setInvalid () {
+					ngModelCtrl.$setValidity('json', false);
+				}
+
+				function string2JSON(text) {
 					try {
 						return angular.fromJson(text);
 					} catch (err) {
-						ngModelCtrl.$setValidity('json', false);
+						setInvalid();
 						return text;
 					}
 				}
 
-				function toUser(object) {
+				function JSON2String(object) {
 					// better than JSON.stringify(), because it formats + filters $$hashKey etc.
+					// NOTE that this will remove all $-prefixed values
 					return angular.toJson(object, true);
 				}
 
-				function isValidJson (model) {
+				function isValidJson(model) {
 					var flag = true;
 					try {
 						angular.fromJson(model);
 					} catch (err) {
 						flag = false;
 					}
-					console.log(flag);
-					console.log(ngModelCtrl);
 					return flag;
 				}
 
-				// push() if faster than unshift(), and avail. in IE8 and earlier (unshift isn't)
-				ngModelCtrl.$parsers.push(fromUser);
-				ngModelCtrl.$formatters.push(toUser);
+				//init
+				setEditing(scope.model);
 
-				scope.$watch('model', function(newValue, oldValue) {
-					if (newValue != oldValue && isValidJson(newValue)) {
-						ngModelCtrl.$setValidity('json', true);
-						ngModelCtrl.$setViewValue(toUser(newValue));
-						ngModelCtrl.$render();
+				//check for changes going out
+				scope.$watch('jsonEditing', function (newval, oldval) {
+					if (newval != oldval) {
+						if (isValidJson(newval)) {
+							setValid();
+							updateModel(newval);
+						} else {
+							setInvalid();
+						}
 					}
-				}, true); // MUST use objectEquality (true) here, for some reason..
+				}, true);
+
+				//check for changes coming in
+				scope.$watch('model', function (newval, oldval) {
+					if (newval != oldval) {
+						setEditing(newval);
+					}
+				}, true);
+
 			}
 		};
 	});
