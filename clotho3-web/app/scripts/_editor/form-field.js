@@ -4,7 +4,7 @@ angular.module('clotho.editor')
  *
  * @description Wrapper for form elements, adding bootstrap classes automatically. Specifically handles according to element type, wrapping appropriately. Also adds Labels and Help blocks. Does not compile internal contents.
  *
- * @note The element declared as child of form-field is transcluded, ng-model delcarations will run into prototypical inheritance weirdness [transcluded elements have isolate scope, sibling to directive] (i.e. if you don't declare in the form of "object.field", define as "$parent.object"). Updates to form controls within this directive will not update an undefined model. Model should at least be declared as empty object / array.
+ * @note The element declared as child of form-field is transcluded, ng-model delcarations may run into prototypical inheritance weirdness [transcluded elements SHUOLD NOT have isolate scope, sibling to directive, so shuold not be affected by directive in prototypical inheritance] (i.e. if you don't declare in the form of "object.field", define as "$parent.object"). Updates to form controls within this directive will not update an undefined model. Model should at least be declared as empty object / array.
  *
  * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName. Can pass hide-label to hide label and just show the element and help, but will be overriden for input types that surround the input with the label (e.g. checkbox, radio)
  *
@@ -37,7 +37,7 @@ angular.module('clotho.editor')
 			controller: function ($scope, $element, $attrs) {
 
 			},
-			link : function linkFunction(scope, element, attrs, parentCtrls) {
+			link : function linkFunction(scope, element, attrs, parentCtrls, transclude) {
 
 				var formCtrl = parentCtrls[0],
 					editorCtrl = parentCtrls[1];

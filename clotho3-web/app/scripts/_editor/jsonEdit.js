@@ -8,6 +8,8 @@ jsonEditing is a string which we edit in a textarea. we try parsing to JSON with
 use isolate scope to prevent model propagation when invalid - will update manually. cannot replace with template, or will override ngModelCtrl, and not hide behind facade
 
 will override element type to textarea and add own attribute ngModel tied to jsonEditing
+
+As far as I know, there is currently no way to achieve this using $parsers (other than one of the function errors and kills the pipeline)
  */
 
 angular.module('clotho.editor')
@@ -15,7 +17,7 @@ angular.module('clotho.editor')
 		return {
 			restrict: 'A',
 			require: 'ngModel',
-			templateUrl: 'views/_editor/json-edit.html',
+			template: '<textarea ng-model="jsonEditing"></textarea>',
 			replace : true,
 			scope: {
 				model: '=jsonEdit'
