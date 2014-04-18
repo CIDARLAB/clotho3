@@ -103,18 +103,10 @@ public void testScript() throws ScriptException {
     }
     
     @Test
-    public  void adgfdasg() throws ScriptException
+    public  void testBindings() throws ScriptException
    {
        
        //http://www.informit.com/articles/article.aspx?p=696621&seqNum=6
-       
-       
-       
-       
-       
-       
-       
-       
        
       // Create a ScriptEngineManager that discovers all script engine
       // factories (and their associated script engines) that are visible to
