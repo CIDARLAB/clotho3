@@ -19,7 +19,7 @@ public class ScriptEngineTest {
     MetaEngine engine;
     
     public ScriptAPI genAPI(){
-        return new ScriptAPI(null, null, null, null);
+        return new ScriptAPI(null, null, null, null, null);
     }
     
     @Before
