@@ -76,18 +76,14 @@ angular.module('clotho.trails').directive('youtube', function(Trails, Youtube, $
 					} else {
 						//todo - move to class (loading class)
 						element.html('<img src="../../images/assets/ajax-loader.gif" />');
-						InitialLoadCreateYoutubePlayer()
-					}
-
-					function InitialLoadCreateYoutubePlayer () {
-						Youtube.readyPromise.then(function() {
-							createYoutubePlayer();
-						});
+						createYoutubePlayer()
 					}
 
 					function createYoutubePlayer() {
-						scope.player = new YT.Player(element[0], scope.params);
-						$(scope.player.a).addClass('youtubePlayer');
+						Youtube.readyPromise.then(function() {
+							scope.player = new YT.Player(element[0], scope.params);
+							$(scope.player.a).addClass('youtubePlayer');
+						});
 					}
 
 					scope.$watch('videoId', function(newval, oldval) {
