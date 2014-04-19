@@ -1,4 +1,4 @@
-<div class="clothoTokenWrap" ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous()}">
+<div class="clothoTokenWrap" ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous(), 'sharable' : token.isSharable()}">
     <div class="clothoTokenPopup" ng-show="tokenActive && token.isSharable()">
         <h3 class="clothoTokenPopupHeader">
             {{token.readable()}}

@@ -1,17 +1,26 @@
 .clothoTokenWrap {
+  $default : #5bc0de;
+  $active : lighten($default, 10);
+  $sharable : #5bdec0;
+  $ambiguous : #de5bc0;
+
   @extend .label;
-  @extend .label-info;
+  background-color: $default;
   display: inline-block;
   position: relative;
   padding: 4px 8px;
   margin: 3px;
 
   &.active {
-    background-color: #ccccee;
+    background-color: $active;
+  }
+
+  &.sharable {
+    background-color: $sharable;
   }
 
   &.ambiguous {
-    background-color: #eedd66;
+    background-color: $ambiguous;
   }
 }
 
