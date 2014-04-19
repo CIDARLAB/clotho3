@@ -2,11 +2,52 @@
   @extend .label;
   @extend .label-info;
   display: inline-block;
+  position: relative;
   padding: 4px 8px;
   margin: 3px;
 
   &.active {
     background-color: #ccccee;
+  }
+
+  &.ambiguous {
+    background-color: #eedd66;
+  }
+}
+
+//todo - refactor / clean up / reuse with log popup
+.clothoTokenPopup {
+  display: block;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  text-align: left;
+  background-color: white;
+  z-index: 1010;
+  min-width: 300px;
+  max-width: 400px;
+  max-height: 400px;
+  overflow: scroll;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(100%);
+
+  .clothoTokenPopupHeader {
+    @extend .popover-title;
+    color: #333;
+
+    .btn-group {
+      float: right;
+      margin-top: -6px;
+    }
+  }
+
+  .info {
+    font-size: 1em;
+    margin: 0;
+    border: 0;
+    background: #fff;
   }
 }
 
