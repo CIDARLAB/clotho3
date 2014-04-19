@@ -1,25 +1,35 @@
 /**
- @NOTE - not distributed via package manager, need to update manually:
- https://github.com/angular-ui/ui-utils/blob/master/modules/keypress/keypress.js
- @lastUpdated 11/18/13
- @note custom keypress service at end
+ * @note - for hotkeys, use the service hotkeys from angular-hotkeys. Use this for binding to inputs etc.
+ *
+ @source adapted from https://github.com/angular-ui/ui-utils/blob/master/modules/keypress/keypress.js
 
- * @description Bind one or more handlers to particular keys or their combination
+ * @description Bind one or more handlers to particular keys or their combination, either on element or programmatically
  * @param hash {mixed} keyBindings Can be an object or string where keybinding expression of keys or keys combinations and AngularJS Exspressions are set.
  *
  * Object syntax: "{ keys1: expression1 [, keys2: expression2 [ , ... ]]}".
- * String syntax: ""expression1 on keys1 [ and expression2 on keys2 [ and ... ]]"".
+ * String syntax: "expression1 on keys1 [ and expression2 on keys2 [ and ... ]]".
  *
  * Expression is an AngularJS Expression, and key(s) are dash-separated combinations of keys and modifiers (one or many, if any. Order does not matter).
  * Supported modifiers are 'ctrl', 'shift', 'alt' and key can be used either via its keyCode (13 for Return) or name.
  * Named keys are 'backspace', 'tab', 'enter', 'esc', 'space', 'pageup', 'pagedown', 'end', 'home', 'left', 'up', 'right', 'down', 'insert', 'delete', 'period', 'comma'.
  *
- * @example
-
- <input ui-keypress="{enter:'x = 1', 'ctrl-shift-space':'foo()', 'shift-13':'bar()'}" />
- <input ui-keypress="foo = 2 on ctrl-13 and bar('hello') on shift-esc" />
-
  * @note keypress for arrows and some other keys will not work -- use keydown or keyup in that case
+ *
+ * @example
+ *
+ * (programmatic - for document or in directive for an element)
+ * [assuming a function foo() is defined on the $scope]
+ * Pass null as arguments, and set parameter object manually
+ *
+ * var x = keypressHelper('keypress', $scope, $document, null, {enter : 'foo()'}, 'myNamespace')
+ * ...
+ * x() //unbind
+ *
+ * (on elements)
+ *
+ * <input ui-keypress="{enter:'x = 1', 'ctrl-shift-space':'foo()', 'shift-13':'bar()'}" />
+ * <input ui-keypress="foo = 2 on ctrl-13 and bar('hello') on shift-esc" />
+ *
  **/
 
 angular.module('ui.keypress',[]).
@@ -46,14 +56,10 @@ angular.module('ui.keypress',[]).
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		};
 
-		return function(mode, scope, elm, attrs) {
-			var params, combinations = [];
-			params = scope.$eval(attrs['ui'+capitaliseFirstLetter(mode)]);
-
-			//CUSTOM
-			if (elm == $document) {
-				params = attrs;
-			}
+		//CUSTOM - allow passing of params to override normal attrs programmatically
+		return function(mode, scope, elm, attrs, params) {
+			var combinations = [];
+			params = params || scope.$eval(attrs['ui'+capitaliseFirstLetter(mode)]);
 
 			// Prepare combinations for simple checking
 			angular.forEach(params, function (v, k) {
@@ -114,19 +120,18 @@ angular.module('ui.keypress',[]).
 
 			elm.bind(mode, handler);
 
-			//custom
-			//kill on scope desctruction, if pass in scope
-			scope.$on('$destroy', function() {
+			//CUSTOM - if element is document, unbind on scope destruction
+			(elm == $document) && scope.$on('$destroy', function() {
 				elm.unbind(mode, handler);
 			});
+
+			//return unbinding function
+			return function () {
+				elm.unbind(mode, handler);
+			}
 		};
 	});
 
-/**
- * Bind one or more handlers to particular keys or their combination
- * @param hash {mixed} keyBindings Can be an object or string where keybinding expression of keys or keys combinations and AngularJS Exspressions are set. Object syntax: "{ keys1: expression1 [, keys2: expression2 [ , ... ]]}". String syntax: ""expression1 on keys1 [ and expression2 on keys2 [ and ... ]]"". Expression is an AngularJS Expression, and key(s) are dash-separated combinations of keys and modifiers (one or many, if any. Order does not matter). Supported modifiers are 'ctrl', 'shift', 'alt' and key can be used either via its keyCode (13 for Return) or name. Named keys are 'backspace', 'tab', 'enter', 'esc', 'space', 'pageup', 'pagedown', 'end', 'home', 'left', 'up', 'right', 'down', 'insert', 'delete'.
- * @example <input ui-keypress="{enter:'x = 1', 'ctrl-shift-space':'foo()', 'shift-13':'bar()'}" /> <input ui-keypress="foo = 2 on ctrl-13 and bar('hello') on shift-esc" />
- **/
 angular.module('ui.keypress').directive('uiKeydown', function(keypressHelper){
 	return {
 		link: function (scope, elm, attrs) {
@@ -149,27 +154,4 @@ angular.module('ui.keypress').directive('uiKeyup', function(keypressHelper){
 			keypressHelper('keyup', scope, elm, attrs);
 		}
 	};
-});
-
-
-/**
- * @note CUSTOM
- * @example
- * var x = $keypress.on('keypress', {'enter' : 'foo()'}, $scope);
- * ...
- * $keypress.off(x);
- * @note
- * you can't do keypress with alt, control, option, up, down, left, right -- use keydown or keyup
- */
-angular.module('ui.keypress').service('$keypress', function(keypressHelper, $document){
-	return {
-		on : function(mode, actions, scope) {
-			return keypressHelper(mode, scope, $document, actions);
-		},
-		//note - should be handled automatically on $scope.$destroy (so use controllers), this is for manual use
-		//format: [elm, mode, handler, combinations];
-		off:function(handle) {
-			handle[0].unbind(handle[1], handle[2]);
-		}
-	}
 });

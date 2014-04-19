@@ -1,4 +1,4 @@
-angular.module('clotho.commandbar').directive('clothoCommandBar', function(Clotho, CommandBar, $location, $window) {
+angular.module('clotho.commandbar').directive('clothoCommandBar', function(Clotho, CommandBar, $location, $window, hotkeys) {
 
 	//todo - implement functionality of typeahead directive, but don't rely (don't make angular UI a dependency)
 
@@ -49,9 +49,27 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 				$scope.display.hide('log')
 			};
 
+			$scope.hideAutocomplete = function () {
+				$scope.display.hide('autocomplete');
+				$scope.display.undetail();
+			};
+
 			$scope.pathIsTerminal = function() {
 				var regexp = /^\/terminal.*$/;
 				return regexp.test($location.path());
+			};
+
+
+			//todo - incorporate login
+
+			$scope.showLogin = function() {
+				$modal.login().result.then(function(result) {
+					console.log(result);
+					if (result) {
+						$scope.username = result;
+						$scope.loggedIn = true;
+					}
+				});
 			};
 
 
@@ -89,7 +107,6 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 			scope.toggleTooltips = function() {
 				console.log("tooltips");
 			};
-
 		}
 	}
 });

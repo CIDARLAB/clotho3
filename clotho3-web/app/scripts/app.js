@@ -18,7 +18,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/', {
 		templateUrl: 'views/home.html',
 		controller: 'HomeCtrl',
-		title : 'Home'
+		title : 'Home',
+		hotkeys : [
+			['h', 'Show Intro Modal', 'showHelp = true']
+		]
 	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
@@ -93,7 +96,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 				});
 				return deferred.promise;
 			}]
-		}
+		},
+		hotkeys : [
+			['alt+left', 'Previous page of Trail', 'prev()'],
+			['alt+right', 'Next page of Trail', 'next()']
+		]
 	})
 	.when('/terminal', {
 		templateUrl:'views/_command/terminal.html',
@@ -122,7 +129,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	});
 
 })
-.run(function($rootScope, $route, $window, Clotho) {
+.run(function($rootScope, $route, $window, Clotho, hotkeys) {
 
 	/****** Init ******/
 
