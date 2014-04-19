@@ -5,35 +5,35 @@ angular.module('clotho.angularAdditions', [])
 		var ext = {};
 		/**
 		 * @name angular.isEmpty
-		 * @description Determines whether object is empty, delegating to lodash if present
+		 * @description Determines whether object is empty.
+		 * Booleans return false.
+		 * {}, [], undefined, null, length == 0, NaN will return true
 		 * @param {*} value
 		 * @returns {*|boolean|Boolean}
 		 */
 		ext.isEmpty = function isEmpty(value) {
-			//can't check if _ defined with angular because throws ReferenceError
-			try {
-				return _.isEmpty(value)
-			} catch (err) {
-				if (angular.isNumber(value)) {
-					return value === value;
-				}
-				else if (angular.isObject(value)) {
-					if (value.length === 0) {
-						return true;
-					} else {
-						for (var key in value) {
-							if (value.hasOwnProperty(key)) {
-								return false;
-							}
-						}
-						return true;
-					}
-				}
-				else if (angular.isUndefined(value) || value === null || value.length == 0) {
-					return true;
-				}
+			if (angular.isNumber(value)) {
+				return value === value;
+			}
+			else if (value === true || value === false) {
 				return false;
 			}
+			else if (angular.isObject(value)) {
+				if (value.length === 0) {
+					return true;
+				} else {
+					for (var key in value) {
+						if (value.hasOwnProperty(key)) {
+							return false;
+						}
+					}
+					return true;
+				}
+			}
+			else if (angular.isUndefined(value) || value === null || value.length == 0) {
+				return true;
+			}
+			return false;
 		};
 		/**
 		 * @name angular.isScope

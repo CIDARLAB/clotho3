@@ -130,10 +130,9 @@ angular.module('clotho.core').service('PubSub',
 			var trigger = function pubsub_trigger (topic, args) {
 
 				//ensure arguments are array
-				if (angular.isUndefined(args) || angular.isEmpty(args)) {
+				if (angular.isEmpty(args)) {
 					args = null;
 				} else {
-					//HACK - wrap everything in array for apply to provide consistency for signature
 					args = [args];
 				}
 
