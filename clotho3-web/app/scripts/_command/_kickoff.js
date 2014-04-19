@@ -1,1 +1,1 @@
-angular.module('clotho.commandbar', ['clotho.core']);
+angular.module('clotho.commandbar', ['clotho.core', 'ui.keypress']);

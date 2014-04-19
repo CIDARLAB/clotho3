@@ -18,17 +18,6 @@ angular.module('ui.bootstrap-decorate', ['ui.bootstrap'])
 			});
 		};
 
-		$delegate.login = function() {
-			return $delegate.open({
-				backdrop: true,
-				backdropFade: true,
-				keyboard: true,
-				backdropClick: true,
-				templateUrl:  'views/_interface/ui-custom/dialogLogin.html',
-				controller: 'DialogLoginController'
-			});
-		};
-
 		$delegate.serverAlert = function(message) {
 			return $delegate.open({
 				backdrop: true,
@@ -118,28 +107,6 @@ angular.module('ui.bootstrap-decorate').controller('MessageBoxController', funct
 	$scope.buttons = model.buttons;
 	$scope.close = function(res){
 		$modalInstance.close(res);
-	};
-});
-
-angular.module('ui.bootstrap-decorate').controller('DialogLoginController', function($scope, $modalInstance, Clotho){
-	$scope.close = function(res){
-		$modalInstance.close(res);
-	};
-
-	$scope.notification = {};
-	$scope.cred = {username : "", password: ""};
-
-	$scope.login = function() {
-		Clotho.login($scope.cred.username, $scope.cred.password).then(function (result) {
-			console.log('run login');
-			if (!!result) {
-				$scope.notification = {class : "alert-success", message: "Log in Success"};
-				dialog.close($scope.cred.username);
-			} else {
-				$scope.notification = {class : "alert-danger", message: "Log in Error"};
-				$scope.cred = {username : "", password: ""};
-			}
-		});
 	};
 });
 

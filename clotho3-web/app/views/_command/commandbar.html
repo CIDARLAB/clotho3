@@ -1,5 +1,9 @@
 <nav id="clotho_commandBar" role="navigation">
 
+    <clotho-modal open="showClothoLoginModal" title="Clotho Login">
+        <div ng-include="'views/_command/simpleLogin.html'"></div>
+    </clotho-modal>
+
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div id="clotho_commandBarWrapper">
 
@@ -82,7 +86,7 @@
 
         <!--help buttons-->
         <div class="btn-group nav navbar-right">
-            <button class="btn btn-default" ng-click="newPage()" alt="New Page"><i class="glyphicon glyphicon-file"></i></button>
+            <button class="btn btn-default" ng-click="showLogin()" alt="Clotho Login"><i class="glyphicon glyphicon-user"></i></button>
             <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
             <a class="btn btn-default dropdown-toggle" ng-click="showHelpDropdown = !showHelpDropdown" style="padding-left: 12px; padding-right: 12px;" id="commandbar_helpbutton"><i class="glyphicon glyphicon-question-sign"></i></a>
             <ul class="dropdown-menu" ng-style="{'display' : showHelpDropdown ? 'block' : 'none'}">

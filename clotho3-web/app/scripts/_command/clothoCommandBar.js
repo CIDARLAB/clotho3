@@ -60,16 +60,11 @@ angular.module('clotho.commandbar').directive('clothoCommandBar', function(Cloth
 			};
 
 
-			//todo - incorporate login
+			//todo - incorporate login, use clotho-modal
 
+			$scope.showClothoLoginModal = false;
 			$scope.showLogin = function() {
-				$modal.login().result.then(function(result) {
-					console.log(result);
-					if (result) {
-						$scope.username = result;
-						$scope.loggedIn = true;
-					}
-				});
+				$scope.showClothoLoginModal = true;
 			};
 
 
