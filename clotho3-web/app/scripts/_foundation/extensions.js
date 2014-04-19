@@ -160,10 +160,10 @@ angular.module('clotho.extensions', [])
 			return $q.when('no script url');
 		}
 
-		var downloads; //don't want to overwrite source urls with timestamp
+		var downloads = []; //don't want to overwrite source urls with timestamp
 
 		if (angular.isString(urls)) {
-			downloads = [urls];
+			urls = [urls];
 		}
 
 		angular.forEach(urls, function(url) {
@@ -246,71 +246,6 @@ angular.module('clotho.extensions', [])
 
 		return deferred.promise;
 	};
-
-	/**
-	 * todo - deprecate this version. create a wrapper for angular.bootstrap instead
-	 * @name Application.bootstrap
-	 *
-	 * @param appInfo {object} Object with necessary information to bootstrap, minimally including:
-	 * {
-     *      "moduleName" : <Name of module as defined in Angular>
-     *      "moduleUrl" : "<URL to module js file>",
-     * }
-	 *
-	 * @returns {Promise} Array of selectors in form: [<appUUID>, <jQuery Selector>]
-	 * @description
-	 * Load a widget and bootstrap it. appInfo must contain a full module. for simply adding components to the stack, use mixin()
-
-	var widgetID = 0;
-	$clotho.extensions.bootstrap = function (appInfo) {
-		widgetID++;
-
-		var deferred = $q.defer();
-
-		//angular version
-		//note angular returns parent, not appended element
-		//note - if want this, select appropriate child element
-		//var insertInto = angular.element(document).find("ng-app-clothoWidgets").append(angular.element('<div clotho-widget clotho-widget-uuid="'+appUUID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>'));
-
-
-
-		//jQuery version
-		var insertInto = $($('<div clotho-widget clotho-widget-uuid="'+widgetID+'" clotho-widget-name="'+appInfo.moduleName+'"></div>').append('<div ng-view></div>')).appendTo($clotho.appWidgets);
-
-		$clotho.extensions.script(appInfo.moduleUrl).then(function() {
-			angular.bootstrap(insertInto, [appInfo.moduleName]);
-			deferred.resolve([widgetID, "[clotho-widget-uuid="+widgetID+"]"]);
-		});
-
-
-
-		//INJECTOR VERSION, basically just angular.bootstrap
-		/*
-		//set up modules array for bootstrap
-		var modules;
-		if (angular.isString(moduleNames))
-			modules = ['ng'].push(moduleNames);
-		else if (angular.isArray(moduleNames))
-			modules = moduleNames.unshift('ng');
-		else
-			modules = ['ng'];
-
-		// create an injector
-		var $injector = angular.injector(modules);
-
-		// use the injector to kick off your application
-		// use the type inference to auto inject arguments, or use implicit injection
-		$injector.invoke(function(){
-			var scope = element.scope();
-			$compile(element)(scope);
-			scope.$digest();
-		});
-		*//*
-
-
-		return deferred.promise;
-	};
-	*/
 
 
 	/**

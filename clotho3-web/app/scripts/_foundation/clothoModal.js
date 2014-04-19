@@ -18,7 +18,7 @@ angular.module('clotho.clothoDirectives')
  <clotho-modal title="clotho.show" id="<WIDGET_ID>">
  </clotho-modal>
  */
-	.directive('clothoModal', function ($parse, $timeout, $keypress) {
+	.directive('clothoModal', function ($parse, $timeout) {
 
 		return {
 			restrict : 'E',
@@ -31,6 +31,18 @@ angular.module('clotho.clothoDirectives')
 				onClose : '=?',
 				onOpen : '=?',
 				title : '@?'
+			},
+			controller : function ($scope, $element, $attrs) {
+				//define on controller so available in template
+				$scope.$close = function (event) {
+					if ($scope.open) {
+						$scope.open = false;
+
+						$timeout(function () {
+							angular.isFunction($scope.onClose) && $scope.onClose();
+						});
+					}
+				};
 			},
 			link: function (scope, element, attrs, nullCtrl, transclude) {
 
@@ -47,21 +59,6 @@ angular.module('clotho.clothoDirectives')
 					scope.open = true;
 					angular.isFunction(scope.onOpen) && scope.onOpen();
 				}
-
-
-				//todo - allow buttons to be pressed and stuff, especially for a show
-
-				scope.$close = function (event) {
-					if (scope.open) {
-						scope.open = false;
-
-						$timeout(function () {
-							angular.isFunction(scope.onClose) && scope.onClose();
-						});
-					}
-				};
-
-				$keypress.on('keyup', {'esc' : '$close()'}, scope);
 			}
 		}
 	});

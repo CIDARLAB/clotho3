@@ -112,7 +112,7 @@ angular.module('ui.bootstrap-decorate', ['ui.bootstrap'])
 });
 
 
-angular.module('clotho.interface').controller('MessageBoxController', function($scope, $modalInstance, model){
+angular.module('ui.bootstrap-decorate').controller('MessageBoxController', function($scope, $modalInstance, model){
 	$scope.title = model.title;
 	$scope.message = model.message;
 	$scope.buttons = model.buttons;
@@ -121,7 +121,7 @@ angular.module('clotho.interface').controller('MessageBoxController', function($
 	};
 });
 
-angular.module('clotho.interface').controller('DialogLoginController', function($scope, $modalInstance, Clotho){
+angular.module('ui.bootstrap-decorate').controller('DialogLoginController', function($scope, $modalInstance, Clotho){
 	$scope.close = function(res){
 		$modalInstance.close(res);
 	};
@@ -143,7 +143,7 @@ angular.module('clotho.interface').controller('DialogLoginController', function(
 	};
 });
 
-angular.module('clotho.interface').controller('ServerAlertController', function($scope, $modalInstance, model, Clotho){
+angular.module('ui.bootstrap-decorate').controller('ServerAlertController', function($scope, $modalInstance, model, Clotho){
 	$scope.title = model.title;
 	$scope.message = model.message;
 	$scope.buttons = model.buttons;
@@ -159,7 +159,7 @@ angular.module('clotho.interface').controller('ServerAlertController', function(
 
 });
 
-angular.module('clotho.interface').controller('DialogShareController', function($scope, $modalInstance, model, $location){
+angular.module('ui.bootstrap-decorate').controller('DialogShareController', function($scope, $modalInstance, model, $location){
 	$scope.close = function(result){
 		$modalInstance.close(result);
 	};
@@ -208,7 +208,7 @@ angular.module('clotho.interface').controller('DialogShareController', function(
 });
 
 
-angular.module('clotho.interface').controller('VideoDialogController', function($scope, $modalInstance, model){
+angular.module('ui.bootstrap-decorate').controller('VideoDialogController', function($scope, $modalInstance, model){
 	$scope.videoId = model.videoId;
 	$scope.videoParams = model.videoParams;
 	$scope.close = function(res){
@@ -216,6 +216,6 @@ angular.module('clotho.interface').controller('VideoDialogController', function(
 	};
 });
 
-angular.module('clotho.interface').controller('DialogEditController', function($scope, $modalInstance, model){
+angular.module('ui.bootstrap-decorate').controller('DialogEditController', function($scope, $modalInstance, model){
 	$scope.uuid = model.uuid;
 });
