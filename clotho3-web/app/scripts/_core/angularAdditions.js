@@ -1,8 +1,10 @@
 //angular components needed, add a couple methods to prototype
 angular.module('clotho.angularAdditions', [])
 	.config(function() {
+
 		//angular function extensions
 		var ext = {};
+
 		/**
 		 * @name angular.isEmpty
 		 * @description Determines whether object is empty.
@@ -35,6 +37,7 @@ angular.module('clotho.angularAdditions', [])
 			}
 			return false;
 		};
+
 		/**
 		 * @name angular.isScope
 		 * @description Determines whether an object is an angular $scope
@@ -44,6 +47,7 @@ angular.module('clotho.angularAdditions', [])
 		ext.isScope = function isScope(obj) {
 			return !!obj && angular.isFunction(obj.$evalAsync) && angular.isFunction(obj.$watch);
 		};
+
 		/**
 		 * @name angular.once
 		 * @description Creates a function that is restricted to execute `func` once. Repeat calls to the function will return the value of the first call. The `func` is executed with the `this` binding of the created function.
@@ -95,11 +99,21 @@ angular.module('clotho.angularAdditions', [])
 			return result;
 		};
 
+		/**
+		 * @name angular.map
+		 * @description Apply a function to each element of an array or values of an object, returning a new Array / Object.
+		 * @param {Array|Object} obj Object to iterate over
+		 * @param {Function} iterator Function to call each time -- function (value, key|index, obj) {}
+		 * @param {Object} context `this` context
+		 * @returns {Array|Object} New array with results of each function call, or Object with same keys and mapped values.
+		 */
 		ext.map = function map(obj, iterator, context) {
-			var results = [];
+			var results = angular.isArray(obj) ? [] : {};
 			angular.forEach(obj, function(value, index, list) {
 				if (angular.isFunction(iterator)) {
-					results.push(iterator.call(context, value, index, list));
+					angular.isArray(results) ?
+						results.push(iterator.call(context, value, index, list)) :
+						results[index] = iterator.call(context, value, index, list)
 				}
 			});
 			return results;
