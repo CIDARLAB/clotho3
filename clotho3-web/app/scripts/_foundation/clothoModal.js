@@ -18,7 +18,7 @@ angular.module('clotho.clothoDirectives')
  <clotho-modal title="clotho.show" id="<WIDGET_ID>">
  </clotho-modal>
  */
-	.directive('clothoModal', function ($parse, $timeout) {
+	.directive('clothoModal', function ($parse, $timeout, hotkeys) {
 
 		return {
 			restrict : 'E',
@@ -28,8 +28,8 @@ angular.module('clotho.clothoDirectives')
 			scope: {
 				id : '@?',
 				open : '=?',
-				onClose : '=?',
-				onOpen : '=?',
+				onClose : '&?',
+				onOpen : '&?',
 				title : '@?'
 			},
 			controller : function ($scope, $element, $attrs) {
@@ -37,6 +37,7 @@ angular.module('clotho.clothoDirectives')
 				$scope.$close = function (event) {
 					if ($scope.open) {
 						$scope.open = false;
+						hotkeys.del('esc');
 
 						$timeout(function () {
 							angular.isFunction($scope.onClose) && $scope.onClose();
@@ -46,19 +47,20 @@ angular.module('clotho.clothoDirectives')
 			},
 			link: function (scope, element, attrs, nullCtrl, transclude) {
 
-				//if the open attr is present, tie a watch, otherwise just show at compile
-				if (attrs.open) {
-					scope.$watch('open', function (newval, oldval) {
-						if (!!newval) {
-							scope.open = true;
-							angular.isFunction(scope.onOpen) && scope.onOpen();
-						}
-					});
+				//if the open attr is not present just show it initially
+				if (!attrs.open) {
+					$timeout(function () {
+						scope.open  = true;
+					})
 				}
-				else {
-					scope.open = true;
-					angular.isFunction(scope.onOpen) && scope.onOpen();
-				}
+
+				scope.$watch('open', function (newval, oldval) {
+					if (!!newval) {
+						scope.open = true;
+						hotkeys.add('esc', scope.$close);
+						angular.isFunction(scope.onOpen) && scope.onOpen();
+					}
+				});
 			}
 		}
 	});

@@ -81,7 +81,7 @@
 
                 <button class="btn btn-default" ng-click="modalShowOpen = true"> Open clotho.show() Modal</button>
 
-                <clotho-modal id="813579135" open="modalShowOpen">
+                <clotho-modal id="813579135" open="modalShowOpen" on-open="openCallback()" on-close="closeCallback()">
                     <p>This is widget #813579135 (this paragraph is transcluded content)</p>
                 </clotho-modal>
             </div>

@@ -34,4 +34,12 @@ angular.module('clotho.webapp')
 		};
 
 		$scope.someValue = 'from parent controller not passed down';
+
+		$scope.openCallback = function () {
+			console.log('modal openeed');
+		};
+
+		$scope.closeCallback = function() {
+			console.log('modal closed');
+		};
   });
