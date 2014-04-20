@@ -211,7 +211,6 @@ angular.module('clotho.clothoDirectives')
 				attrs.$observe( prefix+'Id', function ( val, oldval ) {
 					//verify
 					if (!!val && (!oldval || val != oldval)) {
-						console.log(val);
 						Clotho.get(val).then(function (retrievedSharable) {
 							scope.tt_sharable = ClothoSchemas.pruneToBasicFields(retrievedSharable);
 						});
