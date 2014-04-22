@@ -1,7 +1,7 @@
 //todo - handle loading of markdown, codemirror, etc.
 //todo - handle initial coloring of code based on language
 
-angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas) {
+angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas, $timeout) {
 
 	$scope.langTypes = [
 		{name:'JavaScript', value:'JAVASCRIPT'},
@@ -37,15 +37,16 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		});
 	});
 
+	// todo - this will likely not be practical after release
 	$scope.clothoFunctions = [];
-	Clotho.query({schema: "Function"}).then(function(result) {
+	Clotho.query(ClothoSchemas.sharableTypes.Function.schema).then(function(result) {
 		$scope.clothoFunctions = result;
 	});
 
-
-
 	$scope.addArg = function() {
-		if (angular.isEmpty($scope.sharable.args)) {$scope.sharable.args = [];}
+		if (angular.isEmpty($scope.sharable.args)) {
+			$scope.sharable.args = [];
+		}
 		$scope.sharable.args.push({"type" : "", "name" : ""});
 	};
 
@@ -125,13 +126,16 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		// HACK to have the codemirror instance in the scope...
 		onLoad : function(_cm){
 			$scope.$watch('sharable.language', function(newlang, oldlang) {
-				if (!!newlang && newlang != oldlang) {
+				if (!!newlang) {
 					var mode = newlang.toLowerCase();
 
 					codemirrorLoader.loadLanguage(mode).then(function () {
 						// HACK to catch java case
 						mode = (mode == 'java') ? 'text/x-java' : mode;
-						_cm.setOption("mode", mode);
+						//give it time to register
+						$timeout(function () {
+							_cm.setOption("mode", mode);
+						}, 500);
 					});
 				}
 			});

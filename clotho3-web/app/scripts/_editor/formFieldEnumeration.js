@@ -33,7 +33,7 @@ angular.module('clotho.editor')
 				if (type == '?') field.type == 'text';
 				var required = field.required ? "required" : "";
 
-				var htmlText_pre = '<form-field name="' + field.name + '" removable-field="' + field.name + '">';
+				var htmlText_pre = '<form-field name="' + field.name + '" removable-field="' + field.name + '" horizontal="formHorizontal">';
 				var htmlText_post = '</form-field>';
 				var inputText;
 
@@ -110,6 +110,8 @@ angular.module('clotho.editor')
 
 			},
 			link: function (scope, element, attrs) {
+
+				scope.formHorizontal = scope.$parent.formHorizontal;
 
 				if (angular.isUndefined(scope.fields) && angular.isUndefined(scope.schema) && angular.isUndefined(scope.sharable)) {
 					element.html('no information passed');

@@ -9,7 +9,7 @@ angular.module('clotho.editor')
  * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName. Can pass hide-label to hide label and just show the element and help, but will be overriden for input types that surround the input with the label (e.g. checkbox, radio)
  *
  * @example
- <form-field name="Long Input" help="Enter a short biography about yourself" hide-label="false" removable="true">
+ <form-field name="Long Input" help="Enter a short biography about yourself"  removable="true" horizontal="true">
  <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography"></textarea>
  </form-field>
 
@@ -23,7 +23,7 @@ angular.module('clotho.editor')
  </div>
 
  */
-	.directive('formField', function () {
+	.directive('formField', function ($parse) {
 
 		var template = '<div class="form-group" ng-form ng-transclude>' +
 			'</div>';
@@ -44,8 +44,9 @@ angular.module('clotho.editor')
 
 				var passedName = attrs.name,
 					passedHelp = attrs.help,
+					horizontal = $parse(attrs.horizontal)(scope),
 					removable = attrs.removableField,
-					hideLabel = attrs.hideLabel,
+					labelAdded = false,
 					childElement = element.children();
 
 				if (childElement.length !== 1) {
@@ -57,7 +58,7 @@ angular.module('clotho.editor')
 				var elemType = childElement.attr('type');
 
 				//regex for element types that are special
-				var regWrapElementInType = /checkbox|radio/gi;
+				var regWrapElementInType = /checkbox|radio|button/gi;
 				var regNoFormCtrlClass = /file|checkbox|radio/gi;
 
 				//if didn't set element id, then generate and set ourselves
@@ -66,23 +67,39 @@ angular.module('clotho.editor')
 					childElement.attr('id', elemId);
 				}
 
-				//child class setup
+				//add form-control class to child
 				if (!regNoFormCtrlClass.test(elemType)){
 					childElement.addClass('form-control');
 				}
 
-				//label
+				//create label
 				var label = angular.element('<label class="control-label" for="'+elemId+'">'+
 					( elemType === 'radio' ? childElement.val() : passedName) +
 					'</label>');
 
-				//wrap with bootstrap class if appropriate
+				//wrap with bootstrap class if appropriate (e.g. checkbox, radio)
 				if (regWrapElementInType.test(elemType)) {
-					label.prepend(childElement);
 					var wrapper = angular.element('<div class="'+elemType+'"></div>');
-					element.append(wrapper);
-					hideLabel = false;
+					/*
+					//for normal bootstrap way of handling, but leaves nothing in left column as label...
+					label.prepend(childElement);
+					childElement = wrapper.append(label);
+					labelAdded = true;
+					*/
+					wrapper.append(childElement);
+					childElement = wrapper;
 				}
+
+				//if horizontal, add label to side and wrap input
+				if (horizontal) {
+					label.addClass('col-sm-2');
+					var wrapper = angular.element('<div class="col-sm-10"></div>');
+					wrapper.append(childElement);
+				} else {
+
+				}
+
+				element.append(wrapper);
 
 				/*
 				//note - not supporting field removal for now
@@ -98,7 +115,7 @@ angular.module('clotho.editor')
 			 */
 
 				//add label if pass name
-				if (passedName && !hideLabel) {
+				if (passedName && !labelAdded) {
 					element.prepend(label);
 				}
 

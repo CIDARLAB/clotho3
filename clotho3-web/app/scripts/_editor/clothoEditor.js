@@ -48,7 +48,8 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			 **********/
 
 			// should check for custom template and use if exists. otherwise, do the form generation for the generic
-			$scope.getPartialAndCompile = function (type, obj) {
+			//note - assumes scope already has sharable bound for compilation
+			$scope.getPartialAndCompile = function (type) {
 				$scope.showJsonEditor = false;
 
 				//todo - handle instance-specific templates
@@ -104,7 +105,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 				getObj.then(function (result) {
 					$scope.sharable = result;
-					$scope.getPartialAndCompile(ClothoSchemas.determineType(result), result);
+					$scope.getPartialAndCompile(ClothoSchemas.determineInstanceType(result));
 				});
 
 			};
@@ -141,6 +142,8 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 					/* config */
 
+					scope.formHorizontal = scope.$eval(iAttrs.formHorizontal);
+
 					scope.formCtrl = controllers[1];
 
 					scope.edit = function () {
@@ -152,14 +155,15 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					};
 
 					scope.reset = function () {
-						scope.formCtrl.$setPristine();
 						Clotho.get(scope.id).then(function (result) {
 							scope.sharable = result;
+							scope.formCtrl.$setPristine();
 						});
 					};
 
 					scope.save = function () {
 						if (!scope.isValidJson(scope.sharable)) {
+							//this shouldn't happen often... JSON editor should not propagate to model until valid
 							Clotho.alert('Your JSON is invalid... please fix it');
 						} else {
 							Clotho.set(scope.sharable);
