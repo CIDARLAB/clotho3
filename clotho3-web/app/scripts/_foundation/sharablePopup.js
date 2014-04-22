@@ -69,7 +69,7 @@ angular.module('clotho.clothoDirectives')
 		return {
 			restrict : 'EA',
 			replace : true,
-			scope : true,
+			scope : {},
 			controller : function ($scope, $element, $attrs) {
 
 			},
@@ -164,6 +164,9 @@ angular.module('clotho.clothoDirectives')
 
 					createPopup();
 
+					// Set the initial positioning.
+					popup.css({ top: 0, left: 0, display: 'block' });
+
 					//not visible anyway
 					$animate.enter(popup, bodyElement , angular.element(bodyElement[0].lastChild), function () {});
 
@@ -171,9 +174,7 @@ angular.module('clotho.clothoDirectives')
 
 					// And show the popup.
 					scope.popupOpen = true;
-					scope.$digest(); // digest required as $apply is not called
-
-					hotkeys.add('esc', hide);
+					//scope.$digest(); // digest required as $apply is not called
 
 					// Return positioning function as promise callback for correct
 					// positioning after draw.
@@ -185,20 +186,25 @@ angular.module('clotho.clothoDirectives')
 					if (scope.popupOpen && popup) {
 						$animate.leave(popup, function () {
 							scope.popupOpen = false;
+							removePopup();
 						});
 					}
-					hotkeys.del('esc');
 				}
 
 				function createPopup() {
-					if (!popup) {
-						popup = popupLinker(scope);
+					if (popup) {
+						removePopup();
+					}
+					popup = popupLinker(scope);
 
-						// Set the initial positioning.
-						popup.css({ top: 0, left: 0, display: 'block' });
+					// Get contents rendered into the popup
+					scope.$digest();
+				}
 
-						// Get contents rendered into the popup
-						scope.$digest();
+				function removePopup () {
+					if (popup) {
+						popup.remove();
+						popup = null;
 					}
 				}
 
@@ -222,6 +228,7 @@ angular.module('clotho.clothoDirectives')
 						element.unbind( triggers.show, showPopupBind );
 						element.unbind( triggers.hide, hidePopupBind );
 					}
+					hotkeys.del('esc');
 				};
 
 				attrs.$observe( prefix+'Trigger', function ( val ) {
@@ -235,6 +242,8 @@ angular.module('clotho.clothoDirectives')
 						element.bind( triggers.show, showPopupBind );
 						element.bind( triggers.hide, hidePopupBind );
 					}
+
+					hotkeys.add('esc', hide);
 
 					hasRegisteredTriggers = true;
 				});
@@ -256,8 +265,9 @@ angular.module('clotho.clothoDirectives')
 
 				// Make sure popup is destroyed and removed.
 				scope.$on('$destroy', function onDestroyPopup() {
+					console.log('parent destroy');
 					unregisterTriggers();
-					hide();
+					removePopup();
 					popup = null;
 				});
 			}
@@ -278,11 +288,23 @@ angular.module('clotho.clothoDirectives')
 				scope.$watch('sharableId', function ( val, oldval ) {
 					if (!!val) {
 						Clotho.get(val).then(function (retrievedSharable) {
+							scope.fullSharable = retrievedSharable;
 							scope.sharable = ClothoSchemas.pruneToBasicFields(retrievedSharable);
 							scope.type = ClothoSchemas.determineInstanceType(retrievedSharable);
+
+							if (ClothoSchemas.isSchema(retrievedSharable)) {
+								scope.isSchema = true;
+								ClothoSchemas.downloadSchemaDependencies(retrievedSharable).then(function (finalSchema) {
+									scope.schema = finalSchema;
+								});
+							}
 						});
 					}
 				});
+
+				scope.$on('$destroy', function () {
+					console.log('destroyed');
+				})
 			}
 		};
 	});

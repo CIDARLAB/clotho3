@@ -51,8 +51,12 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 	};
 
 	$scope.addDep = function() {
-		if (angular.isEmpty($scope.sharable.dependencies)) {$scope.sharable.dependencies = [];}
-		$scope.sharable.dependencies.push("");
+		if (angular.isEmpty($scope.sharable.dependencies)) {
+			$scope.sharable.dependencies = [];
+		}
+		if ($scope.newDependencyModel != '') {
+			$scope.sharable.dependencies.push($scope.newDependencyModel);
+		}
 	};
 
 	$scope.addTest = function() {

@@ -7,7 +7,7 @@ angular.module('clotho.editor')
  * - schema: pass a schema to generate a list of fields from the schema
  * - sharable: pass a sharable (containing a schema) to generate a form containing its fields, and the fields of its schema
  */
-	.directive('formFieldEnumeration', function (Clotho, ClothoUtils, $q, $compile) {
+	.directive('formFieldEnumeration', function (Clotho, ClothoSchemas, $q, $compile) {
 
 		function generateDynamicForm (fields) {
 			var fulltext = "";
@@ -119,7 +119,7 @@ angular.module('clotho.editor')
 				}
 
 				function updateWithSchema (schema) {
-					return ClothoUtils.downloadSchemaDependencies(schema)
+					return ClothoSchemas.downloadSchemaDependencies(schema)
 					.then(function(compiledSchema) {
 						scope.generateFields({schema : compiledSchema});
 					});

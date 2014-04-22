@@ -17,19 +17,23 @@
 
             <div class="form-group">
                 <label class="control-label col-sm-2">Dependencies</label>
-                <div ng-repeat="param in sharable.dependencies" class="col-sm-9">
+                <div class="col-sm-10">
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="param">
+                        <input type="text" class="form-control" ng-model="newDependencyModel">
                         <span class="input-group-btn">
-                            <button class="btn btn-warning" ng-click="sharable.dependencies.splice($index, 1)">&times;</button>
+                            <button class="btn btn-default" ng-click="addDep()"><i class="glyphicon glyphicon-plus"></i></button>
                         </span>
                     </div>
 
+                    <div class="input-group" ng-repeat="param in sharable.dependencies">
+                        <input type="text" class="form-control" ng-model="param">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-click="sharable.dependencies.splice($index, 1)">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
-                <div class="col-sm-1">
-                    <button class="btn btn-default pull-left" ng-click="addDep()"><i class="glyphicon glyphicon-plus"></i></button>
-                </div>
-
             </div>
 
             <div class="panel panel-default">
@@ -47,12 +51,14 @@
                             <select ng-model="param.type" class="form-control" ng-options="c.name as c.name group by c.category for c in paramTypes"></select>
                         </div>
 
-                        <div class="col-sm-8">
-                            <input type="text" ng-model="param.name" class="form-control">
-                        </div>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" ng-model="param.name" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default pull-left" ng-click="sharable.args.splice($index, 1)"><i class="glyphicon glyphicon-remove"></i></button>
+                                </span>
+                            </div>
 
-                        <div class="col-sm-1">
-                            <button class="btn btn-warning pull-left" ng-click="sharable.args.splice($index, 1)">&times;</button>
                         </div>
                     </div>
                 </div>

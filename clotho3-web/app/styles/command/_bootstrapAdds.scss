@@ -31,3 +31,12 @@ pre.transparent {
 .popover.large {
   max-width: 600px;
 }
+
+.popover .popover-footer {
+  display: block;
+  background: #f7f7f7;
+  border-top: 1px solid #ebebeb;
+  border-radius: 0 0 5px 5px;
+  padding: 8px 14px;
+  line-height: 18px;
+}
