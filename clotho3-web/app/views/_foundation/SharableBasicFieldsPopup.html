@@ -1,8 +1,15 @@
-<div class="popover {{placement}}">
+<div class="popover {{placement}} large">
     <div class="arrow"></div>
 
     <div class="popover-inner">
-        <h3 class="popover-title">{{sharable.name }}</h3>
-        <pre class="popover-content transparent">{{sharable | json}}</pre>
+        <h3 class="popover-title">{{sharable.name }} <small class="label pull-right" ng-style="{'background-color' : colorType(type)}">{{type}}</small></h3>
+        <div class="popover-content form-horizontal">
+            <div class="form-group" ng-repeat="(key, value) in sharable" ng-show="value" style="margin: 0 0 5px;">
+                <label class="control-label col-sm-3">{{key}}</label>
+                <div class="col-sm-9">
+                    <p class="form-control-static">{{value}}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

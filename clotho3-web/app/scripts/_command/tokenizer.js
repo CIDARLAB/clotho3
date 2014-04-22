@@ -456,14 +456,16 @@ angular.module('clotho.commandbar')
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
-				element.on('click', function (evt) {
-					if (scope.tokenActive) {
-						console.log('sharable object', scope.fullSharable);
-						scope.tokenCollection.unsetActive(scope.tokenIndex);
-					} else {
-						scope.tokenCollection.setActive(scope.tokenIndex);
-					}
-				});
+				if (scope.tokenCollection) {
+					element.on('click', function (evt) {
+						if (scope.tokenActive) {
+							console.log('sharable object', scope.fullSharable);
+							scope.tokenCollection.unsetActive(scope.tokenIndex);
+						} else {
+							scope.tokenCollection.setActive(scope.tokenIndex);
+						}
+					});
+				}
 
 				scope.removeToken = function (evt) {
 					evt.preventDefault();

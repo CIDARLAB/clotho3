@@ -14,34 +14,38 @@ angular.module('clotho.foundation')
 			"Instance" : {
 				readable : "Instance",
 				editor_template_url : 'views/_editor/sharable.html',
+				schema: false,
 				scaffold : {
-					schema: false,
 					language: "JSONSCHEMA"
-				}
+				},
+				color : '#4488cc'
 			},
 			"Function": {
 				readable : "Function",
 				editor_template_url : 'views/_editor/function.html',
+				schema: "org.clothocad.core.datums.Function",
 				scaffold : {
-					schema: "org.clothocad.core.datums.Function",
 					language: "JSONSCHEMA"
-				}
+				},
+				color : '#66bb66'
 			},
 			"Schema": {
 				readable : "Schema",
 				editor_template_url : 'views/_editor/schema.html',
+				schema: SCHEMA_CLOTHOSCHEMA,
 				scaffold : {
-					schema: SCHEMA_CLOTHOSCHEMA,
 					language: "JSONSCHEMA"
-				}
+				},
+				color : '#eeaa55'
 			},
 			"View" :  {
 				readable : "View",
 				editor_template_url : 'views/_editor/view.html',
+				schema: "org.clothocad.core.datums.View",
 				scaffold : {
-					schema: "org.clothocad.core.datums.View",
 					language: "JSONSCHEMA"
-				}
+				},
+				color : '#dd33dd'
 			}
 		};
 
@@ -86,12 +90,37 @@ angular.module('clotho.foundation')
 		];
 
 		var primitiveToJava = {
-			"string" : "java.lang.String",
-			"number" : "java.lang.Long",
 			"boolean" : "java.lang.Boolean",
+			"number" : "java.lang.Long",
 			"object" : "java.util.HashMap",
-			"array" : "java.util.List"
+			"array" : "java.util.List",
+			"string" : "java.lang.String"
 		};
+
+		//determine a JSON field / javascript variable's type
+		function determineFieldType (value) {
+			if (value === null) {
+				return 'null';
+			} else if (angular.isBoolean(value)) {
+				return 'boolean';
+			} else if (angular.isNumber(value)) {
+				return 'number';
+			} else if (angular.isArray(value)) {
+				return 'array';
+			} else if (angular.isObject(value)) {
+				return 'object';
+			} else {
+				return 'string';
+			}
+		}
+
+		function colorByType (type) {
+			if (sharableTypes[type]) {
+				return sharableTypes[type].color;
+			} else {
+				return '#31b0d5';
+			}
+		}
 
 		/* QUERIES */
 
@@ -127,15 +156,15 @@ angular.module('clotho.foundation')
 		}
 
 		function isFunction (sharable) {
-			return determineSchema(sharable) == sharableTypes.Function.scaffold.schema;
+			return determineSchema(sharable) == sharableTypes.Function.schema;
 		}
 
 		function isView (sharable) {
-			return determineSchema(sharable) == sharableTypes.View.scaffold.schema;
+			return determineSchema(sharable) == sharableTypes.View.schema;
 		}
 
 		//determines main type: Instance, Function, View, Schema
-		function determineType (sharable) {
+		function determineInstanceType (sharable) {
 			if (isSchema(sharable)) {
 				return "Schema";
 			} else if (isFunction(sharable)) {
@@ -151,7 +180,7 @@ angular.module('clotho.foundation')
 		function createScaffold (schemaName) {
 			var scaffold;
 			if (sharableTypes[schemaName]) {
-				scaffold = sharableTypes[schemaName].scaffold;
+				scaffold = angular.extend({schema : sharableTypes[schemaName].schema }, sharableTypes[schemaName].scaffold);
 			} else {
 				scaffold = angular.extend({schema : schemaName}, sharableTypes.Instance.scaffold)
 			}
@@ -180,9 +209,11 @@ angular.module('clotho.foundation')
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,
 
-			determineType : determineType,
+			determineInstanceType : determineInstanceType,
+			determineFieldType : determineFieldType,
 			determineSchema : determineSchema,
 			createScaffold : createScaffold,
+			colorByType : colorByType,
 
 			sharableBasicFields : sharableBasicFields,
 			pruneToBasicFields : pruneToBasicFields

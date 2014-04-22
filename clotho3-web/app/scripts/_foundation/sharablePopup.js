@@ -34,7 +34,7 @@ angular.module('clotho.clothoDirectives')
 			};
 		};
 
-		// The default options tooltip and popover.
+		// The default options popup and popover.
 		var defaultOptions = {
 			placement: 'top',
 			animation: true,
@@ -61,8 +61,8 @@ angular.module('clotho.clothoDirectives')
 
 		var template =
 			'<div sharable-popup-inner '+
-			'sharable="tt_sharable" '+
-			'placement="tt_placement" '+
+			'sharable-id="sharable_id" '+
+			'placement="{{popup_placement}}" '+
 			'>'+
 			'</div>';
 
@@ -79,127 +79,126 @@ angular.module('clotho.clothoDirectives')
 					return;
 				}
 
-				var tooltip,
-					tooltipLinker = $compile( template),
+				var popup,
+					popupLinker = $compile(template),
 					triggers,
 					hasRegisteredTriggers = false;
 
-				function positionTooltip () {
+				function positionPopup () {
 					var position,
-						ttWidth,
-						ttHeight,
-						ttPosition;
+						popupWidth,
+						popupHeight,
+						popupPosition;
 					// Get the position of the directive element.
 					position = bodyOffset( element );
 
-					// Get the height and width of the tooltip so we can center it.
-					ttWidth = tooltip.prop( 'offsetWidth' );
-					ttHeight = tooltip.prop( 'offsetHeight' );
+					// Get the height and width of the popup so we can center it.
+					popupWidth = popup.prop( 'offsetWidth' );
+					popupHeight = popup.prop( 'offsetHeight' );
 
-					// Calculate the tooltip's top and left coordinates to center it with
+					// Calculate the popup's top and left coordinates to center it with
 					// this directive.
-					switch ( scope.tt_placement ) {
+					switch ( scope.popup_placement ) {
 						case 'right':
-							ttPosition = {
-								top: position.top + position.height / 2 - ttHeight / 2,
+							popupPosition = {
+								top: position.top + position.height / 2 - popupHeight / 2,
 								left: position.left + position.width
 							};
 							break;
 						case 'top':
-							ttPosition = {
-								top: position.top - ttHeight,
-								left: position.left + position.width / 2 - ttWidth / 2
+							popupPosition = {
+								top: position.top - popupHeight,
+								left: position.left + position.width / 2 - popupWidth / 2
 							};
 							break;
 						case 'left':
-							ttPosition = {
-								top: position.top + position.height / 2 - ttHeight / 2,
-								left: position.left - ttWidth
+							popupPosition = {
+								top: position.top + position.height / 2 - popupHeight / 2,
+								left: position.left - popupWidth
 							};
 							break;
-						default:
-							ttPosition = {
+						case 'bottom':
+							popupPosition = {
 								top: position.top + position.height,
-								left: position.left + position.width / 2 - ttWidth / 2
+								left: position.left + position.width / 2 - popupWidth / 2
 							};
 							break;
+						default : {
+							popupPosition = {
+								top: position.top + position.height,
+								left: position.left
+							};
+							break;
+						}
 					}
 
-					ttPosition.top += 'px';
-					ttPosition.left += 'px';
+					popupPosition.top += 'px';
+					popupPosition.left += 'px';
 
 					// Now set the calculated positioning.
-					tooltip.css( ttPosition );
+					popup.css( popupPosition );
 				}
 
-				function toggleTooltipBind () {
-					if ( !scope.tt_isOpen ) {
-						showTooltipBind();
+				function togglePopupBind () {
+					if ( !scope.popupOpen ) {
+						showPopupBind();
 					} else {
-						hideTooltipBind();
+						hidePopupBind();
 					}
 				}
 
-				// Show the tooltip
+				// Show the popup
 				// double function to position correctly, see show return
-				function showTooltipBind() {
+				function showPopupBind() {
 					show()();
 				}
 
-				function hideTooltipBind () {
+				function hidePopupBind () {
 					scope.$apply(function () {
 						hide();
 					});
 				}
 
-				// Show the tooltip popup element.
+				// Show the popup element.
 				function show() {
 
-					createTooltip();
-
-					// Set the initial positioning.
-					tooltip.css({ top: 0, left: 0, display: 'block' });
+					createPopup();
 
 					//not visible anyway
-					$animate.enter(tooltip, bodyElement , angular.element(bodyElement[0].lastChild), function () {});
+					$animate.enter(popup, bodyElement , angular.element(bodyElement[0].lastChild), function () {});
 
-					positionTooltip();
+					positionPopup();
 
-					// And show the tooltip.
-					scope.tt_isOpen = true;
+					// And show the popup.
+					scope.popupOpen = true;
 					scope.$digest(); // digest required as $apply is not called
 
-					hotkeys.add('esc', hideTooltipBind);
+					hotkeys.add('esc', hide);
 
 					// Return positioning function as promise callback for correct
 					// positioning after draw.
-					return positionTooltip;
+					return positionPopup;
 				}
 
-				// Hide the tooltip popup element.
+				// Hide the popup element.
 				function hide() {
-					// First things first: we don't show it anymore.
-					scope.tt_isOpen = false;
-					removeTooltip();
+					if (scope.popupOpen && popup) {
+						$animate.leave(popup, function () {
+							scope.popupOpen = false;
+						});
+					}
 					hotkeys.del('esc');
 				}
 
-				function createTooltip() {
-					// There can only be one tooltip element per directive shown at once.
-					if (tooltip) {
-						removeTooltip();
-					}
-					tooltip = tooltipLinker(scope);
+				function createPopup() {
+					if (!popup) {
+						popup = popupLinker(scope);
 
-					// Get contents rendered into the tooltip
-					scope.$digest();
-				}
+						// Set the initial positioning.
+						popup.css({ top: 0, left: 0, display: 'block' });
 
-				function removeTooltip() {
-					if (tooltip) {
-						$animate.leave(tooltip, function () {
-							tooltip = null;
-						});
+						// Get contents rendered into the popup
+						scope.$digest();
 					}
 				}
 
@@ -207,28 +206,21 @@ angular.module('clotho.clothoDirectives')
 
 				element.css({cursor : 'pointer'});
 
-				scope.tt_sharable = "loading...";
+				scope.sharable_id = "loading...";
 				attrs.$observe( prefix+'Id', function ( val, oldval ) {
-					//verify
 					if (!!val && (!oldval || val != oldval)) {
-						Clotho.get(val).then(function (retrievedSharable) {
-							scope.tt_sharable = ClothoSchemas.pruneToBasicFields(retrievedSharable);
-						});
+						scope.sharable_id = val;
 					}
 				});
 
-				attrs.$observe( prefix+'Title', function ( val ) {
-					scope.tt_title = val;
-				});
-
 				attrs.$observe( prefix+'Placement', function ( val ) {
-					scope.tt_placement = angular.isDefined( val ) ? val : 'bottom';
+					scope.popup_placement = angular.isDefined( val ) ? val : '';
 				});
 
 				var unregisterTriggers = function() {
 					if (hasRegisteredTriggers) {
-						element.unbind( triggers.show, showTooltipBind );
-						element.unbind( triggers.hide, hideTooltipBind );
+						element.unbind( triggers.show, showPopupBind );
+						element.unbind( triggers.hide, hidePopupBind );
 					}
 				};
 
@@ -238,46 +230,59 @@ angular.module('clotho.clothoDirectives')
 					triggers = getTriggers( val );
 
 					if ( triggers.show === triggers.hide ) {
-						element.bind( triggers.show, toggleTooltipBind );
+						element.bind( triggers.show, togglePopupBind );
 					} else {
-						element.bind( triggers.show, showTooltipBind );
-						element.bind( triggers.hide, hideTooltipBind );
+						element.bind( triggers.show, showPopupBind );
+						element.bind( triggers.hide, hidePopupBind );
 					}
 
 					hasRegisteredTriggers = true;
 				});
 
 				//start closed unless specify attribute
-				scope.tt_isOpen = angular.isDefined( attrs[prefix + 'StartOpen'] );
-				if (scope.tt_isOpen) {
+				//scope.popupOpen = angular.isDefined( attrs[prefix + 'StartOpen'] );
+				if (scope.popupOpen) {
 					//todo
 				}
 
-				// if a tooltip is attached to <body> we need to remove it on
+				// if a popup is attached to <body> we need to remove it on
 				// location change as its parent scope will probably not be destroyed
 				// by the change.
-				scope.$on('$locationChangeSuccess', function closeTooltipOnLocationChangeSuccess () {
-					if ( scope.tt_isOpen ) {
+				scope.$on('$locationChangeSuccess', function closePopupOnLocationChangeSuccess () {
+					if ( scope.popupOpen ) {
 						hide();
 					}
 				});
 
-				// Make sure tooltip is destroyed and removed.
-				scope.$on('$destroy', function onDestroyTooltip() {
+				// Make sure popup is destroyed and removed.
+				scope.$on('$destroy', function onDestroyPopup() {
 					unregisterTriggers();
-					removeTooltip();
+					hide();
+					popup = null;
 				});
 			}
 		}
 	})
-	.directive('sharablePopupInner', function () {
+	.directive('sharablePopupInner', function (Clotho, ClothoSchemas) {
 		return {
 			restrict: 'EA',
 			replace: true,
 			scope: {
-				sharable: '=',
-				placement: '='
+				sharableId: '=',
+				placement: '@'
 			},
-			templateUrl: 'views/_foundation/sharableBasicFieldsPopup.html'
+			templateUrl: 'views/_foundation/sharableBasicFieldsPopup.html',
+			link : function (scope, element, attrs, nullCtrl) {
+				scope.colorType = ClothoSchemas.colorByType;
+
+				scope.$watch('sharableId', function ( val, oldval ) {
+					if (!!val) {
+						Clotho.get(val).then(function (retrievedSharable) {
+							scope.sharable = ClothoSchemas.pruneToBasicFields(retrievedSharable);
+							scope.type = ClothoSchemas.determineInstanceType(retrievedSharable);
+						});
+					}
+				});
+			}
 		};
 	});
