@@ -93,7 +93,7 @@ public class ServerSideAPI {
         this.completer = new AutoComplete(persistor);
     }
 
-    public final List<String> autocomplete(String userText){
+    public final List<Map> autocomplete(String userText){
         //This is needed because the subString is in the format {query=[subString]}
         userText = userText.substring(7, userText.length()-1);
         
@@ -105,10 +105,11 @@ public class ServerSideAPI {
         String lastWord = words[words.length-1];
         
         //Fetch any words in the Mind's <String,String> Trie
-        List<String> comps = mind.getMindCompletions(lastWord);
+        //List<Map> comps = mind.getMindCompletions(lastWord);
+        List<Map> comps = new ArrayList<Map>();
         
         //Add the word suggestions from the global Trie
-        List<String> globalComps = completer.getCompletions(lastWord);
+        List<Map> globalComps = completer.getCompletions(lastWord);
         comps.addAll(globalComps);
         
         return comps;
@@ -141,16 +142,25 @@ public class ServerSideAPI {
         //Scan through each token and pull out unique ids
         for(String token : tokens) {
             //See if the Mind has a unique word for that token
+            System.out.println("contacting mind for sharbales " );
             String uuid = mind.getSharableId(token);
+            System.out.println("uuuid from Mind is: " + uuid);
+            
             if(uuid!=null) {
                 ids.add(uuid);
                 continue;
             }
             
             //See if the global Trie has a unique word for that token
-            List<String> completions = completer.getCompletions(token);
+            List<Map> completions = completer.getCompletions(token);
+            
+            System.out.println("completions and token are " + token + " " + completions.size());
+            for(Map map : completions) {
+                System.out.println("for token " + token + " I have " + map.toString());
+            }
+            
             if(completions.size()==1) {
-                uuid = completions.get(0);
+                uuid = (String) completions.get(0).get("id");
                 ids.add(uuid);
                 continue;
             }

@@ -59,7 +59,8 @@ public class AutoComplete {
             HashMap temp = new HashMap();
             temp.put("name",word);
             temp.put("uuid", map.get(word));
-            temp.put("text", "This is the text");
+            temp.put("text", word);
+            temp.put("type", "phrase");
             trie.put(word.toLowerCase(),temp);
         }
     }
@@ -70,13 +71,13 @@ public class AutoComplete {
      * 
      * Extracting options from the Trie
      */
-    public List<String> getCompletions(String subString) {
+    public List<Map> getCompletions(String subString) {
         SortedMap<String, Object> subTrie = trie.prefixMap(subString.toLowerCase());
         //System.out.println("Size of subtrie: " + subTrie.size());
-        List<String> options = new ArrayList<>();
+        List<Map> options = new ArrayList<>();
         for (Map.Entry<String, Object> entry : subTrie.entrySet()) {
             HashMap tempMap = (HashMap) entry.getValue();
-            options.add(tempMap.get("name").toString());
+            options.add(tempMap);
         }
         return options;
     }
