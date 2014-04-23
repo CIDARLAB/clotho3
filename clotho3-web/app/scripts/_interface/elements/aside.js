@@ -8,15 +8,15 @@ angular.module('clotho.interface')
 	.value('terminalAsideOptions', {
 		visible : false
 	})
-	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions) {
+	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, hotkeys) {
 
 	return {
 		restrict: 'EA',
-		templateUrl : 'views/_interface/aside.html',
+		templateUrl : 'views/_interface/terminalAside.html',
 		replace: true,
 		scope: {
-			title: '=asideTitle',
-			contentUrl: '=asideContentUrl'
+			title: '=?asideTitle',
+			contentUrl: '=?asideContentUrl'
 		},
 		link: function postLink(scope, element, attrs) {
 
@@ -39,10 +39,15 @@ angular.module('clotho.interface')
 				terminalAsideOptions.visible = true;
 			};
 
+			scope.$toggle = function () {
+				terminalAsideOptions.visible = !terminalAsideOptions.visible;
+				angular.element('body').attr('aside-status', !!terminalAsideOptions.visible ? 'active' : '');
+			};
+
 			scope.$watch('contentUrl', function (newval, oldval) {
 				if (!!newval) {
 					fetchTemplate(newval).then(function (template) {
-						console.error('TEMPLATE' + template);
+						console.info('ASIDE TEMPLATE' + template);
 						scope.content = $compile(template)(scope);
 					});
 				}
@@ -53,6 +58,8 @@ angular.module('clotho.interface')
 			}, function (newval) {
 				!!newval ? element.addClass('active') : element.removeClass('active');
 			});
+
+			hotkeys.add('t', "Toggle Clotho Terminal", scope.$toggle)
 
 		}
 	};

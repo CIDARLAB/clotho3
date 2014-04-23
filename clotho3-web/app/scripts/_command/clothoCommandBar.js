@@ -1,7 +1,5 @@
 angular.module('clotho.commandbar').directive('clothoCommandBar', function(Clotho, CommandBar, $location, $window, hotkeys) {
 
-	//todo - implement functionality of typeahead directive, but don't rely (don't make angular UI a dependency)
-
 	return {
 		restrict: 'A',
 		replace: true,
