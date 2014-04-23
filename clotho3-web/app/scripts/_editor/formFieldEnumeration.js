@@ -30,7 +30,6 @@ angular.module('clotho.editor')
 				var javascriptType = ClothoSchemas.javaToJavascript[field.javaType] || false;
 
 				var childElement;
-
 				if (javascriptType) {
 					//if we have an input field, just create an input and extend with attrs given
 					if (javascriptType['input']) {
@@ -75,7 +74,8 @@ angular.module('clotho.editor')
 			scope: {
 				fields: '=?',
 				schema: '=?',
-				sharable: '=?'
+				sharable: '=?',
+				stripBasicFields : '@?'
 			},
 			controller: function($scope, $element, $attrs) {},
 			link: function (scope, element, attrs) {
@@ -85,8 +85,6 @@ angular.module('clotho.editor')
 					element.html('no schema information passed');
 					return;
 				}
-
-				console.log('\n\n\nFormFieldEnumeration Sharable', scope.sharable);
 
 				//styling pass-through
 				scope.formHorizontal = scope.$parent.formHorizontal;
@@ -119,10 +117,18 @@ angular.module('clotho.editor')
 								var sharableFieldNames = _.keys(scope.sharable);
 								var sharableOnlyFieldNames = _.difference(sharableFieldNames, schemaFieldNames);
 
-								//todo - handle field types if defined
+								//todo - handle field types if defined --- where to define?
 								var sharableOnlyFields = _.map(sharableOnlyFieldNames, function (fieldName) {
-									return { name : fieldName }
+									return {
+										name : fieldName
+									}
 								});
+
+								if (scope.stripBasicFields) {
+									_.remove(compiledSchema.fields, function (field) {
+										return angular.isDefined(ClothoSchemas.sharableBasicFields[field.name]);
+									})
+								}
 
 								schemaFieldsElement = $compile(generateDynamicFields(compiledSchema.fields))(scope);
 
@@ -140,7 +146,7 @@ angular.module('clotho.editor')
 
 				function replaceFieldsView () {
 					element.empty();
-					//append elements
+					//add elements
 					element.prepend(sharableFieldsElement);
 					element.prepend(schemaFieldsElement);
 					element.prepend(definedFieldsElement);

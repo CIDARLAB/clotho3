@@ -192,17 +192,25 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 						scope.processInputSharable();
 					}, scope);
 
+
 					//watch for internal PubSub Changes
-					Clotho.watch(scope.sharable.id, function (newObj) {
-						console.log('\n\n\n\nclothoEditor CLOTHO WATCH', newObj);
-						scope.sharable = newObj;
-					}, scope);
+					var sharableWatcher = angular.noop;
+					scope.$watch('sharable', function (newval, oldval) {
+						if (!!newval && newval.id && (!oldval || newval.id != oldval.id)) {
+							sharableWatcher();
+							sharableWatcher = Clotho.watch(newval.id, function (newObj) {
+								console.log('\n\n\n\nclothoEditor CLOTHO WATCH', newObj);
+								scope.sharable = newObj;
+							}, scope);
+						}
+					});
 
 					scope.$watch('inputSharable', function (newval, oldval) {
-						if (!oldval || !!newval && !!oldval && newval.id != oldval.id) {
+						if (!oldval || (!!newval && !!oldval && newval.id != oldval.id)) {
+							console.log(newval, oldval);
 							scope.editMode = false;
+							scope.processInputSharable(newval);
 						}
-						scope.processInputSharable(newval);
 					});
 
 					scope.$watch('editMode', function (newval, oldval) {

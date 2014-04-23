@@ -5,7 +5,10 @@
     <div class="panel-body ng-cloak">
 
         <fieldset ng-disabled="!editMode">
-            <div form-field-enumeration sharable="sharable"></div>
+
+            <div ng-include="_objBaseFields"></div>
+
+            <div form-field-enumeration sharable="sharable" strip-basic-fields="true"></div>
 
             <div class="form-group" ng-show="editMode">
                 <div class="col-md-3">
