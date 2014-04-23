@@ -285,9 +285,9 @@ function generateClothoAPI() {
 	 */
 		var watch = function clothoAPI_watch(uuid, action, reference) {
 			reference = typeof reference != 'undefined' ? reference : null;
-			PubSub.on('update:'+uuid, function(model) {
+			return PubSub.on('update:'+uuid, function(model) {
 				if (angular.isFunction(action)) {
-					action.apply(reference, model);
+					action.apply(reference, [model]);
 				}
 				else {
 					angular.extend(action, model);
@@ -424,11 +424,16 @@ function generateClothoAPI() {
 	    var callback = function queryCallback(data) {
 		    console.groupCollapsed('Query Results for: ' + JSON.stringify(obj));
 
-		    //store models
-		    //future - when not sending whole model, extend what exists
-		    angular.forEach(data, function (sharable) {
-			    Collector.storeModel(sharable.id, sharable);
-		    });
+		    try {
+			    //store models
+			    //future - when not sending whole model, extend what exists
+			    angular.forEach(data, function (sharable) {
+				    Collector.storeModel(sharable.id, sharable);
+			    });
+		    } catch (e) {
+			    //probably exceeded quota...
+			    Debugger.warn('error saving all models', e);
+		    }
 
 		    console.groupEnd();
 	    };
