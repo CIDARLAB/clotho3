@@ -56,7 +56,11 @@ public class AutoComplete {
         trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
         map = new HashMap();
         for(String word: getWordBank()){
-            trie.put(word,map.get(word));
+            HashMap temp = new HashMap();
+            temp.put("name",word);
+            temp.put("uuid", map.get(word));
+            temp.put("text", "This is the text");
+            trie.put(word.toLowerCase(),temp);
         }
     }
 
@@ -67,11 +71,12 @@ public class AutoComplete {
      * Extracting options from the Trie
      */
     public List<String> getCompletions(String subString) {
-        SortedMap<String, Object> subTrie = trie.prefixMap(subString);
+        SortedMap<String, Object> subTrie = trie.prefixMap(subString.toLowerCase());
         //System.out.println("Size of subtrie: " + subTrie.size());
         List<String> options = new ArrayList<>();
         for (Map.Entry<String, Object> entry : subTrie.entrySet()) {
-            options.add(entry.getKey());
+            HashMap tempMap = (HashMap) entry.getValue();
+            options.add(tempMap.get("name").toString());
         }
         return options;
     }
@@ -130,9 +135,8 @@ public class AutoComplete {
     
     public Object getUUID(String key){
 
-        Object output = trie.selectValue(key);
-        
-        return output;
+        HashMap output = (HashMap) trie.selectValue(key);
+        return output.get("uuid");
     }
     
 }
