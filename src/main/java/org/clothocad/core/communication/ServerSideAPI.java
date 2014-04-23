@@ -179,9 +179,9 @@ public class ServerSideAPI {
             try {
                 Map obj = get(new ObjectId(id));
                 System.out.println("I have a Map from get of " + obj.toString());
-                System.out.println("I have a Map with type" + obj.get("type"));
+                System.out.println("I have a Map with type " + obj.get("type"));
                 
-                if(obj.get("type").equals("function ") && functionId==null) {
+                if(obj.get("type").equals("function") && functionId==null) {
                     functionId = id;
                 } else {
                     args.add(obj);
