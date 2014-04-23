@@ -2,73 +2,72 @@ angular.module('clotho.editor')
 /**
  * @name formFieldEnumeration
  *
- * you can pass fields > schema > sharable (in terms of priority given to fields generated). Only one is requried.
+ *
+ * you can pass fields explicitly, and/or a sharable with a schema. Only one is required (probably sharable).
+ *
+ * Each type is given it's own section (fields, schema, sharable), where sharable fields not matching the schema will appear in the sharable section
+ *
  * - fields: pass fields to generate form fields for a specified list of fields. Fields are given priority over schema and sharable
- * - schema: pass a schema to generate a list of fields from the schema
  * - sharable: pass a sharable (containing a schema) to generate a form containing its fields, and the fields of its schema
  */
 	.directive('formFieldEnumeration', function (Clotho, ClothoSchemas, $q, $compile) {
 
-		function generateDynamicForm (fields) {
-			var fulltext = "";
+		//todo - handle ID differently
+		//future - incorporate select and radios
 
-			//todo - need BSON types from server (GH #99)
-			//todo - options for radio and select?
-			/*
-			 string -> test vs. textarea
-			 id not editable
-			 */
-			var typeMap = {
-				'string' : 'text',
-				'boolean' : 'checkbox',
-				'select' : 'select',
-				'radio' : 'radio',
-				'object' : 'object'
-			};
+		function generateDynamicFields (fields) {
+			var allFields = angular.element('<div ng-form>');
 
 			angular.forEach(fields, function(field) {
 
-				//todo - better handling!
-				var type = typeMap[field.type] || field.type || 'text';
-				if (type == '?') field.type == 'text';
-				var required = field.required ? "required" : "";
+				var formField = angular.element('<form-field>');
+				formField.attr({
+					name : field.name,
+					removableField : field.name,
+					horizontal : 'formHorizontal'
+				});
 
-				var htmlText_pre = '<form-field name="' + field.name + '" removable-field="' + field.name + '" horizontal="formHorizontal">';
-				var htmlText_post = '</form-field>';
-				var inputText;
+				var javascriptType = ClothoSchemas.javaToJavascript[field.javaType] || false;
 
-				switch (type) {
-					case 'object' : {
-						inputText = '<textarea json-edit="sharable.'+field.name+'" rows="3" ' + required + '></textarea>';
-						break;
-					}
-					case 'radio' : {
-						angular.forEach(field.options, function(value, key) {
-							inputText += '<input type="radio" value="'+value+'" ng-model="sharable.'+field.name+'>' + value;
+				var childElement;
+
+				if (javascriptType) {
+					//if we have an input field, just create an input and extend with attrs given
+					if (javascriptType['input']) {
+						childElement = angular.element('<input>');
+						childElement.attr(javascriptType['input']);
+						childElement.attr({
+							'ng-model' : 'sharable.'+ field.name
 						});
-						break;
 					}
-					case 'select': {
-						var optionsText = "";
-						//todo - use ng-options (what are options) + attach array to scope
-						angular.forEach(field.options, function(value, key) {
-							optionsText = optionsText + '<option value="'+value+'">'+ value + '</option>';
+					//otherwise, need to handle a bit differently (probably an object)
+					else {
+						childElement = angular.element('<textarea>');
+						childElement.attr({
+							jsonEdit: 'sharable.'+ field.name,
+							rows: 2
 						});
-
-						inputText = '<select ' + required + ' ng-model="sharable.'+field.name+'">' + optionsText + '</select>';
-						break;
 					}
-					default: {
-						inputText = '<input type="' + type + '" ' + required + 'ng-model="sharable.'+field.name+'" >';
-						break;
-					}
-
+				} else {
+					//didn't map, handle as default, allow specification in UI
+					childElement = angular.element('<input>');
+					childElement.attr({
+						type : 'text',
+						'ng-model' : 'sharable.'+ field.name
+					});
 				}
 
-				fulltext += htmlText_pre + inputText + htmlText_post;
+				childElement.attr('placeholder', field.description);
+
+				if (field.required) {
+					childElement.attr('ng-required', true);
+				}
+
+				formField.append(childElement);
+				allFields.append(formField);
 			});
 
-			return fulltext;
+			return allFields;
 		}
 
 		return {
@@ -78,86 +77,75 @@ angular.module('clotho.editor')
 				schema: '=?',
 				sharable: '=?'
 			},
-			controller: function($scope, $element, $attrs) {
-
-				$scope.generateFields = function (opts) {
-
-					var fields = opts.fields || $scope.fields || [];
-					var schema = opts.schema || $scope.schema || {fields: []};
-					var sharable = opts.sharable || $scope.sharable || {schema : {fields: []}};
-
-					//console.log(fields, schema, sharable);
-
-					var concatenatedFields = fields.concat(schema.fields);
-
-					//add sharable fields
-					_.forEach(sharable, function (val, key) {
-						concatenatedFields.push({
-							name : key
-						});
-					});
-
-					//console.log(_.pluck(concatenatedFields, 'name'));
-
-					var uniqueFields = _.uniq(concatenatedFields, function (field) {
-						return field.name;
-					});
-
-					$element.html(generateDynamicForm(uniqueFields));
-					$compile($element.contents())($scope);
-
-				};
-
-			},
+			controller: function($scope, $element, $attrs) {},
 			link: function (scope, element, attrs) {
 
-				scope.formHorizontal = scope.$parent.formHorizontal;
-
-				if (angular.isUndefined(scope.fields) && angular.isUndefined(scope.schema) && angular.isUndefined(scope.sharable)) {
-					element.html('no information passed');
+				if (angular.isUndefined(attrs.fields) &&
+						angular.isUndefined(attrs.sharable)) {
+					element.html('no schema information passed');
 					return;
 				}
 
-				function updateWithSchema (schema) {
-					return ClothoSchemas.downloadSchemaDependencies(schema)
-					.then(function(compiledSchema) {
-						scope.generateFields({schema : compiledSchema});
-					});
-				}
+				console.log('\n\n\nFormFieldEnumeration Sharable', scope.sharable);
+
+				//styling pass-through
+				scope.formHorizontal = scope.$parent.formHorizontal;
+
+				//container elements for each set of fields
+				var schemaFieldsElement = angular.element('<div>'),
+					sharableFieldsElement = angular.element('<div>'),
+					definedFieldsElement = angular.element('<div>');
 
 				//regenerate if fields change
 				scope.$watch('fields', function (newval) {
 					if (!!newval) {
-						console.log('updating fields');
-
-						scope.generateFields({fields: newval});
+						definedFieldsElement.replaceWith($compile(generateDynamicFields(newval))(scope));
 					}
 				}, true);
 
-				//update schema with superClass fields
-				scope.$watch('schema', function (newval) {
-					if (!!newval && !!newval.fields && newval.fields.length) {
-						console.log('updating schema');
-
-						updateWithSchema(newval);
-					}
-				}, true);
-
-				//update sharable schema based on superClass
+				//update sharable keys change - schema and sharable specific fields
 				scope.$watch(function () {
 					return _.keys(scope.sharable)
 				}, function(newkeys) {
-					if (!!scope.sharable) {
-						console.log('updating sharable');
-
-						//todo - don't get schema and just pass fields
+					if (scope.sharable && scope.sharable.schema) {
 
 						Clotho.get(scope.sharable.schema)
-						.then(function(retrievedSchema) {
-							updateWithSchema(retrievedSchema);
-						})
+						.then(function (schema) {
+
+							ClothoSchemas.downloadSchemaDependencies(schema)
+							.then(function(compiledSchema) {
+
+								var schemaFieldNames = _.pluck(compiledSchema.fields, 'name');
+								var sharableFieldNames = _.keys(scope.sharable);
+								var sharableOnlyFieldNames = _.difference(sharableFieldNames, schemaFieldNames);
+
+								//todo - handle field types if defined
+								var sharableOnlyFields = _.map(sharableOnlyFieldNames, function (fieldName) {
+									return { name : fieldName }
+								});
+
+								schemaFieldsElement = $compile(generateDynamicFields(compiledSchema.fields))(scope);
+
+								sharableFieldsElement = $compile(generateDynamicFields(sharableOnlyFields))(scope);
+
+								replaceFieldsView();
+							});
+						});
+					}
+					//no schema... this shouldn't happen...
+					else {
+						schemaFieldsElement = angular.element('<div class="alert">Sharable has no schema...</div>');
 					}
 				}, true);
+
+				function replaceFieldsView () {
+					element.empty();
+					//append elements
+					element.prepend(sharableFieldsElement);
+					element.prepend(schemaFieldsElement);
+					element.prepend(definedFieldsElement);
+				}
+
 
 			}
 		}

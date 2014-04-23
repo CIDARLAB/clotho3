@@ -199,6 +199,8 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 			return Clotho.submit(query).then(function(result){
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});
+			}, function (rejection) {
+				//do nothing...
 			});
 		}
 		else {

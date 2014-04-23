@@ -22,8 +22,8 @@
 
 
         <div class="form-group">
-            <label class="control-label col-sm-2">Methods</label>
-            <div class="col-sm-10">
+            <label class="control-label col-sm-3">Methods</label>
+            <div class="col-sm-9">
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="newMethodObj" ng-init="newMethodObj = newMethod()" typeahead="opt.id as opt.name for opt in clothoFunctions | filter:$viewValue" typeahead-min-length="0">
                         <span class="input-group-btn">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div ng-show="!superClassObj.fields.length">
-                    <p>No inherited Fields</p>
+                    <p style="text-align: center">No inherited Fields</p>
                 </div>
             </div>
 

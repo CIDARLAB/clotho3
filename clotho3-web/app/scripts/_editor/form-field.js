@@ -92,8 +92,8 @@ angular.module('clotho.editor')
 
 				//if horizontal, add label to side and wrap input
 				if (horizontal) {
-					label.addClass('col-sm-2');
-					var wrapper = angular.element('<div class="col-sm-10"></div>');
+					label.addClass('col-sm-3');
+					var wrapper = angular.element('<div class="col-sm-9"></div>');
 					wrapper.append(childElement);
 				} else {
 

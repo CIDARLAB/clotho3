@@ -14,8 +14,10 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	queryResult && console.log('query result', queryResult);
 	if (angular.isDefined(queryResult) && queryResult.length) {
 		$scope.editable = queryResult[0];
+		console.log('\n\n\nEDITOR CONTROLLER', $scope.editable);
 	} else {
 		$scope.editable = $route.current.params.id;
+		console.log('\n\n\nEDITOR CONTROLLER ID ', $scope.editable);
 	}
 
 	$scope.editModePass = false;
@@ -29,11 +31,11 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		$scope.schemas = schemas;
 	});
 
-	//future - phase out (may be able to already)
+	//future - phase out (may be able to already). integrate queryNameWrapper below
 	$scope.allInstances = [];
 	Clotho.query({}).then(function (data) {
 		_.each(data, function (item) {
-			if (item.schema != "BuiltInSchema") {
+			if (!ClothoSchemas.isSchema(item)) {
 				$scope.allInstances.push(item);
 			}
 		});
@@ -41,11 +43,9 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 
 	//functionality
 
-	//todo - update pending #164 and #165, query over multiple fields, replace editableList
+	//todo - integrate to replace editableList
 	$scope.queryNameWrapper = function(text) {
-		return Clotho.query({name: text}).then(function (result) {
-			return $filter('limitTo')(result, 10);
-		})
+		return Clotho.query({name: text}, {maxResults : 10});
 	};
 
 	$scope.createNew = function (type) {

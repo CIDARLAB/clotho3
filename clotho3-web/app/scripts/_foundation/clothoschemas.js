@@ -97,6 +97,103 @@ angular.module('clotho.foundation')
 			"string" : "java.lang.String"
 		};
 
+
+		function escapeRegexp (reg) {
+			return (reg.toString()).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+		}
+		//matches spaces unless between single or double quotes
+		var spaceRegexp = /[^\s"']+|"([^"]*)"|'([^']*)'/;
+		var spaceRegexpEscaped =  escapeRegexp(spaceRegexp);
+
+		// has object 'input' if can be displayed as input. add all as attrs.
+		// otherwise will have to handle another way (e.g. json-edit directive)
+		var javaToJavascript = {
+			"java.lang.Boolean" : {
+				type : "boolean",
+				input : {
+					type : 'checkbox'
+				}
+			},
+			"java.lang.Number" : {
+				type : "number",
+				input : {
+					type : 'number'
+				}
+			},
+			"java.lang.Long" : {
+				type : "number",
+				input : {
+					type : 'number'
+				}
+			},
+			"java.lang.Integer" : {
+				type : "number",
+				input : {
+					type : 'number',
+					"ng-pattern" : "/^[-+]?\\d+$/"
+				}
+			},
+			"java.lang.Short" : {
+				type : "number",
+				input : {
+					type : 'number',
+					min : -32767,
+					max : 32767
+				}
+			},
+			"java.lang.String" : {
+				type : "string",
+				input : {
+					type : 'text'
+				}
+			},
+			"java.awt.Color" :{
+				type : "color",
+				input : {
+					type : 'color'
+				}
+			},
+			"java.util.Date" :{
+				type : "date",
+				input : {
+					type : 'date'
+				}
+			},
+			"java.util.Set" : {
+				type : "array",
+				input : {
+					type : 'text',
+					"ng-list" : spaceRegexpEscaped
+				}
+			},
+			"java.util.List" : {
+				type : "array",
+				input : {
+					type : 'text',
+					"ng-list" : spaceRegexpEscaped
+				}
+			},
+			"org.bson.types.ObjectId" : {
+				type : "id",
+				input : {
+					type : 'text'
+				}
+			},
+			"java.util.Map" : {
+				type : "object"
+			},
+			"java.util.HashMap" : {
+				type: "object"
+			},
+			//suggest do not just use this catch, but allow further specification in UI or something
+			"default" : {
+				type : "string",
+				input : {
+					type: "text"
+				}
+			}
+		};
+
 		//determine a JSON field / javascript variable's type
 		function determineFieldType (value) {
 			if (value === null) {
@@ -124,7 +221,7 @@ angular.module('clotho.foundation')
 
 		/* QUERIES */
 
-		Clotho.query({"schema" : SCHEMA_ALL})
+		Clotho.query({"schema" : SCHEMA_ALL}, {mute : true})
 		.then(function (resultSchemas) {
 			_.remove(resultSchemas, function (schema) {
 				return !!sharableTypes[schema.name];
@@ -247,6 +344,7 @@ angular.module('clotho.foundation')
 			accessTypes : accessTypes,
 			constraintTypes : constraintTypes,
 			primitiveToJava : primitiveToJava,
+			javaToJavascript : javaToJavascript,
 
 			isSchema : isSchema,
 			isBuiltIn : isBuiltIn,

@@ -43,6 +43,8 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 			/** model **/
 
+			var sharableId;
+
 			/*********
 			 COMPILATION
 			 **********/
@@ -73,35 +75,33 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			//process input sharable to see if object, or id string
 			$scope.processInputSharable = function (sharable) {
 
-				$scope.sharable = {};
-
 				if (angular.isEmpty(sharable)) {
 					Debugger.log('sharable is undefined / empty');
 					$scope.getPartialAndCompile();
 					return;
 				}
 
+				$scope.sharable = {};
+
 				Debugger.debug('processing sharable: ', sharable);
 
 				if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
 					Debugger.log('sharable object passed');
-					$scope.id = sharable.id | '';
+					sharableId = sharable.id | '';
 					$scope.sharable = sharable;
 				}
 				else if (angular.isString(sharable)) {
 					//if its a string, call clotho.get()
 					Debugger.log('passed a string, assuming a valid ID: ' + sharable);
-					$scope.id = sharable;
+					sharableId = sharable;
 				} else {
 					Debugger.warn('sharable must be an object or a string, you passed: ', sharable);
-					//todo - better exit if nothing present
-					$scope.id = '';
+					sharableId = '';
 					$scope.sharable = {};
 				}
 
-
 				//if its a string, it's an ID so get it, otherwise just return a wrapper promise for the object
-				var getObj = (angular.isEmpty($scope.sharable) && $scope.id != '') ? Clotho.get($scope.id) : $q.when($scope.sharable);
+				var getObj = (angular.isEmpty($scope.sharable) && sharableId != '') ? Clotho.get(sharableId) : $q.when($scope.sharable);
 
 				getObj.then(function (result) {
 					$scope.sharable = result;
@@ -155,7 +155,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					};
 
 					scope.reset = function () {
-						Clotho.get(scope.id).then(function (result) {
+						Clotho.get(scope.sharable.id).then(function (result) {
 							scope.sharable = result;
 							scope.formCtrl.$setPristine();
 						});
@@ -193,7 +193,10 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					}, scope);
 
 					//watch for internal PubSub Changes
-					Clotho.watch(scope.id, scope.sharable, scope);
+					Clotho.watch(scope.sharable.id, function (newObj) {
+						console.log('\n\n\n\nclothoEditor CLOTHO WATCH', newObj);
+						scope.sharable = newObj;
+					}, scope);
 
 					scope.$watch('inputSharable', function (newval, oldval) {
 						if (!oldval || !!newval && !!oldval && newval.id != oldval.id) {

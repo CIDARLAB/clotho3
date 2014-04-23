@@ -1,6 +1,6 @@
 <div ng-controller="Editor_SharableCtrl"class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Function Editor</h3>
+        <h3 class="panel-title">Sharable Editor</h3>
     </div>
     <div class="panel-body ng-cloak">
 
@@ -11,10 +11,14 @@
                 <div class="col-md-3">
                     <input type="text" class="form-control" ng-model="newFieldKey" placeholder="New Field Key">
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9 input-group">
                     <input type="text" class="form-control" ng-model="newFieldVal" placeholder="New Field Value">
+                    <span class="input-group-btn">
+                         <button ng-click="addNewField()" class="btn btn-default" ng-disabled="!newFieldVal || !newFieldKey">
+                             <span class="glyphicon glyphicon-plus"></span>
+                         </button>
+                    </span>
                 </div>
-                <button ng-click="addNewField()" class="btn btn-default col-md-2" ng-disabled="!newFieldVal || !newFieldKey">Add Field</button>
             </div>
 
             <button ng-show="editMode && !showJsonEditor" type="button" class="btn btn-default" ng-click="toggleJsonEdit()">Edit Json</button>

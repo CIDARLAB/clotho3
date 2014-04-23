@@ -209,7 +209,7 @@ angular.module('clotho.core').service('PubSub',
 					);
 				});
 
-				return (function pubsuub_unsubscribe() {
+				return (function pubsub_unsubscribe() {
 					angular.forEach(unsubscribers, function (handle) {
 						handle();
 					});
