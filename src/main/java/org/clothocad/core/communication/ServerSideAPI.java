@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
@@ -160,24 +161,42 @@ public class ServerSideAPI {
             }
             
             if(completions.size()==1) {
-                uuid = (String) completions.get(0).get("id");
+                uuid = (String) completions.get(0).get("uuid");
                 ids.add(uuid);
                 continue;
             }
             
         }
         
+        //Create variables for holding a function and a list of other stuff
+        String functionId = null;
+        List args = new ArrayList();
+        
         //Retrieve the Sharable associated with each found id
         List<Sharable> shars = new ArrayList<Sharable>();
         for(String id : ids) {
+            System.out.println("submit has id " + id);
             try {
-                ObjBase obj = (ObjBase) get(new ObjectId(id));
-                Sharable shar = (Sharable) obj;
-                shars.add(shar);
+                Map obj = get(new ObjectId(id));
+                System.out.println("I have a Map from get of " + obj.toString());
+                System.out.println("I have a Map with type" + obj.get("type"));
+                
+                if(obj.get("type").equals("function ") && functionId==null) {
+                    functionId = id;
+                } else {
+                    args.add(obj);
+                }
             } catch(Exception err) {
                 System.out.println("Failure of submit to pull uuid: " + id);
                 err.printStackTrace();
             }
+        }
+        
+        //If the FunctionId got populated, try calling run
+        if(functionId != null) {
+            System.out.println("Running the resolved sloppy arguments with function " + functionId);
+//            run(null, args);
+            return null;
         }
         
         //Run the command assuming it's javascript
