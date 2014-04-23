@@ -97,11 +97,8 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		$scope.testResults = {};
 	};
 
-	//todo - update pending #164 and #165
 	$scope.querySchemaWrapper = function(schemaType) {
-		return Clotho.query({schema: schemaType}).then(function (result) {
-			return $filter('limitTo')(result, 10);
-		})
+		return Clotho.query({schema: schemaType}, {maxResults : 10});
 	};
 
 	$scope.testPopoverText = function (ind) {

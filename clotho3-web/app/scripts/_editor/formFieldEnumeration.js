@@ -127,7 +127,10 @@ angular.module('clotho.editor')
 								if (scope.stripBasicFields) {
 									_.remove(compiledSchema.fields, function (field) {
 										return angular.isDefined(ClothoSchemas.sharableBasicFields[field.name]);
-									})
+									});
+									_.remove(sharableOnlyFields, function (field) {
+										return angular.isDefined(ClothoSchemas.sharableBasicFields[field.name]);
+									});
 								}
 
 								schemaFieldsElement = $compile(generateDynamicFields(compiledSchema.fields))(scope);

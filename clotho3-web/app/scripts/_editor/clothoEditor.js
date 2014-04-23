@@ -166,7 +166,12 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 							//this shouldn't happen often... JSON editor should not propagate to model until valid
 							Clotho.alert('Your JSON is invalid... please fix it');
 						} else {
-							Clotho.set(scope.sharable);
+							Clotho.set(scope.sharable).then(function (id) {
+								if (!scope.sharable.id) {
+									console.log('adding ID', id);
+									scope.sharable.id = id;
+								}
+							});
 							scope.editMode = false;
 						}
 					};
