@@ -34,6 +34,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import lombok.extern.slf4j.Slf4j;
@@ -126,77 +128,31 @@ public class ServerSideAPI {
         }
 
     }
-    public Object getID(String input){
-        return completer.getUUID(input);
-    }
+
+        
+    //clotho.run("aa7f191e810c19729de86101", ["53581f9e9e7d7a2fda8c36a7"]);   revcomp pBca1256
+    //clotho.run("aa7f191e810c19729de86101", ["atcg"]);  revcomp atcg
     public final Object submit(String command) {
-        //Resolve the commands to Sharables
-        System.out.println("The command submitted is: " + command);
+        //Resolve the commands to tokens
+        System.out.println("++ The command submitted is: " + command);
         String[] tokens = command.split("\\s+");
         for(String str : tokens) {
             System.out.println("token: " + str);
         }
-        
-        //Create a store for UUIDs resolved from the tokens
-        List<String> ids = new ArrayList<String>();
-        
-        //Scan through each token and pull out unique ids
-        for(String token : tokens) {
-            //See if the Mind has a unique word for that token
-            System.out.println("contacting mind for sharbales " );
-            String uuid = mind.getSharableId(token);
-            System.out.println("uuuid from Mind is: " + uuid);
-            
-            if(uuid!=null) {
-                ids.add(uuid);
-                continue;
-            }
-            
-            //See if the global Trie has a unique word for that token
-            List<Map> completions = completer.getCompletions(token);
-            
-            System.out.println("completions and token are " + token + " " + completions.size());
-            for(Map map : completions) {
-                System.out.println("for token " + token + " I have " + map.toString());
-            }
-            
-            if(completions.size()==1) {
-                uuid = (String) completions.get(0).get("uuid");
-                ids.add(uuid);
-                continue;
-            }
-            
+
+        Object out = tryRun(tokens);
+        if(out != null) {
+            return out;
         }
         
-        //Create variables for holding a function and a list of other stuff
-        String functionId = null;
-        List args = new ArrayList();
-        
-        //Retrieve the Sharable associated with each found id
-        List<Sharable> shars = new ArrayList<Sharable>();
-        for(String id : ids) {
-            System.out.println("submit has id " + id);
-            try {
-                Map obj = get(new ObjectId(id));
-                System.out.println("I have a Map from get of " + obj.toString());
-                System.out.println("I have a Map with type " + obj.get("type"));
-                
-                if(obj.get("type").equals("function") && functionId==null) {
-                    functionId = id;
-                } else {
-                    args.add(obj);
-                }
-            } catch(Exception err) {
-                System.out.println("Failure of submit to pull uuid: " + id);
-                err.printStackTrace();
-            }
+        out = trySingleWord(tokens);
+        if(out != null) {
+            return out;
         }
         
-        //If the FunctionId got populated, try calling run
-        if(functionId != null) {
-            System.out.println("Running the resolved sloppy arguments with function " + functionId);
-//            run(null, args);
-            return null;
+        out = tryAPIWord(tokens);
+        if(out != null) {
+            return out;
         }
         
         //Run the command assuming it's javascript
@@ -213,6 +169,93 @@ public class ServerSideAPI {
         }
     }
 
+    /**
+     * Interprets tokens of a submit as a clotho.run call
+     * where the first token is the Function, and the others are args
+     * 
+     * @param tokens
+     * @return the result or null if it failed to execute
+     */
+    private Object tryRun(String[] tokens) {
+        System.out.println("+++  try RUN on args");
+        Function function = null;
+        List<Object> args = new ArrayList<Object>();
+        
+        //Assume the first token is a Function call
+        List<Map> completions = completer.getCompletions(tokens[0]);
+        if(completions.size()>0) {
+            String uuid = (String) completions.get(0).get("uuid");
+            try {
+                function = persistor.get(Function.class, persistor.resolveSelector(uuid, true));
+            } catch(java.lang.IllegalArgumentException ex) {
+                return null;
+            }
+        } 
+        if(function==null) {
+            return null;
+        }
+        
+        //Iterate through each subsequent token and convert to object if required
+        for(int i=1; i<tokens.length; i++) {
+            String token = tokens[i];
+            completions = completer.getCompletions(token);
+            
+            //If the completions suggest what the things is
+            if(completions.size()>0) {
+                String uuid = (String) completions.get(0).get("uuid");
+                ObjBase shar = persistor.get(ObjBase.class, persistor.resolveSelector(uuid, true));
+                args.add(shar);
+            } 
+            //Otherwise just consider this raw String or int
+            else {
+                args.add(token);
+            }
+        }
+
+        //Invoke run with the ScriptEngine
+        System.out.println("Running the resolved sloppy arguments with function:\n " + function.toString());
+        System.out.println("And args: " );
+        for(Object obj : args) {
+            System.out.println(obj.toString());
+        }
+        Object out = null;
+        try {
+            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
+            return out;
+        } catch (Exception ex) {
+            System.out.println("Unsuccessfully executed the sloppy command");
+            return null;
+        }
+    }
+    
+    private Object trySingleWord(String[] tokens) {
+        System.out.println("+++  try Single Word get");
+        if(tokens.length!=1) {
+            return null;
+        }
+        return get(tokens[0]);
+    }
+    
+    private Object tryAPIWord(String[] tokens) {
+        System.out.println("+++  try first word is API word");
+        String firstWord = tokens[0].toLowerCase();
+        
+        //Example:  get pBca1256
+        if(firstWord.equals("get")) {
+            //Interpret the next token as a clotho.get request
+            return get(tokens[1]);
+            
+        } else if(firstWord.equals("run")) {
+            String[] newtok = new String[tokens.length-1];
+            for(int i=0; i<newtok.length; i++) {
+                newtok[i] = tokens[i+1];
+            }
+            return tryRun(newtok);
+        } else {
+            return null;
+        }
+    }
+    
     public final void learn(Object data) {
         //might already be data?
         Map<String, Object> json = JSON.mappify(data);
@@ -606,6 +649,7 @@ public class ServerSideAPI {
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
                     return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
                 } catch (ScriptException e) {
@@ -689,7 +733,7 @@ public class ServerSideAPI {
     }
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
-
+        System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
         return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
     }
