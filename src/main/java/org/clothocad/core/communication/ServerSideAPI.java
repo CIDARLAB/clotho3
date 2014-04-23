@@ -233,7 +233,14 @@ public class ServerSideAPI {
         if(tokens.length!=1) {
             return null;
         }
-        return get(tokens[0]);
+        System.out.println("trySingleWord has a single token " + tokens[0]);
+        Object out = null;
+        try {
+            out = get(tokens[0]);
+        } catch(Exception err) {
+            return null;
+        }
+        return out;
     }
     
     private Object tryAPIWord(String[] tokens) {
