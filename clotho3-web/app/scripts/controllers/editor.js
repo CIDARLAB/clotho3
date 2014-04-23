@@ -54,15 +54,18 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		} else {
 			$scope.editable = ClothoSchemas.createScaffold(type);
 			$scope.chooseSubtype = false;
+			$scope.editModePass = true;
 		}
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
 		$scope.editable = ClothoSchemas.createScaffold(model);
 		$scope.chooseSubtype = false;
+		$scope.editModePass = true;
 	};
 
 	$scope.editExisting = function (item, model, label) {
 		$scope.editable = item;
+		$scope.editModePass = true;
 	};
 });
