@@ -112,7 +112,11 @@ angular.module('clotho.core').service('clothoLocalStorage',
 					return false;
 				}
 				value = angular.isString(value) ? value : serializer.stringify(value);
-				refStorage.setItem(prefix + key, value);
+				try {
+					refStorage.setItem(prefix + key, value);
+				} catch (err) {
+					Debugger.error('couldnt save ' + key, err);
+				}
 				return true;
 			};
 
