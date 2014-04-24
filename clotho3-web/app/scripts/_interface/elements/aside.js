@@ -8,7 +8,7 @@ angular.module('clotho.interface')
 	.value('terminalAsideOptions', {
 		visible : false
 	})
-	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, hotkeys) {
+	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, hotkeys, Clotho) {
 
 	return {
 		restrict: 'EA',
@@ -17,6 +17,13 @@ angular.module('clotho.interface')
 		scope: {
 			title: '=?asideTitle',
 			contentUrl: '=?asideContentUrl'
+		},
+		controller : function ($scope, $element, $attrs) {
+			$scope.submit = function () {
+				if ($scope.terminalQuery) {
+					Clotho.submit($scope.terminalQuery);
+				}
+			}
 		},
 		link: function postLink(scope, element, attrs) {
 
