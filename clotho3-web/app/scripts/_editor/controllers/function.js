@@ -119,6 +119,7 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 	$scope.$watch('editMode', function(newval) {
 		$scope.codemirrorEditorOptions.readOnly = (newval) ? false : 'nocursor';
+		$scope.resetTests();
 	});
 
 	$scope.codemirrorEditorOptions = {
@@ -143,9 +144,7 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 			// example Events
 			_cm.on("beforeChange", function(){});
-			_cm.on("change", function(){
-				$scope.resetTests();
-			});
+			_cm.on("change", function(){});
 		}
 	};
 

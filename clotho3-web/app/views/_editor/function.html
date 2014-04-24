@@ -69,12 +69,15 @@
                     <span class="panel-title">Code Editor</span>
                 </div>
                 <div>
-                    <textarea ui-codemirror="codemirrorEditorOptions" id="functionCode" ng-model="sharable.code" style="position: relative; width: 100%; height: 12em" ng-disabled="!editMode" required></textarea>
+                    <textarea ui-codemirror="codemirrorEditorOptions" id="functionCode" ng-model="sharable.code" style="position: relative; width: 100%; height: 12em" required></textarea>
                 </div>
+                <pre>{{sharable.code | json}}</pre>
                 <div function-code-drop update-on-read="sharable.code" show-drop="true" show-browser="false"></div>
             </div>
 
         </fieldset>
+
+        <pre>{{sharable | json}}</pre>
 
         <div class="panel panel-default">
             <div class="panel-heading">
