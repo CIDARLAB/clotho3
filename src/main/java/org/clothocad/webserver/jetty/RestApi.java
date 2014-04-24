@@ -53,15 +53,17 @@ public class RestApi extends HttpServlet {
 
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
 
-        if (unamePass != null) {
-            loginMap = new HashMap<String, String>();
-            loginMap.put("username", unamePass[0]);
-            loginMap.put("password", unamePass[1]);
-            loginMessage = new Message(Channel.login, loginMap, null, null);
-            this.router.receiveMessage(this.rc, loginMessage);
-        }
+        login(unamePass);
 
-    	String id = request.getPathInfo().split("/")[1];
+    	String[] pathID = request.getPathInfo().split("/");
+    	
+    	if (pathID.length == 0) {
+    		response.setStatus(HttpServletResponse.SC_OK);
+    		response.getWriter().write("Hello Friend!");
+    		return;
+    	}
+
+    	String id = pathID[1];
 
         // We build our new message
         m = new Message(Channel.get, id, null, null);
@@ -71,10 +73,7 @@ public class RestApi extends HttpServlet {
 
         String result = this.rc.getResult().toString();
 
-        if (unamePass != null) {
-            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-            this.router.receiveMessage(this.rc, logoutMessage);
-        }
+        logout(unamePass);
         
         response.getWriter().write(result);
 
@@ -92,13 +91,7 @@ public class RestApi extends HttpServlet {
 
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
 
-        if (unamePass != null) {
-            loginMap = new HashMap<String, String>();
-            loginMap.put("username", unamePass[0]);
-            loginMap.put("password", unamePass[1]);
-            loginMessage = new Message(Channel.login, loginMap, null, null);
-            this.router.receiveMessage(this.rc, loginMessage);
-        }
+        login(unamePass);
 
         String id = request.getPathInfo().split("/")[1];
 
@@ -110,10 +103,7 @@ public class RestApi extends HttpServlet {
 
         String result = this.rc.getResult().toString();
 
-        if (unamePass != null) {
-            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-            this.router.receiveMessage(this.rc, logoutMessage);
-        }
+        logout(unamePass);
 
         response.getWriter().write(result);
 
@@ -131,17 +121,55 @@ public class RestApi extends HttpServlet {
 
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
 
-        if (unamePass != null) {
-            loginMap = new HashMap<String, String>();
-            loginMap.put("username", unamePass[0]);
-            loginMap.put("password", unamePass[1]);
-            loginMessage = new Message(Channel.login, loginMap, null, null);
-            this.router.receiveMessage(this.rc, loginMessage);
+        login(unamePass);
+
+        Map<String, String> p = getRequestBody(request.getReader());
+
+        if (p.isEmpty()) {
+        	response.getWriter().write("not enough data");
+        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        	return;
         }
+
+        // We build our new message
+        m = new Message(Channel.create, p, null, null);
+
+        // Now we send that message to the router
+        this.router.receiveMessage(this.rc, m);
+
+        // Get the result & check to see if it was successful/if it failed
+        String result = this.rc.getResult().toString();
+
+        logout(unamePass);
+        
+        response.getWriter().write(result);
+
+        if (!result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
+    protected void doPut(HttpServletRequest request, 
+        HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("application/json");
+
+        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
+
+        login(unamePass);
 
         String id = request.getPathInfo().split("/")[1];
 
         Map<String, String> p = getRequestBody(request.getReader());
+
+        if (p.isEmpty()) {
+        	response.getWriter().write("not enough data");
+        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        	return;
+        }
+
         p.put("id", id);
 
         // We build our new message
@@ -153,18 +181,32 @@ public class RestApi extends HttpServlet {
         // Get the result & check to see if it was successful/if it failed
         String result = this.rc.getResult().toString();
 
-        if (unamePass != null) {
-            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-            this.router.receiveMessage(this.rc, logoutMessage);
-        }
+        logout(unamePass);
         
         response.getWriter().write(result);
 
         if (!result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_OK);
+            response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    private void login(String[] userPass) {
+    	if (userPass != null) {
+    	    loginMap = new HashMap<String, String>();
+    	    loginMap.put("username", userPass[0]);
+    	    loginMap.put("password", userPass[1]);
+    	    loginMessage = new Message(Channel.login, loginMap, null, null);
+    	    this.router.receiveMessage(this.rc, loginMessage);
+    	}
+    }
+
+    private void logout(String[] userPass) {
+    	if (userPass != null) {
+    	    logoutMessage = new Message(Channel.logout, loginMap, null, null);
+    	    this.router.receiveMessage(this.rc, logoutMessage);
+    	}
     }
 
     private Map<String, String> getRequestBody(BufferedReader reader) {
@@ -183,7 +225,8 @@ public class RestApi extends HttpServlet {
             }
         } catch (IOException ie) {
             map = new HashMap<String, String>();
-            map.put("IOException", ie.toString());
+        } catch (NullPointerException ne) {
+        	map = new HashMap<String, String>();
         }
 
         return map;
