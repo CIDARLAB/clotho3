@@ -39,7 +39,6 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 	ClothoSchemas.retrievedSchemas.then(function (schemas) {
 		angular.forEach(schemas, function(schema){
 			$scope.paramTypes.push(angular.extend(schema, {category:'Schema'}));
-			console.log($scope.paramTypes);
 		});
 	});
 

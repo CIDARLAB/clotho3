@@ -31,21 +31,14 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		$scope.schemas = schemas;
 	});
 
-	//future - phase out (may be able to already). integrate queryNameWrapper below
-	$scope.allInstances = [];
-	Clotho.query({}).then(function (data) {
-		_.each(data, function (item) {
-			if (!ClothoSchemas.isSchema(item)) {
-				$scope.allInstances.push(item);
-			}
-		});
-	});
-
 	//functionality
 
-	//todo - integrate to replace editableList
-	$scope.queryNameWrapper = function(text) {
-		return Clotho.query({name: text}, {maxResults : 10});
+	//todo - move to autocomplete
+	$scope.queryWrapper = function(text) {
+		return Clotho.query({name: text}, {maxResults : 10}).then(function (results) {
+			console.log(results);
+			return results || [];
+		});
 	};
 
 	$scope.createNew = function (type) {
