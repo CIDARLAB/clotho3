@@ -1,37 +1,177 @@
 angular.module('clotho.commandbar')
-	.directive('clothoTokenizer', function ($parse) {
+	.factory('clothoTokenFactory', function (Clotho) {
+
+		//pass UUID to make object, or just pass value as string
+		function ClothoToken (value, uuid) {
+			this.value = value;
+			this.uuid = uuid || undefined;
+			this.isSharable = angular.isDefined(uuid);
+
+			if (this.isSharable) {
+				this.fullSharablePromise = Clotho.get(this.uuid).then(function (data) {
+					this.fullSharable = data;
+				});
+			}
+		}
+
+		ClothoToken.prototype.isAmbiguous = function () {
+			//todo
+		};
+
+		ClothoToken.prototype.isValid = function () {
+			//todo
+		};
+
+		return ClothoToken
+
+	})
+	.factory('clothoTokenCollectionFactory', function (clothoTokenFactory) {
+
+		function ClothoTokenCollection (startingTokens) {
+
+			this.tokens = [];
+			this.currentSelectedIndex = -1;
+
+			//todo - test initial tokens
+
+			if (angular.isArray(startingTokens)) {
+				angular.forEach(startingTokens, function (token) {
+					this.addToken(token);
+				});
+			}
+		}
+
+		//add a token, pass arguments through to clothoTokenFactory
+		ClothoTokenCollection.prototype.addToken = function () {
+			this.tokens.push(new clothoTokenFactory(arguments));
+		};
+
+		ClothoTokenCollection.prototype.inRange = function (index) {
+			return index > -1 && index < this.tokens.length;
+		};
+
+		//get token at given index
+		ClothoTokenCollection.prototype.getToken = function (index) {
+			return this.tokens[index];
+		};
+
+		//return index of token
+		ClothoTokenCollection.prototype.indexOf = function (token) {
+			return this.tokens.indexOf(token);
+		};
+
+		//remove token at given index, return it if removed, otherwise false
+		ClothoTokenCollection.prototype.removeToken = function (index) {
+			if (this.inRange(index)) {
+				return this.tokens.splice(index, 1);
+			} else {
+				return false;
+			}
+		};
+
+		//remove all tokens
+		ClothoTokenCollection.prototype.removeAll = function () {
+			this.tokens.length = 0;
+		};
+
+		//remove active token if set and return it, otherwise return false
+		ClothoTokenCollection.prototype.removeActiveToken = function () {
+			if (this.isActive()) {
+				var toReturn =  this.removeToken(this.currentSelectedIndex);
+				this.unsetActive();
+				return toReturn;
+			} else {
+				return false;
+			}
+		};
+
+		//set token at given index to be active
+		ClothoTokenCollection.prototype.setActive = function (index) {
+			if (this.inRange(index)) {
+				this.currentSelectedIndex = index;
+				return index;
+			} else {
+				return false;
+			}
+		};
+
+		//set token at last position to be active
+		ClothoTokenCollection.prototype.setLastActive = function (index) {
+			this.setActive(this.tokens.length - 1);
+		};
+
+		//set previous token active, based on current active, otherwise last
+		ClothoTokenCollection.prototype.setPrevActive = function (index) {
+			this.currentSelectedIndex = (this.currentSelectedIndex > 0 ? this.currentSelectedIndex : this.tokens.length) - 1;
+		};
+
+		//set next token active, based on current active, otherwise first
+		ClothoTokenCollection.prototype.setNextActive = function (index) {
+			this.currentSelectedIndex = (this.currentSelectedIndex + 1) % this.tokens.length;
+		};
+
+		//unset active token
+		ClothoTokenCollection.prototype.unsetActive = function (index) {
+			this.currentSelectedIndex = -1;
+		};
+
+		//check if token is active, at index when passed, otherwise if any is active
+		ClothoTokenCollection.prototype.isActive = function (index) {
+			if (angular.isDefined(index)) {
+				return this.currentSelectedIndex == index;
+			} else {
+				return this.currentSelectedIndex > -1;
+			}
+		};
+
+		return ClothoTokenCollection
+
+	})
+	.directive('clothoTokenizer', function ($parse, clothoTokenCollectionFactory) {
 
 		return {
 			restrict: 'E',
 			replace: true,
-			require: 'ngModel',
-			scope: {
-				placeholder: "@",
-				startingTags: '=',
-				model : '=ngModel'
-			},
+			require: 'ngModel', //avoid isolate scope so model propagates correctly
 			templateUrl: "views/_command/tokenizer.html",
 			controller: function clothoTokenizerCtrl($scope, $element, $attrs) {
-
-				$scope.tokens = [];
 
 			},
 			link: function clothoTokenizerLink(scope, element, attrs, ngModelCtrl) {
 
+				scope.placeholder = attrs.placeholder;
+
+				var startingTags = $parse(attrs.startingTags)(scope);
+
+
+
+				scope.tokenCollection = new clothoTokenCollectionFactory(startingTags);
+
 				function updateModel () {
-					console.log('updating model', scope.tokens);
-					ngModelCtrl.$setViewValue(scope.tokens);
+					console.log('updating model', scope.tokenCollection.tokens);
+					ngModelCtrl.$setViewValue(scope.tokenCollection.tokens);
 					console.log(ngModelCtrl);
 				}
 
-				scope.addToken = function (item) {
-					scope.tokens.push(item);
+				scope.$watchCollection('tokenCollection.tokens', function () {
+					console.log('COLLECTION CHANGED');
 					updateModel();
+				});
+
+				scope.addToken = function (item) {
+					console.log('TOKENIZER_LINK adding token', item);
+					scope.tokenCollection.addToken(item);
+					//updateModel();
 				};
 
 				scope.removeToken = function (index, model) {
-					scope.tokens.splice(index, 1);
-					updateModel();
+					console.log('TOKENIZER_LINK removing token', index);
+					scope.tokenCollection.removeToken(index);
+					//updateModel();
+				};
+
+				scope.tokenActive = function (index) {
+					return scope.tokenCollection.isActive(index);
 				};
 
 				scope.focusInput = function () {
@@ -45,22 +185,18 @@ angular.module('clotho.commandbar')
  */
 	.directive('clothoAutocomplete', function (Clotho, $q, $parse, $timeout, $compile, $filter) {
 
-		//              backspace tab enter   escape  up  down
-		var HOT_KEYS = [8,        9,  13,     27,     38, 40];
+		//              backspace tab enter   escape  left  up  right down
+		var HOT_KEYS = [8,        9,  13,     27,     37,   38, 39,   40];
 
 		//todo - add attributes (spellcheck, autocapitalize, etc. if necessary)
 
 		return {
 			restrict: 'A',
-			require: 'ngModel',
-			scope: {
-				query: '=ngModel',
-				onSelect: '&autocompleteOnSelect'
-			},
-			controller: function clothoAutocompleteCtrl($scope, $element, $attrs) {
+			//require: 'ngModel',
+			controller: function clothoAutocompleteCtrl($scope, $element, $attrs) {},
+			link: function clothoAutocompleteLink(scope, element, attrs) {
 
-			},
-			link: function clothoAutocompleteLink(scope, element, attrs, ngModelCtrl) {
+				var onSelectCallback = $parse(attrs.autocompleteOnSelect);
 
 				//pop-up element used to display matches
 				var listingEl = angular.element('<clotho-autocomplete-listing></clotho-autocomplete-listing>');
@@ -105,6 +241,7 @@ angular.module('clotho.commandbar')
 				scope.$watch('query', function (newval, oldval) {
 					if (!!newval && newval.length) {
 						scope.hasFocus = true;
+						scope.tokenCollection.unsetActive();
 
 						if (waitTime > 0) {
 							if (timeoutPromise) {
@@ -125,12 +262,13 @@ angular.module('clotho.commandbar')
 
 					var selected = scope.queryResults[activeIdx] || scope.query;
 
-					scope.onSelect({
-						$item: selected
-					});
+					if (selected) {
+						onSelectCallback(scope, {
+							$item: selected
+						});
+					}
 
 					resetMatches();
-
 					scope.query = '';
 
 					//return focus to the input element if a match was selected via a mouse click event
@@ -150,29 +288,54 @@ angular.module('clotho.commandbar')
 
 					evt.preventDefault();
 
+					//backspace
 					if (evt.which === 8) {
 						if (scope.query.length) {
 							scope.$apply(function () {
 								scope.query = scope.query.substring(0, scope.query.length - 1);
 							});
 						} else {
-							//select last token to delete
-							//todo
+							if (scope.tokenCollection) {
+								if (scope.tokenCollection.isActive()) {
+									scope.tokenCollection.removeActiveToken();
+								} else {
+									scope.tokenCollection.setLastActive();
+								}
+							}
+							scope.$digest();
 						}
-					} else if (evt.which === 40) {
+					}
+					//down
+					else if (evt.which === 40) {
 						scope.activeIdx = (scope.activeIdx + 1) % scope.queryResults.length;
 						scope.$digest();
 
-					} else if (evt.which === 38) {
+					}
+					//up
+					else if (evt.which === 38) {
 						scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.queryResults.length) - 1;
 						scope.$digest();
 
-					} else if (evt.which === 13 || evt.which === 9) {
+					}
+					//left
+					else if (evt.which === 37) {
+						scope.tokenCollection.setPrevActive();
+						scope.$digest();
+					}
+					//right
+					else if (evt.which === 39) {
+						scope.tokenCollection.setNextActive();
+						scope.$digest();
+					}
+					//enter + tab
+					else if (evt.which === 13 || evt.which === 9) {
 						scope.$apply(function () {
 							scope.select(scope.activeIdx);
 						});
 
-					} else if (evt.which === 27) {
+					}
+					//escape
+					else if (evt.which === 27) {
 						evt.stopPropagation();
 
 						resetMatches();
@@ -180,8 +343,15 @@ angular.module('clotho.commandbar')
 					}
 				});
 
-				element.bind('blur', function () {
+				element.on('blur', function () {
 					scope.hasFocus = false;
+					scope.$apply(function () {
+						scope.tokenCollection.unsetActive();
+					});
+				});
+
+				element.on('focus', function () {
+					scope.hasFocus = true;
 				});
 
 				//init()
@@ -192,7 +362,7 @@ angular.module('clotho.commandbar')
 	})
 
 	/*
-	 * directive which displays the actual list of autocompletions
+	 * internal directive which displays the actual list of autocompletions
 	 */
 	.directive('clothoAutocompleteListing', function () {
 		return {
@@ -228,6 +398,9 @@ angular.module('clotho.commandbar')
 		};
 	})
 
+	/*
+	 * internal directive which displays an autocompletion
+	 */
 	.directive('clothoAutocompleteMatch', function () {
 		return {
 			restrict:'EA',
@@ -263,7 +436,7 @@ angular.module('clotho.commandbar')
 /**
  * Given a name and UUID, renders a token which can display more information upon interaction
  */
-	.directive('clothoToken', function (Clotho) {
+	.directive('clothoToken', function (Clotho, clothoTokenFactory) {
 
 		//popover or something when hover via clotho.get()
 
@@ -271,26 +444,33 @@ angular.module('clotho.commandbar')
 			restrict: 'E',
 			replace: true,
 			templateUrl: "views/_command/token.html",
-			require: 'ngModel',
 			scope: {
+				tokenCollection : '=',
+				tokenIndex : '=',
+				tokenActive : '=',
 				model : '=ngModel',
-				onRemove : '&'
+				onRemove : '&?'
 			},
 			controller: function clothoTokenCtrl($scope, $element, $attrs) {
 
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
-				element.on('click', function (evt) {
-					Clotho.get(scope.model.uuid).then(function () {
-
+				if (scope.tokenCollection) {
+					element.on('click', function (evt) {
+						if (scope.tokenActive) {
+							console.log('sharable object', scope.fullSharable);
+							scope.tokenCollection.unsetActive(scope.tokenIndex);
+						} else {
+							scope.tokenCollection.setActive(scope.tokenIndex);
+						}
 					});
-				});
+				}
 
-				scope.removeToken = function () {
-					scope.onRemove({model : scope.model});
+				scope.removeToken = function (evt) {
+					evt.preventDefault();
+					scope.onRemove({$model : scope.model});
 				};
-
 
 				//todo - styling based on whether ambiguous
 

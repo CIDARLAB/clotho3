@@ -2,7 +2,7 @@ angular.module('clotho.trails')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
 		var api_ready = $q.defer();
-		$window.onYouTubePlayerReady = function () {
+		$window.onYouTubeIframeAPIReady = function () {
 			api_ready.resolve();
 		};
 		$clotho.extensions.script('//www.youtube.com/iframe_api');

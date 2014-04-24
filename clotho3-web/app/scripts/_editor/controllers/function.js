@@ -1,7 +1,7 @@
 //todo - handle loading of markdown, codemirror, etc.
 //todo - handle initial coloring of code based on language
 
-angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas) {
+angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas, $timeout) {
 
 	$scope.langTypes = [
 		{name:'JavaScript', value:'JAVASCRIPT'},
@@ -23,13 +23,18 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		"array" : true
 	};
 
-	$scope.paramTypes = [
-		{name:'object', type: "object", category:'Primitive', javaType : "java.util.HashMap", reference: false},
-		{name:'array', type : "array", category:'Primitive', javaType : "java.util.Arrays", reference: false},
-		{name:'string', type : "string", category:'Primitive', javaType : "java.lang.String", reference: false},
-		{name:'number', type : "number", category:'Primitive', javaType : "java.lang.Long", reference: false},
-		{name:'boolean', type : "boolean", category:'Primitive', javaType : "java.lang.Boolean", reference: false}
-	];
+	$scope.paramTypes = [];
+
+	angular.forEach(ClothoSchemas.primitiveToJava, function (val, key) {
+		$scope.paramTypes.push({
+			id : key,
+			name : key,
+			type : key,
+			javaType : val,
+			category : 'Primitive',
+			reference : false
+		});
+	});
 
 	ClothoSchemas.retrievedSchemas.then(function (schemas) {
 		angular.forEach(schemas, function(schema){
@@ -37,21 +42,26 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		});
 	});
 
+	// todo - this will likely not be practical after release
 	$scope.clothoFunctions = [];
-	Clotho.query({schema: "Function"}).then(function(result) {
+	Clotho.query(ClothoSchemas.sharableTypes.Function.schema).then(function(result) {
 		$scope.clothoFunctions = result;
 	});
 
-
-
 	$scope.addArg = function() {
-		if (angular.isEmpty($scope.sharable.args)) {$scope.sharable.args = [];}
+		if (angular.isEmpty($scope.sharable.args)) {
+			$scope.sharable.args = [];
+		}
 		$scope.sharable.args.push({"type" : "", "name" : ""});
 	};
 
 	$scope.addDep = function() {
-		if (angular.isEmpty($scope.sharable.dependencies)) {$scope.sharable.dependencies = [];}
-		$scope.sharable.dependencies.push("");
+		if (angular.isEmpty($scope.sharable.dependencies)) {
+			$scope.sharable.dependencies = [];
+		}
+		if ($scope.newDependencyModel != '') {
+			$scope.sharable.dependencies.push($scope.newDependencyModel);
+		}
 	};
 
 	$scope.addTest = function() {
@@ -92,11 +102,11 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		$scope.testResults = {};
 	};
 
-	//todo - update pending #164 and #165
-	$scope.querySchemaWrapper = function(schemaType) {
-		return Clotho.query({schema: schemaType}).then(function (result) {
-			return $filter('limitTo')(result, 10);
-		})
+	$scope.querySchemaWrapper = function(schemaType, value) {
+		return Clotho.query({schema: schemaType, name : value}, {maxResults : 10})
+		.then(function (results) {
+			return results;
+		});
 	};
 
 	$scope.testPopoverText = function (ind) {
@@ -117,6 +127,7 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 	$scope.$watch('editMode', function(newval) {
 		$scope.codemirrorEditorOptions.readOnly = (newval) ? false : 'nocursor';
+		$scope.resetTests();
 	});
 
 	$scope.codemirrorEditorOptions = {
@@ -125,22 +136,23 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		// HACK to have the codemirror instance in the scope...
 		onLoad : function(_cm){
 			$scope.$watch('sharable.language', function(newlang, oldlang) {
-				if (!!newlang && newlang != oldlang) {
+				if (!!newlang) {
 					var mode = newlang.toLowerCase();
 
 					codemirrorLoader.loadLanguage(mode).then(function () {
 						// HACK to catch java case
 						mode = (mode == 'java') ? 'text/x-java' : mode;
-						_cm.setOption("mode", mode);
+						//give it time to register
+						$timeout(function () {
+							_cm.setOption("mode", mode);
+						}, 500);
 					});
 				}
 			});
 
 			// example Events
 			_cm.on("beforeChange", function(){});
-			_cm.on("change", function(){
-				$scope.resetTests();
-			});
+			_cm.on("change", function(){});
 		}
 	};
 

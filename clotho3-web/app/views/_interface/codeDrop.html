@@ -1,12 +1,11 @@
-<div ng-form class="form" style="margin: 10px 0;">
+<div ng-form>
     <div class="alert alert-warning" ng-hide="dropSupported">File Drop support not present!!</div>
 
     <div ng-show="dropSupported">
-        <div class="form-group">
-            <label for="fileInput">File input</label>
+        <form-field name="File Drop (Updates Code)" ng-show="showBrowser">
             <input id="fileInput" ng-file-select="onFileSelect($files)" type="file" multiple>
-        </div>
+        </form-field>
 
-        <div ng-show="dropSupported" style="background: #efefff; padding: 10px 5px;" ng-file-drop="onFileSelect($files);" ng-file-drop-available="dropSupported=true">or drop files here</div>
+        <div ng-show="showDrop" style="background: #efefff; padding: 10px 5px;" ng-file-drop="onFileSelect($files);" ng-file-drop-available="dropSupported=true">Drop Files here to Update Code</div>
     </div>
 </div>

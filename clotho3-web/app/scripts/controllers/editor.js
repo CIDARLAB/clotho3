@@ -14,8 +14,10 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	queryResult && console.log('query result', queryResult);
 	if (angular.isDefined(queryResult) && queryResult.length) {
 		$scope.editable = queryResult[0];
+		console.log('\n\n\nEDITOR CONTROLLER', $scope.editable);
 	} else {
 		$scope.editable = $route.current.params.id;
+		console.log('\n\n\nEDITOR CONTROLLER ID ', $scope.editable);
 	}
 
 	$scope.editModePass = false;
@@ -29,23 +31,14 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		$scope.schemas = schemas;
 	});
 
-	//future - phase out (may be able to already)
-	$scope.allInstances = [];
-	Clotho.query({}).then(function (data) {
-		_.each(data, function (item) {
-			if (item.schema != "BuiltInSchema") {
-				$scope.allInstances.push(item);
-			}
-		});
-	});
-
 	//functionality
 
-	//todo - update pending #164 and #165, query over multiple fields, replace editableList
-	$scope.queryNameWrapper = function(text) {
-		return Clotho.query({name: text}).then(function (result) {
-			return $filter('limitTo')(result, 10);
-		})
+	//todo - move to autocomplete
+	$scope.queryWrapper = function(text) {
+		return Clotho.query({name: text}, {maxResults : 10}).then(function (results) {
+			console.log(results);
+			return results || [];
+		});
 	};
 
 	$scope.createNew = function (type) {
@@ -54,15 +47,18 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		} else {
 			$scope.editable = ClothoSchemas.createScaffold(type);
 			$scope.chooseSubtype = false;
+			$scope.editModePass = true;
 		}
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
 		$scope.editable = ClothoSchemas.createScaffold(model);
 		$scope.chooseSubtype = false;
+		$scope.editModePass = true;
 	};
 
 	$scope.editExisting = function (item, model, label) {
 		$scope.editable = item;
+		$scope.editModePass = true;
 	};
 });

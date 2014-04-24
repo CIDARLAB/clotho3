@@ -8,7 +8,7 @@
             <!-- view importedViews -->
 
             <form-group name="Imported Views" help="List of Views on which this one is dependent, as key-value pairs">
-                <textarea json-edit ng-model="sharable.importedViews" rows="3"></textarea>
+                <textarea json-edit="sharable.importedViews" rows="3"></textarea>
             </form-group>
 
             <alert type="warning">Filedrop support not yet ready</alert>
@@ -59,7 +59,7 @@
             <div ng-show="showJsonEditor">
                 <hr>
                 <form-field name="Edit JSON directly">
-                    <textarea json-edit ng-model="$parent.sharable" rows="12"></textarea>
+                    <textarea json-edit="$parent.$parent.sharable" rows="12"></textarea>
                 </form-field>
             </div>
 

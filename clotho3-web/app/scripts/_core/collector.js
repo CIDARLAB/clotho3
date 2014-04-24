@@ -18,13 +18,8 @@ angular.module('clotho.core').service('Collector',
 
         // ------- DATA STORAGE + ACCESS -----
 
-        // collector is our internal model / hashmap
-        // localStorage only supports strings, so must be stored separately (can't use same obj reference)
-        var collector = {};
-
         //does not broadcast update (locally at least, but angularLS will via localStorage updates)
         var silentAddModel = function(uuid, obj) {
-            collector[uuid] = obj;
             clothoLocalStorage.setItem(uuid, obj);
         };
 
@@ -33,10 +28,9 @@ angular.module('clotho.core').service('Collector',
         var storeModel = function(uuid, obj, force) {
 	          //todo - ensure that what is in collector also matches localStorage
             if (force || !angular.equals(retrieveRef(uuid), obj)) {
-	            Debugger.log(uuid + " (saving)", collector[uuid], obj);
+	            Debugger.log(uuid + " (saving)", obj);
                 silentAddModel(uuid, obj);
                 broadcastModelUpdate(uuid, obj);
-                //testing Debugger.log(collector[uuid]);
             }
             else {
 	            Debugger.log(uuid + " (model unchanged)");
@@ -49,23 +43,15 @@ angular.module('clotho.core').service('Collector',
         };
 
         var retrieveRef = function(uuid) {
-            if (typeof uuid == 'undefined') {
-                return collector;
-            }
-            if (collector[uuid] && typeof collector[uuid] != 'undefined')
-                return collector[uuid];
-
-            if ( collector[uuid] = clothoLocalStorage.getItem(uuid) ) {
-                return collector[uuid];
-
+            if ( clothoLocalStorage.hasItem(uuid)) {
+	            return clothoLocalStorage.getItem(uuid)
             } else {
                 return false;
             }
         };
 
         var removeModel = function (uuid) {
-            if (collector[uuid]) {
-                collector[uuid] = null;
+            if (clothoLocalStorage.hasItem(uuid)) {
                 clothoLocalStorage.removeItem(uuid);
                 return true;
             } else {
@@ -75,7 +61,6 @@ angular.module('clotho.core').service('Collector',
 
         var clearStorage = function() {
             clothoLocalStorage.clear();
-            collector = {};
             PubSub.trigger("collector_reset");
         };
 
@@ -83,7 +68,6 @@ angular.module('clotho.core').service('Collector',
         // ------- FACADE -----------
 
         return {
-            collector : collector,
             hasItem : clothoLocalStorage.hasItem,
             silentAddModel : silentAddModel,
             storeModel : storeModel,

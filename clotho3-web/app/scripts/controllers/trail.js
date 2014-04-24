@@ -1,4 +1,4 @@
-angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route, $timeout, Clotho, Trails, $keypress, $location) {
+angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route, $timeout, Clotho, Trails, hotkeys, $location) {
 
 	//inherited from $routeProvider.resolve clause in application.js
 	$scope.id = $route.current.params.id;
@@ -40,8 +40,6 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 	};
 
 	$scope.mapIcon = Trails.mapIcon;
-
-	$keypress.on('keydown', {'alt-right' : 'next()', 'alt-left' : 'prev()'}, $scope);
 
 	//listen for position changes
 	$scope.$on('$routeUpdate', function(scope, next, current) {

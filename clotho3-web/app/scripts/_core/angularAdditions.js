@@ -1,40 +1,43 @@
 //angular components needed, add a couple methods to prototype
 angular.module('clotho.angularAdditions', [])
 	.config(function() {
+
 		//angular function extensions
 		var ext = {};
+
 		/**
 		 * @name angular.isEmpty
-		 * @description Determines whether object is empty, delegating to lodash if present
+		 * @description Determines whether object is empty.
+		 * Booleans return false.
+		 * {}, [], undefined, null, length == 0, NaN will return true
 		 * @param {*} value
 		 * @returns {*|boolean|Boolean}
 		 */
 		ext.isEmpty = function isEmpty(value) {
-			//can't check if _ defined with angular because throws ReferenceError
-			try {
-				return _.isEmpty(value)
-			} catch (err) {
-				if (angular.isNumber(value)) {
-					return value === value;
-				}
-				else if (angular.isObject(value)) {
-					if (value.length === 0) {
-						return true;
-					} else {
-						for (var key in value) {
-							if (value.hasOwnProperty(key)) {
-								return false;
-							}
-						}
-						return true;
-					}
-				}
-				else if (angular.isUndefined(value) || value === null || value.length == 0) {
-					return true;
-				}
+			if (angular.isNumber(value)) {
+				return value === value;
+			}
+			else if (value === true || value === false) {
 				return false;
 			}
+			else if (angular.isObject(value)) {
+				if (value.length === 0) {
+					return true;
+				} else {
+					for (var key in value) {
+						if (value.hasOwnProperty(key)) {
+							return false;
+						}
+					}
+					return true;
+				}
+			}
+			else if (angular.isUndefined(value) || value === null || value.length == 0) {
+				return true;
+			}
+			return false;
 		};
+
 		/**
 		 * @name angular.isScope
 		 * @description Determines whether an object is an angular $scope
@@ -44,6 +47,7 @@ angular.module('clotho.angularAdditions', [])
 		ext.isScope = function isScope(obj) {
 			return !!obj && angular.isFunction(obj.$evalAsync) && angular.isFunction(obj.$watch);
 		};
+
 		/**
 		 * @name angular.once
 		 * @description Creates a function that is restricted to execute `func` once. Repeat calls to the function will return the value of the first call. The `func` is executed with the `this` binding of the created function.
@@ -95,11 +99,21 @@ angular.module('clotho.angularAdditions', [])
 			return result;
 		};
 
+		/**
+		 * @name angular.map
+		 * @description Apply a function to each element of an array or values of an object, returning a new Array / Object.
+		 * @param {Array|Object} obj Object to iterate over
+		 * @param {Function} iterator Function to call each time -- function (value, key|index, obj) {}
+		 * @param {Object} context `this` context
+		 * @returns {Array|Object} New array with results of each function call, or Object with same keys and mapped values.
+		 */
 		ext.map = function map(obj, iterator, context) {
-			var results = [];
+			var results = angular.isArray(obj) ? [] : {};
 			angular.forEach(obj, function(value, index, list) {
 				if (angular.isFunction(iterator)) {
-					results.push(iterator.call(context, value, index, list));
+					angular.isArray(results) ?
+						results.push(iterator.call(context, value, index, list)) :
+						results[index] = iterator.call(context, value, index, list)
 				}
 			});
 			return results;

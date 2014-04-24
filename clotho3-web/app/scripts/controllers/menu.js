@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.webapp')
-  .controller('MenuCtrl', function ($scope, $location, $timeout, Collector, PubSub, $keypress, Clotho, $modal) {
+  .controller('MenuCtrl', function ($scope, $location, $timeout, Collector, PubSub, hotkeys, Clotho, $modal) {
 
 		$scope.modes = [
 			{"name" : "Editor", "path" : "/editor"},
@@ -43,11 +43,6 @@ angular.module('clotho.webapp')
 		$scope.clearStorage = function() {Collector.clearStorage()};
 		$scope.logListeners = function() {PubSub.logListeners()};
 
-		$scope.reloadModules = function() {
-			Clotho.emit('reloadModels');
-		};
-
-
 		$scope.loggedIn = false;
 		$scope.showLogin = function() {
 			$modal.login().result.then(function(result) {
@@ -65,6 +60,6 @@ angular.module('clotho.webapp')
 			$scope.hideNavBar = !$scope.hideNavBar;
 		};
 
-		$keypress.on('keydown', {'alt-ctrl-comma' : 'showMenu()'}, $scope)
+		hotkeys.add('alt+ctrl+,', 'Show Route Menu', $scope.showMenu, true);
 
   });

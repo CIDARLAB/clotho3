@@ -18,7 +18,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/', {
 		templateUrl: 'views/home.html',
 		controller: 'HomeCtrl',
-		title : 'Home'
+		title : 'Home',
+		hotkeys : [
+			['h', 'Show Intro Modal', 'showHelp = true']
+		]
 	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
@@ -93,7 +96,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 				});
 				return deferred.promise;
 			}]
-		}
+		},
+		hotkeys : [
+			['alt+left', 'Previous page of Trail', 'prev()'],
+			['alt+right', 'Next page of Trail', 'next()']
+		]
 	})
 	.when('/terminal', {
 		templateUrl:'views/_command/terminal.html',
@@ -117,17 +124,21 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/tokenizer.html',
   controller: 'TestTokenizerCtrl'
 })
+.when('/test/schemaview', {
+  templateUrl: 'views/test/schemaview.html',
+  controller: 'TestSchemaviewCtrl'
+})
 	.otherwise({
 		redirectTo:'/'
 	});
 
 })
-.run(function($rootScope, $route, $window, Clotho) {
+.run(function($rootScope, $route, $window, $location, Clotho, CommandBar, hotkeys) {
 
 	/****** Init ******/
 
 	//sort of init() function with server, for easier scripting
-	Clotho.submit("clotho.run('clientSetup', [])");
+	Clotho.run('clientSetup', []);
 
 	/****** Config *****/
 
@@ -136,6 +147,15 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
 	});
+
+	/******* Global Hotkeys ******/
+
+	hotkeys.add('f', 'Focus Command Bar', function (event) {event.preventDefault(); CommandBar.focusInput(); } );
+	hotkeys.add('a', 'Show Activity Log', function (event) {event.preventDefault(); CommandBar.showActivityLog(); } );
+	hotkeys.add('g h', 'Go to Homepage', function () {$location.path('/') });
+	hotkeys.add('g e', 'Go to Editor', function () { $location.path('/editor') });
+	hotkeys.add('g t', 'Go to Trails', function () { $location.path('/trails') });
+
 });
 
 /*

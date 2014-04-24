@@ -83,11 +83,9 @@ function generateClothoAPI() {
 			deferred.reject(null)
 		}, 5000);
 
-		//todo - reject promise if no data is sent over socket
 		PubSub.once(channel + ':' + requestId, function (data) {
 			$timeout.cancel(timeoutPromise);
-			if (angular.isEmpty(data)) { data = null; }
-			deferred.resolve(data);
+			angular.isEmpty(data) ? deferred.reject(null) : deferred.resolve(data);
 			func(data);
 		}, '$clotho');
 
@@ -150,6 +148,9 @@ function generateClothoAPI() {
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      * @param {object} options
      * @param {boolean=} synchronous   Default false for async, true to return value synchronously
+     *
+     * @option
+     * "filter": [<list of field names>]
      *
      * @description
      * Request a Sharable from the server. Returns the object description for the selected objects. If a selector is ambiguous, clotho will return the first one returned by MongoDB - which is basically arbitrary. Clotho will send an error message on the 'say' channel if an object could not be retrieved.
@@ -278,23 +279,18 @@ function generateClothoAPI() {
 	 * @param {string} uuid UUID of Sharable to watch for changes
 	 * @param {object|function} action if Object, object to be updated (using angular.extend) using passed model for given UUID. if Function, function to run on change, passed the new value, with this equal to the reference passed
 	 * @param {string} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
-	 * @param {boolean} overwriteExistingObj If truthy, will extend an empty object, removing existing fields. Only applies if extending an object
 	 *
 	 * @description
 	 * Watches for published changes for a given uuid, updating the object using angular.extend
 	 */
-		var watch = function clothoAPI_watch(uuid, action, reference, overwriteExistingObj) {
+		var watch = function clothoAPI_watch(uuid, action, reference) {
 			reference = typeof reference != 'undefined' ? reference : null;
-			PubSub.on('update:'+uuid, function(model) {
+			return PubSub.on('update:'+uuid, function(model) {
 				if (angular.isFunction(action)) {
-					action.apply(reference, model);
+					action.apply(reference, [model]);
 				}
 				else {
-					if (!!overwriteExistingObj) {
-						angular.extend({}, model);
-					} else {
-						angular.extend(action, model);
-					}
+					angular.extend(action, model);
 				}
 			}, reference);
 		};
@@ -418,6 +414,9 @@ function generateClothoAPI() {
      *
      * @example To get all schemas, Clotho.query({"schema" : "Schema"})
      *
+     * @option
+     * "maxResults": <integer>
+     *
      * @description
      * Returns all objects that match the fields provided in the spec.
      */
@@ -425,11 +424,16 @@ function generateClothoAPI() {
 	    var callback = function queryCallback(data) {
 		    console.groupCollapsed('Query Results for: ' + JSON.stringify(obj));
 
-		    //store models
-		    //future - when not sending whole model, extend what exists
-		    angular.forEach(data, function (sharable) {
-			    Collector.storeModel(sharable.id, sharable);
-		    });
+		    try {
+			    //store models
+			    //future - when not sending whole model, extend what exists
+			    angular.forEach(data, function (sharable) {
+				    Collector.storeModel(sharable.id, sharable);
+			    });
+		    } catch (e) {
+			    //probably exceeded quota...
+			    Debugger.warn('error saving all models', e);
+		    }
 
 		    console.groupEnd();
 	    };

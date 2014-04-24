@@ -30,6 +30,20 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		}
 	};
 
+	//TODO - dry. duplicates function editor code
+	$scope.paramTypes = [
+		{name:'object', type: "object", category:'Primitive', javaType : "java.util.HashMap", reference: false},
+		{name:'array', type : "array", category:'Primitive', javaType : "java.util.Arrays", reference: false},
+		{name:'string', type : "string", category:'Primitive', javaType : "java.lang.String", reference: false},
+		{name:'number', type : "number", category:'Primitive', javaType : "java.lang.Long", reference: false},
+		{name:'boolean', type : "boolean", category:'Primitive', javaType : "java.lang.Boolean", reference: false}
+	];
+
+	ClothoSchemas.retrievedSchemas.then(function (schemas) {
+		angular.forEach(schemas, function(schema){
+			$scope.paramTypes.push(angular.extend(schema, {category:'Schema'}));
+		});
+	});
 
 
 	$scope.$watch('sharable.superClass', function() {

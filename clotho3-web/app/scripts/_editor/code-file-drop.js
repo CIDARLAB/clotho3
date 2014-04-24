@@ -5,7 +5,9 @@ angular.module('clotho.interface')
 			restrict: 'A',
 			templateUrl: 'views/_interface/codeDrop.html',
 			scope : {
-				updateOnRead : '='
+				updateOnRead : '=',
+				showDrop: '@',
+				showBrowser: '@'
 			},
 			controller: function ($scope, $element, $attrs) {
 				$scope.uploadRightAway = false;

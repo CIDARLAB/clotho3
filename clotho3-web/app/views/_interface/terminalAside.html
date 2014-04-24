@@ -1,0 +1,42 @@
+<div class="aside" role="dialog">
+  <div class="aside-dialog">
+    <div class="aside-content">
+      <div class="aside-header">
+        <button type="button" class="close" ng-click="$toggle()">&times;</button>
+        <h4 class="aside-title">{{title || 'Clotho Terminal'}}</h4>
+      </div>
+
+      <div class="alert alert-warning">
+        Need to add tokenizer
+      </div>
+
+      <div class="input-group">
+        <input id="terminal_input"
+               class="form-control"
+               type="text"
+               placeholder="Enter Command or Search Term"
+               autocorrect="off"
+               autocapitalize="off"
+               spellcheck="false"
+               autocomplete="off"
+               ng-model="terminalQuery"
+               ui-keypress="{'enter':'submit(terminalQuery)'}">
+          <span class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="submit(terminalQuery)"
+                      ng-disabled="!terminalQuery">
+                Submit
+              </button>
+          </span>
+      </div>
+
+
+      <div class="aside-body" ng-controller="TerminalCtrl">
+        <div log-entries="log.entries"></div>
+      </div>
+      <!--<div class="aside-footer">
+      </div>-->
+    </div>
+  </div>
+</div>

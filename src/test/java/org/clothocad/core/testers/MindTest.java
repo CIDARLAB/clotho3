@@ -6,6 +6,7 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.clothocad.core.communication.MessageOptions;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.execution.ScriptAPI;
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class MindTest {
     public void tearDown() {
         System.out.println("tear");
     }
-
+    
     @Test
 public void testScript() throws ScriptException {
         TestConnection connection = new TestConnection("testScriptGet");
@@ -42,19 +43,19 @@ public void testScript() throws ScriptException {
                         "if(result.name != \"UCM\") {\n" +
                         "    throw \"wrong name: \" + result.name;\n" +
                         "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
         script = "result = clotho.get('UCM');\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
         script = "wrapper = [];\n" +
                  "wrapper[0] = newobjid;\n" +
                  "result = clotho.get(wrapper);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
         
         script = "var listy = clotho.query({\"city\" : \"Baltizam\"});\n" +
                  "if (listy.length != 1) {\n" +
@@ -64,7 +65,7 @@ public void testScript() throws ScriptException {
                  "if(existing.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + existing.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, ""));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
         
         script = "var args = {};\n" +
                  "args.id = newobjid;\n" +
@@ -73,7 +74,7 @@ public void testScript() throws ScriptException {
                  "if(result.city != \"Paris\") {\n" +
                  "    throw \"wrong city: \" + result.city;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
         
         script = "existing.name = \"Shamoo University\"; \n" +
                  "existing.city = \"Whaletown\"; \n" +
@@ -85,35 +86,27 @@ public void testScript() throws ScriptException {
                  "if(result.state != \"NR\") {\n" +
                  "    throw \"wrong state: \" + result.state;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
         
         script = "var finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=1) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
         
         script = "clotho.destroy(newobjid);\n" +
                  "finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=0) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "")); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
     }
     
     @Test
-    public  void adgfdasg() throws ScriptException
+    public  void testBindings() throws ScriptException
    {
        
        //http://www.informit.com/articles/article.aspx?p=696621&seqNum=6
-       
-       
-       
-       
-       
-       
-       
-       
        
       // Create a ScriptEngineManager that discovers all script engine
       // factories (and their associated script engines) that are visible to

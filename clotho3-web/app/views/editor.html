@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-            <form clotho-editor ng-model="editable" edit-mode="editModePass" class="form-horizontal well"></form>
+            <form clotho-editor ng-model="editable" edit-mode="editModePass" class="form-horizontal" form-horizontal="true"></form>
         </div>
 
         <div class="col-sm-3">
@@ -23,7 +23,7 @@
                     <h5>Edit Existing...</h5>
                 </div>
                 <div class="panel-body">
-                    <input id="chooseInstance" type="text" class="form-control" ng-model="selectedInstance" typeahead="c.id as c.name for c in allInstances | filter:{name:$viewValue} | limitTo:10" typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';" popover="Type to search for an Instance to edit" popover-trigger="focus">
+                    <input id="chooseInstance" type="text" class="form-control" ng-model="selectedInstance" typeahead="c.id as c.name for c in queryWrapper($viewValue)" typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';" popover="Type to search for an Instance to edit" popover-trigger="focus">
                 </div>
             </div>
         </div>
