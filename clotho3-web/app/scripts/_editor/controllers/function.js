@@ -23,17 +23,23 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		"array" : true
 	};
 
-	$scope.paramTypes = [
-		{name:'object', type: "object", category:'Primitive', javaType : "java.util.HashMap", reference: false},
-		{name:'array', type : "array", category:'Primitive', javaType : "java.util.Arrays", reference: false},
-		{name:'string', type : "string", category:'Primitive', javaType : "java.lang.String", reference: false},
-		{name:'number', type : "number", category:'Primitive', javaType : "java.lang.Long", reference: false},
-		{name:'boolean', type : "boolean", category:'Primitive', javaType : "java.lang.Boolean", reference: false}
-	];
+	$scope.paramTypes = [];
+
+	angular.forEach(ClothoSchemas.primitiveToJava, function (val, key) {
+		$scope.paramTypes.push({
+			id : key,
+			name : key,
+			type : key,
+			javaType : val,
+			category : 'Primitive',
+			reference : false
+		});
+	});
 
 	ClothoSchemas.retrievedSchemas.then(function (schemas) {
 		angular.forEach(schemas, function(schema){
 			$scope.paramTypes.push(angular.extend(schema, {category:'Schema'}));
+			console.log($scope.paramTypes);
 		});
 	});
 
@@ -97,8 +103,11 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		$scope.testResults = {};
 	};
 
-	$scope.querySchemaWrapper = function(schemaType) {
-		return Clotho.query({schema: schemaType}, {maxResults : 10});
+	$scope.querySchemaWrapper = function(schemaType, value) {
+		return Clotho.query({schema: schemaType, name : value}, {maxResults : 10})
+		.then(function (results) {
+			return results;
+		});
 	};
 
 	$scope.testPopoverText = function (ind) {

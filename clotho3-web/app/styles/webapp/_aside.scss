@@ -3,7 +3,7 @@
  */
 
 $asideZ : 1000;
-$asideWidth : 370px;
+$asideWidth : 380px;
 $asideAnimation : all 0.5s ease-out;
 
 body[aside-status]  {
@@ -68,7 +68,7 @@ body[aside-status='active'] {
   right: 0;
   left: auto;
   overflow-y: scroll;
-  overflow-x: auto;
+  overflow-x: hidden;
   width: $asideWidth;
   background: white;
   box-shadow: -10px 0px 10px 1px #dddddd;
