@@ -128,17 +128,24 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/schemaview.html',
   controller: 'TestSchemaviewCtrl'
 })
+.when('/test/trail', {
+  templateUrl: 'views/test/trail.html',
+  controller: 'TestTrailCtrl'
+})
+.when('/test/trail-browser', {
+  templateUrl: 'views/test/trail-browser.html',
+  controller: 'TestTrailBrowserCtrl'
+})
+.when('/test/trail-overview', {
+  templateUrl: 'views/test/trail-overview.html',
+  controller: 'TestTrailOverviewCtrl'
+})
 	.otherwise({
 		redirectTo:'/'
 	});
 
 })
 .run(function($rootScope, $route, $window, $location, Clotho, CommandBar, hotkeys) {
-
-	/****** Init ******/
-
-	//sort of init() function with server, for easier scripting
-	Clotho.run('clientSetup', []);
 
 	/****** Config *****/
 

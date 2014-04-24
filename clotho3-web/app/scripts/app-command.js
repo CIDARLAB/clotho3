@@ -2,10 +2,7 @@
 
 //Command-bar-only stack
 angular.module('clothoRoot', ['clotho.core', 'clotho.commandbar'])
-.run(function(Clotho) {
-	//sort of init() function with server
-	Clotho.submit("clotho.run('clientSetup', [])");
-});
+.run(function(Clotho) {});
 
 /*
 angular.element(document).ready(function() {
