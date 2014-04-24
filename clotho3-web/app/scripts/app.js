@@ -138,7 +138,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	/****** Init ******/
 
 	//sort of init() function with server, for easier scripting
-	Clotho.submit("clotho.run('clientSetup', [])");
+	Clotho.run('clientSetup', []);
 
 	/****** Config *****/
 
