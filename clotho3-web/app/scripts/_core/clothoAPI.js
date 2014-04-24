@@ -691,18 +691,20 @@ function generateClothoAPI() {
      *
      * @param {string} func Object UUID or name (as name or module.name) indicating the function to be run (follows get semantics for ambiguous selectors)
      * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
+     * @param {object} options API options
      *
      * @description
      * Runs a function on the server on supplied arguments.
      * Clotho will send an error message on the 'say' channel if there is an error during function execution, there is no function matching the specifier, or there are ambiguously specified arguments.
      */
-    var run = function clothoAPI_run(func, args) {
-        var packaged = {
-            "id" : func,
-            "args" : args
-        };
+    var run = function clothoAPI_run(func, args, options) {
+	    var packaged = {
+		    "id": func,
+		    "args": args
+	    };
+	    options = angular.isObject(options) ? options : {};
 
-        return fn.emitSubOnce('run', packaged);
+	    return fn.emitSubOnce('run', packaged, options);
     };
 
 
