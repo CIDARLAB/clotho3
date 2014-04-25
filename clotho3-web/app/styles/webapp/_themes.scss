@@ -1,0 +1,8 @@
+body {
+  background-color: #ffffff;
+  transition: background-color 0.25s ease-out;
+}
+
+body.dark {
+  background-color: #eeeeee;
+}
