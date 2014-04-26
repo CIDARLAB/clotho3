@@ -6,10 +6,10 @@ angular.module('clotho.interface')
     return {
       restrict: 'A',
       link: function postLink(scope, element, attrs) {
-	      body.toggleClass('dark', true);
+	      body.toggleClass('gray', true);
 
 	      scope.$on("$destroy", function() {
-		      body.toggleClass('dark', false);
+		      body.toggleClass('gray', false);
 	      })
       }
     };

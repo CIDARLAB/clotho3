@@ -1,17 +1,20 @@
 <div class="trail-contents">
-  <div ng-repeat="chapter in trail.contents">
-    <h4>{{chapter.chapter}}</h4>
-
-    <p>{{chapter.description}}</p>
-
-    <div class="list-group">
-      <a class="list-group-item" ng-repeat="page in chapter.pages"
-         ng-init="page.index = $parent.$index + '-' + $index"
-         ng-class="{active: (page.index == current)}"
-         ng-click="activate(page.index)"
-         ng-disabled="!page.type">
-        <i ng-class="mapIcon(page.icon)"></i> {{page.title}}
-      </a>
+  <div class="trail-chapter" ng-repeat="chapter in trail.contents">
+    <div class="trail-chapter-info">
+      <a class="trail-chapter-title" ng-click="activate($index)">{{chapter.chapter}}</a>
+      <p class="trail-chapter-description">{{chapter.description}}</p>
+    </div>
+    <div class="trail-pages">
+      <div class="list-group">
+        <a class="list-group-item"
+           ng-repeat="page in chapter.pages"
+           ng-init="page.index = $parent.$index + '-' + $index"
+           ng-class="{active: (page.index == current)}"
+           ng-click="activate(page.index)"
+           ng-disabled="!page.type">
+          <i ng-class="mapIcon(page.icon)"></i> {{page.title}}
+        </a>
+      </div>
     </div>
   </div>
 </div>

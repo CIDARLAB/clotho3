@@ -1,8 +1,13 @@
 body {
-  background-color: #ffffff;
+  background-color: $bg-body-light;
   transition: background-color 0.25s ease-out;
 }
 
-body.dark {
-  background-color: #eeeeee;
+body.gray {
+  background-color: $bg-body-gray;
+}
+
+body.black {
+  background-color: $bg-body-black;
+  color: #ffffff;
 }

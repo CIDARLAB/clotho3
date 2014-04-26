@@ -14,7 +14,7 @@ angular.module('clotho.trails').directive('trailContents', function(Trails) {
 			trail: '=trailContents'
 		},
 		link: function (scope,element,attrs) {
-
+			scope.activate = Trails.activate;
 			scope.mapIcon = Trails.mapIcon;
 		}
 	}

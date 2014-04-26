@@ -1,0 +1,31 @@
+//overview page
+.trail-overview {
+
+  .trail-about {
+
+  }
+
+  .trail-section {
+
+    h3 {
+
+    }
+  }
+
+  //define differently than for normal trail
+  .trail-contents {
+
+    .trail-chapter {
+      @extend .row;
+      border: 1px solid $borderColor-trail;
+    }
+
+    .trail-chapter-info {
+      @extend .col-sm-6;
+    }
+
+    .trail-pages {
+      @extend .col-sm-6;
+    }
+  }
+}

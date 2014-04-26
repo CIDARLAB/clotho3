@@ -143,7 +143,6 @@
                          id="functionTestArg{{ $index }}"
                          class="form-control" ng-model="test.args[$index]"
                          typeahead="opt as opt.name for opt in querySchemaWrapper(param.type, $viewValue)"
-                         typeahead-min-length="0"
                          popover="Choose sharable with schema: {{param.type}}"
                          popover-trigger="focus"
                          ng-disabled="!editMode"
