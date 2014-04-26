@@ -39,12 +39,12 @@
   }, {
     "javaType" : "org.clothocad.model.Lab",
     "name" : "lab",
-    "type" : "Lab",
+    "type" : "org.clothocad.model.Lab",
     "reference" : true
   }, {
     "javaType" : "org.clothocad.model.Collection",
     "name" : "myCollection",
-    "type" : "Collection",
+    "type" : "org.clothocad.model.Collection",
     "reference" : true
   } ]
 }

@@ -24,7 +24,6 @@ ENHANCEMENTS, OR MODIFICATIONS.
 //TODO: move the translation from clothoisms to mongodb into mongodbconnection
 
 package org.clothocad.core.persistence;
-import java.io.IOException;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -87,7 +86,6 @@ public class Persistor{
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     private Converters converters;
-    
     
     @Inject
     public Persistor(final ClothoConnection connection){
@@ -203,10 +201,20 @@ public class Persistor{
     }
     
     
-    private void validateBSON(Map<String, Object> obj) throws ConstraintViolationException {
-        //TODO: 
-        //get schema set
+    public void validateBSON(Map<String, Object> obj) throws ConstraintViolationException {
+        //get schema
+        if (!obj.containsKey(SCHEMA) || obj.get(SCHEMA) == null){
+            throw new IllegalArgumentException("Object does not declare a schema.");
+        }
         //validate for all enforcing schemas
+        Schema schema = get(Schema.class, new ObjectId(obj.get(SCHEMA)));
+        try {
+            ObjBase objbase = schema.instantiate(obj);
+            validate(objbase);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Could not validate schema.", e);
+        }
+        
     }
     
     

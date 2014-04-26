@@ -8,7 +8,7 @@
   "fields" : [ {
     "javaType" : "org.clothocad.model.Collection",
     "name" : "myCollection",
-    "type" : "Collection",
+    "type" : "org.clothocad.model.Collection",
     "reference" : true
   }, {
     "javaType" : "java.lang.String",
@@ -18,12 +18,12 @@
   }, {
     "javaType" : "org.clothocad.model.Person",
     "name" : "author",
-    "type" : "Person",
+    "type" : "org.clothocad.model.Person",
     "reference" : false
   }, {
     "javaType" : "org.clothocad.model.Lab",
     "name" : "lab",
-    "type" : "Lab",
+    "type" : "org.clothocad.model.Lab",
     "reference" : true
   }, {
     "javaType" : "java.lang.String",

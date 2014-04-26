@@ -33,8 +33,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -383,10 +386,6 @@ public class ServerSideAPI {
             if (obj.containsKey("id")) {
                 idKey = "id";
             }
-            if (obj.containsKey("_id")) {
-                idKey = "_id";
-            }
-
 
             if (idKey != null) {
 
@@ -402,25 +401,19 @@ public class ServerSideAPI {
                 obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
             //TODO: create sets author to current user
-            ObjectId id = persistor.save(obj);
-
-            //TODO: create as java object and save to force validation and trigger post-create methods
-
+            
             try {
-                ObjBase realObject = persistor.get(ObjBase.class, id);
-                persistor.save(realObject);
-            } catch (Exception e) {
-                logAndSayError("could not validate object - possibly malformed data?", e);
+                ObjectId id = persistor.save(obj);
+                //TODO: Relay the data change to listening clients
+
+                //Return the JSON of the new object as a String
+                say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);
+                return id;
+            } catch (ConstraintViolationException e) {
+                say (String.format("Validation failed: %s. No object was created.", e.getMessage()), Severity.FAILURE);
+                return null;
             }
 
-
-
-            //TODO: Relay the data change to listening clients
-            System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
-
-            //Return the JSON of the new object as a String
-            say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);
-            return id;
         } catch (UnauthorizedException e) {
             say("The current user does not have write access for this domain", Severity.FAILURE);
             return null;
@@ -811,6 +804,20 @@ public class ServerSideAPI {
             throw new EntityNotFoundException();
         }
         return result.get(0);
+    }
+
+    Set<ConstraintViolation<?>> validate(Map<String,Object> data) {
+        try {
+            persistor.validateBSON(data);
+        } catch (IllegalArgumentException iae){
+            say(String.format("Could not validate: %s", iae.getMessage()), Severity.WARNING);
+            
+        } catch (ConstraintViolationException e){
+            say(String.format("Validation unsuccessful: %s", e.getMessage()), Severity.FAILURE);
+            return e.getConstraintViolations();
+        }
+            say("Validation successful.", Severity.SUCCESS);
+        return null;
     }
 
     public static enum Severity {

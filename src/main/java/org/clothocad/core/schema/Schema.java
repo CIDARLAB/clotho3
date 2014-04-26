@@ -23,6 +23,7 @@ import org.clothocad.core.persistence.annotations.Adds;
 import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.jackson.JSONViews;
 import org.clothocad.core.persistence.annotations.Reference;
+import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
 
 /**
@@ -34,8 +35,7 @@ import org.clothocad.model.Person;
 @Data
 @NoArgsConstructor
 @Slf4j
-@Adds({@Add(name="language", provider="getLanguage"),
-@Add(name="binaryName", provider="getBinaryName")})
+@Adds({@Add(name="language", provider="getLanguage")})
 public abstract class Schema extends SharableObjBase {
     
     public Schema(String name, String description, Person author){
@@ -72,10 +72,6 @@ public abstract class Schema extends SharableObjBase {
         return this.getId().toString();
     }
     
-    public static String getBinaryName(ObjectId id){
-          return BASE_PACKAGE_BINARY + "C"+ id;      
-    }
-    
     public String getInternalName(){
         return getBinaryName().replace('.', '/');
     }
@@ -84,25 +80,15 @@ public abstract class Schema extends SharableObjBase {
     public Class<? extends ObjBase> getEnclosedClass(ClassLoader cl) throws ClassNotFoundException{
         return (Class<? extends ObjBase>) cl.loadClass(getBinaryName());
     }
-    
-    public static String extractIdFromClassName(String className){
-        return className;
-    }
-    
-    public static boolean isSchemaClassName(String className){
-        //XXX: needs to go away when schema class names become normal class names
-        //Router router = Router.get();
-        //if persistor is null, we're in bootstrapping, so don't bother
-        /*if (router.getPersistor() == null) return false;
-        if (router.getPersistor().resolveSchemaFromClassName(className) != null){
-            return true;
-        }*/
-        return true;
-    }  
 
     public boolean childOf(Schema schema) {
         if (schema == null || superClass == null) return false;
         if (schema.getId().equals(superClass.getId())) return true;
         return (childOf(schema.superClass));
+    }
+    
+    public ObjBase instantiate(Map<String,Object> data) throws ClassNotFoundException{
+        Class<? extends ObjBase> c = getEnclosedClass(cl);
+        return JSON.mapper.convertValue(data, c);
     }
 }
