@@ -17,7 +17,7 @@
   }, {
     "javaType" : "org.clothocad.model.Person",
     "name" : "author",
-    "type" : "Person",
+    "type" : "org.clothocad.model.Person",
     "reference" : true
   }, {
     "javaType" : "java.lang.Short",

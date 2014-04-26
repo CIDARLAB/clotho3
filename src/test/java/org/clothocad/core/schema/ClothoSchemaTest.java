@@ -77,7 +77,7 @@ public class ClothoSchemaTest {
     public static Schema createFeatureSchema() {
 
         ClothoField field = new ClothoField("sequence", String.class, "ATACCGGA", "the sequence of the feature", false, Access.PUBLIC);
-        //field.setConstraints(Sets.newHashSet(new Constraint("pattern", "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
+        field.setConstraints(Sets.newHashSet(new Constraint(Pattern.class , "regexp", "[ATUCGRYKMSWBDHVN]*", "flags", new Pattern.Flag[]{Pattern.Flag.CASE_INSENSITIVE})));
         Set<ClothoField> fields = Sets.newHashSet(field);
 
         ClothoSchema featureSchema = new ClothoSchema("SimpleFeature", "A simple and sloppy representation of a Feature or other DNA sequence", null, null, fields);
@@ -115,7 +115,7 @@ public class ClothoSchemaTest {
         assertEquals(sequence, featureInstance.getClass().getDeclaredField("sequence").get(featureInstance));
     }
 
-    //@Test //XXX: and temporarily disabled b/c more urgent stuff needs to get done
+    @Test 
     public void testClothoSchemaValidate() throws ClassNotFoundException {
         //persistor.get auto-validates
         

@@ -4,33 +4,38 @@
  */
 package org.clothocad.core.schema;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import javax.validation.constraints.AssertFalse;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.clothocad.core.schema.constraintutils.ConstraintValues;
-import org.clothocad.core.schema.constraintutils.PatternValues;
 
 /**
  *
  * @author spaige
  */
-@NoArgsConstructor
 public class Constraint {
-    public Constraint(String constraint, Object... args){
-        values = getConstraintValue(constraint, null);
-        this.constraint = constraint;
+    public final Class constraintType;
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+    public final Map<String, Object> values;
+    
+    public Constraint(@JsonProperty("constraintType") Class constraintType, @JsonProperty("values") Map<String,Object> values){
+        this.values = values;
+        this.constraintType = constraintType;
+    }
+    
+    public Constraint(Class annotation, Object... args){
+        this.constraintType = annotation;
+        values = new HashMap<>();
         if (args.length % 2 != 0){
             throw new IllegalArgumentException("Needs value for each value name");
         }
@@ -41,60 +46,5 @@ public class Constraint {
             values.put((String) args[i], args[i+1]);
         }
     }
-    
-    public Constraint(String constraint, Map<String, Object> values){
-        this.constraint = constraint;
-        this.values = getConstraintValue(constraint, values);
-    }
-    
-    @Getter
-    @Setter
-    @JsonIgnore
-    protected String constraint;
-    
-    private static final Map<String, Class> annotations;
-    static {
-        annotations = new HashMap<>();
-        annotations.put("pattern", Pattern.class);
-        annotations.put("true", AssertTrue.class);
-        annotations.put("false", AssertFalse.class);
-        annotations.put("max", Max.class);
-        annotations.put("min", Min.class);
-        annotations.put("notNull", NotNull.class);
-        annotations.put("size", Size.class);
-    }
-    
-    protected ConstraintValues values;
-    
-    public Set<String> getValues(){
-       Set<String> set  =  values.keySet();
-       return set;
-    }
-    
-    public Object getValue(String key){
-        return values.get(key);
-    }
-    
-    public Class getAnnotation(){
-        return annotations.get(constraint);
-    }
 
-    protected ConstraintValues getConstraintValue(String constraint, Map<String, Object> values){
-        ConstraintValues cvs;
-        switch(constraint){
-            case("pattern"):
-                cvs = new PatternValues();
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        
-        if (values != null){
-            for (String key : values.keySet()){
-                cvs.put(key, values.get(key));
-            }
-        }
-        
-        return cvs;
-    }
 }

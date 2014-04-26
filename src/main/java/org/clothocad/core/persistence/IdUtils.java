@@ -35,7 +35,7 @@ public class IdUtils {
             return schema.getClass();
         }
         else {
-            return Class.forName(Schema.getBinaryName(schemaId), true, Schema.cl);
+            return Class.forName(schemaId.toString(), true, Schema.cl);
         }
     }
 }
