@@ -3,7 +3,7 @@
  backend: CSS (url), mixin (array|url), script (array|url), onload (array|url), controller (name, must be mixed in)
  content: text (string|html), video (object), template (url), quiz (object), markdown (text), wiki (text)
  */
-angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $controller) {
+angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $controller, hotkeys) {
 
 	return {
 		restrict: 'A',
@@ -75,6 +75,17 @@ angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $c
 					//return scope.createPage(scope.page);
 				},
 				post: function postLink(scope, element, attrs) {
+
+					scope.helpModalOpen = false;
+
+					function toggleHelpModal () {
+						scope.helpModalOpen = !scope.helpModalOpen;
+					}
+
+					if (scope.page.help) {
+						hotkeys.add('h', 'Toggle Page Help', toggleHelpModal, false);
+					}
+
 
 					/*
 					scope.$watch(attrs.trailPage, function(newpage, oldpage) {
