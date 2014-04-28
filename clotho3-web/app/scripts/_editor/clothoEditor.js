@@ -211,9 +211,9 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					});
 
 					scope.$watch('inputSharable', function (newval, oldval) {
-						if (!oldval || (!!newval && !!oldval && newval.id != oldval.id)) {
-							console.log(newval, oldval);
-							scope.editMode = false;
+						console.log(newval, oldval);
+						//no old value, or new and old but id's don't match, or no new id
+						if (!oldval || (!!newval && !!oldval && (!newval.id || newval.id != oldval.id))) {
 							scope.processInputSharable(newval);
 						}
 					});

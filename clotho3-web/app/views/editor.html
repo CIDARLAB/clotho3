@@ -1,32 +1,57 @@
 <div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-            <form clotho-editor ng-model="editable" edit-mode="editModePass" class="form-horizontal" form-horizontal="true"></form>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h5>Create new...</h5>
-                </div>
-                <div class="list-group">
-                    <a class="list-group-item" ng-repeat="(type, obj) in objectTypes" ng-click="createNew(type)" ng-class="{'list-group-item-info' : (type == 'Instance' && chooseSubtype)}">{{ obj.readable }}</a>
-                </div>
-                <div ng-if="chooseSubtype" class="list-group-item" ng-class="{'list-group-item-warning' : !selectedSubtype.length}">
-                    <label for="chooseSubtype">Instance Type</label>
-                    <input id="chooseSubtype" type="text" class="form-control" ng-model="selectedSubtype" typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10" typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';" popover="Type and select a schema to create an object with pre-determined fields" popover-title="Choose a Schema" popover-trigger="focus" popover-append-to-body="true">
-                </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h5>Edit Existing...</h5>
-                </div>
-                <div class="panel-body">
-                    <input id="chooseInstance" type="text" class="form-control" ng-model="selectedInstance" typeahead="c.id as c.name for c in queryWrapper($viewValue)" typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';" popover="Type to search for an Instance to edit" popover-trigger="focus">
-                </div>
-            </div>
-        </div>
-
+  <div class="row">
+    <div class="col-sm-9">
+      <form clotho-editor
+            ng-model="editable"
+            edit-mode="editModePass"
+            class="form-horizontal"
+            form-horizontal="true"></form>
     </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h5>Create new...</h5>
+        </div>
+        <div class="list-group">
+          <a class="list-group-item"
+             ng-repeat="(type, obj) in objectTypes"
+             ng-click="createNew(type)"
+             ng-class="{'list-group-item-info' : (type == 'Instance' && chooseSubtype)}">{{ obj.readable }}</a>
+        </div>
+        <div ng-if="chooseSubtype"
+             class="list-group-item"
+             ng-class="{'list-group-item-warning' : !selectedSubtype.length}">
+          <label for="chooseSubtype">Instance Type</label>
+          <input id="chooseSubtype"
+                 type="text"
+                 class="form-control"
+                 ng-model="selectedSubtype"
+                 typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10"
+                 typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';"
+                 popover="Type and select a schema to create an object with pre-determined fields"
+                 popover-title="Choose a Schema"
+                 popover-trigger="focus"
+                 popover-append-to-body="true">
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h5>Edit Existing...</h5>
+        </div>
+        <div class="panel-body">
+          <input id="chooseInstance"
+                 type="text"
+                 class="form-control"
+                 ng-model="selectedInstance"
+                 typeahead="c.id as c.name for c in queryWrapper($viewValue)"
+                 typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
+                 popover="Type to search for an Instance to edit"
+                 popover-trigger="focus">
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

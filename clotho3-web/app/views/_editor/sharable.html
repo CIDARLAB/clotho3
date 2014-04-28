@@ -29,14 +29,6 @@
                 </div>
             </div>
 
-            <button ng-show="editMode && !showJsonEditor" type="button" class="btn btn-default" ng-click="toggleJsonEdit()">Edit Json</button>
-            <div ng-show="showJsonEditor">
-                <hr>
-                <form-field name="Edit JSON directly">
-                    <textarea json-edit="$parent.$parent.sharable" rows="12"></textarea>
-                </form-field>
-            </div>
-
         </fieldset>
     </div>
     <div class="panel-footer" ng-include="_formActions"></div>
