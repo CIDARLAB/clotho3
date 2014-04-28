@@ -39,6 +39,7 @@ public class AutoComplete {
     Persistor persistor;
     
     /* AutoComplete Contructor */
+    /*This constructor is never used except in the InterpreterAC test*/
     public AutoComplete () {
         
         trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
@@ -48,8 +49,9 @@ public class AutoComplete {
         }
 
     }
+    
     /*
-     * New constructor to accept the persistor from the ServerSideAPI
+     * New constructor to accept the persigstor from the ServerSideAPI
      */
     public AutoComplete(Persistor persistorMongo) {
         persistor = persistorMongo;
