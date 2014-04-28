@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Robert",
+  "nickName" : "Robert",
+  "surName" : "Frawley",
+  "name" : "rfrawley",
+  "emailAddress" : "rfrawley@lbl.gov",
+  "icon" : "robertFrawley.png",
+  "imgUrl" : "",
+  "startDate" : "2012-12-01",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2012-12-01",
+  "isManagement" : true,
+  "role" : "Administrative Assistant",
+  "biography" : "Robert graduated with distinction from UC Berkeley in 2012 with a B.A. in English.",
+  "title" : "Administrative Assistant",
+  "description" : "Robert is Professor Chris Anderson's administrative assistant. He helps manage Chris' busy schedule, grants, and lab personnel. The best way to contact Robert is by e-mailing rfrawley@berkeley.edu.",
+  "social" : "",
+  "id" : "535c6be6ef865882c042d867"
+}

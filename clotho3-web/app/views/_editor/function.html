@@ -12,7 +12,7 @@
                 ng-options="lang.value as lang.name for lang in langTypes" required></select>
       </form-field>
 
-      <form-field name="Precondition" horizontal="formHorizontal">
+      <form-field name="Precondition" horizontal="formHorizontal" placeholder="Precondition must be true in order for function to run">
         <textarea type="text" id="functionPre" class="input-lg" ng-model="sharable.precondition" rows="2"></textarea>
       </form-field>
 
@@ -21,7 +21,7 @@
 
         <div class="col-sm-9">
           <div class="input-group">
-            <input type="text" class="form-control" ng-model="newDependencyModel">
+            <input type="text" class="form-control" ng-model="newDependencyModel" placeholder="Add New Dependency">
               <span class="input-group-btn">
                   <button class="btn btn-default" ng-click="addDep()"><i class="glyphicon glyphicon-plus"></i>
                   </button>
@@ -141,7 +141,8 @@
                 <div ng-if="!simpleTypes[param.type]">
                   <input type="text"
                          id="functionTestArg{{ $index }}"
-                         class="form-control" ng-model="test.args[$index]"
+                         class="form-control"
+                         ng-model="test.args[$index]"
                          typeahead="opt as opt.name for opt in querySchemaWrapper(param.type, $viewValue)"
                          popover="Choose sharable with schema: {{param.type}}"
                          popover-trigger="focus"
@@ -155,18 +156,13 @@
               <label class="control-label col-sm-2"
                      for="functionTestResult{{$index}}">Expects</label>
 
-              <div class="col-sm-4">
-                <select ng-model="test.output.type"
-                        class="form-control"
-                        ng-disabled="!editMode"
-                        ng-options="t.value as t.name for t in outputTypes"></select>
-              </div>
-
-              <div class="col-sm-6">
-                <input type="text"
-                       id="functionTestResult{{ $index }}"
-                       ng-model="test.output.value"
-                       ng-disabled="!editMode" class="form-control col-xs-8">
+              <div class="col-sm-10">
+                <textarea json-edit="test.output.value"
+                          rows="1"
+                          class="form-control"
+                          ng-disabled="!editMode"
+                          placeholder="Enter JSON Value - use quotes for string">
+                </textarea>
               </div>
             </div>
           </div>

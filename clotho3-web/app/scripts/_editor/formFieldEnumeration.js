@@ -1,8 +1,10 @@
+'use strict';
+
 angular.module('clotho.editor')
 /**
  * @name formFieldEnumeration
  *
- *
+ * @description
  * you can pass fields explicitly, and/or a sharable with a schema. Only one is required (probably sharable).
  *
  * Each type is given it's own section (fields, schema, sharable), where sharable fields not matching the schema will appear in the sharable section
@@ -23,46 +25,64 @@ angular.module('clotho.editor')
 				var formField = angular.element('<form-field>');
 				formField.attr({
 					name : field.name,
-					removableField : field.name,
 					horizontal : 'formHorizontal'
 				});
 
-				var javascriptType = ClothoSchemas.javaToJavascript[field.javaType] || false;
+				/*
+				//this doesn't compile properly in transcluded scope
+				var formFieldInput = angular.element('<div>');
+				formFieldInput.attr({
+					'form-field-input' : '',
+					'form-field-type' : field.type,
+					'form-field-model' : 'sharable.' + field.name,
+					'name' : field.name,
+					'ng-required' : !!field.required,
+					'placeholder' : field.description
+				});
+				*/
 
-				var childElement;
+				var javascriptType = ClothoSchemas.formTypeMap[field.type] || false;
+
+				var inputElement;
 				if (javascriptType) {
 					//if we have an input field, just create an input and extend with attrs given
 					if (javascriptType['input']) {
-						childElement = angular.element('<input>');
-						childElement.attr(javascriptType['input']);
-						childElement.attr({
-							'ng-model' : 'sharable.'+ field.name
+						inputElement = angular.element('<input>');
+						inputElement.attr(javascriptType['input']);
+						inputElement.attr({
+							'ng-model': 'sharable.' + field.name
 						});
 					}
-					//otherwise, need to handle a bit differently (probably an object)
+					//otherwise, e.g. object
 					else {
-						childElement = angular.element('<textarea>');
-						childElement.attr({
-							jsonEdit: 'sharable.'+ field.name,
-							rows: 2
+						inputElement = angular.element('<textarea>');
+						inputElement.attr({
+							'json-edit': 'sharable.' + field.name,
+							rows: 3
 						});
 					}
-				} else {
-					//didn't map, handle as default, allow specification in UI
-					childElement = angular.element('<input>');
-					childElement.attr({
-						type : 'text',
-						'ng-model' : 'sharable.'+ field.name
+				}
+				else {
+					//didn't map, handle as default, allow specification via JSON
+					inputElement = angular.element('<textarea>');
+					inputElement.attr({
+						'json-edit': 'sharable.' + field.name,
+						rows: 1,
+						placeholder: "Edit JSON directly, use quotes for strings"
 					});
 				}
 
-				childElement.attr('placeholder', field.description);
+				inputElement.attr({
+					'placeholder' : field.description
+				});
 
 				if (field.required) {
-					childElement.attr('ng-required', true);
+					inputElement.attr({
+						'ng-required' : true
+					});
 				}
 
-				formField.append(childElement);
+				formField.append(inputElement);
 				allFields.append(formField);
 			});
 

@@ -1,4 +1,4 @@
-<div ng-controller="Editor_SharableCtrl"class="panel panel-info">
+<div ng-controller="Editor_SharableCtrl" class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title">Sharable Editor</h3>
     </div>
@@ -10,14 +10,19 @@
 
             <div form-field-enumeration sharable="sharable" strip-basic-fields="true"></div>
 
-            <div class="form-group" ng-show="editMode">
+            <div class="form-group" ng-form name="newField" ng-show="editMode">
                 <div class="col-md-3">
                     <input type="text" class="form-control" ng-model="newFieldKey" placeholder="New Field Key">
                 </div>
                 <div class="col-md-9 input-group">
-                    <input type="text" class="form-control" ng-model="newFieldVal" placeholder="New Field Value">
+                    <textarea json-edit="newFieldVal"
+                              name="newFieldVal"
+                              rows="1"
+                              class="form-control"
+                              placeholder="Enter JSON Value - use quotes for string">
+                    </textarea>
                     <span class="input-group-btn">
-                         <button ng-click="addNewField()" class="btn btn-default" ng-disabled="!newFieldVal || !newFieldKey">
+                         <button ng-click="addNewField()" class="btn btn-default" ng-disabled="!newFieldVal || newField.newFieldVal.$invalid">
                              <span class="glyphicon glyphicon-plus"></span>
                          </button>
                     </span>

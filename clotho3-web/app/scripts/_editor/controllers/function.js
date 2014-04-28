@@ -25,12 +25,12 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 	$scope.paramTypes = [];
 
+	//todo - refactor to ignore javaTypes
 	angular.forEach(ClothoSchemas.primitiveToJava, function (val, key) {
 		$scope.paramTypes.push({
 			id : key,
 			name : key,
 			type : key,
-			javaType : val,
 			category : 'Primitive',
 			reference : false
 		});

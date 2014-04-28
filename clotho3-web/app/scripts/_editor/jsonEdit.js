@@ -1,15 +1,13 @@
 'use strict';
 
 /*
-example usage: <textarea json-edit="myObject" rows="8" class="form-control"></textarea>
+ example usage: <textarea json-edit="myObject" rows="8" class="form-control"></textarea>
 
-jsonEditing is a string which we edit in a textarea. we try parsing to JSON with each change. when it is valid, propagate model changes via ngModelCtrl
+ jsonEditing is a string which we edit in a textarea. we try parsing to JSON with each change. when it is valid, propagate model changes via ngModelCtrl use isolate scope to prevent model propagation when invalid - will update manually. cannot replace with template, or will override ngModelCtrl, and not hide behind facade will override element type to textarea and add own attribute ngModel tied to jsonEditing
 
-use isolate scope to prevent model propagation when invalid - will update manually. cannot replace with template, or will override ngModelCtrl, and not hide behind facade
+ As far as I know, there is currently no way to achieve this using $parsers (other than one of the function errors and kills the pipeline)
 
-will override element type to textarea and add own attribute ngModel tied to jsonEditing
-
-As far as I know, there is currently no way to achieve this using $parsers (other than one of the function errors and kills the pipeline)
+ //todo - refactor so can use ngModel... but can't create element inside.
  */
 
 angular.module('clotho.editor')
@@ -25,7 +23,7 @@ angular.module('clotho.editor')
 			link: function (scope, element, attrs, ngModelCtrl) {
 
 				function setEditing (value) {
-					scope.jsonEditing = angular.copy(JSON2String(value));
+					scope.jsonEditing = JSON2String(value);
 				}
 
 				function updateModel (value) {
