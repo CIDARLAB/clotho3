@@ -1,7 +1,7 @@
 /**
  @NOTE - not distributed via package manager, need to update manually:
  https://github.com/angular-ui/ui-utils/blob/master/modules/event/event.js
- @lastUpdated 11/18/13
+ @lastUpdated 4/25/14
 
  *
  * General-purpose Event binding. Bind any event not natively supported by Angular

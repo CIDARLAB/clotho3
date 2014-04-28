@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Tahoura",
+  "nickName" : "Tahoura",
+  "surName" : "Samad",
+  "name" : "tahourasamad",
+  "emailAddress" : "tahourasamad@gmail.com",
+  "icon" : "tahouraSamad.png",
+  "imgUrl" : "",
+  "startDate" : "2010-06-01",
+  "endDate" : "2012-06-01",
+  "currentLocation" : "Graduate Student at MIT",
+  "current" : false,
+  "dateCreated" : "2010-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "535c6be6ef865882c042d856"
+}

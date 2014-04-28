@@ -13,7 +13,7 @@
   }, {
     "javaType" : "org.clothocad.model.NucSeq",
     "name" : "sequence",
-    "type" : "NucSeq",
+    "type" : "org.clothocad.model.NucSeq",
     "reference" : true
   }, {
     "javaType" : "java.lang.String",
@@ -43,7 +43,7 @@
   }, {
     "javaType" : "org.clothocad.model.Person",
     "name" : "author",
-    "type" : "Person",
+    "type" : "org.clothocad.model.Person",
     "reference" : true
   }, {
     "javaType" : "java.awt.Color",

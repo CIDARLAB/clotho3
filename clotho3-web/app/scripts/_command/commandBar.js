@@ -15,11 +15,11 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	//todo - should capture from commandBar directive as possible
 
 	var getCommandBarElement = function() {
-		return angular.element($document[0].getElementById('clothoCommandBar'));
+		return angular.element($document[0].querySelector('[clotho-command-bar]'));
 	};
 
 	var getCommandBarInput = function () {
-		return angular.element($document[0].getElementById('clothoCommandBarInput'));
+		return angular.element($document[0].getElementById('clotho_command_input'));
 	};
 
 	var getCommandBarLogButton = function () {
@@ -27,8 +27,12 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 	};
 
 	var focusInput = function() {
-		getCommandBarElement().focus();
+		getCommandBarInput().focus();
 	};
+
+	function showActivityLog () {
+		display.log = true;
+	}
 
 
 
@@ -195,6 +199,8 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 			return Clotho.submit(query).then(function(result){
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});
+			}, function (rejection) {
+				//do nothing...
 			});
 		}
 		else {
@@ -233,7 +239,8 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		//interaction
 		getCommandBarElement: getCommandBarElement,
 		getCommandBarInput : getCommandBarInput,
-		focusInput : focusInput
+		focusInput : focusInput,
+		showActivityLog : showActivityLog
 	}
 
 });

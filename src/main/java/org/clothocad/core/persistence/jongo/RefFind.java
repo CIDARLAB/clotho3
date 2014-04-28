@@ -8,6 +8,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.thoughtworks.proxy.toys.hotswap.Swappable;
 import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.datums.ObjBase;
@@ -74,7 +75,15 @@ public class RefFind {
                 ObjBase current = cache.getNextUndone();
                 Query currentQuery = queryFactory.createQuery("{_id:#}", current.getId().toString());
                 DBObject result = collection.findOne(currentQuery.toDBObject(), null, readPreference);
-                unmarshaller.unmarshall(Bson.createDocument(result), current, cache);                
+                if (current instanceof Swappable){
+                    //need to resolve proxy to actual value
+                    ObjBase actual = unmarshaller.unmarshall(Bson.createDocument(result), ObjBase.class , cache);
+                    ((Swappable) current).hotswap(actual);
+                }
+                else {
+                    //update instance with results of query
+                    unmarshaller.unmarshall(Bson.createDocument(result), current, cache);
+                }            
             }
         }
 

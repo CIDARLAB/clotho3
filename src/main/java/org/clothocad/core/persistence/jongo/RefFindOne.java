@@ -7,6 +7,7 @@ package org.clothocad.core.persistence.jongo;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.ReadPreference;
+import com.thoughtworks.proxy.toys.hotswap.Swappable;
 import org.clothocad.core.datums.ObjBase;
 import org.jongo.bson.Bson;
 import org.jongo.query.Query;
@@ -46,7 +47,15 @@ public class RefFindOne {
                 current = cache.getNextUndone();
                 Query currentQuery = queryFactory.createQuery("{_id:#}", current.getId().toString());
                 result = collection.findOne(currentQuery.toDBObject(), null, readPreference);
-                unmarshaller.unmarshall(Bson.createDocument(result), current, cache);
+                if (current instanceof Swappable){
+                    //need to resolve proxy to actual value
+                    ObjBase actual = unmarshaller.unmarshall(Bson.createDocument(result), ObjBase.class , cache);
+                    ((Swappable) current).hotswap(actual);
+                }
+                else {
+                    //update instance with results of query
+                    unmarshaller.unmarshall(Bson.createDocument(result), current, cache);
+                }
             }
         }
         return resultObj;

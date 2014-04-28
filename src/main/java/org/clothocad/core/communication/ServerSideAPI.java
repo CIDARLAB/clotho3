@@ -34,10 +34,16 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+<<<<<<< HEAD
 import java.util.logging.Level;
 import java.util.logging.Logger;
+=======
+import java.util.Set;
+>>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -87,12 +93,17 @@ public class ServerSideAPI {
     private final Persistor persistor;
     private final String requestId;
     private final Mind mind;
+    private final MessageOptions options;
 
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
+        this(mind, persistor, router, requestId, new MessageOptions());
+    }    
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
+<<<<<<< HEAD
         this.completer = new AutoComplete(persistor);
     }
 
@@ -116,6 +127,9 @@ public class ServerSideAPI {
         comps.addAll(globalComps);
         
         return comps;
+=======
+        this.options = options;
+>>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
@@ -318,28 +332,6 @@ public class ServerSideAPI {
         say("The mind has been cleared", Severity.SUCCESS);
     }
 
-    public final void say(Object obj) {
-        if (obj instanceof String) {
-            say((String) obj);
-            return;
-        }
-        Map<String, Object> json = JSON.mappify(obj);
-        Severity severity = json.containsKey("severity")
-                ? Severity.valueOf(json.get("severity").toString())
-                : Severity.NORMAL;
-        String recipients = json.containsKey("recipients")
-                ? json.get("recipients").toString()
-                : null;
-        boolean isUser = json.containsKey("isUser")
-                ? Boolean.parseBoolean(json.get("isUser").toString())
-                : false;
-        say(json.get("message").toString(), severity, recipients, isUser);
-    }
-
-    public final void say(String message) {
-        say(message, Severity.NORMAL, null, false);
-    }
-
     /**
      *
      * @param message
@@ -357,7 +349,9 @@ public class ServerSideAPI {
     }
 
     protected void say(String message, Severity severity, String recipients, boolean isUser) {
-
+        //if say is turned off in options, send nothing
+        if (options.isMute()) return;
+        
         //Resolve the recipients
         //XXX: doesn't currently handle multiple recipients
         //List<Sharable> listUsers = resolveToExistentSharablesList(recipients);
@@ -401,7 +395,7 @@ public class ServerSideAPI {
         System.out.println("I need to put this in your notebook, but i'm not implemented");
         //These have the same structure as a say, but they are stored.
 
-        say("I've stored your note (but not really): " + message);
+        say("I've stored your note (but not really): " + message, Severity.MUTED);
     }
 
     protected void send(Message message) {
@@ -428,7 +422,7 @@ public class ServerSideAPI {
 
     public Map<String, Object> get(ObjectId id) {
         try {
-            Map<String, Object> out = persistor.getAsJSON(id);
+            Map<String, Object> out = persistor.getAsJSON(id, options.getPropertiesFilter());
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
 
@@ -539,10 +533,6 @@ public class ServerSideAPI {
             if (obj.containsKey("id")) {
                 idKey = "id";
             }
-            if (obj.containsKey("_id")) {
-                idKey = "_id";
-            }
-
 
             if (idKey != null) {
 
@@ -558,25 +548,19 @@ public class ServerSideAPI {
                 obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
             //TODO: create sets author to current user
-            ObjectId id = persistor.save(obj);
-
-            //TODO: create as java object and save to force validation and trigger post-create methods
-
+            
             try {
-                ObjBase realObject = persistor.get(ObjBase.class, id);
-                persistor.save(realObject);
-            } catch (Exception e) {
-                logAndSayError("could not validate object - possibly malformed data?", e);
+                ObjectId id = persistor.save(obj);
+                //TODO: Relay the data change to listening clients
+
+                //Return the JSON of the new object as a String
+                say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);
+                return id;
+            } catch (ConstraintViolationException e) {
+                say (String.format("Validation failed: %s. No object was created.", e.getMessage()), Severity.FAILURE);
+                return null;
             }
 
-
-
-            //TODO: Relay the data change to listening clients
-            System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
-
-            //Return the JSON of the new object as a String
-            say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);
-            return id;
         } catch (UnauthorizedException e) {
             say("The current user does not have write access for this domain", Severity.FAILURE);
             return null;
@@ -624,7 +608,7 @@ public class ServerSideAPI {
         List<Map<String, Object>> objs;
         try {
             //Relay the query to Persistor and return the hits
-            objs = persistor.findAsBSON(spec);
+            objs = persistor.findAsBSON(spec, options.getPropertiesFilter(), options.getMaxResults());
             say("Found " + objs.size() + " objects that satisfy your query", Severity.SUCCESS);
             return objs;
         } catch (Exception e) {
@@ -646,7 +630,7 @@ public class ServerSideAPI {
         try {
             args = (List) data.get("args");
         } catch (ClassCastException e) {
-            say("Arguments must be a list or array");
+            say("Arguments must be a list or array", Severity.WARNING);
             return null;
         }
 
@@ -658,7 +642,7 @@ public class ServerSideAPI {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
 System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
-                    return mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
+                    return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -672,7 +656,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
                 try {
                     Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
 
-                    return mind.invokeMethod(module, data.get("function").toString(), args, new ScriptAPI(mind, persistor, router, requestId));
+                    return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -742,7 +726,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
     public final Object run(Function function, List<Object> args) throws ScriptException {
         System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
-        return mind.evalFunction(function.getCode(), function.getName(), args, new ScriptAPI(mind, persistor, router, requestId));
+        return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }
 
     /**
@@ -970,6 +954,20 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
         return result.get(0);
     }
 
+    Set<ConstraintViolation<?>> validate(Map<String,Object> data) {
+        try {
+            persistor.validateBSON(data);
+        } catch (IllegalArgumentException iae){
+            say(String.format("Could not validate: %s", iae.getMessage()), Severity.WARNING);
+            
+        } catch (ConstraintViolationException e){
+            say(String.format("Validation unsuccessful: %s", e.getMessage()), Severity.FAILURE);
+            return e.getConstraintViolations();
+        }
+            say("Validation successful.", Severity.SUCCESS);
+        return null;
+    }
+
     public static enum Severity {
         SUCCESS,
         WARNING,
@@ -979,6 +977,6 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
     }
 
     private ScriptAPI getScriptAPI() {
-        return new ScriptAPI(mind, persistor, router, requestId);
+        return new ScriptAPI(mind, persistor, router, requestId, options);
     }
 }

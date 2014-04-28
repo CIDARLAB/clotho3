@@ -83,16 +83,13 @@ import org.clothocad.core.util.JSON;
 @Singleton
 @Slf4j
 public class Persistor{
-    //TODO: figure out if references to BSON are okay or should be eradicated in favor of Map
-    
-    private static final int SEARCH_MAX = 5000;
+    public static final int SEARCH_MAX = 5000;
     
     private ClothoConnection connection;
     
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     private Converters converters;
-    
     
     @Inject
     public Persistor(final ClothoConnection connection){
@@ -172,7 +169,11 @@ public class Persistor{
     }
     
     public Map<String, Object> getAsJSON(ObjectId uuid){
-        Map<String,Object> result = connection.getAsBSON(uuid);
+        return getAsJSON(uuid, null);
+    }
+    
+    public Map<String, Object> getAsJSON(ObjectId uuid, Set<String> fields){
+        Map<String,Object> result = connection.getAsBSON(uuid, fields);
         if (result == null) throw new EntityNotFoundException(uuid.toString());
         return result;
     }
@@ -204,10 +205,20 @@ public class Persistor{
     }
     
     
-    private void validateBSON(Map<String, Object> obj) throws ConstraintViolationException {
-        //TODO: 
-        //get schema set
+    public void validateBSON(Map<String, Object> obj) throws ConstraintViolationException {
+        //get schema
+        if (!obj.containsKey(SCHEMA) || obj.get(SCHEMA) == null){
+            throw new IllegalArgumentException("Object does not declare a schema.");
+        }
         //validate for all enforcing schemas
+        Schema schema = get(Schema.class, new ObjectId(obj.get(SCHEMA)));
+        try {
+            ObjBase objbase = schema.instantiate(obj);
+            validate(objbase);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Could not validate schema.", e);
+        }
+        
     }
     
     
@@ -305,12 +316,12 @@ public class Persistor{
     public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
 
         query = addSubSchemas(query);
-        List<ObjBase> result = connection.get(query);
+        List<ObjBase> result = connection.get(query, hitmax);
         //TODO: also add converted instances
         return result;
     }
 
-    private List<Map<String,Object>> getConvertedData(Schema originalSchema){
+    private List<Map<String,Object>> getConvertedData(Schema originalSchema, Set<String> fields){
         List<Map<String, Object>> results = new ArrayList<>();
 
         for (Schema schema : converters.getConverterSchemas(originalSchema)){
@@ -325,7 +336,19 @@ public class Persistor{
             }
         }
         
+        for (Map<String,Object> result : results){
+            filterFields(result, fields);
+        }
+        
         return results;
+    }
+    
+    public static void filterFields(Map<String,Object> value, Set<String> fields){
+        for (String field : value.keySet()){
+            if (!fields.contains(field)){
+                value.remove(field);
+            }
+        }
     }
     
     //XXX: mutator - maybe should make copy?
@@ -376,13 +399,13 @@ public class Persistor{
 //defaults to the first class an instance was saved as (?)
     
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec){
-        return findAsBSON(spec, 1000);
+        return findAsBSON(spec, null, 1000);
     }
     
-    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, int hitmax) {
+    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, Set<String> fields, int hitmax) {
         //TODO: limit results
         spec = addSubSchemas(spec);
-        List<Map<String,Object>> out = connection.getAsBSON(spec);
+        List<Map<String,Object>> out = connection.getAsBSON(spec, hitmax, fields);
 
         
         if (spec.containsKey(SCHEMA) && spec.get(SCHEMA)!= null){
@@ -403,7 +426,7 @@ public class Persistor{
                 schemaQuery.put(ID, id);
                 Schema originalSchema = connection.getOne(Schema.class, schemaQuery);
                 if (originalSchema != null) {
-                    List<Map<String, Object>> convertedData = getConvertedData(originalSchema);
+                    List<Map<String, Object>> convertedData = getConvertedData(originalSchema, fields);
                     out.addAll(filterDataByQuery(convertedData, spec));
                 }
             }
@@ -474,6 +497,7 @@ public class Persistor{
         }
     }
     
+    //XXX: doesn't appear to be used anywhere. Remove?
     public <T extends ObjBase> Collection<T> getAll(Class<T> aClass) {
         return connection.getAll(aClass);
     }

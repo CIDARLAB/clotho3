@@ -108,9 +108,8 @@ public class RouterTest {
             null
         );
         sendMessage(message, connection);
-        Message returnMessage = connection.messages.get(2);
-        assertMatch(message, returnMessage);
-        assertEquals(id.toString(), ((List)returnMessage.getData()).get(0).toString());
+        List ids = (List) connection.messageDataByChannelAndId.get(Channel.createAll.toString()+"2");
+        assertEquals(id.toString(), ids.get(0).toString());
     }
 
     @Test

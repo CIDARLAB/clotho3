@@ -1,0 +1,14 @@
+<div class="modal fade" ng-class="{in: open}" ng-show="open" style="z-index: 1050; display: block; background: rgba(100,100,100,0.7);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="$close()">&times;</button>
+                <h4 class="modal-title">{{ title || 'Clotho Modal'}}</h4>
+            </div>
+            <div class="modal-body">
+                <div ng-transclude></div>
+                <clotho-show ng-if="id" id="{{id}}"></clotho-show>
+            </div>
+        </div>
+    </div>
+</div>

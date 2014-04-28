@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2080",
+  "shortdescription" : "{ManB 3' UTR}",
+  "sequence" : "gatcttaccgctgatggaagaaaagacaaaacttatccttgagttactgaacaagtaattcagtaatttcatataaatggtttttaaaaaacggaaaagatgagatatccggtgtggtatagccaaggtaatgctattcagtatctctatgagtgagttaacatctataccacatttaagccgcacacttcgcggtgaccaccccctgacaggagtaaacaatgtcaaagcaacagatcggcgtcgtcggtatggcagtgatggggcgcaacctcgcgctcaacatcgaaagtcgtggttataccgtctctattttcaaccgttcccgtgaaaagcaggaagaagtgattgccgaaaatccaggcaagaaactggttccttactatacggtgaaagagtttgttgaatctctggaaacgcctcgtcgcatcctgttaatggtgaaagcaggtgcaggcacggatgctgctattgattccctcaagccg",
+  "id" : "535c6be7ef865882c042d888"
+}

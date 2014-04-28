@@ -2,7 +2,7 @@ angular.module('clotho.trails')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
 		var api_ready = $q.defer();
-		$window.onYouTubePlayerReady = function () {
+		$window.onYouTubeIframeAPIReady = function () {
 			api_ready.resolve();
 		};
 		$clotho.extensions.script('//www.youtube.com/iframe_api');
@@ -12,7 +12,7 @@ angular.module('clotho.trails')
 	 * @source http://stackoverflow.com/a/10315969/624466
 	 * @note assumes length of 11 characters. Youtube may change this in the future.
 	 *
-	 * @param {string} url
+	 * @param {string} url URL for the video, containing the ID
 	 * @returns {string} videoId
 	 */
 	var extract = function extractYoutubeID (url) {
@@ -20,14 +20,25 @@ angular.module('clotho.trails')
 		return (url.match(regex) || url.match(/((\w|-){11})/)) ? RegExp.$1 : false;
 	};
 
-	//can use youtube names (default, hqdefault, mqdefault, 0, 1, 2, 3)
-	//defaults to default (120 x 90)
+	/**
+	 * @description Given a videoId, retrieves the youtube feeds API information about it
+	 *
+	 * @param {string} videoId ID of the video
+	 * @param {string} size Thumbnail size, youtube names (default, hqdefault, mqdefault, 0, 1, 2, 3). default is 'default' (120x90)
+	 * @returns {Promise} thumbnail URL
+	 */
 	var thumbnail = function generateYoutubeThumbnailUrl(videoId, size) {
 		size = size || "default";
 
 		return "https://img.youtube.com/vi/"+ videoId + "/" + size + ".jpg";
 	};
 
+	/**
+	 * @description Given a valid videoId, retrieves the youtube feeds API information about it
+	 *
+	 * @param {string} videoId
+	 * @returns {Promise} data (JSON) retrieved from youtube feeds API
+	 */
 	var info = function getYoutubeInfo (videoId) {
 		return $http.get('https://gdata.youtube.com/feeds/api/videos/'+videoId+'?&alt=json')
 			.then(function (data) {
@@ -35,6 +46,12 @@ angular.module('clotho.trails')
 			})
 	};
 
+	/**
+	 * @description Given a valid playlist, retrieves the youtube feeds API information about it
+	 *
+	 * @param {string} playlistId
+	 * @returns {Promise} data (JSON) retrieved from youtube feeds API
+	 */
 	var playlist = function getYoutubePlaylist (playlistId) {
 		return $http.get('http://gdata.youtube.com/feeds/api/playlists/'+playlistId+'?alt=json')
 			.then(function (data) {

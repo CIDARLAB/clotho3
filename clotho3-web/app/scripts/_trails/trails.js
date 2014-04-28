@@ -1,4 +1,4 @@
-angular.module('clotho.trails').service('Trails', function(Clotho, $q) {
+angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location) {
 
 	var compile = function TrailCompile(trail) {
 
@@ -109,20 +109,38 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q) {
 		return newpos;
 	};
 
+	//go to the location of a trail page
+	var activate = function (indices) {
+		//if passed nothing
+		if (!indices || !angular.isString(indices)) return;
+
+		//if just pass chapter
+		if (indices.indexOf('-') < 0) {
+			indices = indices + '-0';
+		}
+
+		$location.search('position', indices);
+	};
+
+	//icons for both page types and material types
 	var trailIconMap = {
-		'quiz'        : 'glyphicon glyphicon-pencil'     ,
-		'list'        : 'glyphicon glyphicon-list-alt'   ,
-		'eye'         : 'glyphicon glyphicon-eye-open'   ,
-		'info'        : 'glyphicon glyphicon-info-sign'  ,
-		'video'       : 'glyphicon glyphicon-film'       ,
-		'template'    : 'glyphicon glyphicon-book'       ,
-		'exercise'    : 'glyphicon glyphicon-edit'       ,
+		'book'        : 'glyphicon-book',
+		'exercise'    : 'glyphicon glyphicon-edit',
+		'eye'         : 'glyphicon glyphicon-eye-open',
+		'info'        : 'glyphicon glyphicon-info-sign',
+		'list'        : 'glyphicon glyphicon-list-alt',
+		'picture'     : 'glyphicon-picture',
+		'quiz'        : 'glyphicon glyphicon-pencil',
+		'schedule'    : 'glyphicon-calendar',
+		'slides'      : 'glyphicon-th-large',
+		'syllabus'    : 'glyphicon-list-alt',
+		'video'       : 'glyphicon glyphicon-film',
 		'undefined'   : 'glyphicon glyphicon-file'         //fallthrough
 	};
 
 	var mapIcon = function(iconName) {
 		iconName = iconName || 'undefined';
-		return trailIconMap[iconName];
+		return trailIconMap[iconName]  || trailIconMap['undefined'];
 	};
 
 
@@ -137,6 +155,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q) {
 		extractPage : extractPage,
 		calcNextPage : calcNextPage,
 		calcPrevPage : calcPrevPage,
+		activate : activate,
 		mapIcon : mapIcon,
 		share : Clotho.share,
 		favorite : favorite

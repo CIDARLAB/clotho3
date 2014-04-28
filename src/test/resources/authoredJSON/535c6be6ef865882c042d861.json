@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Roger",
+  "nickName" : "Roger",
+  "surName" : "Lowe",
+  "name" : "raja.lo87",
+  "emailAddress" : "raja.lo87@gmail.com",
+  "icon" : "",
+  "imgUrl" : "",
+  "startDate" : "2009-06-01",
+  "endDate" : "2013-05-10",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2009-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "535c6be6ef865882c042d861"
+}

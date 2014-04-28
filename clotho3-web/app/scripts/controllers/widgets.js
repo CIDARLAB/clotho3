@@ -3,6 +3,9 @@
 angular.module('clotho.webapp')
   .controller('WidgetsCtrl', function ($scope, $compile) {
 
+		$scope.myObj = {
+			myProp : 'aacccggttt'
+		};
 		$scope.myModel = 'WHATS up';
 		$scope.myDNAmodel = 'aaaagt';
 
@@ -31,4 +34,12 @@ angular.module('clotho.webapp')
 		};
 
 		$scope.someValue = 'from parent controller not passed down';
+
+		$scope.openCallback = function () {
+			console.log('modal openeed');
+		};
+
+		$scope.closeCallback = function() {
+			console.log('modal closed');
+		};
   });

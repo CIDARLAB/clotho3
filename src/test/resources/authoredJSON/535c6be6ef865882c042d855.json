@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Shelly",
+  "nickName" : "Shelly",
+  "surName" : "Hsiao-Ying Cheng",
+  "name" : "shellycheng",
+  "emailAddress" : "shellycheng@berkeley.edu",
+  "icon" : "shellyCheng.png",
+  "imgUrl" : "",
+  "startDate" : "2010-03-01",
+  "endDate" : "2011-03-01",
+  "currentLocation" : "Graduate Student",
+  "current" : false,
+  "dateCreated" : "2010-03-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "535c6be6ef865882c042d855"
+}

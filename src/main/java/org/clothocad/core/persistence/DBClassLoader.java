@@ -73,7 +73,7 @@ public class DBClassLoader extends ClassLoader {
     
     @Override
     public Class<?> findClass(String id) throws ClassNotFoundException{
-        ObjectId dbId = new ObjectId(Schema.extractIdFromClassName(id));
+        ObjectId dbId = new ObjectId(id);
         Schema s = getPersistor().get(Schema.class, dbId);
         if (s == null){
             logger.error("Could not find schema with id {} in database.", id);

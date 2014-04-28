@@ -1,0 +1,31 @@
+.trail-instructor {
+
+  $dim-icon: 75px;
+
+  display: block;
+  @extend .clearfix;
+
+  .trail-instructor-icon {
+    display: block;
+    float: left;
+    width: $dim-icon;
+    height: $dim-icon;
+    border-radius: $dim-icon * 2;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 2px 0 $borderColor-trail;
+  }
+
+  .trail-instructor-info {
+
+    display: block;
+    float: left;
+
+    .trail-instructor-name {
+
+    }
+
+    .trail-instructor-position {
+
+    }
+  }
+}

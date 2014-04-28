@@ -67,53 +67,12 @@ angular.module('clotho.utils', ['clotho.core'])
 		 ************/
 
 		//todo - clean up
-		var downloadSchemaDependencies = function (schema) {
 
-			//initial checks
-			if (angular.isUndefined(schema)) {
-				return $q.when();
-			}
-			if (!schema.superClass) {
-				return $q.when(schema);
-			}
-
-			var finalSchema = angular.copy(schema);
-			var promiseChain = $q.when();
-			var reachedBottom = $q.defer();
-
-			function getSuperClass (passedSchema) {
-				if (passedSchema.superClass) {
-					promiseChain.then(function () {
-						//testing console.log('retriving ' + passedSchema.superClass);
-						return Clotho.get(passedSchema.superClass)
-							.then(function (retrieved) {
-								//testing console.log('retrieved ' + retrieved.id + ' - ' + retrieved.name, _.pluck(retrieved.fields, 'name'), retrieved);
-								finalSchema.fields = finalSchema.fields.concat(retrieved.fields);
-								//testing console.log('finalSchema now', _.pluck(finalSchema.fields, 'name'));
-								return getSuperClass(retrieved)
-							});
-					});
-				} else {
-					reachedBottom.resolve();
-				}
-			}
-
-			getSuperClass(schema);
-
-			return reachedBottom.promise.then(function() {
-				return promiseChain;
-			})
-			.then(function (chain) {
-				return finalSchema;
-			});
-		};
 
 		return {
 			validUUID : validUUID,
 
 			downloadViewDependencies : downloadViewDependencies,
-			generateWidgetUrl : generateWidgetUrl,
-
-			downloadSchemaDependencies : downloadSchemaDependencies
+			generateWidgetUrl : generateWidgetUrl
 		}
 	});

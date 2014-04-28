@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 
@@ -125,6 +126,8 @@ public interface ClothoConnection {
      */
     <T extends ObjBase> T get(Class<T> type, ObjectId uuid);
     Map<String,Object> getAsBSON(ObjectId uuid);
+    Map<String,Object> getAsBSON(ObjectId uuid, Set<String> fields);
+    
 
     /**
      * Search the database using a query using MongoDB semantics.
@@ -139,22 +142,18 @@ public interface ClothoConnection {
      * @return
      */
     List<ObjBase> get(Map query);
-    List<ObjBase> get(String name);
+    List<ObjBase> get(Map query, int hitmax);
+    
     <T extends ObjBase> List<T> get(Class<T> type, Map query);
-    <T extends ObjBase> List<T> get(Class<T> type, String name);
+    <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax);
     
     List<Map<String,Object>> getAsBSON(Map query);
-    List<Map<String,Object>> getAsBSON(String name);    
-    <T extends ObjBase> List<Map<String,Object>> getAsBSON(Class<T> type, Map query);
-    <T extends ObjBase> List<Map<String,Object>> getAsBSON(Class<T> type, String name);
-    
+    List<Map<String,Object>> getAsBSON(Map query, int hitmax, Set<String> fields);
+
     <T extends ObjBase> T getOne(Class<T> type, Map query);
-    <T extends ObjBase> T getOne(Class<T> type, String name);
-    
+
     Map<String,Object> getOneAsBSON(Map query);
-    Map<String,Object> getOneAsBSON(String name);
-    <T extends ObjBase> Map<String,Object> getOneAsBSON(Class<T> type, Map query);
-    <T extends ObjBase> Map<String,Object> getOneAsBSON(Class<T> type, String name);
+    Map<String,Object> getOneAsBSON(Map query, Set<String> fields);
     
     <T extends ObjBase> List<T> getAll(Class<T> type);
     

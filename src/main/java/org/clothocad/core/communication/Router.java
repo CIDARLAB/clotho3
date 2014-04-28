@@ -62,8 +62,7 @@ public class Router {
         } else {
             mind = getMind(connection);
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId());
-
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()));
 
         Object data = request.getData();
         
@@ -98,7 +97,7 @@ public class Router {
                     api.log(data.toString());
                     break;
                 case say:
-                    api.say(data);
+                    api.say(data.toString(), ServerSideAPI.Severity.SUCCESS);
                     break;
                 case note:
                     api.note(data.toString());
@@ -151,6 +150,8 @@ public class Router {
                 case unlisten:
                     api.unlisten(data.toString());
                     break;
+                case validate:
+                    api.validate(JSON.mappify(data));
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());
                     response = Void.TYPE;

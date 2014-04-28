@@ -43,12 +43,15 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 			/** model **/
 
+			var sharableId;
+
 			/*********
 			 COMPILATION
 			 **********/
 
 			// should check for custom template and use if exists. otherwise, do the form generation for the generic
-			$scope.getPartialAndCompile = function (type, obj) {
+			//note - assumes scope already has sharable bound for compilation
+			$scope.getPartialAndCompile = function (type) {
 				$scope.showJsonEditor = false;
 
 				//todo - handle instance-specific templates
@@ -72,39 +75,37 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			//process input sharable to see if object, or id string
 			$scope.processInputSharable = function (sharable) {
 
-				$scope.sharable = {};
-
 				if (angular.isEmpty(sharable)) {
 					Debugger.log('sharable is undefined / empty');
 					$scope.getPartialAndCompile();
 					return;
 				}
 
+				$scope.sharable = {};
+
 				Debugger.debug('processing sharable: ', sharable);
 
 				if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
 					Debugger.log('sharable object passed');
-					$scope.id = sharable.id | '';
+					sharableId = sharable.id | '';
 					$scope.sharable = sharable;
 				}
 				else if (angular.isString(sharable)) {
 					//if its a string, call clotho.get()
 					Debugger.log('passed a string, assuming a valid ID: ' + sharable);
-					$scope.id = sharable;
+					sharableId = sharable;
 				} else {
 					Debugger.warn('sharable must be an object or a string, you passed: ', sharable);
-					//todo - better exit if nothing present
-					$scope.id = '';
+					sharableId = '';
 					$scope.sharable = {};
 				}
 
-
 				//if its a string, it's an ID so get it, otherwise just return a wrapper promise for the object
-				var getObj = (angular.isEmpty($scope.sharable) && $scope.id != '') ? Clotho.get($scope.id) : $q.when($scope.sharable);
+				var getObj = (angular.isEmpty($scope.sharable) && sharableId != '') ? Clotho.get(sharableId) : $q.when($scope.sharable);
 
 				getObj.then(function (result) {
 					$scope.sharable = result;
-					$scope.getPartialAndCompile(ClothoSchemas.determineType(result), result);
+					$scope.getPartialAndCompile(ClothoSchemas.determineInstanceType(result));
 				});
 
 			};
@@ -129,7 +130,19 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 				},
 				post: function postLink(scope, iElement, iAttrs, controllers) {
 
+					scope.isValidJson = function (model) {
+						var flag = true;
+						try {
+							angular.fromJson(model);
+						} catch (err) {
+							flag = false;
+						}
+						return flag;
+					};
+
 					/* config */
+
+					scope.formHorizontal = scope.$eval(iAttrs.formHorizontal);
 
 					scope.formCtrl = controllers[1];
 
@@ -142,15 +155,25 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					};
 
 					scope.reset = function () {
-						scope.formCtrl.$setPristine();
-						Clotho.get(scope.id).then(function (result) {
+						Clotho.get(scope.sharable.id).then(function (result) {
 							scope.sharable = result;
+							scope.formCtrl.$setPristine();
 						});
 					};
 
 					scope.save = function () {
-						Clotho.set(scope.sharable);
-						scope.editMode = false;
+						if (!scope.isValidJson(scope.sharable)) {
+							//this shouldn't happen often... JSON editor should not propagate to model until valid
+							Clotho.alert('Your JSON is invalid... please fix it');
+						} else {
+							Clotho.set(scope.sharable).then(function (id) {
+								if (!scope.sharable.id) {
+									console.log('adding ID', id);
+									scope.sharable.id = id;
+								}
+							});
+							scope.editMode = false;
+						}
 					};
 
 					scope.discard = function () {
@@ -174,20 +197,30 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 						scope.processInputSharable();
 					}, scope);
 
+
 					//watch for internal PubSub Changes
-					Clotho.watch(scope.id, scope.sharable, scope);
+					var sharableWatcher = angular.noop;
+					scope.$watch('sharable', function (newval, oldval) {
+						if (!!newval && newval.id && (!oldval || newval.id != oldval.id)) {
+							sharableWatcher();
+							sharableWatcher = Clotho.watch(newval.id, function (newObj) {
+								console.log('\n\n\n\nclothoEditor CLOTHO WATCH', newObj);
+								scope.sharable = newObj;
+							}, scope);
+						}
+					});
 
 					scope.$watch('inputSharable', function (newval, oldval) {
-						if (!oldval || !!newval && !!oldval && newval.id != oldval.id) {
-							scope.editMode = false;
+						console.log(newval, oldval);
+						//no old value, or new and old but id's don't match, or no new id
+						if (!oldval || (!!newval && !!oldval && (!newval.id || newval.id != oldval.id))) {
+							scope.processInputSharable(newval);
 						}
-						scope.processInputSharable(newval);
 					});
 
 					scope.$watch('editMode', function (newval, oldval) {
 						Debugger.log('edit mode: ', newval);
 					});
-
 				}
 			}
 		}

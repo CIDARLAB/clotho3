@@ -14,6 +14,7 @@
     <!-- /process -->
     <!-- process:remove:api,command -->
     <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="bower_components/angular-hotkeys/build/hotkeys.min.css">
     <link rel="stylesheet" href="css/main.css">
     <!-- endbuild -->
     <!-- /process -->
@@ -39,41 +40,9 @@
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
 
-<!-- process:remove:command,api -->
-<!-- terminal aside for webapp... note not ready for prime time yet... need to make command bar styles more accessible -->
-<!--
-<div terminal-aside-trigger></div>
-<div terminal-aside aside-content-url="'views/_command/terminal.html'"></div>
--->
-<!-- /process -->
-
 <!-- process:remove:api -->
 <div class="container">
-<!-- /process -->
-
-    <!-- process:remove:command,api -->
-    <div ng-cloak ng-hide="hideNavBar" ng-controller="MenuCtrl">
-        <div class="navbar navbar-default" style="margin-bottom: 0;">
-            <a class="navbar-brand" href="#">Clotho</a>
-
-            <ul class="nav navbar-nav">
-                <li class="ng-cloak" ng-repeat="item in modes" ng-class="item.class"><a ng-href="#{{item.path}}">{{item.name}}</a></li>
-            </ul>
-
-            <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
-                <div class="btn-group">
-                    <button class="btn navbar-btn btn-small" ng-click="showLogin()" ng-class="{'btn-info' : loggedIn}"><i class="glyphicon glyphicon-user"></i> <span ng-cloak ng-if="loggedIn">{{ username }}</span></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="clearStorage()" disabled><i class="glyphicon glyphicon-trash"></i></button>
-                    <button class="btn navbar-btn btn-warning btn-small" ng-click="reloadModules()"><i class="glyphicon glyphicon-refresh"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /process -->
-
-<!-- process:remove:api -->
     <div clotho-command-bar></div>
-
 </div>
 <!-- /process -->
 
@@ -83,6 +52,9 @@
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
+
+<!-- hotkey triggered terminal window -->
+<terminal-aside></terminal-aside>
 
 <!-- /process -->
 
@@ -153,12 +125,14 @@ function: CommandBar and related directives, services, etc.
 dependencies: clotho.core, jQuery, Lodash
 -->
 <script src="scripts/_command/_kickoff.js"></script>
+<script src="bower_components/angular-ui-utils/keypress.min.js"></script> <!-- ui.keypress module -->
 <script src="scripts/_command/commandBar.js"></script>
 <script src="scripts/_command/clothoCommandBar.js"></script>
 <script src="scripts/_command/terminal.js"></script>
 <script src="scripts/_command/autocomplete.js"></script>
 <script src="scripts/_command/logEntries.js"></script>
 <script src="scripts/_command/tokenizer.js"></script>
+<script src="scripts/_command/loginCtrl.js"></script>
 <!--endbuild-->
 <!-- /process -->
 
@@ -174,8 +148,11 @@ dependencies: clotho.core
 <script src="scripts/_foundation/_kickoff.js"></script>
 <script src="scripts/_foundation/setup.js"></script>
 <script src="scripts/_foundation/clotho-utils.js"></script>
+<script src="scripts/_foundation/clothoSchemas.js"></script>
 <script src="scripts/_foundation/clothoRun.js"></script>
 <script src="scripts/_foundation/clothoShow.js"></script>
+<script src="scripts/_foundation/clothoModal.js"></script>
+<script src="scripts/_foundation/sharablePopup.js"></script>
 <script src="scripts/_foundation/extensions.js"></script>
 <!--endbuild-->
 
@@ -199,10 +176,10 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 -->
 <!--future - refactor ui-bootstrap dependencies here-->
 <script src="scripts/_interface/_kickoff.js"></script>
-<script src="scripts/_interface/events/ui-keypress.js"></script> <!-- ui.keypress module -->
-<!-- todo - load codemirror modes as module using refactored $clotho.extensions -->
+<!-- modes are loaded separately by service codemirrorLoader -->
 <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script> <!-- ui.codemirror module -->
 <script src="bower_components/ng-file-upload/angular-file-upload.js"></script> <!-- angularFileUpload module -->
+<script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
 <script src="scripts/_interface/html5/fileUpload.js"></script>
 <script src="scripts/_interface/angular-ui/modal-ext.js"></script>
 <script src="scripts/_interface/clotho/sharable.js"></script>
@@ -220,6 +197,7 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/filters/stringEnds.js"></script>
 <script src="scripts/_interface/filters/unique.js"></script>
 <script src="scripts/_interface/html5/contentEditable.js"></script>
+<script src="scripts/_interface/images/backgroundImage.js"></script>
 <!--todo - remove commandBar dependence, move into separate module e.g. webapp-->
 <script src="scripts/_interface/interaction/focus.js"></script>
 <script src="scripts/_interface/jquery-ui/jqSortable.js"></script>
@@ -243,6 +221,9 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_trails/youtubeService.js"></script>
 <script src="scripts/_trails/trailPage.js"></script>
 <script src="scripts/_trails/trailPageComponent.js"></script>
+<script src="scripts/_trails/ui/trailContents.js"></script>
+<script src="scripts/_trails/ui/trailInstructor.js"></script>
+<script src="scripts/_trails/ui/trailMaterial.js"></script>
 <!--endbuild-->
 
 
@@ -253,12 +234,12 @@ function: Editor components
 dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/_editor/_kickoff.js"></script>
-<script src="scripts/_editor/clothoschemas.js"></script>
 <script src="scripts/_editor/clothoEditor.js"></script>
 <script src="scripts/_editor/codemirrorLoader.js"></script>
 <script src="scripts/_editor/form-field.js"></script>
 <script src="scripts/_editor/code-file-drop.js"></script>
 <script src="scripts/_editor/formFieldEnumeration.js"></script>
+<script src="scripts/_editor/formFieldInput.js"></script>
 <script src="scripts/_editor/jsonEdit.js"></script>
 <script src="scripts/_editor/controllers/sharable.js"></script>
 <script src="scripts/_editor/controllers/function.js"></script>
@@ -285,7 +266,6 @@ dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/controllers/_kickoff-webapp.js"></script>
 <script src="scripts/controllers/home.js"></script>
-<script src="scripts/controllers/menu.js"></script>
 <script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/team.js"></script>
 <script src="scripts/controllers/browser.js"></script>
@@ -295,6 +275,10 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/controllers/trails.js"></script>
 <script src="scripts/controllers/widgets.js"></script>
 <script src="scripts/controllers/test/tokenizer.js"></script>
+<script src="scripts/controllers/test/schemaview.js"></script>
+<script src="scripts/controllers/test/trail.js"></script>
+<script src="scripts/controllers/test/trail-browser.js"></script>
+<script src="scripts/controllers/test/trail-overview.js"></script>
 <!-- endbuild -->
 
 <!-- /process -->
