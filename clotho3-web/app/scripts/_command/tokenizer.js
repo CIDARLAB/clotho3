@@ -16,18 +16,9 @@ angular.module('clotho.commandbar')
 			}
 		}
 
-<<<<<<< HEAD
 		ClothoToken.prototype.readable = function () {
 			//todo - refactor to name pending #216
 			return this.model.text || this.model;
-=======
-		ClothoToken.prototype.isAmbiguous = function () {
-			//todo
-		};
-
-		ClothoToken.prototype.isValid = function () {
-			//todo
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 		};
 
 		ClothoToken.prototype.isAmbiguous = function () {
@@ -49,11 +40,7 @@ angular.module('clotho.commandbar')
 		function ClothoTokenCollection (startingTokens) {
 
 			this.tokens = [];
-<<<<<<< HEAD
 			this.currentTokenIndex = -1;
-=======
-			this.currentSelectedIndex = -1;
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 
 			//todo - test initial tokens
 
@@ -65,13 +52,8 @@ angular.module('clotho.commandbar')
 		}
 
 		//add a token, pass arguments through to clothoTokenFactory
-<<<<<<< HEAD
 		ClothoTokenCollection.prototype.addToken = function (sharable) {
 			this.tokens.push(new clothoTokenFactory(sharable));
-=======
-		ClothoTokenCollection.prototype.addToken = function () {
-			this.tokens.push(new clothoTokenFactory(arguments));
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 		};
 
 		ClothoTokenCollection.prototype.inRange = function (index) {
@@ -105,11 +87,7 @@ angular.module('clotho.commandbar')
 		//remove active token if set and return it, otherwise return false
 		ClothoTokenCollection.prototype.removeActiveToken = function () {
 			if (this.isActive()) {
-<<<<<<< HEAD
 				var toReturn =  this.removeToken(this.currentTokenIndex);
-=======
-				var toReturn =  this.removeToken(this.currentSelectedIndex);
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 				this.unsetActive();
 				return toReturn;
 			} else {
@@ -120,11 +98,7 @@ angular.module('clotho.commandbar')
 		//set token at given index to be active
 		ClothoTokenCollection.prototype.setActive = function (index) {
 			if (this.inRange(index)) {
-<<<<<<< HEAD
 				this.currentTokenIndex = index;
-=======
-				this.currentSelectedIndex = index;
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 				return index;
 			} else {
 				return false;
@@ -263,7 +237,7 @@ angular.module('clotho.commandbar')
 						} else {
 							scope.queryResults = $filter('limitTo')(results, 10);
 						}
-				  });
+					});
 
 					/*scope.queryResults = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];*/
 				};
@@ -502,23 +476,10 @@ angular.module('clotho.commandbar')
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
-<<<<<<< HEAD
 				element.on('click', function (evt) {
 					//toggle whether token is active
 					scope.tokenCollection[scope.tokenActive ? 'unsetActive' : 'setActive'](scope.tokenIndex)
 				});
-=======
-				if (scope.tokenCollection) {
-					element.on('click', function (evt) {
-						if (scope.tokenActive) {
-							console.log('sharable object', scope.fullSharable);
-							scope.tokenCollection.unsetActive(scope.tokenIndex);
-						} else {
-							scope.tokenCollection.setActive(scope.tokenIndex);
-						}
-					});
-				}
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 
 				scope.removeToken = function (evt) {
 					evt.preventDefault();
