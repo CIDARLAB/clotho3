@@ -1,27 +1,35 @@
-<div ng-controller="Editor_SharableCtrl">
+<div ng-controller="Editor_SharableCtrl" class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Sharable Editor</h3>
+    </div>
+    <div class="panel-body ng-cloak">
 
-    <fieldset class="ng-cloak" ng-disabled="!editMode">
-        <legend>Sharable Editor</legend>
-        <div form-field-enumeration sharable="sharable"></div>
+        <fieldset ng-disabled="!editMode">
 
-        <div class="form-group" ng-show="editMode">
-            <div class="col-md-3">
-                <input type="text" class="form-control" ng-model="newFieldKey" placeholder="New Field Key">
+            <div ng-include="_objBaseFields"></div>
+
+            <div form-field-enumeration sharable="sharable" strip-basic-fields="true"></div>
+
+            <div class="form-group" ng-form name="newField" ng-show="editMode">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" ng-model="newFieldKey" placeholder="New Field Key">
+                </div>
+                <div class="col-md-9 input-group">
+                    <textarea json-edit="newFieldVal"
+                              name="newFieldVal"
+                              rows="1"
+                              class="form-control"
+                              placeholder="Enter JSON Value - use quotes for string">
+                    </textarea>
+                    <span class="input-group-btn">
+                         <button ng-click="addNewField()" class="btn btn-default" ng-disabled="!newFieldVal || newField.newFieldVal.$invalid">
+                             <span class="glyphicon glyphicon-plus"></span>
+                         </button>
+                    </span>
+                </div>
             </div>
-            <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="newFieldVal" placeholder="New Field Value">
-            </div>
-            <button ng-click="addNewField()" class="btn btn-default col-md-2" ng-disabled="!newFieldVal || !newFieldKey">Add Field</button>
-        </div>
 
-        <button ng-show="editMode && !showJsonEditor" type="button" class="btn btn-default" ng-click="toggleJsonEdit()">Edit Json</button>
-        <div ng-show="showJsonEditor">
-            <hr>
-            <form-field name="Edit JSON directly">
-                <textarea json-edit="$parent.$parent.sharable" rows="12"></textarea>
-            </form-field>
-        </div>
-
-    </fieldset>
-    <div ng-include="_formActions"></div>
+        </fieldset>
+    </div>
+    <div class="panel-footer" ng-include="_formActions"></div>
 </div>
