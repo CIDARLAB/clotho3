@@ -151,7 +151,8 @@ public class Router {
                     api.unlisten(data.toString());
                     break;
                 case validate:
-                    api.validate(JSON.mappify(data));
+                    response = api.validate(JSON.mappify(data));
+                    break;
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());
                     response = Void.TYPE;

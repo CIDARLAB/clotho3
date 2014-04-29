@@ -97,6 +97,7 @@ public class ClothoSchema extends Schema {
                     Map<String, Object> values = constraint.values;
                     logger.trace("{}.visitAnnotation({},{})", fv, descriptor, true);
                     AnnotationVisitor av = fv.visitAnnotation(descriptor, true);
+                    //XXX: invalid annotation values cause hibernate validator to crash
                     for (String valueName : values.keySet()) {
                         handleAnnotationValue(av, valueName, values.get(valueName));
                     }

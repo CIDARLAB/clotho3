@@ -121,10 +121,38 @@ asyncTest("create with schema", function () {
 });
 
 testThroughAsync("create LabPerson", 
-        new Message("create", {"schema":"52310822c2e67bf02c9c21f1"}),
+        new Message("create", {"schema":"LabPerson"}),
         function (){
             expect(0);
         });
+
+testThroughAsync("validation failure",
+        new Message("validate", {schema:"org.clothocad.model.NucSeq", sequence:null}),
+        function (errors){
+            equal(errors.length, 1);
+            equal(errors[0].interpolatedMessage, "may not be null");
+            equal(errors[0].propertyPath.nodeList[1].name, "sequence");
+        });
+
+testThroughAsync("validation success", 
+        new Message("validate", {schema:"org.clothocad.model.NucSeq", sequence:"ATCG"}),
+        function (errors){
+            equal(errors.length, 0);
+        });
+
+asyncTest("authoring schema constraints", function (){
+    var socket = getSocket(clothosocket);
+    socket.onopen = function (){
+        socket.send(new Message("create", {id:"org.clothocad.model.SimpleFeature", language:"JSONSCHEMA", schema:"org.clothocad.core.schema.ClothoSchema", name:"SimpleFeature", description:"A simple and sloppy representation of a Feature or other DNA sequence", "fields":[{name:"sequence", type:"string", example:"ATACCGGA", access:"PUBLIC", constraints:[{constraintType:"javax.validation.constraints.Pattern", values:{flags:["CASE_INSENSITIVE"], regexp:"[ATUCGRYKMSWBDHVN]*"}}], description:"the sequence of the feature"}]}), function (response) {
+            socket.send(new Message("validate", {schema:"org.clothocad.model.SimpleFeature", sequence:"this is not a valid sequence"}), function (errors) {
+                equal(errors.length, 1);
+                equal(errors[0].interpolatedMessage, "must match \"[ATUCGRYKMSWBDHVN]*\"");
+                equal(errors[0].propertyPath.nodeList[1].name, "sequence");
+                start();
+            });
+        });
+    };
+});
 
 asyncTest("set", function (){
     var socket = getSocket(clothosocket);

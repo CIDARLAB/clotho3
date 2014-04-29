@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -816,8 +817,8 @@ public class ServerSideAPI {
             say(String.format("Validation unsuccessful: %s", e.getMessage()), Severity.FAILURE);
             return e.getConstraintViolations();
         }
-            say("Validation successful.", Severity.SUCCESS);
-        return null;
+        say("Validation successful.", Severity.SUCCESS);
+        return new HashSet<>();
     }
 
     public static enum Severity {
