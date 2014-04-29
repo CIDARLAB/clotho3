@@ -105,6 +105,56 @@ angular.module('clotho.foundation')
 		var spaceRegexp = /[^\s"']+|"([^"]*)"|'([^']*)'/;
 		var spaceRegexpEscaped =  escapeRegexp(spaceRegexp);
 
+		var formTypeMap = {
+			"boolean" : {
+				type : "boolean",
+				input : {
+					type : 'checkbox'
+				}
+			},
+			"number" : {
+				type : "number",
+				input : {
+					type : 'number'
+				}
+			},
+			"string" : {
+				type : "string",
+				input : {
+					type : 'text'
+				}
+			},
+			"date" :{
+				type : "date",
+				input : {
+					type : 'date'
+				}
+			},
+			"array" : {
+				type : "array",
+				input : {
+					type : 'text',
+					"ng-list" : spaceRegexpEscaped
+				}
+			},
+			"org.bson.types.ObjectId" : {
+				type : "id",
+				input : {
+					type : 'text'
+				}
+			},
+			"object" : {
+				type : "object"
+			},
+			//suggest do not just use this catch, but allow further specification in UI or something
+			"default" : {
+				type : "string",
+				input : {
+					type: "text"
+				}
+			}
+		};
+
 		// has object 'input' if can be displayed as input. add all as attrs.
 		// otherwise will have to handle another way (e.g. json-edit directive)
 		var javaToJavascript = {
@@ -344,6 +394,7 @@ angular.module('clotho.foundation')
 			accessTypes : accessTypes,
 			constraintTypes : constraintTypes,
 			primitiveToJava : primitiveToJava,
+			formTypeMap : formTypeMap,
 			javaToJavascript : javaToJavascript,
 
 			isSchema : isSchema,

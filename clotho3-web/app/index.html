@@ -40,14 +40,6 @@
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
 
-<!-- process:remove:command,api -->
-<!-- terminal aside for webapp... note not ready for prime time yet... need to make command bar styles more accessible -->
-<!--
-<div terminal-aside-trigger></div>
-<div terminal-aside aside-content-url="'views/_command/terminal.html'"></div>
--->
-<!-- /process -->
-
 <!-- process:remove:api -->
 <div class="container">
     <div clotho-command-bar></div>
@@ -205,6 +197,7 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/filters/stringEnds.js"></script>
 <script src="scripts/_interface/filters/unique.js"></script>
 <script src="scripts/_interface/html5/contentEditable.js"></script>
+<script src="scripts/_interface/images/backgroundImage.js"></script>
 <!--todo - remove commandBar dependence, move into separate module e.g. webapp-->
 <script src="scripts/_interface/interaction/focus.js"></script>
 <script src="scripts/_interface/jquery-ui/jqSortable.js"></script>
@@ -228,6 +221,9 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_trails/youtubeService.js"></script>
 <script src="scripts/_trails/trailPage.js"></script>
 <script src="scripts/_trails/trailPageComponent.js"></script>
+<script src="scripts/_trails/ui/trailContents.js"></script>
+<script src="scripts/_trails/ui/trailInstructor.js"></script>
+<script src="scripts/_trails/ui/trailMaterial.js"></script>
 <!--endbuild-->
 
 
@@ -243,6 +239,7 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_editor/form-field.js"></script>
 <script src="scripts/_editor/code-file-drop.js"></script>
 <script src="scripts/_editor/formFieldEnumeration.js"></script>
+<script src="scripts/_editor/formFieldInput.js"></script>
 <script src="scripts/_editor/jsonEdit.js"></script>
 <script src="scripts/_editor/controllers/sharable.js"></script>
 <script src="scripts/_editor/controllers/function.js"></script>
@@ -279,6 +276,9 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/controllers/widgets.js"></script>
 <script src="scripts/controllers/test/tokenizer.js"></script>
 <script src="scripts/controllers/test/schemaview.js"></script>
+<script src="scripts/controllers/test/trail.js"></script>
+<script src="scripts/controllers/test/trail-browser.js"></script>
+<script src="scripts/controllers/test/trail-overview.js"></script>
 <!-- endbuild -->
 
 <!-- /process -->

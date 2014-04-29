@@ -43,12 +43,8 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
             var newValue = instance.getValue();
             if (ngModel && newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
+	            scope.$digest();
             }
-            /* hack...
-            if (!scope.$$phase) {
-              scope.$apply();
-            }
-            */
           });
           if (ngModel) {
             ngModel.$formatters.push(function (value) {

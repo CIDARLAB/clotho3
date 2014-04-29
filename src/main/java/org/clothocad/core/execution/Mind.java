@@ -27,9 +27,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import javax.script.ScriptException;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 
@@ -82,6 +87,9 @@ public class Mind
 
     public Mind() {
         engine = getEngine();
+        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR); //JCA added 4/3/14
+        trie.put("mindtest1", "533e28679e7d657d78b6eb83");
+        trie.put("mindtrap", "533e28689e7d657d78b6ebf7");
     }
 
     /**
@@ -207,4 +215,25 @@ public class Mind
         }
         return out;
     }
+    
+    //*****Start JCA section for dealing with autocomplete/disambiguation
+    public List<String> getMindCompletions(String query) {
+        SortedMap<String, String> subTrie = trie.prefixMap(query);
+        List<String> options = new ArrayList<>();
+        for (Map.Entry<String, String> entry : subTrie.entrySet()) {
+            options.add(entry.getKey());
+        }
+        return options;
+    }
+    
+    public String getSharableId(String query) {
+        SortedMap<String, String> subTrie = trie.prefixMap(query);
+        if(subTrie.size()==1) {
+            return subTrie.get(subTrie.lastKey());
+        } else {
+            return null;
+        }
+    }
+
+    private Trie<String, String> trie;
 }

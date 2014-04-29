@@ -14,14 +14,17 @@ import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import static com.mongodb.MongoException.DuplicateKey;
+import groovy.lang.Tuple;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -288,7 +291,25 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     public void deleteAllCredentials() {
         cred.drop();
     }
-
+    @Override
+    public Tuple[] getTuples(){
+        DBCursor cursor = rawDataCollection.find();
+        Iterator<DBObject> iter = cursor.iterator();
+        Tuple[] output = new Tuple[cursor.length()];
+        int i = 0;
+        while(iter.hasNext()){
+            DBObject temp = iter.next();
+            Object name = temp.get("name");
+            Object uuid = temp.get("_id");
+            Object[] elem = new Object[2];
+            elem[0] = name;
+            elem[1] = uuid;
+            Tuple input = new Tuple(elem);
+            output[i] = input;
+            i++;
+        }
+        return output;
+    }
     private List<Map<String, Object>> mappify(Iterable<JSONFilter> objs) {
         List<Map<String, Object>> out = new ArrayList<>();
         for (JSONFilter obj : objs) {
@@ -296,7 +317,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         }
         return out;
     }
-
+    
     private Map<String, Object> mappify(JSONFilter obj) {
 
         return mapper.convertValue(obj, STRINGMAP);

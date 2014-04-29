@@ -83,6 +83,7 @@ angular.module('clotho.interface')
 
     return {
       template: '<div></div>',
+	    replace : true,
       restrict: 'EA',
 	    scope: {},
       link: function postLink(scope, element, attrs) {

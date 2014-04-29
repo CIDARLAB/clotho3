@@ -1,7 +1,8 @@
 'use strict';
 
 //Api-only stack
-angular.module('clothoRoot', ['clotho.core']);
+angular.module('clothoRoot', ['clotho.core'])
+.run(function(Clotho) {});
 
 /*
 angular.element(document).ready(function() {

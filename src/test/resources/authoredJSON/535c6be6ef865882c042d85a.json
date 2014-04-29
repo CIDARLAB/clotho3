@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Christoph",
+  "nickName" : "Christoph",
+  "surName" : "Neyer",
+  "name" : "christoph.neyer",
+  "emailAddress" : "christoph.neyer@gmail.com",
+  "icon" : "christophNeyer.png",
+  "imgUrl" : "",
+  "startDate" : "2010-06-01",
+  "endDate" : "2012-06-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2010-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "social" : "",
+  "id" : "535c6be6ef865882c042d85a"
+}

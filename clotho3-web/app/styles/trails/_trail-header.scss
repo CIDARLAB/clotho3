@@ -1,0 +1,50 @@
+//appears across trail-page and trail-overview
+
+.trail-header {
+
+  $height-trailHeader : 135px;
+  $width-trailImage : 240px;
+  $borderWidth-trailHeader : 1px;
+
+  border: $borderWidth-trailHeader solid $borderColor-trail;
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+  display: block;
+  position: relative;
+
+
+  .trail-icon {
+
+    display: block;
+    float: left;
+    width: $width-trailImage;
+    height: $height-trailHeader;
+    margin: 0;
+    padding: 0;
+
+    img {
+      display: block;
+      max-height: 100%;
+    }
+  }
+
+  .trail-info {
+
+    display: block;
+    width: $width-container - $width-trailImage - $borderWidth-trailHeader*2;
+    padding: 10px 15px;
+    position: absolute;
+    bottom: 0;
+    left: $width-trailImage;
+  }
+
+  .trail-name {
+
+  }
+
+  .trail-description {
+
+  }
+
+}

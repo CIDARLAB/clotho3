@@ -24,6 +24,10 @@ ENHANCEMENTS, OR MODIFICATIONS.
 //TODO: move the translation from clothoisms to mongodb into mongodbconnection
 
 package org.clothocad.core.persistence;
+
+import com.mongodb.BasicDBObject;
+import groovy.lang.Tuple;
+import java.io.IOException;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -589,5 +593,11 @@ public class Persistor{
         //complain about ambiguity
         log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
+    }
+    /*
+     * Used to pass the data collection from the MongoDBConnection
+     */
+    public Tuple[] getTuplesMongo(){
+        return connection.getTuples();
     }
 }

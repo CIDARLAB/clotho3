@@ -3,13 +3,11 @@
  backend: CSS (url), mixin (array|url), script (array|url), onload (array|url), controller (name, must be mixed in)
  content: text (string|html), video (object), template (url), quiz (object), markdown (text), wiki (text)
  */
-angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $controller) {
+angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $controller, hotkeys) {
 
 	return {
 		restrict: 'A',
-		template: '<div ng-repeat="comp in pageComponents">' +
-			'<div trail-page-component="comp"></div>' +
-			'</div>',
+		templateUrl: 'views/_trails/trailPage.html',
 		scope: {
 			page: '=trailPage',
 			next : '=',
@@ -34,17 +32,15 @@ angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $c
 					});
 
 					scope.createPage = function () {
-						if (!!scope.page.dictionary) {
+						if (angular.isDefined(scope.page.dictionary)) {
 							angular.extend(scope, scope.page.dictionary);
 						}
 
-						return $clotho.extensions.css(scope.page.css)
-						.then(function() {
-							return $clotho.extensions.mixin(scope.page.mixin)
-						})
-						.then(function() {
-							return $clotho.extensions.script(scope.page.script)
-						})
+						return $q.all([
+							$clotho.extensions.css(scope.page.css),
+							$clotho.extensions.mixin(scope.page.mixin),
+							$clotho.extensions.script(scope.page.script)
+						])
 						.then(function (){
 
 
@@ -79,6 +75,17 @@ angular.module('clotho.trails').directive('trailPage', function($timeout, $q, $c
 					//return scope.createPage(scope.page);
 				},
 				post: function postLink(scope, element, attrs) {
+
+					scope.helpModalOpen = false;
+
+					function toggleHelpModal () {
+						scope.helpModalOpen = !scope.helpModalOpen;
+					}
+
+					if (scope.page.help) {
+						hotkeys.add('h', 'Toggle Page Help', toggleHelpModal, false);
+					}
+
 
 					/*
 					scope.$watch(attrs.trailPage, function(newpage, oldpage) {
