@@ -229,7 +229,7 @@ public class ServerSideAPI {
         }
         Object out = null;
         try {
-            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId));
+            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId, options));
             return out;
         } catch (Exception ex) {
             System.out.println("Unsuccessfully executed the sloppy command");
