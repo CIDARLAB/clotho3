@@ -34,12 +34,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
 import java.util.logging.Level;
 import java.util.logging.Logger;
-=======
 import java.util.Set;
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import javax.validation.ConstraintViolation;
@@ -98,13 +95,14 @@ public class ServerSideAPI {
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
         this(mind, persistor, router, requestId, new MessageOptions());
     }    
+    
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
-<<<<<<< HEAD
         this.completer = new AutoComplete(persistor);
+        this.options = options;
     }
 
     public final List<Map> autocomplete(String userText){
@@ -127,9 +125,6 @@ public class ServerSideAPI {
         comps.addAll(globalComps);
         
         return comps;
-=======
-        this.options = options;
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
