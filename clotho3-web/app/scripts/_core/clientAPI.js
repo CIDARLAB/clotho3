@@ -243,6 +243,8 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var help = function clientAPIHelp(uuid) {
 
+			//todo - create clotho modal and show it
+
 		};
 
 		/**
