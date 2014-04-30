@@ -1,5 +1,22 @@
 angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q, $sce) {
 
+	//temporary, to get out of API
+	//todo - reference by ID
+	/**
+	 * @name gradeQuiz
+	 *
+	 * @param {*} questionValue
+	 * @param {*} input
+	 * @param {string} answerGen ID of function to run to generate answer
+	 *
+	 * @description
+	 * wrapper for grade quiz funciton on server (easier to change in one place)
+	 *
+	 */
+	var gradeQuiz = function (questionValue, input, answerGen) {
+		return Clotho.run('gradeQuiz', [questionValue, input, answerGen]);
+	};
+
 	return {
 		restrict: "EA",
 		require: 'ngModel',
@@ -49,7 +66,7 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 					};
 
 					scope.submitQuestion = function(quiz) {
-						Clotho.gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (data) {
+						gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (data) {
 							console.log('gradeQuiz result: ' + data);
 							scope.quiz.submitted = true;
 							scope.quiz.response = {};

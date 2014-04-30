@@ -31,32 +31,6 @@ angular.module('clotho.core').service('ClientAPI',
 		};
 
 		/**
-		 * @name clientAPI.edit
-		 * @param uuid UUID of sharable to edit, opens in modal
-		 */
-		var edit = function (uuid) {
-			if ($injector.has('$route')) {
-				$location.path('/editor/' + uuid)
-			} else {
-				//need to go to full instance, this just has API or Command build
-				say({
-					text : 'Cannot edit in API / Command Build',
-					from: 'client',
-					class : 'error'
-				});
-			}
-		};
-
-		/**
-		 * @name clientAPI.changeUrl
-		 *
-		 * @param newUrl URL to change to, angular version
-		 */
-		var changeUrl = function (newUrl) {
-			$location.path(newUrl);
-		};
-
-		/**
 		 * @name clientAPI.broadcast
 		 *
 		 * @param {object} obj  Object to pass to PubSub
@@ -261,6 +235,32 @@ angular.module('clotho.core').service('ClientAPI',
 		};
 
 		/**
+		 * @name clientAPI.changeUrl
+		 *
+		 * @param newUrl URL to change to, angular version
+		 */
+		var changeUrl = function (newUrl) {
+			$location.path(newUrl);
+		};
+
+		/**
+		 * @name clientAPI.edit
+		 * @param uuid UUID of sharable to edit, opens in modal
+		 */
+		var edit = function (uuid) {
+			if ($injector.has('$route')) {
+				$location.path('/editor/' + uuid)
+			} else {
+				//need to go to full instance, this just has API or Command build
+				say({
+					text : 'Cannot edit in API / Command Build',
+					from: 'client',
+					class : 'error'
+				});
+			}
+		};
+
+		/**
 		 * @name clientAPI.startTrail
 		 *
 		 * @param {string} uuid
@@ -272,41 +272,8 @@ angular.module('clotho.core').service('ClientAPI',
 			$location.path('/trails/' + uuid);
 		};
 
-
-		// ---- COMMAND BAR ----
-
-		/**
-		 * @name clientAPI.autocomplete
-		 *
-		 * @param {array} list Array of autocompletions
-		 *
-		 * @description
-		 * Publishes autocompletions to PubSub for listeners to pick up
-		 */
-		var autocomplete = function clientAPIAutocomplete(list) {
-			Debugger.log('autocomplete', list);
-			PubSub.trigger('autocomplete', list);
-		};
-
-		var autocompleteDetail = function clientAPIAutocompleteDetail(obj) {
-
-			Debugger.log('(autocompleteDetail)', obj);
-
-			if (angular.isObject(obj.command_object) && obj.command_object.function_id) {
-				var id = obj.command_object.function_id;
-				Collector.storeModel('detail_' + id, obj);
-				PubSub.trigger('autocompleteDetail_' + id, obj);
-			}
-			else {
-				Debugger.warn('(autocompleteDetail)\tCould not extract id from object (possibly malformed)');
-			}
-		};
-
-
 		return {
 			collect: collect,
-			edit: edit,
-			changeUrl: changeUrl,
 			broadcast: broadcast,
 			log: log,
 			say: say,
@@ -315,8 +282,10 @@ angular.module('clotho.core').service('ClientAPI',
 			hide: hide,
 			help: help,
 			revisions: revisions,
-			startTrail: startTrail,
-			//autocomplete : autocomplete,
-			autocompleteDetail: autocompleteDetail
+
+			//using routes
+			changeUrl: changeUrl,
+			edit: edit,
+			startTrail: startTrail
 		}
 	});

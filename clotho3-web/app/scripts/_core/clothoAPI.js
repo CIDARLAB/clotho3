@@ -642,8 +642,7 @@ function generateClothoAPI() {
         fn.emit('alert', packaged);
     };
 
-    var autocomplete = function(query,  options) {
-      //todo - use $cacheFactory to cache searches
+    var autocomplete = function(query, options) {
 
 	    //catch all, publish on autocomplete for now
 	    var callback = function(data) {
@@ -655,32 +654,6 @@ function generateClothoAPI() {
       };
       return fn.emitSubCallback('autocomplete', packaged, callback, options);
     };
-
-    var autocompleteDetail = function(uuid) {
-
-        var deferred = $q.defer();
-        //check the collector first
-        if (Collector.hasItem('detail_'+uuid)) {
-            deferred.resolve(Collector.retrieveModel('detail_'+uuid));
-        } else {
-            var packaged = {
-                "uuid" : uuid
-            };
-            fn.emit('autocompleteDetail', packaged);
-
-            //testing
-            //PubSub.once('autocompleteDetail_'+'function_id123', function(data) {
-            PubSub.once('update:detail_'+uuid, function(data) {
-                deferred.resolve(data);
-            }, '$clotho');
-        }
-
-        return deferred.promise;
-    };
-
-
-
-
 
     var submit = function(query) {
         return fn.emitSubOnce('submit', query);
@@ -773,22 +746,6 @@ function generateClothoAPI() {
         $location.path("/trails/" + uuid);
     };
 
-    /**
-     * @name Clotho.gradeQuiz
-     *
-     * @param {*} questionValue
-     * @param {*} input
-     * @param {string} answerGen ID of function to run to generate answer
-     *
-     * @description
-     * wrapper for grade quiz funciton on server (easier to change in one place)
-     *
-     */
-    var gradeQuiz = function clothoAPI_gradeQuiz(questionValue, input, answerGen) {
-        return run('gradeQuiz', [questionValue, input, answerGen]);
-    };
-
-
     return {
         //api
         login : login,
@@ -808,12 +765,10 @@ function generateClothoAPI() {
         run : run,
         recent: recent,
         notify : notify,
-        gradeQuiz : gradeQuiz,
 
 		    //searchbar
 		    submit: submit,
 		    autocomplete : autocomplete,
-		    autocompleteDetail : autocompleteDetail,
 
         //toolkit
         watch : watch,
