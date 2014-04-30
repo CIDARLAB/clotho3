@@ -87,9 +87,7 @@ public class Mind
 
     public Mind() {
         engine = getEngine();
-        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR); //JCA added 4/3/14
-        trie.put("mindtest1", "533e28679e7d657d78b6eb83");
-        trie.put("mindtrap", "533e28689e7d657d78b6ebf7");
+        trie = new PatriciaTrie<String, String> (StringKeyAnalyzer.CHAR);
     }
 
     /**
