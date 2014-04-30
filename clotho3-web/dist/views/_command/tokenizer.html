@@ -1,19 +1,10 @@
 <div class="clothoTokenizerWrap" ng-click="focusInput()">
     <div class="clothoTokenizerTokens">
-<<<<<<< HEAD
         <clotho-token ng-repeat="token in tokenCollection.tokens track by $index" token-collection="tokenCollection" token-index="$index" token-active="tokenCollection.isActive($index)" ng-model="token" on-remove="removeToken($index, $token)"></clotho-token>
-=======
-        <clotho-token ng-repeat="token in tokenCollection.tokens track by $index" token-collection="tokenCollection" token-index="$index" token-active="tokenCollection.isActive($index)" ng-model="token" on-remove="removeToken($index, $model)"></clotho-token>
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
     </div>
 
     <div class="clothoTokenizerAutocompleteWrap clothoAutocompleteWrap">
         <input type="text" clotho-autocomplete placeholder="{{placeholder}}" class="clothoAutocomplete" ng-model="query" token-collection="tokenCollection" autocomplete-on-select="addToken($item)">
     </div>
-<<<<<<< HEAD
-=======
-
-    <pre>{{tokenCollection | json}}</pre>
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
 </div>
 

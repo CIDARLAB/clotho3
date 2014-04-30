@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="clothoTokenWrap" ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous(), 'sharable' : token.isSharable()}">
     <div class="clothoTokenPopup" ng-show="tokenActive && token.isSharable()">
         <h3 class="clothoTokenPopupHeader">
@@ -11,9 +10,5 @@
         <pre class="info">{{token.fullSharable | json}}</pre>
     </div>
     <span class="clothoTokenText">{{token.readable()}}</span>
-=======
-<div class="clothoTokenWrap" ng-class="{'active' : tokenActive}">
-    <span class="clothoTokenText">{{model.name || model}}</span>
->>>>>>> d5f512eff9e5aa2d9563e8b347d49975c772b22d
     <span class="clothoTokenClose" ng-click="removeToken($event)" ng-show="tokenActive">&times;</span>
 </div>
