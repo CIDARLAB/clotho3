@@ -62,6 +62,7 @@ import org.clothocad.core.schema.Constraint;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.annotation.AnnotationType;
 /**
  * @author John Christopher Anderson
  */
@@ -301,21 +302,24 @@ public class ClothoField {
             //ignore properties not in annotation class
             Map<String,Object> values = new HashMap<>();
             jp = tokens.asParser();
+            t = jp.nextToken();
             
             if (jp.hasCurrentToken()){
                 t = jp.nextToken();
                 while (t != JsonToken.END_OBJECT){
                     if (t != JsonToken.FIELD_NAME) throw new IOException("Expected FIELD_NAME.");
-                    t = jp.nextToken();
+                    String name = jp.getCurrentName();
+                    jp.nextToken();
                     try {
-                        JavaType fieldType = SimpleType.construct(constraintType.getField(jp.getCurrentName()).getType());
+                        JavaType fieldType = ctxt.getTypeFactory().constructType(constraintType.getMethod(name).getReturnType());
                         Object fieldValue = ctxt.findContextualValueDeserializer(fieldType, null).deserialize(jp, ctxt);
-                    } catch (NoSuchFieldException ex) {
+                        values.put(name, fieldValue);
+                    } catch (NoSuchMethodException ex) {
                         jp.skipChildren();
                     } catch (SecurityException ex) {
                         throw new RuntimeException("Couldn't access field " + jp.getCurrentName() + " in " + constraintType.getCanonicalName());
                     }
-                    jp.nextToken();
+                    t = jp.nextToken();
                 }               
             }
 
