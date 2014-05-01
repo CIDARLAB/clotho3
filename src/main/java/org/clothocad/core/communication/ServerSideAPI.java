@@ -30,11 +30,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -46,15 +53,17 @@ import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.execution.Mind;
+import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
 import static org.clothocad.core.ReservedFieldNames.*;
-import org.clothocad.core.execution.ScriptAPI;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -78,7 +87,7 @@ import org.clothocad.core.execution.ScriptAPI;
 @Slf4j
 public class ServerSideAPI {
 
-    private static final AutoComplete completer = new AutoComplete();
+    private final AutoComplete completer;
     private final Router router;
     private final Persistor persistor;
     private final String requestId;
@@ -88,18 +97,37 @@ public class ServerSideAPI {
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
         this(mind, persistor, router, requestId, new MessageOptions());
     }    
+    
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
+        this.completer = new AutoComplete(persistor);
         this.options = options;
     }
 
-    public final List<String> autocomplete(String userText) {
-        return completer.getCompletions(userText);
-    }
+    public final List<Map> autocomplete(String userText){
+        //This is needed because the subString is in the format {query=[subString]}
+        userText = userText.substring(7, userText.length()-1);
+        
+        //TODO: This should be changed to an int provided from the client
+        int cursorIndex = userText.length();  
 
+        //Grab the last word fragment up to the cursor position
+        String[] words = userText.substring(0, cursorIndex).split("\\s+");
+        String lastWord = words[words.length-1];
+        
+        //Fetch any words in the Mind's <String,String> Trie
+        //List<Map> comps = mind.getMindCompletions(lastWord);
+        List<Map> comps = new ArrayList<Map>();
+        
+        //Add the word suggestions from the global Trie
+        List<Map> globalComps = completer.getCompletions(lastWord);
+        comps.addAll(globalComps);
+        
+        return comps;
+    }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
         try {
@@ -112,8 +140,33 @@ public class ServerSideAPI {
 
     }
 
+        
+    //clotho.run("aa7f191e810c19729de86101", ["53581f9e9e7d7a2fda8c36a7"]);   revcomp pBca1256
+    //clotho.run("aa7f191e810c19729de86101", ["atcg"]);  revcomp atcg
     public final Object submit(String command) {
-        //Resolve the arguments to a command string
+        //Resolve the commands to tokens
+        System.out.println("++ The command submitted is: " + command);
+        String[] tokens = command.split("\\s+");
+        for(String str : tokens) {
+            System.out.println("token: " + str);
+        }
+
+        Object out = tryRun(tokens);
+        if(out != null) {
+            return out;
+        }
+        
+        out = trySingleWord(tokens);
+        if(out != null) {
+            return out;
+        }
+        
+        out = tryAPIWord(tokens);
+        if(out != null) {
+            return out;
+        }
+        
+        //Run the command assuming it's javascript
         //say(command, Severity.MUTED, null, true);
         try {
             Object returnValue = mind.runCommand(command, getScriptAPI());
@@ -127,6 +180,107 @@ public class ServerSideAPI {
         }
     }
 
+    /**
+     * Interprets tokens of a submit as a clotho.run call
+     * where the first token is the Function, and the others are args
+     * 
+     * @param tokens
+     * @return the result or null if it failed to execute
+     */
+    private Object tryRun(String[] tokens) {
+        System.out.println("+++  try RUN on args");
+        Function function = null;
+        List<Object> args = new ArrayList<Object>();
+        
+        //Assume the first token is a Function call
+        List<Map> completions = completer.getCompletions(tokens[0]);
+        if(completions.size()>0) {
+            String uuid = (String) completions.get(0).get("uuid");
+            try {
+                function = persistor.get(Function.class, persistor.resolveSelector(uuid, true));
+            } catch(java.lang.IllegalArgumentException ex) {
+                return null;
+            }
+        } 
+        if(function==null) {
+            return null;
+        }
+        
+        //Iterate through each subsequent token and convert to object if required
+        for(int i=1; i<tokens.length; i++) {
+            String token = tokens[i];
+            completions = completer.getCompletions(token);
+            
+            //If the completions suggest what the things is
+            if(completions.size()>0) {
+                String uuid = (String) completions.get(0).get("uuid");
+                ObjBase shar = persistor.get(ObjBase.class, persistor.resolveSelector(uuid, true));
+                args.add(shar);
+            } 
+            //Otherwise just consider this raw String or int
+            else {
+                args.add(token);
+            }
+        }
+
+        //Invoke run with the ScriptEngine
+        System.out.println("Running the resolved sloppy arguments with function:\n " + function.toString());
+        System.out.println("And args: " );
+        for(Object obj : args) {
+            System.out.println(obj.toString());
+        }
+        Object out = null;
+        try {
+            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId, options));
+            return out;
+        } catch (Exception ex) {
+            System.out.println("Unsuccessfully executed the sloppy command");
+            return null;
+        }
+    }
+    
+    private Object trySingleWord(String[] tokens) {
+        System.out.println("+++  try Single Word get");
+        if(tokens.length!=1) {
+            return null;
+        }
+        System.out.println("trySingleWord has a single token " + tokens[0]);
+        Object out = null;
+        try {
+            String word = tokens[0];
+            List<Map> completions = completer.getCompletions(word);
+            
+            //If the completions suggest what the things is
+            if(completions.size()>0) {
+                String uuid = (String) completions.get(0).get("uuid");
+                return get(uuid);
+            } 
+            return null;
+        } catch(Exception err) {
+            return null;
+        }
+    }
+    
+    private Object tryAPIWord(String[] tokens) {
+        System.out.println("+++  try first word is API word");
+        String firstWord = tokens[0].toLowerCase();
+        
+        //Example:  get pBca1256
+        if(firstWord.equals("get")) {
+            //Interpret the next token as a clotho.get request
+            return get(tokens[1]);
+            
+        } else if(firstWord.equals("run")) {
+            String[] newtok = new String[tokens.length-1];
+            for(int i=0; i<newtok.length; i++) {
+                newtok[i] = tokens[i+1];
+            }
+            return tryRun(newtok);
+        } else {
+            return null;
+        }
+    }
+    
     public final void learn(Object data) {
         //might already be data?
         Map<String, Object> json = JSON.mappify(data);
@@ -383,10 +537,6 @@ public class ServerSideAPI {
             if (obj.containsKey("id")) {
                 idKey = "id";
             }
-            if (obj.containsKey("_id")) {
-                idKey = "_id";
-            }
-
 
             if (idKey != null) {
 
@@ -402,25 +552,19 @@ public class ServerSideAPI {
                 obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
             //TODO: create sets author to current user
-            ObjectId id = persistor.save(obj);
-
-            //TODO: create as java object and save to force validation and trigger post-create methods
-
+            
             try {
-                ObjBase realObject = persistor.get(ObjBase.class, id);
-                persistor.save(realObject);
-            } catch (Exception e) {
-                logAndSayError("could not validate object - possibly malformed data?", e);
+                ObjectId id = persistor.save(obj);
+                //TODO: Relay the data change to listening clients
+
+                //Return the JSON of the new object as a String
+                say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);
+                return id;
+            } catch (ConstraintViolationException e) {
+                say (String.format("Validation failed: %s. No object was created.", e.getMessage()), Severity.FAILURE);
+                return null;
             }
 
-
-
-            //TODO: Relay the data change to listening clients
-            System.out.println("Ernst, this needs to be implemented here too.  Push object via pubsub.");
-
-            //Return the JSON of the new object as a String
-            say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);
-            return id;
         } catch (UnauthorizedException e) {
             say("The current user does not have write access for this domain", Severity.FAILURE);
             return null;
@@ -478,6 +622,27 @@ public class ServerSideAPI {
         }
     }
 
+    public Object
+    run2(final String name, final List<Object> args) {
+        final Map<String, Object> funcJSON =
+            persistor.getAsJSON(persistor.resolveSelector(name, true));
+        return SubprocessExec.run(
+            this,
+            funcJSON,
+            args,
+            new SubprocessExec.EventHandler() {
+                @Override public void onFail(final String standardError) {
+                    say(standardError, Severity.FAILURE);
+                }
+
+                @Override public void onSuccess(final String standardError) {
+                    if (!standardError.isEmpty())
+                        say(standardError, Severity.NORMAL);
+                }
+            }
+        );
+    }
+
     //TODO: needs serious cleaning up
     public final Object run(Object o)
     throws ScriptException,
@@ -500,6 +665,7 @@ public class ServerSideAPI {
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
                     Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
                     return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -583,7 +749,7 @@ public class ServerSideAPI {
     }
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
-
+        System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
         return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }
@@ -811,6 +977,20 @@ public class ServerSideAPI {
             throw new EntityNotFoundException();
         }
         return result.get(0);
+    }
+
+    Set<ConstraintViolation<?>> validate(Map<String,Object> data) {
+        try {
+            persistor.validateBSON(data);
+        } catch (IllegalArgumentException iae){
+            say(String.format("Could not validate: %s", iae.getMessage()), Severity.WARNING);
+            
+        } catch (ConstraintViolationException e){
+            say(String.format("Validation unsuccessful: %s", e.getMessage()), Severity.FAILURE);
+            return e.getConstraintViolations();
+        }
+        say("Validation successful.", Severity.SUCCESS);
+        return new HashSet<>();
     }
 
     public static enum Severity {

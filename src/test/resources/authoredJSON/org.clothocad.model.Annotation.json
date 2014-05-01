@@ -28,7 +28,7 @@
   }, {
     "javaType" : "org.clothocad.model.Person",
     "name" : "author",
-    "type" : "Person",
+    "type" : "org.clothocad.model.Person",
     "reference" : true
   }, {
     "javaType" : "java.lang.Integer",
@@ -43,12 +43,12 @@
   }, {
     "javaType" : "org.clothocad.model.NucSeq",
     "name" : "sequence",
-    "type" : "NucSeq",
+    "type" : "org.clothocad.model.NucSeq",
     "reference" : true
   }, {
     "javaType" : "org.clothocad.model.Feature",
     "name" : "feature",
-    "type" : "Feature",
+    "type" : "org.clothocad.model.Feature",
     "reference" : true
   } ]
 }

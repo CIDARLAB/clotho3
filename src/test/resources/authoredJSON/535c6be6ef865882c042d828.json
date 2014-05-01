@@ -1,0 +1,23 @@
+{
+  "schema" : "LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Josh",
+  "nickName" : "Josh",
+  "surName" : "Kittleson",
+  "name" : "josh.kittleson",
+  "emailAddress" : "josh.kittleson@gmail.com",
+  "icon" : "joshKittleson.png",
+  "imgUrl" : "",
+  "startDate" : "2008-01-01",
+  "endDate" : "2012-12-01",
+  "currentLocation" : "Researcher at Refactored Materials",
+  "current" : false,
+  "dateCreated" : "2008-01-01",
+  "isManagement" : false,
+  "role" : "Graduate Student",
+  "biography" : "",
+  "title" : "Engineering the E. coli chassis",
+  "description" : "",
+  "social" : "",
+  "id" : "535c6be6ef865882c042d828"
+}

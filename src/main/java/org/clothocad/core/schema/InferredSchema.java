@@ -14,6 +14,7 @@ import org.clothocad.core.datums.util.Language;
  * @author spaige
  */
 
+
 public class InferredSchema extends Schema{
 
     public InferredSchema(String name){

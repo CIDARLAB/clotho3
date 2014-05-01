@@ -5,6 +5,7 @@
 package org.clothocad.core.schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 import java.util.Set;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
@@ -90,20 +91,21 @@ public class ClothoSchema extends Schema {
                 fv.visitAnnotation(Type.getType(Reference.class).getInternalName(), true).visitEnd();
             }
 
-            //XXX: disabling constraints (see ClothoField.java for explanation)
-            /*
             if (field.getConstraints() != null) {
-                for (Constraint c : field.getConstraints()) {
-                    logger.trace("{}.visitAnnotation({},{})", fv, Type.getDescriptor(c.getAnnotation()), true);
-                    AnnotationVisitor av = fv.visitAnnotation(Type.getDescriptor(c.getAnnotation()), true);
-                    for (String value : c.getValues()) {
-                        handleAnnotationValue(av, value, c.getValue(value));
+                for (Constraint constraint : field.getConstraints()) {
+                    String descriptor = Type.getDescriptor(constraint.constraintType);
+                    Map<String, Object> values = constraint.values;
+                    logger.trace("{}.visitAnnotation({},{})", fv, descriptor, true);
+                    AnnotationVisitor av = fv.visitAnnotation(descriptor, true);
+                    //XXX: invalid annotation values cause hibernate validator to crash
+                    for (String valueName : values.keySet()) {
+                        handleAnnotationValue(av, valueName, values.get(valueName));
                     }
                     logger.trace("{}.visitEnd", av);
                     av.visitEnd();
                 }
             }
-*/
+
             logger.trace("{}.visitEnd", fv);
             fv.visitEnd();
             //getters and setters

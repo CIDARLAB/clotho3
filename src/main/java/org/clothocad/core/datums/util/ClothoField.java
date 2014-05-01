@@ -24,34 +24,45 @@ ENHANCEMENTS, OR MODIFICATIONS..
 
 package org.clothocad.core.datums.util;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.fasterxml.jackson.databind.util.StdConverter;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import com.fasterxml.jackson.databind.type.SimpleType;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
 import java.io.IOException;
+import java.lang.Object;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
-import org.clothocad.core.persistence.annotations.Rename;
 import org.clothocad.core.schema.Access;
 import org.clothocad.core.schema.Constraint;
+import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.annotation.AnnotationType;
 /**
  * @author John Christopher Anderson
  */
@@ -64,8 +75,8 @@ public class ClothoField {
     
     public ClothoField(Field field){
         
-        if (field.getAnnotation(Rename.class) != null){
-            name = field.getAnnotation(Rename.class).value();
+        if (field.getAnnotation(JsonProperty.class) != null){
+            name = field.getAnnotation(JsonProperty.class).value();
         } else {
             name = field.getName();            
         }
@@ -95,6 +106,9 @@ public class ClothoField {
 
     private String name;
     
+    @Getter
+    @JsonSerialize(using = ClothoFieldTypeSerializer.class)
+    @JsonDeserialize(using = ClothoFieldTypeDeserializer.class)
     private Class<?> type;
     private Type subtype;
     private String example;   //A string representation/explanation of an expected value
@@ -102,24 +116,11 @@ public class ClothoField {
     private boolean reference;
     private boolean referenceCollection;
 
-//XXX: disabling constraints for now because the current approach is awful    
-/*    @JsonSerialize(using=ConstraintsSerializer.class)
-    @JsonDeserialize(converter = ConstraintsConverter.class)
-    private Set<Constraint>  constraints;
-    
-    public Map prettyPrintConstraints(){
-        if (constraints == null) return null;
-        Map<String, Map<String,Object>> output = new HashMap<>();
-        for (Constraint constraint : constraints){
-            Map<String, Object> constraintMap = new HashMap<>();
-            for (String key : constraint.getValues()){
-                constraintMap.put(key, constraint.getValue(key));
-            }
-            output.put(constraint.getConstraint(), constraintMap);
-        }
-        return output;
-    }
-  */  
+    //@JsonSerialize(using=ConstraintsSerializer.class)
+    @JsonDeserialize(contentUsing = ConstraintDeserializer.class)
+    //@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "constraintType")
+    private Set<Constraint> constraints;
+
     //metadata
     private String description;
     
@@ -136,13 +137,59 @@ public class ClothoField {
         if (s.length() == 0) return s;
         return s.substring(0,1).toUpperCase() + s.substring(1);
     }
-    /*
-    public String jsonifyFieldType(){
-        Class c = this.type;
+    
+    //XXX: needs more specific type info (parameterization) in some cases
+    public static class ClothoFieldTypeDeserializer extends JsonDeserializer<Class<?>>{
+
+        @Override
+        public Class<?> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            if (jp.getCurrentToken() != JsonToken.VALUE_STRING) {
+                throw ctxt.wrongTokenException(jp, JsonToken.VALUE_STRING, "Expected type name as string");
+            }
+            String typeName = jp.getValueAsString();
+            switch (typeName){
+                case "id":
+                    return ObjectId.class;
+                case "date":
+                    return Date.class;
+                case "string":
+                    return String.class;
+                case "boolean":
+                    return Boolean.class;
+                case "number":
+                    return Number.class;
+                case "object":
+                    return Map.class;
+                case "array":
+                    return Collection.class;
+                default:
+                    try {
+                        return Class.forName(typeName, true, Schema.cl);
+                    } catch (ClassNotFoundException ex) {
+                        throw ctxt.weirdStringException(Class.class, typeName + " is not a schema id or field type");
+                    }
+            }
+        }
+
+        @Override
+        public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException, JsonProcessingException {
+            return deserialize(jp,ctxt);
+        }
         
-        if (Schema.isSchemaClassName(c.getName())) ///XXX: fix for inner classes
-            return Schema.extractIdFromClassName(c.getName());
-        if (ObjBase.class.isAssignableFrom(c)) return c.getSimpleName();
+    }
+    
+    public static class ClothoFieldTypeSerializer extends JsonSerializer<Class<?>>{
+
+        @Override
+        public void serialize(Class<?> value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+            jgen.writeString(jsonifyFieldType(value));
+        }
+
+    }
+    
+    public static String jsonifyFieldType(Class c){
+        
+        if (ObjBase.class.isAssignableFrom(c)) return c.getCanonicalName();
         if (ObjectId.class.isAssignableFrom(c)) return "id";
         if (Date.class.isAssignableFrom(c)) return "date";
         if (String.class.isAssignableFrom(c) || c.equals(char.class)) return "string";
@@ -153,7 +200,7 @@ public class ClothoField {
                 c.equals(int.class) ||
                 c.equals(long.class) ||
                 c.equals(float.class) ||
-                c.equals(double.class)) return "number"; // String.format("number(%s)", c.getSimpleName());
+                c.equals(double.class)) return "number"; //String.format("number(%s)", c.getSimpleName());
         if (c.isArray() || Collection.class.isAssignableFrom(c)){
            //todo: parameterize array types;
             return "array";
@@ -163,52 +210,6 @@ public class ClothoField {
         logger.warn("Unable to jsonify field type {}", c.getName());
         return "object";
     }
-    
-    public void decodeFieldType(Map object){
-        String s = (String) object.get("javaType");
-        if (s == null) s= (String) object.get(ClothoMappedField.VIRTUAL_PREFIX + "javaType");
-        try {
-            type = Class.forName(s, true, Schema.cl);
-        } catch (ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    public void decodeConstraints(Map object){
-        Map<String, Map<String, Object>> constraints = (Map<String, Map<String, Object>>) object.get("constraints");
-        if (constraints == null) return;
-        
-        Set<Constraint> realConstraints = new HashSet<>();
-        for (String constraint : constraints.keySet()){
-            realConstraints.add(new Constraint(constraint, constraints.get(constraint)));
-        }
-        this.constraints = realConstraints;
-    }
-    */
-    public Class<?> getType(){
-        return type;
-    }
-  
-    /*
-    //after switch to jongo, this shouldn't be necessary
-    //Morphia can't decode primitive classes
-    //http://stackoverflow.com/questions/1704634/simple-way-to-get-wrapper-class-type-in-java
-    // safe because both Long.class and long.class are of type Class<Long>
-    @SuppressWarnings("unchecked")
-    private static <T> Class<T> wrap(Class<T> c) {
-        return c.isPrimitive() ? (Class<T>) PRIMITIVES_TO_WRAPPERS.get(c) : c;
-    }
-    private static final Map<Class<?>, Class<?>> PRIMITIVES_TO_WRAPPERS = new ImmutableMap.Builder<Class<?>, Class<?>>()
-            .put(boolean.class, Boolean.class)
-            .put(byte.class, Byte.class)
-            .put(char.class, Character.class)
-            .put(double.class, Double.class)
-            .put(float.class, Float.class)
-            .put(int.class, Integer.class)
-            .put(long.class, Long.class)
-            .put(short.class, Short.class)
-            .put(void.class, Void.class)
-            .build();*/
     //Constraints
     
     //#
@@ -255,78 +256,80 @@ public class ClothoField {
         return null;
     }
     
-    public static class ConstraintsSerializer extends JsonSerializer<Set<Constraint>> {
+    
+    public static class ConstraintDeserializer extends JsonDeserializer<Constraint> {
 
         @Override
-        public void serialize(Set<Constraint> value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-            if (value == null) return;
-            //start object
-            jgen.writeStartObject();
-            //for each constraint in set
-            for (Constraint constraint : value){
-                //write constraint
-                jgen.writeObjectField(constraint.getConstraint(), constraint);
-            }
-            //end object
-            jgen.writeEndObject();
-        }
-
-        @Override
-        public void serializeWithType(Set<Constraint> value, JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException, JsonProcessingException {
-            serialize(value, jgen, provider);
-        }
-    }
-    
-    
-    public static class ConstraintsConverter extends StdConverter<Map<String,Object>,Set<Constraint>> {
-        @Override
-        public Set<Constraint> convert(Map<String, Object> value) {
-            Set<Constraint> output = new HashSet<>();
-            for (String name : value.keySet()){
-                Constraint constraint = new Constraint(name, value.get(name));
-            }
-            return output;
-        }
-    }
-    
-    /*public static class ConstraintsDeserializer extends JsonDeserializer<Set<Constraint>> implements ContextualDeserializer{
-        private BeanProperty property;
-        
-        @Override
-        public Set<Constraint> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-            if (jp.getCurrentToken().equals (JsonToken.START_OBJECT)){
-                Set<Constraint> output = new HashSet<>();
-                while (!jp.getCurrentToken().equals(JsonToken.END_OBJECT)){
-                    //this should be the field name
-                    JsonToken token = jp.nextToken();
-                    if (!token.equals(JsonToken.VALUE_STRING)){
-                        throw new JsonMappingException("Expected constraint name");
+        public Constraint deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            JsonToken t = jp.nextToken();
+            Class constraintType = null;
+            TokenBuffer tokens = new TokenBuffer(jp.getCodec());
+            while (t != JsonToken.END_OBJECT) {
+                if (t == JsonToken.FIELD_NAME) {
+                    switch (jp.getCurrentName()) {
+                        case "constraintType":
+                            t = jp.nextToken();
+                            if (t != JsonToken.VALUE_STRING) {
+                                throw ctxt.wrongTokenException(jp, JsonToken.VALUE_STRING, "Expected string specifying constraint type");
+                            }
+                            try {
+                                //any magic names we want should be handled here
+                                constraintType = Schema.cl.loadClass(jp.getValueAsString());
+                            } catch (ClassNotFoundException ex) {
+                                throw ctxt.weirdStringException(jp.getValueAsString(), Class.class, "Not a valid constraint id.");
+                            }
+                            break;
+                        case "values":
+                            t = jp.nextToken();
+                            if (t != JsonToken.START_OBJECT) {
+                                throw ctxt.wrongTokenException(jp, JsonToken.START_OBJECT, "Expected object specifying constraint parameter values");
+                            }
+                            tokens.copyCurrentStructure(jp);
+                            break;
+                        default:
+                            throw ctxt.weirdStringException(jp.getCurrentName(), Constraint.class, "Must be \"constraintType\" or \"values\"");
                     }
-                    String name = jp.getCurrentName();
-                    
-                    //this should be the value; and should be an object
-                    token = jp.nextToken();
-                    if (!token.equals(JsonToken.START_OBJECT)){
-                        throw new JsonMappingException("Expected constraint body");
-                    }
-                    Map<String,Object> values = ctxt.deserializerInstance(null, reference)
-                    
-                    Constraint constraint = new Constraint(name, values);
-                    output.add(constraint);
-                    
-                    //move to next key-value pair or end of set
-                    jp.nextToken();
+                } else {
+                    throw ctxt.wrongTokenException(jp, JsonToken.FIELD_NAME, "Expected field name named \"constraintType\" or \"values\"");
                 }
-                return output;               
+                t = jp.nextToken();
             }
-            else throw new JsonMappingException("Expected START_OBJECT beginning constraints set");
+            //cannot create constraint without a declared type
+            if (constraintType == null)  {
+                
+            }
+            //use annotation class to find out property types
+            //ignore properties not in annotation class
+            Map<String,Object> values = new HashMap<>();
+            jp = tokens.asParser();
+            t = jp.nextToken();
+            
+            if (jp.hasCurrentToken()){
+                t = jp.nextToken();
+                while (t != JsonToken.END_OBJECT){
+                    if (t != JsonToken.FIELD_NAME) throw new IOException("Expected FIELD_NAME.");
+                    String name = jp.getCurrentName();
+                    jp.nextToken();
+                    try {
+                        JavaType fieldType = ctxt.getTypeFactory().constructType(constraintType.getMethod(name).getReturnType());
+                        Object fieldValue = ctxt.findContextualValueDeserializer(fieldType, null).deserialize(jp, ctxt);
+                        values.put(name, fieldValue);
+                    } catch (NoSuchMethodException ex) {
+                        jp.skipChildren();
+                    } catch (SecurityException ex) {
+                        throw new RuntimeException("Couldn't access field " + jp.getCurrentName() + " in " + constraintType.getCanonicalName());
+                    }
+                    t = jp.nextToken();
+                }               
+            }
+
+            return new Constraint(constraintType, values);
         }
 
         @Override
-        public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
-            this.property = property;
+        public Object deserializeWithType(JsonParser jp, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException, JsonProcessingException {
+            return deserialize(jp, ctxt); //To change body of generated methods, choose Tools | Templates.
         }
-        
-    }*/
+    }
     
 }

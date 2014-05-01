@@ -8,8 +8,12 @@ import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.JavaType;
+import com.thoughtworks.proxy.factory.CglibProxyFactory;
+import com.thoughtworks.proxy.toys.hotswap.HotSwapping;
+import com.thoughtworks.proxy.toys.hotswap.Swappable;
 import java.util.ArrayList;
 import java.util.List;
+import javassist.Modifier;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 
@@ -21,10 +25,24 @@ public class InstantiatedReferencesCache extends InjectableValues.Std{
     
     List<ObjBase> undone = new ArrayList<>();
     
-    public void addObjBase(Object valueId, ObjBase value){
-        addValue((String) valueId, value);
+    public void addObjBase(String valueId, ObjBase value){
+        addValue(valueId, value);
         undone.add(value);
-    }    
+    }  
+    
+    public void addProxy(String valueId, ObjBase value){
+        addValue(valueId, value);
+        undone.add(0, value);
+    }
+    
+    public void resolveProxy(String valueId, ObjBase value){
+        try {
+            Swappable proxy = Swappable.class.cast(_values.get(valueId));
+            proxy.hotswap(value);
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Internal Error: tried to resolve a non-proxy object", e);
+        }
+    }
 
     @Override
     public Object findInjectableValue(Object valueId, DeserializationContext ctxt, BeanProperty forProperty, Object beanInstance) {
@@ -42,13 +60,22 @@ public class InstantiatedReferencesCache extends InjectableValues.Std{
             } catch (IllegalArgumentException e){
                 // else, create it, cache it, return it
                 //XXX: just assuming there's a lombok no-arg constructor for now
+                if (Modifier.isAbstract(c.getModifiers()) || Modifier.isInterface(c.getModifiers())){
+                    //todo: also if no-args
+                    
+                    //make a proxy and return that
+                    ObjBase newValue = HotSwapping.proxy(c).with(null).build(new CglibProxyFactory());
+                    this.addProxy(valueId.toString(), newValue);
+                    return newValue;
+                }
+                
                 try{
                     ObjBase newValue = c.newInstance();
                     newValue.setId(new ObjectId(valueId));
-                    this.addObjBase(valueId, newValue);
+                    this.addObjBase(valueId.toString(), newValue);
                     return newValue;
                 } catch (InstantiationException|IllegalAccessException ie){
-                    throw new RuntimeException(ie);
+                    throw new RuntimeException("Could not invoke no-args constructor on " + c.getCanonicalName(), ie);
                 }
             }
             

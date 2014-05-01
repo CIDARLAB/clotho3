@@ -1,9 +1,9 @@
 // layout
 
 body {
-  padding: 20px;
+  padding: 20px 10px;
 }
 
 .container {
-  width: 992px !important;
+  width: ($width-container + 30px) !important;
 }

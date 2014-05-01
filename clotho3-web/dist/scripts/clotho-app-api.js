@@ -1,1 +1,1 @@
-"use strict";angular.module("clothoRoot",["clotho.core"]);
+"use strict";angular.module("clothoRoot",["clotho.core"]).run(["Clotho",function(){}]);

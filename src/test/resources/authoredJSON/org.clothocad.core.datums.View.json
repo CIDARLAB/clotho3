@@ -33,7 +33,7 @@
   }, {
     "javaType" : "org.clothocad.core.datums.Function",
     "name" : "canUpdate",
-    "type" : "Function",
+    "type" : "org.clothocad.core.datums.Function",
     "reference" : false
   }, {
     "javaType" : "java.lang.Integer",

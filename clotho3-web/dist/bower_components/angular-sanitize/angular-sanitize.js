@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2343+sha.3344396
+ * @license AngularJS v1.2.17-build.128+sha.050aae3
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -259,7 +259,7 @@ function htmlParser( html, handler ) {
         match = html.match( DOCTYPE_REGEXP );
 
         if ( match ) {
-          html = html.replace( match[0] , '');
+          html = html.replace( match[0], '');
           chars = false;
         }
       // end tag

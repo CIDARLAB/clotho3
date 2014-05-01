@@ -4,7 +4,10 @@
  */
 package org.clothocad.core.schema;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -18,5 +21,20 @@ public class ReflectionUtils {
             }
         }
         return null;
+    }
+    
+    public static Map<String, Object> getFieldsAndValues(Object o){
+        Map<String,Object> out = new HashMap<>();
+        Field[] fields = o.getClass().getFields();
+        for (Field field : fields){
+            try {
+                out.put(field.getName(), field.get(o));
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return out;
     }
 }

@@ -86,11 +86,8 @@ angular.module('clotho.extensions', [])
 	};
 
 
-
-
-
 	//note - create a new isolate scope, deleting scope and children if present
-	//todo - DEPRECATE. can't really scrub DOM of compiled code, so should use bootstrap for something that needs to be compiled (i.e. cache template and bootstrap that div, as easy to recompile a template in $templateCache)
+	//DEPRECATED can't really scrub DOM of compiled code, so should use bootstrap for something that needs to be compiled (i.e. cache template and bootstrap that div, as easy to recompile a template in $templateCache)
 	$clotho.extensions.recompile = function(element, args) {
 		if (typeof element == 'undefined') {return;}
 		args = args || {};
@@ -106,21 +103,14 @@ angular.module('clotho.extensions', [])
 	};
 
 
-
-
-	$clotho.extensions.extend = angular.extend;
-
 	//not really recommended for use...
 	$clotho.extensions.extendPrimaryRootscope = function(args) {
 		$clotho.extensions.extend($rootScope, args);
 	};
 
 
-
-
-
 	/**
-	 * @name Application.mixin
+	 * @name $clotho.extensions.mixin
 	 *
 	 * @description Will download URLs only once
 	 *
@@ -146,8 +136,9 @@ angular.module('clotho.extensions', [])
 		return deferred.promise;
 	};
 
+
 	/**
-	 * @name Application.script
+	 * @name $clotho.extensions.script
 	 *
 	 * @description Downloads and executes a script or scripts, using cache-busting. Timestamp is appended to the script, to ensure it will run each time.
 	 *
@@ -173,8 +164,9 @@ angular.module('clotho.extensions', [])
 		return $clotho.extensions.mixin(downloads);
 	};
 
+
 	/**
-	 * @name Application.css
+	 * @name $clotho.extensions.css
 	 *
 	 * @description Downloads and appends a CSS file to the page head, so that it will be applied properly
 	 *
@@ -216,8 +208,9 @@ angular.module('clotho.extensions', [])
 		return deferred.promise;
 	};
 
+
 	/**
-	 * @name Application.cache
+	 * @name $clotho.extensions.cache
 	 *
 	 * @description Downloads caches an angular template for later use. Forces addition to the cache, under ID of the passed URL. So, to use later, e.g. use <div ng-include="url_you_passed"></div>. Note that the template is cached in the primary Clotho App, so to access it in a separately bootstrapped app, you'll need to list the appropriate angular module as a dependency
 	 *
@@ -254,12 +247,6 @@ angular.module('clotho.extensions', [])
 	 * @description This is just a reference to angular.bootstrap. Bootstraps a new app manually, creating a new (isolate) $rootScope outside the flow of the parent app. Need to define clotho angular modules for them to be present in this app if you want their functionality. Note that this method expects all dependencies to have already been downloaded
 	 */
 	$clotho.extensions.bootstrap = angular.bootstrap;
-
-
-
-
-
-
 
 
 	$clotho.extensions.determineUrlExtension = function ( url ) {

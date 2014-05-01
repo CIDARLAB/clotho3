@@ -1,5 +1,7 @@
 angular.module('clotho.trails').directive('trailPageComponent', function ($compile, $q, $timeout, $http, $templateCache, Youtube) {
 
+	//todo - use angular.element()
+
 	return {
 		restrict: 'EA',
 		scope: false, //avoid isolate

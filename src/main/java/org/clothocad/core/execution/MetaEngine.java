@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.execution;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import java.util.Collection;
@@ -14,6 +15,7 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
@@ -32,9 +34,10 @@ public class MetaEngine {
     private transient Map<Language, ScriptEngine> engines = new HashMap<>();
     
     @JsonSerialize(converter = BindingsMapConverter.class)
+    @JsonDeserialize(contentAs = SimpleBindings.class)
     private Map<Language, Bindings> bindings = new HashMap<>();
 
-    public static class BindingsMapConverter extends StdConverter<Map<Language,Bindings>,Map>{
+    public static class BindingsMapConverter extends StdConverter<Map<Language,Bindings>,Map<Language,Bindings>>{
 
         @Override
         public Map<Language,Bindings> convert(Map<Language,Bindings> value) {

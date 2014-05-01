@@ -5,7 +5,7 @@
  * This is the client Clotho API - commands issued BY the server to be run on the client
  */
 angular.module('clotho.core').service('ClientAPI',
-	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $compile) {
+	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $document) {
 
 		var Debugger = new Debug('ClientAPI', '#dd99dd');
 
@@ -35,16 +35,15 @@ angular.module('clotho.core').service('ClientAPI',
 		 * @param uuid UUID of sharable to edit, opens in modal
 		 */
 		var edit = function (uuid) {
-			if (angular.isDefined($modal)) {
-				var dialog_opts = {
-					backdrop: true,
-					keyboard: true,
-					backdropClick: true,
-					templateUrl: '<form sharable-editor ng-model="' + uuid + '" class="col-sm-6 form-horizontal well"></form>'
-				};
-				$modal.open(dialog_opts);
-			} else {
+			if ($injector.has('$route')) {
 				$location.path('/editor/' + uuid)
+			} else {
+				//need to go to full instance, this just has API or Command build
+				say({
+					text : 'Cannot edit in API / Command Build',
+					from: 'client',
+					class : 'error'
+				});
 			}
 		};
 
@@ -243,6 +242,8 @@ angular.module('clotho.core').service('ClientAPI',
 		 * Get help for a mode or instance or something
 		 */
 		var help = function clientAPIHelp(uuid) {
+
+			//todo - create clotho modal and show it
 
 		};
 

@@ -26,14 +26,6 @@
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
 
-<!-- process:remove:command,api -->
-<!-- terminal aside for webapp... note not ready for prime time yet... need to make command bar styles more accessible -->
-<!--
-<div terminal-aside-trigger></div>
-<div terminal-aside aside-content-url="'views/_command/terminal.html'"></div>
--->
-<!-- /process -->
-
 <!-- process:remove:api -->
 <div class="container">
     <div clotho-command-bar></div>
@@ -46,6 +38,9 @@
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
+
+<!-- hotkey triggered terminal window -->
+<terminal-aside></terminal-aside>
 
 <!-- /process -->
 

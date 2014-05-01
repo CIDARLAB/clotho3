@@ -155,6 +155,7 @@ public class JSON {
         public void setupModule(SetupContext context) {
             context.setMixInAnnotations(Object.class, DisableGetters.class);
             context.setMixInAnnotations(Collection.class, DisableTypeInfo.class);
+            context.setMixInAnnotations(Map.class, DisableTypeInfo.class);
             context.setMixInAnnotations(Bindings.class, UseSimpleBindings.class);
            
         }

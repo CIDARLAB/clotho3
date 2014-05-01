@@ -9,7 +9,7 @@
   "fields" : [ {
     "javaType" : "org.clothocad.model.Person",
     "name" : "PI",
-    "type" : "Person",
+    "type" : "org.clothocad.model.Person",
     "reference" : true
   }, {
     "javaType" : "java.lang.String",
@@ -24,7 +24,7 @@
   }, {
     "javaType" : "org.clothocad.model.Institution",
     "name" : "institution",
-    "type" : "Institution",
+    "type" : "org.clothocad.model.Institution",
     "reference" : true
   }, {
     "javaType" : "java.lang.String",

@@ -14,7 +14,7 @@
   }, {
     "javaType" : "org.clothocad.model.NucSeq",
     "name" : "sequence",
-    "type" : "NucSeq",
+    "type" : "org.clothocad.model.NucSeq",
     "reference" : false
   } ]
 }

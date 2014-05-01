@@ -68,7 +68,7 @@ public class Router {
         
         Object response = null;
         try {
-            switch (request.getChannel()) {
+            switch (request.getChannel()) {                
                 case autocomplete:
                     response = api.autocomplete(data.toString());
                     break;
@@ -149,6 +149,9 @@ public class Router {
                     break;
                 case unlisten:
                     api.unlisten(data.toString());
+                    break;
+                case validate:
+                    response = api.validate(JSON.mappify(data));
                     break;
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());

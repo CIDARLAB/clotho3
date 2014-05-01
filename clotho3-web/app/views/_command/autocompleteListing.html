@@ -1,5 +1,5 @@
-<ul class="clothoAutocompleteListing" ng-style="{display: isOpen() ? 'block' : 'none'}">
-    <li ng-repeat="match in matches" ng-class="{'active' : isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="select($index)">
-        <div clotho-autocomplete-match index="$index" match="match" query="query"></div>
+<ul class="clothoAutocompleteListing" ng-style="{display: (hasFocus && matches.length) ? 'block' : 'none'}">
+    <li ng-repeat="match in matches" ng-class="{'active' : isActive($index) }" ng-mouseenter="selectActive($index)">
+        <div clotho-autocomplete-match ng-click="selectMatch($index)" index="$index" match="match" query="query"></div>
     </li>
 </ul>

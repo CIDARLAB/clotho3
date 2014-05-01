@@ -51,7 +51,7 @@
     "reference" : false
   }, {
     "name" : "video",
-    "type" : "object|string",
+    "type" : "string",
     "description" : "YouTube VideoID or link to Youtube video. Can also be an object, where: <code>obj.id</code> is the ID or link to the YouTube video, <code>obj.params</code> is an object as defined by the YouTube iFrame API, <code>obj.mini</code> dictates whether the video starts in small form, and <code>obj.autoplay</code> dictates whether the video should play immediately",
     "example" : "",
     "constraints" : null,

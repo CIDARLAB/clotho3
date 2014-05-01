@@ -29,7 +29,7 @@
   }, {
     "javaType" : "org.clothocad.core.schema.Schema",
     "name" : "superClass",
-    "type" : "Schema",
+    "type" : "org.clothocad.core.schema.Schema",
     "reference" : true
   }, {
     "javaType" : "org.slf4j.Logger",

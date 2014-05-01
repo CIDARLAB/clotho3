@@ -1,0 +1,60 @@
+<div class="container trail-overview">
+
+  <div class="trail-header clearfix">
+    <div class="trail-icon" background-image ng-src="{{ trail.icon ? trail.icon : defaultTrailIcon}}"></div>
+    <div class="trail-info">
+      <h2 class="trail-name">{{trail.name}}</h2>
+      <h5 class="trail-description">{{trail.description}}</h5>
+    </div>
+  </div>
+
+  <div class="row trail-about">
+
+    <div class="col-xs-8">
+
+      <!-- about -->
+      <div class="trail-section">
+        <h3 class="trail-section-title">About this Trail</h3>
+        <div trail-page="trail.about"></div>
+      </div>
+
+      <!-- materials -->
+      <div class="trail-section">
+        <h3 class="trail-section-title">Course Materials</h3>
+        <div ng-repeat="material in trail.materials"
+             trail-material="material">
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-xs-4">
+      <!-- Instructors -->
+      <div class="trail-section">
+        <h3 class="trail-section-title">Instructor</h3>
+        <div ng-repeat="instructor in trail.instructors"
+             trail-instructor="instructor">
+        </div>
+      </div>
+
+      <!-- Sharing -->
+      <div class="trail-section">
+        <h3 class="trail-section-title">Share</h3>
+        <p>todo</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="trail-contents-wrap">
+    <!-- trail contents -->
+    <div class="trail-section">
+      <h3 class="trail-section-title">Course Contents</h3>
+      <div trail-contents="trail"></div>
+    </div>
+  </div>
+
+</div>
+
+
+<pre>{{trail | json}}</pre>

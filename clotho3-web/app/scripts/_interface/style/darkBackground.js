@@ -1,15 +1,15 @@
 angular.module('clotho.interface')
   .directive('darkBackground', function ($document) {
+
+		var body = $document.find('body');
+
     return {
       restrict: 'A',
       link: function postLink(scope, element, attrs) {
-        //todo - convert to class, use toggleClass()
-
-	      var oldBackground = $document.find('body').css('background');
-				$document.find('body').css({background: '#eeeeee'});
+	      body.toggleClass('gray', true);
 
 	      scope.$on("$destroy", function() {
-		      $document.find('body').css({background: oldBackground});
+		      body.toggleClass('gray', false);
 	      })
       }
     };
