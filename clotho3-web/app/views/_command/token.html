@@ -1,14 +1,9 @@
-<div class="clothoTokenWrap" ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous(), 'sharable' : token.isSharable()}">
-    <div class="clothoTokenPopup" ng-show="tokenActive && token.isSharable()">
-        <h3 class="clothoTokenPopupHeader">
-            {{token.readable()}}
-            <div class="btn-group">
-                <button class="btn btn-danger"><span class="glyphicon glyphicon-trash" ng-click="removeToken($event)"></span></button>
-                <button class="btn btn-default"><span class="glyphicon glyphicon-resize-small"></span></button>
-            </div>
-        </h3>
-        <pre class="info">{{token.fullSharable | json}}</pre>
-    </div>
-    <span class="clothoTokenText">{{token.readable()}}</span>
-    <span class="clothoTokenClose" ng-click="removeToken($event)" ng-show="tokenActive">&times;</span>
+<div class="clothoTokenWrap"
+     ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous(), 'sharable' : token.isSharable()}">
+    <span class="clothoTokenText"
+          sharable-popup
+          sharable-popup-id="{{token.id()}}"
+          sharable-popup-open="{{tokenActive && token.isSharable()}}">
+      {{ token.readable() }}
+    </span>
 </div>

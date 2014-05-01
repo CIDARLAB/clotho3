@@ -10,7 +10,7 @@ angular.module('clotho.clothoDirectives')
  * sharablePopupId
  * sharablePopupPlacement
  * sharablePopupTrigger
- * sharablePopupStartOpen //todo
+ * sharablePopupOpen
  *
  * @usage
  *
@@ -20,7 +20,7 @@ angular.module('clotho.clothoDirectives')
 
 	//todo - incorporate with tokens for popover style
 
-	.directive('sharablePopup', function ($animate, $window, $document, $compile, $timeout, Clotho, ClothoSchemas, hotkeys) {
+	.directive('sharablePopup', function ($animate, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas, hotkeys) {
 
 		var bodyElement = $document.find( 'body' );
 
@@ -68,13 +68,13 @@ angular.module('clotho.clothoDirectives')
 
 		return {
 			restrict : 'EA',
-			replace : true,
 			scope : {},
 			controller : function ($scope, $element, $attrs) {
 
 			},
 			link: function (scope, element, attrs, nullCtrl) {
 
+				//short circuit link if ID is empty
 				if (!attrs[prefix + 'Id']) {
 					return;
 				}
@@ -159,8 +159,19 @@ angular.module('clotho.clothoDirectives')
 					});
 				}
 
+				//NB toggleBind above... this is for internal use, can pass value to force
+				function toggle (value) {
+					if (angular.isDefined(value)) {
+						!!value ? show()() : hide();
+					} else {
+						!scope.popupOpen ? show()() : hide();
+					}
+				}
+
 				// Show the popup element.
 				function show() {
+
+					console.log('showing sharable popup');
 
 					createPopup();
 
@@ -168,13 +179,13 @@ angular.module('clotho.clothoDirectives')
 					popup.css({ top: 0, left: 0, display: 'block' });
 
 					//not visible anyway
-					$animate.enter(popup, bodyElement , angular.element(bodyElement[0].lastChild), function () {});
+					$animate.enter(popup, bodyElement , angular.element(bodyElement[0].lastChild), angular.noop);
 
 					positionPopup();
 
 					// And show the popup.
 					scope.popupOpen = true;
-					//scope.$digest(); // digest required as $apply is not called
+					//scope.$digest(); // unnecessary, digest is called in createPopup
 
 					// Return positioning function as promise callback for correct
 					// positioning after draw.
@@ -183,6 +194,9 @@ angular.module('clotho.clothoDirectives')
 
 				// Hide the popup element.
 				function hide() {
+
+					console.log('hiding sharable popup');
+
 					if (scope.popupOpen && popup) {
 						$animate.leave(popup, function () {
 							scope.popupOpen = false;
@@ -248,11 +262,13 @@ angular.module('clotho.clothoDirectives')
 					hasRegisteredTriggers = true;
 				});
 
-				//start closed unless specify attribute
-				//scope.popupOpen = angular.isDefined( attrs[prefix + 'StartOpen'] );
-				if (scope.popupOpen) {
-					//todo
-				}
+				//todo - not working on start (correct value but not showing)
+				attrs.$observe( prefix+'Open' , function ( val ) {
+					//need to timeout because call $digest on creation
+					$timeout(function () {
+						toggle(!!val && $parse(val)(scope));
+					});
+				});
 
 				// if a popup is attached to <body> we need to remove it on
 				// location change as its parent scope will probably not be destroyed
@@ -265,7 +281,6 @@ angular.module('clotho.clothoDirectives')
 
 				// Make sure popup is destroyed and removed.
 				scope.$on('$destroy', function onDestroyPopup() {
-					console.log('parent destroy');
 					unregisterTriggers();
 					removePopup();
 					popup = null;
@@ -303,7 +318,7 @@ angular.module('clotho.clothoDirectives')
 				});
 
 				scope.$on('$destroy', function () {
-					console.log('destroyed');
+
 				})
 			}
 		};

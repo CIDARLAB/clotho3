@@ -2,6 +2,8 @@ angular.module('clotho.commandbar')
 /**
  * ClothoTokens are essentially wrappers for clotho sharables, or strings. The expect the fields minimally of name, uuid, schema to be a sharable, or just a string for other keywords
  */
+
+	//todo - pending #216, move from uuid -> id and other fields
 	.factory('clothoTokenFactory', function (Clotho) {
 
 		//pass UUID to make object, or just pass value as string
@@ -10,7 +12,7 @@ angular.module('clotho.commandbar')
 			self.model = sharable;
 
 			if (this.isSharable()) {
-				self.fullSharablePromise = Clotho.get(self.model.uuid).then(function (data) {
+				self.fullSharablePromise = Clotho.get(self.model.uuid, {mute : true}).then(function (data) {
 					self.fullSharable = data;
 				});
 			}
@@ -19,6 +21,11 @@ angular.module('clotho.commandbar')
 		ClothoToken.prototype.readable = function () {
 			//todo - refactor to name pending #216
 			return this.model.text || this.model;
+		};
+
+		ClothoToken.prototype.id = function () {
+			//todo - refactor to name pending #216
+			return this.model.uuid || null;
 		};
 
 		ClothoToken.prototype.isAmbiguous = function () {
@@ -134,6 +141,14 @@ angular.module('clotho.commandbar')
 			}
 		};
 
+		ClothoTokenCollection.prototype.whichActive = function () {
+			return this.currentTokenIndex;
+		};
+
+		ClothoTokenCollection.prototype.isLastActive = function () {
+			return (this.currentTokenIndex === (this.tokens.length - 1))
+		};
+
 		return ClothoTokenCollection;
 	})
 	.directive('clothoTokenizer', function ($parse, clothoTokenCollectionFactory, Debug) {
@@ -154,20 +169,35 @@ angular.module('clotho.commandbar')
 
 				var startingTags = $parse(attrs.startingTags)(scope);
 
+				var completeQuery = "";
+
 				scope.tokenCollection = new clothoTokenCollectionFactory(startingTags);
 
 				/* updates + watches */
 
 				function updateModel () {
-					Debugger.log('updating model', scope.tokenCollection.tokens);
-					ngModelCtrl.$setViewValue(scope.tokenCollection.tokens);
-					Debugger.log(ngModelCtrl);
+					Debugger.log('updating model (query, tokens)', completeQuery, scope.tokenCollection.tokens);
+					ngModelCtrl.$setViewValue({
+						query: completeQuery,
+						tokens : scope.tokenCollection.tokens
+					});
 				}
 
 				scope.$watchCollection('tokenCollection.tokens', function () {
-					Debugger.log('COLLECTION CHANGED');
+					// if tokens changed, query should reflect it.
+					// token is either just text, or a full sharable
+					// can assume input element is irrelevant
+					completeQuery = '';
+					//todo - refactor to name pending #216
+					angular.forEach(scope.tokenCollection.tokens, function(token) {
+						completeQuery  += token.readable() + ' ';
+					});
+
+					//update parent model
 					updateModel();
 				});
+
+				//todo - handle submit / reset to update completeQuery
 
 				/* functionality */
 
@@ -198,6 +228,10 @@ angular.module('clotho.commandbar')
 
 		//              backspace tab enter   escape  left  up  right down
 		var HOT_KEYS = [8,        9,  13,     27,     37,   38, 39,   40];
+		var SPACE_KEY = 32;
+		var ENTER_KEY = 13;
+		var tokenDelimiterCode = SPACE_KEY;
+		var tokenDelimiterValue = ' ';
 		//todo - add attributes (spellcheck, autocapitalize, etc. if necessary)
 
 		return {
@@ -205,6 +239,8 @@ angular.module('clotho.commandbar')
 			//require: 'ngModel',
 			controller: function clothoAutocompleteCtrl($scope, $element, $attrs) {},
 			link: function clothoAutocompleteLink(scope, element, attrs) {
+
+				var initialQuoteRegexp = /^['"].*/;
 
 				var onSelectCallback = $parse(attrs.autocompleteOnSelect);
 
@@ -228,11 +264,26 @@ angular.module('clotho.commandbar')
 					scope.activeIdx = -1;
 				};
 
+				// get Clotho.autocompletions and update results
+				// checks for intiial quote, will not autocomplete empty
 				var getAutocompletions = function (inputValue) {
+
+					//check for initial quote
+					if (initialQuoteRegexp.test(inputValue)) {
+						inputValue = inputValue.substring(1);
+					}
+
+					//don't autocomplete empty strings
+					if (inputValue.length === 0) {
+						return;
+					}
+
 					var locals = {$viewValue: inputValue};
 
-					Clotho.autocomplete(scope.query).then(function (results) {
-						if (!results || !results.length) {
+					//todo - pending #248 use API option
+					Clotho.autocomplete(inputValue).then(function (results) {
+						//it no results, or query now empty
+						if ( !results || !results.length || !scope.query.length ) {
 							resetMatches();
 						} else {
 							scope.queryResults = $filter('limitTo')(results, 10);
@@ -253,6 +304,7 @@ angular.module('clotho.commandbar')
 						scope.hasFocus = true;
 						scope.tokenCollection.unsetActive();
 
+						//todo - don't cancel previous until launch new
 						if (waitTime > 0) {
 							if (timeoutPromise) {
 								$timeout.cancel(timeoutPromise);//cancel previous timeout
@@ -274,7 +326,8 @@ angular.module('clotho.commandbar')
 
 					if (selected) {
 						onSelectCallback(scope, {
-							$item: selected
+							$item: selected,
+							$query : scope.query
 						});
 					}
 
@@ -288,8 +341,22 @@ angular.module('clotho.commandbar')
 					}, 0, false);
 				};
 
-				//bind keyboard events: arrows up(38) / down(40), enter(13) and tab(9), esc(27)
+				//bind keyboard events from HOT_KEYS + delimiter
 				element.bind('keydown', function (evt) {
+
+					//keep delimiter out of HOT_KEYS check because space is a weird default hotkey
+					//if type space and not in quote, and only 1 result, will choose it (enter will not)
+					if (evt.which === tokenDelimiterCode) {
+						//if first letter is quote, don't end the token
+						if ( ! (initialQuoteRegexp.test(scope.query.charAt(0))) ) {
+							scope.$apply(function () {
+								//if there is one result, select it otherwise null (token is query)
+								scope.select(scope.queryResults.length == 1 ? 0 : -1);
+							});
+							//return so space is not prevented
+							return;
+						}
+					}
 
 					//typeahead is open and an "interesting" key was pressed
 					if (HOT_KEYS.indexOf(evt.which) === -1) {
@@ -307,7 +374,9 @@ angular.module('clotho.commandbar')
 						} else {
 							if (scope.tokenCollection) {
 								if (scope.tokenCollection.isActive()) {
+									var previousActive = scope.tokenCollection.whichActive();
 									scope.tokenCollection.removeActiveToken();
+									scope.tokenCollection.setActive(previousActive);
 								} else {
 									scope.tokenCollection.setLastActive();
 								}
@@ -334,21 +403,26 @@ angular.module('clotho.commandbar')
 					}
 					//right
 					else if (evt.which === 39) {
-						scope.tokenCollection.setNextActive();
+						if ( scope.tokenCollection.isLastActive() ) {
+							scope.tokenCollection.unsetActive();
+						} else {
+							scope.tokenCollection.setNextActive();
+						}
 						scope.$digest();
+
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
 						scope.$apply(function () {
 							scope.select(scope.activeIdx);
 						});
-
 					}
 					//escape
 					else if (evt.which === 27) {
 						evt.stopPropagation();
 
 						resetMatches();
+						scope.tokenCollection.unsetActive();
 						scope.$digest();
 					}
 				});
@@ -362,6 +436,24 @@ angular.module('clotho.commandbar')
 
 				//can't use 'blur' because will hide list even when item clicked
 				//however, don't want to override element.focus() when focused by clicking somewhere in the tokenizerWrap, which will run after element handler due to way events bubble
+
+				//on pasting text, break up into tokens (unless quoted) and reset query
+				element.on('paste', function (evt) {
+					//copied text only available on clipboard, but inconsistent use and access so just do simple workaround and $timeout then process element
+
+					//don't want to prevent the event if we're getting it next event loop
+					//evt.preventDefault();
+
+					//get the value, split into tokens and save, reset query
+					$timeout(function () {
+						angular.forEach(scope.query.split(tokenDelimiterValue), function (token) {
+							//want to call parent's add token so updates completeQuery as well
+							scope.addToken(token);
+						});
+						scope.query = '';
+						resetMatches();
+					});
+				});
 				function clothoAutocompleteBlurHandler (event) {
 					if (scope.hasFocus) {
 						if (!element[0].contains(event.target)) {

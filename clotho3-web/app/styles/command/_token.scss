@@ -1,6 +1,6 @@
 .clothoTokenWrap {
   $default : #5bc0de;
-  $active : lighten($default, 10);
+  $active : #eeddbb;
   $sharable : #5bdec0;
   $ambiguous : #de5bc0;
 
@@ -11,16 +11,17 @@
   padding: 4px 8px;
   margin: 3px;
 
-  &.active {
-    background-color: $active;
-  }
-
   &.sharable {
     background-color: $sharable;
   }
 
   &.ambiguous {
     background-color: $ambiguous;
+  }
+
+  //last gets priority...
+  &.active {
+    background-color: $active;
   }
 }
 
