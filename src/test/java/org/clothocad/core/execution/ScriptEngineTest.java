@@ -6,6 +6,8 @@ package org.clothocad.core.execution;
 
 import javax.script.ScriptException;
 import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.util.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -19,7 +21,7 @@ public class ScriptEngineTest {
     MetaEngine engine;
     
     public ScriptAPI genAPI(){
-        return new ScriptAPI(null, null, null, null, null);
+        return new ScriptAPI(null, TestUtils.getDefaultTestInjector().getInstance(Persistor.class), null, null, null);
     }
     
     @Before

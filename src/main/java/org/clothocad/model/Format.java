@@ -23,6 +23,7 @@
 
 package org.clothocad.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.List;
 
 /**
@@ -30,6 +31,7 @@ import java.util.List;
  * @author J.Christopher Anderson
  * @author Douglas Densmore
  */ 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "schema", include = JsonTypeInfo.As.PROPERTY)
 public interface Format {
 
 

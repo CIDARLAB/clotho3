@@ -307,7 +307,7 @@ public class ClothoField {
             if (jp.hasCurrentToken()){
                 t = jp.nextToken();
                 while (t != JsonToken.END_OBJECT){
-                    if (t != JsonToken.FIELD_NAME) throw new IOException("Expected FIELD_NAME.");
+                    if (t != JsonToken.FIELD_NAME) throw ctxt.wrongTokenException(jp, JsonToken.FIELD_NAME, "Constraint parameter values malformed");
                     String name = jp.getCurrentName();
                     jp.nextToken();
                     try {

@@ -31,6 +31,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import lombok.extern.slf4j.Slf4j;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
+import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
@@ -50,6 +52,7 @@ public class JSON {
     static {
         mapper.registerModule(new ClothoJacksonModule());
         mapper.disable(FAIL_ON_EMPTY_BEANS);
+        //mapper.disableDefaultTyping();
         //write types into serialized objects
         //mapper.enableDefaultTypingAsProperty(ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, "schema");
     }
@@ -156,8 +159,11 @@ public class JSON {
             context.setMixInAnnotations(Object.class, DisableGetters.class);
             context.setMixInAnnotations(Collection.class, DisableTypeInfo.class);
             context.setMixInAnnotations(Map.class, DisableTypeInfo.class);
+//            context.setMixInAnnotations(Array.class, DisableTypeInfo.class);
+            
+            //Default types for interfaces unknown to Jackson
             context.setMixInAnnotations(Bindings.class, UseSimpleBindings.class);
-           
+            context.setMixInAnnotations(Trie.class, UsePatriciaTrie.class);
         }
     }
 
@@ -174,6 +180,11 @@ public class JSON {
     
     @JsonDeserialize(as = SimpleBindings.class)
     static abstract class UseSimpleBindings{
+        
+    }
+    
+    @JsonDeserialize(as = PatriciaTrie.class)
+    static abstract class UsePatriciaTrie {
         
     }
 
