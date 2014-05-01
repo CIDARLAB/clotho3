@@ -1,0 +1,5 @@
+{
+    "name": "die_early",
+    "language": "python2",
+    "code": "raise Exception('dying during definition!')"
+}
