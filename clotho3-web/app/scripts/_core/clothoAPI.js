@@ -68,7 +68,7 @@ function generateClothoAPI() {
 	 * @param data {*} API Data
 	 * @param func {Function} Callback Function, run when data received from server
 	 * @param options {Object} API Options
-	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout
+	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout or if (data === undefined || data === null)
 	 */
 	fn.emitSubCallback = function (channel, data, func, options) {
 		var deferred = $q.defer(),
@@ -85,7 +85,8 @@ function generateClothoAPI() {
 
 		PubSub.once(channel + ':' + requestId, function (data) {
 			$timeout.cancel(timeoutPromise);
-			angular.isEmpty(data) ? deferred.reject(null) : deferred.resolve(data);
+			//if null or undefined (not valid in JSON), reject
+			(angular.isUndefined(data) || data === null) ? deferred.reject(null) : deferred.resolve(data);
 			func(data);
 		}, '$clotho');
 
@@ -643,16 +644,10 @@ function generateClothoAPI() {
     };
 
     var autocomplete = function(query, options) {
-
-	    //catch all, publish on autocomplete for now
-	    var callback = function(data) {
-		    //todo - only publish if newer
-		    PubSub.trigger('autocomplete', data)
-	    };
 	    var packaged = {
         "query" : query
       };
-      return fn.emitSubCallback('autocomplete', packaged, callback, options);
+      return fn.emitSubOnce('autocomplete', packaged, options);
     };
 
     var submit = function(query) {

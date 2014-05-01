@@ -130,7 +130,8 @@ angular.module('clotho.core').service('PubSub',
 			var trigger = function pubsub_trigger (topic, args) {
 
 				//ensure arguments are array
-				if (angular.isEmpty(args)) {
+				//undefined is not a JSON value, so means nothing was sent over the socket
+				if (angular.isUndefined(args) || args === null) {
 					args = null;
 				} else {
 					args = [args];
