@@ -7,11 +7,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.clothocad.core.communication.*;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.util.JSON;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.shiro.authz.UnauthorizedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,8 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RestApi extends HttpServlet {
 
     private static Router router;
-    private static Message m;
-    private static Message loginMessage, logoutMessage;
+    private static Message m, loginMessage, logoutMessage;
     private static Map<String, String> loginMap;
     private static RestConnection rc = new RestConnection("RestConnection");
     // Test set with following url , change sequence: https://localhost:8443/rest/52410adf50763ce31f941915
@@ -36,10 +33,6 @@ public class RestApi extends HttpServlet {
     // http://shiro-user.582556.n2.nabble.com/Shiro-and-RESTful-web-services-td5539212.html
     // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
     // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
-
-    // should i login through router & then logout?
-
-    // look into http authentication
 
     // http://shiro.apache.org/
     public RestApi(Router router) {
@@ -59,17 +52,28 @@ public class RestApi extends HttpServlet {
     	
     	if (pathID.length == 0) {
     		response.setStatus(HttpServletResponse.SC_OK);
-    		response.getWriter().write("Hello Friend!");
+    		response.getWriter().write("{\"greeting\": \"Hello Friend!\"}");
     		return;
     	}
 
     	String id = pathID[1];
 
-        // We build our new message
-        m = new Message(Channel.get, id, null, null);
+        if (id.equals("query")) {
+            Map<String, String> p = getRequestBody(request.getReader());
+            m = new Message(Channel.query, p, null, null);
+        } else {
+            m = new Message(Channel.get, id, null, null);
+        }
 
-        // Now we send that message to the router
-        this.router.receiveMessage(this.rc, m);
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
 
         String result = this.rc.getResult().toString();
 
@@ -77,10 +81,10 @@ public class RestApi extends HttpServlet {
         
         response.getWriter().write(result);
 
-        if (!result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_OK);
+        if (result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
@@ -93,13 +97,29 @@ public class RestApi extends HttpServlet {
 
         login(unamePass);
 
-        String id = request.getPathInfo().split("/")[1];
+        String[] pathID = request.getPathInfo().split("/");
+        
+        if (pathID.length == 0) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"Required\": \"ID required for delete\"}");
+            return;
+        }
+
+        String id = pathID[1];
 
         // We build our new message
         m = new Message(Channel.destroy, id, null, null);
 
         // Now we send that message to the router
-        this.router.receiveMessage(this.rc, m);
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
 
         String result = this.rc.getResult().toString();
 
@@ -107,10 +127,10 @@ public class RestApi extends HttpServlet {
 
         response.getWriter().write(result);
 
-        if (!result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_OK);
+        if (result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
@@ -126,7 +146,7 @@ public class RestApi extends HttpServlet {
         Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
-        	response.getWriter().write("not enough data");
+        	response.getWriter().write("{\"Required\": \"new data to create item with\"}");
         	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	return;
         }
@@ -135,7 +155,15 @@ public class RestApi extends HttpServlet {
         m = new Message(Channel.create, p, null, null);
 
         // Now we send that message to the router
-        this.router.receiveMessage(this.rc, m);
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
 
         // Get the result & check to see if it was successful/if it failed
         String result = this.rc.getResult().toString();
@@ -144,10 +172,10 @@ public class RestApi extends HttpServlet {
         
         response.getWriter().write(result);
 
-        if (!result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-        } else {
+        if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
@@ -160,23 +188,43 @@ public class RestApi extends HttpServlet {
 
         login(unamePass);
 
-        String id = request.getPathInfo().split("/")[1];
+        String[] pathID = request.getPathInfo().split("/");
+        
+        if (pathID.length == 0) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"Required\": \"ID required for set\"}");
+            return;
+        }
 
         Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
-        	response.getWriter().write("not enough data");
+        	response.getWriter().write("{\"Required\": \"new data to set item to\"}");
         	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	return;
         }
 
-        p.put("id", id);
+        String id = pathID[1];
 
-        // We build our new message
-        m = new Message(Channel.set, p, null, null);
+        if (id.equals("run")) {
+            // you can change the url schema, but this makes it a run instead of a set
+            m = new Message(Channel.run, p, null, null);
+        } else {
+            p.put("id", id);
+            // We build our new message
+            m = new Message(Channel.set, p, null, null);
+        }
 
         // Now we send that message to the router
-        this.router.receiveMessage(this.rc, m);
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
 
         // Get the result & check to see if it was successful/if it failed
         String result = this.rc.getResult().toString();
@@ -185,10 +233,10 @@ public class RestApi extends HttpServlet {
         
         response.getWriter().write(result);
 
-        if (!result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        } else {
+        if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_CREATED);
         }
     }
 

@@ -90,7 +90,7 @@ public class ClothoWebserver {
         servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
         servletHandler.addServlet(new ServletHolder(wsServlet), "/websocket");
         
-        servletHandler.addServlet(new ServletHolder(new RestApi(router)), "/rest/*");
+        servletHandler.addServlet(new ServletHolder(new RestApi(router)), "/data/*");
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(constraintHandler);
