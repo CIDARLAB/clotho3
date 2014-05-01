@@ -33,10 +33,8 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 
 	//functionality
 
-	//todo - move to autocomplete
 	$scope.queryWrapper = function(text) {
-		return Clotho.query({name: text}, {maxResults : 10}).then(function (results) {
-			console.log(results);
+		return Clotho.autocomplete(text).then(function (results) {
 			return results || [];
 		});
 	};
