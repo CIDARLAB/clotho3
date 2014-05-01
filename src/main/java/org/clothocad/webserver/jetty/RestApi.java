@@ -51,6 +51,7 @@ public class RestApi extends HttpServlet {
     	String[] pathID = request.getPathInfo().split("/");
     	
     	if (pathID.length == 0) {
+            logout(unamePass);
     		response.setStatus(HttpServletResponse.SC_OK);
     		response.getWriter().write("{\"greeting\": \"Hello Friend!\"}");
     		return;
@@ -68,6 +69,7 @@ public class RestApi extends HttpServlet {
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
+            logout(unamePass);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
             response.addHeader("HTTP/1.0 401", "Unauthorized");
@@ -100,6 +102,7 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         
         if (pathID.length == 0) {
+            logout(unamePass);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"Required\": \"ID required for delete\"}");
             return;
@@ -114,6 +117,7 @@ public class RestApi extends HttpServlet {
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
+            logout(unamePass);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
             response.addHeader("HTTP/1.0 401", "Unauthorized");
@@ -146,6 +150,7 @@ public class RestApi extends HttpServlet {
         Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
+            logout(unamePass);
         	response.getWriter().write("{\"Required\": \"new data to create item with\"}");
         	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	return;
@@ -191,6 +196,7 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         
         if (pathID.length == 0) {
+            logout(unamePass);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"Required\": \"ID required for set\"}");
             return;
@@ -199,6 +205,7 @@ public class RestApi extends HttpServlet {
         Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
+            logout(unamePass);
         	response.getWriter().write("{\"Required\": \"new data to set item to\"}");
         	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	return;
@@ -219,6 +226,7 @@ public class RestApi extends HttpServlet {
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
+            logout(unamePass);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
             response.addHeader("HTTP/1.0 401", "Unauthorized");
