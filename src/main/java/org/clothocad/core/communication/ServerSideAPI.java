@@ -247,11 +247,18 @@ public class ServerSideAPI {
         System.out.println("trySingleWord has a single token " + tokens[0]);
         Object out = null;
         try {
-            out = get(tokens[0]);
+            String word = tokens[0];
+            List<Map> completions = completer.getCompletions(word);
+            
+            //If the completions suggest what the things is
+            if(completions.size()>0) {
+                String uuid = (String) completions.get(0).get("uuid");
+                return get(uuid);
+            } 
+            return null;
         } catch(Exception err) {
             return null;
         }
-        return out;
     }
     
     private Object tryAPIWord(String[] tokens) {
