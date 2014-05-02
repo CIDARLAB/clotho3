@@ -9,7 +9,7 @@ angular.module('clotho.clothoDirectives')
  * @attrs
  * sharablePopupId
  * sharablePopupPlacement
- * sharablePopupTrigger
+ * sharablePopupTrigger (none | click | mouseenter | focus)
  * sharablePopupOpen
  *
  * @usage
@@ -254,6 +254,10 @@ angular.module('clotho.clothoDirectives')
 
 					attrs.$observe(prefix + 'Trigger', function (val) {
 						unregisterTriggers();
+
+						if (val == 'none') {
+							return;
+						}
 
 						triggers = getTriggers(val);
 

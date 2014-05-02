@@ -247,7 +247,7 @@ angular.module('clotho.commandbar')
 				//pop-up element used to display matches
 				var listingEl = angular.element('<clotho-autocomplete-listing></clotho-autocomplete-listing>');
 				listingEl.attr({
-					matches: 'queryResults',
+					autocompletions: 'autocompletions',
 					active: 'activeIdx',
 					select: 'select(activeIdx)',
 					"has-focus": 'hasFocus',
@@ -260,7 +260,7 @@ angular.module('clotho.commandbar')
 				var waitTime = 0;
 
 				var resetMatches = function() {
-					scope.queryResults = [];
+					scope.autocompletions = [];
 					scope.activeIdx = -1;
 				};
 
@@ -286,11 +286,11 @@ angular.module('clotho.commandbar')
 						if ( !results || !results.length || !scope.query.length ) {
 							resetMatches();
 						} else {
-							scope.queryResults = $filter('limitTo')(results, 10);
+							scope.autocompletions = $filter('limitTo')(results, 10);
 						}
 					});
 
-					/*scope.queryResults = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];*/
+					/*scope.autocompletions = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];*/
 				};
 
 				//we need to propagate user's query so we can higlight matches
@@ -322,7 +322,7 @@ angular.module('clotho.commandbar')
 
 				scope.select = function (activeIdx) {
 
-					var selected = activeIdx > -1 ? scope.queryResults[activeIdx] : scope.query;
+					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : scope.query;
 
 					if (selected) {
 						onSelectCallback(scope, {
@@ -351,7 +351,7 @@ angular.module('clotho.commandbar')
 						if ( ! (initialQuoteRegexp.test(scope.query.charAt(0))) ) {
 							scope.$apply(function () {
 								//if there is one result, select it otherwise null (token is query)
-								scope.select(scope.queryResults.length == 1 ? 0 : -1);
+								scope.select(scope.autocompletions.length == 1 ? 0 : -1);
 							});
 							//return so space is not prevented
 							return;
@@ -384,13 +384,13 @@ angular.module('clotho.commandbar')
 					}
 					//down
 					else if (evt.which === 40) {
-						scope.activeIdx = (scope.activeIdx + 1) % scope.queryResults.length;
+						scope.activeIdx = (scope.activeIdx + 1) % scope.autocompletions.length;
 						scope.$digest();
 
 					}
 					//up
 					else if (evt.which === 38) {
-						scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.queryResults.length) - 1;
+						scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.autocompletions.length) - 1;
 						scope.$digest();
 
 					}
@@ -489,7 +489,7 @@ angular.module('clotho.commandbar')
 		return {
 			restrict:'EA',
 			scope:{
-				matches:'=',
+				autocompletions:'=',
 				query:'=',
 				active:'=',
 				hasFocus: '=',
@@ -528,16 +528,10 @@ angular.module('clotho.commandbar')
 			scope:{
 				index:'=',
 				match:'=',
-				query:'='
+				query:'=',
+				active : '='
 			},
-			templateUrl : 'views/_command/autocompleteMatch.html',
-			link:function (scope, element, attrs) {
-
-				//todo - currently relies on ngSanitize... need to handle SCE version
-
-				//todo - use highlighting filter
-
-			}
+			templateUrl : 'views/_command/autocompleteMatch.html'
 		};
 	})
 
