@@ -2,11 +2,12 @@ angular.module('clotho.clothoDirectives')
 /**
  * @name sharable-popup
  *
- * @description Displays a popup showing the basic fields of an instance. Appended to Body.
+ * @description Displays a popup showing the basic fields of an instance. Appended to Body. Either pass Model or ID of sharable, model gets priority (should only use pruned fields or may be very large)
  *
- * @note - need to create isolate scope so properties don't overlap... todo - try assigning to locals instead
+ * @note - need to create isolate scope so properties don't overlap
  *
  * @attrs
+ * sharablePopupModel
  * sharablePopupId
  * sharablePopupPlacement
  * sharablePopupTrigger (none | click | mouseenter | focus)
@@ -53,6 +54,7 @@ angular.module('clotho.clothoDirectives')
 		var template =
 			'<div sharable-popup-inner '+
 			'sharable-id="sharable_id" '+
+			'sharable-model="passedModel" '+
 			'placement="{{popup_placement}}" '+
 			'>'+
 			'</div>';
@@ -60,7 +62,8 @@ angular.module('clotho.clothoDirectives')
 		return {
 			restrict : 'EA',
 			scope : {
-				popupOpen : '=?' + prefix + 'Open'
+				popupOpen : '=?' + prefix + 'Open',
+				passedModel : '=?' + prefix + 'Model'
 			},
 			controller : function ($scope, $element, $attrs) {
 
@@ -70,9 +73,8 @@ angular.module('clotho.clothoDirectives')
 
 				return function (scope, element, attrs, nullCtrl) {
 
-					//short circuit link if no ID
-					//todo - allow passing in of model
-					if (angular.isUndefined(attrs[prefix + 'Id'])) {
+					//short circuit link if no ID or model
+					if (angular.isUndefined(attrs[prefix + 'Id']) && angular.isUndefined(attrs[prefix + 'Model'])) {
 						return;
 					}
 
@@ -234,7 +236,6 @@ angular.module('clotho.clothoDirectives')
 
 					element.css({cursor: 'pointer'});
 
-					scope.sharable_id = "loading...";
 					attrs.$observe(prefix + 'Id', function (val, oldval) {
 						if (!!val && (!oldval || val != oldval)) {
 							scope.sharable_id = val;
@@ -303,26 +304,39 @@ angular.module('clotho.clothoDirectives')
 			restrict: 'EA',
 			replace: true,
 			scope: {
-				sharableId: '=',
+				sharableId: '=?',
+				sharableModel : '=?',
 				placement: '@'
 			},
 			templateUrl: 'views/_foundation/sharableBasicFieldsPopup.html',
 			link : function (scope, element, attrs, nullCtrl) {
 
-				scope.$watch('sharableId', function ( val, oldval ) {
+				//given a model (should be pruned), sets related scope variables
+				function setSharable (model) {
+					scope.sharable = model;
+					scope.type = ClothoSchemas.determineInstanceType(model);
+					scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(scope.type);
+
+					if (ClothoSchemas.isSchema(model)) {
+						scope.isSchema = true;
+						ClothoSchemas.downloadSchemaDependencies(model).then(function (finalSchema) {
+							scope.schema = finalSchema;
+						});
+					}
+				}
+
+				scope.$watch('sharableModel', function ( val, oldval ) {
+					console.log(val);
 					if (!!val) {
+						setSharable(val);
+					}
+				});
+
+				scope.$watch('sharableId', function ( val, oldval ) {
+					if (!!val && angular.isEmpty(scope.sharableModel)) {
 						Clotho.get(val).then(function (retrievedSharable) {
 							scope.fullSharable = retrievedSharable;
-							scope.sharable = ClothoSchemas.pruneToBasicFields(retrievedSharable);
-							scope.type = ClothoSchemas.determineInstanceType(retrievedSharable);
-							scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(scope.type);
-
-							if (ClothoSchemas.isSchema(retrievedSharable)) {
-								scope.isSchema = true;
-								ClothoSchemas.downloadSchemaDependencies(retrievedSharable).then(function (finalSchema) {
-									scope.schema = finalSchema;
-								});
-							}
+							setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
 						});
 					}
 				});

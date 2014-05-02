@@ -466,6 +466,8 @@ angular.module('clotho.commandbar')
 					if (scope.hasFocus) {
 						if (!element[0].contains(event.target)) {
 							scope.hasFocus = false;
+							resetMatches();
+							scope.tokenCollection.unsetActive();
 							scope.$digest();
 						}
 					}
