@@ -23,7 +23,8 @@
         </div>
         <div class="popover-footer clearfix">
             <a class="label label-default pull-right" ng-click="showingSchema = !showingSchema" ng-show="isSchema">
-                <span class="glyphicon glyphicon-eye-open"></span> View Schema
+                <span class="glyphicon glyphicon-eye-open"></span>
+                View {{ showingSchema ? 'Instance' : 'Schema Fields'}}
             </a>
             <a class="label label-default pull-right" ng-href="#/editor/{{sharable.id}}" ng-hide="isSchema">
             Edit

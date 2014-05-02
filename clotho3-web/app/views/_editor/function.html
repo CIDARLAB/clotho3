@@ -1,4 +1,6 @@
-<div ng-controller="Editor_FunctionCtrl" class="panel panel-info">
+<div ng-controller="Editor_FunctionCtrl"
+     class="panel"
+     ng-class="sharableType.class ? 'panel-' + sharableType.class :  'panel-default'">
   <div class="panel-heading">
     <h3 class="panel-title">Function Editor</h3>
   </div>

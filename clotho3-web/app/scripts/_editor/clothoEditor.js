@@ -63,6 +63,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 
 				$http.get(ClothoSchemas.sharableTypes[type].editor_template_url, {cache: $templateCache})
 				.success(function (data) {
+					$scope.sharableType = ClothoSchemas.sharableTypes[type];
 					var el = $compile(data)($scope);
 					$element.html(el);
 				})

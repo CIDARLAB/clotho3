@@ -1,6 +1,7 @@
 body {
   background-color: $bg-body-light;
   transition: background-color 0.25s ease-out;
+  min-height: 100vh;
 }
 
 body.gray {

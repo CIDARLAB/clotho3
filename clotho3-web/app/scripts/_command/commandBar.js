@@ -196,6 +196,12 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 			ClientAPI.say(submission);
 
+			//note - temporary, patch as object pending tokenizer
+			query = {
+				query : query,
+				tokens : []
+			};
+
 			return Clotho.submit(query).then(function(result){
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});

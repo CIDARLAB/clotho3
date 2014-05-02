@@ -1,4 +1,6 @@
-<div ng-controller="Editor_SchemaCtrl"class="panel panel-info">
+<div ng-controller="Editor_SchemaCtrl"
+     class="panel"
+     ng-class="sharableType.class ? 'panel-' + sharableType.class :  'panel-default'">
     <div class="panel-heading">
         <h3 class="panel-title">Schema Editor</h3>
     </div>

@@ -363,8 +363,6 @@ angular.module('clotho.commandbar')
 						return;
 					}
 
-					evt.preventDefault();
-
 					//backspace
 					if (evt.which === 8) {
 						if (scope.query.length) {
@@ -398,18 +396,25 @@ angular.module('clotho.commandbar')
 					}
 					//left
 					else if (evt.which === 37) {
-						scope.tokenCollection.setPrevActive();
-						scope.$digest();
+						if (scope.tokenCollection.isActive()) {
+							scope.tokenCollection.setPrevActive();
+							scope.$digest();
+						} else {
+							return;
+						}
 					}
 					//right
 					else if (evt.which === 39) {
-						if ( scope.tokenCollection.isLastActive() ) {
-							scope.tokenCollection.unsetActive();
+						if (scope.tokenCollection.isActive()) {
+							if ( scope.tokenCollection.isLastActive() ) {
+								scope.tokenCollection.unsetActive();
+							} else {
+								scope.tokenCollection.setNextActive();
+							}
+							scope.$digest();
 						} else {
-							scope.tokenCollection.setNextActive();
+							return;
 						}
-						scope.$digest();
-
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
@@ -425,6 +430,9 @@ angular.module('clotho.commandbar')
 						scope.tokenCollection.unsetActive();
 						scope.$digest();
 					}
+
+					//at bottom so can return out and continue normal action
+					evt.preventDefault();
 				});
 
 				//$timeout so runs after document click
