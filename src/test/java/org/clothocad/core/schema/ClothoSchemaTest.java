@@ -23,6 +23,7 @@
  */
 package org.clothocad.core.schema;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Injector;
 import com.mongodb.BasicDBObject;

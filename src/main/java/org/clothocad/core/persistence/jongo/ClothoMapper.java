@@ -73,9 +73,9 @@ public class ClothoMapper implements Mapper {
                 public void modify(ObjectMapper mapper) {
                         mapper.disable(FAIL_ON_EMPTY_BEANS);
                         //write types into serialized objects
-                        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
+                        //mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS);
+                        mapper.disableDefaultTyping();
                         //mapper.setDefaultTyping(typer);
-                        
                         mapper.registerModule(new ClothoJacksonModule());
                         //add "id" -> "_id" renaming mixin
                         mapper.addMixInAnnotations(ObjBase.class, IdRenamingMixin.class);
