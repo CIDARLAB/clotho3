@@ -18,7 +18,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#4488cc'
+				class : 'info' // blue
 			},
 			"Function": {
 				readable : "Function",
@@ -27,7 +27,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#66bb66'
+				class : 'success' //green
 			},
 			"Schema": {
 				readable : "Schema",
@@ -36,7 +36,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#eeaa55'
+				class : 'danger' //orange
 			},
 			"View" :  {
 				readable : "View",
@@ -45,7 +45,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#dd33dd'
+				class : 'warning' //pink
 			}
 		};
 
@@ -261,11 +261,11 @@ angular.module('clotho.foundation')
 			}
 		}
 
-		function colorByType (type) {
+		function typeToColorClass (type) {
 			if (sharableTypes[type]) {
-				return sharableTypes[type].color;
+				return sharableTypes[type].class;
 			} else {
-				return '#31b0d5';
+				return 'default';
 			}
 		}
 
@@ -354,7 +354,7 @@ angular.module('clotho.foundation')
 		//determines main type: Instance, Function, View, Schema
 		function determineInstanceType (sharable) {
 			if (isSchema(sharable)) {
-				return "Schema";
+				return 'Schema';
 			} else if (isFunction(sharable)) {
 				return 'Function';
 			} else if (isView(sharable)) {
@@ -405,7 +405,7 @@ angular.module('clotho.foundation')
 			determineFieldType : determineFieldType,
 			determineSchema : determineSchema,
 			createScaffold : createScaffold,
-			colorByType : colorByType,
+			typeToColorClass : typeToColorClass,
 
 			sharableBasicFields : sharableBasicFields,
 			pruneToBasicFields : pruneToBasicFields
