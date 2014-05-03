@@ -38,6 +38,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/edit', {
 		redirectTo: '/editor'
 	})
+	/*
 	.when('/editor/query/:queryTerm', {
 		templateUrl: 'views/editor.html',
 		controller: 'EditorCtrl',
@@ -68,9 +69,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/editor/query', {
 		redirectTo : '/editor'
 	})
-	.when('/editor/:id?', {
+	*/
+	.when('/editor', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
+		reloadOnSearch: false,
 		resolve : {
 			deps : ['codemirrorLoader', function(loader) {
 				return loader.loadMain();

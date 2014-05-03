@@ -249,11 +249,11 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var edit = function (uuid) {
 			if ($injector.has('$route')) {
-				$location.path('/editor/' + uuid)
+				$location.path("/editor?id=" + uuid);
 			} else {
 				//need to go to full instance, this just has API or Command build
 				say({
-					text : 'Cannot edit in API / Command Build',
+					text : 'Editor not available',
 					from: 'client',
 					class : 'error'
 				});

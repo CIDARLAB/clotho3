@@ -490,7 +490,7 @@ function generateClothoAPI() {
      *
      */
     var edit = function clothoAPI_edit(uuid) {
-        $location.path("/editor/" + uuid);
+        $location.path("/editor?id=" + uuid);
     };
 
     /**
