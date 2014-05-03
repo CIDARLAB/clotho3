@@ -22,6 +22,10 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		}
 	});
 
+	$scope.$on('$destroy', function () {
+		$location.search('id', null).replace();
+	});
+
 	/*
 	initial route handling:
 
