@@ -6,10 +6,12 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 		$scope.schemas = schemas;
 	});
 
-	$scope.clothoFunctions = [];
-	Clotho.query({"schema": "Function"}).then(function(data) {
-		$scope.clothoFunctions = data;
-	});
+	$scope.clothoFunctionWrap = function (query) {
+		return Clotho.query({"schema": ClothoSchemas.sharableTypes.Function.schema, name : query}, {mute : true})
+		.then(function(data) {
+			return data || [];
+		});
+	};
 
 	$scope.accessTypes = ClothoSchemas.accessTypes;
 
@@ -19,24 +21,19 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 
 	$scope.findSpacesRegExp = /\s/ig;
 
+	//necessary?
 	$scope.parseField = function(field) {
 		//only passed field.value so model maps onto options properly in html
-		if ($scope.simpleTypes[field.type]) {
-			field.javaType = $scope.primitiveToJava[field.type];
-			field.reference = false;
-		} else {
-
-			field.reference = true;
-		}
+		field.reference = !angular.isEmpty($scope.simpleTypes[field.type]);
 	};
 
 	//TODO - dry. duplicates function editor code
 	$scope.paramTypes = [
-		{name:'object', type: "object", category:'Primitive', javaType : "java.util.HashMap", reference: false},
-		{name:'array', type : "array", category:'Primitive', javaType : "java.util.Arrays", reference: false},
-		{name:'string', type : "string", category:'Primitive', javaType : "java.lang.String", reference: false},
-		{name:'number', type : "number", category:'Primitive', javaType : "java.lang.Long", reference: false},
-		{name:'boolean', type : "boolean", category:'Primitive', javaType : "java.lang.Boolean", reference: false}
+		{name:'object', type: "object", category:'Primitive', reference: false},
+		{name:'array', type : "array", category:'Primitive', reference: false},
+		{name:'string', type : "string", category:'Primitive', reference: false},
+		{name:'number', type : "number", category:'Primitive', reference: false},
+		{name:'boolean', type : "boolean", category:'Primitive', reference: false}
 	];
 
 	ClothoSchemas.retrievedSchemas.then(function (schemas) {
@@ -46,21 +43,20 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 	});
 
 
-	$scope.$watch('sharable.superClass', function() {
-		$scope.getSuperClass();
+	$scope.$watch('sharable.superClass', function(val) {
+		if (!!val) {
+			$scope.getSuperClass();
+		}
 	});
 
 	$scope.getSuperClass = function () {
 		if ($scope.sharable.superClass) {
 			Clotho.get($scope.sharable.superClass)
-				.then(function(result) {
-					$scope.superClassObj = result
-				})
+			.then(function(result) {
+				$scope.superClassObj = result;
+			})
 		}
 	};
-
-
-
 
 	$scope.newMethod = function() {
 		return ""

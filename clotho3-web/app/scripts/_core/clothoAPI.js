@@ -465,10 +465,13 @@ function generateClothoAPI() {
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      *
      * @description
-     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Clotho will send an error message on the 'say' channel if destroy fails for an object.
+     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Nothing will happen if no UUID is passed. Clotho will send an error message on the 'say' channel if destroy fails for an object.
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
+	    if (!uuid) {
+		    return;
+	    }
 
         var callback = function() {
             Collector.removeModel(uuid);

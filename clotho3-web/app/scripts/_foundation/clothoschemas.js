@@ -103,7 +103,7 @@ angular.module('clotho.foundation')
 		}
 		//matches spaces unless between single or double quotes
 		var spaceRegexp = /[^\s"']+|"([^"]*)"|'([^']*)'/;
-		var spaceRegexpEscaped =  escapeRegexp(spaceRegexp);
+		var spaceRegexpEscaped =  spaceRegexp.toString();
 
 		var formTypeMap = {
 			"boolean" : {
@@ -134,7 +134,7 @@ angular.module('clotho.foundation')
 				type : "array",
 				input : {
 					type : 'text',
-					"ng-list" : spaceRegexpEscaped
+					"ng-list" : ""
 				}
 			},
 			"org.bson.types.ObjectId" : {

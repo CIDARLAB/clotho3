@@ -4,9 +4,13 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 
 	// todo - better handle dynamic routing
 	// note - could use search param, and set reloadOnSearch to false
-	/*$scope.$watch('editable', function (newval, oldval) {
-	 $location.url('/editor/' + $scope.editable.id).replace();
-	 });*/
+	/*
+	$scope.$watch('editable.id', function (newval, oldval) {
+		if (!!newval) {
+			$location.url('/editor/' + newval).replace();
+		}
+	});
+	*/
 
 	//init()
 	//todo - test
@@ -33,7 +37,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 
 	//functionality
 
-	$scope.queryWrapper = function(text) {
+	$scope.queryWrapper = function (text) {
 		return Clotho.autocomplete(text).then(function (results) {
 			return results || [];
 		});
@@ -56,7 +60,8 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	};
 
 	$scope.editExisting = function (item, model, label) {
-		$scope.editable = item;
+		console.log(item, model);
+		$scope.editable = model;
 		$scope.editModePass = true;
 	};
 });

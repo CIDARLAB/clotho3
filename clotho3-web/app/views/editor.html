@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-9">
       <form clotho-editor
-            ng-model="editable"
+            sharable="editable"
             edit-mode="editModePass"
             class="form-horizontal"
             form-horizontal="true"></form>
@@ -19,20 +19,23 @@
              ng-click="createNew(type)"
              ng-class="{'list-group-item-info' : (type == 'Instance' && chooseSubtype)}">{{ obj.readable }}</a>
         </div>
-        <div ng-if="chooseSubtype"
-             class="list-group-item"
-             ng-class="{'list-group-item-warning' : !selectedSubtype.length}">
-          <label for="chooseSubtype">Instance Type</label>
-          <input id="chooseSubtype"
-                 type="text"
-                 class="form-control"
-                 ng-model="selectedSubtype"
-                 typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10"
-                 typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';"
-                 popover="Type and select a schema to create an object with pre-determined fields"
-                 popover-title="Choose a Schema"
-                 popover-trigger="focus"
-                 popover-append-to-body="true">
+        <div class="list-group"
+             ng-if="chooseSubtype">
+          <div
+              class="list-group-item"
+              ng-class="{'list-group-item-warning' : !selectedSubtype.length}">
+            <label for="chooseSubtype">Instance Type</label>
+            <input id="chooseSubtype"
+                   type="text"
+                   class="form-control"
+                   ng-model="selectedSubtype"
+                   typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10"
+                   typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';"
+                   popover="Type and select a schema to create an object with pre-determined fields"
+                   popover-title="Choose a Schema"
+                   popover-trigger="focus"
+                   popover-append-to-body="true">
+          </div>
         </div>
       </div>
 
@@ -45,10 +48,14 @@
                  type="text"
                  class="form-control"
                  ng-model="selectedInstance"
-                 typeahead="c.id as c.name for c in queryWrapper($viewValue)"
+                 typeahead="c.uuid as c.name for c in queryWrapper($viewValue)"
                  typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
                  popover="Type to search for an Instance to edit"
-                 popover-trigger="focus">
+                 popover-trigger="focus"
+                 popover-append-to-body="true">
+        </div>
+        <div class="panel-footer">
+          <p>uuid -> id pending #216</p>
         </div>
       </div>
     </div>

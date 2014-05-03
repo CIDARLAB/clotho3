@@ -326,7 +326,6 @@ angular.module('clotho.clothoDirectives')
 				}
 
 				scope.$watch('sharableModel', function ( val, oldval ) {
-					console.log(val);
 					if (!!val) {
 						setSharable(val);
 					}
