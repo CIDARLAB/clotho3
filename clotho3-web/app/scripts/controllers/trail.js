@@ -4,6 +4,14 @@ angular.module('clotho.webapp').controller('TrailCtrl', function($scope, $route,
 	$scope.id = $route.current.params.id;
 	$scope.trail = $route.current.locals.trail;
 
+	//initial position check
+	if ($route.current.params.position) {
+		$scope.current = $route.current.params.position;
+		$scope.currentPage = Trails.extractPage($scope.trail, $scope.current);
+	} else {
+		//todo - show landing page
+	}
+
 	$scope.activate = Trails.activate;
 
 	$scope.favorite = function() {
