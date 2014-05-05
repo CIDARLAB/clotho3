@@ -18,26 +18,6 @@ angular.module('ui.bootstrap-decorate', ['ui.bootstrap'])
 			});
 		};
 
-		$delegate.serverAlert = function(message) {
-			return $delegate.open({
-				backdrop: true,
-				backdropFade: true,
-				keyboard: true,
-				backdropClick: true,
-				templateUrl: 'views/_interface/ui-custom/dialogMessagebox.html',
-				controller: 'ServerAlertController',
-				resolve: {
-					model: function() {
-						return {
-							title: "Server Message",
-							message: message,
-							buttons: [{result:'ok', label: 'OK', cssClass: 'btn-primary'}]
-						};
-					}
-				}
-			});
-		};
-
 		$delegate.share = function(url) {
 			return $delegate.open({
 				backdrop: true,
@@ -108,22 +88,6 @@ angular.module('ui.bootstrap-decorate').controller('MessageBoxController', funct
 	$scope.close = function(res){
 		$modalInstance.close(res);
 	};
-});
-
-angular.module('ui.bootstrap-decorate').controller('ServerAlertController', function($scope, $modalInstance, model, Clotho){
-	$scope.title = model.title;
-	$scope.message = model.message;
-	$scope.buttons = model.buttons;
-	$scope.close = function(res){
-		$modalInstance.close(res);
-	};
-
-	//todo - more intelligent handling??
-	Clotho.listen('serverAlert', function() {
-		$scope.close('Another alert appeared');
-		Clotho.say($scope.message);
-	}, $scope);
-
 });
 
 angular.module('ui.bootstrap-decorate').controller('DialogShareController', function($scope, $modalInstance, model, $location){

@@ -70,6 +70,7 @@ angular.module('clotho.trails')
 					createYoutubePlayer();
 				};
 
+				//init()
 				if (!!scope.startMini && scope.startMini != 'false') {
 					scope.miniThumb = Youtube.thumbnail(scope.videoId, 'mqdefault');
 

@@ -6,7 +6,13 @@ angular.module('clotho.clothoDirectives')
  *
  * @usage
  *
- * (arbitrary HTML)
+ * You can define arbitrary HTML as content or transclude, a template, or a clotho ID to show. All will be shown if defined.
+ *
+ * (arbitrary HTML, on scope)
+ *
+ * <clotho-modal title="Clotho Help" open="showHelp" content="modalContent"></clotho-modal>
+ *
+ * (arbitrary HTML, transcluded)
  *
 <clotho-modal title="arbitrary content" open="true">
  <p>Any content you want here</p>
@@ -15,10 +21,16 @@ angular.module('clotho.clothoDirectives')
  *
  * (Clotho.show(<id>)
  *
- <clotho-modal title="clotho.show" id="<WIDGET_ID>">
- </clotho-modal>
+ <clotho-modal title="clotho.show" id="<WIDGET_ID>"></clotho-modal>
+ *
+ * (template)
+ *
+ * <clotho-modal title="Another Template" template-url="'myUrl.html'"></clotho-modal>
+ *
+ * @description
+ * This implementation is a bit different than UI Bootstrap and Angular Strap in that most of the logic is placed in the modal, rather than the service. Usage is similar, though less programmatic manipulation, in favor of ease of creation and ability to support transclusion.
  */
-	.directive('clothoModal', function ($parse, $timeout, hotkeys) {
+	.directive('clothoModal', function ($parse, $timeout, $http, $compile, $sce, hotkeys) {
 
 		return {
 			restrict : 'E',
@@ -30,17 +42,20 @@ angular.module('clotho.clothoDirectives')
 				open : '=?',
 				onClose : '&?',
 				onOpen : '&?',
-				title : '@?'
+				title : '@?',
+				content : '=?',
+				templateUrl : '=?',
+				actions : '=?'
 			},
 			controller : function ($scope, $element, $attrs) {
-				//define on controller so available in template
+				//define on controller so available outside template
 				$scope.$close = function (event) {
 					if ($scope.open) {
 						$scope.open = false;
 						hotkeys.del('esc');
 
 						$timeout(function () {
-							angular.isFunction($scope.onClose) && $scope.onClose();
+							$scope.onClose();
 						});
 					}
 				};
@@ -54,6 +69,23 @@ angular.module('clotho.clothoDirectives')
 					})
 				}
 
+				scope.$watch('content', function(newValue, oldValue) {
+					scope.contentTrusted = $sce.trustAsHtml(newValue);
+				});
+
+				scope.$watch('templateUrl', function (newval, oldval) {
+					if (!!newval && (newval != oldval || !oldval)) {
+						$http.get(newval, {cache: true}).success(function (data, headers) {
+							element[0].querySelectorAll('[template-insert]').html($compile(data)(scope));
+							scope.hasTemplate = true;
+						})
+						.error(function (data) {
+							//let's hide the area
+							scope.hasTemplate = false;
+						});
+					}
+				});
+
 				scope.$watch('open', function (newval, oldval) {
 					if (!!newval) {
 						scope.open = true;
@@ -63,4 +95,66 @@ angular.module('clotho.clothoDirectives')
 				});
 			}
 		}
+	})
+
+/**
+ * @name $clothoModal
+ *
+ * @description
+ * Simple service for programmatic creation of clotho-modals.
+ *
+ * It is likely you may want to use the $modal service provided by angularUI-bootstrap, this is primarily for the minimal builds (API and command bar only), though completely usable elsewhere.
+ *
+ * This service allows on modal at a time.
+ *
+ * To pass functions etc, you must create them on the scope, and pass in the $scope. The config options are simply mapped to the DOM as attrs, so should match docs for clotho-modal directive. They should be snake-case. Note that the $scope of the directive is isolate, so all actions must be within the 'scope' of the $scope you pass in.
+ *
+ */
+	.service('$clothoModal', function($window, $rootScope, $compile) {
+
+		var bodyElement = angular.element($window.document.body);
+		var extantModal = null, extantScope = null;
+
+		/**
+		 * @name $clothoModal.create
+		 *
+		 * @description
+		 * Create a new clotho-modal element on the body, removing the last one if it existed.
+		 *
+		 * @param config {Object} directly mapped to attrs of clotho-modal element
+		 * @param scope {Scope} for evaluating scope of modal, otherwise new scope created
+		 */
+		this.create = function (config, scope) {
+			destroy();
+
+			var options = angular.extend({}, config);
+			extantScope = scope = scope || $rootScope.$new();
+
+			//reset the close
+			var oldClose = scope.$eval(options.onClose) || angular.noop;
+			scope.clothoModalClose = function () {
+				oldClose();
+				destroy();
+			};
+			options['on-close'] = 'clothoModalClose()';
+
+			extantModal = $compile(angular.element('<clotho-modal>').attr(options))(scope);
+			bodyElement.append(extantModal);
+		};
+
+		/**
+		 * @name $clothoModal.destroy()
+		 *
+		 * @description
+		 * Remove a modal created by this service, otherwise does nothing.
+		 */
+		function destroy () {
+			extantScope && extantScope.$destroy();
+			extantModal && extantModal.remove();
+			extantModal = null;
+			extantScope = null;
+		}
+
+		this.destroy = destroy;
+
 	});
