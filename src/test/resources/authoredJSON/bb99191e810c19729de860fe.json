@@ -1,153 +1,245 @@
 {
-  "id" : "bb99191e810c19729de860fe",
-  "schema" : "Trail",
-  "name" : "Learning Clotho",
-  "description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
-  "contents" : [ {
-    "chapter" : "Introducing Clotho",
-    "pages" : [ {
-      "title" : "Intro to DNA",
-      "icon" : "video",
-      "contents" : [ {
-        "type" : "text",
-        "params" : "<div><blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you get up to speed. This one will give you a brief introduction to DNA and Synthetic Biology. <b>Feel free to <a ng-click=\"next()\">skip ahead</a> if this isn't new to you.</b></p></div>"
-      }, {
-        "type" : "video",
-        "params" : {
-          "id" : "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
-          "autoplay" : true
-        }
-      } ]
-    }, {
-      "title" : "Reverse Complement",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/reverseComplement.js",
-      "dictionary" : {
-        "outerDictVal" : "Tester"
-      },
-      "contents" : [ {
-        "type" : "video",
-        "params" : {
-          "id" : "https://www.youtube.com/watch?v=gKHO0HHPsXg",
-          "params" : {
-            "height" : 394,
-            "width" : 700
-          }
-        }
-      }, {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/reverseComplement.html"
-      }, {
-        "type" : "quiz",
-        "params" : {
-          "title" : "Reverse Complement",
-          "type" : "fillin",
-          "question" : "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
-          "dictionary" : {
-            "questionValue" : "ACGTACG",
-            "answerGenerator" : "aa7f191e810c19729de86101"
-          },
-          "retry" : {
-            "questionValue" : "clotho.run('randomSequence', ['7'])"
-          }
-        }
-      } ]
-    }, {
-      "title" : "Tools in Clotho",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/toolsIntro.js",
-      "contents" : [ {
-        "type" : "text",
-        "params" : "<p>Clotho can automate several common tasks, such as reverse complementing a sequence.</p>"
-      }, {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/toolsIntro.html"
-      } ]
-    }, {
-      "title" : "The Command Bar",
-      "icon" : "eye",
-      "mixin" : "partials/trails/clotho-intro/searchbarIntro.js",
-      "contents" : [ {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/searchbarIntro.html"
-      } ]
-    }, {
-      "title" : "Scripting in Clotho",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/scriptingIntro.js",
-      "contents" : [ {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/scriptingIntro.html"
-      } ]
-    } ]
-  }, {
-    "chapter" : "Manipulating DNA",
-    "pages" : [ {
-      "title" : "Restriction Digests",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/RestrictionDigests.js",
-      "contents" : [ {
-        "type" : "video",
-        "params" : "https://www.youtube.com/watch?v=JruotWQmZxg"
-      }, {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/RestrictionDigests.html"
-      } ]
-    }, {
-      "title" : "Ligation",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/Ligation.js",
-      "contents" : [ {
-        "type" : "video",
-        "params" : {
-          "id" : "https://www.youtube.com/watch?v=ytHETbIjBV4",
-          "params" : {
-            "height" : 394,
-            "width" : 700
-          }
-        }
-      }, {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/Ligation.html"
-      } ]
-    }, {
-      "title" : "PCR",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/PCR.js",
-      "contents" : [ {
-        "type" : "video",
-        "params" : "20a-mp4YXRQ"
-      }, {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/PCR.html"
-      } ]
-    } ]
-  }, {
-    "chapter" : "Construction Files",
-    "pages" : [ {
-      "title" : "Examining",
-      "icon" : "eye",
-      "mixin" : "partials/trails/clotho-intro/examining.js",
-      "contents" : [ {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/examining.html"
-      } ]
-    }, {
-      "title" : "Simulation",
-      "icon" : "eye",
-      "mixin" : "partials/trails/clotho-intro/simulation.js",
-      "contents" : [ {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/simulation.html"
-      } ]
-    }, {
-      "title" : "Writing",
-      "icon" : "exercise",
-      "mixin" : "partials/trails/clotho-intro/writing.js",
-      "contents" : [ {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/writing.html"
-      } ]
-    } ]
-  } ]
+	"id": "bb99191e810c19729de860fe",
+	"schema": "Trail",
+	"name": "Learning Clotho",
+	"description": "Learn how Clotho can simplify and automate your genetic engineering workflows.",
+	"icon" : "",
+	"about" : {
+		"help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
+		"contents" : [
+			{
+				"type" : "markdown",
+				"params" : "#Clotho Intro \n\n## Example Markdown"
+			}
+		]
+	},
+	"materials" : [
+		{
+			"name" : "Example Syllabus",
+			"icon" : "syllabus",
+			"type" : "Syllabus",
+			"path" : "partials/trails/clotho-intro/materials/ClothoIntroSyllabus.pdf"
+		}
+	],
+	"instructors" : ['5362ad80ef86f9bb693aaba1'],
+	"contents": [
+		{
+			"chapter": "Introducing Clotho",
+			"description" : "Introduce concepts of DNA and basic sequence manipulation, and learn how to use Clotho to automate those manipulations",
+			"pages": [
+				{
+					"title": "Intro to DNA",
+					"icon": "video",
+					"materials" : [
+						{
+							"name" : "Video Slides",
+							"icon" : "slides",
+							"type" : "Slides",
+							"path" : "partials/trails/clotho-intro/materials/IntroDNASlides.txt"
+						}
+					],
+					"contents": [
+						{
+							"type": "text",
+							"params": "<div><blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you get up to speed. This one will give you a brief introduction to DNA and Synthetic Biology. <b>Feel free to <a ng-click=\"next()\">skip ahead</a> if this isn't new to you.</b></p></div>"
+						},
+						{
+							"type": "video",
+							"params": {
+								"id": "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
+								"autoplay": true
+							}
+						}
+					]
+				},
+				{
+					"title": "Reverse Complement",
+					"icon": "exercise",
+					"help" : "Boxes like the one below are quizzes. This Trail will ask you to answer questions about DNA manipulation. Watch the videos on each page if you need to brush up on your knowledge (click OK and peek behind this window), but make sure you understand each quiz before moving forward.",
+					"contents": [
+						{
+							"type": "video",
+							"params": {
+								"id": "https://www.youtube.com/watch?v=gKHO0HHPsXg",
+								"params": {
+									"height": 394,
+									"width": 700
+								}
+							}
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/reverseComplement.html"
+						},
+						{
+							"type": "quiz",
+							"params": {
+								"title": "Reverse Complement",
+								"type": "fillin",
+								"question": "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
+								"dictionary": {
+									"questionValue": "ACGTACG",
+									"answerGenerator": "aa7f191e810c19729de86101"
+								},
+								"retry": {
+									"questionValue": "clotho.run('randomSequence', ['7'])"
+								}
+							}
+						}
+					]
+				},
+				{
+					"title": "Tools in Clotho",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/toolsIntro.js"
+					},
+					"contents": [
+						{
+							"type": "text",
+							"params": "<p>Clotho can automate several common tasks, such as reverse complementing a sequence.</p>"
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/toolsIntro.html"
+						}
+					]
+				},
+				{
+					"title": "The Command Bar",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/searchbarIntro.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/searchbarIntro.html"
+						}
+					]
+				},
+				{
+					"title": "Scripting in Clotho",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/scriptingIntro.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/scriptingIntro.html"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter": "Manipulating DNA",
+			"description" : "Move beyond simple sequence manipulation to DNA-enzyme and DNA-DNA interactions, and predicting them in Clotho",
+			"pages": [
+				{
+					"title": "Restriction Digests",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/RestrictionDigests.js"
+					},
+					"contents": [
+						{
+							"type": "video",
+							"params": "https://www.youtube.com/watch?v=JruotWQmZxg"
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/RestrictionDigests.html"
+						}
+					]
+				},
+				{
+					"title": "Ligation",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/Ligation.js"
+					},
+					"contents": [
+						{
+							"type": "video",
+							"params": {
+								"id": "https://www.youtube.com/watch?v=ytHETbIjBV4",
+								"params": {
+									"height": 394,
+									"width": 700
+								}
+							}
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/Ligation.html"
+						}
+					]
+				},
+				{
+					"title": "PCR",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/PCR.js"
+					},
+					"contents": [
+						{
+							"type": "video",
+							"params": "20a-mp4YXRQ"
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/PCR.html"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter": "Construction Files",
+			"description" : "Construction files list a sequence of reactions to yield a final product, which can be predicted in Clotho",
+			"pages": [
+				{
+					"title": "Examining",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/examining.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/examining.html"
+						}
+					]
+				},
+				{
+					"title": "Simulation",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/simulation.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/simulation.html"
+						}
+					]
+				},
+				{
+					"title": "Writing",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/writing.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/writing.html"
+						}
+					]
+				}
+			]
+		}
+	]
 }
