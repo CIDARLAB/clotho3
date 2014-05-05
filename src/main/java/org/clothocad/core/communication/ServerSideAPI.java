@@ -143,10 +143,15 @@ public class ServerSideAPI {
         
     //clotho.run("aa7f191e810c19729de86101", ["53581f9e9e7d7a2fda8c36a7"]);   revcomp pBca1256
     //clotho.run("aa7f191e810c19729de86101", ["atcg"]);  revcomp atcg
-    public final Object submit(String command) {
+    public final Object submit(Object data) {
+        //Extract the query String and tokens
+        Map<String, Object> json = JSON.mappify(data);
+        String query = (String) json.get("query");
+        List<Object> clientTokens = (List<Object>) json.get("tokens");
+        
         //Resolve the commands to tokens
-        System.out.println("++ The command submitted is: " + command);
-        String[] tokens = command.split("\\s+");
+        System.out.println("++ The command submitted is: " + query);
+        String[] tokens = query.split("\\s+");
         for(String str : tokens) {
             System.out.println("token: " + str);
         }
@@ -169,9 +174,9 @@ public class ServerSideAPI {
         //Run the command assuming it's javascript
         //say(command, Severity.MUTED, null, true);
         try {
-            Object returnValue = mind.runCommand(command, getScriptAPI());
+            Object returnValue = mind.runCommand(query, getScriptAPI());
             //If the command successfully executed, it gets retained
-            mind.addLastCommand(Channel.submit, command);
+            mind.addLastCommand(Channel.submit, query);
             return returnValue;
         } catch (ScriptException ex) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up

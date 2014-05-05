@@ -60,7 +60,7 @@ public class AutoComplete {
         for(String word: getWordBank()){
             HashMap temp = new HashMap();
             temp.put("name",word);
-            temp.put("uuid", map.get(word));
+            temp.put("id", map.get(word));
             temp.put("text", word);
             temp.put("type", "phrase");
             trie.put(word.toLowerCase(),temp);
