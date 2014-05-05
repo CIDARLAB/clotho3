@@ -73,7 +73,7 @@ public class Router {
                     response = api.autocomplete(data.toString());
                     break;
                 case submit:
-                    response = api.submit(data.toString());
+                    response = api.submit(data);
                     break;
                 case clear:
                     api.clear();
