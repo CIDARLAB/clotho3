@@ -1,7 +1,9 @@
 /**
  field types that are handled:
- backend: CSS (url), mixin (array|url), script (array|url), onload (array|url), controller (name, must be mixed in)
+ backend: CSS (url), mixin (array|url), script (array|url), onload (array|url)
  content: text (string|html), video (object), template (url), quiz (object), markdown (text), wiki (text)
+
+ you can add a controller using the ng-controller directive in a template, and declare it as a mixin.
  */
 angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys) {
 
@@ -15,23 +17,16 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 		},
 		link: function trailPageLink(scope, element, attrs) {
 
-			scope.helpModalOpen = false;
-
+			scope.helpModalOpen = false;m
 			function toggleHelpModal() {
 				scope.helpModalOpen = !scope.helpModalOpen;
 			}
 
 			scope.$watch('page', function (newPage) {
-				if (!!newPage) {
+				if (!angular.isEmpty(newPage)) {
 					scope.createPage()
 				}
 			});
-
-			scope.setPage = function (thePage) {
-				if (angular.isObject(thePage)) {
-					scope.page = thePage;
-				}
-			};
 
 			//future - this provides the foundation for Clotho.view() -- move it there
 			scope.createPage = function () {
@@ -44,42 +39,18 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 					$clotho.extensions.mixin(scope.page.mixin),
 					$clotho.extensions.script(scope.page.script)
 				])
-					.then(function () {
+				.then(function () {
+					scope.pageComponents = scope.page.contents;
 
+					if (scope.page.help) {
+						hotkeys.add('h', 'Toggle Page Help', toggleHelpModal, false);
+					}
 
-						// verify this is the best way to do this
-						// todo - create empty as default and use ng-controller in template? -- avoid attaching to DOM directly as may change
-						//check for controller, must be already included (e.g. by mixin)
-						if (scope.page.controller) {
-							var locals = {};
-							locals.$scope = scope;
-							var ctrl = $controller(scope.page.controller, locals);
-							element.data('$ngControllerController', ctrl);
-						}
-
-					})
-					.then(function () {
-						scope.pageComponents = scope.page.contents;
-					}, function (error) {
-
-						//todo - better error handling
-
-						console.log(error);
-					})
-					.then(function () {
-						return (!scope.page.onload) ? $q.when() : $timeout(function () {
-							console.log('loading page onload script');
-							return $clotho.extensions.script(scope.page.onload)
-						});
+					$timeout(function () {
+						return $clotho.extensions.script(scope.page.onload)
 					});
+				});
 			};
-
-			$timeout(function () {
-				if (scope.page && scope.page.help) {
-					hotkeys.add('h', 'Toggle Page Help', toggleHelpModal, false);
-				}
-			});
-
 		}
 	}
 });
