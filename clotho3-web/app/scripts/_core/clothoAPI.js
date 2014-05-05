@@ -174,7 +174,7 @@ function generateClothoAPI() {
     var get = function clothoAPI_get(uuid, options, synchronous) {
 
         //default to false (return promise)
-        synchronous = typeof synchronous != 'undefined' ? !!synchronous : false;
+        synchronous = angular.isDefined(synchronous) ? !!synchronous : false;
 
         return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
     };
@@ -185,6 +185,7 @@ function generateClothoAPI() {
 			    return $q.when();
 		    }
 
+	      /*
 	      //check collector
 	      var retrieved = Collector.retrieveModel(uuid);
 
@@ -199,6 +200,11 @@ function generateClothoAPI() {
 
 	          return fn.emitSubCallback('get', uuid, callback, options);
 	      }
+        */
+
+	    //bypass collector so don't get a stale model
+	    //todo - reintegrate collector in a way that makes sense. Probably need to check which objects have been loaded in this session and allow those (assuming we have watches for updates, otherwise go to server)
+	    return fn.emitSubOnce('get', uuid, options);
     };
 
     var get_sync = function clothoAPI_get_sync(uuid, options) {
