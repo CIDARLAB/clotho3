@@ -39,9 +39,16 @@
       </div>
 
       <!-- Sharing -->
-      <div class="trail-section">
+      <div class="trail-section" ng-controller="SharingCtrl">
         <h3 class="trail-section-title">Share</h3>
-        <p>todo</p>
+        <div>
+          <img ng-repeat="site in social"
+               ng-src="{{site.icon}}"
+               ng-click="share(site)"
+               ng-style="{'width' : '40px',
+                          'padding-right' : ($last ? '0' : '5px') }"
+               class="hoverFade" />
+        </div>
       </div>
     </div>
   </div>

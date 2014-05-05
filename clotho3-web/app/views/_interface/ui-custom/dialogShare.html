@@ -2,10 +2,11 @@
     <button type="button" class="close" ng-click="close()">&times;</button>
     <h3>Share This Page</h3>
 </div>
-<div class="modal-body">
-    <div style="margin: 0 auto; width: {{ (social.length*64) + ((social.length - 1) * 5 ) }}px">
+<div class="modal-body" ng-controller="SharingCtrl">
+    <div style="margin: 0 auto;"
+         ng-style="{width: ((social.length*64) + ((social.length - 1) * 5 )) + 'px'}">
         <img ng-repeat="site in social"
-             ng-src="interface/socialmedia/{{site.name}}.png"
+             ng-src="{{site.icon}}"
              ng-click="share(site)"
              ng-style="$last ? '' : {'padding-right': '5px'}"
              class="hoverFade" />

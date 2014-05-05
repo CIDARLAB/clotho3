@@ -17,7 +17,7 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 		},
 		link: function trailPageLink(scope, element, attrs) {
 
-			scope.helpModalOpen = false;m
+			scope.helpModalOpen = false;
 			function toggleHelpModal() {
 				scope.helpModalOpen = !scope.helpModalOpen;
 			}

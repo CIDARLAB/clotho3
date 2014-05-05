@@ -90,7 +90,7 @@ angular.module('ui.bootstrap-decorate').controller('MessageBoxController', funct
 	};
 });
 
-angular.module('ui.bootstrap-decorate').controller('DialogShareController', function($scope, $modalInstance, model, $location){
+angular.module('ui.bootstrap-decorate').controller('DialogShareController', function($scope, $modalInstance, model, $location, $window){
 	$scope.close = function(result){
 		$modalInstance.close(result);
 	};
@@ -133,7 +133,7 @@ angular.module('ui.bootstrap-decorate').controller('DialogShareController', func
 
 		$scope.close();
 
-		window.open(url, (site.name == 'email' ? '_self' : "_blank") );
+		$window.open(url, (site.name == 'email' ? '_self' : "_blank") );
 	}
 
 });
