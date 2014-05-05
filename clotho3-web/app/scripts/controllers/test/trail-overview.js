@@ -6,5 +6,5 @@ angular.module('clotho.trails')
 			$scope.trail = result;
 		});
 
-		$scope.defaultTrailIcon = 'images/trails_splash.jpg';
+		$scope.defaultTrailIcon = 'images/trails/trails_splash.jpg';
 	});
