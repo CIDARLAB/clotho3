@@ -3,11 +3,11 @@
 .trail-header {
 
   $height-trailHeader : 135px;
-  $width-trailImage : 240px;
+  $width-trailImage : 25%;
   $borderWidth-trailHeader : 1px;
 
   border: $borderWidth-trailHeader solid $borderColor-trail;
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 0;
   overflow: hidden;
   display: block;
@@ -33,7 +33,7 @@
   .trail-info {
 
     display: block;
-    width: $width-container - $width-trailImage - $borderWidth-trailHeader*2;
+    width: 100% - $width-trailImage;
     padding: 10px 15px;
     position: absolute;
     bottom: 0;

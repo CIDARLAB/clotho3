@@ -19,6 +19,12 @@
 			"icon" : "syllabus",
 			"type" : "Syllabus",
 			"path" : "partials/trails/clotho-intro/materials/ClothoIntroSyllabus.pdf"
+		},
+		{
+			"name" : "Course Schedule",
+			"icon" : "schedule",
+			"type" : "Calendar",
+			"path" : "partials/trails/clotho-intro/materials/courseSchedule.pdf"
 		}
 	],
 	"instructors" : ["53681df2ef864f6fb0bd29cc"],

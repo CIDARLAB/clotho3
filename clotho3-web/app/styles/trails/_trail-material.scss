@@ -1,11 +1,16 @@
 .trail-material {
 
+  display: block;
+  text-decoration: none;
+  margin-bottom: 5px;
+
   &:hover {
+    text-decoration: none;
 
   }
 
   .trail-material-icon {
-
+    margin-right: 10px;
   }
 
   .trail-material-type {
