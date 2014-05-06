@@ -298,19 +298,23 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         List<Map> out = new ArrayList<Map>();
         int i = 0;
         while(iter.hasNext()){
-            DBObject temp = iter.next();
-            Map map = new HashMap();
-            map.put("name", temp.get("name"));
-            map.put("schema", temp.get("schema"));
-            map.put("id", temp.get("_id").toString());
-            if(temp.containsKey("description")) {
-                map.put("description", temp.get("description"));
-            } else if(temp.containsKey("shortDescription")) {
-                map.put("description", temp.get("shortDescription"));
-            } else {
-                map.put("description", "<no description>");
+            try {
+                DBObject temp = iter.next();
+                Map map = new HashMap();
+                map.put("name", temp.get("name"));
+                map.put("schema", temp.get("schema"));
+                map.put("id", temp.get("_id").toString());
+                if(temp.containsKey("description")) {
+                    map.put("description", temp.get("description"));
+                } else if(temp.containsKey("shortDescription")) {
+                    map.put("description", temp.get("shortDescription"));
+                } else {
+                    map.put("description", "<no description>");
+                }
+                out.add(map);
+            } catch(Exception err) {
+                err.printStackTrace();
             }
-            out.add(map);
             i++;
         }
         return out;
