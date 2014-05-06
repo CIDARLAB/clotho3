@@ -6,7 +6,7 @@
       ng-mouseenter="selectActive($index)">
     <div clotho-autocomplete-match
          ng-click="selectMatch($index)"
-         active="isActive($index)"
+         active="{{isActive($index)}}"
          index="$index"
          match="match"
          query="query"></div>

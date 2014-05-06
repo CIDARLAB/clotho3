@@ -62,7 +62,6 @@ angular.module('clotho.clothoDirectives')
 		return {
 			restrict : 'EA',
 			scope : {
-				popupOpen : '=?' + prefix + 'Open',
 				passedModel : '=?' + prefix + 'Model'
 			},
 			controller : function ($scope, $element, $attrs) {
@@ -272,10 +271,12 @@ angular.module('clotho.clothoDirectives')
 						hasRegisteredTriggers = true;
 					});
 
-					scope.$watch('popupOpen', function (newval, oldval) {
-						//hack - need to do this out of the $scope lifecycle because may need to trigger $digest
+					scope.$watch(function () {
+						return attrs[prefix + 'Open'];
+					}, function (val) {
+						scope.popupOpen = scope.$eval(val);
 						setTimeout(function () {
-							toggle(newval);
+							toggle(scope.popupOpen);
 						});
 					});
 
@@ -291,10 +292,8 @@ angular.module('clotho.clothoDirectives')
 					// Make sure popup is destroyed and removed.
 					scope.$on('$destroy', function onDestroyPopup() {
 						unregisterTriggers();
-						removePopup();
-						popup = null;
+						hide();
 					});
-
 				}
 			}
 		}
@@ -339,6 +338,13 @@ angular.module('clotho.clothoDirectives')
 						});
 					}
 				});
+
+				//remove focus from autocomplete input... hard to hide popup.
+				//todo - refocus input (but only when applicable)
+				scope.toggleSchema = function (evt) {
+					evt.preventDefault();
+					scope.showingSchema = !scope.showingSchema;
+				};
 
 				scope.$on('$destroy', function () {
 				})
