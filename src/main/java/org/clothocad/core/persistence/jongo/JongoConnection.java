@@ -292,23 +292,28 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         cred.drop();
     }
     @Override
-    public Tuple[] getTuples(){
+    public List<Map> getCompletionData(){
         DBCursor cursor = rawDataCollection.find();
         Iterator<DBObject> iter = cursor.iterator();
-        Tuple[] output = new Tuple[cursor.length()];
+        List<Map> out = new ArrayList<Map>();
         int i = 0;
         while(iter.hasNext()){
             DBObject temp = iter.next();
-            Object name = temp.get("name");
-            Object uuid = temp.get("_id");
-            Object[] elem = new Object[2];
-            elem[0] = name;
-            elem[1] = uuid;
-            Tuple input = new Tuple(elem);
-            output[i] = input;
+            Map map = new HashMap();
+            map.put("name", temp.get("name"));
+            map.put("schema", temp.get("schema"));
+            map.put("id", temp.get("_id"));
+            if(temp.containsKey("description")) {
+                map.put("description", temp.get("description"));
+            } else if(temp.containsKey("shortDescription")) {
+                map.put("description", temp.get("shortDescription"));
+            } else {
+                map.put("description", "<no description>");
+            }
+            out.add(map);
             i++;
         }
-        return output;
+        return out;
     }
     private List<Map<String, Object>> mappify(Iterable<JSONFilter> objs) {
         List<Map<String, Object>> out = new ArrayList<>();

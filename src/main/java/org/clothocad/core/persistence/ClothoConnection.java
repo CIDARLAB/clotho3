@@ -162,6 +162,6 @@ public interface ClothoConnection {
 
     public boolean exists(ObjectId id);
     
-    public Tuple[] getTuples();
+    public List<Map> getCompletionData();
  
 }
