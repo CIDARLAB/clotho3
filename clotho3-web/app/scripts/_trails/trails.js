@@ -39,7 +39,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 				//iterate through trail, pushing in chapters
 				angular.forEach(trail.contents, function (chapter, ind) {
 
-					if (typeof chapter.transclude == 'undefined') {
+					if (angular.isUndefined(chapter.transclude)) {
 						final_contents.push(chapter);
 					} else {
 						//chapters to include :
@@ -74,19 +74,21 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	};
 
 	//in form <Chapter>-<Page>
-	var extractPage = function(Trail, indices) {
+	var extractPage = function trailExtractPage (Trail, indices) {
 		var pos = indices.split("-");
 		var page = Trail.contents[pos[0]]['pages'][pos[1]];
 		return page;
 	};
 
 	//bring back in logic from trail-module.js
-	var calcNextPage = function(Trail, oldpos) {
-		oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, -1];
+	var calcNextPage = function trailNextPage(Trail, oldpos) {
+		oldpos = angular.isUndefined(oldpos) ? oldpos.split("-") : [0, -1];
 		var newpos;
 
+		//check next page
 		if (typeof Trail.contents[oldpos[0]]['pages'][+oldpos[1] + 1] != 'undefined')
 			newpos = oldpos[0] + '-' + (+oldpos[1] + 1);
+		//check next chapter
 		else if (typeof Trail.contents[+oldpos[0] + 1]['pages'] != 'undefined')
 			newpos = (+oldpos[0] + 1) + '-' + 0;
 		else {
@@ -95,7 +97,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		return newpos;
 	};
 
-	var calcPrevPage = function(Trail, oldpos) {
+	var calcPrevPage = function trailPrevPage(Trail, oldpos) {
 		if (oldpos == '0-0') return;
 
 		oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, 1];
@@ -112,7 +114,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	};
 
 	//go to the location of a trail page
-	var activate = function (indices) {
+	var activate = function trailActivate (indices) {
 		//if passed nothing
 		if (!indices || !angular.isString(indices)) return;
 
@@ -125,7 +127,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	};
 
 	// download dependencies object - css, mixin, script - return function to for onload
-	var downloadDependencies = function (dependencies) {
+	var downloadDependencies = function trailDownloadDependencies(dependencies) {
 		if (angular.isEmpty(dependencies)) {
 			return $q.when(angular.noop);
 		}
@@ -157,17 +159,14 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		'undefined'   : 'glyphicon glyphicon-file'         //fallthrough
 	};
 
-	var mapIcon = function(iconName) {
+	var mapIcon = function trailMapIcon (iconName) {
 		iconName = iconName || 'undefined';
 		return trailIconMap[iconName]  || trailIconMap['undefined'];
 	};
 
-
-
-	var favorite = function(id) {
+	var favorite = function trailFavorite (id) {
 		console.log("favorite trail with id: " + id);
 	};
-
 
 	return {
 		compile : compile,

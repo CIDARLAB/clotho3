@@ -303,6 +303,10 @@ angular.module('clotho.foundation')
 								finalSchema.fields = finalSchema.fields.concat(retrieved.fields);
 								//testing console.log('finalSchema now', _.pluck(finalSchema.fields, 'name'));
 								return getSuperClass(retrieved)
+							}, function (err) {
+								console.log('couldnt get parent');
+								//couldn't get parent schema
+								reachedBottom.reject(finalSchema);
 							});
 					});
 				} else {
@@ -313,11 +317,13 @@ angular.module('clotho.foundation')
 			getSuperClass(schema);
 
 			return reachedBottom.promise.then(function() {
+				console.log('promise rejected');
 				return promiseChain;
 			})
-				.then(function (chain) {
-					return finalSchema;
-				});
+			.then(function (chain) {
+				console.log(finalSchema);
+				return finalSchema;
+			});
 		};
 
 		/* FUNCTIONALITY */
