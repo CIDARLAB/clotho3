@@ -130,8 +130,8 @@ testThroughAsync("validation failure",
         new Message("validate", {schema:"org.clothocad.model.NucSeq", sequence:null}),
         function (errors){
             equal(errors.length, 1);
-            equal(errors[0].interpolatedMessage, "may not be null");
-            equal(errors[0].propertyPath.nodeList[1].name, "sequence");
+            equal(errors[0].message, "may not be null");
+            equal(errors[0].propertyPath.currentLeafNode.name, "sequence");
         });
 
 testThroughAsync("validation success", 
@@ -146,8 +146,8 @@ asyncTest("authoring schema constraints", function (){
         socket.send(new Message("create", {id:"org.clothocad.model.SimpleFeature", language:"JSONSCHEMA", schema:"org.clothocad.core.schema.ClothoSchema", name:"SimpleFeature", description:"A simple and sloppy representation of a Feature or other DNA sequence", "fields":[{name:"sequence", type:"string", example:"ATACCGGA", access:"PUBLIC", constraints:[{constraintType:"javax.validation.constraints.Pattern", values:{flags:["CASE_INSENSITIVE"], regexp:"[ATUCGRYKMSWBDHVN]*"}}], description:"the sequence of the feature"}]}), function (response) {
             socket.send(new Message("validate", {schema:"org.clothocad.model.SimpleFeature", sequence:"this is not a valid sequence"}), function (errors) {
                 equal(errors.length, 1);
-                equal(errors[0].interpolatedMessage, "must match \"[ATUCGRYKMSWBDHVN]*\"");
-                equal(errors[0].propertyPath.nodeList[1].name, "sequence");
+                equal(errors[0].message, "must match \"[ATUCGRYKMSWBDHVN]*\"");
+                equal(errors[0].propertyPath.currentLeafNode.name, "sequence");
                 start();
             });
         });
