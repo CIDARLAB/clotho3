@@ -5,7 +5,7 @@
 
  you can add a controller using the ng-controller directive in a template, and declare it as a mixin.
  */
-angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys) {
+angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys, Trails) {
 
 	return {
 		restrict: 'A',
@@ -34,12 +34,8 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 					angular.extend(scope, scope.page.dictionary);
 				}
 
-				return $q.all([
-					$clotho.extensions.css(scope.page.css),
-					$clotho.extensions.mixin(scope.page.mixin),
-					$clotho.extensions.script(scope.page.script)
-				])
-				.then(function () {
+				Trails.downloadDependencies(scope.page.dependencies)
+				.then(function (onloadFunction) {
 					scope.pageComponents = scope.page.contents;
 
 					if (scope.page.help) {
@@ -47,7 +43,7 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 					}
 
 					$timeout(function () {
-						return $clotho.extensions.script(scope.page.onload)
+						onloadFunction();
 					});
 				});
 			};

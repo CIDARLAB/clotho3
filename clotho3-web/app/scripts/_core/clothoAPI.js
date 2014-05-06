@@ -221,17 +221,6 @@ function generateClothoAPI() {
         } else {
             //future - need REST API
 
-            /* OLD ATTEMPT
-             var value = {};
-             value.$then = deferred.promise.then(function (response) {
-                var then = value.$then;
-                if (response) {
-                    angular.copy(response, value);
-                    value.$then = then;
-                }
-             });
-             return value;
-             */
         }
     };
 

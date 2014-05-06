@@ -9,7 +9,7 @@
 		"contents" : [
 			{
 				"type" : "markdown",
-				"params" : "#Clotho Intro \n\n## Example Markdown"
+				"params" : "###Clotho Intro\n\n#### Example Markdown\n\n**wowo!**"
 			}
 		]
 	},
@@ -21,7 +21,7 @@
 			"path" : "partials/trails/clotho-intro/materials/ClothoIntroSyllabus.pdf"
 		}
 	],
-	"instructors" : ["5362ad80ef86f9bb693aaba1"],
+	"instructors" : ["53681df2ef864f6fb0bd29cc"],
 	"contents": [
 		{
 			"chapter": "Introducing Clotho",

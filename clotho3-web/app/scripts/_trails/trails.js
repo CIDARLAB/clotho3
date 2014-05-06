@@ -21,9 +21,11 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 			promises.push(Clotho.get(id));
 		});
 
-		$clotho.extensions.mixin(trail.mixin)
-			.then(function() {
-				return $q.all(promises)
+		//download dependencies and transcluded trails
+		downloadDependencies(trail.dependencies)
+			.then(function () {
+				//keep separate so the next step in the chain has the trails to transclude
+				return $q.all(promises);
 			})
 			//after download all, pluck out the chapters we need
 			.then(function (downloads) {
@@ -122,18 +124,35 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		$location.search('position', indices);
 	};
 
+	// download dependencies object - css, mixin, script - return function to for onload
+	var downloadDependencies = function (dependencies) {
+		if (angular.isEmpty(dependencies)) {
+			return $q.when(angular.noop);
+		}
+
+		return $q.all([
+			$clotho.extensions.css(dependencies.css),
+			$clotho.extensions.mixin(dependencies.mixin),
+			$clotho.extensions.script(dependencies.script)
+		]).then(function () {
+			return function () {
+				$clotho.extensions.script(dependencies.onload);
+			}
+		});
+	};
+
 	//icons for both page types and material types
 	var trailIconMap = {
-		'book'        : 'glyphicon-book',
+		'book'        : 'glyphicon glyphicon-book',
 		'exercise'    : 'glyphicon glyphicon-edit',
 		'eye'         : 'glyphicon glyphicon-eye-open',
 		'info'        : 'glyphicon glyphicon-info-sign',
 		'list'        : 'glyphicon glyphicon-list-alt',
-		'picture'     : 'glyphicon-picture',
+		'picture'     : 'glyphicon glyphicon-picture',
 		'quiz'        : 'glyphicon glyphicon-pencil',
-		'schedule'    : 'glyphicon-calendar',
-		'slides'      : 'glyphicon-th-large',
-		'syllabus'    : 'glyphicon-list-alt',
+		'schedule'    : 'glyphicon glyphicon-calendar',
+		'slides'      : 'glyphicon glyphicon-th-large',
+		'syllabus'    : 'glyphicon glyphicon-list-alt',
 		'video'       : 'glyphicon glyphicon-film',
 		'undefined'   : 'glyphicon glyphicon-file'         //fallthrough
 	};
@@ -158,6 +177,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		activate : activate,
 		mapIcon : mapIcon,
 		share : Clotho.share,
-		favorite : favorite
+		favorite : favorite,
+		downloadDependencies : downloadDependencies
 	}
 });

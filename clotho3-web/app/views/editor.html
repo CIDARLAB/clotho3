@@ -47,14 +47,11 @@
                  type="text"
                  class="form-control"
                  ng-model="selectedInstance"
-                 typeahead="c.uuid as c.name for c in queryWrapper($viewValue)"
+                 typeahead="c.id as c.name for c in queryWrapper($viewValue)"
                  typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
                  popover="Type to search for an Instance to edit"
                  popover-trigger="focus"
                  popover-append-to-body="true">
-        </div>
-        <div class="panel-footer">
-          <p>uuid -> id pending #216</p>
         </div>
       </div>
     </div>

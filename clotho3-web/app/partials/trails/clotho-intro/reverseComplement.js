@@ -1,5 +1,6 @@
 $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($scope, $focus, $timeout, $modal, Clotho) {
 
+	/*
     var dialogOpts = {
         backdrop: false,
         keyboard: true,
@@ -30,5 +31,6 @@ $clotho.extensions.controller('clothoIntro_reverseComplementCtrl', function($sco
 		$focus.setZ(oldZ, $('.quiz'));
 		return $focus.removeBackdrop();
 	});
+	*/
 
 });

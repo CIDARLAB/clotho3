@@ -26,6 +26,11 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		$location.search('id', null).replace();
 	});
 
+	//initial query handling
+	if ( $route.current.params.id ) {
+		$scope.editable = $route.current.params.id;
+	}
+
 	/*
 	initial route handling:
 
@@ -79,7 +84,6 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	};
 
 	$scope.editExisting = function (item, model, label) {
-		console.log(item, model);
 		$scope.editable = model;
 		$scope.editModePass = true;
 	};
