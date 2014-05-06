@@ -198,7 +198,7 @@ public class ServerSideAPI {
         //Assume the first token is a Function call
         List<Map> completions = persistor.getCompletions(tokens[0]);
         if(completions.size()>0) {
-            String uuid = (String) completions.get(0).get("uuid");
+            String uuid = (String) completions.get(0).get("id").toString();
             try {
                 function = persistor.get(Function.class, persistor.resolveSelector(uuid, true));
             } catch(java.lang.IllegalArgumentException ex) {
@@ -216,7 +216,7 @@ public class ServerSideAPI {
             
             //If the completions suggest what the things is
             if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("uuid");
+                String uuid = (String) completions.get(0).get("id");
                 ObjBase shar = persistor.get(ObjBase.class, persistor.resolveSelector(uuid, true));
                 args.add(shar);
             } 

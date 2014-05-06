@@ -302,7 +302,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
             Map map = new HashMap();
             map.put("name", temp.get("name"));
             map.put("schema", temp.get("schema"));
-            map.put("id", temp.get("_id"));
+            map.put("id", temp.get("_id").toString());
             if(temp.containsKey("description")) {
                 map.put("description", temp.get("description"));
             } else if(temp.containsKey("shortDescription")) {

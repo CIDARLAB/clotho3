@@ -86,7 +86,7 @@ public class GlobalTrie {
         try {
             Map map = new HashMap();
             map.put("name", data.get("name"));
-            map.put("id", data.get("id"));
+            map.put("id", data.get("id").toString());
             map.put("schema", data.get("schema"));
             if(data.containsKey("description")) {
                 map.put("description", data.get("description"));
