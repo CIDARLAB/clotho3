@@ -1,6 +1,9 @@
 angular.module('clotho.trails')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
+		var PUBLIC_KEY = 'AIzaSyBbk4x1xscVvwBaT0Liu8dd-G7qoDeiD30';
+		var url_base = 'https://www.googleapis.com/youtube/v3';
+
 		//load the API and return it as promise resolution
 		var api_ready = $q.defer();
 		$window.onYouTubeIframeAPIReady = function () {
@@ -28,10 +31,25 @@ angular.module('clotho.trails')
 	 * @param {string} size Thumbnail size, youtube names (default, hqdefault, mqdefault, 0, 1, 2, 3). default is 'default' (120x90)
 	 * @returns {Promise} thumbnail URL
 	 */
-	var thumbnail = function generateYoutubeThumbnailUrl(videoId, size) {
+	var videoThumbnail = function generateYoutubeThumbnailUrl(videoId, size) {
 		size = size || "default";
 
 		return "https://img.youtube.com/vi/"+ videoId + "/" + size + ".jpg";
+	};
+
+	var videoSearch = function youtubeSearch (term) {
+		return $http.get(url_base + '/search', {
+			params: {
+				key: PUBLIC_KEY,
+				type: 'video',
+				maxResults: '15',
+				part: 'id, snippet',
+				fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
+				q: term
+			}
+		}).then(function (data) {
+			return data;
+		});
 	};
 
 	/**
@@ -40,7 +58,7 @@ angular.module('clotho.trails')
 	 * @param {string} videoId
 	 * @returns {Promise} data (JSON) retrieved from youtube feeds API
 	 */
-	var info = function getYoutubeInfo (videoId) {
+	var videoInfo = function getYoutubeInfo (videoId) {
 		return $http.get('https://gdata.youtube.com/feeds/api/videos/'+videoId+'?&alt=json')
 			.then(function (data) {
 				return data.data
@@ -48,23 +66,60 @@ angular.module('clotho.trails')
 	};
 
 	/**
-	 * @description Given a valid playlist, retrieves the youtube feeds API information about it
+	 * @description
+	 * Given a valid playlist id, retrieves information about playlist.
+	 *
+	 * We parse this down to the single list item, so you get a [youtube playlist](https://developers.google.com/youtube/v3/docs/playlists)
+	 *
+	 * Doesn't retrieve contents - see playlistItems for that.
 	 *
 	 * @param {string} playlistId
 	 * @returns {Promise} data (JSON) retrieved from youtube feeds API
 	 */
-	var playlist = function getYoutubePlaylist (playlistId) {
-		return $http.get('http://gdata.youtube.com/feeds/api/playlists/'+playlistId+'?alt=json')
-			.then(function (data) {
-				return data.data
-			})
+	var playlistInfo = function getYoutubePlaylistInfo (playlistId) {
+		return $http.get('https://www.googleapis.com/youtube/v3/playlists', {
+			params : {
+				key: PUBLIC_KEY,
+				part: 'id, snippet, status, contentDetails',
+				id : playlistId
+			}
+		}).then(function (data) {
+			return data.data.items[0];
+		})
+	};
+
+	/**
+	 * @description
+	 * Given a valid playlist, retreives information about contents.
+	 *
+	 * https://developers.google.com/youtube/v3/docs/playlistItems
+	 *
+	 * @param {string} playlistId
+	 * @returns {Promise} data (JSON) retrieved from youtube feeds API
+	 */
+	var playlistItems = function getYoutubePlaylist (playlistId) {
+		return $http.get(url_base + '/playlistItems', {
+			params : {
+				key: PUBLIC_KEY,
+				maxResults: '50',
+				part: 'id, snippet, status, contentDetails',
+				playlistId : playlistId
+			}
+		}).then(function (data) {
+			//todo - check for items length, and is less than maxResults
+			return data.data.items;
+		})
 	};
 
 	return {
 		apiPromise : api_ready.promise,
 		extract : extract,
-		thumbnail : thumbnail,
-		info : info,
-		playlist : playlist
+
+		videoSearch: videoSearch,
+		videoThumbnail : videoThumbnail,
+		videoInfo : videoInfo,
+
+		playlistInfo : playlistInfo,
+		playlistItems : playlistItems
 	}
 });
