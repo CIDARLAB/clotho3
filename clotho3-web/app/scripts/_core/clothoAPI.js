@@ -174,7 +174,7 @@ function generateClothoAPI() {
     var get = function clothoAPI_get(uuid, options, synchronous) {
 
         //default to false (return promise)
-        synchronous = typeof synchronous != 'undefined' ? !!synchronous : false;
+        synchronous = angular.isDefined(synchronous) ? !!synchronous : false;
 
         return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
     };
@@ -185,6 +185,7 @@ function generateClothoAPI() {
 			    return $q.when();
 		    }
 
+	      /*
 	      //check collector
 	      var retrieved = Collector.retrieveModel(uuid);
 
@@ -199,6 +200,11 @@ function generateClothoAPI() {
 
 	          return fn.emitSubCallback('get', uuid, callback, options);
 	      }
+        */
+
+	    //bypass collector so don't get a stale model
+	    //todo - reintegrate collector in a way that makes sense. Probably need to check which objects have been loaded in this session and allow those (assuming we have watches for updates, otherwise go to server)
+	    return fn.emitSubOnce('get', uuid, options);
     };
 
     var get_sync = function clothoAPI_get_sync(uuid, options) {
@@ -215,17 +221,6 @@ function generateClothoAPI() {
         } else {
             //future - need REST API
 
-            /* OLD ATTEMPT
-             var value = {};
-             value.$then = deferred.promise.then(function (response) {
-                var then = value.$then;
-                if (response) {
-                    angular.copy(response, value);
-                    value.$then = then;
-                }
-             });
-             return value;
-             */
         }
     };
 
@@ -465,10 +460,13 @@ function generateClothoAPI() {
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      *
      * @description
-     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Clotho will send an error message on the 'say' channel if destroy fails for an object.
+     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Nothing will happen if no UUID is passed. Clotho will send an error message on the 'say' channel if destroy fails for an object.
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
+	    if (!uuid) {
+		    return;
+	    }
 
         var callback = function() {
             Collector.removeModel(uuid);
@@ -487,7 +485,7 @@ function generateClothoAPI() {
      *
      */
     var edit = function clothoAPI_edit(uuid) {
-        $location.path("/editor/" + uuid);
+        $location.path("/editor?id=" + uuid);
     };
 
     /**

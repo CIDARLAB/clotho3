@@ -3,13 +3,13 @@ package org.clothocad.core.testers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.clothocad.core.aspects.Interpreter.AutoComplete;
+import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class InterpreterAC {
     final static Logger logger = LoggerFactory.getLogger(InterpreterAC.class);
-    public static AutoComplete completer1() {
+    public static GlobalTrie completer1() {
         String[] word_bank1 = {
             "walk my cat",
             "sail on my boat",
@@ -22,10 +22,10 @@ class InterpreterAC {
             "Walter",
         };
 //        return new AutoComplete(word_bank1);
-        return new AutoComplete();
+        return new GlobalTrie();
     }
 
-    public static AutoComplete completer2() {
+    public static GlobalTrie completer2() {
         String[] word_bank2 = {
             "complete this sentence",
             "Complete this sentence",
@@ -36,11 +36,11 @@ class InterpreterAC {
             "COMPLETE THIS SENTENCE"
         };
 //        return new AutoComplete(word_bank2);
-        return new AutoComplete();
+        return new GlobalTrie();
     }
 
     public static void test1() {
-        AutoComplete completer1 = completer1();
+        GlobalTrie completer1 = completer1();
         List<Map> results = completer1.getCompletions("wa");
 //        check(results.get(0), "walk my cat");
 //        check(results.get(1), "walk my dog");
@@ -49,7 +49,7 @@ class InterpreterAC {
     }
 
     public static void test2() {
-        AutoComplete completer1 = completer1();
+        GlobalTrie completer1 = completer1();
 //        List<String> results = completer1.getCompletions("sa");
 //        check(results.get(0), "sail on my boat");
 //        check(results.get(1), "samba");
@@ -57,7 +57,7 @@ class InterpreterAC {
     }
 
     public static void test3() {
-        AutoComplete completer2 = completer2();
+        GlobalTrie completer2 = completer2();
 //        List<String> results = completer2.getCompletions("com");
 //        check(results.get(0), "complete this sentence");
 //        check(results.get(2), "complete thissentence");

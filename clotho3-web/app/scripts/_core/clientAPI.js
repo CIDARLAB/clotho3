@@ -5,14 +5,9 @@
  * This is the client Clotho API - commands issued BY the server to be run on the client
  */
 angular.module('clotho.core').service('ClientAPI',
-	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $document) {
+	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $clothoModal, $document) {
 
 		var Debugger = new Debug('ClientAPI', '#dd99dd');
-
-		var $modal;
-		if ($injector.has('$modal')) {
-			$modal = $injector.get('$modal');
-		}
 
 		/**
 		 * @name clientAPI.collect
@@ -193,18 +188,10 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var alert = function clientAPIAlert(msg) {
 
-			PubSub.trigger('serverAlert');
-
-			if (angular.isDefined($modal)) {
-				$rootScope.$safeApply($modal.serverAlert(msg)
-					.result
-					.then(function (result) {
-						Debugger.log('dialog closed with result: ' + result);
-					})
-				);
-			} else {
-				$window.alert(msg);
-			}
+			$clothoModal.create({
+				title : "Clotho Alert",
+				content : "msg"
+			})
 		};
 
 		/**
@@ -249,11 +236,11 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var edit = function (uuid) {
 			if ($injector.has('$route')) {
-				$location.path('/editor/' + uuid)
+				$location.path("/editor?id=" + uuid);
 			} else {
 				//need to go to full instance, this just has API or Command build
 				say({
-					text : 'Cannot edit in API / Command Build',
+					text : 'Editor not available',
 					from: 'client',
 					class : 'error'
 				});

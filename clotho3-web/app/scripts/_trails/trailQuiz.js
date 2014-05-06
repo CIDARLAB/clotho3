@@ -1,4 +1,5 @@
-angular.module('clotho.trails').directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q, $sce) {
+angular.module('clotho.trails')
+.directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q, $sce) {
 
 	//temporary, to get out of API
 	//todo - reference by ID
@@ -17,12 +18,20 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 		return Clotho.run('gradeQuiz', [questionValue, input, answerGen]);
 	};
 
+	var gradeQuestion = function (questionId, input) {
+		//todo - migrate to this function
+	};
+
+	var getFeedback = function (questionId, input) {
+		//todo
+	};
+
 	return {
 		restrict: "EA",
 		require: 'ngModel',
 		scope: {
 			quiz: '=ngModel',
-			gradeCallback : '=?',
+			gradeCallback : '=?', //todo - migrate to function
 			advance : '&?'
 		},
 
@@ -42,7 +51,7 @@ angular.module('clotho.trails').directive('trailQuiz', function($http, $template
 						return $sce.trustAsHtml('<h5>' + scope.quiz.question + '</h5>');
 					};
 
-					$http.get('partials/trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
+					$http.get('views/_trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
 						.success(function (data) {
 							element.html($compile('<div class="quiz">' + data + '</div>')(scope));
 						})

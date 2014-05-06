@@ -21,9 +21,11 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 			promises.push(Clotho.get(id));
 		});
 
-		$clotho.extensions.mixin(trail.mixin)
-			.then(function() {
-				return $q.all(promises)
+		//download dependencies and transcluded trails
+		downloadDependencies(trail.dependencies)
+			.then(function () {
+				//keep separate so the next step in the chain has the trails to transclude
+				return $q.all(promises);
 			})
 			//after download all, pluck out the chapters we need
 			.then(function (downloads) {
@@ -37,7 +39,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 				//iterate through trail, pushing in chapters
 				angular.forEach(trail.contents, function (chapter, ind) {
 
-					if (typeof chapter.transclude == 'undefined') {
+					if (angular.isUndefined(chapter.transclude)) {
 						final_contents.push(chapter);
 					} else {
 						//chapters to include :
@@ -72,19 +74,21 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	};
 
 	//in form <Chapter>-<Page>
-	var extractPage = function(Trail, indices) {
+	var extractPage = function trailExtractPage (Trail, indices) {
 		var pos = indices.split("-");
 		var page = Trail.contents[pos[0]]['pages'][pos[1]];
 		return page;
 	};
 
 	//bring back in logic from trail-module.js
-	var calcNextPage = function(Trail, oldpos) {
-		oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, -1];
+	var calcNextPage = function trailNextPage(Trail, oldpos) {
+		oldpos = angular.isUndefined(oldpos) ? oldpos.split("-") : [0, -1];
 		var newpos;
 
+		//check next page
 		if (typeof Trail.contents[oldpos[0]]['pages'][+oldpos[1] + 1] != 'undefined')
 			newpos = oldpos[0] + '-' + (+oldpos[1] + 1);
+		//check next chapter
 		else if (typeof Trail.contents[+oldpos[0] + 1]['pages'] != 'undefined')
 			newpos = (+oldpos[0] + 1) + '-' + 0;
 		else {
@@ -93,7 +97,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		return newpos;
 	};
 
-	var calcPrevPage = function(Trail, oldpos) {
+	var calcPrevPage = function trailPrevPage(Trail, oldpos) {
 		if (oldpos == '0-0') return;
 
 		oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, 1];
@@ -110,7 +114,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	};
 
 	//go to the location of a trail page
-	var activate = function (indices) {
+	var activate = function trailActivate (indices) {
 		//if passed nothing
 		if (!indices || !angular.isString(indices)) return;
 
@@ -122,33 +126,47 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		$location.search('position', indices);
 	};
 
+	// download dependencies object - css, mixin, script - return function to for onload
+	var downloadDependencies = function trailDownloadDependencies(dependencies) {
+		if (angular.isEmpty(dependencies)) {
+			return $q.when(angular.noop);
+		}
+
+		return $q.all([
+			$clotho.extensions.css(dependencies.css),
+			$clotho.extensions.mixin(dependencies.mixin),
+			$clotho.extensions.script(dependencies.script)
+		]).then(function () {
+			return function () {
+				$clotho.extensions.script(dependencies.onload);
+			}
+		});
+	};
+
 	//icons for both page types and material types
 	var trailIconMap = {
-		'book'        : 'glyphicon-book',
+		'book'        : 'glyphicon glyphicon-book',
 		'exercise'    : 'glyphicon glyphicon-edit',
 		'eye'         : 'glyphicon glyphicon-eye-open',
 		'info'        : 'glyphicon glyphicon-info-sign',
 		'list'        : 'glyphicon glyphicon-list-alt',
-		'picture'     : 'glyphicon-picture',
+		'picture'     : 'glyphicon glyphicon-picture',
 		'quiz'        : 'glyphicon glyphicon-pencil',
-		'schedule'    : 'glyphicon-calendar',
-		'slides'      : 'glyphicon-th-large',
-		'syllabus'    : 'glyphicon-list-alt',
+		'schedule'    : 'glyphicon glyphicon-calendar',
+		'slides'      : 'glyphicon glyphicon-th-large',
+		'syllabus'    : 'glyphicon glyphicon-list-alt',
 		'video'       : 'glyphicon glyphicon-film',
 		'undefined'   : 'glyphicon glyphicon-file'         //fallthrough
 	};
 
-	var mapIcon = function(iconName) {
+	var mapIcon = function trailMapIcon (iconName) {
 		iconName = iconName || 'undefined';
 		return trailIconMap[iconName]  || trailIconMap['undefined'];
 	};
 
-
-
-	var favorite = function(id) {
+	var favorite = function trailFavorite (id) {
 		console.log("favorite trail with id: " + id);
 	};
-
 
 	return {
 		compile : compile,
@@ -158,6 +176,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		activate : activate,
 		mapIcon : mapIcon,
 		share : Clotho.share,
-		favorite : favorite
+		favorite : favorite,
+		downloadDependencies : downloadDependencies
 	}
 });

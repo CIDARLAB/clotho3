@@ -3,7 +3,7 @@ angular.module('clotho.interface')
 	.directive('functionCodeDrop', function ($upload, $window, $timeout) {
 		return {
 			restrict: 'A',
-			templateUrl: 'views/_interface/codeDrop.html',
+			templateUrl: '../../../views/_interface/codeDrop.html',
 			scope : {
 				updateOnRead : '=',
 				showDrop: '@',
@@ -15,23 +15,23 @@ angular.module('clotho.interface')
 				$scope.selectedFiles = [];
 				$scope.inputFiles = [];
 
+				function readContents(fileReader, file) {
+					fileReader.readAsText(file);
+					fileReader.onload = function(e) {
+						$timeout(function() {
+							$scope.updateOnRead = e.target.result;
+						});
+					}
+				}
+
 				$scope.onFileSelect = function($files) {
-					console.log('files changed');
 					$scope.selectedFiles = $files;
 
 					for ( var i = 0; i < $files.length; i++) {
 						var $file = $files[i];
 						if ($window.FileReader && $file.type.indexOf('text') > -1) {
 							var fileReader = new FileReader();
-							function readContents(fileReader, index) {
-								fileReader.readAsText($files[i]);
-								fileReader.onload = function(e) {
-									$timeout(function() {
-										$scope.updateOnRead = e.target.result;
-									});
-								}
-							}
-							readContents(fileReader, i);
+							readContents(fileReader, $files[i]);
 						}
 					}
 				};

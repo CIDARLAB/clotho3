@@ -20,7 +20,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'HomeCtrl',
 		title : 'Home',
 		hotkeys : [
-			['h', 'Show Intro Modal', 'showHelp = true']
+			['h', 'Show Intro Modal', 'showHelp = !showHelp']
 		]
 	})
 	.when('/about', {
@@ -38,6 +38,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/edit', {
 		redirectTo: '/editor'
 	})
+	/*
 	.when('/editor/query/:queryTerm', {
 		templateUrl: 'views/editor.html',
 		controller: 'EditorCtrl',
@@ -68,9 +69,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/editor/query', {
 		redirectTo : '/editor'
 	})
-	.when('/editor/:id?', {
+	*/
+	.when('/editor', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
+		reloadOnSearch: false,
 		resolve : {
 			deps : ['codemirrorLoader', function(loader) {
 				return loader.loadMain();
@@ -107,7 +110,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		title : 'Terminal',
 		resolve : {
 			deps : function() {
-				return $clotho.extensions.mixin('_command/terminal.js')
+				return $clotho.extensions.mixin('scripts/_command/terminal.js')
 			}
 		}
 	})
@@ -126,7 +129,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 })
 .when('/test/schemaview', {
   templateUrl: 'views/test/schemaview.html',
-  controller: 'TestSchemaviewCtrl'
+  controller: 'TestSchemaviewCtrl',
+	hotkeys : [
+		['m', 'Show Programmatic Modal', 'createModal()']
+	]
 })
 .when('/test/trail', {
   templateUrl: 'views/test/trail.html',
@@ -160,6 +166,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	hotkeys.add('f', 'Focus Command Bar', function (event) {event.preventDefault(); CommandBar.focusInput(); } );
 	hotkeys.add('a', 'Show Activity Log', function (event) {event.preventDefault(); CommandBar.showActivityLog(); } );
 	hotkeys.add('g h', 'Go to Homepage', function () {$location.path('/') });
+	hotkeys.add('g b', 'Go to Browser', function () { $location.path('/browser') });
 	hotkeys.add('g e', 'Go to Editor', function () { $location.path('/editor') });
 	hotkeys.add('g t', 'Go to Trails', function () { $location.path('/trails') });
 

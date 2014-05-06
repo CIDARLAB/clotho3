@@ -47,7 +47,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.SecurityUtils;
-import org.clothocad.core.aspects.Interpreter.AutoComplete;
+import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
@@ -87,7 +87,6 @@ import static org.clothocad.core.ReservedFieldNames.*;
 @Slf4j
 public class ServerSideAPI {
 
-    private final AutoComplete completer;
     private final Router router;
     private final Persistor persistor;
     private final String requestId;
@@ -103,7 +102,6 @@ public class ServerSideAPI {
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
-        this.completer = new AutoComplete(persistor);
         this.options = options;
     }
 
@@ -123,7 +121,7 @@ public class ServerSideAPI {
         List<Map> comps = new ArrayList<Map>();
         
         //Add the word suggestions from the global Trie
-        List<Map> globalComps = completer.getCompletions(lastWord);
+        List<Map> globalComps = persistor.getCompletions(lastWord);
         comps.addAll(globalComps);
         
         return comps;
@@ -143,10 +141,15 @@ public class ServerSideAPI {
         
     //clotho.run("aa7f191e810c19729de86101", ["53581f9e9e7d7a2fda8c36a7"]);   revcomp pBca1256
     //clotho.run("aa7f191e810c19729de86101", ["atcg"]);  revcomp atcg
-    public final Object submit(String command) {
+    public final Object submit(Object data) {
+        //Extract the query String and tokens
+        Map<String, Object> json = JSON.mappify(data);
+        String query = (String) json.get("query");
+        List<Object> clientTokens = (List<Object>) json.get("tokens");
+        
         //Resolve the commands to tokens
-        System.out.println("++ The command submitted is: " + command);
-        String[] tokens = command.split("\\s+");
+        System.out.println("++ The command submitted is: " + query);
+        String[] tokens = query.split("\\s+");
         for(String str : tokens) {
             System.out.println("token: " + str);
         }
@@ -169,9 +172,9 @@ public class ServerSideAPI {
         //Run the command assuming it's javascript
         //say(command, Severity.MUTED, null, true);
         try {
-            Object returnValue = mind.runCommand(command, getScriptAPI());
+            Object returnValue = mind.runCommand(query, getScriptAPI());
             //If the command successfully executed, it gets retained
-            mind.addLastCommand(Channel.submit, command);
+            mind.addLastCommand(Channel.submit, query);
             return returnValue;
         } catch (ScriptException ex) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up
@@ -193,9 +196,9 @@ public class ServerSideAPI {
         List<Object> args = new ArrayList<Object>();
         
         //Assume the first token is a Function call
-        List<Map> completions = completer.getCompletions(tokens[0]);
+        List<Map> completions = persistor.getCompletions(tokens[0]);
         if(completions.size()>0) {
-            String uuid = (String) completions.get(0).get("uuid");
+            String uuid = (String) completions.get(0).get("id").toString();
             try {
                 function = persistor.get(Function.class, persistor.resolveSelector(uuid, true));
             } catch(java.lang.IllegalArgumentException ex) {
@@ -209,11 +212,11 @@ public class ServerSideAPI {
         //Iterate through each subsequent token and convert to object if required
         for(int i=1; i<tokens.length; i++) {
             String token = tokens[i];
-            completions = completer.getCompletions(token);
+            completions = persistor.getCompletions(token);
             
             //If the completions suggest what the things is
             if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("uuid");
+                String uuid = (String) completions.get(0).get("id");
                 ObjBase shar = persistor.get(ObjBase.class, persistor.resolveSelector(uuid, true));
                 args.add(shar);
             } 
@@ -248,7 +251,7 @@ public class ServerSideAPI {
         Object out = null;
         try {
             String word = tokens[0];
-            List<Map> completions = completer.getCompletions(word);
+            List<Map> completions = persistor.getCompletions(word);
             
             //If the completions suggest what the things is
             if(completions.size()>0) {

@@ -1,12 +1,6 @@
 <div class="container trail-overview">
 
-  <div class="trail-header clearfix">
-    <div class="trail-icon" background-image ng-src="{{ trail.icon ? trail.icon : defaultTrailIcon}}"></div>
-    <div class="trail-info">
-      <h2 class="trail-name">{{trail.name}}</h2>
-      <h5 class="trail-description">{{trail.description}}</h5>
-    </div>
-  </div>
+  <div trail-header="trail"></div>
 
   <div class="row trail-about">
 
@@ -14,16 +8,23 @@
 
       <!-- about -->
       <div class="trail-section">
-        <h3 class="trail-section-title">About this Trail</h3>
-        <div trail-page="trail.about"></div>
+        <div class="trail-section-heading">
+          <h3 class="trail-section-title">About this Trail</h3>
+        </div>
+        <div class="trail-section-content">
+          <div trail-page="trail.about"></div>
+        </div>
       </div>
 
       <!-- materials -->
       <div class="trail-section">
-        <h3 class="trail-section-title">Course Materials</h3>
-        <div ng-repeat="material in trail.materials"
-             trail-material="material">
-
+        <div class="trail-section-heading">
+          <h3 class="trail-section-title">Course Materials</h3>
+        </div>
+        <div class="trail-section-content">
+          <div ng-repeat="material in trail.materials"
+               trail-material="material">
+          </div>
         </div>
       </div>
 
@@ -32,16 +33,31 @@
     <div class="col-xs-4">
       <!-- Instructors -->
       <div class="trail-section">
-        <h3 class="trail-section-title">Instructor</h3>
-        <div ng-repeat="instructor in trail.instructors"
-             trail-instructor="instructor">
+        <div class="trail-section-heading">
+          <h3 class="trail-section-title">Instructors</h3>
+        </div>
+        <div class="trail-section-content">
+          <div ng-repeat="instructor in trail.instructors"
+               trail-instructor="instructor">
+          </div>
         </div>
       </div>
 
       <!-- Sharing -->
-      <div class="trail-section">
-        <h3 class="trail-section-title">Share</h3>
-        <p>todo</p>
+      <div class="trail-section" ng-controller="SharingCtrl">
+        <div class="trail-section-heading">
+          <h3 class="trail-section-title">Share</h3>
+        </div>
+        <div class="trail-section-content" style="text-align: center;">
+          <div style="display: inline-block; margin: 0 auto;">
+          <img ng-repeat="site in social"
+               ng-src="{{site.icon}}"
+               ng-click="share(site)"
+               ng-style="{'width' : '36px',
+                          'padding-right' : ($last ? '0' : '5px') }"
+               class="hoverFade"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -49,8 +65,12 @@
   <div class="trail-contents-wrap">
     <!-- trail contents -->
     <div class="trail-section">
-      <h3 class="trail-section-title">Course Contents</h3>
-      <div trail-contents="trail"></div>
+      <div class="trail-section-heading">
+        <h3 class="trail-section-title">Trail Contents</h3>
+      </div>
+      <div class="trail-section-content" style="padding-bottom: 0;">
+        <div trail-contents="trail"></div>
+      </div>
     </div>
   </div>
 

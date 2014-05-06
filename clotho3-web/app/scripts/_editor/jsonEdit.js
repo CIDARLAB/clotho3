@@ -22,6 +22,21 @@ angular.module('clotho.editor')
 			},
 			link: function (scope, element, attrs, ngModelCtrl) {
 
+				function string2JSON(text) {
+					try {
+						return angular.fromJson(text);
+					} catch (err) {
+						setInvalid();
+						return text;
+					}
+				}
+
+				function JSON2String(object) {
+					// better than JSON.stringify(), because it formats + filters $$hashKey etc.
+					// NOTE that this will remove all $-prefixed values
+					return angular.toJson(object, true);
+				}
+
 				function setEditing (value) {
 					scope.jsonEditing = JSON2String(value);
 				}
@@ -36,21 +51,6 @@ angular.module('clotho.editor')
 
 				function setInvalid () {
 					ngModelCtrl.$setValidity('json', false);
-				}
-
-				function string2JSON(text) {
-					try {
-						return angular.fromJson(text);
-					} catch (err) {
-						setInvalid();
-						return text;
-					}
-				}
-
-				function JSON2String(object) {
-					// better than JSON.stringify(), because it formats + filters $$hashKey etc.
-					// NOTE that this will remove all $-prefixed values
-					return angular.toJson(object, true);
 				}
 
 				function isValidJson(model) {

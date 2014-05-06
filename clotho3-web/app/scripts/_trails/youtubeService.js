@@ -1,9 +1,10 @@
 angular.module('clotho.trails')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
+		//load the API and return it as promise resolution
 		var api_ready = $q.defer();
 		$window.onYouTubeIframeAPIReady = function () {
-			api_ready.resolve();
+			api_ready.resolve(YT);
 		};
 		$clotho.extensions.script('//www.youtube.com/iframe_api');
 
@@ -60,7 +61,7 @@ angular.module('clotho.trails')
 	};
 
 	return {
-		readyPromise : api_ready.promise,
+		apiPromise : api_ready.promise,
 		extract : extract,
 		thumbnail : thumbnail,
 		info : info,

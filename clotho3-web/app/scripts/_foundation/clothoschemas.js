@@ -18,7 +18,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#4488cc'
+				class : 'info' // blue
 			},
 			"Function": {
 				readable : "Function",
@@ -27,7 +27,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#66bb66'
+				class : 'success' //green
 			},
 			"Schema": {
 				readable : "Schema",
@@ -36,7 +36,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#eeaa55'
+				class : 'danger' //orange
 			},
 			"View" :  {
 				readable : "View",
@@ -45,7 +45,7 @@ angular.module('clotho.foundation')
 				scaffold : {
 					language: "JSONSCHEMA"
 				},
-				color : '#dd33dd'
+				class : 'warning' //pink
 			}
 		};
 
@@ -103,7 +103,7 @@ angular.module('clotho.foundation')
 		}
 		//matches spaces unless between single or double quotes
 		var spaceRegexp = /[^\s"']+|"([^"]*)"|'([^']*)'/;
-		var spaceRegexpEscaped =  escapeRegexp(spaceRegexp);
+		var spaceRegexpEscaped =  spaceRegexp.toString();
 
 		var formTypeMap = {
 			"boolean" : {
@@ -134,7 +134,7 @@ angular.module('clotho.foundation')
 				type : "array",
 				input : {
 					type : 'text',
-					"ng-list" : spaceRegexpEscaped
+					"ng-list" : ""
 				}
 			},
 			"org.bson.types.ObjectId" : {
@@ -261,11 +261,11 @@ angular.module('clotho.foundation')
 			}
 		}
 
-		function colorByType (type) {
+		function typeToColorClass (type) {
 			if (sharableTypes[type]) {
-				return sharableTypes[type].color;
+				return sharableTypes[type].class;
 			} else {
-				return '#31b0d5';
+				return 'default';
 			}
 		}
 
@@ -303,6 +303,10 @@ angular.module('clotho.foundation')
 								finalSchema.fields = finalSchema.fields.concat(retrieved.fields);
 								//testing console.log('finalSchema now', _.pluck(finalSchema.fields, 'name'));
 								return getSuperClass(retrieved)
+							}, function (err) {
+								console.log('couldnt get parent');
+								//couldn't get parent schema
+								reachedBottom.reject(finalSchema);
 							});
 					});
 				} else {
@@ -313,11 +317,13 @@ angular.module('clotho.foundation')
 			getSuperClass(schema);
 
 			return reachedBottom.promise.then(function() {
+				console.log('promise rejected');
 				return promiseChain;
 			})
-				.then(function (chain) {
-					return finalSchema;
-				});
+			.then(function (chain) {
+				console.log(finalSchema);
+				return finalSchema;
+			});
 		};
 
 		/* FUNCTIONALITY */
@@ -354,7 +360,7 @@ angular.module('clotho.foundation')
 		//determines main type: Instance, Function, View, Schema
 		function determineInstanceType (sharable) {
 			if (isSchema(sharable)) {
-				return "Schema";
+				return 'Schema';
 			} else if (isFunction(sharable)) {
 				return 'Function';
 			} else if (isView(sharable)) {
@@ -405,7 +411,7 @@ angular.module('clotho.foundation')
 			determineFieldType : determineFieldType,
 			determineSchema : determineSchema,
 			createScaffold : createScaffold,
-			colorByType : colorByType,
+			typeToColorClass : typeToColorClass,
 
 			sharableBasicFields : sharableBasicFields,
 			pruneToBasicFields : pruneToBasicFields

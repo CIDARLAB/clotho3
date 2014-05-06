@@ -1,24 +1,8 @@
 <div class="container trail-page">
-  <div class="trail-header">
-    <h1>{{trail.name}}</h1>
-    <h5>{{trail.description}}</h5>
-  </div>
 
-  <div class="col-xs-3">
-    <div ng-repeat="chapter in trail.contents">
-      <h4 class="text-muted">{{chapter.chapter}}</h4>
-      <div class="list-group">
-        <a class="list-group-item" ng-repeat="page in chapter.pages"
-           ng-init="page.index = $parent.$index + '-' + $index"
-           ng-class="{active: (page.index == current)}"
-           ng-click="activate(page.index)"
-           ng-disabled="!page.type">
-          <i ng-class="mapIcon(page.icon)"></i>
-          {{page.title}}
-        </a>
-      </div>
-    </div>
-  </div>
+  <div trail-header="trail"></div>
+
+  <div class="col-xs-3" trail-contents="trail"></div>
 
   <div class="col-xs-9" id="trail_view">
     <div trail-page="" next="next" prev="prev"></div>

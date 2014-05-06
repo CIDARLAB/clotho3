@@ -1,4 +1,6 @@
-<div ng-controller="Editor_SchemaCtrl"class="panel panel-info">
+<div ng-controller="Editor_SchemaCtrl"
+     class="panel"
+     ng-class="'panel-' + panelClass">
     <div class="panel-heading">
         <h3 class="panel-title">Schema Editor</h3>
     </div>
@@ -17,15 +19,15 @@
         </form-field>
 
         <form-field name="Description" horizontal="formHorizontal">
-            <textarea id="schemaDesc" class="input-lg" ng-model="sharable.description" style="width: 100%; height: 3em"></textarea>
+            <textarea id="schemaDesc" ng-model="sharable.description" rows="3"></textarea>
         </form-field>
 
-
+        <!--
         <div class="form-group">
             <label class="control-label col-sm-3">Methods</label>
             <div class="col-sm-9">
                 <div class="input-group">
-                    <input type="text" class="form-control" ng-model="newMethodObj" ng-init="newMethodObj = newMethod()" typeahead="opt.id as opt.name for opt in clothoFunctions | filter:$viewValue" typeahead-min-length="0">
+                    <input type="text" class="form-control" ng-model="newMethodObj" ng-init="newMethodObj = newMethod()" typeahead="opt.id as opt.name for opt in clothoFunctionWrap($viewValue) | filter:$viewValue" typeahead-min-length="0">
                         <span class="input-group-btn">
                             <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!newMethodObj"><i class="glyphicon glyphicon-plus"></i></button>
                         </span>
@@ -41,6 +43,7 @@
                 </div>
             </div>
         </div>
+        -->
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -87,8 +90,19 @@
 
                     <div class="row">
                         <div class="col-sm-9">
-                            <input ng-if="!field.reference" class="form-control" type="text" ng-model="field.example" placeholder="Field Example">
-                            <input ng-if="field.reference" class="form-control" type="text" ng-model="field.example"placeholder="Field Example" typeahead="opt for opt in querySchemaWrapper(field.type) | filter:$viewValue" typeahead-min-length="0" />
+                          <textarea ng-if="!field.reference"
+                                    json-edit="field.example"
+                                    name="newFieldVal"
+                                    rows="1"
+                                    class="form-control"
+                                    placeholder="Enter JSON Value - use quotes for string"></textarea>
+                            <input ng-if="field.reference"
+                                   class="form-control"
+                                   type="text"
+                                   ng-model="field.example"
+                                   placeholder="Field Example"
+                                   typeahead="opt for opt in querySchemaWrapper(field.type) | filter:$viewValue"
+                                   typeahead-min-length="0" />
                         </div>
                         <div class="col-sm-3">
                             <button class="btn btn-default" type="button" ng-click="addConstraint($index)"><i class="glyphicon glyphicon-plus"></i>Add Constraint</button>

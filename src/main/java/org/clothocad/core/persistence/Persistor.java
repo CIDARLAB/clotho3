@@ -49,6 +49,7 @@ import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
 import static org.clothocad.core.ReservedFieldNames.*;
+import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
 import org.clothocad.core.schema.BuiltInSchema;
@@ -91,6 +92,8 @@ public class Persistor{
     
     private Converters converters;
     
+    private GlobalTrie globalTrie;
+    
     @Inject
     public Persistor(final ClothoConnection connection){
         this(connection, true);
@@ -103,6 +106,7 @@ public class Persistor{
         if (initializeBuiltins) initializeBuiltInSchemas();
         
         converters = new Converters();       
+        globalTrie = new GlobalTrie(connection.getCompletionData());
     }
     
     protected void validate(ObjBase obj){
@@ -160,6 +164,9 @@ public class Persistor{
             data.put(ID, id.toString());
         }
         connection.save(data);
+        
+        //Update the GlobalTrie with the new object
+        globalTrie.put(data);
         
         return new ObjectId(data.get(ID).toString());
     }
@@ -594,10 +601,8 @@ public class Persistor{
         log.warn("Unable to strictly resolve selector {}", selector);
         throw new NonUniqueResultException();
     }
-    /*
-     * Used to pass the data collection from the MongoDBConnection
-     */
-    public Tuple[] getTuplesMongo(){
-        return connection.getTuples();
+    
+    public List<Map> getCompletions(String word){
+        return globalTrie.getCompletions(word);
     }
 }

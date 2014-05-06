@@ -35,35 +35,30 @@ import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
 import org.clothocad.core.util.FileUtils;
 import org.clothocad.core.util.JSON;
 
-public class AutoComplete {
-    Persistor persistor;
-    
+public class GlobalTrie {
     /* AutoComplete Contructor */
     /*This constructor is never used except in the InterpreterAC test*/
-    public AutoComplete () {
+    public GlobalTrie () {
         
         trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
         //Load up the words from the word bank into the Trie
-        for(String word : getWordBank()) {
-            trie.put(word, map.get(word));
-        }
+
 
     }
     
     /*
      * New constructor to accept the persigstor from the ServerSideAPI
      */
-    public AutoComplete(Persistor persistorMongo) {
-        persistor = persistorMongo;
+    public GlobalTrie(List<Map> data) {
         trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
-        map = new HashMap();
-        for(String word: getWordBank()){
-            HashMap temp = new HashMap();
-            temp.put("name",word);
-            temp.put("uuid", map.get(word));
-            temp.put("text", word);
-            temp.put("type", "phrase");
-            trie.put(word.toLowerCase(),temp);
+        List<Map> temp = data;
+        for(Map map : temp){
+            try {
+                String name = (String) map.get("name");
+                trie.put(name.toLowerCase(), map);
+            } catch(Exception err) {
+                System.out.println("Couldn't add to autocomplete Trie: " + map.toString());
+            }
         }
     }
 
@@ -87,59 +82,26 @@ public class AutoComplete {
     /**
      * Adds new options into the trie
      */
-    public void put(String word) {
+    public void put(Map data) {
         try {
-            System.out.println("Trie is going to store: " + word);
-            trie.put(word, word);
-            wordBank.add(word);
-            //FIXME: persistor.save(wordBank); (make a wordbank class)
-            System.out.println("Stephanie, change persistance to db instead of flatfile");
-            FileUtils.writeFile(wordBank.toString(), "wordbank.txt");
-        } catch(Exception err) {
-            err.printStackTrace();
-        }
-    }
-    /*
-     * Creates a wordbank using the list of tuples from the persistor
-     */
-    private Set<String> getWordBank() {
-        try {
-            if(wordBank==null) {
-                Tuple[] temp = persistor.getTuplesMongo();
-                //System.out.println("Temp size: " + temp.length);
-                //String sfile = FileUtils.readFile("wordbank.txt");
-                //List listy = JSON.deserializeList(sfile);
-                //if (listy == null) return new HashSet<>(); //XXX
-                wordBank = new HashSet<String>();
-                //for(int i=0; i<listy.size(); i++) {
-                //    String str = listy.get(i).toString();
-                //    wordBank.add(str);
-                //}
-                for(int i = 0; i< temp.length;i++){
-                    if (temp[i].get(0) != null){
-                        String str = temp[i].get(0).toString();
-                        Object uuid = temp[i].get(1);
-                        wordBank.add(str);
-                        map.put(str,uuid);
-                    }
-                }
-                return wordBank;
+            Map map = new HashMap();
+            map.put("name", data.get("name"));
+            map.put("id", data.get("id").toString());
+            map.put("schema", data.get("schema"));
+            if(data.containsKey("description")) {
+                map.put("description", data.get("description"));
+            } else if(data.containsKey("shortDescription")) {
+                map.put("description", data.get("shortDescription"));
+            } else {
+                map.put("description", "<no description>");
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            
+            String name = (String) data.get("name");
+            trie.put(name.toLowerCase(), map);
+        } catch(Exception err) {
+            System.out.println("Couldn't add new object to autocomplete Trie: " + data.toString());
         }
-        
-        return wordBank;
     }
 
     private Trie<String, Object> trie;
-    transient private Set<String> wordBank;
-    private HashMap map;
-    
-    public Object getUUID(String key){
-
-        HashMap output = (HashMap) trie.selectValue(key);
-        return output.get("uuid");
-    }
-    
 }
