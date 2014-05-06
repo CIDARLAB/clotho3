@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.17-build.128+sha.050aae3
+ * @license AngularJS v1.2.17-build.156+sha.3d0b49c
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1800,7 +1800,9 @@ angular.module('ngMockE2E', ['ng']).config(['$provide', function($provide) {
  *
  *     // adds a new phone to the phones array
  *     $httpBackend.whenPOST('/phones').respond(function(method, url, data) {
- *       phones.push(angular.fromJson(data));
+ *       var phone = angular.fromJson(data);
+ *       phones.push(phone);
+ *       return [200, phone, {}];
  *     });
  *     $httpBackend.whenGET(/^\/templates\//).passThrough();
  *     //...
