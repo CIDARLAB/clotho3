@@ -30,6 +30,9 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+import javax.validation.ConstraintViolation;
+import javax.validation.Path.Node;
+import javax.validation.metadata.ConstraintDescriptor;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
@@ -164,6 +167,11 @@ public class JSON {
             //Default types for interfaces unknown to Jackson
             context.setMixInAnnotations(Bindings.class, UseSimpleBindings.class);
             context.setMixInAnnotations(Trie.class, UsePatriciaTrie.class);
+            
+            //and it's safer to use public interfaces on some classes
+            context.setMixInAnnotations(ConstraintViolation.class, UseDefaultAutoDetect.class);
+            context.setMixInAnnotations(ConstraintDescriptor.class, UseDefaultAutoDetect.class);
+            context.setMixInAnnotations(Node.class, UseDefaultAutoDetect.class);
         }
     }
 
@@ -188,6 +196,11 @@ public class JSON {
         
     }
 
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.DEFAULT, 
+            getterVisibility = JsonAutoDetect.Visibility.DEFAULT,
+            isGetterVisibility = JsonAutoDetect.Visibility.DEFAULT)
+    static abstract class UseDefaultAutoDetect {};
+    
     //XXX: move to test utils
     public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {
         ServerSideAPI api = new DummyAPI(persistor);
