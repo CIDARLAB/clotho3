@@ -72,9 +72,9 @@ angular.module('clotho.trails')
 
 				//init()
 				if (!!scope.startMini && scope.startMini != 'false') {
-					scope.miniThumb = Youtube.thumbnail(scope.videoId, 'mqdefault');
+					scope.miniThumb = Youtube.videoThumbnail(scope.videoId, 'mqdefault');
 
-					Youtube.info(scope.videoId).then(function (json) {
+					Youtube.videoInfo(scope.videoId).then(function (json) {
 						scope.miniInfo = json.data;
 						scope.miniInfo.durationFormatted = (Math.floor(scope.miniInfo.duration / 60) + ":" + ((scope.miniInfo.duration % 60 < 10) ? '0' : '') + (scope.miniInfo.duration % 60));
 					});

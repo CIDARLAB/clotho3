@@ -26,7 +26,28 @@ angular.module('clotho.core').service('clothoLocalStorage',
 			// e.g. https://github.com/grevory/angular-local-storage/blob/master/localStorageModule.js
 			// and could fallback to cookies for small strings (<4kb)
 
-			// Checks the browser to see if local storage is supported
+			/*
+			Checks the browser to see if local storage is supported. Adopted from Modernizer.
+
+			Note that this will trigger cross browser events that we pick up in this service.
+
+			  In FF4, if disabled, window.localStorage should === null.
+
+				Normally, we could not test that directly and need to do a
+				 `('localStorage' in window) && ` test first because otherwise Firefox will
+				 throw bugzil.la/365772 if cookies are disabled
+
+				Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
+				will throw the exception:
+				 QUOTA_EXCEEDED_ERRROR DOM Exception 22.
+				Peculiarly, getItem and removeItem calls do not throw.
+
+				Because we are forced to try/catch this, we'll go aggressive.
+
+				Just FWIW: IE8 Compat mode supports these features completely:
+				 www.quirksmode.org/dom/html5.html
+				But IE8 doesn't support either with local files
+			*/
 			var browserSupportsLocalStorage = function () {
 				try{
 					refStorage.setItem('test', '7');
@@ -134,6 +155,11 @@ angular.module('clotho.core').service('clothoLocalStorage',
 			var handle_storage_change = function (e) {
 				if (!e) {
 					e = $window.event;
+				}
+
+				// avoid non-prefixed items
+				if (e.key.indexOf(prefix) < 0) {
+					return;
 				}
 
 				var uuid = e.key.replace(prefix, '') || '';

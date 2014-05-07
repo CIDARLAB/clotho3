@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-sm-8">
+    <input type="text" class="form-control" ng-model="playlistId" placeholder="Playlist ID">
+    <div class="alert alert-danger" ng-show="showerror">Youtube playlist could not be loaded</div>
+  </div>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="search" placeholder="Search Youtube Videos">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <pre ng-bind="result | json"></pre>
+    <pre class="scrollable" ng-bind="playlistItems | json"></pre>
+    <pre class="scrollable" ng-bind="playlistInfo | json"></pre>
+  </div>
+  <div class="col-sm-4">
+    <pre ng-bind="searchResult | json"></pre>
+  </div>
+</div>
