@@ -4,6 +4,9 @@ module("Server API Tests");
 var Message = function (channel, data, requestId) {
     this.channel = channel;
     this.data = data;
+    if (channel == "submit" && typeof this.data == "string"){
+        this.data = {query:this.data, tokens:[]};
+    } 
 };
 
 var getSocket = function (addr) {
