@@ -4,9 +4,10 @@
  *
  * @description Given a trail, constructs the Trail banner
  */
-angular.module('clotho.trails').directive('trailHeader', function() {
+angular.module('clotho.trails')
+.directive('trailHeader', function() {
 
-	var defaultIcon = 'images/trails/trails_splash.jpg';
+	var defaultIcon = 'images/trails/trails_logo.png';
 
 	return {
 		restrict: 'A',

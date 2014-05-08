@@ -4,6 +4,8 @@
  content: text (string|html), video (object), template (url), quiz (object), markdown (text), wiki (text)
 
  you can add a controller using the ng-controller directive in a template, and declare it as a mixin.
+
+ //todo - remove next and prev from needed attrs
  */
 angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys, Trails) {
 
@@ -28,7 +30,6 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 				}
 			});
 
-			//future - this provides the foundation for Clotho.view() -- move it there
 			scope.createPage = function () {
 				if (angular.isDefined(scope.page.dictionary)) {
 					angular.extend(scope, scope.page.dictionary);

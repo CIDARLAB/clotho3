@@ -17,7 +17,6 @@ angular.module('clotho.webapp')
 				},
 				//error handling
 				function (err) {
-					console.log('error');
 					$scope.showerror = true;
 					$scope.playlist = {};
 					$scope.result = {};
@@ -39,6 +38,8 @@ angular.module('clotho.webapp')
 		function parsePlaylist (info, items) {
 
 			//parse out info we want
+
+			//todo - get thumbnail for trail icon
 
 			var result = {
 				name : info.snippet.title,

@@ -136,7 +136,18 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 })
 .when('/test/trail', {
   templateUrl: 'views/test/trail.html',
-  controller: 'TestTrailCtrl'
+  controller: 'TestTrailCtrl',
+	resolve : {
+		trail : ['$q', '$http', 'Trails', function ($q, $http, Trails) {
+			var deferred = $q.defer();
+			$http.get('models/bb99191e810c19729de860fe.json').then(function(data) {
+				Trails.compile(data.data).then(function (compiled) {
+					deferred.resolve(compiled);
+				});
+			});
+			return deferred.promise;
+		}]
+	}
 })
 .when('/test/trail-browser', {
   templateUrl: 'views/test/trail-browser.html',

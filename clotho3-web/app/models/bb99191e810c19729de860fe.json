@@ -3,7 +3,7 @@
 	"schema": "Trail",
 	"name": "Learning Clotho",
 	"description": "Learn how Clotho can simplify and automate your genetic engineering workflows.",
-	"icon" : "",
+	"icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
 	"about" : {
 		"help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
 		"contents" : [
