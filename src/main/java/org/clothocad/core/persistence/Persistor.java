@@ -567,41 +567,7 @@ public class Persistor{
         return connection.getOne(Schema.class, query);
     }
     
-    public ObjectId resolveSelector(String selector, boolean strict) {
-        return resolveSelector(selector, null, strict);
-    }
-
-    public ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict) {
-        //XXX: needs to go away b/c name for id shorthand is going away
-        //uuid?
-        ObjectId id;
-
-        if (org.bson.types.ObjectId.isValid(selector)){
-            return new ObjectId(selector);
-        }
-
-        Map<String, Object> spec = new HashMap<>();
-        spec.put("name", selector);
-        /* TODO: class & superclass discrimination
-         * if (type != null) {
-            spec.put(SCHEMA, type);
-        }*/
-
-        //name of something?
-        List<Map<String, Object>> results = findAsBSON(spec);
-
-        if (results.isEmpty()) throw new EntityNotFoundException(selector);
-        
-        id = new ObjectId(results.get(0).get(ID).toString());
-        if (results.size() == 1 || !strict) {
-            return id;
-        }
-
-        //complain about ambiguity
-        log.warn("Unable to strictly resolve selector {}", selector);
-        throw new NonUniqueResultException();
-    }
-    
+ 
     public List<Map> getCompletions(String word){
         return globalTrie.getCompletions(word);
     }

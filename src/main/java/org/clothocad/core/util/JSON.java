@@ -231,8 +231,8 @@ public class JSON {
             for (Map obj : objects) {
                 if (!overwrite) {
                     try {
-                        persistor.resolveSelector(obj.get("name").toString(), false);
-                        continue;
+                        if ( obj.containsKey("id") && persistor.has(new ObjectId(obj.get("id"))))
+                            continue;
 
                     } catch (EntityNotFoundException e) {
                     }

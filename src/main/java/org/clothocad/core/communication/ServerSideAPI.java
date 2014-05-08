@@ -200,7 +200,7 @@ public class ServerSideAPI {
         if(completions.size()>0) {
             String uuid = (String) completions.get(0).get("id").toString();
             try {
-                function = persistor.get(Function.class, persistor.resolveSelector(uuid, true));
+                function = persistor.get(Function.class, new ObjectId(uuid));
             } catch(java.lang.IllegalArgumentException ex) {
                 return null;
             }
@@ -217,7 +217,7 @@ public class ServerSideAPI {
             //If the completions suggest what the things is
             if(completions.size()>0) {
                 String uuid = (String) completions.get(0).get("id");
-                ObjBase shar = persistor.get(ObjBase.class, persistor.resolveSelector(uuid, true));
+                ObjBase shar = persistor.get(ObjBase.class, new ObjectId(uuid));
                 args.add(shar);
             } 
             //Otherwise just consider this raw String or int
@@ -424,7 +424,7 @@ public class ServerSideAPI {
 
     public Map<String, Object> get(Object o) {
         o = unwrap(o);
-        return get(persistor.resolveSelector(o.toString(), false));
+        return get(new ObjectId(o));
     }
 
     public Map<String, Object> get(ObjectId id) {
@@ -445,7 +445,7 @@ public class ServerSideAPI {
     public final List<Map<String, Object>> getAll(List objects) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         for (Object obj : objects) {
-            returnData.add(get(persistor.resolveSelector(obj.toString(), false)));
+            returnData.add(get(obj));
         }
         return returnData;
     }
@@ -585,10 +585,11 @@ public class ServerSideAPI {
     }
 
     public final ObjectId destroy(Object id) {
-        ObjectId resolvedId = persistor.resolveSelector(id.toString(), false);
-        if (resolvedId == null) {
+        if (id == null) {
             return null;
         }
+        
+        ObjectId resolvedId = new ObjectId(id);
         try {
             try {
                 persistor.delete(resolvedId);
@@ -628,7 +629,7 @@ public class ServerSideAPI {
     public Object
     run2(final String name, final List<Object> args) {
         final Map<String, Object> funcJSON =
-            persistor.getAsJSON(persistor.resolveSelector(name, true));
+            persistor.getAsJSON(new ObjectId(name));
         return SubprocessExec.run(
             this,
             funcJSON,
@@ -664,10 +665,10 @@ public class ServerSideAPI {
 
         if (data.containsKey(ID)) {
             //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
+            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id")));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+                    Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
 System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
                     return mind.invoke(function, args, getScriptAPI());
@@ -682,7 +683,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             //XXX: this whole function is still a mess
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
-                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
+                    Module module = persistor.get(Module.class, new ObjectId(data.get("id")));
 
                     return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -731,7 +732,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             return Void.TYPE;
         }
 
-        Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
+        Function function = persistor.get(Function.class, new ObjectId(data.get("function")));
         List arguments;
         try {
             arguments = data.containsKey("arguments")

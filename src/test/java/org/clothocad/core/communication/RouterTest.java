@@ -74,7 +74,7 @@ public class RouterTest {
         TestConnection connection = new TestConnection("getTest");
         final Message message = new Message(
             Channel.getAll,
-            new String[] {"Test Part 1"},
+            new String[] {ids.get(0).toString()},
             "1",
             null
         );
@@ -199,9 +199,9 @@ public class RouterTest {
                 + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
                 + "data.arguments = [{name:'sequence', type:'String'}];\n"
                 + "\n"
-                + "clotho.create(data);\n"
+                + "reverse1 = clotho.create(data);\n"
                 + "\n"
-                + "clotho.run(\"reverse1\", [\"AAACCC\"]);";
+                + "clotho.run(reverse1, [\"AAACCC\"]);";
         TestConnection connection = new TestConnection("constructFunction");
         
         Map submission = new HashMap();
