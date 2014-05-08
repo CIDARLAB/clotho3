@@ -8,11 +8,11 @@ angular.module('clotho.clothoDirectives')
  *
  * You can define arbitrary HTML as content or transclude, a template, or a clotho ID to show. All will be shown if defined.
  *
- * (arbitrary HTML, on scope)
+ * (arbitrary HTML, on scope - not angular compiled)
  *
  * <clotho-modal title="Clotho Help" open="showHelp" content="modalContent"></clotho-modal>
  *
- * (arbitrary HTML, transcluded)
+ * (arbitrary HTML, transcluded - angular compiled)
  *
 <clotho-modal title="arbitrary content" open="true">
  <p>Any content you want here</p>
@@ -23,7 +23,7 @@ angular.module('clotho.clothoDirectives')
  *
  <clotho-modal title="clotho.show" id="<WIDGET_ID>"></clotho-modal>
  *
- * (template)
+ * (template - angular compiled)
  *
  * <clotho-modal title="Another Template" template-url="'myUrl.html'"></clotho-modal>
  *
@@ -69,18 +69,19 @@ angular.module('clotho.clothoDirectives')
 					})
 				}
 
+				//todo - this should be compiled
 				scope.$watch('content', function(newValue, oldValue) {
 					scope.contentTrusted = $sce.trustAsHtml(newValue);
 				});
 
 				scope.$watch('templateUrl', function (newval, oldval) {
-					if (!!newval && (newval != oldval || !oldval)) {
+					if (!!newval && (newval != oldval || !oldval || !scope.hasTemplate)) {
 						$http.get(newval, {cache: true}).success(function (data, headers) {
-							element[0].querySelectorAll('[template-insert]').html($compile(data)(scope));
+							angular.element(element[0].querySelector('[template-insert]')).html($compile(data)(scope));
 							scope.hasTemplate = true;
 						})
 						.error(function (data) {
-							//let's hide the area
+							//let's hide the area if the template doesn't exist
 							scope.hasTemplate = false;
 						});
 					}
@@ -109,6 +110,38 @@ angular.module('clotho.clothoDirectives')
  *
  * To pass functions etc, you must create them on the scope, and pass in the $scope. The config options are simply mapped to the DOM as attrs, so should match docs for clotho-modal directive. They should be snake-case. Note that the $scope of the directive is isolate, so all actions must be within the 'scope' of the $scope you pass in.
  *
+ * @example (simple)
+ * given var msg = <string>, because the string is inserted into the DOM
+ *
+ *  $clothoModal.create({
+			title : "Clotho Alert",
+			content : "msg"
+		});
+ *
+ * @example (further demonstrate quoting)
+ *
+ *  $clothoModal.create({
+			title : 'Clotho Login',
+			'template-url' : "'views/_command/simpleLogin.html'"
+		});
+ *
+ * @example (passing in scope)
+		var newScope = $scope.$new();
+		newScope.modalActions =  [
+			{
+			class : 'info',
+			text : 'Great!',
+			action : $clothoModal.destroy
+			}
+		];
+
+	  $clothoModal.create({
+			title : "Hey there",
+			content : "'here is some <br>content'",
+			actions : 'modalActions'
+		}, newScope);
+
+
  */
 	.service('$clothoModal', function($window, $rootScope, $compile) {
 
@@ -122,7 +155,7 @@ angular.module('clotho.clothoDirectives')
 		 * Create a new clotho-modal element on the body, removing the last one if it existed.
 		 *
 		 * @param config {Object} directly mapped to attrs of clotho-modal element
-		 * @param scope {Scope} for evaluating scope of modal, otherwise new scope created
+		 * @param scope {Scope=} for evaluating scope of modal, otherwise new scope created
 		 */
 		this.create = function (config, scope) {
 			destroy();

@@ -6,7 +6,7 @@ angular.module('clotho.interface')
 	});
 	hotkeys.add('a', 'Show Activity Log', function (event) {
 		event.preventDefault();
-		CommandBar.toggleActivityLog();
+		CommandBar.display.toggleActivityLog();
 	});
 	hotkeys.add('g h', 'Go to Homepage', function () {
 		$location.path('/')

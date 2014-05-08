@@ -29,11 +29,6 @@ angular.module('clotho.commandbar')
 		getCommandBarInput().focus();
 	};
 
-	function toggleActivityLog () {
-		display.log = !display.log;
-	}
-
-
 
 	/******* log data *******/
 	var log = {};
@@ -90,60 +85,12 @@ angular.module('clotho.commandbar')
 		};
 	};
 
-	/*
-	//note - now in css
-	display.genAutocompletePos = function() {
-		var target = getCommandBarInput()[0];
-		display.autocompletePos = {
-			left : (target.offsetLeft) + "px",
-			top : (target.offsetTop + target.clientHeight)  + "px"
-		};
-	};
-	*/
-
-
-	display.detail = function(uuid) {
-		if (typeof uuid == 'undefined') return;
-
-		if (uuid != autocomplete.detailUUID) {
-			display.hide('autocompleteDetailInfo');
-			autocomplete.detailUUID = uuid;
+	display.toggleActivityLog = function () {
+		display.log = !display.log;
+		if (display.log) {
+			log.unread = '';
 		}
-
-		Clotho.autocompleteDetail(autocomplete.detailUUID).then(function(result) {
-			autocomplete.autoDetail = result;
-			display.show('autocompleteDetail');
-		});
 	};
-
-	display.undetail = function() {
-		display.hide('autocompleteDetail');
-		display.hide('autocompleteDetailInfo');
-		autocomplete.detailModel = {};
-	};
-
-	//todo - avoid using index in case sort - have to namespace
-	display.detailInfo = function (type, index) {
-		//choose template
-		switch (type) {
-			case 'command' : {
-				autocomplete.detailTemplate = 'views/_command/detail-command.html';
-				break;
-			}
-			case 'author' : {
-				autocomplete.detailTemplate = 'views/_command/detail-author.html';
-				break;
-			}
-			default : {}
-		}
-		//choose model
-		autocomplete.detailModel = autocomplete.autoDetail.sharables[index];
-		if (type == "author")
-			autocomplete.detailModel = autocomplete.detailModel.author;
-
-		display.show('autocompleteDetailInfo');
-	};
-
 
 	/***** functions *****/
 
@@ -241,8 +188,7 @@ angular.module('clotho.commandbar')
 		//interaction
 		getCommandBarElement: getCommandBarElement,
 		getCommandBarInput : getCommandBarInput,
-		focusInput : focusInput,
-		toggleActivityLog : toggleActivityLog
+		focusInput : focusInput
 	}
 
 });

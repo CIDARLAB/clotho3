@@ -9,7 +9,7 @@
  */
 
 angular.module('clotho.commandbar')
-.directive('clothoCommandBar', function(Clotho, CommandBar, $location, $window) {
+.directive('clothoCommandBar', function(Clotho, CommandBar, $location, $window, $compile, $clothoModal) {
 
 	return {
 		restrict: 'A',
@@ -27,6 +27,19 @@ angular.module('clotho.commandbar')
 			$scope.execute = CommandBar.execute;
 
 			//todo - incorporate login, use clotho-modal service
+
+			var showClothoLoginModal = false;
+			$scope.toggleLogin = function (force) {
+				showClothoLoginModal = angular.isDefined(force) ? force : !showClothoLoginModal;
+				if (showClothoLoginModal) {
+					$clothoModal.create({
+						title : 'Clotho Login',
+						'template-url' : "'views/_command/simpleLogin.html'"
+					});
+				} else {
+					$clothoModal.destroy();
+				}
+			};
 
 			$scope.showClothoLoginModal = false;
 			$scope.showLogin = function() {
