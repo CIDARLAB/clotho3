@@ -16,7 +16,7 @@ angular.module('clotho.commandbar')
 		return angular.element($document[0].querySelector('[clotho-command-bar]'));
 	};
 
-	//todo - should capture from commandBar directive as possible
+	//todo - should capture from commandBar directive as possible, e.g. via controller
 	var getCommandBarInput = function () {
 		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-autocomplete]'));
 	};
@@ -33,13 +33,6 @@ angular.module('clotho.commandbar')
 	/******* log data *******/
 	var log = {};
 
-	var autocomplete = {};
-	autocomplete.autocompletions = [];
-	autocomplete.autoDetail = {};
-	autocomplete.detailTemplate = {};
-	autocomplete.detailModel = {};
-	autocomplete.detailUUID = -1;
-
 	log.entries = [
 		{
 			"text" : "Welcome to Clotho!",
@@ -49,40 +42,14 @@ angular.module('clotho.commandbar')
 		}
 	];
 
-
 	/****** display ******/
 	var display = {};
 	display.query = '';
-	display.queryHistory = [];
-	display.autocomplete = false; // autocomplete list
-	display.autocompleteDetail = false; //pane to left of autocomplete
-	display.autocompleteDetailInfo = false; // e.g. command or author
-	display.help = false; // help menu far right
 	display.log = false; // activity log
 	display.logSnippet = false; // snippet right of log button
 
-	//basic toggles
-	display.show = function (field) {
-		if (!display[field])
-			display[field] = true;
-	};
-
-	display.hide = function(field) {
-		if (display[field])
-			display[field] = false;
-	};
-
-	display.toggle = function(field) {
-		display[field] = !display[field];
-	};
-
-	// todo - should be CSS
-	display.genLogPos = function() {
-		var target = getCommandBarLogButton()[0];
-		display.logpos = {
-			left : (target.offsetLeft + (target.scrollWidth / 2) - 200) + "px",
-			top : (target.offsetTop + target.scrollHeight)  + "px"
-		};
+	display.toggle = function(field, value) {
+		display[field] = angular.isDefined(value) ? value : !display[field];
 	};
 
 	display.toggleActivityLog = function () {
@@ -100,7 +67,7 @@ angular.module('clotho.commandbar')
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
 		log.entries.unshift(data);
 		Debugger.log('LOG - entries: ', log.entries);
-		display.show('logSnippet');
+		display.toggle('logSnippet', true);
 		log.startLogTimeout();
 	}
 
@@ -108,18 +75,12 @@ angular.module('clotho.commandbar')
 		log.cancelLogTimeout();
 
 		log.timeout = $timeout( function() {
-			display.hide('logSnippet');
+			display.toggle('logSnippet', false);
 		}, 10000);
 	};
 
 	log.cancelLogTimeout = function() {
 		$timeout.cancel(log.timeout);
-	};
-
-	var execute = function (command) {
-		Debugger.log("execute called (not implemented) " + command);
-		display.hide('autocomplete');
-		display.undetail();
 	};
 
 	var submit = function (input) {
@@ -138,10 +99,6 @@ angular.module('clotho.commandbar')
 
 		if (!!input.query) {
 			var submission = {class : 'info', from : 'client', text: input.query, timestamp : Date.now()};
-			display.queryHistory.push(submission);
-
-			//display.autocomplete = false;
-			display.undetail();
 
 			ClientAPI.say(submission);
 
@@ -172,18 +129,15 @@ angular.module('clotho.commandbar')
 		display : display,
 		log : log,
 		setQuery : function(item, $event) {
-			if (typeof $event != 'undefined')
+			if (angular.isDefined( $event )) {
 				$event.preventDefault();
-			/*if (item.type != 'command') {
-			 display.undetail();
-			 }*/
+			}
+
 			if (!item) return;
 
-			display.query = !!item.value ? item.value : item.text;
+			display.query = !angular.isEmpty(item.value) ? item.value : item.text;
 		},
-		autocomplete : autocomplete,
 		submit : submit,
-		execute : execute,
 
 		//interaction
 		getCommandBarElement: getCommandBarElement,

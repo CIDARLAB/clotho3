@@ -17,15 +17,14 @@
 
   <!--log-->
   <div id="clotho_logButtonContainer"
-       ng-init="display.genLogPos()"
-       click-outside="display.hide('log');"
+       click-outside="display.toggle('log', false);"
        click-outside-active="display.log">
     <button id="clotho_logButton" ng-click="display.toggleActivityLog()">
       <i class="glyphicon glyphicon-tasks" style="top: 3px;"></i>
       <span class="badge badge-info" ng-bind="log.unread || ''"></span>
     </button>
 
-    <div id="clotho_log" ng-show="display.log" ng-style="display.logpos">
+    <div id="clotho_log" ng-show="display.log">
       <div class="arrow"></div>
       <h3 class="popover-title">
         Activity Log
