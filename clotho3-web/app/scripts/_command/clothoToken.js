@@ -1,12 +1,11 @@
 angular.module('clotho.tokenizer')
-
 /**
- * Given a name and UUID, renders a token which can display more information upon interaction
+ * @name clotho-token
+ *
+ * @description
+ * Given a name and UUID, renders a token which can display more information upon interaction via sharable-popup
  */
 	.directive('clothoToken', function (Clotho, clothoTokenFactory) {
-
-		//popover or something when hover via clotho.get()
-
 		return {
 			restrict: 'E',
 			replace: true,
@@ -17,9 +16,6 @@ angular.module('clotho.tokenizer')
 				tokenActive : '=',
 				token : '=ngModel',
 				onRemove : '&?'
-			},
-			controller: function clothoTokenCtrl($scope, $element, $attrs) {
-
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 

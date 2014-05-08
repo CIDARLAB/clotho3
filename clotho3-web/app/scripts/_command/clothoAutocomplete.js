@@ -26,6 +26,8 @@ angular.module('clotho.tokenizer')
 		//time to wait before initiating typeahead request
 		var waitTime = 0;
 
+		//todo - easy method to submit (not requiring passage of scope.query)
+
 		//todo - add attributes (spellcheck, autocapitalize, etc. if necessary)
 
 		//todo - allow tie-in of query to model via ngModel
@@ -158,9 +160,8 @@ angular.module('clotho.tokenizer')
 					//backspace
 					if (evt.which === 8) {
 						if (scope.query.length) {
-							scope.$apply(function () {
-								scope.query = scope.query.substring(0, scope.query.length - 1);
-							});
+							//return to handle deleting single letter or highlighted text
+							return;
 						} else {
 							if (scope.tokenCollection) {
 								if (scope.tokenCollection.isActive()) {
@@ -210,9 +211,15 @@ angular.module('clotho.tokenizer')
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
-						scope.$apply(function () {
-							scope.select(scope.activeIdx);
-						});
+						if (scope.query.length) {
+							scope.$apply(function () {
+								scope.select(scope.activeIdx);
+							});
+						} else {
+							scope.$apply(function () {
+								scope.submit();
+							});
+						}
 					}
 					//escape
 					else if (evt.which === 27) {
@@ -224,7 +231,9 @@ angular.module('clotho.tokenizer')
 						if (scope.query.length) {
 							evt.stopPropagation();
 						} else {
+							scope.hasFocus = false;
 							element.blur();
+							scope.$digest();
 						}
 					}
 

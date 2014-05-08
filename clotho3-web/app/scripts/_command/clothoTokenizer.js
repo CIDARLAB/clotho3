@@ -4,6 +4,8 @@ angular.module('clotho.tokenizer')
  * @name clotho-tokenizer
  * @description
  * Wrapper for the clotho tokenizer. Creates token collection and autocomplete with dropdown
+ * @example
+ * <clotho-tokenizer ng-model="myModel" placeholder="Construct a command"></clotho-tokenizer>
  */
 	.directive('clothoTokenizer', function ($parse, clothoTokenCollectionFactory, Debug) {
 
@@ -14,16 +16,13 @@ angular.module('clotho.tokenizer')
 			replace: true,
 			require: 'ngModel', //avoid isolate scope so model propagates correctly
 			templateUrl: "views/_command/tokenizer.html",
-			controller: function clothoTokenizerCtrl($scope, $element, $attrs) {
-
-			},
 			link: function clothoTokenizerLink(scope, element, attrs, ngModelCtrl) {
 
 				scope.placeholder = attrs.placeholder;
 
 				var startingTags = $parse(attrs.startingTags)(scope);
 
-				var completeQuery = "";
+				var completeQuery = '';
 
 				scope.tokenCollection = new clothoTokenCollectionFactory(startingTags);
 
@@ -42,7 +41,6 @@ angular.module('clotho.tokenizer')
 					// token is either just text, or a full sharable
 					// can assume input element is irrelevant
 					completeQuery = '';
-					//todo - refactor to name pending #216
 					angular.forEach(scope.tokenCollection.tokens, function(token) {
 						completeQuery  += token.readable() + ' ';
 					});
@@ -50,8 +48,6 @@ angular.module('clotho.tokenizer')
 					//update parent model
 					updateModel();
 				});
-
-				//todo - handle submit / reset to update completeQuery
 
 				/* functionality */
 
@@ -70,8 +66,18 @@ angular.module('clotho.tokenizer')
 				};
 
 				scope.focusInput = function () {
-					element[0].querySelector('.clothoAutocomplete').focus();
+					element[0].querySelector('[clotho-autocomplete]').focus();
 				};
+
+				/*
+				//todo - move to controller?
+				scope.submit = function () {
+					// close last token
+					// wrap query and tokens
+					// send to Clotho.submit()
+					//reset query
+				};
+				 */
 			}
 		}
 	});

@@ -1,7 +1,12 @@
 .clothoTokenizerWrap {
   display: block;
   width: 100%;
-  padding: 2px 12px;
+}
+
+.clothoTokenizerInputWrap {
+  display: block;
+  width: 100%;
+  padding: 4px 12px;
   margin: 0;
   font-size: 14px;
   line-height: 1.428571429;
@@ -13,6 +18,17 @@
   border-radius: 4px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+  &.focused {
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+}
+
+.clothoTokenizerSubmit {
+  @extend .btn;
+  @extend .btn-default;
 }
 
 .clothoTokenizerTokens {
@@ -22,7 +38,7 @@
 .clothoAutocompleteWrap {
   display: inline-block;
   position: relative;
-  padding: 4px;
+  padding: 1px 4px;
   width: 1px;
   overflow: visible;
 }
@@ -33,6 +49,7 @@
   appearance: none;
   outline: none;
   border: 0;
+  background-color: transparent;
 }
 
 .clothoAutocompleteListing {

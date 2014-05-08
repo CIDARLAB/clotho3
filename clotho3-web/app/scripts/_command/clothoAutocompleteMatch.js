@@ -23,7 +23,9 @@ angular.module('clotho.tokenizer')
 		};
 	})
 
-	/* for autocomplete list, bold text matching query */
+	/*
+	for autocomplete list, bold text matching query. requires that text bound is HTML not a string
+	*/
 	.filter('clothoAutocompleteHighlight', function() {
 
 		function escapeRegexp(queryToEscape) {

@@ -1,6 +1,5 @@
-//rename directive
-
-angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
+angular.module('clotho.commandbar')
+.service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -176,10 +175,13 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		display.undetail();
 	};
 
-	var submit = function (query) {
-		if (!query) {
-			query = display.query;
+	var submit = function (input) {
+		if (angular.isEmpty(input) || !angular.isObject(input)) {
+			input = display.query
 		}
+
+		//remove trailing whitespace
+		input.query = input.query.trim();
 
 		/*
 		 Debugger.log(query);
@@ -187,8 +189,8 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		 Debugger.log(log.entries)
 		 */
 
-		if (!!query) {
-			var submission = {class : 'info', from : 'client', text: query, timestamp : Date.now()};
+		if (!!input.query) {
+			var submission = {class : 'info', from : 'client', text: input.query, timestamp : Date.now()};
 			display.queryHistory.push(submission);
 
 			//display.autocomplete = false;
@@ -196,13 +198,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 			ClientAPI.say(submission);
 
-			//note - temporary, patch as object pending tokenizer
-			query = {
-				query : query,
-				tokens : []
-			};
-
-			return Clotho.submit(query).then(function(result){
+			return Clotho.submit(input).then(function(result){
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});
 			}, function (rejection) {
