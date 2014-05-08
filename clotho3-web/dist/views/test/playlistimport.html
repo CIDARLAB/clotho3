@@ -4,7 +4,7 @@
     <div class="alert alert-danger" ng-show="showerror">Youtube playlist could not be loaded</div>
   </div>
   <div class="col-sm-4">
-    <input type="text" class="form-control" ng-model="search" placeholder="Search Youtube Videos">
+    <input type="text" class="form-control" ng-model="search" ng-model-options="{debounce: 300}" placeholder="Search Youtube Videos">
   </div>
 </div>
 

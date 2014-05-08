@@ -1,5 +1,8 @@
 angular.module('clotho.tokenizer')
 /**
+ * @name clothoTokenFactory
+ *
+ * @description
  * ClothoTokens are essentially wrappers for clotho sharables, or strings.
  * They expect the fields minimally of name, id, schema to be a sharable, or just a string for other keywords
  */

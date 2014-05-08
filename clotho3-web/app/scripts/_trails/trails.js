@@ -75,7 +75,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 
 	//in form <Chapter>-<Page>
 	var extractPage = function trailExtractPage (Trail, indices) {
-		var pos = indices.split("-");
+		var pos = angular.isString(indices) ? indices.split("-") : [0,0];
 		var page = Trail.contents[pos[0]]['pages'][pos[1]];
 		return page;
 	};

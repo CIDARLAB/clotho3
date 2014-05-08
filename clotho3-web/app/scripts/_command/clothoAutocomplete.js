@@ -1,6 +1,17 @@
 angular.module('clotho.tokenizer')
 /**
- * Renders an autocomplete, given a query
+ * @description
+ * As a directive on an input element, renders an autocomplete with typeahead
+ *
+ * @example
+ <input type="text"
+    clotho-autocomplete
+    ng-model="query"
+    placeholder="{{placeholder}}"
+    token-collection="tokenCollection"
+    autocomplete-on-select="addToken($item, $query)">
+
+ ngModel is not necessary
  */
 	.directive('clothoAutocomplete', function (Clotho, $q, $parse, $timeout, $compile, $filter, $document) {
 
@@ -8,15 +19,23 @@ angular.module('clotho.tokenizer')
 		var HOT_KEYS = [8,        9,  13,     27,     37,   38, 39,   40];
 		var SPACE_KEY = 32;
 		var ENTER_KEY = 13;
+
 		var tokenDelimiterCode = SPACE_KEY;
 		var tokenDelimiterValue = ' ';
+
+		//time to wait before initiating typeahead request
+		var waitTime = 0;
+
+		//todo - easy method to submit (not requiring passage of scope.query)
+
 		//todo - add attributes (spellcheck, autocapitalize, etc. if necessary)
+
+		//todo - allow tie-in of query to model via ngModel
 
 		return {
 			restrict: 'A',
-			//require: 'ngModel',
-			controller: function clothoAutocompleteCtrl($scope, $element, $attrs) {},
-			link: function clothoAutocompleteLink(scope, element, attrs) {
+			require : '?ngModel',
+			link: function clothoAutocompleteLink(scope, element, attrs, ngModelCtrl) {
 
 				var initialQuoteRegexp = /^['"].*/;
 
@@ -33,9 +52,6 @@ angular.module('clotho.tokenizer')
 				});
 
 				scope.hasFocus = false;
-
-				//time to wait before initiating typeahead request
-				var waitTime = 0;
 
 				var resetMatches = function() {
 					scope.autocompletions = [];
@@ -72,7 +88,7 @@ angular.module('clotho.tokenizer')
 				};
 
 				//we need to propagate user's query so we can higlight matches
-				scope.query = undefined;
+				scope.query = '';
 
 				//Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
 				var timeoutPromise;
@@ -144,9 +160,8 @@ angular.module('clotho.tokenizer')
 					//backspace
 					if (evt.which === 8) {
 						if (scope.query.length) {
-							scope.$apply(function () {
-								scope.query = scope.query.substring(0, scope.query.length - 1);
-							});
+							//return to handle deleting single letter or highlighted text
+							return;
 						} else {
 							if (scope.tokenCollection) {
 								if (scope.tokenCollection.isActive()) {
@@ -196,22 +211,31 @@ angular.module('clotho.tokenizer')
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
-						scope.$apply(function () {
-							scope.select(scope.activeIdx);
-						});
+						if (scope.query.length) {
+							scope.$apply(function () {
+								scope.select(scope.activeIdx);
+							});
+						} else {
+							scope.$apply(function () {
+								scope.submit();
+							});
+						}
 					}
 					//escape
 					else if (evt.which === 27) {
-						evt.stopPropagation();
-
 						resetMatches();
 						scope.tokenCollection.unsetActive();
 						scope.$digest();
-					}
 
-					//remove focus on these events to avoid triggering document click listener
-					//if select a token, focus will be re-added via timeout
-					//scope.hasFocus = false;
+						//if there is no query, blur
+						if (scope.query.length) {
+							evt.stopPropagation();
+						} else {
+							scope.hasFocus = false;
+							element.blur();
+							scope.$digest();
+						}
+					}
 
 					//at bottom so can return out and continue normal action
 					evt.preventDefault();

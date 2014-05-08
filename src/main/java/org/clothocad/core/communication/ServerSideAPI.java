@@ -109,22 +109,10 @@ public class ServerSideAPI {
         //This is needed because the subString is in the format {query=[subString]}
         userText = userText.substring(7, userText.length()-1);
         
-        //TODO: This should be changed to an int provided from the client
-        int cursorIndex = userText.length();  
-
-        //Grab the last word fragment up to the cursor position
-        String[] words = userText.substring(0, cursorIndex).split("\\s+");
-        String lastWord = words[words.length-1];
-        
-        //Fetch any words in the Mind's <String,String> Trie
-        //List<Map> comps = mind.getMindCompletions(lastWord);
-        List<Map> comps = new ArrayList<Map>();
-        
         //Add the word suggestions from the global Trie
-        List<Map> globalComps = persistor.getCompletions(lastWord);
-        comps.addAll(globalComps);
+        List<Map> globalComps = persistor.getCompletions(userText);
         
-        return comps;
+        return globalComps;
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {

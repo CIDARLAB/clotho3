@@ -648,8 +648,26 @@ function generateClothoAPI() {
       return fn.emitSubOnce('autocomplete', packaged, options);
     };
 
+	/**
+	 * @name Clotho.submit
+	 *
+	 * @param query {Object|String} query
+	 * string to be disambiguated or
+	 * object in form {query : <query, tokens : <array of ClothoTokens>}
+	 *
+	 * @description
+	 * Submit a command to the server for parsing / disambiguation.
+	 *
+	 *
+	 */
     var submit = function(query) {
-        return fn.emitSubOnce('submit', query);
+	    if (angular.isString(query)) {
+		    query = {
+			    query : query,
+			    tokens : []
+		    };
+	    }
+      return fn.emitSubOnce('submit', query);
     };
 
     /**

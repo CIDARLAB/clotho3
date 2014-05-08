@@ -1,5 +1,8 @@
 angular.module('clotho.tokenizer')
 /**
+ * @name clothoTokenCollectionFactory
+ *
+ * @description
  * Object to handle a collection of ClothoTokens
  */
 	.factory('clothoTokenCollectionFactory', function (clothoTokenFactory) {

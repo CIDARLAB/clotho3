@@ -1,15 +1,28 @@
-// note - use click-outside-active attr.. should set that attr to false when take action with this directive
-// note - requires jQuery has()
-// future - to make more universal, see:
-// https://raw.github.com/cowboy/jquery-outside-events/v1.1/jquery.ba-outside-events.js
-// angular way of creating ng-directives
-angular.module('clotho.interface').directive('clickOutside', function($document, $parse) {
+/**
+ * @name clickOutside
+ *
+ * @description
+ * Registers a document click listener which is triggered when clicking on an element not containing this one.
+ *
+ * Requires the attribute click-outside-active to avoid bloat on each click.
+ *
+ * Pass in the function directly, without parenthesis.
+ *
+ * @example
+ * <div id="externalClickListener"
+        click-outside="myCallback"
+        click-outside-active="myBoolean">
+ */
+
+angular.module('clotho.interface')
+.directive('clickOutside', function($document, $parse) {
 	return function(scope, element, attr) {
 
-		//todo - add watch for action
-		var clickAction = $parse(attr['clickOutside']),
+		//click action will be parsed against the scope on each run, so don't need to watch it
+		var clickAction = $parse(attr.clickOutside),
 			active;
 
+		//watch to see if active
 		scope.$watch(function () {
 			return $parse(attr.clickOutsideActive)(scope);
 		}, function (newval, oldval) {
@@ -17,11 +30,8 @@ angular.module('clotho.interface').directive('clickOutside', function($document,
 		});
 
 		var handler = function (event) {
-
 			if (active) {
-				if (element.has(event.target).length == 0) {
-					console.log('click captured');
-
+				if (!element[0].contains(event.target)) {
 					event.preventDefault();
 					event.stopPropagation();
 					scope.$apply( clickAction(scope, {$event:event}) );
