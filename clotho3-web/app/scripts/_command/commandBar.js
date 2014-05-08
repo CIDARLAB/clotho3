@@ -11,14 +11,14 @@ angular.module('clotho.commandbar')
 
 	/******* elements ******/
 
-	//todo - should capture from commandBar directive as possible
 
 	var getCommandBarElement = function() {
 		return angular.element($document[0].querySelector('[clotho-command-bar]'));
 	};
 
+	//todo - should capture from commandBar directive as possible
 	var getCommandBarInput = function () {
-		return angular.element($document[0].getElementById('clotho_command_input'));
+		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-autocomplete]'));
 	};
 
 	var getCommandBarLogButton = function () {
@@ -29,8 +29,8 @@ angular.module('clotho.commandbar')
 		getCommandBarInput().focus();
 	};
 
-	function showActivityLog () {
-		display.log = true;
+	function toggleActivityLog () {
+		display.log = !display.log;
 	}
 
 
@@ -242,7 +242,7 @@ angular.module('clotho.commandbar')
 		getCommandBarElement: getCommandBarElement,
 		getCommandBarInput : getCommandBarInput,
 		focusInput : focusInput,
-		showActivityLog : showActivityLog
+		toggleActivityLog : toggleActivityLog
 	}
 
 });

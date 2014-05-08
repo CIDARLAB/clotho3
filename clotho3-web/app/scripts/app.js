@@ -166,7 +166,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	});
 
 })
-.run(function($rootScope, $route, $window, $location, Clotho, CommandBar, hotkeys) {
+.run(function($rootScope, $route, $window) {
 
 	/****** Config *****/
 
@@ -175,15 +175,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
 	});
-
-	/******* Global Hotkeys ******/
-
-	hotkeys.add('f', 'Focus Command Bar', function (event) {event.preventDefault(); CommandBar.focusInput(); } );
-	hotkeys.add('a', 'Show Activity Log', function (event) {event.preventDefault(); CommandBar.showActivityLog(); } );
-	hotkeys.add('g h', 'Go to Homepage', function () {$location.path('/') });
-	hotkeys.add('g b', 'Go to Browser', function () { $location.path('/browser') });
-	hotkeys.add('g e', 'Go to Editor', function () { $location.path('/editor') });
-	hotkeys.add('g t', 'Go to Trails', function () { $location.path('/trails') });
 
 });
 
