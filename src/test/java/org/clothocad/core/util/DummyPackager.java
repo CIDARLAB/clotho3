@@ -34,7 +34,7 @@ public class DummyPackager extends Function {
     public Module packJavaScript(String name, String description, String code, List<Module> dependencies){
         Module result;
         result = new Module(name, description, Language.JAVASCRIPT, code,
-                dependencies.toArray(new Module[0]));
+                dependencies.toArray(new Module[0]));   
         return result;
     }
 }

@@ -100,9 +100,9 @@ public class ScriptAPI {
         isFunction = api.get(selector).get("schema").toString().endsWith("Function");
         Module module;
         if (isFunction){
-            module = persistor.get(Function.class, persistor.resolveSelector(selector.toString(), Function.class, true));
+            module = persistor.get(Function.class, new ObjectId(selector));
         } else {
-            module = persistor.get(Module.class, persistor.resolveSelector(selector.toString(), Module.class, true));
+            module = persistor.get(Module.class, new ObjectId(selector));
         }
         
         //some kind of circular dependency detection would be good

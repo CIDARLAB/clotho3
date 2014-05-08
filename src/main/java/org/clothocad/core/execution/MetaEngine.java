@@ -100,11 +100,11 @@ public class MetaEngine {
     }
 
     public static String idToName(ObjectId id) {
-        return "f" + id.toString();
+        return "f" + id.toString().replaceAll("\\W", "_");
     }
 
     public void loadAsGlobal(Module module, ScriptAPI api) throws ScriptException {
-        String name = "f" + module.getId().toString();
+        String name = idToName(module.getId());
         //TODO: check last saved date
         //if (getEngine(module.getLanguage()).getContext().getBindings(ScriptContext.ENGINE_SCOPE).containsKey(name)){
         //    return;

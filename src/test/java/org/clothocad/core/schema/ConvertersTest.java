@@ -5,11 +5,8 @@
 package org.clothocad.core.schema;
 
 import com.google.inject.Injector;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.schema.Converter;
-import org.clothocad.core.schema.Converters;
-import org.clothocad.core.schema.InferredSchema;
-import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.BasicPartConverter;
 import org.junit.After;
@@ -64,8 +61,8 @@ public class ConvertersTest {
     @Test
     public void testGetConverterSchemas() {
         Converters converters = prepareConverters();
-        Schema basicPartSchema = persistor.get(Schema.class, persistor.resolveSelector("BasicPart", false));
-        Schema compositePartSchema = persistor.get(Schema.class, persistor.resolveSelector("CompositePart", false));
+        Schema basicPartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
+        Schema compositePartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.CompositePart"));
         Iterable<Schema> convertibleSchemas = converters.getConverterSchemas(basicPartSchema);
         assertEquals(new InferredSchema("eugene.dom.components.Part"), convertibleSchemas.iterator().next());
         
@@ -76,7 +73,7 @@ public class ConvertersTest {
     @Test
     public void testGetConverter() {
         Converters converters = prepareConverters();
-        Schema basicPartSchema = persistor.get(Schema.class, persistor.resolveSelector("BasicPart", false));
+        Schema basicPartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
         Schema eugeneSchema = new InferredSchema("eugene.dom.components.Part");
         Converter converter = converters.getConverter(eugeneSchema, basicPartSchema);
         assertTrue(converter.canConvert(eugeneSchema));

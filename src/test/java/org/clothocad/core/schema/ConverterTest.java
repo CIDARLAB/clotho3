@@ -7,6 +7,7 @@ package org.clothocad.core.schema;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
 import java.util.Map;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -25,7 +26,7 @@ public class ConverterTest {
     public ConverterTest() {
     }
     public static final Persistor p = new TestUtils().getA(Persistor.class);
-    public static Schema basicPartSchema = p.get(Schema.class, p.resolveSelector("BasicPart", false));
+    public static Schema basicPartSchema = p.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
 
     @Test
     public void testCanConvert() {
