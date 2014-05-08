@@ -14,6 +14,7 @@ angular.module('clotho.commandbar')
 	return {
 		restrict: 'A',
 		replace: true,
+		scope: true,
 		templateUrl: "views/_command/commandbar.html",
 		controller: function($scope, $element, $attrs) {
 
