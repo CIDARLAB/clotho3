@@ -103,6 +103,7 @@ angular.module('clotho.commandbar')
 			ClientAPI.say(submission);
 
 			return Clotho.submit(input).then(function(result){
+				console.log('resetting query');
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});
 			}, function (rejection) {

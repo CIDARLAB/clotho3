@@ -36,6 +36,12 @@ angular.module('clotho.tokenizer')
 					});
 				}
 
+				ngModelCtrl.$render = function () {
+					//todo - update query and tokens internally (e.g. on submit()) when set externally
+					//pending fix to submit because nothign goes through yet
+					console.log('rendering');
+				};
+
 				scope.$watchCollection('tokenCollection.tokens', function () {
 					// if tokens changed, query should reflect it.
 					// token is either just text, or a full sharable
@@ -68,16 +74,6 @@ angular.module('clotho.tokenizer')
 				scope.focusInput = function () {
 					element[0].querySelector('[clotho-autocomplete]').focus();
 				};
-
-				/*
-				//todo - move to controller?
-				scope.submit = function () {
-					// close last token
-					// wrap query and tokens
-					// send to Clotho.submit()
-					//reset query
-				};
-				 */
 			}
 		}
 	});

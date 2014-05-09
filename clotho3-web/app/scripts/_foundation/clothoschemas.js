@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('clotho.foundation')
-  .service('ClothoSchemas', function EditorSchemas(Clotho, $q) {
+  .service('ClothoSchemas', function EditorSchemas(Clotho, Debug, $q) {
+
+		var Debugger = new Debug('clothoSchemas', '#992299');
 
 		var SCHEMA_ALL = 'org.clothocad.core.schema.Schema';
 		var SCHEMA_BUILTIN = 'org.clothocad.core.schema.BuiltInSchema';
@@ -273,10 +275,7 @@ angular.module('clotho.foundation')
 
 		Clotho.query({"schema" : SCHEMA_ALL}, {mute : true})
 		.then(function (resultSchemas) {
-			_.remove(resultSchemas, function (schema) {
-				return !!sharableTypes[schema.name];
-			});
-				retrievedSchemas.resolve(resultSchemas)
+			retrievedSchemas.resolve(resultSchemas);
 		});
 
 		var downloadSchemaDependencies = function (schema) {
@@ -296,7 +295,6 @@ angular.module('clotho.foundation')
 			function getSuperClass (passedSchema) {
 				if (passedSchema.superClass) {
 					promiseChain.then(function () {
-						//testing console.log('retriving ' + passedSchema.superClass);
 						return Clotho.get(passedSchema.superClass)
 							.then(function (retrieved) {
 								//testing console.log('retrieved ' + retrieved.id + ' - ' + retrieved.name, _.pluck(retrieved.fields, 'name'), retrieved);
@@ -304,7 +302,7 @@ angular.module('clotho.foundation')
 								//testing console.log('finalSchema now', _.pluck(finalSchema.fields, 'name'));
 								return getSuperClass(retrieved)
 							}, function (err) {
-								console.log('couldnt get parent');
+								Debugger.warn('couldnt get parent schema ' + passedSchema.superClass);
 								//couldn't get parent schema
 								reachedBottom.reject(finalSchema);
 							});
@@ -317,11 +315,9 @@ angular.module('clotho.foundation')
 			getSuperClass(schema);
 
 			return reachedBottom.promise.then(function() {
-				console.log('promise rejected');
 				return promiseChain;
 			})
 			.then(function (chain) {
-				console.log(finalSchema);
 				return finalSchema;
 			});
 		};

@@ -14,7 +14,7 @@ angular.module('clotho.commandbar')
 	return {
 		restrict: 'A',
 		replace: true,
-		scope: true,
+		scope: {},
 		templateUrl: "views/_command/commandbar.html",
 		controller: function($scope, $element, $attrs) {
 
@@ -27,8 +27,6 @@ angular.module('clotho.commandbar')
 			$scope.submit = CommandBar.submit;
 			$scope.execute = CommandBar.execute;
 
-			//todo - incorporate login, use clotho-modal service
-
 			var showClothoLoginModal = false;
 			$scope.toggleLogin = function (force) {
 				showClothoLoginModal = angular.isDefined(force) ? force : !showClothoLoginModal;
@@ -40,11 +38,6 @@ angular.module('clotho.commandbar')
 				} else {
 					$clothoModal.destroy();
 				}
-			};
-
-			$scope.showClothoLoginModal = false;
-			$scope.showLogin = function() {
-				$scope.showClothoLoginModal = true;
 			};
 		},
 		link : function clothoCommandBarLink(scope, element, attrs, controller) {
@@ -67,10 +60,6 @@ angular.module('clotho.commandbar')
 
 			scope.teamClotho = function() {
 				$location.path('/team');
-			};
-
-			scope.toggleTooltips = function() {
-				console.log("tooltips");
 			};
 		}
 	}

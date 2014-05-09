@@ -53,10 +53,22 @@ angular.module('clotho.tokenizer')
 
 				scope.hasFocus = false;
 
-				var resetMatches = function() {
+				function resetQuery () {
+					scope.query = '';
+				}
+
+				function resetMatches() {
 					scope.autocompletions = [];
 					scope.activeIdx = -1;
-				};
+				}
+
+				function resetActive () {
+					resetQuery();
+					resetMatches();
+					scope.hasFocus = false;
+					scope.tokenCollection.unsetActive();
+					scope.$digest();
+				}
 
 				// get Clotho.autocompletions and update results
 				// checks for intiial quote, will not autocomplete empty
@@ -88,6 +100,7 @@ angular.module('clotho.tokenizer')
 				};
 
 				//we need to propagate user's query so we can higlight matches
+				//this string represents what is in the autocompete input element
 				scope.query = '';
 
 				//Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
@@ -126,7 +139,7 @@ angular.module('clotho.tokenizer')
 					}
 
 					resetMatches();
-					scope.query = '';
+					resetQuery();
 
 					//return focus to the input element if a match was selected via a mouse click event
 					// use timeout to avoid $rootScope:inprog error
@@ -177,15 +190,17 @@ angular.module('clotho.tokenizer')
 					}
 					//down
 					else if (evt.which === 40) {
-						scope.activeIdx = (scope.activeIdx + 1) % scope.autocompletions.length;
-						scope.$digest();
-
+						if (scope.autocompletions.length) {
+							scope.activeIdx = (scope.activeIdx + 1) % scope.autocompletions.length;
+							scope.$digest();
+						}
 					}
 					//up
 					else if (evt.which === 38) {
-						scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.autocompletions.length) - 1;
-						scope.$digest();
-
+						if (scope.autocompletions.length) {
+							scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.autocompletions.length) - 1;
+							scope.$digest();
+						}
 					}
 					//left
 					else if (evt.which === 37) {
@@ -211,11 +226,19 @@ angular.module('clotho.tokenizer')
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
-						if (scope.query.length) {
+						//if highlighted dropdown select it, otherwise we'll submit
+						if (scope.activeIdx >= 0) {
 							scope.$apply(function () {
 								scope.select(scope.activeIdx);
 							});
 						} else {
+							//if there's an open token, close it
+							if (scope.query.length) {
+								scope.$apply(function () {
+									scope.select();
+								});
+							}
+							//submit
 							scope.$apply(function () {
 								scope.submit();
 							});
@@ -248,9 +271,6 @@ angular.module('clotho.tokenizer')
 					});
 				});
 
-				//can't use 'blur' because will hide list even when item clicked
-				//however, don't want to override element.focus() when focused by clicking somewhere in the tokenizerWrap, which will run after element handler due to way events bubble
-
 				//on pasting text, break up into tokens (unless quoted) and reset query
 				element.on('paste', function (evt) {
 					//copied text only available on clipboard, but inconsistent use and access so just do simple workaround and $timeout then process element
@@ -264,24 +284,26 @@ angular.module('clotho.tokenizer')
 							//want to call parent's add token so updates completeQuery as well
 							scope.addToken(token);
 						});
-						scope.query = '';
+						resetQuery();
 						resetMatches();
 					});
 				});
+
+				scope.$on('$locationChangeSuccess', function () {
+					//timeout because triggers $digest()
+					setTimeout(resetActive);
+				});
+
 				function clothoAutocompleteBlurHandler (event) {
 					//only trigger if (1) have focus (2) tokens inactive (3) autocomplete inactive
 					if ( scope.hasFocus && !scope.tokenCollection.isActive() && scope.activeIdx < 0 ) {
 						//timeout so can prevent default somewhere else
-						$timeout(function () {
-							if (!element[0].contains(event.target)) {
-								scope.hasFocus = false;
-								resetMatches();
-								scope.tokenCollection.unsetActive();
-								scope.$digest();
-							}
-						});
+						if (!element[0].contains(event.target)) {
+							$timeout(resetActive);
+						}
 					}
 				}
+
 				$document.bind('click', clothoAutocompleteBlurHandler);
 				scope.$on('$destroy', function() {
 					$document.unbind('click', clothoAutocompleteBlurHandler);
