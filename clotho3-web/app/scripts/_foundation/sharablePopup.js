@@ -56,6 +56,7 @@ angular.module('clotho.clothoDirectives')
 			'sharable-id="sharable_id" '+
 			'sharable-model="passedModel" '+
 			'placement="{{popup_placement}}" '+
+			'reposition="repositionFunction()"' +
 			'>'+
 			'</div>';
 
@@ -63,9 +64,6 @@ angular.module('clotho.clothoDirectives')
 			restrict : 'EA',
 			scope : {
 				passedModel : '=?' + prefix + 'Model'
-			},
-			controller : function ($scope, $element, $attrs) {
-
 			},
 			compile:function (tElement, tAttrs){
 				var popupLinker = $compile(template);
@@ -137,6 +135,13 @@ angular.module('clotho.clothoDirectives')
 						// Now set the calculated positioning.
 						popup.css(popupPosition);
 					}
+
+					//expose on the scope so can be passed to the inner function to trigger when it's content change
+					scope.repositionFunction = function () {
+						$timeout(function () {
+							positionPopup();
+						});
+					};
 
 					function togglePopupBind() {
 						if (!scope.popupOpen) {
@@ -305,7 +310,8 @@ angular.module('clotho.clothoDirectives')
 			scope: {
 				sharableId: '=?',
 				sharableModel : '=?',
-				placement: '@'
+				placement: '@',
+				reposition : '&'
 			},
 			templateUrl: 'views/_foundation/sharableBasicFieldsPopup.html',
 			link : function (scope, element, attrs, nullCtrl) {
@@ -318,32 +324,41 @@ angular.module('clotho.clothoDirectives')
 
 					if (ClothoSchemas.isSchema(model)) {
 						scope.isSchema = true;
-						ClothoSchemas.downloadSchemaDependencies(model).then(function (finalSchema) {
-							scope.schema = finalSchema;
-						});
+						//must have a proper schema to download schema dependencies
+						Clotho.get(model.id)
+						.then(function (fullModel) {
+							ClothoSchemas.downloadSchemaDependencies(fullModel)
+							.then(function (finalSchema) {
+								scope.schema = finalSchema;
+							});
+						})
+
 					}
 				}
 
 				scope.$watch('sharableModel', function ( val, oldval ) {
 					if (!!val) {
 						setSharable(val);
+						//no need to reposition if we pass in the model, since the initial $digest will fill it
 					}
 				});
 
 				scope.$watch('sharableId', function ( val, oldval ) {
 					if (!!val && angular.isEmpty(scope.sharableModel)) {
-						Clotho.get(val).then(function (retrievedSharable) {
+						Clotho.get(val, {mute : true}).then(function (retrievedSharable) {
 							scope.fullSharable = retrievedSharable;
 							setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
+							//if we're getting it remotely, the size probably changed, so let's reposition it.
+							scope.reposition();
 						});
 					}
 				});
 
 				//remove focus from autocomplete input... hard to hide popup.
-				//todo - refocus input (but only when applicable)
 				scope.toggleSchema = function (evt) {
 					evt.preventDefault();
 					scope.showingSchema = !scope.showingSchema;
+					scope.reposition();
 				};
 
 				scope.$on('$destroy', function () {
