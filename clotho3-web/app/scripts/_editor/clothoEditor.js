@@ -44,11 +44,13 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			scope._formActions = formActionsTemplate;
 
 			//DEPRECATED
+			/*
 			scope.removeField = function (name) {
 				Debugger.warn('(DEPRECATED) - removing fields from sharables is not supported');
 				Debugger.log('removing key ' + name);
 				delete scope.sharable[name];
 			};
+			*/
 
 			/* compilation */
 
@@ -116,6 +118,12 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					});
 			};
 
+			/* shared dataTypes */
+
+			ClothoSchemas.retrievedSchemas.then(function (schemas) {
+				scope.clothoSchemas = schemas;
+			});
+
 			/* functionality */
 
 			scope.isValidJson = function (model) {
@@ -178,10 +186,11 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			}, scope);
 
 
-			//watch for internal PubSub Changes for given sharable
+			//watch for internal PubSub Changes, update when input sharable changes
 			var sharableWatcher = angular.noop;
 			scope.$watch('sharable', function (newval, oldval) {
 				//not empty, and either: no old value, is string and different, or object and id is different
+				//todo - clean up watch
 				if (!angular.isEmpty(newval) &&
 					 ( !oldval ||
 						 ( angular.isString(newval) && newval != oldval ) ||
@@ -199,7 +208,8 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					//re-compile the actual editor
 					scope.processInputSharable(newval);
 				}
-			});
+			}, true);
+
 
 			/* init */
 

@@ -6,9 +6,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	
 	//check for updates to editable's id, update URL
 	$scope.$watch('editable.id', function (newval, oldval) {
-		if (!!newval) {
-			$location.search('id', newval);
-		}
+		$location.search('id', newval || null);
 	});
 
 	//check for updates to URL - this will only be triggered when URL is not set by above action

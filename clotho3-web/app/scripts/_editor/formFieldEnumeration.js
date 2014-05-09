@@ -93,7 +93,6 @@ angular.module('clotho.editor')
 			restrict: 'A',
 			scope: {
 				fields: '=?',
-				schema: '=?',
 				sharable: '=?',
 				stripBasicFields : '@?'
 			},

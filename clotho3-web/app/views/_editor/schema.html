@@ -66,7 +66,7 @@
             </div>
 
             <div class="list-group">
-                <div class="list-group-item clearfix" ng-repeat="field in sharable.fields">
+                <div class="list-group-item clearfix" ng-repeat="field in sharable.fields track by $index">
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -111,7 +111,7 @@
 
                     <div class="row" ng-show="!!field.constraints">
                         <div class="col-sm-12">
-                            <div ng-repeat="constraint in field.constraints" class="row">
+                            <div ng-repeat="constraint in field.constraints track by $index" class="row">
                                 <div class="col-sm-4">
                                     <select ng-model="constraint.type" class="form-control" ng-options="t.value as t.name for t in constraintTypes"></select>
                                 </div>

@@ -123,11 +123,6 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 				field.constraints = null;
 			}
 		});
-
-		console.log($scope.sharable);
-
-		//inherited
-		//verify
 		$scope.$parent.save();
 	};
 
