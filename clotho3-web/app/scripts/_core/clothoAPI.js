@@ -68,7 +68,7 @@ function generateClothoAPI() {
 	 * @param data {*} API Data
 	 * @param func {Function} Callback Function, run when data received from server
 	 * @param options {Object} API Options
-	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout or if (data === undefined || data === null)
+	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout or if data === undefined
 	 */
 	fn.emitSubCallback = function (channel, data, func, options) {
 		var deferred = $q.defer(),
@@ -86,7 +86,7 @@ function generateClothoAPI() {
 		PubSub.once(channel + ':' + requestId, function (data) {
 			$timeout.cancel(timeoutPromise);
 			//if null or undefined (not valid in JSON), reject
-			(angular.isUndefined(data) || data === null) ? deferred.reject(null) : deferred.resolve(data);
+			(angular.isUndefined(data)) ? deferred.reject(null) : deferred.resolve(data);
 			func(data);
 		}, '$clotho');
 
