@@ -5,27 +5,26 @@ import sys
 class IncompleteReadError(Exception):
     pass
 
+class ClothoError(Exception):
+    pass
+
+class ClothoMethod(object):
+    def __init__(self, name):
+        self._name = name
+
+    def __call__(self, *args):
+        send_val({"type": "api", "name": self._name, "args": args})
+        reply_value = read_val()
+        reply_type = reply_value["type"]
+        if reply_type == "api":
+            return reply_value["return"]
+        elif reply_type == "api_error":
+            raise ClothoError(reply_value["message"])
+        raise RuntimeError("bad API reply")
+
 class Clotho(object):
-    @staticmethod
-    def get(id):
-        send_val({"type": "api", "name": "get", "args": [id]})
-        api_return = read_val()
-        assert api_return["type"] == "api"
-        return api_return["return"]
-
-    @staticmethod
-    def set(val):
-        send_val({"type": "api", "name": "set", "args": [val]})
-        api_return = read_val()
-        assert api_return["type"] == "api"
-        return api_return["return"]
-
-    @staticmethod
-    def run(name, args):
-        send_val({"type": "api", "name": "run", "args": [name, args]})
-        api_return = read_val()
-        assert api_return["type"] == "api"
-        return api_return["return"]
+    def __getattr__(self, name):
+        return ClothoMethod(name)
 
 def read_val():
     buf = bytearray()
@@ -49,7 +48,7 @@ def main():
     assert defcall_obj["type"] == "func"
 
     # execute user code body
-    scope_dict = {"clotho": Clotho()}
+    scope_dict = {"clotho": Clotho(), "ClothoError": ClothoError}
     exec(defcall_obj["code"], scope_dict)
 
     # execute user function, which is always called "run"

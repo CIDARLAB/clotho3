@@ -47,19 +47,19 @@ class JSONStreamReader implements Runnable {
 
     private boolean
     loop() {
-        final int c;
+        final int b;
         try {
-            c = pipe.read();
+            b = pipe.read();
         } catch (IOException e) {
             return false;
         }
-        if (c < 0)
+        if (b < 0)
             return false;
-        if (c == 0) {
-            parsedValues.push(JSONUtil.fromBytes(buf.getArray()));
+        if (b == 0) {
+            parsedValues.push(JSONUtil.decodeUTF8(buf.getArray()));
             buf.clear();
         } else {
-            buf.add((byte) c);
+            buf.add((byte) b);
         }
         return true;
     }

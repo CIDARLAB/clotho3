@@ -9,7 +9,7 @@ import java.io.IOException;
 class JSONUtil {
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    static Object fromBytes(final byte[] bytes) {
+    static Object decodeUTF8(final byte[] bytes) {
         try {
             return mapper.readValue(new String(bytes, UTF_8), Object.class);
         } catch (IOException e) {
@@ -17,7 +17,7 @@ class JSONUtil {
         }
     }
 
-    static byte[] toBytes(final Object value) {
+    static byte[] encodeUTF8(final Object value) {
         try {
             return mapper.writeValueAsBytes(value);
         } catch (JsonProcessingException e) {

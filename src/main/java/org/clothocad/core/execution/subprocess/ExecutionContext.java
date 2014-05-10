@@ -59,16 +59,20 @@ class ExecutionContext {
 
     private void
     handleAPICall(final Map in_value) {
+        final Object return_value;
         final Map<String, Object> out_value = new HashMap<>();
+        final String in_value_name = (String) in_value.get("name");
+        final List in_value_args = (List) in_value.get("args");
+        try {
+            return_value = APIRelayer.relay(api, in_value_name, in_value_args);
+        } catch (final Exception e) {
+            out_value.put("type", "api_error");
+            out_value.put("message", e.getMessage());
+            sendValue(out_value);
+            return;
+        }
         out_value.put("type", "api");
-        out_value.put(
-            "return",
-            APIRelayer.relay(
-                api,
-                (String) in_value.get("name"),
-                (List) in_value.get("args")
-            )
-        );
+        out_value.put("return", return_value);
         sendValue(out_value);
     }
 
@@ -83,7 +87,7 @@ class ExecutionContext {
 
     private void
     sendValue(final Object value) {
-        final byte[] bytes = JSONUtil.toBytes(value);
+        final byte[] bytes = JSONUtil.encodeUTF8(value);
         try {
             output.write(bytes);
             output.write(0);

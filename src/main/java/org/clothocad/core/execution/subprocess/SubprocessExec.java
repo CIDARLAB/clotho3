@@ -15,11 +15,13 @@ import org.clothocad.core.util.CloseableThread;
  *
  * The types of messages that can be sent to the subprocess are:
  *   function_defcall ("define and call"):
- *     {"type": "func", "code": <string>,
- *      "name": <string>, "args": <array>}
+ *     {"type": "func", "code": <string>, "args": <array>}
  *
- *   api_return: (send only)
+ *   api_return:
  *     {"type": "api", "return": <value>}
+ *
+ *   api_error:
+ *     {"type": "api_error", "message": <string>}
  *
  * The messages that can be received from the subprocess are:
  *   function_return:
@@ -31,29 +33,30 @@ import org.clothocad.core.util.CloseableThread;
  * The message protocol and threads of execution are
  * summarized in the following diagram:
  *
- *  Host             Subprocess
+ *  Host                    Subprocess
  *main thread
  *  ...
- *   |                 [born]
- *   |                   |
- *   |                   X (blocks)
- *   | function_defcall
- *   | ----------------> \ (resumes)
- *   X                   |
- *                       |
- *                       |
- *         api_call      |
- *   / <---------------- |
- *   |                   X
- *   |     api_return
- *   | ----------------> \
- *   X                   |
- *                       |
- *  ...                 ...
- *                       |
- *      function_return  |
- *   / <---------------- |
- *   |                 [dies]
+ *   |                       [is born]
+ *   |                          |
+ *   |                          X (blocks)
+ *   |    function_defcall
+ *   | -----------------------> \ (resumes)
+ *   X                          |
+ *                              |
+ *  ...                        ...
+ *                              |
+ *            api_call          |
+ *   / <----------------------- |
+ *   |                          X
+ *   | api_return or api_error
+ *   | -----------------------> \
+ *   X                          |
+ *                              |
+ *  ...                        ...
+ *                              |
+ *         function_return      |
+ *   / <----------------------- |
+ *   |                        [dies]
  *  ...
  *
  * The host creates helper threads for reading from the standard output and
