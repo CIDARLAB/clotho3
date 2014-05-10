@@ -12,8 +12,8 @@
  * onComplete {function}
  */
 
-angular.module('clotho.trails')
-	.directive('youtube', function (Trails, Youtube, $compile, $timeout, $http) {
+angular.module('clotho.youtube')
+	.directive('youtube', function (Youtube, $compile, $timeout, $http) {
 
 		return {
 			restrict: 'EA',

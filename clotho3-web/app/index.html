@@ -173,6 +173,7 @@ function: Angular-UI project components
 dependencies: none
 -->
 <!--todo - use development version and build selected components with grunt-->
+<!-- note - need to copy over /template/ from UI as well as scripts we want -->
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <!-- endbuild -->
 
@@ -182,9 +183,8 @@ name: clotho.interface
 function: Clotho-Angular Interface components
 dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angularFileUpload for file uploads
 -->
-<!--future - refactor ui-bootstrap dependencies here-->
 <script src="scripts/_interface/_kickoff.js"></script>
-<!-- modes are loaded separately by service codemirrorLoader -->
+<!-- note - modes are loaded separately by service codemirrorLoader -->
 <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script> <!-- ui.codemirror module -->
 <script src="bower_components/ng-file-upload/angular-file-upload.js"></script> <!-- angularFileUpload module -->
 <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script> <!-- hotkeys set up in /interaction/ -->
@@ -206,6 +206,7 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/filters/stringEnds.js"></script>
 <script src="scripts/_interface/filters/unique.js"></script>
 <script src="scripts/_interface/html5/contentEditable.js"></script>
+<script src="scripts/_interface/html5/code-file-drop.js"></script>
 <script src="scripts/_interface/images/backgroundImage.js"></script>
 <!--todo - remove commandBar dependence, move into separate module e.g. webapp-->
 <script src="scripts/_interface/interaction/focus.js"></script>
@@ -226,10 +227,15 @@ function: Trails components
 dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/_trails/_kickoff.js"></script>
-<script src="scripts/_trails/trails.js"></script>
-<script src="scripts/_trails/trailQuiz.js"></script>
+
 <script src="scripts/_trails/youtube.js"></script>
 <script src="scripts/_trails/youtubeService.js"></script>
+
+<script src="scripts/_trails/quizQuestionService.js"></script>
+<script src="scripts/_trails/quizQuestion.js"></script>
+
+<script src="scripts/_trails/trails.js"></script>
+<script src="scripts/_trails/trailQuiz.js"></script>
 <script src="scripts/_trails/trailPage.js"></script>
 <script src="scripts/_trails/trailPageComponent.js"></script>
 <script src="scripts/_trails/ui/trailContents.js"></script>
@@ -249,7 +255,6 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_editor/clothoEditor.js"></script>
 <script src="scripts/_editor/codemirrorLoader.js"></script>
 <script src="scripts/_editor/form-field.js"></script>
-<script src="scripts/_interface/html5/code-file-drop.js"></script>
 <script src="scripts/_editor/formFieldEnumeration.js"></script>
 <script src="scripts/_editor/formFieldInput.js"></script>
 <script src="scripts/_editor/jsonEdit.js"></script>

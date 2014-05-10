@@ -1,4 +1,12 @@
-angular.module('clotho.trails')
+angular.module('clotho.quiz')
+/**
+ * @ngdoc directive
+ * @name trail-quiz
+ *
+ * @attr ngModel
+ * @attr grade-callback {Function}
+ * @attr advance {Function}
+ */
 .directive('trailQuiz', function($http, $templateCache, $compile, Clotho, $interpolate, $q, $sce) {
 
 	//temporary, to get out of API
@@ -18,21 +26,13 @@ angular.module('clotho.trails')
 		return Clotho.run('gradeQuiz', [questionValue, input, answerGen]);
 	};
 
-	var gradeQuestion = function (questionId, input) {
-		//todo - migrate to this function
-	};
-
-	var getFeedback = function (questionId, input) {
-		//todo
-	};
-
 	return {
 		restrict: "EA",
 		require: 'ngModel',
 		scope: {
 			quiz: '=ngModel',
-			gradeCallback : '=?', //todo - migrate to function
-			advance : '&?'
+			gradeCallback : '&?',
+			advance : '&?' //todo - events?
 		},
 
 		compile: function compile(tElement, tAttrs, transclude) {
@@ -75,15 +75,14 @@ angular.module('clotho.trails')
 					};
 
 					scope.submitQuestion = function(quiz) {
-						gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (data) {
-							console.log('gradeQuiz result: ' + data);
+						gradeQuiz(quiz.questionValue, quiz.answer, quiz.answerGenerator).then(function (result) {
+							console.log('gradeQuiz result: ' + result);
 							scope.quiz.submitted = true;
 							scope.quiz.response = {};
-							scope.quiz.response.result = data;
-							//console.log(scope.gradeCallback);
+							scope.quiz.response.result = result;
 
-							if (angular.isDefined(scope.gradeCallback)) {
-								scope.gradeCallback(data);
+							if (angular.isDefined(attrs.gradeCallback)) {
+								scope.gradeCallback({$result : result});
 							}
 						});
 					};

@@ -1,4 +1,4 @@
-angular.module('clotho.trails')
+angular.module('clotho.youtube')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
 		var PUBLIC_KEY = 'AIzaSyBbk4x1xscVvwBaT0Liu8dd-G7qoDeiD30';
