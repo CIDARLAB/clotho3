@@ -26,6 +26,7 @@ package org.clothocad.core.communication;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -34,9 +35,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
@@ -53,17 +54,17 @@ import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.execution.subprocess.SubprocessExec;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.execution.ScriptAPI;
+import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
-import static org.clothocad.core.ReservedFieldNames.*;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -623,13 +624,16 @@ public class ServerSideAPI {
             funcJSON,
             args,
             new SubprocessExec.EventHandler() {
-                @Override public void onFail(final String standardError) {
-                    say(standardError, Severity.FAILURE);
+                @Override public void onFail(final byte[] standardError) {
+                    say(new String(standardError, StandardCharsets.UTF_8),
+                        Severity.FAILURE);
                 }
 
-                @Override public void onSuccess(final String standardError) {
-                    if (!standardError.isEmpty())
-                        say(standardError, Severity.NORMAL);
+                @Override public void onSuccess(final byte[] standardError) {
+                    if (standardError.length == 0)
+                        return;
+                    say(new String(standardError, StandardCharsets.UTF_8),
+                        Severity.NORMAL);
                 }
             }
         );
@@ -651,7 +655,7 @@ public class ServerSideAPI {
             return null;
         }
 
-        if (data.containsKey(ID)) {
+        if (data.containsKey(ReservedFieldNames.ID)) {
             //XXX:(ugh ugh) end-run if *Function
             Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id")));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
@@ -956,7 +960,11 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
      */
     public static final String replaceWidgetId(String script, String widgetIdPrefix) {
         try {
-            return XMLParser.addPrefixToTagAttribute(script, ID, widgetIdPrefix);
+            return XMLParser.addPrefixToTagAttribute(
+                script,
+                ReservedFieldNames.ID,
+                widgetIdPrefix
+            );
         } catch (Exception ex) {
             log.error("", ex);
         }

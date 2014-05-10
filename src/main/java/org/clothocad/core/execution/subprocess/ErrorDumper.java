@@ -2,31 +2,32 @@ package org.clothocad.core.execution.subprocess;
 
 import java.io.InputStream;
 import java.io.IOException;
+import org.clothocad.core.util.ByteArray;
 
 class ErrorDumper implements Runnable {
     private final InputStream errorStream;
-    private final StringBuffer buffer = new StringBuffer(0);
+    private final ByteArray buffer = new ByteArray();
 
     ErrorDumper(final InputStream errorStream) {
         this.errorStream = errorStream;
     }
 
-    String getString() {
-        return buffer.toString();
+    byte[] getBytes() {
+        return buffer.getArray();
     }
 
     @Override public void
     run() {
         while (!Thread.interrupted()) {
-            final int c;
+            final int b;
             try {
-                c = errorStream.read();
+                b = errorStream.read();
             } catch (IOException e) {
                 break;
             }
-            if (c < 0)
+            if (b < 0)
                 break;
-            buffer.append((char) c);
+            buffer.add((byte) b);
         }
     }
 }

@@ -9,8 +9,9 @@ import org.clothocad.core.util.CloseableThread;
 /** Executes function in an external language interpreter subprocess
  *
  * Communication with the subprocess is done over pipes connected to
- * the standard input/output of the subprocess. Messages are encoded
- * as null-byte terminated, UTF-8 JSON values.
+ * the standard input/output/error of the subprocess. Messages over standard
+ * input/output are UTF-8 encoded, null-byte terminated JSON values. Standard
+ * error is captured in a byte array and is not interpreted.
  *
  * The types of messages that can be sent to the subprocess are:
  *   function_defcall ("define and call"):
@@ -91,17 +92,17 @@ public class SubprocessExec {
                         args
                     ).start();
                 }
-            } catch (Exception e) {
-                eventHandler.onFail(errorDumper.getString());
+            } catch (final Exception e) {
+                eventHandler.onFail(errorDumper.getBytes());
                 throw e;
             }
-            eventHandler.onSuccess(errorDumper.getString());
+            eventHandler.onSuccess(errorDumper.getBytes());
             return returnValue;
         }
     }
 
     public static interface EventHandler {
-        void onFail(final String standardError);
-        void onSuccess(final String standardError);
+        void onFail(final byte[] standardError);
+        void onSuccess(final byte[] standardError);
     }
 }
