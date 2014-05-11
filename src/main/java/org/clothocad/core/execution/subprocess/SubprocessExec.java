@@ -73,41 +73,39 @@ public class SubprocessExec {
         try (final CloseableProcess proc =
              ProcessProvider.newProcess((String) sourceJSON.get("language"))
         ) {
-            final JSONStreamReader reader = new JSONStreamReader(
-                proc.getProcess().getInputStream()
-            );
+            final Object returnValue;
             final ErrorDumper errorDumper =
                 new ErrorDumper(proc.getProcess().getErrorStream());
-            final Object returnValue;
             try {
-                try (final CloseableThread readerThread =
-                     new CloseableThread(reader);
-                     final CloseableThread errorDumperThread =
-                     new CloseableThread(errorDumper)
-                ) {
-                    try {
-                        readerThread.getThread().start();
-                        errorDumperThread.getThread().start();
-                        returnValue = new ExecutionContext(
-                            api,
-                            reader,
-                            proc.getProcess().getOutputStream(),
-                            (String) sourceJSON.get("code"),
-                            args
-                        ).start();
-                    } finally {
-                        /* ensures the two helper threads are unblocked
-                         * from their read() calls
-                         */
-                        proc.close();
-                    }
-                }
+                returnValue = initThreadsAndRun(
+                    api,
+                    new JSONStreamReader(proc.getProcess().getInputStream()),
+                    new JSONStreamWriter(proc.getProcess().getOutputStream()),
+                    errorDumper,
+                    (String) sourceJSON.get("code"),
+                    args
+                );
             } catch (final Exception e) {
                 eventHandler.onFail(errorDumper.getBytes());
                 throw e;
             }
             eventHandler.onSuccess(errorDumper.getBytes());
             return returnValue;
+        }
+    }
+
+    private static Object
+    initThreadsAndRun(final ServerSideAPI api,
+                      final JSONStreamReader r,
+                      final JSONStreamWriter w,
+                      final ErrorDumper ed,
+                      final String code,
+                      final List<Object> args) {
+        try (final CloseableThread rThread = new CloseableThread(r);
+             final CloseableThread edThread = new CloseableThread(ed)) {
+            rThread.getThread().start();
+            edThread.getThread().start();
+            return new ExecutionContext(api, r, w, code, args).start();
         }
     }
 

@@ -10,18 +10,18 @@ import org.clothocad.core.communication.ServerSideAPI;
 class ExecutionContext {
     private final ServerSideAPI api;
     private final JSONStreamReader reader;
-    private final OutputStream output;
+    private final JSONStreamWriter writer;
     private final String code;
     private final List<Object> args;
 
     ExecutionContext(final ServerSideAPI api,
                      final JSONStreamReader reader,
-                     final OutputStream output,
+                     final JSONStreamWriter writer,
                      final String code,
                      final List<Object> args) {
         this.api = api;
         this.reader = reader;
-        this.output = output;
+        this.writer = writer;
         this.code = code;
         this.args = args;
     }
@@ -56,7 +56,7 @@ class ExecutionContext {
         value.put("type", "func");
         value.put("code", code);
         value.put("args", args);
-        sendValue(value);
+        writer.sendValue(value);
     }
 
     private Object
@@ -83,18 +83,6 @@ class ExecutionContext {
                          (String) value.get("name"),
                          (List) value.get("args"),
                          cb);
-        sendValue(reply);
-    }
-
-    private void
-    sendValue(final Object value) {
-        final byte[] bytes = JSONUtil.encodeUTF8(value);
-        try {
-            output.write(bytes);
-            output.write(0);
-            output.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        writer.sendValue(reply);
     }
 }

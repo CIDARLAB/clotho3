@@ -2,6 +2,7 @@ package org.clothocad.core.util;
 
 import java.util.Arrays;
 
+/** Thread-safe, dynamically resizable array of bytes */
 public class ByteArray {
     private byte[] array;
     private int size;
@@ -11,17 +12,17 @@ public class ByteArray {
         size = 0;
     }
 
-    public byte[] getArray() {
+    synchronized public byte[] getArray() {
         return Arrays.copyOf(array, size);
     }
 
-    public void clear() {
+    synchronized public void clear() {
         if (16 <= size && 2 * size < array.length)
             array = new byte[size];
         size = 0;
     }
 
-    public void add(final byte b) {
+    synchronized public void add(final byte b) {
         ensureSize();
         array[size] = b;
         size++;

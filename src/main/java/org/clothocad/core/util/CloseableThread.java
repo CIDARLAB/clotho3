@@ -4,10 +4,12 @@ import java.io.InputStream;
 
 public class CloseableThread implements AutoCloseable {
     private final Thread thread;
+    private final AutoCloseable runner;
 
     public
-    CloseableThread(final Runnable runnable) {
-        thread = new Thread(runnable);
+    CloseableThread(final CloseableRunnable r) {
+        runner = r;
+        thread = new Thread(r);
     }
 
     public Thread
@@ -15,6 +17,10 @@ public class CloseableThread implements AutoCloseable {
 
     @Override public void
     close() {
+        try {
+            runner.close();
+        } catch (Exception e) {
+        }
         thread.interrupt();
         try {
             thread.join();

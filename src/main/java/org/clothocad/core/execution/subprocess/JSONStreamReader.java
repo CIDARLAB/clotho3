@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import org.clothocad.core.util.ByteArray;
 import org.clothocad.core.util.CloseableQueue;
+import org.clothocad.core.util.CloseableRunnable;
 
 /** Parses InputStream as JSON values
  *
@@ -16,10 +17,10 @@ import org.clothocad.core.util.CloseableQueue;
  *
  * Intended for execution on a separate thread.
  */
-class JSONStreamReader implements Runnable {
+class JSONStreamReader implements CloseableRunnable {
     private final InputStream pipe;
     private final CloseableQueue parsedValues = new CloseableQueue();
-    private final ByteArray buf = new ByteArray();
+    private final ByteArray buffer = new ByteArray();
 
     JSONStreamReader(final InputStream pipe) {
         this.pipe = pipe;
@@ -45,6 +46,14 @@ class JSONStreamReader implements Runnable {
         }
     }
 
+    @Override public void
+    close() {
+        try {
+            pipe.close();
+        } catch (IOException e) {
+        }
+    }
+
     private boolean
     loop() {
         final int b;
@@ -56,10 +65,10 @@ class JSONStreamReader implements Runnable {
         if (b < 0)
             return false;
         if (b == 0) {
-            parsedValues.push(JSONUtil.decodeUTF8(buf.getArray()));
-            buf.clear();
+            parsedValues.push(JSONUtil.decodeUTF8(buffer.getArray()));
+            buffer.clear();
         } else {
-            buf.add((byte) b);
+            buffer.add((byte) b);
         }
         return true;
     }
