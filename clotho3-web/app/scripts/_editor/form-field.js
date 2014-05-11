@@ -15,18 +15,17 @@ angular.module('clotho.editor')
 
  Produces (some removeField classes stripped):
 
- <div ng-form="" class="form-group" name="Long Input" help="Enter a short biography about yourself">
- <label for="exampleTextarea">Long Input</label>
- <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography" class="form-control"></textarea>
- <button ng-click="removeField($index)"></button>
- <p class="help-block">Enter a short biography about yourself</p>
- </div>
+ <ng-form class="form-group" name="Long Input" help="Enter a short biography about yourself">
+	 <label for="exampleTextarea">Long Input</label>
+	 <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography" class="form-control"></textarea>
+	 <button ng-click="removeField($index)"></button>
+	 <p class="help-block">Enter a short biography about yourself</p>
+ </ng-form>
 
  */
 	.directive('formField', function ($parse) {
 
-		var template = '<div class="form-group" ng-form ng-transclude>' +
-			'</div>';
+		var template = '<ng-form class="form-group" ng-transclude></ng-form>';
 
 		return {
 			restrict: 'E',
