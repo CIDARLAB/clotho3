@@ -93,7 +93,7 @@ angular.module('clotho.editor')
 		}
 
 		Clotho.run(data.id, data.args).then(function (result){
-			$scope.testResults[index] = (result == $scope.sharable.tests[index].output.value);
+			$scope.testResults[index] = angular.equals(result, $scope.sharable.tests[index].output.value);
 		});
 	};
 
