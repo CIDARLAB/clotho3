@@ -7,7 +7,7 @@
 
  //todo - remove next and prev from needed attrs
  */
-angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys, Trails) {
+angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys, Trails, $clothoModal) {
 
 	return {
 		restrict: 'A',
@@ -22,6 +22,14 @@ angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $
 			scope.helpModalOpen = false;
 			function toggleHelpModal() {
 				scope.helpModalOpen = !scope.helpModalOpen;
+				if (scope.helpModalOpen) {
+					$clothoModal.create({
+						title : 'Trail Help',
+						content : 'page.help'
+					});
+				} else {
+					$clothoModal.destroy();
+				}
 			}
 
 			scope.$watch('page', function (newPage) {
