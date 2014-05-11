@@ -48,10 +48,11 @@ angular.module('clotho.editor')
 	});
 
 	$scope.querySchemaWrapper = function(schemaType, value) {
-		return Clotho.query({schema: schemaType, name : value}, {maxResults : 10})
-			.then(function (results) {
-				return results;
+		return Clotho.autocomplete(value).then(function (results) {
+			return _.filter(results, function (result) {
+				return result.schema == schemaType;
 			});
+		});
 	};
 
 	/* args + deps */
@@ -92,8 +93,10 @@ angular.module('clotho.editor')
 			data.args = $scope.sharable.tests[index].args;
 		}
 
-		Clotho.run(data.id, data.args).then(function (result){
+		Clotho.run(data.id, data.args).then(function onFunctionTestSuccess (result){
 			$scope.testResults[index] = angular.equals(result, $scope.sharable.tests[index].output.value);
+		}, function onFunctionTestError () {
+			//todo
 		});
 	};
 
