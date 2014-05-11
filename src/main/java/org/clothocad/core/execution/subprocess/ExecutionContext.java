@@ -50,6 +50,15 @@ class ExecutionContext {
         }
     }
 
+    private void
+    sendFunctionDefcall() {
+        final Map<String, Object> value = new HashMap<>();
+        value.put("type", "func");
+        value.put("code", code);
+        value.put("args", args);
+        sendValue(value);
+    }
+
     private Object
     handleFunctionReturn(final Map value) {
         if (!value.containsKey("return"))
@@ -58,31 +67,23 @@ class ExecutionContext {
     }
 
     private void
-    handleAPICall(final Map in_value) {
-        final Object return_value;
-        final Map<String, Object> out_value = new HashMap<>();
-        final String in_value_name = (String) in_value.get("name");
-        final List in_value_args = (List) in_value.get("args");
-        try {
-            return_value = APIRelayer.relay(api, in_value_name, in_value_args);
-        } catch (final Exception e) {
-            out_value.put("type", "api_error");
-            out_value.put("message", e.getMessage());
-            sendValue(out_value);
-            return;
-        }
-        out_value.put("type", "api");
-        out_value.put("return", return_value);
-        sendValue(out_value);
-    }
-
-    private void
-    sendFunctionDefcall() {
-        final Map<String, Object> val = new HashMap<>();
-        val.put("type", "func");
-        val.put("code", code);
-        val.put("args", args);
-        sendValue(val);
+    handleAPICall(final Map value) {
+        final Map<String, Object> reply = new HashMap<>();
+        final APIRelayer.Callback cb = new APIRelayer.Callback() {
+            @Override public void onSuccess(final Object ret) {
+                reply.put("type", "api");
+                reply.put("return", ret);
+            }
+            @Override public void onFail(final String message) {
+                reply.put("type", "api_error");
+                reply.put("message", message);
+            }
+        };
+        APIRelayer.relay(api,
+                         (String) value.get("name"),
+                         (List) value.get("args"),
+                         cb);
+        sendValue(reply);
     }
 
     private void

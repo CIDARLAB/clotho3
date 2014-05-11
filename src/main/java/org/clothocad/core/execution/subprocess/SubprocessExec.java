@@ -85,15 +85,22 @@ public class SubprocessExec {
                      final CloseableThread errorDumperThread =
                      new CloseableThread(errorDumper)
                 ) {
-                    readerThread.getThread().start();
-                    errorDumperThread.getThread().start();
-                    returnValue = new ExecutionContext(
-                        api,
-                        reader,
-                        proc.getProcess().getOutputStream(),
-                        (String) sourceJSON.get("code"),
-                        args
-                    ).start();
+                    try {
+                        readerThread.getThread().start();
+                        errorDumperThread.getThread().start();
+                        returnValue = new ExecutionContext(
+                            api,
+                            reader,
+                            proc.getProcess().getOutputStream(),
+                            (String) sourceJSON.get("code"),
+                            args
+                        ).start();
+                    } finally {
+                        /* ensures the two helper threads are unblocked
+                         * from their read() calls
+                         */
+                        proc.close();
+                    }
                 }
             } catch (final Exception e) {
                 eventHandler.onFail(errorDumper.getBytes());
