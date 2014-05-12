@@ -112,9 +112,10 @@ angular.module('clotho.editor')
 
 	//todo - re-parse non-simple tests - interpolate strings to objects so run correctly
 
-	//overwrite save to reset tests
+	//overwrite save to reset tests and set code pristine
 	$scope.save = function() {
 		$scope.resetTests();
+		$scope.Code.$setPristine();
 		$scope.$parent.save()
 	};
 

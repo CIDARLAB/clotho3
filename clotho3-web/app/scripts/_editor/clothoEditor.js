@@ -3,12 +3,15 @@
 /**
  * @name clotho-editor
  *
- * @param sharable {string|object} If String, ID of sharable. Otherwise the sharable directly.
+ * @param sharable {object} The sharable to be edited. Preferred way of passing in data.
+ * @param sharableId {string} ID of sharable to edit. will be retrieved via Clotho.get(), and overwrite sharable passed (if id is passed)
  * @param editMode {*} pass false, null, undefined to start in view mode. Pass anything that passes !!var to start in edit mode
  *
- *
+ * @description
+ * Will watch for changes to sharable.id
  */
-angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $compile, $parse, $http, $templateCache, $filter, $q, Debug, ClothoSchemas) {
+angular.module('clotho.editor')
+.directive('clothoEditor', function (Clotho, $compile, $parse, $http, $templateCache, $filter, $q, Debug, ClothoSchemas) {
 
 	var Debugger = new Debug('Editor', '#dd44dd');
 
@@ -19,11 +22,17 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 		restrict: 'A',
 		require: '^form',
 		scope: {
-			sharable: '=',
+			sharable: '=?',
+			sharableId : '=?',
 			editMode: '=?',
 			formHorizontal : '=?'
 		},
 		link: function postLink(scope, element, attrs, formCtrl) {
+
+			if (angular.isUndefined(attrs.sharable) && angular.isUndefined(attrs.sharableId)) {
+				Debugger.warn('editor not compiling - did not pass either sharable or sharable-id');
+				return;
+			}
 
 			/* config */
 
@@ -52,77 +61,51 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 			};
 			*/
 
-			/* compilation */
-
-			var retrievedModel;
-
-			//process input sharable to see if object, or id string
-			scope.processInputSharable = function (sharable) {
-
-				if (angular.isEmpty(sharable)) {
-					Debugger.warn('sharable is undefined / empty');
-					scope.getPartialAndCompile();
-					return;
-				}
-
-				//will store retrieved value as promise
-				var getObj;
-
-				//reset what existed before
-				scope.sharable = {}; //can be reset because re-assign in compilation
-				retrievedModel = null;
-
-				//if its a string, it's an ID so get it, otherwise just return a wrapper promise for the object
-				if (angular.isObject(sharable) && !angular.isEmpty(sharable)) {
-					Debugger.log('sharable object passed');
-					getObj = $q.when( sharable );
-				} else if (angular.isString(sharable)) {
-					//if its a string, call clotho.get()
-					Debugger.log('passed a string, assuming a valid ID: ' + sharable);
-					getObj = Clotho.get(sharable);
-				} else {
-					Debugger.warn('sharable must be an object or a string, you passed: ', sharable);
-					scope.getPartialAndCompile(null);
-					return;
-				}
-
-				getObj.then(function (result) {
-					retrievedModel = result;
-					scope.getPartialAndCompile(ClothoSchemas.determineInstanceType(result));
-				});
-			};
-
-			//gets partial for type of sharable and compiles editor HTML
-			//note - assumes scope already has sharable bound for compilation
-			scope.getPartialAndCompile = function (type) {
-				scope.showJsonEditor = false;
-
-				if (angular.isEmpty(type)) {
-					element.html('<p class="text-center">Please select an Object</p>');
-					return;
-				}
-
-				//todo - handle instance-specific templates
-
-				$http.get(ClothoSchemas.sharableTypes[type].editor_template_url, {cache: $templateCache})
-					.success(function (data) {
-						scope.sharable = retrievedModel;
-						scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
-
-						var el = $compile(data)(scope);
-						element.html(el);
-					})
-					.error(function (data) {
-						Debugger.error('Could not retrieve template for type ' + type);
-						element.html('<p class="text-center">Please select an Object</p>');
-					});
-			};
-
 			/* shared dataTypes */
 
 			ClothoSchemas.retrievedSchemas.then(function (schemas) {
 				scope.clothoSchemas = schemas;
 			});
+
+			/* compilation */
+
+			function createEmptyEditor () {
+				element.html('<p class="text-center">Please select an Object</p>');
+			}
+
+			function createEditorElement (sharable) {
+
+				if (angular.isUndefined(sharable) || !angular.isObject(sharable) || angular.isEmpty(sharable)) {
+					Debugger.warn('editor must be created from object, was given: ', sharable);
+					createEmptyEditor();
+					return;
+				}
+
+				var type = ClothoSchemas.determineInstanceType(sharable),
+					templateUrl;
+
+				// if it's an instance, check for a more specific template
+				if (type == 'Instance') {
+					//todo - handle instance-specific templates
+					templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
+				} else {
+					templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
+				}
+
+				//gets partial for type of sharable and compiles editor HTML
+				$http.get(templateUrl, {cache: $templateCache})
+				.success(function (data) {
+					scope.showJsonEditor = false;
+					scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
+
+					var el = $compile(data)(scope);
+					element.html(el);
+				})
+				.error(function (data) {
+					Debugger.error('Could not retrieve template: ' + templateUrl);
+					element.html('<p class="text-center">Please select an Object</p>');
+				});
+			}
 
 			/* functionality */
 
@@ -157,9 +140,7 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 					Clotho.alert('Your JSON is invalid... please fix it');
 				} else {
 					Clotho.set(scope.sharable).then(function (id) {
-						if (!scope.sharable.id) {
-							scope.sharable.id = id;
-						}
+						scope.sharable.id = id;
 					});
 					scope.editMode = false;
 				}
@@ -174,47 +155,57 @@ angular.module('clotho.editor').directive('clothoEditor', function (Clotho, $com
 				Clotho.destroy(scope.sharable.id).then(function () {
 					scope.editMode = false;
 					scope.sharable = null;
-					scope.processInputSharable(null);
+					createEmptyEditor();
 				});
 			};
 
-			/* watchers */
+			/*** watchers ***
+
+			 When the sharable changes, we may not need to do anything beyond updating the models.
+			 When the id changes, set up a new PubSub watch
+			 When the schema changes, the editor needs to recompile. It is assumed the schema is selected via a dropdown, or it will be recompiled on each keystroke.
+
+			 When sharableId changes, that means it has been triggered externally, so we get the ID and set scope.sharable.
+			 When the collector resets, we don't want to keep a stale model, so reset the editor.
+
+			*/
 
 			//listen for collector_reset and reget & recompile
 			Clotho.listen('collector_reset', function Editor_onCollectorReset() {
-				scope.processInputSharable(scope.editable);
+				createEmptyEditor();
 			}, scope);
 
-
-			//watch for internal PubSub Changes, update when input sharable changes
+			//watch for internal PubSub Changes, update when input sharable id changes
 			var sharableWatcher = angular.noop;
-			scope.$watch('sharable', function (newval, oldval) {
-				//not empty, and either: no old value, is string and different, or object and id is different
-				//todo - clean up watch
-				if (!angular.isEmpty(newval) &&
-					 ( !oldval ||
-						 ( angular.isString(newval) && newval != oldval ) ||
-						 ( newval.id && newval.id != oldval.id)
-					 )
-				) {
-					Debugger.log('sharable is different', newval, oldval);
+			function setNewWatch (id) {
+				//cancel the last watcher, and set up a new one
+				sharableWatcher();
+				sharableWatcher = Clotho.watch(id, function (newObj) {
+					scope.sharable = newObj;
+				}, scope);
+			}
 
-					//cancel the last watcher, and set up a new one
-					sharableWatcher();
-					sharableWatcher = Clotho.watch(newval.id, function (newObj) {
-						scope.sharable = newObj;
-					}, scope);
+			//watch the input id if attr is present
+			scope.$watch('sharableId', function (newval, oldval) {
+				Debugger.log('new id input', newval, oldval);
 
-					//re-compile the actual editor
-					scope.processInputSharable(newval);
-				}
-			}, true);
+				newval && Clotho.get(newval).then(function (result) {
+					scope.sharable = result;
+				});
+			});
 
+			//when schema changes, update
+			scope.$watch('sharable.schema', function (newval, oldval) {
+				Debugger.log('sharable schema has changed', newval, oldval);
+				createEditorElement(scope.sharable);
+			});
 
-			/* init */
+			//watch the sharable itself for changes to the id
+			scope.$watch('sharable.id', function (newval, oldval) {
+				Debugger.log('sharable id has changed', newval, oldval);
+				setNewWatch(newval);
+			});
 
-			//init with input sharable
-			scope.processInputSharable(scope.sharable);
 		}
 	}
 });

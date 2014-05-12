@@ -65,24 +65,22 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		});
 	};
 
-	$scope.createNew = function (type) {
-		if (type == 'Instance') {
-			$scope.chooseSubtype = !$scope.chooseSubtype;
-		} else {
-			$scope.editable = ClothoSchemas.createScaffold(type);
-			$scope.chooseSubtype = false;
-			$scope.editModePass = true;
-		}
+	$scope.createNewNonInstance = function (type) {
+		$scope.editable = ClothoSchemas.createScaffold(type);
+		$scope.editModePass = true;
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
 		$scope.editable = ClothoSchemas.createScaffold(model);
-		$scope.chooseSubtype = false;
 		$scope.editModePass = true;
 	};
 
 	$scope.editExisting = function (item, model, label) {
-		$scope.editable = model;
-		$scope.editModePass = true;
+		Clotho.get(model).then(function (result) {
+			$scope.editable = result;
+			$scope.editModePass = true;
+		}, function () {
+			console.log('for some reason could not get that sharable...')
+		});
 	};
 });

@@ -326,7 +326,7 @@ angular.module('clotho.foundation')
 
 		//returns schema of a sharable, or null
 		function determineSchema (sharable) {
-			return sharable.schema || null;
+			return angular.isDefined(sharable) ? sharable.schema : null;
 		}
 
 		//determine whether a sharable is a schema

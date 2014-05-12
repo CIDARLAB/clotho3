@@ -99,14 +99,14 @@
           <span class="panel-title">Code Editor</span>
         </div>
         <div>
-          <textarea ui-codemirror="codemirrorEditorOptions"
+          <div ui-codemirror="codemirrorEditorOptions"
                     ng-form="Code"
                     id="functionCode"
                     ng-model="sharable.code"
                     rows="12"
                     style="position: relative; width: 100%;"
                     ng-required>
-          </textarea>
+          </div>
         </div>
         <div function-code-drop update-on-read="sharable.code" show-drop="true" show-browser="false"></div>
       </div>
