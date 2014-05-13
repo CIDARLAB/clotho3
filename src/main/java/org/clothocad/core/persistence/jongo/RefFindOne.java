@@ -37,6 +37,7 @@ public class RefFindOne {
     public <T> T as(final Class<T> clazz) {
         DBObject result = collection.findOne(query.toDBObject(), getFieldsAsDBObject(), readPreference);
         if (result == null) return null;
+        
         InstantiatedReferencesCache cache = new InstantiatedReferencesCache();
         
         T resultObj = unmarshaller.unmarshall(Bson.createDocument(result), clazz, cache);
@@ -47,6 +48,9 @@ public class RefFindOne {
                 current = cache.getNextUndone();
                 Query currentQuery = queryFactory.createQuery("{_id:#}", current.getId().toString());
                 result = collection.findOne(currentQuery.toDBObject(), null, readPreference);
+                if (result == null){
+                    throw new RuntimeException("Unresolvable reference: No object with id "+ current.getId() +" found.");
+                }
                 if (current instanceof Swappable){
                     //need to resolve proxy to actual value
                     ObjBase actual = unmarshaller.unmarshall(Bson.createDocument(result), ObjBase.class , cache);
