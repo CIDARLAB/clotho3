@@ -14,8 +14,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		var updateId = next.params.id;
 
 		// only activate if new -- won't happen if dropdown changed this already
-		if ($scope.editable.id != updateId && $scope.editable != updateId) {
-			console.log('updating editable from route');
+		if (!angular.isEmpty($scope.editable) && $scope.editable.id != updateId) {
 			$scope.editable = updateId;
 		}
 	});
