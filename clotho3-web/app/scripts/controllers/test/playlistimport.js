@@ -6,21 +6,17 @@ angular.module('clotho.webapp')
 		$scope.playlistId = 'PL2aPXzks-TgO0k9PhT__NSh2x6HNimaOy';
 
 		$scope.$watch('playlistId', function (newval) {
-			$q.all({
-				playlistItems : Youtube.playlistItems(newval),
-				playlistInfo : Youtube.playlistInfo(newval)
-			}).then(function (resultObj) {
-					$scope.showerror = false;
-					$scope.playlistInfo = resultObj.playlistInfo;
-					$scope.playlistItems = resultObj.playlistItems;
-					$scope.result = parsePlaylist($scope.playlistInfo, $scope.playlistItems);
-				},
-				//error handling
-				function (err) {
-					$scope.showerror = true;
-					$scope.playlist = {};
-					$scope.result = {};
-				});
+			Youtube.playlistItems(newval)
+			.then(function (result) {
+				 $scope.playlistInfo = result;
+			});
+			Youtube.playlistInfo(newval)
+			.then(function (result) {
+				$scope.playlistItems = result;
+			});
+			Youtube.playlistToTrail(newval).then(function (result) {
+				$scope.playlistTrail = result;
+			});
 		});
 
 		//testing api get
@@ -34,33 +30,5 @@ angular.module('clotho.webapp')
 				$scope.searchResult = '';
 			}
 		});
-
-		function parsePlaylist (info, items) {
-
-			//parse out info we want
-
-			//todo - get thumbnail for trail icon
-
-			var result = {
-				name : info.snippet.title,
-				description : info.snippet.description,
-				created : new Date(info.snippet.publishedAt).valueOf(),
-				icon : info.snippet.thumbnails.standard.url
-			};
-
-			//parse out videos
-
-			result.videos = [];
-			_.each(items, function (item) {
-				result.videos.push({
-					videoId : item.contentDetails.videoId,
-					name : item.snippet.title,
-					description : item.snippet.description,
-					icon : item.snippet.thumbnails.standard.url
-				})
-			});
-
-			return result;
-		}
 
 	});

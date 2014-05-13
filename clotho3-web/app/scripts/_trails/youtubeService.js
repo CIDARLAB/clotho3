@@ -92,6 +92,8 @@ angular.module('clotho.youtube')
 	 * @description
 	 * Given a valid playlist, retreives information about contents.
 	 *
+	 * Note that this will not handle playlists with more than 50 items
+	 *
 	 * https://developers.google.com/youtube/v3/docs/playlistItems
 	 *
 	 * @param {string} playlistId
@@ -106,9 +108,49 @@ angular.module('clotho.youtube')
 				playlistId : playlistId
 			}
 		}).then(function (data) {
-			//todo - check for items length, and is less than maxResults
 			return data.data.items;
 		})
+	};
+
+	var playlistToTrail = function (playlistId) {
+		return $q.all({
+			playlistItems : playlistItems(playlistId),
+			playlistInfo : playlistInfo(playlistId)
+		})
+		.then(function (resultObj) {
+			var info = resultObj.playlistInfo;
+			var items = resultObj.playlistItems;
+
+			var result = {
+				name : info.snippet.title,
+				description : info.snippet.description,
+				created : new Date(info.snippet.publishedAt).valueOf(),
+				icon : info.snippet.thumbnails.standard.url,
+				contents: [
+					{
+						chapter: 'Youtube Playlist',
+						pages: []
+					}
+				]
+			};
+
+			//parse out videos
+			_.each(items, function (item) {
+				result.contents[0].pages.push({
+					name : item.snippet.title,
+					description : item.snippet.description,
+					icon : "video",
+					contents : [{
+						type: "video",
+						params: {
+							id : item.contentDetails.videoId
+						}
+					}]
+				})
+			});
+
+			return result;
+		});
 	};
 
 	return {
@@ -120,6 +162,8 @@ angular.module('clotho.youtube')
 		videoInfo : videoInfo,
 
 		playlistInfo : playlistInfo,
-		playlistItems : playlistItems
+		playlistItems : playlistItems,
+
+		playlistToTrail : playlistToTrail
 	}
 });
