@@ -8,7 +8,7 @@ angular.module('clotho.quiz')
  *
  * todo - after writing, move to server
  */
-	.service('QuizQuestion', function (Clotho, $q, $interpolate) {
+	.service('QuizQuestion', function (Clotho, $q, $interpolate, $rootScope) {
 
 		/**
 		 * @description
@@ -17,55 +17,82 @@ angular.module('clotho.quiz')
 		 an answer (grade.answer) - a string, array, or static function
 		 a function (grade.function) handling all grading, returning a boolean
 
-		 * @param questionId
-		 * @param input
+		 * @param quiz {QuizQuestion}
+		 * @param input {*}
 		 * @param args {Array|Object}
+		 * @param returnAnswer {boolean}
 		 */
-		this.grade = function gradeQuestion(questionId, input, args) {
-			// synchronous get of quiz
-			//var quiz = Clotho.get(questionId);
+		this.grade = function gradeQuestion(quiz, input, args, returnAnswer) {
+			// (on server) synchronous get of quiz
+			// var quiz = Clotho.get(questionId);
+
+			console.log(quiz.grade, input, args);
 
 			var result;
 
-			Clotho.get(questionId, {mute: true})
-			.then(function (quiz) {
+			args = _.isArray(args) ? args : [];
 
-				args = _.isArray(args) ? args : [];
+			//todo - make case insensitive
 
-				//todo - make case insensitive
+			if (quiz.grade.answer) {
 
-				// check if grade.answer is defined
-				if (quiz.grade.answer) {
-					// Author supplied a single answer
-					if (quiz.grade.answer.type == 'string') {
-						//check equality, lowercasing
-						result = (input == quiz.grade.answer.value);
+				var answerValue = quiz.grade.answer.value;
+
+				if (quiz.grade.answer.type == 'string') {
+					if (returnAnswer) {
+						return $q.when(answerValue);
 					}
-					// Author supplied a few possible answers
-					else if (quiz.grade.answer.type == 'array') {
-						//check index, lowercasing
-						result = _.indexOf(quiz.grade.answer.value, input) >= 0;
-					}
-					// Author supplied a function to run
-					else if (quiz.grade.answer.type == 'function') {
-						//check against function result
-						var functionResult = Clotho.run(quiz.grade.answer.value, args);
-						result = (input == functionResult);
-					}
-					else {
-						//shouldn't happen in this definition, but may add features later
-					}
+
+					result = (input == answerValue);
 				}
-				//use grade.function is answer not defined
-				else if (quiz.grade.function) {
-					result = Clotho.run(quiz.grade.function, args);
+				else if (quiz.grade.answer.type == 'number') {
+					if (returnAnswer) {
+						return $q.when(answerValue);
+					}
+					var tolerance = quiz.grade.answer.tolerance;
+
+					result = (input > (answerValue - tolerance) && input < (answerValue + tolerance) );
+				}
+				else if (quiz.grade.answer.type == 'boolean') {
+					if (returnAnswer) {
+						return $q.when(answerValue);
+					}
+
+					result = (input == !!answerValue);
+				}
+				else if (quiz.grade.answer.type == 'array') {
+					if (returnAnswer) {
+						return $q.when(answerValue[0]);
+					}
+
+					result = _.indexOf(answerValue, input) >= 0;
+				}
+				else if (quiz.grade.answer.type == 'function') {
+					if (returnAnswer) {
+						return Clotho.run(answerValue, args);
+					}
+
+					result = Clotho.run(answerValue, args).then(function (fnResult) {
+						return input == fnResult;
+					});
 				}
 				else {
-					// catch for answer and function undefined (should never happen)
-					Clotho.say('no answer was defined...');
-					result = null;
+					//shouldn't happen in this definition, but may add features later
+					Clotho.say('answer was provided in wrong format (cannot grade)');
 				}
-			});
+			}
+			else if (quiz.grade.function) {
+				if (returnAnswer) {
+					return Clotho.run(quiz.grade.function, [input, args]);
+				}
+
+				result = Clotho.run(quiz.grade.function, [input, args]);
+			}
+			else {
+				// catch for answer and function undefined (should never happen)
+				Clotho.say('no answer was defined...');
+				result = null;
+			}
 
 			// after determining whether answer is correct
 			// future - do additional processing with result
@@ -75,9 +102,7 @@ angular.module('clotho.quiz')
 			//finally, return the result
 			//return result;
 
-			return $q.when(result).then(function (det) {
-				return det;
-			});
+			return $q.when(result);
 		};
 
 
@@ -85,50 +110,59 @@ angular.module('clotho.quiz')
 			//todo
 		};
 
-
-		this.feedback = function (questionId, input, args) {
-			//todo
+		//future - handle dynamic feedback
+		//todo - async
+		this.feedback = function generateFeedback (quiz, input) {
+			//todo - handle case-insensitive
+			if (!quiz.feedback) {
+				return null;
+			}
+			if (_.isUndefined(input)) {
+				return quiz.feedback.default || null;
+			}
+			var staticFeedback = quiz.feedback.static || {};
+			return staticFeedback[input] || quiz.feedback.default;
 		};
 
 
 		this.interpolateDictionary = function interpolateDictionary (dictionary) {
 
-			//for storing sequential runs
-			var promiseChain = $q.when({});
-
 			if (angular.isEmpty(dictionary)) {
-				return promiseChain;
+				return $q.when();
 			}
 
 			var interpolatedDict = {};
 
 			//first add static values
 			if (angular.isDefined(dictionary.static)) {
-				angular.forEach(dictionary.static, function (obj) {
-					angular.extend(interpolatedDict, obj);
-				});
+				angular.extend(interpolatedDict, dictionary.static);
 			}
 
-			//go through dynamic values
+			//for storing sequential runs
+			var prevPromise = $q.when(interpolatedDict);
+
+			//go through dynamic values, sequentially, so previous interpolations can be used
 			if ( angular.isDefined(dictionary.dynamic) ) {
 				angular.forEach(dictionary.dynamic, function (obj) {
 					//no good way of just getting the value of a single object
 					//don't want to alter the dictionary itself, this creates a copy
-					angular.extend(interpolatedDict, _.mapValues(obj, function (val) {
-						var interpolatedValue = $interpolate(val)(interpolatedDict);
-						console.log(interpolatedValue);
+					_.mapValues(obj, function (val, key) {
 
-						//todo - check if just needs to interpolate, or also submit
-						//once interpolate, need to submit, add to chain of promises to resolve sequentially
+						// interpolate, submit, add to chain to resolve sequentially
+						prevPromise = prevPromise.then(function (intermediateDict) {
+							var interpolatedValue = $interpolate(val)(intermediateDict);
 
-						return interpolatedValue;
-					}));
+							return Clotho.submit(interpolatedValue)
+							.then(function (result) {
+								//extend interpolated dictionary with new value
+								intermediateDict[key] = result;
+								return intermediateDict;
+							});
+						});
+					});
 				});
 			}
 
-			return promiseChain.then(function () {
-				return interpolatedDict;
-			});
+			return prevPromise;
 		}
-	})
-;
+	});

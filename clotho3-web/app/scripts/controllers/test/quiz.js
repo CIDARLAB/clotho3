@@ -1,103 +1,179 @@
 'use strict';
 
 angular.module('clotho.webapp')
-  .controller('TestQuizCtrl', function ($scope) {
+	.controller('TestQuizCtrl', function ($scope) {
 
 		//todo - refactor from names to IDs for get() and run()
 
-		$scope.staticMC = {
-			question : {
-				type : "mc",
-				question : "Find the reverse complement of the sequence ACCGGGTTTT",
-				options : ["accgggtttt", "TGGCCCAAAA", "TTTTGGGCCA", "AAAACCCGGT"]
-			},
-			options : {
-				checkAnswer : true,
-				showAnswer : true,
-				allowMultiple : true,
-				allowRetry : true,
-				randomization : false
+		// todo - experiment with lazily retrieved quizzes
+
+		//todo - example self-contained grading function
+
+		$scope.trueFalse = {
+			question: {
+				type: "truefalse",
+				title: "True False",
+				question: "Clotho is great?"
 			},
 			grade: {
-				answer : "AAAACCCGGT"
+				answer: {
+					type: "boolean",
+					value: true
+				}
 			}
-		},
+		};
+
+		$scope.number = {
+			question: {
+				type: "number",
+				title: "Number with tolerance (0.01)",
+				question: "What is Pi?"
+			},
+			grade: {
+				answer: {
+					type: "number",
+					tolerance: 0.01,
+					value: 3.1415926
+				}
+			}
+		};
+
+		$scope.staticMC = {
+			question: {
+				type: "mc",
+				title: "Static Multiple Choice",
+				question: "Find the reverse complement of the sequence ACCGGGTTTT",
+				options: ["accgggtttt", "TGGCCCAAAA", "TTTTGGGCCA", "AAAACCCGGT"],
+				hint: "Example hint!"
+			},
+			options: {
+				showAnswer: true,
+				allowMultiple: true,
+				allowRetry: true,
+				randomization: false
+			},
+			grade: {
+				answer: {
+					type: "string",
+					value: "AAAACCCGGT"
+				}
+			}
+		};
 
 		$scope.staticTemplating = {
-			question : {
-				type : "mc",
-				question : "Find the reverse complement of the sequence {{mySeq}}",
-				options : ["{{value1}}", "{{value2}}", "{{value2}}", "{{value2}}"]
-			},
-			options : {
-				multipleAttempts : true,
-				retry : true
+			question: {
+				type: "mc",
+				title: "Static Templating",
+				question: "Find the reverse complement of the sequence {{mySeq}}",
+				options: ["{{value1}}", "{{value2}}", "{{value3}}", "{{value4}}"]
 			},
 			dictionary: {
-				static : [
-					{ mySeq : "ACCGGGTTTT" },
-					{ value1 : "accgggtttt" },
-					{ value2 : "TGGCCCAAAA" },
-					{ value3 : "TTTTGGGCCA" },
-					{ value4 : "AAAACCCGGT" }
-				]
+				static: {
+					mySeq: "ACCGGGTTTT",
+					value1: "accgggtttt",
+					value2: "TGGCCCAAAA",
+					value3: "TTTTGGGCCA",
+					value4: "AAAACCCGGT"
+				}
 			},
 			grade: {
-				answer : "AAAACCCGGT"
+				answer: {
+					type: "string",
+					value: "AAAACCCGGT"
+				}
 			}
 		};
 
 		$scope.staticFeedback = {
-			question : {
-				type : "mc",
-				question : "Find the reverse complement of the sequence ACCGGGTTTT",
-				options : ["accgggtttt", "TGGCCCAAAA", "TTTTGGGCCA", "AAAACCCGGT"]
+			question: {
+				type: "mc",
+				title: "Static Feedback",
+				question: "Find the reverse complement of the sequence ACCGGGTTTT",
+				options: ["accgggtttt", "TGGCCCAAAA", "TTTTGGGCCA", "AAAACCCGGT"]
+			},
+			options: {
+				allowRetry: true
 			},
 			grade: {
-				answer : "AAAACCCGGT"
+				answer: {
+					type: "string",
+					value: "AAAACCCGGT"
+				}
 			},
-			feedback : {
-				default : 'Feedback shown when other keys are not met',
-				static : [
-					{ "accgggtttt" : "Nope, that's the lowercase" },
-					{ "TGGCCCAAAA" : "Nope, that's the complement" },
-					{ "TTTTGGGCCA" : "Nope, that's the reverse" }
-				]
+			feedback: {
+				default: 'To reverse complement a sequence, simply reverse the order, and complement each base (order in which you do this does not matter)',
+				static: {
+					"accgggtttt": "Nope, that's the lowercase",
+					"TGGCCCAAAA": "Nope, that's the complement",
+					"TTTTGGGCCA": "Nope, that's the reverse"
+				}
 			}
 		};
 
 		$scope.staticFillin = {
-			question : {
-				type : "fillin",
-				question : "Find the reverse complement of the sequence AAACCGT"
+			question: {
+				type: "fillin",
+				title: "Static Fillin",
+				question: "Find the reverse complement of the sequence AAACCGT"
+			},
+			options: {
+				showAnswer: true
 			},
 			grade: {
-				answer : {
-					type : "string",
-					value : "ACGGTTT"
+				answer: {
+					type: "string",
+					value: "ACGGTTT"
 				}
 			}
 		};
 
 		$scope.dynamicTemplating = {
-			question : {
-				type : "mc",
-				question : "Find the reverse complement of the sequence {{mySeq}}",
-				options : ["{{value1}}", "{{value2}}", "{{value3}}", "{{value4}}"]
+			question: {
+				type: "mc",
+				title: "Dynamic Templating",
+				question: "Find the reverse complement of the sequence {{mySeq}}",
+				options: ["{{value1}}", "{{value2}}", "{{value3}}", "{{mySeq}}"],
+				hint: "When you retry, all templated values are recalculated. They are then passed to the server for grading"
+			},
+			options: {
+				allowRetry: true
 			},
 			dictionary: {
-				dynamic : [
-					{mySeq  : "clotho.run('randomSequence', [16])" },
-					{value1 : "clotho.run('DNA.revcomp', ['{{mySeq}}'])" },
-					{value2 : "clotho.run('DNA.reverse', ['{{mySeq}}'])" },
-					{value3 : "clotho.run('DNA.complement', ['{{mySeq}}'])" },
-					{value4 : "clotho.run('reverse', ['{{mySeq}}'])" }
+				dynamic: [
+					{mySeq: "randomSequence 16" },
+					{value1: "revcomp {{mySeq}}" },
+					{value2: "reverse {{mySeq}}" },
+					{value3: "complement {{mySeq}} " }
 				]
 			},
 			grade: {
-				function : "DNA.revcomp",
-				args : ['{{mySeq}}']
+				answer: {
+					type: "function",
+					value: "org.clothocad.test.revcomp"
+				},
+				args: ['{{mySeq}}']
 			}
-		}
+		};
 
-  });
+		$scope.functionGrading = {
+			question: {
+				type: "fillin",
+				title: "Own grading function",
+				question: "Copy in this sequence: {{mySeq}}",
+				hint: "This question has its own grading function, for more complicated logic. Arguments can be specified by author. This one just makes sure args + input are equal."
+			},
+			options: {
+				allowRetry: true
+			},
+			dictionary: {
+				dynamic: [
+					{mySeq: "randomSequence 16" }
+				]
+			},
+			grade: {
+				function: "org.clothocad.test.customGradeFunction",
+				args: ['{{mySeq}}']
+			}
+		};
+
+	});

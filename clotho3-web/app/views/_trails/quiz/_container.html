@@ -1,47 +1,37 @@
-<div class="clothoQuizQuestion">
-  <h5 class="title" ng-bind-html="interpolatedQuestion"></h5>
-  <!-- question itself -->
+<div class="clothoQuizQuestion"
+     ng-class="{'ungraded' : !$meta.submitted,
+                'correct' : $meta.response === true,
+                'incorrect' : $meta.response === false}">
+  <div class="quizQuestionHeading">
+    <!-- question hint -->
+    <qq-hint class="quizQuestionHint" ng-if="quiz.question.hint"></qq-hint>
+    <h3 class="quizQuestionTitle">
+      {{quiz.question.title || 'Quiz Question'}}
+    </h3>
 
-  <quiz-question-question></quiz-question-question>
+  </div>
 
-  <!-- dynamic template -->
-  <quiz-question-input></quiz-question-input>
+  <div class="quizQuestionContent">
+    <!-- question itself -->
+    <qq-question class="quizQuestionQuestion"></qq-question>
 
-  <!-- feedback -->
+    <!-- dynamic template -->
+    <qq-template class="quizQuestionTemplate"></qq-template>
+
+    <!-- feedback -->
+    <div class="quizQuestionFeedback"
+         ng-show="$meta.submitted"
+         ng-class="{'correct' : $meta.response === true,
+                    'incorrect' : $meta.response === false}">
+      {{ $meta.currentFeedback || ($meta.response ? 'Correct!' : 'Sorry, that is not the answer') }}
+    </div>
+  </div>
 
   <!-- unified submission + grading -->
-
-  <div class="btn-group" ng-hide="submitted">
-    <button class="btn btn-default"
-            ng-click="grade()">
-      Grade Quiz
-    </button>
-    <button class="btn btn-default"
-            ng-if="quiz.options.checkAnswer"
-            ng-click="checkAnswer()">
-      Check Answer
-    </button>
-    <button class="btn btn-default"
-            ng-if="quiz.options.showAnswer"
-            ng-click="showAnswer()">
-      Show Answer
-    </button>
-  </div>
-
-  <div class="btn-group" ng-show="submitted">
-    <button class="btn btn-danger"
-            ng-if="quiz.options.allowMultiple"
-            ng-show="response === false"
-            ng-click="reset()">
-      Try Again
-    </button>
-    <button class="btn btn-danger"
-            ng-if="quiz.options.allowRetry"
-            ng-class="{'btn-success' : response === true,
-                       'btn-danger' : response === false}"
-            ng-click="retry()">
-      New Question
-    </button>
-  </div>
+  <qq-actions class="quizQuestionActions"
+              ng-hide="$meta.submitted &&
+                       !quiz.options.allowRetry &&
+                       ($meta.response === true || !quiz.options.allowMultiple)">
+  </qq-actions>
 
 </div>

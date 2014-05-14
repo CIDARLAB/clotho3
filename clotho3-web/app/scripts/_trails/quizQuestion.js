@@ -9,7 +9,7 @@ angular.module('clotho.quiz')
  * @attr ngModel {Quiz Question}
  * @attr gradeCallback {Function} on attr as: `grade-callback="myCallback($result)"`
  */
-	.directive('quizQuestion', function (QuizQuestion) {
+	.directive('quizQuestion', function (QuizQuestion, $interpolate) {
 
 		return {
 			restrict: "E",
@@ -28,114 +28,173 @@ angular.module('clotho.quiz')
 					},
 					post: function postLink(scope, element, attrs) {
 
-						//pull in dictionary
-						//interpolate dictionary.dynamic, then question, options, etc.
-
-						/* todo - implement options:
-
-							 options : {
-								 checkAnswer : false,
-								 showAnswer : false,
-								 allowMultiple : false,
-								 allowRetry : true,
-								 randomization : false
-							 }
-						 */
-
 						/* setup + utilities */
 
-						scope.createEmptyAnswer = function (quiz, value) {
-							//todo - for quizzes which have array as answer, check quiz type
-						};
+						//todo - default options
 
-						//todo - create scope for answers etc. outside quiz
+						//todo - hide if not interpolated
 
-						scope.answerUndefined = angular.isEmpty;
-
-
-						function interpolateArguments (args) {
-							if (!angular.isArray(args)) {
-								return [];
+						function createEmptyAnswer() {
+							var type = scope.quiz.question.type;
+							switch (type) {
+								case 'mc' : {
+									return new Array(scope.quiz.question.options.length);
+								}
+								default : {
+									return  ''
+								}
 							}
-
 						}
+
+						//given array / object / *, return array for arguments for function
+						function interpolateArguments (args) {
+							var interpolated = [];
+							angular.forEach(args, function (arg) {
+								interpolated.push($interpolate(arg)(scope))
+							});
+							return interpolated;
+						}
+
+						function regenerateDynamic () {
+							return QuizQuestion.interpolateDictionary(scope.quiz.dictionary)
+							.then(function (interpolatedDict) {
+								//extend scope with the dictionary
+								angular.extend(scope, interpolatedDict);
+
+								//note - options are interpolated on submission, not here (they are displayed as interpolated using directive below
+							});
+						}
+
+						scope.inputEmpty = function () {
+							return angular.isUndefined(scope.$meta) || angular.isEmpty(scope.$meta.input);
+						};
 
 						/* quiz grading + retrying etc. */
 
 						scope.grade = function () {
-							//need to interpolate arguments
-							var interpolatedArgs = interpolateArguments(scope.grade.args);
-							QuizQuestion.grade(scope.quiz.id, scope.input).then(function (result) {
+							//can only interpolate strings -- don't want to pass numbers or booleans through
+							var interpolatedInput = angular.isString(scope.$meta.input) ? $interpolate(scope.$meta.input)(scope) : scope.$meta.input;
+							var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
 
-								//todo
+							QuizQuestion.grade(scope.quiz, interpolatedInput, interpolatedArgs).then(function (result) {
 
-								scope.response = !!result;
+								console.log('result is ' , result);
+
+								var relevantFeedback = QuizQuestion.feedback(scope.quiz, interpolatedInput);
+
+								//don't want to overwrite the input
+								angular.extend(scope.$meta , {
+									submitted : true,
+									response : !!result,
+									currentFeedback : relevantFeedback
+								});
 
 								if (angular.isDefined(attrs.gradeCallback)) {
-									scope.gradeCallback({$result: result});
+									scope.gradeCallback({
+										$input : interpolatedInput,
+										$feedback : relevantFeedback,
+										$result: result
+									});
 								}
 							});
 						};
 
-						scope.feedback = function () {
-							QuizQuestion.feedback()
-						};
-
 						scope.reset = function () {
-
+							scope.$meta = {
+								input : '',
+								submitted : false,
+								response : null,
+								currentFeedback : null
+							};
 						};
 
 						scope.retry = function () {
-							QuizQuestion.retry().then(function (result) {
-								//todo
+							regenerateDynamic().then(function () {
+								scope.reset();
 							});
 						};
 
+						//future - make this snazzier...
 						scope.showAnswer = function () {
+							var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
 
-						};
-
-						scope.checkAnswer = function () {
-
+							QuizQuestion.grade(scope.quiz, null, interpolatedArgs, true)
+							.then(function (answer) {
+									scope.$meta.input = answer;
+							});
 						};
 
 						/* watchers */
 
-						//todo - watch for things to interpolate - can watch quiz directly
-
+						//todo
 
 						//init pending watches
-						QuizQuestion.interpolateDictionary(scope.quiz.dictionary)
-						.then(function (interpolated) {
-							angular.extend(scope, interpolated);
-						});
-
-
+						scope.retry();
 					}
 				}
 			}
 		}
 	})
-
-	.directive('quizQuestionQuestion', function ($compile) {
-		return {
-			restrict: "E",
-			scope: false, //do not create isolate scope
-			link: function (scope, element, attrs) {
-				var wrapped = angular.element('<div>' + scope.quiz.question.question + '</div>');
-				element.html($compile(wrapped)(scope));
-			}
-		}
-	})
-/**
- * Internal directive to handle the input of the question, for which a specific template is pulled for each question type
+/*
+ * internal directives used in quiz questions
  */
-.directive('quizQuestionInput', function ($http) {
-		return {
-			restrict: "E",
-			scope: false, //do not create isolate scope
-			link: function (scope, element, attrs) {
-				//todo - get proper template, tie to answer
-			}
+
+//note - this just changes what is shown. Must be interpolated on submission
+//functions as ng-bind kinda... extra intpolation later
+.directive('qqValue', function ($compile) {
+	return {
+		link: function (scope, element, attrs) {
+			scope.$watch(attrs.qqValue, function (value) {
+				var el = angular.element('<span>' + value + '</span>');
+				element.html($compile(el)(scope));
+			});
 		}
-	});
+	}
+})
+.directive('qqQuestion', function ($compile) {
+	return {
+		restrict: "E",
+		link: function postLink(scope, element, attrs) {
+			//simply compile and binding will update accordingly
+			var wrapped = angular.element('<div>' + scope.quiz.question.question + '</div>');
+			element.html($compile(wrapped)(scope));
+		}
+	}
+})
+.directive('qqTemplate', function ($http, $compile) {
+		return {
+		restrict: "E",
+		link: function (scope, element, attrs) {
+			//because we are getting a template, need to set up a watch
+			//can't use ng-include becuase sets up isolate scope
+			//scope.$watch('quiz.question.type', function (newval) {
+			//	console.log('quiz type ' + newval);
+				$http.get('views/_trails/quiz/' + scope.quiz.question.type + '.html', {cache : true})
+				.success(function (data, headers) {
+					element.html($compile(data)(scope));
+				})
+				.error(function (data, headers) {
+					element.html('<p>template not found</p>');
+				});
+			//});
+		}
+	}
+})
+.directive('qqHint', function () {
+	return {
+		restrict: "E",
+		replace: true,
+		template: '<div popover="{{quiz.question.hint}}"' +
+			'popover-trigger="mouseenter"' +
+			'popover-placement="left">' +
+			'<span class="glyphicon glyphicon-info-sign"></span>' +
+			'</div>'
+	}
+})
+.directive('qqActions', function () {
+	return {
+		restrict: "E",
+		replace: true,
+		templateUrl: 'views/_trails/quiz/_actions.html'
+	}
+});
