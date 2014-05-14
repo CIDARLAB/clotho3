@@ -384,18 +384,26 @@ module.exports = function (grunt) {
 				  async: true
 			  }
 		  },
+		  clothoCleanBuild: {
+			  command: 'cd ..; mvn clean install'
+		  },
+
+		  /*
+		   * The following commands for running the server require mvn command line tools installed:
+	     * export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
+			 */
+
+		  /**
+		   * Run the test server, from app (client source files)
+		   */
 		  clothoTestServer: {
 			  /*
-			   requires mvn command line tools installed:
-			   export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
+
 			  */
 			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
 			  }
-		  },
-		  clothoCleanBuild: {
-			  command: 'cd ..; mvn clean install'
 		  },
 			clothoTestServerVerbose: {
 			  command: 'cd ..; mvn "-Dexec.args= -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
@@ -403,8 +411,19 @@ module.exports = function (grunt) {
 				  async: true
 			  }
 		  },
+		  /**
+		   * Run the Production server, from app (client source files)
+		   */
+		  clothoAuthoringAppServer: {
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  },
+		  /**
+		   * Run the Production server, from dist (client compiled files)
+		   */
 		  clothoProdServer: {
-			  //todo - update to proper server etc (currently just uses /dist/)
 			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
@@ -488,6 +507,16 @@ module.exports = function (grunt) {
 	grunt.registerTask('dev', [
 		'shell:mongo',
 		'shell:clothoTestServer',
+		'clean:server',
+		'concurrent:server',
+		'autoprefixer',
+		'open',
+		'watch'
+	]);
+
+	grunt.registerTask('authoring', [
+		'shell:mongo',
+		'shell:clothoAuthoringAppServer',
 		'clean:server',
 		'concurrent:server',
 		'autoprefixer',
