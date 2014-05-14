@@ -94,6 +94,12 @@ angular.module('clotho.clothoDirectives')
 						angular.isFunction(scope.onOpen) && scope.onOpen();
 					}
 				});
+
+				scope.$on('$destroy', function () {
+					$timeout(function () {
+						scope.onClose();
+					});
+				});
 			}
 		}
 	})
@@ -108,7 +114,9 @@ angular.module('clotho.clothoDirectives')
  *
  * This service allows on modal at a time.
  *
- * To pass functions etc, you must create them on the scope, and pass in the $scope. The config options are simply mapped to the DOM as attrs, so should match docs for clotho-modal directive. They should be snake-case. Note that the $scope of the directive is isolate, so all actions must be within the 'scope' of the $scope you pass in.
+ * To pass functions etc, you must create them on the scope, and pass in the $scope. A new child scope is created.
+ *
+ * The config options are simply mapped to the DOM as attrs, so should match docs for clotho-modal directive. They should be snake-case. Note that the $scope of the directive is isolate, so all actions must be within the 'scope' of the $scope you pass in.
  *
  * @example (simple)
  * given var msg = <string>, because the string is inserted into the DOM
@@ -143,10 +151,12 @@ angular.module('clotho.clothoDirectives')
 
 
  */
-	.service('$clothoModal', function($window, $rootScope, $compile) {
+	.service('$clothoModal', function($window, $rootScope, $compile, $parse) {
 
 		var bodyElement = angular.element($window.document.body);
-		var extantModal = null, extantScope = null;
+		var extantModal = null,
+			extantScope = null,
+			oldClose = angular.noop;
 
 		/**
 		 * @name $clothoModal.create
@@ -161,19 +171,22 @@ angular.module('clotho.clothoDirectives')
 			destroy();
 
 			var options = angular.extend({}, config);
-			extantScope = scope = scope || $rootScope.$new();
+			extantScope = scope.$new() || $rootScope.$new();
 
 			//reset the close
-			var oldClose = scope.$eval(options.onClose) || angular.noop;
-			scope.clothoModalClose = function () {
-				oldClose();
+
+			var oldClose = $parse(options['on-close']) || angular.noop;
+			extantScope.clothoModalClose = function () {
+				oldClose(extantScope);
 				destroy();
 			};
 			options['on-close'] = 'clothoModalClose()';
 
-			extantModal = $compile(angular.element('<clotho-modal>').attr(options))(scope);
+			extantModal = $compile(angular.element('<clotho-modal>').attr(options))(extantScope);
 			bodyElement.append(extantModal);
 		};
+
+		//todo - onClose is not called unless use escape
 
 		/**
 		 * @name $clothoModal.destroy()
@@ -182,10 +195,12 @@ angular.module('clotho.clothoDirectives')
 		 * Remove a modal created by this service, otherwise does nothing.
 		 */
 		function destroy () {
+			oldClose(extantScope);
 			extantScope && extantScope.$destroy();
 			extantModal && extantModal.remove();
 			extantModal = null;
 			extantScope = null;
+			oldClose = angular.noop;
 		}
 
 		this.destroy = destroy;
