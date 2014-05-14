@@ -9,16 +9,19 @@ import org.clothocad.core.util.CloseableThread;
 /** Executes function in an external language interpreter subprocess
  *
  * Communication with the subprocess is done over pipes connected to
- * the standard input/output of the subprocess. Messages are encoded
- * as null-byte terminated, UTF-8 JSON values.
+ * the standard input/output/error of the subprocess. Messages over standard
+ * input/output are UTF-8 encoded, null-byte terminated JSON values. Standard
+ * error is captured in a byte array and is not interpreted.
  *
  * The types of messages that can be sent to the subprocess are:
  *   function_defcall ("define and call"):
- *     {"type": "func", "code": <string>,
- *      "name": <string>, "args": <array>}
+ *     {"type": "func", "code": <string>, "args": <array>}
  *
- *   api_return: (send only)
+ *   api_return:
  *     {"type": "api", "return": <value>}
+ *
+ *   api_error:
+ *     {"type": "api_error", "message": <string>}
  *
  * The messages that can be received from the subprocess are:
  *   function_return:
@@ -30,29 +33,30 @@ import org.clothocad.core.util.CloseableThread;
  * The message protocol and threads of execution are
  * summarized in the following diagram:
  *
- *  Host             Subprocess
+ *  Host                    Subprocess
  *main thread
  *  ...
- *   |                 [born]
- *   |                   |
- *   |                   X (blocks)
- *   | function_defcall
- *   | ----------------> \ (resumes)
- *   X                   |
- *                       |
- *                       |
- *         api_call      |
- *   / <---------------- |
- *   |                   X
- *   |     api_return
- *   | ----------------> \
- *   X                   |
- *                       |
- *  ...                 ...
- *                       |
- *      function_return  |
- *   / <---------------- |
- *   |                 [dies]
+ *   |                       [is born]
+ *   |                          |
+ *   |                          X (blocks)
+ *   |    function_defcall
+ *   | -----------------------> \ (resumes)
+ *   X                          |
+ *                              |
+ *  ...                        ...
+ *                              |
+ *            api_call          |
+ *   / <----------------------- |
+ *   |                          X
+ *   | api_return or api_error
+ *   | -----------------------> \
+ *   X                          |
+ *                              |
+ *  ...                        ...
+ *                              |
+ *         function_return      |
+ *   / <----------------------- |
+ *   |                        [dies]
  *  ...
  *
  * The host creates helper threads for reading from the standard output and
@@ -69,39 +73,44 @@ public class SubprocessExec {
         try (final CloseableProcess proc =
              ProcessProvider.newProcess((String) sourceJSON.get("language"))
         ) {
-            final JSONStreamReader reader = new JSONStreamReader(
-                proc.getProcess().getInputStream()
-            );
+            final Object returnValue;
             final ErrorDumper errorDumper =
                 new ErrorDumper(proc.getProcess().getErrorStream());
-            final Object returnValue;
             try {
-                try (final CloseableThread readerThread =
-                     new CloseableThread(reader);
-                     final CloseableThread errorDumperThread =
-                     new CloseableThread(errorDumper)
-                ) {
-                    readerThread.getThread().start();
-                    errorDumperThread.getThread().start();
-                    returnValue = new ExecutionContext(
-                        api,
-                        reader,
-                        proc.getProcess().getOutputStream(),
-                        (String) sourceJSON.get("code"),
-                        args
-                    ).start();
-                }
-            } catch (Exception e) {
-                eventHandler.onFail(errorDumper.getString());
+                returnValue = initThreadsAndRun(
+                    api,
+                    new JSONStreamReader(proc.getProcess().getInputStream()),
+                    new JSONStreamWriter(proc.getProcess().getOutputStream()),
+                    errorDumper,
+                    (String) sourceJSON.get("code"),
+                    args
+                );
+            } catch (final Exception e) {
+                eventHandler.onFail(errorDumper.getBytes());
                 throw e;
             }
-            eventHandler.onSuccess(errorDumper.getString());
+            eventHandler.onSuccess(errorDumper.getBytes());
             return returnValue;
         }
     }
 
+    private static Object
+    initThreadsAndRun(final ServerSideAPI api,
+                      final JSONStreamReader r,
+                      final JSONStreamWriter w,
+                      final ErrorDumper ed,
+                      final String code,
+                      final List<Object> args) {
+        try (final CloseableThread rThread = new CloseableThread(r);
+             final CloseableThread edThread = new CloseableThread(ed)) {
+            rThread.getThread().start();
+            edThread.getThread().start();
+            return new ExecutionContext(api, r, w, code, args).start();
+        }
+    }
+
     public static interface EventHandler {
-        void onFail(final String standardError);
-        void onSuccess(final String standardError);
+        void onFail(final byte[] standardError);
+        void onSuccess(final byte[] standardError);
     }
 }

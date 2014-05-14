@@ -2,12 +2,12 @@
     "name": "revcomp",
     "type": "function",
     "schema":"org.clothocad.core.datums.Function",
-    "id": "aa7f191e810c19729de86101",
+    "id": "org.clothocad.test.revcomp",
     "code": "function(string) { var map = {a : 't', t : 'a', c : 'g', g : 'c', A : 'T', T : 'A', C : 'G', G : 'C' }; var reversed = reverse(string); return reversed.replace(/[acgt]/gi, function(i) {return map[i]});  };",
     "language": "JAVASCRIPT",
     "description": "This function should reverse complement a string",
     "precondition": "",
-    "dependencies": ["5232624a7054e77e5d370961"],
+    "dependencies": ["org.clothocad.test.reverse"],
     "args": [
         {
             "type": "string",

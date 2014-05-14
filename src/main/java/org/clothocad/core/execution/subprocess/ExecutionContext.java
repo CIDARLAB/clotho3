@@ -10,18 +10,18 @@ import org.clothocad.core.communication.ServerSideAPI;
 class ExecutionContext {
     private final ServerSideAPI api;
     private final JSONStreamReader reader;
-    private final OutputStream output;
+    private final JSONStreamWriter writer;
     private final String code;
     private final List<Object> args;
 
     ExecutionContext(final ServerSideAPI api,
                      final JSONStreamReader reader,
-                     final OutputStream output,
+                     final JSONStreamWriter writer,
                      final String code,
                      final List<Object> args) {
         this.api = api;
         this.reader = reader;
-        this.output = output;
+        this.writer = writer;
         this.code = code;
         this.args = args;
     }
@@ -50,6 +50,15 @@ class ExecutionContext {
         }
     }
 
+    private void
+    sendFunctionDefcall() {
+        final Map<String, Object> value = new HashMap<>();
+        value.put("type", "func");
+        value.put("code", code);
+        value.put("args", args);
+        writer.sendValue(value);
+    }
+
     private Object
     handleFunctionReturn(final Map value) {
         if (!value.containsKey("return"))
@@ -58,38 +67,22 @@ class ExecutionContext {
     }
 
     private void
-    handleAPICall(final Map in_value) {
-        final Map<String, Object> out_value = new HashMap<>();
-        out_value.put("type", "api");
-        out_value.put(
-            "return",
-            APIRelayer.relay(
-                api,
-                (String) in_value.get("name"),
-                (List) in_value.get("args")
-            )
-        );
-        sendValue(out_value);
-    }
-
-    private void
-    sendFunctionDefcall() {
-        final Map<String, Object> val = new HashMap<>();
-        val.put("type", "func");
-        val.put("code", code);
-        val.put("args", args);
-        sendValue(val);
-    }
-
-    private void
-    sendValue(final Object value) {
-        final byte[] bytes = JSONUtil.toBytes(value);
-        try {
-            output.write(bytes);
-            output.write(0);
-            output.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    handleAPICall(final Map value) {
+        final Map<String, Object> reply = new HashMap<>();
+        final APIRelayer.Callback cb = new APIRelayer.Callback() {
+            @Override public void onSuccess(final Object ret) {
+                reply.put("type", "api");
+                reply.put("return", ret);
+            }
+            @Override public void onFail(final String message) {
+                reply.put("type", "api_error");
+                reply.put("message", message);
+            }
+        };
+        APIRelayer.relay(api,
+                         (String) value.get("name"),
+                         (List) value.get("args"),
+                         cb);
+        writer.sendValue(reply);
     }
 }
