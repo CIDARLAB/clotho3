@@ -17,7 +17,7 @@
       </form-field>
 
       <form-field name="ID" horizontal="formHorizontal">
-        <input type="text" id="sharableId" ng-model="sharable.id">
+        <input type="text" id="sharableId" ng-model="sharable.id" ng-model-options="{updateOn : 'blur'}">
       </form-field>
 
       <form-field name="Description" horizontal="formHorizontal">
