@@ -171,7 +171,7 @@ angular.module('clotho.clothoDirectives')
 			destroy();
 
 			var options = angular.extend({}, config);
-			extantScope = scope.$new() || $rootScope.$new();
+			extantScope = angular.isDefined(scope) ? scope.$new() : $rootScope.$new();
 
 			//reset the close
 
