@@ -65,7 +65,7 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 						 });*/
 					};
 
-					pageComponentTypes.quiz = function loadQuiz(content) {
+					pageComponentTypes.quizQuestion = function loadQuiz(content) {
 						if (!content || !angular.isObject(content)) return $q.when();
 
 						scope.quiz = angular.copy(content);

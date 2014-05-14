@@ -138,14 +138,19 @@ angular.module('clotho.youtube')
 			_.each(items, function (item) {
 				result.contents[0].pages.push({
 					name : item.snippet.title,
-					description : item.snippet.description,
+					schema : "Trail",
 					icon : "video",
-					contents : [{
-						type: "video",
-						params: {
-							id : item.contentDetails.videoId
+					contents : [
+						{
+							type: "text",
+							params : item.snippet.description
+						}, {
+							type: "video",
+							params: {
+								id : item.contentDetails.videoId
+							}
 						}
-					}]
+					]
 				})
 			});
 

@@ -161,6 +161,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/playlistimport.html',
   controller: 'TestPlaylistimportCtrl'
 })
+.when('/test/quiz', {
+  templateUrl: 'views/test/quiz.html',
+  controller: 'TestQuizCtrl'
+})
 	.otherwise({
 		redirectTo:'/'
 	});

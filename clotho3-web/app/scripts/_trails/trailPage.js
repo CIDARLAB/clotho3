@@ -1,32 +1,38 @@
 /**
- field types that are handled:
- backend: CSS (url), mixin (array|url), script (array|url), onload (array|url)
- content: text (string|html), video (object), template (url), quiz (object), markdown (text), wiki (text)
-
- you can add a controller using the ng-controller directive in a template, and declare it as a mixin.
-
- //todo - remove next and prev from needed attrs
+ * @ngdoc directive
+ * @name trail-page
+ *
+ * @description
+ * handles inserting a trail page into the page.
+ * downloads dependencies, and element which is populated with trail page components
+ *
+ * you can add a controller using the ng-controller directive in a template, and declare it as a mixin.
+ *
  */
-angular.module('clotho.trails').directive('trailPage', function ($timeout, $q, $controller, hotkeys, Trails, $clothoModal) {
+angular.module('clotho.trails')
+.directive('trailPage', function ($timeout, $q, $controller, hotkeys, Trails, $clothoModal) {
 
 	return {
 		restrict: 'A',
 		templateUrl: 'views/_trails/trailPage.html',
 		scope: {
-			page: '=trailPage',
-			next: '=',
-			prev: '='
+			page: '=trailPage'
 		},
 		link: function trailPageLink(scope, element, attrs) {
 
 			scope.helpModalOpen = false;
+			scope.closeHelpModal = function () {
+				scope.helpModalOpen = false;
+			};
+
 			function toggleHelpModal() {
 				scope.helpModalOpen = !scope.helpModalOpen;
 				if (scope.helpModalOpen) {
 					$clothoModal.create({
 						title : 'Trail Help',
-						content : 'page.help'
-					});
+						content : 'page.help',
+						'on-close' : 'closeHelpModal()' //in case close with escape
+					}, scope);
 				} else {
 					$clothoModal.destroy();
 				}
