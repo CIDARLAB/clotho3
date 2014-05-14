@@ -5,16 +5,14 @@
       <p class="trail-chapter-description">{{chapter.description}}</p>
     </div>
     <div class="trail-pages">
-      <div class="list-group">
-        <a class="list-group-item"
-           ng-repeat="page in chapter.pages"
-           ng-init="page.index = $parent.$index + '-' + $index"
-           ng-class="{active: (page.index == current)}"
-           ng-click="activate(page.index)"
-           ng-disabled="!page.type">
-          <i ng-class="mapIcon(page.icon)"></i> {{page.title}}
-        </a>
-      </div>
+      <a class="list-group-item"
+         ng-repeat="page in chapter.pages"
+         ng-init="page.index = $parent.$index + '-' + $index"
+         ng-class="{active: (page.index == current)}"
+         ng-click="activate(page.index)"
+         ng-disabled="!page.type">
+        <i ng-class="mapIcon(page.icon)"></i> {{page.title}}
+      </a>
     </div>
   </div>
 </div>

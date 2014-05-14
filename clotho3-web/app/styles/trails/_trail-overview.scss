@@ -35,6 +35,7 @@
 
     .trail-pages {
       @extend .col-sm-6;
+      @extend .list-group;
     }
   }
 }

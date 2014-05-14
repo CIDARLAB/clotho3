@@ -78,7 +78,7 @@
 							"params": "partials/trails/clotho-intro/reverseComplement.html"
 						},
 						{
-							"type": "quiz",
+							"type": "quizQuestion",
 							"params": {
 								"title": "Reverse Complement",
 								"type": "fillin",
