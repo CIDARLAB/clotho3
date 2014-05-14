@@ -123,6 +123,8 @@ angular.module('clotho.youtube')
 
 			var result = {
 				name : info.snippet.title,
+				schema : "Trail",
+				id : "org.clothocad.trails." + (info.snippet.title).replace(/\s+/g, ''),
 				description : info.snippet.description,
 				created : new Date(info.snippet.publishedAt).valueOf(),
 				icon : info.snippet.thumbnails.standard.url,
