@@ -1,8 +1,6 @@
 // Generated on 2013-11-18 using generator-angular 0.6.0-rc.1
 'use strict';
 
-var shell = require('shelljs');
-
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
@@ -483,12 +481,6 @@ module.exports = function (grunt) {
 		  }
 	  }
   });
-
-
-	grunt.registerTask('update:npm', 'Update NPM packages.', function () {
-		shell.exec('npm install');
-	});
-
 
 	grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
