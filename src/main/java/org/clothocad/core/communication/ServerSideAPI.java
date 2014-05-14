@@ -244,7 +244,7 @@ public class ServerSideAPI {
             
             //If the completions suggest what the things is
             if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("uuid");
+                String uuid = (String) completions.get(0).get("id");
                 return get(uuid);
             } 
             return null;
