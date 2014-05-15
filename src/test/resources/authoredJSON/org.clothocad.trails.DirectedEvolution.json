@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "Introduction to Libraries",
+      "title" : "Introduction to Libraries",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "Library Approaches",
+      "title" : "Library Approaches",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Directed Evolution",
+      "title" : "Directed Evolution",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "Diversity Generation",
+      "title" : "Diversity Generation",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

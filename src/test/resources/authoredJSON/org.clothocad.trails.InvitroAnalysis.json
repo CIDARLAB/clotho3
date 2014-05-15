@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "in vitro Characterization",
+      "title" : "in vitro Characterization",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "Protein Purification",
+      "title" : "Protein Purification",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Enzymatic Assays",
+      "title" : "Enzymatic Assays",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "Binding Assays",
+      "title" : "Binding Assays",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "Product Studies",
+      "title" : "Product Studies",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

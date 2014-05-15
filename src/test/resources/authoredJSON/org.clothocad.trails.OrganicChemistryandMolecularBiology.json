@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "Essentials Concepts of Organic Chemistry",
+      "title" : "Essentials Concepts of Organic Chemistry",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "DNA structure and the Reverse Complement operation",
+      "title" : "DNA structure and the Reverse Complement operation",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

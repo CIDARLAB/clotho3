@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "The Primitives: Parts",
+      "title" : "The Primitives: Parts",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "CDS-Based Parts",
+      "title" : "CDS-Based Parts",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "RNA-Based Parts",
+      "title" : "RNA-Based Parts",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "DNA-Based Parts",
+      "title" : "DNA-Based Parts",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "Part Families",
+      "title" : "Part Families",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

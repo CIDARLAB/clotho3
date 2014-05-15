@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "Whole Cell Analysis",
+      "title" : "Whole Cell Analysis",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "Demonstations",
+      "title" : "Demonstations",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Fluorescent Reporter Assays",
+      "title" : "Fluorescent Reporter Assays",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "Biochemical Assays",
+      "title" : "Biochemical Assays",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "Microbiological Assays",
+      "title" : "Microbiological Assays",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -73,7 +73,7 @@
         }
       } ]
     }, {
-      "name" : "Experimental Design",
+      "title" : "Experimental Design",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -86,7 +86,7 @@
         }
       } ]
     }, {
-      "name" : "Caltech Researchers Find Pulsating Response to Stress in Bacteria",
+      "title" : "Caltech Researchers Find Pulsating Response to Stress in Bacteria",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -99,7 +99,7 @@
         }
       } ]
     }, {
-      "name" : "La ola bacteriana, bacterial wave",
+      "title" : "La ola bacteriana, bacterial wave",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

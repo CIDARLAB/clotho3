@@ -137,6 +137,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 .when('/test/trail', {
   templateUrl: 'views/test/trail.html',
   controller: 'TestTrailCtrl',
+	reloadOnSearch: false,
 	resolve : {
 		trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 			var deferred = $q.defer();
@@ -145,7 +146,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 					$route.current.$$route.title = result.name;
 					deferred.resolve(compiled);
 				});
-			}, function rejection () {
+			}, function trailGetRejection () {
 				$http.get('models/bb99191e810c19729de860fe.json').then(function(data) {
 					Trails.compile(data.data).then(function (compiled) {
 						deferred.resolve(compiled);

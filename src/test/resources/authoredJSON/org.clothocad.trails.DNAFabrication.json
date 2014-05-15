@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "DNA Fabrication",
+      "title" : "DNA Fabrication",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "Gene Synthesis",
+      "title" : "Gene Synthesis",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Ad hoc Cloning",
+      "title" : "Ad hoc Cloning",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "BioBrick Standard Assembly",
+      "title" : "BioBrick Standard Assembly",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "PCR-based Assembly Methods",
+      "title" : "PCR-based Assembly Methods",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -73,7 +73,7 @@
         }
       } ]
     }, {
-      "name" : "Site-directed Mutagenesis",
+      "title" : "Site-directed Mutagenesis",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

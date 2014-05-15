@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "Genome Manipulation",
+      "title" : "Genome Manipulation",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "att Integrases",
+      "title" : "att Integrases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Homologous Recombination",
+      "title" : "Homologous Recombination",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "Conjugation, Transposition, and Transduction",
+      "title" : "Conjugation, Transposition, and Transduction",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "Manipulation of Non Model Genomes",
+      "title" : "Manipulation of Non Model Genomes",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -73,7 +73,7 @@
         }
       } ]
     }, {
-      "name" : "Optimization of Biosynthesis using MAGE",
+      "title" : "Optimization of Biosynthesis using MAGE",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -86,7 +86,7 @@
         }
       } ]
     }, {
-      "name" : "Webinar: Genome Editing with CRISPR/Cas9",
+      "title" : "Webinar: Genome Editing with CRISPR/Cas9",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

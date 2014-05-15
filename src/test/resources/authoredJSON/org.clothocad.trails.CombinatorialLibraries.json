@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "Combinatorial Libraries Introduction",
+      "title" : "Combinatorial Libraries Introduction",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "Diversity and Sampling",
+      "title" : "Diversity and Sampling",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Combinatorial Library Design",
+      "title" : "Combinatorial Library Design",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "Selection Methods",
+      "title" : "Selection Methods",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

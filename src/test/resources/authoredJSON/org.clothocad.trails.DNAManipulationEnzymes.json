@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "The DNA Manipulation Enzymes",
+      "title" : "The DNA Manipulation Enzymes",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "Endonucleases",
+      "title" : "Endonucleases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Exonucleases",
+      "title" : "Exonucleases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "DNA Polymerases",
+      "title" : "DNA Polymerases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "RNA Polymerases",
+      "title" : "RNA Polymerases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -73,7 +73,7 @@
         }
       } ]
     }, {
-      "name" : "Ligases",
+      "title" : "Ligases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -86,7 +86,7 @@
         }
       } ]
     }, {
-      "name" : "Methyltransferases",
+      "title" : "Methyltransferases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -99,7 +99,7 @@
         }
       } ]
     }, {
-      "name" : "DNA Repair Enzymes",
+      "title" : "DNA Repair Enzymes",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -112,7 +112,7 @@
         }
       } ]
     }, {
-      "name" : "Kinases and Phosphatases",
+      "title" : "Kinases and Phosphatases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -125,7 +125,7 @@
         }
       } ]
     }, {
-      "name" : "Recombinases",
+      "title" : "Recombinases",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

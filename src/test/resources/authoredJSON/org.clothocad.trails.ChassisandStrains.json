@@ -8,7 +8,7 @@
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
-      "name" : "The Primitives: Chassis and Strains",
+      "title" : "The Primitives: Chassis and Strains",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -21,7 +21,7 @@
         }
       } ]
     }, {
-      "name" : "E. coli as a chassis",
+      "title" : "E. coli as a chassis",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -34,7 +34,7 @@
         }
       } ]
     }, {
-      "name" : "Lab strains of E. coli",
+      "title" : "Lab strains of E. coli",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -47,7 +47,7 @@
         }
       } ]
     }, {
-      "name" : "Primary and Secondary Processes",
+      "title" : "Primary and Secondary Processes",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -60,7 +60,7 @@
         }
       } ]
     }, {
-      "name" : "Understanding Bacterial Pathogenicity",
+      "title" : "Understanding Bacterial Pathogenicity",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
@@ -73,7 +73,7 @@
         }
       } ]
     }, {
-      "name" : "Protein Localization",
+      "title" : "Protein Localization",
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {

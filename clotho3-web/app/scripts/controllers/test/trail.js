@@ -52,6 +52,7 @@ angular.module('clotho.trails')
 
 		$scope.$on('$destroy', function (scope, next, current) {
 			$location.search('position', null).replace();
+			$location.search('id', null).replace();
 		});
 
 		//kickoff
