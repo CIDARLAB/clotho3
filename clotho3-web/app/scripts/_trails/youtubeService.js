@@ -138,22 +138,29 @@ angular.module('clotho.youtube')
 
 			//parse out videos
 			_.each(items, function (item) {
-				result.contents[0].pages.push({
+
+				var newPage = {
 					title : item.snippet.title,
 					schema : "Trail",
 					icon : "video",
-					contents : [
-						{
-							type: "text",
-							params : item.snippet.description
-						}, {
-							type: "video",
-							params: {
-								id : item.contentDetails.videoId
-							}
-						}
-					]
-				})
+					contents : []
+				};
+
+				if (item.snippet.description && item.snippet.description.length) {
+					newPage.contents.push({
+						type: "text",
+						params : item.snippet.description
+					});
+				}
+
+				newPage.contents.push({
+					type: "video",
+					params: {
+						id: item.contentDetails.videoId
+					}
+				});
+
+				result.contents[0].pages.push(newPage)
 			});
 
 			return result;
