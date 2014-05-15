@@ -1,0 +1,38 @@
+{
+  "name" : "Organic Chemistry and Molecular Biology",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.OrganicChemistryandMolecularBiology",
+  "description" : "Quick rehash of organic chemistry concepts and the structure of DNA.",
+  "created" : 1390413041000,
+  "icon" : "https://i1.ytimg.com/vi/DywiuCuDbtY/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "name" : "Essentials Concepts of Organic Chemistry",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "DywiuCuDbtY"
+        }
+      } ]
+    }, {
+      "name" : "DNA structure and the Reverse Complement operation",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "DNA is double stranded, but we represent it as a single strand for convenience. Often you'll need to know the sequence of the other strand (the reverse-complement)."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "gKHO0HHPsXg"
+        }
+      } ]
+    } ]
+  } ]
+}

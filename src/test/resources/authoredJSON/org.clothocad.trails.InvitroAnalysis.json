@@ -1,0 +1,77 @@
+{
+  "name" : "In vitro Analysis",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.InvitroAnalysis",
+  "description" : "Many ways of characterizing the performance of an engineered organism involve disrupting the cell and isolating a chemical component.  Such 'in vitro' methods are often used to quantify a component of the cell or the molecular function of a cellular component.",
+  "created" : 1396884895000,
+  "icon" : "https://i1.ytimg.com/vi/EheWQRLvLWU/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "name" : "in vitro Characterization",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Today we'll discuss assay methods that require destruction of the organism.  These in vitro methods of characterization include Biochemical Analysis, and Product Studies."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "EheWQRLvLWU"
+        }
+      } ]
+    }, {
+      "name" : "Protein Purification",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Protein purification is a process wherein you isolate a protein component from disrupted cells.  Purifying specific proteins from a genetically unaltered organism is very challenging.  However, when you control the gene for the protein you wish to purify, there are many tricks to simplify the task."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "fELdxoW3UR4"
+        }
+      } ]
+    }, {
+      "name" : "Enzymatic Assays",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "After purifying your component of interest from the cell, you are either going assay its function, quantify it, or probe its structure. Molecular function is either binding or catalysis.  Here we deal with the assay of catalytic function."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "CJCdoGIfUeE"
+        }
+      } ]
+    }, {
+      "name" : "Binding Assays",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The other type of molecular function is binding, and there are ways of monitoring non-covalent interactions too."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "eIEMXWeaMYg"
+        }
+      } ]
+    }, {
+      "name" : "Product Studies",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The other type of in vitro method is a product study.  Here you are analyzing the chemical composition of the cells.  Product studies can be qualitative or quantitative.  Qualitative product studies ask some question about the structure of molecules in the cell.  Quantitative product studies are interested in the concentrations of particular chemicals.  These experiments can be endpoint assays, or they may contain multiple time points."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "GD-yyI4jEX8"
+        }
+      } ]
+    } ]
+  } ]
+}

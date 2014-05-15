@@ -1,0 +1,64 @@
+{
+  "name" : "Human Practices",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.HumanPractices",
+  "description" : "Human Practices is the field concerns at the intersection of technology development and social consequences.  Various topics include intellectual property, biosafety, education, open access, and the like.",
+  "created" : 1393996985000,
+  "icon" : "https://i1.ytimg.com/vi/hDAnyG7zHFs/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "name" : "Introduction to Human Practices",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "In the early years of the Synthetic Biology Engineering Research Center, or SynBERC, UC Berkeley professor Paul Rabinow introduced the phrase 'human practices' into the lexicon of genetic engineering. It has become a popular term referring to diverse aspects of how technology interacts with people's lives. The term is often reduced to simply 'practices' and the scope of its meaning is increasingly broad. Synthetic Biology practitioners use this term to refer to issues of biosafety and biosecurity, intellectual property, government regulation, public perception, and education."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "hDAnyG7zHFs"
+        }
+      } ]
+    }, {
+      "name" : "Traditional Biological Risk Assessment",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Terry Johnson of UC Berkeley and Synberc provides an overview of the rules that govern academic research in biological engineering projects, like recombinant DNA research. Terry reviews Biosafety Level (BSL) categories, how we determine the risk of different kinds of projects, and some considerations individual researchers should have about their own work in the context of risk and dual-use concerns.\n\nVideo by Terry D. Johnson, UC Berkeley Bioengineering (tdj@berkeley.edu)\nBased on slides by J. Christopher Anderson, UC Berkeley Bioengineering"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "9s48kuPNr8U"
+        }
+      } ]
+    }, {
+      "name" : "Responsible conduct of synthetic biology",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Terry Johnson of UC Berkeley and Synberc provides a perspective on the unique features of synthetic biology that require special consideration above and beyond traditional biotechnology. Terry discusses how technologies like gene sequencing, gene synthesis, computational design, and the internet are accelerating and converging to pose new challenges to responsible innovation.\n\nThis is a draft version of an element being developed for a synberc biosafety and bioethics program. We've been asked to release this early version so that it can be used in the training of iGEM teams and other researchers.\n\nThis video is part 2 of 2; we will release more content when it becomes available.\n\nVideo by Terry D. Johnson, UC Berkeley Bioengineering (tdj@berkeley.edu)\nBased on slides by J. Christopher Anderson, UC Berkeley Bioengineering"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "5a25Z46ZFfA"
+        }
+      } ]
+    }, {
+      "name" : "Perception and Hypothetical Risks",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Genetic engineering has always raised concerns about its potential for causing harm in the realm of biosafety. Here we review some historical context of discussions that resulted from a proposed establishment of research facilities in Cambridge, MA.\n\nSee http://ttv.mit.edu/videos/11570-hypothetical-risk-cambridge-city-councils-hearings-on-recombinant-dna-research-1976"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "vvTmIMNMmoE"
+        }
+      } ]
+    } ]
+  } ]
+}

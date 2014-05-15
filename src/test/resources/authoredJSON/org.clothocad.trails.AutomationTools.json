@@ -1,0 +1,116 @@
+{
+  "name" : "Automation Tools",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.AutomationTools",
+  "description" : "Automation tools that are transforming the way we do synthetic biology.  All aspects of the design, fabrication, and testing process are being replaced by automated methods.  Here we examine the software and hardware involved.",
+  "created" : 1397586557000,
+  "icon" : "https://i1.ytimg.com/vi/QtJOb2wucQo/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "name" : "Automation Introduction",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "QtJOb2wucQo"
+        }
+      } ]
+    }, {
+      "name" : "Robotics",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "T9kuB37tG0s"
+        }
+      } ]
+    }, {
+      "name" : "Software Tools",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "_macHtlNRp8"
+        }
+      } ]
+    }, {
+      "name" : "Technical Design Tools",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "LWO8wBrlgTs"
+        }
+      } ]
+    }, {
+      "name" : "Data Management Platforms",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "8bYAQgaspmI"
+        }
+      } ]
+    }, {
+      "name" : "Automated Compositional Design",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "bv186MrHQg0"
+        }
+      } ]
+    }, {
+      "name" : "Automated Assembly",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "X0eemsxBtlI"
+        }
+      } ]
+    }, {
+      "name" : "Kinetic Models and Simulation",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : ""
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "Ny9ZlkM2rzo"
+        }
+      } ]
+    } ]
+  } ]
+}

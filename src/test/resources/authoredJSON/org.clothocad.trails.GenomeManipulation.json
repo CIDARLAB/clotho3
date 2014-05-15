@@ -1,0 +1,103 @@
+{
+  "name" : "Genome Manipulation",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.GenomeManipulation",
+  "description" : "Here we describe the various ways that a cell's genome can be modified.",
+  "created" : 1392047204000,
+  "icon" : "https://i1.ytimg.com/vi/vfmuDvEgD28/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "name" : "Genome Manipulation",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "When genetically modifying a cell, one can add additional DNAs, such as plasmids, that replicate as distinct molecules in the host.  Alternatively, one can modify the sequence of the host's genomic DNA.  Today we will discuss the various means of modifying a preexisting DNA inside a cell."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "vfmuDvEgD28"
+        }
+      } ]
+    }, {
+      "name" : "att Integrases",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Phage-derived att integrases employ a site specific recombinase to insert a DNA at a single locus of the genome."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "r8MoYX3SqaQ"
+        }
+      } ]
+    }, {
+      "name" : "Homologous Recombination",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Homologous recombination underlies many genome engineering methods.  It involves inserting DNAs into the genome at arbitrarily-chosen locations of the genome based on their homology to that sequence."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "NyqRjjcZJmQ"
+        }
+      } ]
+    }, {
+      "name" : "Conjugation, Transposition, and Transduction",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Conjugation, Transposition, and Transduction are 'old-school' ways of performing genome manipulation that pre-date recombinant DNA methods. Despite their age, they are still commonly used techniques.  Conjugation involves the transfer of DNAs from one cell to another through mating.  Transduction involves the transfer of DNAs from one cell to another via a phage particle intermediate.  Transposition is the process of randomly inserting a DNA into the genome.  * This book here is an excellent resource for describing these and many other traditional genetic methods."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "WKXZTaYwxJ8"
+        }
+      } ]
+    }, {
+      "name" : "Manipulation of Non Model Genomes",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "I have primarily discussed genome modification in E. coli and to some degree yeast.  The basic mechanisms of genome manipulation are the same regardless of organism, but not all organism are equally amenable to the various techniques.  There are many organisms that have no methods of deliberate genetic manipulation, but many organisms have at least one method."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "CP2CSSaCWM8"
+        }
+      } ]
+    }, {
+      "name" : "Optimization of Biosynthesis using MAGE",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "MAGE is a technique developed in the Church lab that allows you to install all combinations of a set of specific genome edits to produce a library of organisms.  More generally, it is one of the recent power tools for making many edits to a genome. It is most useful for improving the production of chemicals by MCF organisms."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "abUdm52Y_j0"
+        }
+      } ]
+    }, {
+      "name" : "Webinar: Genome Editing with CRISPR/Cas9",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "OriGene offers CRISPR/Cas9, the latest and effective tool for genome editing. This webinar covers the basics of the CRISPR/Cas9 system, as well as the applications of this novel technology."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "UAppRRKy8go"
+        }
+      } ]
+    } ]
+  } ]
+}
