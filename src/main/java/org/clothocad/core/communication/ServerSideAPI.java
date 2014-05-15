@@ -204,11 +204,11 @@ public class ServerSideAPI {
             completions = persistor.getCompletions(token);
             
             //If the completions suggest what the things is
-            if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("id");
-                ObjBase shar = persistor.get(ObjBase.class, new ObjectId(uuid));
-                args.add(shar);
-            } 
+            Object obj = resolveSloppy(tokens[i]);
+            if(obj!=null) {
+                args.add(obj);
+                continue;
+            }
             //Otherwise just consider this raw String or int
             else {
                 args.add(token);
@@ -237,14 +237,18 @@ public class ServerSideAPI {
             return null;
         }
         System.out.println("trySingleWord has a single token " + tokens[0]);
+        return resolveSloppy(tokens[0]);
+    }
+    
+    private Object resolveSloppy(String gigla) {
         Object out = null;
         try {
-            String word = tokens[0];
+            String word = gigla;
             List<Map> completions = persistor.getCompletions(word);
             
             //If the completions suggest what the things is
             if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("uuid");
+                String uuid = (String) completions.get(0).get("id");
                 return get(uuid);
             } 
             return null;
@@ -260,7 +264,7 @@ public class ServerSideAPI {
         //Example:  get pBca1256
         if(firstWord.equals("get")) {
             //Interpret the next token as a clotho.get request
-            return get(tokens[1]);
+            return resolveSloppy(tokens[1]);
             
         } else if(firstWord.equals("run")) {
             String[] newtok = new String[tokens.length-1];
