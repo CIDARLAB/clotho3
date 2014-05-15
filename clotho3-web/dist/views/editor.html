@@ -3,6 +3,7 @@
     <div class="col-sm-9">
       <form clotho-editor
             sharable="editable"
+            sharable-id="editableId"
             edit-mode="editModePass"
             form-horizontal="true"></form>
     </div>
@@ -10,20 +11,11 @@
     <div class="col-sm-3">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h5>Create new...</h5>
+          <h5>Create new</h5>
         </div>
         <div class="list-group">
-          <a class="list-group-item"
-             ng-repeat="(type, obj) in objectTypes"
-             ng-click="createNew(type)"
-             ng-class="{'list-group-item-info' : (type == 'Instance' && chooseSubtype)}">{{ obj.readable }}</a>
-        </div>
-        <div class="list-group"
-             ng-if="chooseSubtype">
-          <div
-              class="list-group-item"
-              ng-class="{'list-group-item-warning' : !selectedSubtype.length}">
-            <label for="chooseSubtype">Instance Type</label>
+          <div class="list-group-item">
+            <p>Instance</p>
             <input id="chooseSubtype"
                    type="text"
                    class="form-control"
@@ -35,12 +27,15 @@
                    popover-trigger="focus"
                    popover-append-to-body="true">
           </div>
+          <a class="list-group-item"
+             ng-repeat="type in ['Function', 'Schema', 'View']"
+             ng-click="createNewNonInstance(type)">{{ type }}</a>
         </div>
       </div>
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h5>Edit Existing...</h5>
+          <h5>Edit Existing Object</h5>
         </div>
         <div class="panel-body">
           <input id="chooseInstance"
@@ -49,7 +44,7 @@
                  ng-model="selectedInstance"
                  typeahead="c.id as c.name for c in queryWrapper($viewValue)"
                  typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
-                 popover="Type to search for an Instance to edit"
+                 popover="Type to search for and edit an existing object"
                  popover-trigger="focus"
                  popover-append-to-body="true">
         </div>

@@ -9790,7 +9790,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 })( window );
 
 /**
- * @license AngularJS v1.3.0-build.2687+sha.ac37915
+ * @license AngularJS v1.3.0-build.2693+sha.e9bc51c
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -9860,7 +9860,7 @@ function minErr(module) {
       return match;
     });
 
-    message = message + '\nhttp://errors.angularjs.org/1.3.0-build.2687+sha.ac37915/' +
+    message = message + '\nhttp://errors.angularjs.org/1.3.0-build.2693+sha.e9bc51c/' +
       (module ? module + '/' : '') + code;
     for (i = 2; i < arguments.length; i++) {
       message = message + (i == 2 ? '?' : '&') + 'p' + (i-2) + '=' +
@@ -11301,10 +11301,12 @@ function snake_case(name, separator){
 }
 
 function bindJQuery() {
+  var originalCleanData;
   // bind to jQuery if present;
   jQuery = window.jQuery;
-  // reset to jQuery or default to us.
-  if (jQuery) {
+  // Use jQuery if it exists with proper functionality, otherwise default to us.
+  // Angular 1.2+ requires jQuery 1.7.1+ for on()/off() support.
+  if (jQuery && jQuery.fn.on) {
     jqLite = jQuery;
     extend(jQuery.fn, {
       scope: JQLitePrototype.scope,
@@ -11313,14 +11315,25 @@ function bindJQuery() {
       injector: JQLitePrototype.injector,
       inheritedData: JQLitePrototype.inheritedData
     });
-    // Method signature:
-    //     jqLitePatchJQueryRemove(name, dispatchThis, filterElems, getterIfNoArguments)
-    jqLitePatchJQueryRemove('remove', true, true, false);
-    jqLitePatchJQueryRemove('empty', false, false, false);
-    jqLitePatchJQueryRemove('html', false, false, true);
+
+    originalCleanData = jQuery.cleanData;
+    // Prevent double-proxying.
+    originalCleanData = originalCleanData.$$original || originalCleanData;
+
+    // All nodes removed from the DOM via various jQuery APIs like .remove()
+    // are passed through jQuery.cleanData. Monkey-patch this method to fire
+    // the $destroy event on all removed nodes.
+    jQuery.cleanData = function(elems) {
+      for (var i = 0, elem; (elem = elems[i]) != null; i++) {
+        jQuery(elem).triggerHandler('$destroy');
+      }
+      originalCleanData(elems);
+    };
+    jQuery.cleanData.$$original = originalCleanData;
   } else {
     jqLite = JQLite;
   }
+
   angular.element = jqLite;
 }
 
@@ -11816,7 +11829,7 @@ function setupModuleLoader(window) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.3.0-build.2687+sha.ac37915',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.3.0-build.2693+sha.e9bc51c',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 3,
   dot: 0,
@@ -12079,49 +12092,6 @@ function camelCase(name) {
       return offset ? letter.toUpperCase() : letter;
     }).
     replace(MOZ_HACK_REGEXP, 'Moz$1');
-}
-
-/////////////////////////////////////////////
-// jQuery mutation patch
-//
-// In conjunction with bindJQuery intercepts all jQuery's DOM destruction apis and fires a
-// $destroy event on all DOM nodes being removed.
-//
-/////////////////////////////////////////////
-
-function jqLitePatchJQueryRemove(name, dispatchThis, filterElems, getterIfNoArguments) {
-  var originalJqFn = jQuery.fn[name];
-  originalJqFn = originalJqFn.$original || originalJqFn;
-  removePatch.$original = originalJqFn;
-  jQuery.fn[name] = removePatch;
-
-  function removePatch(param) {
-    // jshint -W040
-    var list = filterElems && param ? [this.filter(param)] : [this],
-        fireEvent = dispatchThis,
-        set, setIndex, setLength,
-        element, childIndex, childLength, children;
-
-    if (!getterIfNoArguments || param != null) {
-      while(list.length) {
-        set = list.shift();
-        for(setIndex = 0, setLength = set.length; setIndex < setLength; setIndex++) {
-          element = jqLite(set[setIndex]);
-          if (fireEvent) {
-            element.triggerHandler('$destroy');
-          } else {
-            fireEvent = !fireEvent;
-          }
-          for(childIndex = 0, childLength = (children = element.children()).length;
-              childIndex < childLength;
-              childIndex++) {
-            list.push(jQuery(children[childIndex]));
-          }
-        }
-      }
-    }
-    return originalJqFn.apply(this, arguments);
-  }
 }
 
 var SINGLE_TAG_REGEXP = /^<(\w+)\s*\/?>(?:<\/\1>|)$/;
@@ -16386,7 +16356,8 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
           isolateScope = scope.$new(true);
 
-          if (templateDirective && (templateDirective === newIsolateScopeDirective.$$originalDirective)) {
+          if (templateDirective && (templateDirective === newIsolateScopeDirective ||
+              templateDirective === newIsolateScopeDirective.$$originalDirective)) {
             $linkNode.data('$isolateScope', isolateScope) ;
           } else {
             $linkNode.data('$isolateScopeNoTemplate', isolateScope);
@@ -25929,6 +25900,23 @@ function FormController(element, attrs, $scope, $animate) {
 
   /**
    * @ngdoc method
+   * @name form.FormController#$commitViewValue
+   *
+   * @description
+   * Commit all form controls pending updates to the `$modelValue`.
+   *
+   * Updates may be pending by a debounced event or because the input is waiting for a some future
+   * event defined in `ng-model-options`. This method is rarely needed as `NgModelController`
+   * usually handles calling this in response to input events.
+   */
+  form.$commitViewValue = function() {
+    forEach(controls, function(control) {
+      control.$commitViewValue();
+    });
+  };
+
+  /**
+   * @ngdoc method
    * @name form.FormController#$addControl
    *
    * @description
@@ -26139,6 +26127,10 @@ function FormController(element, attrs, $scope, $animate) {
  * hitting enter in any of the input fields will trigger the click handler on the *first* button or
  * input[type=submit] (`ngClick`) *and* a submit handler on the enclosing form (`ngSubmit`)
  *
+ * Any pending `ngModelOptions` changes will take place immediately when an enclosing form is
+ * submitted. Note that `ngClick` events will occur before the model is updated. Use `ngSubmit`
+ * to have access to the updated model.
+ *
  * @param {string=} name Name of the form. If specified, the form controller will be published into
  *                       related scope, under this name.
  *
@@ -26234,19 +26226,23 @@ var formDirectiveFactory = function(isNgForm) {
               // IE 9 is not affected because it doesn't fire a submit event and try to do a full
               // page reload if the form was destroyed by submission of the form via a click handler
               // on a button in the form. Looks like an IE9 specific bug.
-              var preventDefaultListener = function(event) {
+              var handleFormSubmission = function(event) {
+                scope.$apply(function() {
+                  controller.$commitViewValue();
+                });
+
                 event.preventDefault
                   ? event.preventDefault()
                   : event.returnValue = false; // IE
               };
 
-              addEventListenerFn(formElement[0], 'submit', preventDefaultListener);
+              addEventListenerFn(formElement[0], 'submit', handleFormSubmission);
 
               // unregister the preventDefault listener so that we don't not leak memory but in a
               // way that will achieve the prevention of the default action.
               formElement.on('$destroy', function() {
                 $timeout(function() {
-                  removeEventListenerFn(formElement[0], 'submit', preventDefaultListener);
+                  removeEventListenerFn(formElement[0], 'submit', handleFormSubmission);
                 }, 0, false);
               });
             }
@@ -26294,7 +26290,7 @@ var DATETIMELOCAL_REGEXP = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)$/;
 var WEEK_REGEXP = /^(\d{4})-W(\d\d)$/;
 var MONTH_REGEXP = /^(\d{4})-(\d\d)$/;
 var TIME_REGEXP = /^(\d\d):(\d\d)$/;
-var DEFAULT_REGEXP = /(\b|^)default(\b|$)/;
+var DEFAULT_REGEXP = /(\s+|^)default(\s+|$)/;
 
 var inputType = {
 
@@ -27212,50 +27208,41 @@ function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     }
   };
 
-  // Allow adding/overriding bound events
-  if (ctrl.$options && ctrl.$options.updateOn) {
-    // bind to user-defined events
-    element.on(ctrl.$options.updateOn, listener);
-  }
+  // if the browser does support "input" event, we are fine - except on IE9 which doesn't fire the
+  // input event on backspace, delete or cut
+  if ($sniffer.hasEvent('input')) {
+    element.on('input', listener);
+  } else {
+    var timeout;
 
-  // setup default events if requested
-  if (!ctrl.$options || ctrl.$options.updateOnDefault) {
-    // if the browser does support "input" event, we are fine - except on IE9 which doesn't fire the
-    // input event on backspace, delete or cut
-    if ($sniffer.hasEvent('input')) {
-      element.on('input', listener);
-    } else {
-      var timeout;
-
-      var deferListener = function(ev) {
-        if (!timeout) {
-          timeout = $browser.defer(function() {
-            listener(ev);
-            timeout = null;
-          });
-        }
-      };
-
-      element.on('keydown', function(event) {
-        var key = event.keyCode;
-
-        // ignore
-        //    command            modifiers                   arrows
-        if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) return;
-
-        deferListener(event);
-      });
-
-      // if user modifies input value using context menu in IE, we need "paste" and "cut" events to catch it
-      if ($sniffer.hasEvent('paste')) {
-        element.on('paste cut', deferListener);
+    var deferListener = function(ev) {
+      if (!timeout) {
+        timeout = $browser.defer(function() {
+          listener(ev);
+          timeout = null;
+        });
       }
-    }
+    };
 
-    // if user paste into input using mouse on older browser
-    // or form autocomplete on newer browser, we need "change" event to catch it
-    element.on('change', listener);
+    element.on('keydown', function(event) {
+      var key = event.keyCode;
+
+      // ignore
+      //    command            modifiers                   arrows
+      if (key === 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) return;
+
+      deferListener(event);
+    });
+
+    // if user modifies input value using context menu in IE, we need "paste" and "cut" events to catch it
+    if ($sniffer.hasEvent('paste')) {
+      element.on('paste cut', deferListener);
+    }
   }
+
+  // if user paste into input using mouse on older browser
+  // or form autocomplete on newer browser, we need "change" event to catch it
+  element.on('change', listener);
 
   ctrl.$render = function() {
     element.val(ctrl.$isEmpty(ctrl.$viewValue) ? '' : ctrl.$viewValue);
@@ -27499,15 +27486,7 @@ function radioInputType(scope, element, attr, ctrl) {
     }
   };
 
-  // Allow adding/overriding bound events
-  if (ctrl.$options && ctrl.$options.updateOn) {
-    // bind to user-defined events
-    element.on(ctrl.$options.updateOn, listener);
-  }
-
-  if (!ctrl.$options || ctrl.$options.updateOnDefault) {
-    element.on('click', listener);
-  }
+  element.on('click', listener);
 
   ctrl.$render = function() {
     var value = attr.value;
@@ -27530,15 +27509,7 @@ function checkboxInputType(scope, element, attr, ctrl) {
     });
   };
 
-  // Allow adding/overriding bound events
-  if (ctrl.$options && ctrl.$options.updateOn) {
-    // bind to user-defined events
-    element.on(ctrl.$options.updateOn, listener);
-  }
-
-  if (!ctrl.$options || ctrl.$options.updateOnDefault) {
-    element.on('click', listener);
-  }
+  element.on('click', listener);
 
   ctrl.$render = function() {
     element[0].checked = ctrl.$viewValue;
@@ -27982,22 +27953,22 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
 
   /**
    * @ngdoc method
-   * @name ngModel.NgModelController#$cancelUpdate
+   * @name ngModel.NgModelController#$rollbackViewValue
    *
    * @description
-   * Cancel an update and reset the input element's value to prevent an update to the `$viewValue`,
+   * Cancel an update and reset the input element's value to prevent an update to the `$modelValue`,
    * which may be caused by a pending debounced event or because the input is waiting for a some
    * future event.
    *
    * If you have an input that uses `ng-model-options` to set up debounced events or events such
-   * as blur you can have a situation where there is a period when the value of the input element
-   * is out of synch with the ngModel's `$viewValue`.
+   * as blur you can have a situation where there is a period when the `$viewValue`
+   * is out of synch with the ngModel's `$modelValue`.
    *
    * In this case, you can run into difficulties if you try to update the ngModel's `$modelValue`
    * programmatically before these debounced/future events have resolved/occurred, because Angular's
    * dirty checking mechanism is not able to tell whether the model has actually changed or not.
    *
-   * The `$cancelUpdate()` method should be called before programmatically changing the model of an
+   * The `$rollbackViewValue()` method should be called before programmatically changing the model of an
    * input which may have such events pending. This is important in order to make sure that the
    * input field will be updated with the new model value and any pending operations are cancelled.
    *
@@ -28008,7 +27979,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    *     .controller('CancelUpdateCtrl', function($scope) {
    *       $scope.resetWithCancel = function (e) {
    *         if (e.keyCode == 27) {
-   *           $scope.myForm.myInput1.$cancelUpdate();
+   *           $scope.myForm.myInput1.$rollbackViewValue();
    *           $scope.myValue = '';
    *         }
    *       };
@@ -28027,11 +27998,11 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    *        <p>Now see what happens if you start typing then press the Escape key</p>
    *
    *       <form name="myForm" ng-model-options="{ updateOn: 'blur' }">
-   *         <p>With $cancelUpdate()</p>
+   *         <p>With $rollbackViewValue()</p>
    *         <input name="myInput1" ng-model="myValue" ng-keydown="resetWithCancel($event)"><br/>
    *         myValue: "{{ myValue }}"
    *
-   *         <p>Without $cancelUpdate()</p>
+   *         <p>Without $rollbackViewValue()</p>
    *         <input name="myInput2" ng-model="myValue" ng-keydown="resetWithoutCancel($event)"><br/>
    *         myValue: "{{ myValue }}"
    *       </form>
@@ -28039,14 +28010,27 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    *   </file>
    * </example>
    */
-  this.$cancelUpdate = function() {
+  this.$rollbackViewValue = function() {
     $timeout.cancel(pendingDebounce);
+    ctrl.$viewValue = ctrl.$$lastCommittedViewValue;
     ctrl.$render();
   };
 
-  // update the view value
-  this.$$realSetViewValue = function(value) {
-    ctrl.$viewValue = value;
+  /**
+   * @ngdoc method
+   * @name ngModel.NgModelController#$commitViewValue
+   *
+   * @description
+   * Commit a pending update to the `$modelValue`.
+   *
+   * Updates may be pending by a debounced event or because the input is waiting for a some future
+   * event defined in `ng-model-options`. this method is rarely needed as `NgModelController`
+   * usually handles calling this in response to input events.
+   */
+  this.$commitViewValue = function() {
+    var value = ctrl.$viewValue;
+    ctrl.$$lastCommittedViewValue = value;
+    $timeout.cancel(pendingDebounce);
 
     // change to dirty
     if (ctrl.$pristine) {
@@ -28091,6 +28075,9 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    *
    * Lastly, all the registered change listeners, in the `$viewChangeListeners` list, are called.
    *
+   * In case the {@link ng.directive:ngModelOptions ngModelOptions} directive is used with `updateOn`
+   * and the `default` trigger is not listed, all those actions will remain pending until one of the
+   * `updateOn` events is triggered on the DOM element.
    * All these actions will be debounced if the {@link ng.directive:ngModelOptions ngModelOptions}
    * directive is used with a custom debounce for this particular event.
    *
@@ -28100,6 +28087,13 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    * @param {string} trigger Event that triggered the update.
    */
   this.$setViewValue = function(value, trigger) {
+    ctrl.$viewValue = value;
+    if (!ctrl.$options || ctrl.$options.updateOnDefault) {
+      ctrl.$$debounceViewValueCommit(trigger);
+    }
+  };
+
+  this.$$debounceViewValueCommit = function(trigger) {
     var debounceDelay = 0,
         options = ctrl.$options,
         debounce;
@@ -28118,10 +28112,10 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
     $timeout.cancel(pendingDebounce);
     if (debounceDelay) {
       pendingDebounce = $timeout(function() {
-        ctrl.$$realSetViewValue(value);
+        ctrl.$commitViewValue();
       }, debounceDelay);
     } else {
-      ctrl.$$realSetViewValue(value);
+      ctrl.$commitViewValue();
     }
   };
 
@@ -28141,7 +28135,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
       }
 
       if (ctrl.$viewValue !== value) {
-        ctrl.$viewValue = value;
+        ctrl.$viewValue = ctrl.$$lastCommittedViewValue = value;
         ctrl.$render();
       }
     }
@@ -28279,6 +28273,16 @@ var ngModelDirective = function() {
         scope.$on('$destroy', function() {
           formCtrl.$removeControl(modelCtrl);
         });
+      },
+      post: function(scope, element, attr, ctrls) {
+        var modelCtrl = ctrls[0];
+        if (modelCtrl.$options && modelCtrl.$options.updateOn) {
+          element.on(modelCtrl.$options.updateOn, function(ev) {
+            scope.$apply(function() {
+              modelCtrl.$$debounceViewValueCommit(ev && ev.type);
+            });
+          });
+        }
       }
     }
   };
@@ -28557,13 +28561,17 @@ var ngValueDirective = function() {
  *
  * Given the nature of `ngModelOptions`, the value displayed inside input fields in the view might
  * be different than the value in the actual model. This means that if you update the model you
- * should also invoke {@link ngModel.NgModelController `$cancelUpdate`} on the relevant input field in
+ * should also invoke {@link ngModel.NgModelController `$rollbackViewValue`} on the relevant input field in
  * order to make sure it is synchronized with the model and that any debounced action is canceled.
  *
- * The easiest way to reference the control's {@link ngModel.NgModelController `$cancelUpdate`}
+ * The easiest way to reference the control's {@link ngModel.NgModelController `$rollbackViewValue`}
  * method is by making sure the input is placed inside a form that has a `name` attribute. This is
  * important because `form` controllers are published to the related scope under the name in their
  * `name` attribute.
+ *
+ * Any pending changes will take place immediately when an enclosing form is submitted via the
+ * `submit` event. Note that `ngClick` events will occur before the model is updated. Use `ngSubmit`
+ * to have access to the updated model.
  *
  * @param {Object} ngModelOptions options to apply to the current model. Valid keys are:
  *   - `updateOn`: string specifying which event should be the input bound to. You can set several
@@ -28602,7 +28610,7 @@ var ngValueDirective = function() {
 
         $scope.cancel = function (e) {
           if (e.keyCode == 27) {
-            $scope.userForm.userName.$cancelUpdate();
+            $scope.userForm.userName.$rollbackViewValue();
           }
         };
       }
@@ -28620,7 +28628,7 @@ var ngValueDirective = function() {
         expect(model.getText()).toEqual('say hello');
       });
 
-      it('should $cancelUpdate when model changes', function() {
+      it('should $rollbackViewValue when model changes', function() {
         input.sendKeys(' hello');
         expect(input.getAttribute('value')).toEqual('say hello');
         input.sendKeys(protractor.Key.ESCAPE);
@@ -28642,7 +28650,7 @@ var ngValueDirective = function() {
           <input type="text" name="userName"
                  ng-model="user.name"
                  ng-model-options="{ debounce: 1000 }" />
-          <button ng-click="userForm.userName.$cancelUpdate(); user.name=''">Clear</button><br />
+          <button ng-click="userForm.userName.$rollbackViewValue(); user.name=''">Clear</button><br />
         </form>
         <pre>user.name = <span ng-bind="user.name"></span></pre>
       </div>
@@ -28660,13 +28668,13 @@ var ngModelOptionsDirective = function() {
       var that = this;
       this.$options = $scope.$eval($attrs.ngModelOptions);
       // Allow adding/overriding bound events
-      if (this.$options.updateOn) {
+      if (this.$options.updateOn !== undefined) {
         this.$options.updateOnDefault = false;
         // extract "default" pseudo-event from list of events that can trigger a model update
-        this.$options.updateOn = this.$options.updateOn.replace(DEFAULT_REGEXP, function() {
+        this.$options.updateOn = trim(this.$options.updateOn.replace(DEFAULT_REGEXP, function() {
           that.$options.updateOnDefault = true;
           return ' ';
-        });
+        }));
       } else {
         this.$options.updateOnDefault = true;
       }

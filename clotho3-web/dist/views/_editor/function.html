@@ -7,7 +7,22 @@
   <div class="panel-body ng-cloak">
 
     <fieldset ng-disabled="!editMode">
-      <div ng-include="_objBaseFields"></div>
+      <!-- note - not using ng-include because want these forms published on the scope and accessible for form controls-->
+      <form-field name="Name" horizontal="formHorizontal">
+        <input type="text" id="sharableName" ng-model="sharable.name">
+      </form-field>
+
+      <form-field name="Schema" horizontal="formHorizontal">
+        <select id="sharableSchema" ng-model="sharable.schema" ng-options="s.id as s.name for s in clothoSchemas | orderBy:'name'"></select>
+      </form-field>
+
+      <form-field name="ID" horizontal="formHorizontal">
+        <input type="text" id="sharableId" ng-model="sharable.id" ng-model-options="{updateOn : 'blur'}">
+      </form-field>
+
+      <form-field name="Description" horizontal="formHorizontal">
+        <textarea id="sharableDescription" ng-model="sharable.description" rows="3"></textarea>
+      </form-field>
 
       <form-field name="Language" horizontal="formHorizontal">
         <select id="functionLang" ng-model="sharable.language"
@@ -55,8 +70,8 @@
             </button>
           </div>
         </div>
-        <div class="panel-body">
-          <div class="form-group clearfix" ng-repeat="param in sharable.args  track by $index">
+        <div class="panel-body" ng-show="sharable.args.length">
+          <div class="form-group clearfix" ng-repeat="param in sharable.args track by $index">
 
             <div class="col-sm-3">
               <select ng-model="param.type"
@@ -84,12 +99,14 @@
           <span class="panel-title">Code Editor</span>
         </div>
         <div>
-          <textarea ui-codemirror="codemirrorEditorOptions"
+          <div ui-codemirror="codemirrorEditorOptions"
+                    ng-form="Code"
                     id="functionCode"
                     ng-model="sharable.code"
-                    style="position: relative; width: 100%; height: 12em"
-                    required>
-          </textarea>
+                    rows="12"
+                    style="position: relative; width: 100%;"
+                    ng-required>
+          </div>
         </div>
         <div function-code-drop update-on-read="sharable.code" show-drop="true" show-browser="false"></div>
       </div>
@@ -114,7 +131,7 @@
         </div>
 
       </div>
-      <div class="list-group">
+      <div class="list-group" ng-show="sharable.id && Code.$pristine">
         <div ng-repeat="test in sharable.tests track by $index"
              class="list-group-item clearfix"
              ng-class="{'list-group-item-success' : testResults[$index] === true, 'list-group-item-danger' : testResults[$index] === false}">
@@ -122,12 +139,14 @@
           <div class="pull-right btn-group-vertical col-sm-2">
             <button class="btn btn-default"
                     ng-click="singleTest($index)"
-                    ng-disabled="form.$invalid"
-                    ng-class="{'btn-success' : testResults[$index] === true, 'btn-danger' : testResults[$index] === false}">Test
+                    ng-disabled="!editMode"
+                    ng-class="{'btn-success' : testResults[$index] === true, 'btn-danger' : testResults[$index] === false}">
+              Test
             </button>
             <button class="btn btn-warning pull-right"
                     ng-click="sharable.tests.splice($index, 1)"
-                    ng-disabled="!editMode">Delete
+                    ng-disabled="!editMode">
+              Delete
             </button>
           </div>
 
@@ -137,12 +156,12 @@
 
               <div ng-repeat="param in sharable.args track by $index" class="col-sm-10">
                 <div ng-if="simpleTypes[param.type]">
-                  <input type="text"
-                         class="form-control"
-                         id="functionTestArg{{$index}}"
-                         ng-model="test.args[$index]"
-                         ng-disabled="!editMode"
-                         placeholder="{{param.name}}">
+                  <textarea json-edit="test.args[$index]"
+                            rows="1"
+                            class="form-control"
+                            ng-disabled="!editMode"
+                            placeholder="{{param.name + ' - enter as JSON (quote for string)'}}">
+                  </textarea>
                 </div>
                 <div ng-if="!simpleTypes[param.type]">
                   <input type="text"
@@ -172,6 +191,11 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="list-group" ng-show="!sharable.id || Code.$dirty">
+        <div class="list-group-item list-group-item-warning" style="text-align: center;">
+          <p>Please save your changes before running tests</p>
         </div>
       </div>
     </div>
