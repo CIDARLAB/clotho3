@@ -5,7 +5,7 @@
  * @description Given a trail, constructs the Trail banner
  */
 angular.module('clotho.trails')
-.directive('trailHeader', function() {
+.directive('trailHeader', function($sce) {
 
 	var defaultIcon = 'images/trails/trails_logo.png';
 
@@ -17,7 +17,7 @@ angular.module('clotho.trails')
 			trail: '=trailHeader'
 		},
 		link: function (scope,element,attrs) {
-			scope.defaultTrailIcon = defaultIcon;
+			scope.trailIconTrusted = $sce.trustAsResourceUrl(scope.trail.icon || defaultIcon);
 		}
 	}
 });

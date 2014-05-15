@@ -3,10 +3,6 @@ angular.module('clotho.interface')
 		return {
 			restrict: 'A',
 			link: function postLink(scope, element, attrs) {
-				if (!angular.isDefined(attrs['ngSrc'])) {
-					return;
-				}
-
 				element.css({
 					'background-position' : '50% 50%',
 					'background-repeat' : 'none',
