@@ -139,7 +139,7 @@ angular.module('clotho.youtube')
 			//parse out videos
 			_.each(items, function (item) {
 				result.contents[0].pages.push({
-					name : item.snippet.title,
+					title : item.snippet.title,
 					schema : "Trail",
 					icon : "video",
 					contents : [

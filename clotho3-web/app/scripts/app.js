@@ -138,11 +138,18 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/trail.html',
   controller: 'TestTrailCtrl',
 	resolve : {
-		trail : ['$q', '$http', 'Trails', function ($q, $http, Trails) {
+		trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
 			var deferred = $q.defer();
-			$http.get('models/bb99191e810c19729de860fe.json').then(function(data) {
-				Trails.compile(data.data).then(function (compiled) {
+			Clotho.get($route.current.params.id).then(function(result) {
+				Trails.compile(result).then(function (compiled) {
+					$route.current.$$route.title = result.name;
 					deferred.resolve(compiled);
+				});
+			}, function rejection () {
+				$http.get('models/bb99191e810c19729de860fe.json').then(function(data) {
+					Trails.compile(data.data).then(function (compiled) {
+						deferred.resolve(compiled);
+					});
 				});
 			});
 			return deferred.promise;
