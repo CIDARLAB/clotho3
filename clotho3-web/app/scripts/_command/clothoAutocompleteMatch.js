@@ -2,7 +2,7 @@ angular.module('clotho.tokenizer')
 	/*
 	 * internal directive which displays an autocompletion
 	 */
-	.directive('clothoAutocompleteMatch', function () {
+	.directive('clothoAutocompleteMatch', function (ClothoSchemas) {
 		return {
 			restrict:'EA',
 			replace: true,
@@ -18,6 +18,10 @@ angular.module('clotho.tokenizer')
 					return attrs['active'];
 				}, function (newval) {
 					scope.active = scope.$eval(newval);
+				});
+
+				scope.$watch('match', function (match) {
+					scope.iconClass = ClothoSchemas.determineSharableIcon(ClothoSchemas.determineSharableType(match));
 				});
 			}
 		};

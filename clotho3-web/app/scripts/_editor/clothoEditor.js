@@ -81,7 +81,7 @@ angular.module('clotho.editor')
 					return;
 				}
 
-				var type = ClothoSchemas.determineInstanceType(sharable),
+				var type = ClothoSchemas.determineSharableType(sharable),
 					templateUrl;
 
 				// if it's an instance, check for a more specific template

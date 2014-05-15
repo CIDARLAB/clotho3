@@ -346,7 +346,8 @@ angular.module('clotho.foundation')
 		}
 
 		function isFunction (sharable) {
-			return determineSchema(sharable) == sharableTypes.Function.schema;
+			var sharableSchema = determineSchema(sharable);
+			return sharableSchema == sharableTypes.Function.schema || sharableSchema == 'org.clothocad.core.datums.Module';
 		}
 
 		function isView (sharable) {
@@ -354,7 +355,7 @@ angular.module('clotho.foundation')
 		}
 
 		//determines main type: Instance, Function, View, Schema
-		function determineInstanceType (sharable) {
+		function determineSharableType (sharable) {
 			if (isSchema(sharable)) {
 				return 'Schema';
 			} else if (isFunction(sharable)) {
@@ -364,6 +365,19 @@ angular.module('clotho.foundation')
 			} else {
 				return 'Instance';
 			}
+		}
+
+		var sharableIconMap = {
+			Instance : "glyphicon glyphicon-file",
+			Function : "glyphicon glyphicon-play-circle",
+			View : "glyphicon glyphicon-picture",
+			Schema : "glyphicon glyphicon-cog",
+			default : "glyphicon glyphicon-file"
+		};
+
+		//returns class for icon of sharable type given
+		function determineSharableIcon (type) {
+			return sharableIconMap[type] || sharableIconMap["default"];
 		}
 
 		//creates scaffold given SchemaName, does not create on server
@@ -403,7 +417,8 @@ angular.module('clotho.foundation')
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,
 
-			determineInstanceType : determineInstanceType,
+			determineSharableType : determineSharableType,
+			determineSharableIcon : determineSharableIcon,
 			determineFieldType : determineFieldType,
 			determineSchema : determineSchema,
 			createScaffold : createScaffold,
