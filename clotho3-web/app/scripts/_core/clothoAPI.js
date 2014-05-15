@@ -99,6 +99,12 @@ function generateClothoAPI() {
 		return fn.emitSubCallback(channel, data, angular.noop, options);
 	};
 
+	function createRejectedPromise () {
+		var deferred = $q.defer();
+		deferred.reject();
+		return deferred.promise;
+	}
+
 
 
     /**********
@@ -182,7 +188,7 @@ function generateClothoAPI() {
     var get_async = function clothoAPI_get_async(uuid, options) {
 
 		    if (angular.isUndefined(uuid)) {
-			    return $q.when();
+			    return createRejectedPromise();
 		    }
 
 	      /*
@@ -239,11 +245,6 @@ function generateClothoAPI() {
     var set = function clothoAPI_set(sharable) {
 
         if (angular.isEmpty(sharable)) return false;
-
-        //strip $$v (angular promise value wrapper)
-        while (sharable.$$v) {
-            sharable = sharable.$$v;
-        }
 
         var callback = function() {
             Collector.storeModel(sharable.id, sharable);
@@ -448,7 +449,10 @@ function generateClothoAPI() {
      * @returns {object} The object if created successfully, null otherwise
      */
     var create = function clothoAPI_create(obj) {
-        return fn.emitSubOnce('create', obj);
+	    if (angular.isUndefined(obj)) {
+		    return null;
+	    }
+      return fn.emitSubOnce('create', obj);
     };
 
     /**
@@ -460,19 +464,19 @@ function generateClothoAPI() {
      * @param {string|array} uuid UUID of Sharable, or an array of string UUIDs
      *
      * @description
-     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Nothing will happen if no UUID is passed. Clotho will send an error message on the 'say' channel if destroy fails for an object.
+     * Destroys the listed objects. Does not destroy anything if the selector is ambiguous. Returns rejected promise if no id is passed. Clotho will send an error message on the 'say' channel if destroy fails for an object.
      *
      */
     var destroy = function clothoAPI_destroy(uuid) {
-	    if (!uuid) {
-		    return;
+	    if (angular.isUndefined(uuid)) {
+		    return createRejectedPromise();
 	    }
 
-        var callback = function() {
-            Collector.removeModel(uuid);
-        };
+      var callback = function() {
+          Collector.removeModel(uuid);
+      };
 
-        return fn.emitSubCallback('destroy', uuid, callback);
+      return fn.emitSubCallback('destroy', uuid, callback);
     };
 
     /**
@@ -518,34 +522,11 @@ function generateClothoAPI() {
      * @returns {array} array of results of validation. Empty object means object passed validation. Populated object encountered problems. Fields are listed which were problematic, with error messages.
      */
     var validate = function (obj) {
-        return fn.emitSubOnce('validate', obj);
+	    if (angular.isEmpty(obj)) {
+		    return createRejectedPromise();
+	    }
+      return fn.emitSubOnce('validate', obj);
     };
-
-    /**
-     * @name Clotho.show_old
-     *
-     * @param {string} uuid
-     * @param {object=} args
-     *  - ? [custom]
-     *  - position object
-     *      - parent : { uuid : [uuid of div to insert into] }
-     *      - absposition : { {int} x, {int} y }
-     *
-     * @description
-     * Request a GUI from the server. JSON will be validated and pushed to the client, and necessary resources will be collected via a series of client.collect() calls, then displayed via client.show().
-     *
-     * @notes
-     * viewID should be kept on the server, not passed explicitly to function
-     *
-     */
-    var show_old = function clothoAPI_show(uuid, args) {
-        var packaged = {
-            "uuid" : uuid,
-            "args" : args
-        };
-        fn.api.emit('show_old', packaged);
-    };
-
 
     /**
      * @name Clotho.show
@@ -691,24 +672,6 @@ function generateClothoAPI() {
 	    return fn.emitSubOnce('run', packaged, options);
     };
 
-
-    /**
-     * @name Clotho.recent_deprecated
-     * @note This is the old implementation. Sends request on requestRecent, and expects response on displayRecent
-     * @returns {Promise}
-     */
-    var recent_deprecated = function() {
-        fn.emit('requestRecent', {});
-
-        var deferred = $q.defer();
-
-        PubSub.once('displayRecent', function(data) {
-            deferred.resolve(data);
-        }, 'clothoAPI');
-
-        return deferred.promise;
-    };
-
     /**
      * @name Clotho.recent
      *
@@ -754,7 +717,7 @@ function generateClothoAPI() {
      * start a trail with a given uuid
      */
     var startTrail = function clothoAPI_startTrail(uuid) {
-        $location.path("/trails/" + uuid);
+      $location.path("/trails?id=" + uuid);
     };
 
     return {
