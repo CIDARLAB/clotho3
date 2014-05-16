@@ -187,7 +187,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	/****** Config *****/
 
 	$rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
-		var title = current.$$route.title;
+		var title = angular.isDefined(current.$$route) ? current.$$route.title : null;
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
 	});
