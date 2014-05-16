@@ -1,10 +1,10 @@
 {
-  "id" : "bb7f191e810c19729de860bb",
+  "id" : "org.clothocad.trails.WritingTrails-AddingFunctionality",
   "schema" : "Trail",
-  "name" : "Combined Trail",
+  "name" : "Writing Trails - Adding Functionality",
   "dependencies" : [ "bb7f191e810c19729de860ab", "bb7f191e810c19729de860dd" ],
   "author" : "Max Bates",
-  "description" : "<blockquote><p>This Trail transcludes the 140L Combinatorial videos and a chapter from the Biosafety Trail. It also demos the ability to Mixin components, and bootstrap autonomous widgets.</p><p><small>Maxwell Bates</small></p></blockquote>",
+  "description" : "This trail demos the ability to mixin components, and bootstrap autonomous widgets. It is kinda outdated",
   "contents" : [ {
     "chapter" : "Mixin / Bootstrap",
     "pages" : [ {
@@ -62,17 +62,5 @@
       "template" : "/partials/trails/trail_super/revcomp8.html",
       "css" : "/partials/trails/trail_super/revcomp-css.css"
     } ]
-  }, {
-    "chapter" : "Full Transclude",
-    "transclude" : {
-      "id" : "bb7f191e810c19729de860dd",
-      "chapters" : "all"
-    }
-  }, {
-    "chapter" : "Partial Transclude",
-    "transclude" : {
-      "id" : "bb7f191e810c19729de860ab",
-      "chapters" : "0-1"
-    }
   } ]
 }

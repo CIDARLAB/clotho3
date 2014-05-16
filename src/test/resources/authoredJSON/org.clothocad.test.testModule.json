@@ -1,0 +1,7 @@
+{
+  "name" : "testModule",
+  "id" : "org.clothocad.test.testModule",
+  "language" : "JAVASCRIPT",
+  "schema" : "org.clothocad.core.datums.Module",
+  "code" : "(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
+}

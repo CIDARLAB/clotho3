@@ -1,0 +1,18 @@
+{
+  "name" : "reverse",
+  "id" : "org.clothocad.test.reverse",
+  "language" : "JAVASCRIPT",
+  "schema" : "org.clothocad.core.datums.Function",
+  "args" : [ {
+    "type" : "string",
+    "name" : "str"
+  } ],
+  "code" : "function(str) { return str.split('').reverse().join('') };",
+  "tests" : [ {
+    "args" : [ "blah" ],
+    "output" : {
+      "value" : "halb",
+      "type" : "VALUE"
+    }
+  } ]
+}

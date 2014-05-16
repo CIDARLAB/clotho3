@@ -1,0 +1,5 @@
+{
+  "id" : "py_biorc",
+  "language" : "python2",
+  "code" : "import Bio.Seq\ndef run(in_seq): return str(Bio.Seq.Seq(in_seq).reverse_complement())"
+}

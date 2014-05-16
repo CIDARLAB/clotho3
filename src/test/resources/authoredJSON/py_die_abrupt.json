@@ -1,0 +1,5 @@
+{
+  "id" : "py_die_abrupt",
+  "language" : "python2",
+  "code" : "import os; os.kill(os.getpid(), 9)"
+}
