@@ -123,6 +123,8 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 			indices = indices + '-0';
 		}
 
+		//todo - check if already at url of trail
+
 		$location.search('position', indices);
 	};
 

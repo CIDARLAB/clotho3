@@ -173,6 +173,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/quiz.html',
   controller: 'TestQuizCtrl'
 })
+.when('/test/trail-splash', {
+  templateUrl: 'views/test/trail-splash.html',
+  controller: 'TestTrailSplashCtrl'
+})
 	.otherwise({
 		redirectTo:'/'
 	});

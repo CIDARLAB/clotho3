@@ -17,7 +17,9 @@ angular.module('clotho.trails')
 			trail: '=trailHeader'
 		},
 		link: function (scope,element,attrs) {
-			scope.trailIconTrusted = $sce.trustAsResourceUrl(scope.trail.icon || defaultIcon);
+			scope.$watch('trail.icon', function (newsrc) {
+				scope.trailIconTrusted = newsrc ? $sce.trustAsResourceUrl(newsrc) : defaultIcon;
+			});
 		}
 	}
 });

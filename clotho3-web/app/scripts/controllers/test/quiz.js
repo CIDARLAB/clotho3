@@ -3,11 +3,12 @@
 angular.module('clotho.webapp')
 	.controller('TestQuizCtrl', function ($scope) {
 
-		//todo - refactor from names to IDs for get() and run()
-
 		// todo - experiment with lazily retrieved quizzes
 
-		//todo - example self-contained grading function
+		// todo - example self-contained grading function
+
+		// fixme - change dynamic dictionary syntax - not sloppy
+		// todo - refactor from names to IDs for get() and run()
 
 		$scope.trueFalse = {
 			question: {

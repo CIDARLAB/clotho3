@@ -78,12 +78,14 @@ angular.module('clotho.youtube')
 	 */
 	var playlistInfo = function getYoutubePlaylistInfo (playlistId) {
 		return $http.get('https://www.googleapis.com/youtube/v3/playlists', {
-			params : {
+			params: {
 				key: PUBLIC_KEY,
 				part: 'id, snippet, status, contentDetails',
-				id : playlistId
-			}
-		}).then(function (data) {
+				id: playlistId
+			},
+			cache : true
+		})
+		.then(function (data) {
 			return data.data.items[0];
 		})
 	};
@@ -101,13 +103,15 @@ angular.module('clotho.youtube')
 	 */
 	var playlistItems = function getYoutubePlaylist (playlistId) {
 		return $http.get(url_base + '/playlistItems', {
-			params : {
+			params: {
 				key: PUBLIC_KEY,
 				maxResults: '50',
 				part: 'id, snippet, status, contentDetails',
-				playlistId : playlistId
-			}
-		}).then(function (data) {
+				playlistId: playlistId
+			},
+			cache: true
+		})
+		.then(function (data) {
 			return data.data.items;
 		})
 	};
@@ -127,6 +131,7 @@ angular.module('clotho.youtube')
 				id : "org.clothocad.trails." + (info.snippet.title).replace(/\s+/g, ''),
 				description : info.snippet.description,
 				created : new Date(info.snippet.publishedAt).valueOf(),
+				youtubePlaylistId: playlistId,
 				icon : info.snippet.thumbnails.standard.url,
 				contents: [
 					{

@@ -1,0 +1,110 @@
+.trailTopics {
+
+  .topic {
+  }
+
+  .topic-title {
+  }
+
+  .topic-contents {
+
+    &:hover {
+      //todo - hover over version
+    }
+  }
+
+  .trail-thumbnail {
+
+  }
+
+  .trail-overview {
+
+  }
+
+  .trail-title {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .trail-description {
+    margin: 10px 0 0;
+  }
+}
+
+.trail-highlight {
+
+  img {
+    box-shadow: 0 0 6px 1px rgba(200, 200, 200, 0.5);
+  }
+
+  .trail-chapter-info {
+    display: none;
+  }
+}
+
+/*
+.codeacademy {
+
+  .topic {
+    box-sizing: border-box;
+    display: block;
+  }
+
+  .topic-title {
+    padding: 3rem 0 1rem;
+    margin: 0 0 10px;
+  }
+
+  .topic-contents {
+    position: relative;
+    cursor: pointer;
+    display: table;
+    width: 100%;
+    height: 8rem;
+    border-bottom: 1px solid transparent;
+    background-clip: padding-box;
+
+    &:hover {
+      //todo - hover over version
+    }
+  }
+
+  .trail-thumbnail {
+
+  }
+
+  .trail-overview {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    padding-right: 5rem !important;
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+    width: 80%;
+
+    &:after {
+      content: ">";
+      display: inline-block;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      margin-top: -1.5rem;
+      color: #f1f2f2;
+      font-size: 3rem !important;
+      line-height: 3rem;
+    }
+  }
+
+  .trail-title {
+    margin: 0;
+  }
+
+  .trail-author {
+    margin: 0;
+  }
+
+  .trail-description {
+    margin: 10px 0 0;
+  }
+}
+*/
