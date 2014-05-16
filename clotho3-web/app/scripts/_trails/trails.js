@@ -129,21 +129,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	};
 
 	// download dependencies object - css, mixin, script - return function to for onload
-	var downloadDependencies = function trailDownloadDependencies(dependencies) {
-		if (angular.isEmpty(dependencies)) {
-			return $q.when(angular.noop);
-		}
-
-		return $q.all([
-			$clotho.extensions.css(dependencies.css),
-			$clotho.extensions.mixin(dependencies.mixin),
-			$clotho.extensions.script(dependencies.script)
-		]).then(function () {
-			return function () {
-				$clotho.extensions.script(dependencies.onload);
-			}
-		});
-	};
+	var downloadDependencies = $clotho.extensions.downloadDependencies;
 
 	//icons for both page types and material types
 	var trailIconMap = {

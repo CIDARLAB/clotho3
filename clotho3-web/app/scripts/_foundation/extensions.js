@@ -109,6 +109,22 @@ angular.module('clotho.extensions', [])
 	};
 
 
+	$clotho.extensions.downloadDependencies = function downloadDependencies(dependencies) {
+		if (angular.isEmpty(dependencies)) {
+			return $q.when(angular.noop);
+		}
+		return $q.all([
+			$clotho.extensions.css(dependencies.css),
+			$clotho.extensions.mixin(dependencies.mixin),
+			$clotho.extensions.script(dependencies.script)
+		]).then(function () {
+			return $timeout(function () {
+				$clotho.extensions.script(dependencies.onload);
+			});
+		});
+	};
+
+
 	/**
 	 * @name $clotho.extensions.mixin
 	 *
