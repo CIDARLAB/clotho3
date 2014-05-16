@@ -43,7 +43,7 @@ angular.module('clotho.editor')
 
 	// todo - this will likely not be practical after release
 	$scope.clothoFunctions = [];
-	Clotho.query({schema : ClothoSchemas.sharableTypes.Function.schema}).then(function(result) {
+	Clotho.query({schema : ClothoSchemas.sharableTypes.Function.schema}, {mute : true}).then(function(result) {
 		$scope.clothoFunctions = result;
 	});
 
