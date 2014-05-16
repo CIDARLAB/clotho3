@@ -200,10 +200,6 @@ public class ServerSideAPI {
         
         //Iterate through each subsequent token and convert to object if required
         for(int i=1; i<tokens.length; i++) {
-            String token = tokens[i];
-            completions = persistor.getCompletions(token);
-            
-            //If the completions suggest what the things is
             Object obj = resolveSloppy(tokens[i]);
             if(obj!=null) {
                 args.add(obj);
@@ -211,7 +207,7 @@ public class ServerSideAPI {
             }
             //Otherwise just consider this raw String or int
             else {
-                args.add(token);
+                args.add(tokens[i]);
             }
         }
 
