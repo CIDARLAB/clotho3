@@ -132,7 +132,9 @@ angular.module('clotho.youtube')
 				description : info.snippet.description,
 				created : new Date(info.snippet.publishedAt).valueOf(),
 				youtubePlaylistId: playlistId,
-				icon : info.snippet.thumbnails.standard.url,
+				icon : !!info.snippet.thumbnails.standard ?
+								 info.snippet.thumbnails.standard.url :
+								 info.snippet.thumbnails.high.url,
 				contents: [
 					{
 						chapter: 'Youtube Playlist',

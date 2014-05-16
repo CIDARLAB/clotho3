@@ -1,11 +1,15 @@
 <div class="container">
 
+  <div class="page-header">
+    <h1>Synthetic Biology Trails</h1>
+  </div>
+
   <blockquote>
     <p>The Synthetic Biology Trails introduce you to the concepts behind Synthetic Biology. Synthetic Biology allows you to write sequences of DNAs, and introduce those into cells to elicit new and useful function. We'll start by jumping right in explaining how to think through the basic cloning experiment, then we'll show you how to do it in the wetlab, then circle around and discuss the process in great detail. Finally, we introduce new topics at the bleeding edge of Synthetic Biology, or go into more detail about specific techniques and tools.</p>
   </blockquote>
 
-  <div class="row">
-    <div class="trailTopics col-sm-6">
+  <div class="trail-topics-wrap">
+    <div class="trail-topics">
       <div class="topic panel panel-info" ng-repeat="topic in topics">
         <div class="topic-heading panel-heading">
           <h3 class="topic-title panel-title">{{topic.title}}</h3>
@@ -14,7 +18,7 @@
         <div class="topic-trails list-group">
           <div class="topic-contents list-group-item"
                ng-repeat="trail in topic.trails"
-               ng-mouseenter="highlight(trail)"
+               ng-mouseenter="highlight(trail, $event)"
                ng-click="startTrail(trail)"
                ng-class="{'active' : highlighted == trail}">
             <div class="trail-thumbnail">{{trail.icon}}</div>
@@ -28,10 +32,9 @@
 
       </div>
     </div>
-    <div class="col-sm-6">
-      <div class="trail-highlight" ng-style="positionHighlight">
-        <img ng-src="{{selected.icon}}">
-        <h3 ng-click="startTrail(selected)">{{selected.name}}</h3>
+    <div class="trail-highlight-wrap">
+      <div class="trail-highlight" ng-style="highlightStyle">
+        <img ng-src="{{selected.icon}}" ng-click="startTrail(selected)">
         <div trail-contents="selected"></div>
       </div>
     </div>

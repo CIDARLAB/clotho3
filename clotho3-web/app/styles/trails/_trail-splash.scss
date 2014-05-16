@@ -1,4 +1,13 @@
-.trailTopics {
+/* topics */
+
+.trail-topics-wrap {
+  position: relative;
+}
+
+.trail-topics {
+  display: block;
+  padding-right: 30px;
+  margin-right: 400px;
 
   .topic {
   }
@@ -31,10 +40,23 @@
   }
 }
 
+/* highlight */
+
+.trail-highlight-wrap {
+  display: block;
+  width: 400px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .trail-highlight {
+  transition: top 0.5s linear;
+  position: absolute;
 
   img {
     box-shadow: 0 0 6px 1px rgba(200, 200, 200, 0.5);
+    margin-bottom: 15px;
   }
 
   .trail-chapter-info {

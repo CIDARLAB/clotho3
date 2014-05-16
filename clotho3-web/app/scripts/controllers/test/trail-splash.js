@@ -84,10 +84,16 @@ angular.module('clotho.trails')
 			//todo
 		};
 
-		$scope.highlight = function (trail) {
+		$scope.highlight = function (trail, evt) {
 			$scope.highlighted = trail;
+			$scope.loading = true;
 			//note - in interim, let's just fetch the playlist and construct lazily
 			Youtube.playlistToTrail(trail.playlist).then(function (compiled) {
+				//cna't use translate because not consistent across browsers
+				$scope.highlightStyle = {
+					top: evt.target.offsetTop
+				};
+				$scope.loading = false;
 				$scope.selected = compiled;
 			});
 		}
