@@ -3,7 +3,6 @@
 .trail-header {
 
   $height-trailHeader : 135px;
-  $width-trailImage : 25%;
   $borderWidth-trailHeader : 1px;
 
   border: $borderWidth-trailHeader solid $borderColor-trail;
@@ -14,30 +13,33 @@
   position: relative;
   margin-bottom: 20px;
 
+  .trail-icon-wrap {
+    @extend .col-xs-3;
+  }
 
   .trail-icon {
 
     display: block;
     float: left;
-    width: $width-trailImage;
+    width: 100%;
     height: $height-trailHeader;
     margin: 0;
     padding: 0;
+  }
 
-    img {
-      display: block;
-      max-height: 100%;
-    }
+  .trail-info-wrap {
+    @extend .col-xs-9;
+    position: relative;
+    height: $height-trailHeader;
   }
 
   .trail-info {
 
     display: block;
-    width: 100% - $width-trailImage;
-    padding: 10px 15px;
+    width: 100%;
+    padding: 10px 0;
     position: absolute;
     bottom: 0;
-    left: $width-trailImage;
   }
 
   .trail-name {
