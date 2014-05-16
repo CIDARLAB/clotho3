@@ -34,7 +34,12 @@
     </div>
     <div class="trail-highlight-wrap">
       <div class="trail-highlight" ng-style="highlightStyle">
-        <img ng-src="{{selected.icon}}" ng-click="startTrail(selected)">
+        <div class="shadowBackground highlightPlaceholder" ng-if="!selected">
+          <h3>Select a trail</h3>
+        </div>
+        <img ng-src="{{selected.icon}}"
+             class="shadowBackground"
+             ng-click="startTrail(selected)">
         <div trail-contents="selected"></div>
       </div>
     </div>
