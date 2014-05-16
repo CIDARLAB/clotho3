@@ -23,6 +23,19 @@
     "code":"function (str) {return str.split('').join(' ');};",
     "args":[{"name":"str", "type":"string"}]
 },
+{  
+  "name": "complement",
+  "schema": "org.clothocad.core.datums.Function",
+  "id": "org.clothocad.test.complement",
+  "language": "JAVASCRIPT",
+  "code": "function (seq) {\n  var map = { a : 't', c : 'g', g : 'c', t: 'a' }\n  return seq.replace(/[acgt]/ig, function (n) { return map[n.toLowerCase()] })\n}",
+  "args": [
+    {
+      "type": "string",
+      "name": "seq"
+    }
+  ]
+},
 {
     "name":"reverse",
     "id":"org.clothocad.test.reverse",
@@ -77,6 +90,12 @@
     "schema":"org.clothocad.core.datums.Function",
     "code":"function() {return _.map([1,2,3],function(i){return i+1;});};"
 },
-{"schema":"org.clothocad.core.datums.Function","id":"org.clothocad.test.randomSequence","name":"randomSequence","language":"JAVASCRIPT","args":[{"type":"number","name":"length"}],"code":"function randomSequence (length) { \nvar units = 'acgt'.split('');\nvar seq = \"\";\nfor (var i = 0; i < +length; i++) {\nseq += units[_.random(3)];\n}\nreturn seq;\n};","tests":[{"args":["5"],"output":{"value":"","type":"VALUE"}}]}
+{"schema":"org.clothocad.core.datums.Function",
+"id":"org.clothocad.test.randomSequence",
+"name":"randomSequence",
+"language":"JAVASCRIPT",
+"args":[{"type":"number","name":"length"}],
+"code":"function randomSequence (length) { \nvar units = 'acgt'.split('');\nvar seq = \"\";\nfor (var i = 0; i < +length; i++) {\nseq += units[_.random(3)];\n}\nreturn seq;\n};",
+"tests":[{"args":["5"],"output":{"value":"","type":"VALUE"}}]}
 ]
 

@@ -44,26 +44,15 @@ angular.module('clotho.quiz')
 			// (on server) synchronous get of quiz
 			// var quiz = Clotho.get(questionId);
 
-			console.log(quiz.grade, input, args);
-
 			var result;
 
 			args = _.isArray(args) ? args : [];
-
-			//todo - make case insensitive
 
 			if (quiz.grade.answer) {
 
 				var answerValue = quiz.grade.answer.value;
 
-				if (quiz.grade.answer.type == 'string') {
-					if (returnAnswer) {
-						return $q.when(answerValue);
-					}
-
-					result = (input == answerValue);
-				}
-				else if (quiz.grade.answer.type == 'number') {
+				if (quiz.grade.answer.type == 'number') {
 					if (returnAnswer) {
 						return $q.when(answerValue);
 					}
@@ -78,12 +67,22 @@ angular.module('clotho.quiz')
 
 					result = (input == !!answerValue);
 				}
+				if (quiz.grade.answer.type == 'string') {
+					if (returnAnswer) {
+						return $q.when(answerValue);
+					}
+
+					result = input.toLowerCase() == answerValue.toLowerCase();
+				}
 				else if (quiz.grade.answer.type == 'array') {
 					if (returnAnswer) {
 						return $q.when(answerValue[0]);
 					}
 
-					result = _.indexOf(answerValue, input) >= 0;
+					var foundIndex = _.find(answerValue, function (val) {
+						return val.toLowerCase() == input.toLowerCase();
+					});
+					result = foundIndex >= 0;
 				}
 				else if (quiz.grade.answer.type == 'function') {
 					if (returnAnswer) {
@@ -91,7 +90,12 @@ angular.module('clotho.quiz')
 					}
 
 					result = Clotho.run(answerValue, args).then(function (fnResult) {
-						return input == fnResult;
+						if (_.isString(fnResult)) {
+							return input.toLowerCase() == fnResult.toLowerCase();
+						}
+						else {
+							return input == fnResult;
+						}
 					});
 				}
 				else {
@@ -123,23 +127,17 @@ angular.module('clotho.quiz')
 			return $q.when(result);
 		};
 
-
-		this.retry = function (questionId) {
-			//todo
-		};
-
 		//future - handle dynamic feedback
-		//todo - async
 		this.feedback = function generateFeedback (quiz, input) {
 			//todo - handle case-insensitive
 			if (!quiz.feedback) {
-				return null;
+				return $q.when(null);
 			}
 			if (_.isUndefined(input)) {
-				return quiz.feedback.default || null;
+				return $q.when(quiz.feedback.default || null);
 			}
 			var staticFeedback = quiz.feedback.static || {};
-			return staticFeedback[input] || quiz.feedback.default;
+			return $q.when(staticFeedback[input] || quiz.feedback.default);
 		};
 
 
@@ -182,5 +180,7 @@ angular.module('clotho.quiz')
 			}
 
 			return prevPromise;
-		}
+		};
+
+		//note - retrying is handled directly in the quiz question since it is only a matter of reinterpolating the dictionary, and extending the scope
 	});

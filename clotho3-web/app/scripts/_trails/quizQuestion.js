@@ -9,7 +9,7 @@ angular.module('clotho.quiz')
  * @attr ngModel {Quiz Question}
  * @attr gradeCallback {Function} on attr as: `grade-callback="myCallback($result)"`
  */
-	.directive('quizQuestion', function (QuizQuestion, $interpolate) {
+	.directive('quizQuestion', function (QuizQuestion, $interpolate, $q) {
 
 		return {
 			restrict: "E",
@@ -71,22 +71,24 @@ angular.module('clotho.quiz')
 							var interpolatedInput = angular.isString(scope.$meta.input) ? $interpolate(scope.$meta.input)(scope) : scope.$meta.input;
 							var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
 
-							QuizQuestion.grade(scope.quiz, interpolatedInput, interpolatedArgs).then(function (result) {
-
-								var relevantFeedback = QuizQuestion.feedback(scope.quiz, interpolatedInput);
+							$q.all({
+								result : QuizQuestion.grade(scope.quiz, interpolatedInput, interpolatedArgs),
+								feedback : QuizQuestion.feedback(scope.quiz, interpolatedInput)
+							})
+							.then(function (results) {
 
 								//don't want to overwrite the input
 								angular.extend(scope.$meta , {
 									submitted : true,
-									response : !!result,
-									currentFeedback : relevantFeedback
+									response : !!results.result,
+									currentFeedback : results.feedback
 								});
 
 								if (angular.isDefined(attrs.gradeCallback)) {
 									scope.gradeCallback({
 										$input : interpolatedInput,
-										$feedback : relevantFeedback,
-										$result: result
+										$feedback : results.feedback,
+										$result: results.result
 									});
 								}
 							});
@@ -113,7 +115,7 @@ angular.module('clotho.quiz')
 
 							QuizQuestion.grade(scope.quiz, null, interpolatedArgs, true)
 							.then(function (answer) {
-									scope.$meta.input = answer;
+								scope.$meta.input = answer;
 							});
 						};
 

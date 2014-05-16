@@ -181,7 +181,7 @@ angular.module('clotho.webapp')
 				type: "fillin",
 				title: "Own grading function",
 				question: "Copy in this sequence: {{mySeq}}",
-				hint: "This question has its own grading function, for more complicated logic. Arguments can be specified by author. This one just makes sure args + input are equal."
+				hint: "This question has its own grading function, for more complicated logic. Arguments can be specified by author. This one just makes sure args + input are equal. This function is not case sensitive (but grading normally is)"
 			},
 			options: {
 				allowRetry: true
