@@ -129,7 +129,13 @@ angular.module('clotho.youtube')
 				name : info.snippet.title,
 				schema : "Trail",
 				id : "org.clothocad.trails." + (info.snippet.title).replace(/\s+/g, ''),
-				description : info.snippet.description,
+				about : {
+					help : info.snippet.title + " was retrieved from Youtube from the channel " + info.snippet.channelTitle + ", and was created on " + (new Date(info.snippet.publishedAt)).toLocaleDateString() + ".",
+					contents : [{
+						type : "text",
+						params: info.snippet.description
+					}]
+				},
 				created : new Date(info.snippet.publishedAt).valueOf(),
 				youtubePlaylistId: playlistId,
 				icon : !!info.snippet.thumbnails.standard ?
