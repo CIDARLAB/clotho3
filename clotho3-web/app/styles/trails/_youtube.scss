@@ -14,23 +14,3 @@ youtube
   display: block;
   margin: 0 auto;
 }
-
-.youtubeLoading {
-  background: url('../../images/assets/spinner.png') top left;
-  background-size: 100% 100%;
-  position: absolute;
-  display: block;
-  top: 50%;
-  left: 50%;
-  margin: -40px 0 0 -40px;
-  height: 80px;
-  width: 80px;
-  white-space: nowrap;
-  overflow: hidden;
-  @include animation(spin 1.5s infinite linear);
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}

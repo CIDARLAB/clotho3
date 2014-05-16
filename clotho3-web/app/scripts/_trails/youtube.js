@@ -88,7 +88,7 @@ angular.module('clotho.youtube')
 						});
 
 				} else {
-					element.html('<div class="youtubeLoading" width="' + scope.params.width + '" height="' + scope.params.height + '"></div>');
+					element.html('<div class="loading" width="' + scope.params.width + '" height="' + scope.params.height + '"></div>');
 					createYoutubePlayer()
 				}
 

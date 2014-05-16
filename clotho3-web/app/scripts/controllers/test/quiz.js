@@ -1,28 +1,24 @@
 'use strict';
 
 angular.module('clotho.webapp')
-	.controller('TestQuizCtrl', function ($scope) {
+	.controller('TestQuizCtrl', function ($scope, $timeout) {
 
-		// todo - experiment with lazily retrieved quizzes
-
-		// todo - example self-contained grading function
-
-		// fixme - change dynamic dictionary syntax - not sloppy
-		// todo - refactor from names to IDs for get() and run()
-
-		$scope.trueFalse = {
-			question: {
-				type: "truefalse",
-				title: "True False",
-				question: "Clotho is great?"
-			},
-			grade: {
-				answer: {
-					type: "boolean",
-					value: true
+		//demoing lazy load
+		$timeout(function () {
+			$scope.trueFalse = {
+				question: {
+					type: "truefalse",
+					title: "True False",
+					question: "Clotho is great?"
+				},
+				grade: {
+					answer: {
+						type: "boolean",
+						value: true
+					}
 				}
 			}
-		};
+		}, 1000);
 
 		$scope.number = {
 			question: {

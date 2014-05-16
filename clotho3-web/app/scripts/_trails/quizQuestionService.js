@@ -143,8 +143,10 @@ angular.module('clotho.quiz')
 
 		this.interpolateDictionary = function interpolateDictionary (dictionary) {
 
+			console.log(dictionary);
+
 			if (angular.isEmpty(dictionary)) {
-				return $q.when();
+				return $q.when({});
 			}
 
 			var interpolatedDict = {};

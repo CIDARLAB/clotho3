@@ -19,114 +19,116 @@ angular.module('clotho.quiz')
 				quiz : '=ngModel',
 				gradeCallback : '&?'
 			},
-			compile: function compile(tElement, tAttrs, transclude) {
-				return {
-					pre: function preLink(scope, element, attrs) {
+			link: function quizQuestionLink(scope, element, attrs) {
 
-						//get template based on type
+				/* setup + utilities */
 
-					},
-					post: function postLink(scope, element, attrs) {
+				var defaultOptions = {
+					showAnswer : false,
+					allowMultiple : false,
+					allowRetry : true,
+					randomization : true
+				};
 
-						/* setup + utilities */
-
-						//todo - default options
-
-						//todo - hide if not interpolated
-
-						function createEmptyAnswer() {
-							var type = scope.quiz.question.type;
-							switch (type) {
-								case 'mc' : {
-									return new Array(scope.quiz.question.options.length);
-								}
-								default : {
-									return  ''
-								}
-							}
+				function createEmptyAnswer() {
+					var type = scope.quiz.question.type;
+					switch (type) {
+						case 'mc' : {
+							return new Array(scope.quiz.question.options.length);
 						}
-
-						var interpolateArguments = function (args) {
-							return QuizQuestion.interpolateArguments(args, scope);
-						};
-
-						function regenerateDynamic () {
-							return QuizQuestion.interpolateDictionary(scope.quiz.dictionary)
-							.then(function (interpolatedDict) {
-								//extend scope with the dictionary
-								angular.extend(scope, interpolatedDict);
-
-								//note - options are interpolated on submission, not here (they are displayed as interpolated using directive below
-							});
+						default : {
+							return  ''
 						}
-
-						scope.inputEmpty = function () {
-							return angular.isUndefined(scope.$meta) || angular.isEmpty(scope.$meta.input);
-						};
-
-						/* quiz grading + retrying etc. */
-
-						scope.grade = function () {
-							//can only interpolate strings -- don't want to pass numbers or booleans through
-							var interpolatedInput = angular.isString(scope.$meta.input) ? $interpolate(scope.$meta.input)(scope) : scope.$meta.input;
-							var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
-
-							$q.all({
-								result : QuizQuestion.grade(scope.quiz, interpolatedInput, interpolatedArgs),
-								feedback : QuizQuestion.feedback(scope.quiz, interpolatedInput)
-							})
-							.then(function (results) {
-
-								//don't want to overwrite the input
-								angular.extend(scope.$meta , {
-									submitted : true,
-									response : !!results.result,
-									currentFeedback : results.feedback
-								});
-
-								if (angular.isDefined(attrs.gradeCallback)) {
-									scope.gradeCallback({
-										$input : interpolatedInput,
-										$feedback : results.feedback,
-										$result: results.result
-									});
-								}
-							});
-						};
-
-						scope.reset = function () {
-							scope.$meta = {
-								input : '',
-								submitted : false,
-								response : null,
-								currentFeedback : null
-							};
-						};
-
-						scope.retry = function () {
-							regenerateDynamic().then(function () {
-								scope.reset();
-							});
-						};
-
-						//future - make this snazzier...
-						scope.showAnswer = function () {
-							var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
-
-							QuizQuestion.grade(scope.quiz, null, interpolatedArgs, true)
-							.then(function (answer) {
-								scope.$meta.input = answer;
-							});
-						};
-
-						/* watchers */
-
-						//todo
-
-						//init pending watches
-						scope.retry();
 					}
 				}
+
+				var interpolateArguments = function (args) {
+					return QuizQuestion.interpolateArguments(args, scope);
+				};
+
+				function regenerateDynamic () {
+					return QuizQuestion.interpolateDictionary(scope.quiz.dictionary)
+					.then(function (interpolatedDict) {
+						//extend scope with the dictionary
+						angular.extend(scope, interpolatedDict);
+
+						//note - options are interpolated on submission, not here (they are displayed as interpolated using directive below
+					});
+				}
+
+				scope.inputEmpty = function () {
+					return angular.isUndefined(scope.$meta) || angular.isEmpty(scope.$meta.input);
+				};
+
+				/* quiz grading + retrying etc. */
+
+				scope.grade = function () {
+					//can only interpolate strings -- don't want to pass numbers or booleans through
+					var interpolatedInput = angular.isString(scope.$meta.input) ? $interpolate(scope.$meta.input)(scope) : scope.$meta.input;
+					var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
+
+					$q.all({
+						result : QuizQuestion.grade(scope.quiz, interpolatedInput, interpolatedArgs),
+						feedback : QuizQuestion.feedback(scope.quiz, interpolatedInput)
+					})
+					.then(function (results) {
+
+						//don't want to overwrite the input
+						angular.extend(scope.$meta , {
+							submitted : true,
+							response : !!results.result,
+							currentFeedback : results.feedback
+						});
+
+						if (angular.isDefined(attrs.gradeCallback)) {
+							scope.gradeCallback({
+								$input : interpolatedInput,
+								$feedback : results.feedback,
+								$result: results.result
+							});
+						}
+					});
+				};
+
+				scope.reset = function () {
+					scope.$meta = {
+						input : '',
+						submitted : false,
+						response : null,
+						currentFeedback : null,
+						loading : false
+					};
+				};
+
+				scope.retry = function () {
+					regenerateDynamic().then(function () {
+						scope.reset();
+					});
+				};
+
+				//future - make this snazzier...
+				scope.showAnswer = function () {
+					var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
+
+					QuizQuestion.grade(scope.quiz, null, interpolatedArgs, true)
+					.then(function (answer) {
+						scope.$meta.input = answer;
+					});
+				};
+
+				/* watchers */
+
+				scope.$watch('quiz', function (newquiz) {
+
+					if (!angular.isEmpty(newquiz)) {
+						//add default options, in new variable so don't alter quiz itself
+						scope.quizOptions = angular.extend({}, defaultOptions, newquiz.options || {});
+						scope.retry();
+					} else {
+						scope.reset();
+						scope.$meta.loading = true;
+					}
+				});
 			}
 		}
 	})
@@ -150,9 +152,11 @@ angular.module('clotho.quiz')
 	return {
 		restrict: "E",
 		link: function postLink(scope, element, attrs) {
-			//simply compile and binding will update accordingly
-			var wrapped = angular.element('<div>' + scope.quiz.question.question + '</div>');
-			element.html($compile(wrapped)(scope));
+			//cannot simply compile because the text itself needs to be compiled, so watch for question to change
+			scope.$watch('quiz.question.question', function (newval) {
+				var wrapped = angular.element('<div>' + (newval || '') + '</div>');
+				element.html($compile(wrapped)(scope));
+			});
 		}
 	}
 })
@@ -162,16 +166,17 @@ angular.module('clotho.quiz')
 		link: function (scope, element, attrs) {
 			//because we are getting a template, need to set up a watch
 			//can't use ng-include becuase sets up isolate scope
-			//scope.$watch('quiz.question.type', function (newval) {
-			//	console.log('quiz type ' + newval);
-				$http.get('views/_trails/quiz/' + scope.quiz.question.type + '.html', {cache : true})
-				.success(function (data, headers) {
-					element.html($compile(data)(scope));
-				})
-				.error(function (data, headers) {
-					element.html('<p>template not found</p>');
-				});
-			//});
+			scope.$watch('quiz.question.type', function (newval) {
+				if (newval) {
+					$http.get('views/_trails/quiz/' + scope.quiz.question.type + '.html', {cache : true})
+					.success(function (data, headers) {
+						element.html($compile(data)(scope));
+					})
+					.error(function (data, headers) {
+						element.html('<p>template not found</p>');
+					});
+				}
+			});
 		}
 	}
 })

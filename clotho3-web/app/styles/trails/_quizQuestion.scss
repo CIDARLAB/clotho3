@@ -25,6 +25,7 @@
 
   .quizQuestionContent {
     @extend .panel-body;
+    position: relative;
   }
 
   .quizQuestionHint {
