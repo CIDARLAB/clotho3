@@ -12,6 +12,24 @@ angular.module('clotho.quiz')
 
 		/**
 		 * @description
+		 * given array or object, interpolate each using passed scope ($scope or object)
+		 *
+		 * @param args {Array|Object} with values to interpolate. Will not be interpolated if not a string.
+		 * @param scope {Object|Scope} dictionary for interpolating
+		 * @returns {Array} interpolated array / object (same as input)
+		 */
+		function interpolateArguments (args, scope) {
+			var interpolated = angular.isArray(args) ? [] : {};
+			angular.forEach(args, function (arg, key) {
+				interpolated[key] = angular.isString(arg) ? $interpolate(arg)(scope) : arg;
+			});
+			return interpolated;
+		}
+
+		this.interpolateArguments = interpolateArguments;
+
+		/**
+		 * @description
 		 an author can specify either:
 
 		 an answer (grade.answer) - a string, array, or static function
@@ -143,16 +161,16 @@ angular.module('clotho.quiz')
 
 			//go through dynamic values, sequentially, so previous interpolations can be used
 			if ( angular.isDefined(dictionary.dynamic) ) {
-				angular.forEach(dictionary.dynamic, function (obj) {
+				angular.forEach(dictionary.dynamic, function (keyObj) {
 					//no good way of just getting the value of a single object
 					//don't want to alter the dictionary itself, this creates a copy
-					_.mapValues(obj, function (val, key) {
+					_.mapValues(keyObj, function (runObj, key) {
 
 						// interpolate, submit, add to chain to resolve sequentially
 						prevPromise = prevPromise.then(function (intermediateDict) {
-							var interpolatedValue = $interpolate(val)(intermediateDict);
+							var interpolatedArgs = interpolateArguments(runObj.args, intermediateDict);
 
-							return Clotho.submit(interpolatedValue)
+							return Clotho.run(runObj.id, interpolatedArgs)
 							.then(function (result) {
 								//extend interpolated dictionary with new value
 								intermediateDict[key] = result;

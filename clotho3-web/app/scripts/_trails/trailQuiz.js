@@ -51,7 +51,7 @@ angular.module('clotho.quiz')
 						return $sce.trustAsHtml('<h5>' + scope.quiz.question + '</h5>');
 					};
 
-					$http.get('views/_trails/quiz/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
+					$http.get('views/_trails/quiz/deprecated/' + scope.quiz.type + '-partial.html', {cache: $templateCache})
 						.success(function (data) {
 							element.html($compile('<div class="quiz">' + data + '</div>')(scope));
 						})

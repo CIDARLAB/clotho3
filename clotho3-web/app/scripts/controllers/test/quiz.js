@@ -141,10 +141,30 @@ angular.module('clotho.webapp')
 			},
 			dictionary: {
 				dynamic: [
-					{mySeq: "randomSequence 16" },
-					{value1: "revcomp {{mySeq}}" },
-					{value2: "reverse {{mySeq}}" },
-					{value3: "complement {{mySeq}} " }
+					{
+						mySeq: {
+							id : "org.clothocad.test.randomSequence",
+							args : [16]
+						}
+					},
+					{
+						value1: {
+							id : "org.clothocad.test.revcomp",
+							args : ["{{mySeq}}"]
+						}
+					},
+					{
+						value2: {
+							id : "org.clothocad.test.reverse",
+							args : ["{{mySeq}}"]
+						}
+					},
+					{
+						value3: {
+							id : "org.clothocad.test.complement",
+							args : ["{{mySeq}}"]
+						}
+					}
 				]
 			},
 			grade: {
@@ -168,7 +188,12 @@ angular.module('clotho.webapp')
 			},
 			dictionary: {
 				dynamic: [
-					{mySeq: "randomSequence 16" }
+					{
+						mySeq: {
+							id : "org.clothocad.test.randomSequence",
+							args : [40]
+						}
+					}
 				]
 			},
 			grade: {

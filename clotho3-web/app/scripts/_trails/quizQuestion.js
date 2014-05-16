@@ -46,14 +46,9 @@ angular.module('clotho.quiz')
 							}
 						}
 
-						//given array / object / *, return array for arguments for function
-						function interpolateArguments (args) {
-							var interpolated = [];
-							angular.forEach(args, function (arg) {
-								interpolated.push($interpolate(arg)(scope))
-							});
-							return interpolated;
-						}
+						var interpolateArguments = function (args) {
+							return QuizQuestion.interpolateArguments(args, scope);
+						};
 
 						function regenerateDynamic () {
 							return QuizQuestion.interpolateDictionary(scope.quiz.dictionary)
@@ -77,8 +72,6 @@ angular.module('clotho.quiz')
 							var interpolatedArgs = interpolateArguments(scope.quiz.grade.args);
 
 							QuizQuestion.grade(scope.quiz, interpolatedInput, interpolatedArgs).then(function (result) {
-
-								console.log('result is ' , result);
 
 								var relevantFeedback = QuizQuestion.feedback(scope.quiz, interpolatedInput);
 
