@@ -36,7 +36,7 @@ function generateClothoAPI() {
 
 		//note that angular.toJson will strip $-prefixed keys, so should be avoided
     fn.send = function(pkg) {
-        Socket.send(angular.toJson(pkg));
+        Socket.send(JSON.stringify(pkg));
     };
     fn.pack = function(channel, data, requestId, options) {
         return {
