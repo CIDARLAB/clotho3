@@ -1,9 +1,16 @@
 {
   "name" : "Directed Evolution",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.DirectedEvolution",
-  "description" : "Directed evolution involves iterative changes to a DNA sequence through rounds of mutagenesis and screening.",
+  "id" : "org.clothocad.trails.youtube.DirectedEvolution",
+  "about" : {
+    "help" : "Directed Evolution was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/15/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Directed evolution involves iterative changes to a DNA sequence through rounds of mutagenesis and screening."
+    } ]
+  },
   "created" : 1397573963000,
+  "youtubePlaylistId" : "PL2aPXzks-TgOOPfxneYJ3pBwTlqzv9Ezn",
   "icon" : "https://i1.ytimg.com/vi/1wWyTrUroGM/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",

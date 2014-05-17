@@ -1,0 +1,68 @@
+{
+  "name" : "Metabolic Optimization",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.youtube.MetabolicOptimization",
+  "about" : {
+    "help" : "Metabolic Optimization was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/6/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Once you have a cell that can make a small amount of a chemical, you need to optimize the production to achieve a high-yielding strain to be commercially competitive.  This 'scale-up' problem is currently the bottlneck step in biosynthetic chemical production, and thus is a common focus of research in synthetic biology and metabolic engineering."
+    } ]
+  },
+  "created" : 1378477808000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPhvEG_0c44SFt03b5sUGov",
+  "icon" : "https://i1.ytimg.com/vi/IkmH98EOhzM/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "The Optimization Problem",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Once you have a cell that can make a small amount of a chemical, you need to optimize the production to achieve a high-yielding strain to be commercially competitive.  This 'scale-up' problem is currently the bottlneck step in biosynthetic chemical production, and thus is a common focus of research in synthetic biology and metabolic engineering."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "IkmH98EOhzM"
+        }
+      } ]
+    }, {
+      "title" : "Flux Balance Analysis",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Flux balance analysis is a simplification to the massive set of differential equations that could describe the metabolism of the cell. It is one of the most popular methods for modeling the metabolism of the cell."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "eNo7NeQPA2c"
+        }
+      } ]
+    }, {
+      "title" : "Optimization of Biosynthesis using MAGE",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "MAGE is a technique developed in the Church lab that allows you to install all combinations of a set of specific genome edits to produce a library of organisms.  More generally, it is one of the recent power tools for making many edits to a genome. It is most useful for improving the production of chemicals by MCF organisms."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "abUdm52Y_j0"
+        }
+      } ]
+    }, {
+      "title" : "Optimization of Biosynthesis using Promoter Libraries",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "pmPiMFdsXpk"
+        }
+      } ]
+    } ]
+  } ]
+}

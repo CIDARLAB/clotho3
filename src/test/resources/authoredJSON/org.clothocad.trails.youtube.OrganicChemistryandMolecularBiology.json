@@ -1,9 +1,16 @@
 {
   "name" : "Organic Chemistry and Molecular Biology",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.OrganicChemistryandMolecularBiology",
-  "description" : "Quick rehash of organic chemistry concepts and the structure of DNA.",
+  "id" : "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology",
+  "about" : {
+    "help" : "Organic Chemistry and Molecular Biology was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 1/22/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Organic Chemistry sits at the base of all modern understanding of biology.  You don't need to understand the topic in great detail, but let's refresh what you learned from Chemistry 101."
+    } ]
+  },
   "created" : 1390413041000,
+  "youtubePlaylistId" : "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ",
   "icon" : "https://i1.ytimg.com/vi/DywiuCuDbtY/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",
@@ -12,9 +19,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "DywiuCuDbtY"

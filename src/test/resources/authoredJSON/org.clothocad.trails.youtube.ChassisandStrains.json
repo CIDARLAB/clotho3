@@ -1,9 +1,16 @@
 {
   "name" : "Chassis and Strains",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.ChassisandStrains",
-  "description" : "A strain is a cellular composition defined by a specific genetic composition. In all genetic engineering experiments, some strain was used as the starting point for modification.  This organism is often referred to as the 'host' or 'chassis' organism.",
+  "id" : "org.clothocad.trails.youtube.ChassisandStrains",
+  "about" : {
+    "help" : "Chassis and Strains was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 2/24/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "A strain is a cellular composition defined by a specific genetic composition. In all genetic engineering experiments, some strain was used as the starting point for modification.  This organism is often referred to as the 'host' or 'chassis' organism."
+    } ]
+  },
   "created" : 1393308188000,
+  "youtubePlaylistId" : "PL2aPXzks-TgMvy4PG5wwbrw9VKBuowOR8",
   "icon" : "https://i1.ytimg.com/vi/tgFp72Fx4Hk/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",

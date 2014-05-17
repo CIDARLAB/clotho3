@@ -1,0 +1,71 @@
+{
+  "name" : "Advanced microbial processes",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.youtube.Advancedmicrobialprocesses",
+  "about" : {
+    "help" : "Advanced microbial processes was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "The most common microbial engineering apps are chemical or protein-producing organisms.  However, there are many other cellular behaviors that can be genetically encoded."
+    } ]
+  },
+  "created" : 1382464060000,
+  "youtubePlaylistId" : "PL2aPXzks-TgOacBZ1TGGwANuld5yGmbkt",
+  "icon" : "https://i1.ytimg.com/vi/tLWg-LImQaY/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Transfer of Gas Vesicles",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The transfer of large clusters of genes from one organism to the next is often quite challenging even when the phylogenetic distance between the organisms is very small.  However, there are many examples of gene clusters that are modular and can be transferred without a refactoring effort."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "tLWg-LImQaY"
+        }
+      } ]
+    }, {
+      "title" : "Radiation Induced Biofilms",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "We've discussed in previous chapters how you can construct sensor, processor, and actuator devices and join them together to create complex devices. In this study, Collins and coworkers construct a genetic circuit (the toggle switch) and use it to control a microbiological process (biofilm formation)."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "ZjNJLC5Wq3U"
+        }
+      } ]
+    }, {
+      "title" : "DNA Manipulation Circuits",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "With the single exception of oligonucleotide phorphoramidite chemistry, the manipulation of DNAs always involves some biologically derived component.  Because it is often very expensive to purify biochemical components for such procedures, using cells to do common DNA manipulation processes is often a good strategy for performing many operations in parallel on robots.  One very popular cloning method today is yeast recombination.  If you construct linear, double-stranded DNAs that overlap at their ends, the introduce them in S. cerevisiae by transformation, the DNA repair machinery of the cell will join the DNAs together into larger molecules.  This reaction is the basis for the Venter approach to genome engineering.  Many strategies, however, exist including the use of cell lysates and more complex engineered processes."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "FZbLZ1cX7vc"
+        }
+      } ]
+    }, {
+      "title" : "Payload delivery device",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "How complex can a designer microbiological process be?  The early years of research in my lab were focused on this question.  It is clear that there are many examples of connecting up sensors and actuators to achieve new function, but how far does this go?  In this study, we pushed this style of engineering to its limits in the construction of a payload delivery device."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "CP-keUfEkpE"
+        }
+      } ]
+    } ]
+  } ]
+}

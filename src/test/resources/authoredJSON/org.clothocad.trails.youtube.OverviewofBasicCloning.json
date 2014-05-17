@@ -1,0 +1,29 @@
+{
+  "name" : "Overview of Basic Cloning",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.youtube.OverviewofBasicCloning",
+  "about" : {
+    "help" : "Overview of Basic Cloning was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/25/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "You've learned in tutorials how to design the basic cloning experiment.  Now you need to implement it in the lab!  We'll walk you through the multiple steps and considerations involved.  Specifically, we'll be amplifying a DNA using PCR, cut the DNA with restriction endonucleases, ligate the DNA into a cloning vector, and then transform bacteria."
+    } ]
+  },
+  "created" : 1398443063000,
+  "youtubePlaylistId" : "PL2aPXzks-TgNu5fDsnbCOdQqdSqU6m1FF",
+  "icon" : "https://i1.ytimg.com/vi/juP6iHMIYkE/hqdefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Steps in Cloning a Gene",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "juP6iHMIYkE"
+        }
+      } ]
+    } ]
+  } ]
+}

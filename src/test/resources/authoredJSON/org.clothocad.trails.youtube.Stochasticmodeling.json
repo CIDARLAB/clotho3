@@ -1,0 +1,45 @@
+{
+  "name" : "Stochastic modeling",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.youtube.Stochasticmodeling",
+  "about" : {
+    "help" : "Stochastic modeling was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Stochastic modeling is an alternative to differential equations for describing biochemical systems.  it is particularly useful when dealing with small numbers of molecules."
+    } ]
+  },
+  "created" : 1382463386000,
+  "youtubePlaylistId" : "PL2aPXzks-TgP0KMKfq4-fQPKClxvkYwWd",
+  "icon" : "https://i1.ytimg.com/vi/46ruoTTLL5g/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Gillespie Algorithm",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The gillespie algorithm is the original 'stochastic modeling' method.  It employs random numbers to simulate individual reaction events and is thus a chemically exact method of simulating the dynamics of a biochemical system."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "46ruoTTLL5g"
+        }
+      } ]
+    }, {
+      "title" : "Stochastic models of translation",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "A paper about using stochastic models to explain some unusual phenomena in translation"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "nzoG1Ln0wPg"
+        }
+      } ]
+    } ]
+  } ]
+}

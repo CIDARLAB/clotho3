@@ -1,9 +1,16 @@
 {
   "name" : "In vitro Analysis",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.InvitroAnalysis",
-  "description" : "Many ways of characterizing the performance of an engineered organism involve disrupting the cell and isolating a chemical component.  Such 'in vitro' methods are often used to quantify a component of the cell or the molecular function of a cellular component.",
+  "id" : "org.clothocad.trails.youtube.InvitroAnalysis",
+  "about" : {
+    "help" : "In vitro Analysis was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/7/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Many ways of characterizing the performance of an engineered organism involve disrupting the cell and isolating a chemical component.  Such 'in vitro' methods are often used to quantify a component of the cell or the molecular function of a cellular component."
+    } ]
+  },
   "created" : 1396884895000,
+  "youtubePlaylistId" : "PL2aPXzks-TgNlrgM8BK3jD_aiyjoXOsRI",
   "icon" : "https://i1.ytimg.com/vi/EheWQRLvLWU/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",

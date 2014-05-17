@@ -1,9 +1,16 @@
 {
   "name" : "Automation Tools",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.AutomationTools",
-  "description" : "Automation tools that are transforming the way we do synthetic biology.  All aspects of the design, fabrication, and testing process are being replaced by automated methods.  Here we examine the software and hardware involved.",
+  "id" : "org.clothocad.trails.youtube.AutomationTools",
+  "about" : {
+    "help" : "Automation Tools was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/15/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Automation tools that are transforming the way we do synthetic biology.  All aspects of the design, fabrication, and testing process are being replaced by automated methods.  Here we examine the software and hardware involved."
+    } ]
+  },
   "created" : 1397586557000,
+  "youtubePlaylistId" : "PL2aPXzks-TgOj55WalLbDUTfmuhZvYVmW",
   "icon" : "https://i1.ytimg.com/vi/QtJOb2wucQo/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",
@@ -12,9 +19,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "QtJOb2wucQo"
@@ -25,9 +29,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "T9kuB37tG0s"
@@ -38,9 +39,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "_macHtlNRp8"
@@ -51,9 +49,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "LWO8wBrlgTs"
@@ -64,9 +59,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "8bYAQgaspmI"
@@ -77,9 +69,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "bv186MrHQg0"
@@ -90,9 +79,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "X0eemsxBtlI"
@@ -103,9 +89,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "Ny9ZlkM2rzo"

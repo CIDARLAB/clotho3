@@ -1,9 +1,16 @@
 {
   "name" : "Genome Manipulation",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.GenomeManipulation",
-  "description" : "Here we describe the various ways that a cell's genome can be modified.",
+  "id" : "org.clothocad.trails.youtube.GenomeManipulation",
+  "about" : {
+    "help" : "Genome Manipulation was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 2/10/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Here we describe the various ways that a cell's genome can be modified."
+    } ]
+  },
   "created" : 1392047204000,
+  "youtubePlaylistId" : "PL2aPXzks-TgOtngzKdocz4P50TCncRyPy",
   "icon" : "https://i1.ytimg.com/vi/vfmuDvEgD28/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",

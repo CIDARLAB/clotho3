@@ -1,9 +1,16 @@
 {
   "name" : "Human Practices",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.HumanPractices",
-  "description" : "Human Practices is the field concerns at the intersection of technology development and social consequences.  Various topics include intellectual property, biosafety, education, open access, and the like.",
+  "id" : "org.clothocad.trails.youtube.HumanPractices",
+  "about" : {
+    "help" : "Human Practices was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 3/4/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Human Practices is the field concerns at the intersection of technology development and social consequences.  Various topics include intellectual property, biosafety, education, open access, and the like."
+    } ]
+  },
   "created" : 1393996985000,
+  "youtubePlaylistId" : "PL2aPXzks-TgN_Ztp-bRkzbtbi5Ncsh71t",
   "icon" : "https://i1.ytimg.com/vi/hDAnyG7zHFs/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",

@@ -1,9 +1,16 @@
 {
   "name" : "DNA Manipulation Enzymes",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.DNAManipulationEnzymes",
-  "description" : "DNA Manipulation Enzymes are proteins that accept a DNA molecule as substrate and perform some covalent modification to its structure.  All methods for manipulating the sequence of a DNA involve one or more of these enzymes.",
+  "id" : "org.clothocad.trails.youtube.DNAManipulationEnzymes",
+  "about" : {
+    "help" : "DNA Manipulation Enzymes was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 1/19/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "DNA Manipulation Enzymes are proteins that accept a DNA molecule as substrate and perform some covalent modification to its structure.  All methods for manipulating the sequence of a DNA involve one or more of these enzymes."
+    } ]
+  },
   "created" : 1390193153000,
+  "youtubePlaylistId" : "PL2aPXzks-TgNkKi2lUWL65MpPsRBCb5q5",
   "icon" : "https://i1.ytimg.com/vi/SWDl9Yh6gx8/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",

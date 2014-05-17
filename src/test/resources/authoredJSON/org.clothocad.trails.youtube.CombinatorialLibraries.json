@@ -1,9 +1,16 @@
 {
   "name" : "Combinatorial Libraries",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.CombinatorialLibraries",
-  "description" : "Combinatorial methods involve permuting many related genetic variants and filtering them for new or improved activity.",
-  "created" : 1397586542000,
+  "id" : "org.clothocad.trails.youtube.CombinatorialLibraries",
+  "about" : {
+    "help" : "Combinatorial Libraries was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/27/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Combinatorial methods involve permuting many related genetic variants and filtering them for new or improved activity."
+    } ]
+  },
+  "created" : 1369680857000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPIVgTQU-ajK2eCP9deCIl2",
   "icon" : "https://i1.ytimg.com/vi/8BDTS9NK7Zg/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",
@@ -12,9 +19,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "8BDTS9NK7Zg"
@@ -25,9 +29,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "TcokQWySo4Y"
@@ -38,9 +39,6 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : ""
-      }, {
         "type" : "video",
         "params" : {
           "id" : "rhguyAUGN6A"
@@ -51,12 +49,9 @@
       "schema" : "Trail",
       "icon" : "video",
       "contents" : [ {
-        "type" : "text",
-        "params" : "Combinatorial libraries are typically quite large and require selections.  There are some cases, such as with rbs libraries, in which the libraries aren't too big for screening.  You need to calculate the theoretical diversity during design of your experiment and determine what type of screen or selection is required."
-      }, {
         "type" : "video",
         "params" : {
-          "id" : "Pf2v5QUQOys"
+          "id" : "08MUBVp2RQ4"
         }
       } ]
     } ]

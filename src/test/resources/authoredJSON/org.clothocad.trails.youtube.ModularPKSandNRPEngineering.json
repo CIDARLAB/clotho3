@@ -1,0 +1,78 @@
+{
+  "name" : "Modular PKS and NRP Engineering",
+  "schema" : "Trail",
+  "id" : "org.clothocad.trails.youtube.ModularPKSandNRPEngineering",
+  "about" : {
+    "help" : "Modular PKS and NRP Engineering was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/9/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Polymeric carbohydrates pose special challenges for genetic engineering.  Here we discuss some of the opportunities around PKS, NRPS, and carbohydrate biosynthetic devices."
+    } ]
+  },
+  "created" : 1378788371000,
+  "youtubePlaylistId" : "PL2aPXzks-TgNe-LNrcRmB-iHvFFZokK7R",
+  "icon" : "https://i1.ytimg.com/vi/-GPUcNu52Q8/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Orthogonality and Equivalence",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The cell can be thought of as a big state machine.  When you take the chemical specifics out of the description of the system, you are left with a mathematical object, and many principles from other areas of engineering can be applied to those models. Two terms that pertain to models of this type are orthogonality and equivalence."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "-GPUcNu52Q8"
+        }
+      } ]
+    }, {
+      "title" : "Transferring a PKS to E  coli",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Polyketides natively have an unfortunate tendency to exist in organisms that are difficult to bioengineer.  Many of them are fungi or bacteria that simply aren't genetically tractable.  The difficulty of installing a DNA into a cell is what primarily determines how many genetic constructs you can test in an experiment.  Because of this fundamental bottleneck, it is far easier to engineer a pathway once you have moved it into a genetically-easy organism like E. coli or Yeast."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "JJhrSzThUio"
+        }
+      } ]
+    }, {
+      "title" : "Mixing and Matching PKS Modules",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "Gs7yXDTu_Vs"
+        }
+      } ]
+    }, {
+      "title" : "Optimization of Megasynthases with Libraries",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "When one alters the domain or module composition of a megasynthase, it is common to lose product formation.  Presumably the polymer gets stuck somewhere on the protein and shuts it down.  Functionality can sometimes be restored using directed evolution. In this paper by Liu and coworkers, a chimeric non-ribosomal peptide synthase is improved using a combination of random mutagenesis and genetic selection."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "UT2a1shOqpk"
+        }
+      } ]
+    }, {
+      "title" : "Glycoprotein Engineering",
+      "schema" : "Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "qTuIVH9ttXs"
+        }
+      } ]
+    } ]
+  } ]
+}

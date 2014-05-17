@@ -1,9 +1,16 @@
 {
   "name" : "Whole-Cell Analysis",
   "schema" : "Trail",
-  "id" : "org.clothocad.trails.Whole-CellAnalysis",
-  "description" : "Many ways of characterizing the function of an engineered organism can be performed on intact cells.  Typically these involve fluorescent reporter genes or growth-based assays.",
+  "id" : "org.clothocad.trails.youtube.Whole-CellAnalysis",
+  "about" : {
+    "help" : "Whole-Cell Analysis was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/1/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Many ways of characterizing the function of an engineered organism can be performed on intact cells.  Typically these involve fluorescent reporter genes or growth-based assays."
+    } ]
+  },
   "created" : 1396366580000,
+  "youtubePlaylistId" : "PL2aPXzks-TgMo_x6XhYmfoZDezm4m-DcL",
   "icon" : "https://i1.ytimg.com/vi/plOc9Ei5nvY/sddefault.jpg",
   "contents" : [ {
     "chapter" : "Youtube Playlist",
