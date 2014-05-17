@@ -583,12 +583,13 @@ function generateClothoAPI() {
      *
      */
     var say = function clothoAPI_say(msg, userID) {
-        var packaged = {
-            "userID" : userID || "",
-            "msg" : msg,
-            "timestamp" : Date.now()
-        };
-        fn.emit('say', packaged);
+	    var packaged = {
+		    "userID": userID || "",
+		    "msg": msg,
+		    "timestamp": Date.now(),
+		    "from": "client"
+	    };
+	    fn.emit('say', packaged);
     };
 
     /**

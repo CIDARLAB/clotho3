@@ -1,9 +1,10 @@
 //note - jQuery reliance
 //todo - rewrite for autonomy
-angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, Clotho) {
+angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, Clotho, CommandBar) {
 
-	var searchBarInput = $('#clothoCommandBarInput');
+	var searchBarInput = CommandBar.getCommandBarInput();
 
+	//relies on jQuery
 	var maxZ = function() {
 		return Math.max.apply(null,
 			$.map($('body *'), function(e,n) {

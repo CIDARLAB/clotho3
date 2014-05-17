@@ -6,7 +6,7 @@ angular.module('clotho.quiz')
  * @description
  * Service to handle Quiz Question grading, retrying, feedback etc.
  *
- * todo - after writing, move to server
+ * todo - move grade + feedback to server
  */
 	.service('QuizQuestion', function (Clotho, $q, $interpolate, $rootScope) {
 
@@ -46,6 +46,8 @@ angular.module('clotho.quiz')
 
 			var result;
 
+			console.log(quiz.grade.answer);
+
 			args = _.isArray(args) ? args : [];
 
 			if (quiz.grade.answer) {
@@ -67,7 +69,7 @@ angular.module('clotho.quiz')
 
 					result = (input == !!answerValue);
 				}
-				if (quiz.grade.answer.type == 'string') {
+				else if (quiz.grade.answer.type == 'string') {
 					if (returnAnswer) {
 						return $q.when(answerValue);
 					}
@@ -89,7 +91,7 @@ angular.module('clotho.quiz')
 						return Clotho.run(answerValue, args);
 					}
 
-					result = Clotho.run(answerValue, args).then(function (fnResult) {
+					result = Clotho.run(answerValue, args, {mute : true}).then(function (fnResult) {
 						if (_.isString(fnResult)) {
 							return input.toLowerCase() == fnResult.toLowerCase();
 						}
@@ -105,10 +107,10 @@ angular.module('clotho.quiz')
 			}
 			else if (quiz.grade.function) {
 				if (returnAnswer) {
-					return Clotho.run(quiz.grade.function, [input, args]);
+					return Clotho.run(quiz.grade.function, [input, args], {mute : true});
 				}
 
-				result = Clotho.run(quiz.grade.function, [input, args]);
+				result = Clotho.run(quiz.grade.function, [input, args], {mute : true});
 			}
 			else {
 				// catch for answer and function undefined (should never happen)
@@ -142,8 +144,6 @@ angular.module('clotho.quiz')
 
 
 		this.interpolateDictionary = function interpolateDictionary (dictionary) {
-
-			console.log(dictionary);
 
 			if (angular.isEmpty(dictionary)) {
 				return $q.when({});

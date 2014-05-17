@@ -7,7 +7,9 @@ $clotho.extensions.controller('clothoIntro_RestrictionDigestsCtrl', function($sc
     $scope.demo.digestEnz = Digest.enzymes.EcoRI;
     $scope.demo.digestSeq = 'acaacgtctcacggatccagtcggaattctacatgcatcgatcgacggatccagatcgactagc';
 
+		/*
     $modal.messageBox('On to the Next Chapter...', '<p>Moving forward, we\'ll focus on using Clotho tools in sequence manipulation and other synthetic biology applications.</p> <p><b>We\'ll show you the tools, and click \"Show Me How\" to see how to use them in the Command Bar.</b></p>', [{label: "OK", cssClass: "btn-primary", result: true}]);
+    */
 
     $scope.showMeHow = function () {
 

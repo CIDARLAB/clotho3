@@ -7,12 +7,17 @@ angular.module('clotho.quiz')
  * Given a properly formed Quiz Question, displays it using the proper template (chosen by quiz.type)
  *
  * @attr ngModel {Quiz Question}
- * @attr gradeCallback {Function} on attr as: `grade-callback="myCallback($result)"`
+ * @attr gradeCallback {Function} on attr as: `grade-callback="myCallback($result, $input, $feedback)"`
+ *
+ * @example
+ * <quiz-question ng-model="myQuiz"></quiz-question>
+ *
+ * <div quiz-question ng-model="quiz" grade-callback="gradeCallback($result, $input, $feedback)"></div>
  */
 	.directive('quizQuestion', function (QuizQuestion, $interpolate, $q) {
 
 		return {
-			restrict: "E",
+			restrict: "EA",
 			require: 'ngModel',
 			templateUrl : 'views/_trails/quiz/_container.html',
 			scope : {

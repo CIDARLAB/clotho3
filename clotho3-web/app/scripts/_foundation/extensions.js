@@ -118,9 +118,11 @@ angular.module('clotho.extensions', [])
 			$clotho.extensions.mixin(dependencies.mixin),
 			$clotho.extensions.script(dependencies.script)
 		]).then(function () {
-			return $timeout(function () {
-				$clotho.extensions.script(dependencies.onload);
-			});
+			return function () {
+				$timeout(function () {
+					$clotho.extensions.script(dependencies.onload);
+				});
+			};
 		});
 	};
 

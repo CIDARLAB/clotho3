@@ -54,7 +54,6 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 
 					pageComponentTypes.template = function loadTemplate(url) {
 						if (!url || !angular.isString(url)) return $q.when();
-						console.log(url);
 						return $q.when('<div ng-include="\'' + url + '\'"></div>');
 
 						/*return $http.get(url, {cache:$templateCache}).then(function (success) {
@@ -70,20 +69,18 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 
 						scope.quiz = angular.copy(content);
 
-						//extend the scope with Page.quiz.dictionary (separate from Page.dictionary)
-						if (scope.quiz.dictionary) {
-							var dict = angular.copy(scope.quiz.dictionary);
-							delete scope.quiz.dictionary;
-							angular.extend(scope.quiz, dict);
-						}
-
 						//testing, should also run next() clause on complete
-						scope.gradeCallback = function (data) {
-							console.log('quiz grade callback result: ' + data);
+						scope.gradeCallback = function (result, input, feedback) {
+							console.log('quiz callback: ', result, input, feedback);
 						};
 
-						//note - next is from parent controller -- go to next page
-						var template = '<div trail-quiz ng-model="quiz" grade-callback="gradeCallback" advance="next()"></div>';
+						var template = '<div quiz-question ng-model="quiz" grade-callback="gradeCallback($result, $input, $feedback)"></div>';
+						return $q.when(template);
+					};
+
+					//todo - allow passage of attrs
+					pageComponentTypes.tool = function loadTool(params) {
+						var template = '<div clotho-tool="' + params.name + '"></div>';
 						return $q.when(template);
 					};
 
