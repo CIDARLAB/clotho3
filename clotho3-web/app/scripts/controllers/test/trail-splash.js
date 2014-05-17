@@ -1,84 +1,207 @@
 'use strict';
 
 angular.module('clotho.trails')
-	.controller('TestTrailSplashCtrl', function ($scope, Youtube) {
+	.controller('TestTrailSplashCtrl', function ($scope, Clotho, Youtube) {
 		$scope.topics = [
 			{
 				"title": "Introducing Clotho",
 				"trails": [
-					{ title: "Introduction to Clotho", "playlist": "" }
+					{
+						"title": "Introduction to Clotho",
+						"id": "org.clothocad.trails.LearningClotho"
+					}
 				]
 			},
 			{
 				"title": "Basic Molecular Biology",
 				"trails": [
-					{ title: "Introduction to Synthetic Biology", "playlist": "PL2aPXzks-TgPYH_y0UNKluRkrRHbcQLuX" },
-					{ title: "Organic Chemistry and Molecular Biology", "playlist": "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ" }
+					{
+						"title": "Introduction to Synthetic Biology",
+						"id": "org.clothocad.trails.youtube.IntroductiontoSyntheticBiology"
+					},
+					{
+						"title": "Organic Chemistry and Molecular Biology",
+						"id": "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology"
+					}
 				]
 			},
 			{
 				"title": "Fabrication",
 				"trails": [
-					{ title: "DNA Manipulation Enzymes", "playlist": "PL2aPXzks-TgNkKi2lUWL65MpPsRBCb5q5" },
-					{ title: "DNA Fabrication", "playlist": "PL2aPXzks-TgPX7HU4pogNUSBN9OK2PhBK" },
-					{ title: "Genome Manipulation", "playlist": "PL2aPXzks-TgOtngzKdocz4P50TCncRyPy" },
-					{ title: "Chassis and Strains", "playlist": "PL2aPXzks-TgMvy4PG5wwbrw9VKBuowOR8" },
-					{ title: "Parts", "playlist": "PL2aPXzks-TgNP1FuAv0v-fS6UhCjy1waN" },
-					{ title: "Human Practices", "playlist": "PL2aPXzks-TgN_Ztp-bRkzbtbi5Ncsh71t" }
+					{
+						"title": "DNA Manipulation Enzymes",
+						"id": "org.clothocad.trails.youtube.DNAManipulationEnzymes"
+					},
+					{
+						"title": "DNA Fabrication",
+						"id": "org.clothocad.trails.youtube.DNAFabrication"
+					},
+					{
+						"title": "Genome Manipulation",
+						"id": "org.clothocad.trails.youtube.GenomeManipulation"
+					},
+					{
+						"title": "Chassis and Strains",
+						"id": "org.clothocad.trails.youtube.ChassisandStrains"
+					},
+					{
+						"title": "Parts",
+						"id": "org.clothocad.trails.youtube.Parts"
+					},
+					{
+						"title": "Human Practices",
+						"id": "org.clothocad.trails.youtube.HumanPractices"
+					}
 				]
 			},
 			{
 				"title": "Analysis",
 				"trails": [
-					{ title: "Whole-Cell Analysis", "playlist": "PL2aPXzks-TgMo_x6XhYmfoZDezm4m-DcL" },
-					{ title: "In vitro Analysis", "playlist": "PL2aPXzks-TgNlrgM8BK3jD_aiyjoXOsRI" },
-					{ title: "Directed Evolution", "playlist": "PL2aPXzks-TgOOPfxneYJ3pBwTlqzv9Ezn" },
-					{ title: "Combinatorial Libraries", "playlist": "PL2aPXzks-TgPIVgTQU-ajK2eCP9deCIl2" },
-					{ title: "Automation Tools", "playlist": "PL2aPXzks-TgOj55WalLbDUTfmuhZvYVmW" }
+					{
+						"title": "Whole-Cell Analysis",
+						"id": "org.clothocad.trails.youtube.Whole-CellAnalysis"
+					},
+					{
+						"title": "In vitro Analysis",
+						"id": "org.clothocad.trails.youtube.InvitroAnalysis"
+					},
+					{
+						"title": "Directed Evolution",
+						"id": "org.clothocad.trails.youtube.DirectedEvolution"
+					},
+					{
+						"title": "Combinatorial Libraries",
+						"id": "org.clothocad.trails.youtube.CombinatorialLibraries"
+					},
+					{
+						"title": "Automation Tools",
+						"id": "org.clothocad.trails.youtube.AutomationTools"
+					}
 				]
 			},
 			{
 				"title": "Design",
 				"trails": [
-					{ title: "Basics of OOP and Organic Chemistry", "playlist": "PL2aPXzks-TgOv8a6ycw13PCY0UcsTxNkA" },
-					{ title: "Introduction to Biosynthesis", "playlist": "PL2aPXzks-TgPrTigCFi0P8hfWz-CEO5qL" },
-					{ title: "Literature Search and Pathway Discovery", "playlist": "PL2aPXzks-TgMJr2fAKj5ixn9RXypJ_zaZ" },
-					{ title: "Metabolic Optimization", "playlist": "PL2aPXzks-TgPhvEG_0c44SFt03b5sUGov" },
-					{ title: "Monofunctional Enzyme Biosynthesis Examples ", "playlist": "PL2aPXzks-TgNmfjrolgYWGblQDNzo11Yq" },
-					{ title: "Polymeric Metabolites", "playlist": "PL2aPXzks-TgP45-xudcn4XXiVZfUOYMht" },
-					{ title: "Modular PKS and NRP Engineering", "playlist": "PL2aPXzks-TgNe-LNrcRmB-iHvFFZokK7R" },
-					{ title: "Processes and Localization", "playlist": "PL2aPXzks-TgMz06rZlbCRKzYyVkXyIwb9" },
-					{ title: "Transcription Models", "playlist": "PL2aPXzks-TgO0k9PhT__NSh2x6HNimaOy" },
-					{ title: "Translation Models", "playlist": "PL2aPXzks-TgOYRv5T9yRzwJE1QWEiY2R8" },
-					{ title: "Biochemical Circuits", "playlist": "PL2aPXzks-TgNK702CfJaz-gTfRtv34sNt" },
-					{ title: "Stochastic modeling", "playlist": "PL2aPXzks-TgP0KMKfq4-fQPKClxvkYwWd" },
-					{ title: "Biological Relationships", "playlist": "PL2aPXzks-TgMRN9PNtntlYoMuV5Xb8iu2" },
-					{ title: "Engineering microbial interactions", "playlist": "PL2aPXzks-TgN9w3Pm49zEQJfnNDV8T1KZ" },
-					{ title: "Refactoring", "playlist": "PL2aPXzks-TgPQbhJWXI3fSsV9FZ0QLAXa" },
-					{ title: "Advanced microbial processes", "playlist": "PL2aPXzks-TgOacBZ1TGGwANuld5yGmbkt" },
-					{ title: "Eukaryotic Devices", "playlist": "PL2aPXzks-TgNwbIY4SU7Wd1RObYSllKqv" },
-					{ title: "Developmental Devices", "playlist": "PL2aPXzks-TgPagNtoxbU5Kqt1aZCm1ORd" },
-					{ title: "Part Engineering", "playlist": "PL2aPXzks-TgPkmcVYYZACTbbq4bx_ZAoI" }
+					{
+						"title": "Introduction to Biosynthesis",
+						"id": "org.clothocad.trails.youtube.IntroductiontoBiosynthesis"
+					},
+					{
+						"title": "Literature Search and Pathway Discovery",
+						"id": "org.clothocad.trails.youtube.LiteratureSearchandPathwayDiscovery"
+					},
+					{
+						"title": "Metabolic Optimization",
+						"id": "org.clothocad.trails.youtube.MetabolicOptimization"
+					},
+					{
+						"title": "Monofunctional Enzyme Biosynthesis Examples ",
+						"id": "org.clothocad.trails.youtube.MonofunctionalEnzymeBiosynthesisExamples"
+					},
+					{
+						"title": "Polymeric Metabolites",
+						"id": "org.clothocad.trails.youtube.PolymericMetabolites"
+					},
+					{
+						"title": "Modular PKS and NRP Engineering",
+						"id": "org.clothocad.trails.youtube.ModularPKSandNRPEngineering"
+					},
+					{
+						"title": "Processes and Localization",
+						"id": "org.clothocad.trails.youtube.ProcessesandLocalization"
+					},
+					{
+						"title": "Transcription Models",
+						"id": "org.clothocad.trails.youtube.TranscriptionModels"
+					},
+					{
+						"title": "Translation Models",
+						"id": "org.clothocad.trails.youtube.TranslationModels"
+					},
+					{
+						"title": "Biochemical Circuits",
+						"id": "org.clothocad.trails.youtube.BiochemicalCircuits"
+					},
+					{
+						"title": "Stochastic modeling",
+						"id": "org.clothocad.trails.youtube.Stochasticmodeling"
+					},
+					{
+						"title": "Biological Relationships",
+						"id": "org.clothocad.trails.youtube.BiologicalRelationships"
+					},
+					{
+						"title": "Engineering microbial interactions",
+						"id": "org.clothocad.trails.youtube.Engineeringmicrobialinteractions"
+					},
+					{
+						"title": "Refactoring",
+						"id": "org.clothocad.trails.youtube.Refactoring"
+					},
+					{
+						"title": "Advanced microbial processes",
+						"id": "org.clothocad.trails.youtube.Advancedmicrobialprocesses"
+					},
+					{
+						"title": "Eukaryotic Devices",
+						"id": "org.clothocad.trails.youtube.EukaryoticDevices"
+					},
+					{
+						"title": "Developmental Devices",
+						"id": "org.clothocad.trails.youtube.DevelopmentalDevices"
+					},
+					{
+						"title": "Part Engineering",
+						"id": "org.clothocad.trails.youtube.PartEngineering"
+					}
 				]
 			},
 			{
 				"title": "Wetlab: Cloning Experiment",
 				"trails": [
-					{ title: "Overview of Basic Cloning", "playlist": "PL2aPXzks-TgNu5fDsnbCOdQqdSqU6m1FF" },
-					{ title: "Running PCR", "playlist": "PL2aPXzks-TgOdmDmfWSneeIdp_4jF9lI-" },
-					{ title: "Digesting DNAs", "playlist": "PL2aPXzks-TgPiVtQqqthOAE60E7iHz-gg" },
-					{ title: "Gel Purification", "playlist": "PL2aPXzks-TgMgibxKB80naduiRZnqcZPR" },
-					{ title: "Ligation and Transformation", "playlist": "PL2aPXzks-TgPMLXx10saMCO7oKp7IMKDn" },
-					{ title: "Growing up colonies and prepping DNA", "playlist": "PL2aPXzks-TgNn3gT7KNn3m2QN3x_m4NCW" }
+					{
+						"title": "Overview of Basic Cloning",
+						"id": "org.clothocad.trails.youtube.OverviewofBasicCloning"
+					},
+					{
+						"title": "Running PCR",
+						"id": "org.clothocad.trails.youtube.RunningPCR"
+					},
+					{
+						"title": "Digesting DNAs with restriction endonucleases",
+						"id": "org.clothocad.trails.youtube.DigestingDNAswithrestrictionendonucleases"
+					},
+					{
+						"title": "Gel Purification",
+						"id": "org.clothocad.trails.youtube.GelPurification"
+					},
+					{
+						"title": "Ligation and Transformation",
+						"id": "org.clothocad.trails.youtube.LigationandTransformation"
+					},
+					{
+						"title": "Growing up colonies and then prepping DNA",
+						"id": "org.clothocad.trails.youtube.GrowingupcoloniesandthenpreppingDNA"
+					}
 				]
 			},
 			{
 				"title": "Advanced Tools",
-				"trails": [
-
-				]
+				"trails": []
 			}
 		];
+
+		/*
+		$scope.createAll = function () {
+			angular.forEach($scope.topics, function (topic) {
+				angular.forEach(topic.trails, function (trail) {
+					Youtube.playlistToTrail(trail.playlist).then(function (result) {
+						Clotho.create(result);
+					});
+				});
+			});
+		};
+		*/
 
 		$scope.startTrail = function (trail) {
 			//todo
@@ -88,13 +211,14 @@ angular.module('clotho.trails')
 			$scope.highlighted = trail;
 			$scope.loading = true;
 			//note - in interim, let's just fetch the playlist and construct lazily
-			Youtube.playlistToTrail(trail.playlist).then(function (compiled) {
-				//cna't use translate because not consistent across browsers
+			//Youtube.playlistToTrail(trail.playlist).then(function (compiled) {
+			Clotho.get(trail.id).then(function (result) {
+				//cna't use translate because not consistent across browsers (vendor prefixing)
 				$scope.highlightStyle = {
 					top: evt.target.offsetTop
 				};
 				$scope.loading = false;
-				$scope.selected = compiled;
+				$scope.selected = result;
 			});
 		}
 	});
