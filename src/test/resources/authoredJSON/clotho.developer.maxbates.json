@@ -1,0 +1,23 @@
+{
+  "biography" : "Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.",
+  "current" : true,
+  "currentLocation" : "",
+  "dateCreated" : "2012-06-01",
+  "description" : "",
+  "emailAddress" : "maxbates@gmail.com",
+  "endDate" : "",
+  "givenName" : "Maxwell",
+  "icon" : "maxBates.png",
+  "imgUrl" : "",
+  "isManagement" : false,
+  "lab" : "Anderson",
+  "name" : "maxbates",
+  "nickName" : "Max",
+  "role" : "Programmer",
+  "schema" : "LabPerson",
+  "social" : "",
+  "startDate" : "2012-06-01",
+  "surName" : "Bates",
+  "title" : "Web Developer",
+  "id" : "clotho.developer.maxbates"
+}
