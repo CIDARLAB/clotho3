@@ -47,7 +47,7 @@
 					"contents": [
 						{
 							"type": "text",
-							"params": "<div><blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you get up to speed. This one will give you a brief introduction to DNA and Synthetic Biology. <b>Feel free to <a ng-click=\"next()\">skip ahead</a> if this isn't new to you.</b></p></div>"
+							"params": "<div><blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you get up to speed. This one will give you a brief introduction to DNA and Synthetic Biology. Feel free to skip ahead if this isn't new to you.</p></div>"
 						},
 						{
 							"type": "video",
@@ -74,21 +74,30 @@
 							}
 						},
 						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/reverseComplement.html"
-						},
-						{
 							"type": "quizQuestion",
 							"params": {
-								"title": "Reverse Complement",
-								"type": "fillin",
-								"question": "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
-								"dictionary": {
-									"questionValue": "ACGTACG",
-									"answerGenerator": "aa7f191e810c19729de86101"
+								"question" : {
+									"title": "Reverse Complement",
+									"type": "fillin",
+									"question": "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
+									"hint" : "Watch the video to learn about reverse complementing."
 								},
-								"retry": {
-									"questionValue": "clotho.run('randomSequence', ['7'])"
+								"dictionary" : {
+									"dynamic" : [
+										{
+											"questionValue": {
+												"id" : "org.clothocad.test.randomSequence",
+												"args" : [6]
+											}
+										}
+									]
+								},
+								"grade": {
+									"answer" : {
+										"type" : "function",
+										"value" : "org.clothocad.test.revcomp"
+									},
+									"args" : ["{{questionValue}}"]
 								}
 							}
 						}
@@ -97,27 +106,62 @@
 				{
 					"title": "Tools in Clotho",
 					"icon": "exercise",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/toolsIntro.js"
-					},
+					"help" : "Copy the sequence in the quiz into the tool to find the answer!",
 					"contents": [
 						{
 							"type": "text",
-							"params": "<p>Clotho can automate several common tasks, such as reverse complementing a sequence.</p>"
+							"params": "<p>Clotho can automate several common tasks, such as reverse complementing a sequence. While you can use a UI for many of these functions, they can also be run programmatically (learn how in the next section).</p>"
 						},
 						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/toolsIntro.html"
+							"type": "tool",
+							"params": {
+								"name" : "revcomp"
+							}
+						},
+						{
+							"type": "quizQuestion",
+							"params": {
+								"question" : {
+									"type" : "fillin",
+									"hint" : "Copy-paste the sequence into the tool below, or click Show Me How",
+									"question" : "Find the reverse complement of the sequence <code>{{ questionValue }}</code> using the tool."
+								},
+								"options" : {
+									"showAnswer" : true
+								},
+								"dictionary" : {
+									"dynamic" : [
+										{
+											"questionValue": {
+												"id" : "org.clothocad.test.randomSequence",
+												"args" : [15]
+											}
+										}
+									]
+								},
+								"grade": {
+									"answer" : {
+										"type" : "function",
+										"value" : "org.clothocad.test.revcomp"
+									},
+									"args" : ["{{questionValue}}"]
+								}
+							}
 						}
 					]
 				},
 				{
 					"title": "The Command Bar",
 					"icon": "eye",
+					"help" : "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p>",
 					"dependencies" : {
 						"mixin": "partials/trails/clotho-intro/searchbarIntro.js"
 					},
 					"contents": [
+						{
+							"type": "text",
+							"params": "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p><h1>UPDATE COMMANDS</h1>"
+						},
 						{
 							"type": "template",
 							"params": "partials/trails/clotho-intro/searchbarIntro.html"
@@ -132,8 +176,35 @@
 					},
 					"contents": [
 						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/scriptingIntro.html"
+							"type" : "text",
+							"params" : "<p>Answer the quiz by running your own function!</p><p>In the Command Bar (type <code>f</code>), type <code>revcomp</code> and copy-paste the sequence, then grab the value from the Activity Log and paste it in the quiz.</p>"
+						},
+						{
+							"type": "quizQuestion",
+							"params": {
+								"question" : {
+									"type" : "fillin",
+									"question" : "Find the reverse complement of the sequence <code>{{mySeq}}</code> using the Command Bar."
+								},
+								"options" : {},
+								"dictionary" : {
+									"dynamic" : [
+										{
+											"mySeq": {
+												"id" : "org.clothocad.test.randomSequence",
+												"args" : [15]
+											}
+										}
+									]
+								},
+								"grade": {
+									"answer" : {
+										"type" : "function",
+										"value" : "org.clothocad.test.revcomp"
+									},
+									"args" : ["{{mySeq}}"]
+								}
+							}
 						}
 					]
 				}
@@ -155,8 +226,14 @@
 							"params": "https://www.youtube.com/watch?v=JruotWQmZxg"
 						},
 						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/RestrictionDigests.html"
+							"type": "text",
+							"params": "Select an Enzyme from the tool below to see where it will cut the sequence. Cut marks are denoted by arrows, and the recognition site is colored in."
+						},
+						{
+							"type" : "tool",
+							"params" : {
+								"name" : "digestCuts"
+							}
 						}
 					]
 				},
@@ -209,6 +286,7 @@
 				{
 					"title": "Examining",
 					"icon": "eye",
+					"help" : "A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.",
 					"dependencies" : {
 						"mixin": "partials/trails/clotho-intro/examining.js"
 					},
