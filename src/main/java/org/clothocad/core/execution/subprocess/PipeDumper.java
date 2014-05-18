@@ -5,12 +5,14 @@ import java.io.IOException;
 import org.clothocad.core.util.ByteArray;
 import org.clothocad.core.util.CloseableRunnable;
 
-class ErrorDumper implements CloseableRunnable {
+class PipeDumper implements CloseableRunnable {
     private final InputStream pipe;
     private final ByteArray buffer = new ByteArray();
+    private final Condition condition;
 
-    ErrorDumper(final InputStream pipe) {
+    PipeDumper(final InputStream pipe, final Condition condition) {
         this.pipe = pipe;
+        this.condition = condition;
     }
 
     byte[] getBytes() {
@@ -19,7 +21,7 @@ class ErrorDumper implements CloseableRunnable {
 
     @Override public void
     run() {
-        while (!Thread.interrupted()) {
+        while (!Thread.interrupted() && condition.poll()) {
             final int b;
             try {
                 b = pipe.read();

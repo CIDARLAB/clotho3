@@ -2,19 +2,18 @@ import importlib
 import json
 import sys
 
-class IncompleteReadError(Exception):
-    pass
-
 class ClothoError(Exception):
     pass
 
 class ClothoMethod(object):
-    def __init__(self, name):
+    def __init__(self, name, context):
         self._name = name
+        self._context = context
 
     def __call__(self, *args):
-        send_val({"type": "api", "name": self._name, "args": args})
-        reply_value = read_val()
+        self._context.send_value(
+            {"type": "api", "name": self._name, "args": args})
+        reply_value = read_value()
         reply_type = reply_value["type"]
         if reply_type == "api":
             return reply_value["return"]
@@ -23,38 +22,58 @@ class ClothoMethod(object):
         raise RuntimeError("bad API reply")
 
 class Clotho(object):
-    def __getattr__(self, name):
-        return ClothoMethod(name)
+    def __init__(self, context):
+        self._context = context
 
-def read_val():
+    def __getattr__(self, name):
+        return ClothoMethod(name, self._context)
+
+class Context(object):
+    '''Execution context object
+
+    Setup by initialization object
+    '''
+    def __init__(self, init_obj):
+        if init_obj["type"] != "func":
+            raise ValueError
+        self.code = init_obj["code"]
+        self.args = init_obj["args"]
+        self._tmpfile = open(init_obj["tmpfile"], "wb")
+
+    def __del__(self):
+        self._tmpfile.flush();
+        self._tmpfile.close();
+
+    def send_value(self, value):
+        '''Send one message to host through temporary file'''
+        self._tmpfile.write(json.dumps(value).encode("UTF-8"))
+        self._tmpfile.write(b'\0')
+        self._tmpfile.flush()
+
+def read_value():
+    '''Read one message from host through standard input and return it'''
     buf = bytearray()
     while 1:
         c = sys.stdin.read(1)
         if c == "":
-            raise IncompleteReadError
+            raise ValueError("received incomplete JSON value")
         if c == "\0":
             break
         buf.append(c)
     return json.loads(bytes(buf).decode("UTF-8"))
 
-def send_val(val):
-    sys.stdout.write(json.dumps(val).encode("UTF-8"))
-    sys.stdout.write(b'\0')
-    sys.stdout.flush()
-
 def main():
-    # fetch defcall object
-    defcall_obj = read_val()
-    assert defcall_obj["type"] == "func"
+    # fetch initialization object
+    context = Context(read_value())
 
     # execute user code body
-    scope_dict = {"clotho": Clotho(), "ClothoError": ClothoError}
-    exec(defcall_obj["code"], scope_dict)
+    scope_dict = {"clotho": Clotho(context), "ClothoError": ClothoError}
+    exec(context.code, scope_dict)
 
     # execute user function, which is always called "run"
     user_func = scope_dict["run"]
-    user_return_value = user_func(*defcall_obj["args"])
+    user_return_value = user_func(*context.args)
 
-    send_val({"type": "func", "return": user_return_value})
+    context.send_value({"type": "func", "return": user_return_value})
 
 main()

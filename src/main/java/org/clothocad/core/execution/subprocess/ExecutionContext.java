@@ -2,35 +2,52 @@ package org.clothocad.core.execution.subprocess;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.clothocad.core.communication.ServerSideAPI;
 
+/** A helper class for SubprocessExec
+ *
+ * All this could be easily implemented with purely static methods.
+ * We use a class here just for syntactic convenience.
+ */
 class ExecutionContext {
     private final ServerSideAPI api;
     private final JSONStreamReader reader;
     private final JSONStreamWriter writer;
-    private final String code;
-    private final List<Object> args;
 
     ExecutionContext(final ServerSideAPI api,
                      final JSONStreamReader reader,
-                     final JSONStreamWriter writer,
-                     final String code,
-                     final List<Object> args) {
+                     final JSONStreamWriter writer) {
         this.api = api;
         this.reader = reader;
         this.writer = writer;
-        this.code = code;
-        this.args = args;
     }
 
-    /** Communicate with subprocess */
+    /** Communicate with subprocess
+     *
+     * This method cannot be called more than once.
+     * Returns the return value from the function execution
+     */
     Object
-    start() {
-        sendFunctionDefcall();
+    start(final Path tmpfile, final String code, final List<Object> args) {
+        /* send function_init message */
+        final Map<String, Object> value = new HashMap<>();
+        value.put("type", "func");
+        value.put("tmpfile", tmpfile.toString());
+        value.put("code", code);
+        value.put("args", args);
+        writer.sendValue(value);
 
+        /* do rest of communication */
+        return interact();
+    }
+
+    /** Interact with subprocess (handle API calls, get return value) */
+    private Object
+    interact() {
         while (true) {
             final Map value;
             try {
@@ -48,15 +65,6 @@ class ExecutionContext {
                 throw new RuntimeException();
             }
         }
-    }
-
-    private void
-    sendFunctionDefcall() {
-        final Map<String, Object> value = new HashMap<>();
-        value.put("type", "func");
-        value.put("code", code);
-        value.put("args", args);
-        writer.sendValue(value);
     }
 
     private Object
