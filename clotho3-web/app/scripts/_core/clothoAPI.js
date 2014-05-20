@@ -489,7 +489,7 @@ function generateClothoAPI() {
      *
      */
     var edit = function clothoAPI_edit(uuid) {
-        $location.path("/editor?id=" + uuid);
+      $location.path("/editor").search('id', uuid);
     };
 
     /**
@@ -718,7 +718,7 @@ function generateClothoAPI() {
      * start a trail with a given uuid
      */
     var startTrail = function clothoAPI_startTrail(uuid) {
-      $location.path("/trails?id=" + uuid);
+      $location.path("/trails").search('id', uuid);
     };
 
     return {
@@ -755,7 +755,10 @@ function generateClothoAPI() {
         on : on,
         once : once,
         off : off,
-        share : share
+        share : share,
+
+	      //misc
+	      startTrail : startTrail
 
     }
 

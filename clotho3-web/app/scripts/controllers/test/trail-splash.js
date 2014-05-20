@@ -203,9 +203,7 @@ angular.module('clotho.trails')
 		};
 		*/
 
-		$scope.startTrail = function (trail) {
-			//todo
-		};
+		$scope.startTrail = Clotho.startTrail;
 
 		$scope.highlight = function (trail, evt) {
 			$scope.highlighted = trail;

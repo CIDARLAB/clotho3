@@ -34,9 +34,8 @@
   }
 
   .trail-info {
-
+    margin-right: 30px; //compensate for absolute positioning
     display: block;
-    width: 100%;
     padding: 10px 0;
     position: absolute;
     bottom: 0;

@@ -5,4 +5,6 @@ angular.module('clotho.trails')
     Clotho.query({"schema" : "Trail"}).then(function (result) {
 	    $scope.trails = result;
     });
+
+		$scope.startTrail = Clotho.startTrail;
   });

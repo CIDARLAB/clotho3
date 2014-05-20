@@ -13,7 +13,20 @@ angular.module('clotho.fullPackage', [
 
 //web application set up
 angular.module('clothoRoot', ['clotho.fullPackage'])
-.config(function ($routeProvider) {
+.config(function ($routeProvider, $locationProvider) {
+
+	/*
+	simulate legacy browser not supporting pushstate (add $provide to DI clause above)
+	$provide.decorator('$sniffer', function($delegate) {
+		$delegate.history = false;
+		return $delegate;
+	});
+	*/
+
+	$locationProvider
+		.html5Mode(false)
+		.hashPrefix('!');
+
 	$routeProvider
 	.when('/', {
 		templateUrl: 'views/home.html',
@@ -190,6 +203,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		var title = angular.isDefined(current.$$route) ? current.$$route.title : null;
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
+	});
+
+	$rootScope.$on('$locationChangeStart', function(event, current, previous) {
+		console.log(event, current);
 	});
 
 });

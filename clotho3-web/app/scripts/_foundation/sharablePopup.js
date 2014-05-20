@@ -362,6 +362,8 @@ angular.module('clotho.clothoDirectives')
 					scope.reposition();
 				};
 
+				scope.edit = Clotho.edit;
+
 				scope.$on('$destroy', function () {
 				})
 			}
