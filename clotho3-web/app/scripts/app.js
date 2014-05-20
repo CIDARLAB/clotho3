@@ -102,13 +102,15 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'TrailCtrl',
 		reloadOnSearch: false,
 		resolve : {
-			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
+			trail : ['Clotho', '$q', '$http', '$route', '$location', 'Trails', function (Clotho, $q, $http, $route, $location, Trails) {
 				var deferred = $q.defer();
 				Clotho.get($route.current.params.id).then(function(result) {
 					Trails.compile(result).then(function (compiled) {
 						$route.current.$$route.title = result.name;
 						deferred.resolve(compiled);
 					});
+				}, function () {
+					$location.path('/trails')
 				});
 				return deferred.promise;
 			}]
@@ -203,10 +205,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		var title = angular.isDefined(current.$$route) ? current.$$route.title : null;
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
-	});
-
-	$rootScope.$on('$locationChangeStart', function(event, current, previous) {
-		console.log(event, current);
 	});
 
 });
