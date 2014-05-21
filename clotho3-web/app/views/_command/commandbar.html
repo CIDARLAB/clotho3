@@ -4,11 +4,11 @@
   <div class="input-group" id="clotho_command_inputWrapper">
     <clotho-tokenizer ng-model="display.query"
                       placeholder="Construct a command"></clotho-tokenizer>
-    <span class="input-group-btn">
+    <span class="input-group-btn" style="vertical-align: top;">
       <button type="button"
               class="clothoTokenizerSubmit"
               ng-click="submit()"
-              ng-disabled="!display.query">
+              ng-disabled="!display.query.query">
         <span class="glyphicon glyphicon-chevron-right"></span>
       </button>
     </span>

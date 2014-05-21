@@ -180,9 +180,10 @@ function generateClothoAPI() {
     var get = function clothoAPI_get(uuid, options, synchronous) {
 
         //default to false (return promise)
-        synchronous = angular.isDefined(synchronous) ? !!synchronous : false;
+        //synchronous = angular.isDefined(synchronous) ? !!synchronous : false;
+        //return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
 
-        return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
+	      return get_async(uuid, options);
     };
 
     var get_async = function clothoAPI_get_async(uuid, options) {

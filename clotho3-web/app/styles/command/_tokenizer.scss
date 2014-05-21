@@ -34,7 +34,8 @@
 }
 
 .clothoTokenizerTokens {
-  display: inline;
+  display: inline-block;
+  max-width: 410px
 }
 
 .clothoAutocompleteWrap {
@@ -57,4 +58,8 @@
 .clothoAutocompleteListing {
   @extend .dropdown-menu;
   width: 300px;
+}
+
+.clothoAutocompleteMatch {
+  display: block;
 }

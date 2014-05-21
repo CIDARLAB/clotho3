@@ -1,0 +1,17 @@
+.popover.topRight {
+
+  .arrow {
+    top: 55px;
+  }
+
+}
+
+[sharable-popup-inner] {
+  .popover-content {
+    overflow: hidden;
+  }
+
+  .form-control-static {
+    word-break: break-word;
+  }
+}
