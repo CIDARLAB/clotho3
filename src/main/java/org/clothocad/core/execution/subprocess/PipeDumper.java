@@ -8,11 +8,9 @@ import org.clothocad.core.util.CloseableRunnable;
 class PipeDumper implements CloseableRunnable {
     private final InputStream pipe;
     private final ByteArray buffer = new ByteArray();
-    private final Condition condition;
 
-    PipeDumper(final InputStream pipe, final Condition condition) {
+    PipeDumper(final InputStream pipe) {
         this.pipe = pipe;
-        this.condition = condition;
     }
 
     byte[] getBytes() {
@@ -21,7 +19,7 @@ class PipeDumper implements CloseableRunnable {
 
     @Override public void
     run() {
-        while (!Thread.interrupted() && condition.poll()) {
+        while (!Thread.interrupted()) {
             final int b;
             try {
                 b = pipe.read();
