@@ -27,7 +27,7 @@
 			"path" : "partials/trails/clotho-intro/materials/courseSchedule.pdf"
 		}
 	],
-	"instructors" : ["53681df2ef864f6fb0bd29cc"],
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
 	"contents": [
 		{
 			"chapter": "Introducing Clotho",
@@ -123,7 +123,7 @@
 							"params": {
 								"question" : {
 									"type" : "fillin",
-									"hint" : "Copy-paste the sequence into the tool below, or click Show Me How",
+									"hint" : "Copy-paste the sequence into the tool",
 									"question" : "Find the reverse complement of the sequence <code>{{ questionValue }}</code> using the tool."
 								},
 								"options" : {
@@ -177,7 +177,7 @@
 					"contents": [
 						{
 							"type" : "text",
-							"params" : "<p>Answer the quiz by running your own function!</p><p>In the Command Bar (type <code>f</code>), type <code>revcomp</code> and copy-paste the sequence, then grab the value from the Activity Log and paste it in the quiz.</p>"
+							"params" : "<p>Answer the quiz by running your own function!</p><p>In the Command Bar, type <code>revcomp</code> and select the reverse complement function, then copy-paste the sequence in the quiz. Grab the resulting value from the Activity Log and paste it in the quiz.</p>"
 						},
 						{
 							"type": "quizQuestion",
@@ -217,9 +217,6 @@
 				{
 					"title": "Restriction Digests",
 					"icon": "exercise",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/RestrictionDigests.js"
-					},
 					"contents": [
 						{
 							"type": "video",
@@ -257,6 +254,12 @@
 						{
 							"type": "template",
 							"params": "partials/trails/clotho-intro/Ligation.html"
+						},
+						{
+							"type": "tool",
+							"params": {
+								"name" : "ligation"
+							}
 						}
 					]
 				},
@@ -272,8 +275,14 @@
 							"params": "20a-mp4YXRQ"
 						},
 						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/PCR.html"
+							"type": "text",
+							"params": "<h1>Add some text</h1>"
+						},
+						{
+							"type": "tool",
+							"params": {
+								"name" : "pcr"
+							}
 						}
 					]
 				}
