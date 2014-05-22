@@ -15,6 +15,18 @@ angular.module('clotho.foundation')
 			dependencies : {
 				mixin : toolRoot + "digestCuts.js"
 			}
+		},
+		"ligation" : {
+			partial : "ligation.html",
+			dependencies : {
+				mixin : toolRoot + "ligation.js"
+			}
+		},
+		"pcr" : {
+			partial : "pcr.html",
+			dependencies : {
+				mixin : toolRoot + "pcr.js"
+			}
 		}
 	};
 
@@ -38,7 +50,6 @@ angular.module('clotho.foundation')
 					Debugger.warn('tool name not provided');
 				}
 			});
-
 
 			function constructTool (name) {
 
