@@ -1,8 +1,8 @@
 {
-	"id": "bb99191e810c19729de860fe",
-	"schema": "Trail",
-	"name": "Learning Clotho",
-	"description": "Learn how Clotho can simplify and automate your genetic engineering workflows.",
+	"id" : "org.clothocad.trails.LearningClotho",
+	"schema":"org.clothocad.model.Trail",
+	"name" : "Learning Clotho",
+	"description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
 	"icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
 	"about" : {
 		"help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",

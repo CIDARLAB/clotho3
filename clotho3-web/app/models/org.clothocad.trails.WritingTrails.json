@@ -1,8 +1,8 @@
 {
-	"id" : "bb99191e810c19729de860cf",
-	"schema" : "Trail",
+	"id" : "org.clothocad.trails.WritingTrails",
+	"schema" : "org.clothocad.model.Trail",
 	"name" : "Writing Trails",
-	"author" : "UC Berkeley",
+	"author" : "Maxwell Bates",
 	"description" : "This Trail will walk you through how to write a Trail, introducing you to the relevant schemas, and built-in Clotho tools and services you can access.",
 	"mixin" : "partials/trails/writingTrails/writingTrails-controller.js",
 	"contents" : [
