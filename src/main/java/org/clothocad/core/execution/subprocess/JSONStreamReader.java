@@ -21,11 +21,9 @@ class JSONStreamReader implements CloseableRunnable {
     private final InputStream pipe;
     private final CloseableQueue parsedValues = new CloseableQueue();
     private final ByteArray buffer = new ByteArray();
-    private final Condition condition;
 
-    JSONStreamReader(final InputStream pipe, final Condition condition) {
+    JSONStreamReader(final InputStream pipe) {
         this.pipe = pipe;
-        this.condition = condition;
     }
 
     /** Pop one JSON value off queue of read values.
@@ -41,7 +39,7 @@ class JSONStreamReader implements CloseableRunnable {
 
     @Override public void run() {
         try {
-            while (!Thread.interrupted() && condition.poll() && loop())
+            while (!Thread.interrupted() && loop())
                 ;
         } finally {
             parsedValues.close();
@@ -65,10 +63,7 @@ class JSONStreamReader implements CloseableRunnable {
             return false;
         }
         if (b < 0)
-            /* even if at EOF, keeping spinning in hopes that something can
-             * eventually be read.
-             */
-            return true;
+            return false;
         if (b == 0) {
             parsedValues.push(JSONUtil.decodeUTF8(buffer.getArray()));
             buffer.clear();

@@ -625,21 +625,18 @@ public class ServerSideAPI {
             args,
             new SubprocessExec.EventHandler() {
                 @Override public void
-                onFail(final byte[] out, final byte[] err) {
-                    say_helper(out, err, Severity.FAILURE);
+                onFail(final byte[] err) {
+                    say_helper(err, Severity.FAILURE);
                 }
 
                 @Override public void
-                onSuccess(final byte[] out, final byte[] err) {
-                    say_helper(out, err, Severity.NORMAL);
+                onSuccess(final byte[] err) {
+                    say_helper(err, Severity.NORMAL);
                 }
 
                 private void
-                say_helper(final byte[] out,
-                           final byte[] err,
+                say_helper(final byte[] err,
                            final Severity sev) {
-                    if (out.length != 0)
-                        say(new String(out, StandardCharsets.UTF_8), sev);
                     if (err.length != 0)
                         say(new String(err, StandardCharsets.UTF_8), sev);
                 }

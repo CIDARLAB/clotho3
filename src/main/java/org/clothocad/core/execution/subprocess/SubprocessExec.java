@@ -1,6 +1,5 @@
 package org.clothocad.core.execution.subprocess;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import org.clothocad.core.communication.ServerSideAPI;
@@ -13,21 +12,16 @@ import org.clothocad.core.util.CloseableThread;
  * Our Java process (the "host") communicates with the subprocess over
  * the following channels:
  *   - subprocess standard input:  host --> subprocess messages
- *   - temporary file:             subprocess --> host messages
- *   - subprocess standard output: copied to host; not interpreted
+ *   - subprocess standard output: subprocess --> host messages
  *   - subprocess standard error:  copied to host; not interpreted
  *
- * The temporary file is created by the host and the file name is passed
- * to the subprocess via its standard input. This enables communication
- * from subprocess to host.
- *
- * Subprocess standard output and error is captured in byte arrays and
- * is not interpreted.
+ * Subprocess standard error is captured in a byte array and is not
+ * interpreted.
  *
  * Messages are UTF-8 encoded, null-byte terminated JSON values.
  * The types of messages that can be sent to the subprocess are:
  *   function_init:
- *     {"type": "func", "tmpfile": <string>, "code": <string>, "args": <array>}
+ *     {"type": "func", "code": <string>, "args": <array>}
  *
  *   api_return:
  *     {"type": "api", "return": <value>}
@@ -72,9 +66,8 @@ import org.clothocad.core.util.CloseableThread;
  *  ...
  *
  * The host creates helper threads for reading from the standard output and
- * standard error streams of the subprocess and from the temporary file. When
- * the subprocess dies, so do the helper threads. The temporary file is also
- * deleted. The diagram above does not show the helper threads.
+ * error streams of the subprocess. When the subprocess dies, so do the helper
+ * threads. The diagram above does not show the helper threads.
  */
 public class SubprocessExec {
     public static Object
@@ -85,42 +78,26 @@ public class SubprocessExec {
 
         try (final CloseableProcess proc =
              ProcessProvider.newProcess((String) sourceJSON.get("language"));
-             final CloseableTmpFile tmpfile = new CloseableTmpFile()
         ) {
             final Object returnValue;
-            final Condition procCond = new Condition() {
-                @Override public boolean poll() {
-                    try {
-                        proc.getProcess().exitValue();
-                    } catch (Exception e) {
-                        return true;
-                    }
-                    return false;
-                }
-            };
-            final Path tmpfile_path = tmpfile.setup();
-            final PipeDumper outDumper =
-                new PipeDumper(proc.getProcess().getInputStream(), procCond);
             final PipeDumper errDumper =
-                new PipeDumper(proc.getProcess().getErrorStream(), procCond);
+                new PipeDumper(proc.getProcess().getErrorStream());
             final JSONStreamReader reader =
-                new JSONStreamReader(tmpfile.getInputStream(), procCond);
+                new JSONStreamReader(proc.getProcess().getInputStream());
             try {
                 returnValue = initThreadsAndRun(
                     api,
                     reader,
                     new JSONStreamWriter(proc.getProcess().getOutputStream()),
-                    new CloseableRunnable[] {reader, outDumper, errDumper},
-                    tmpfile_path,
+                    new CloseableRunnable[] {reader, errDumper},
                     (String) sourceJSON.get("code"),
                     args
                 );
             } catch (final Exception e) {
-                eventHandler.onFail(outDumper.getBytes(),
-                                    errDumper.getBytes());
+                eventHandler.onFail(errDumper.getBytes());
                 throw e;
             }
-            eventHandler.onSuccess(outDumper.getBytes(), errDumper.getBytes());
+            eventHandler.onSuccess(errDumper.getBytes());
             return returnValue;
         }
     }
@@ -130,7 +107,6 @@ public class SubprocessExec {
                       final JSONStreamReader r,
                       final JSONStreamWriter w,
                       final CloseableRunnable[] runnables,
-                      final Path tmpfile_path,
                       final String code,
                       final List<Object> args) {
         final CloseableThread[] threads =
@@ -142,13 +118,12 @@ public class SubprocessExec {
         try (final TryAll tryall = new TryAll(threads)) {
             for (final CloseableThread thread : threads)
                 thread.getThread().start();
-            return new ExecutionContext(api, r, w)
-                   .start(tmpfile_path, code, args);
+            return new ExecutionContext(api, r, w).start(code, args);
         }
     }
 
     public static interface EventHandler {
-        void onFail(byte[] standardOutput, byte[] standardError);
-        void onSuccess(byte[] standardOutput, byte[] standardError);
+        void onFail(byte[] standardError);
+        void onSuccess(byte[] standardError);
     }
 }
