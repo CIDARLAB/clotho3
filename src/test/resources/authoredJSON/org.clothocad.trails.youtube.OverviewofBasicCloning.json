@@ -1,6 +1,6 @@
 {
   "name" : "Overview of Basic Cloning",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.OverviewofBasicCloning",
   "about" : {
     "help" : "Overview of Basic Cloning was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/25/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Steps in Cloning a Gene",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",

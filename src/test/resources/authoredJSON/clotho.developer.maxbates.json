@@ -14,7 +14,7 @@
   "name" : "Maxwell Bates",
   "nickName" : "Max",
   "role" : "Programmer",
-  "schema" : "LabPerson",
+  "schema":"org.clothocad.model.LabPerson",
   "social" : "",
   "startDate" : "2012-06-01",
   "surName" : "Bates",

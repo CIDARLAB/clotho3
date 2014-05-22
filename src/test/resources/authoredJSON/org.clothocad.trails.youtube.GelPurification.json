@@ -1,6 +1,6 @@
 {
   "name" : "Gel Purification",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.GelPurification",
   "about" : {
     "help" : "Gel Purification was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "cloning cycle   runing a gel of our digestion",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +26,7 @@
       } ]
     }, {
       "title" : "Cutting bands out of gel",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -39,7 +39,7 @@
       } ]
     }, {
       "title" : "cloning cycle   agarose gel DNA purification with zymo columns pt1",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -49,7 +49,7 @@
       } ]
     }, {
       "title" : "cloning cycle   agarose gel DNA purification with zymo columns pt2",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",

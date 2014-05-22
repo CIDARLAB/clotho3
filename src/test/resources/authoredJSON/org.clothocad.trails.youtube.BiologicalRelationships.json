@@ -1,6 +1,6 @@
 {
   "name" : "Biological Relationships",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.BiologicalRelationships",
   "about" : {
     "help" : "Biological Relationships was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Biological Relationships",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",

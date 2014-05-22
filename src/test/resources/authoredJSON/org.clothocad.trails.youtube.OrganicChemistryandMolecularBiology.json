@@ -1,6 +1,6 @@
 {
   "name" : "Organic Chemistry and Molecular Biology",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology",
   "about" : {
     "help" : "Organic Chemistry and Molecular Biology was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 1/22/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Essentials Concepts of Organic Chemistry",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +26,7 @@
       } ]
     }, {
       "title" : "DNA structure and the Reverse Complement operation",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

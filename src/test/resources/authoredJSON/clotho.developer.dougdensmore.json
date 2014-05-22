@@ -6,7 +6,7 @@
   "isManagement" : "true",
   "name" : "Douglas Densmore",
   "nickName" : "Doug",
-  "schema" : "LabPerson",
+  "schema":"org.clothocad.model.LabPerson",
   "surName" : "Densmore",
   "title" : "Project Leader",
   "id" : "clotho.developer.dougdensmore"

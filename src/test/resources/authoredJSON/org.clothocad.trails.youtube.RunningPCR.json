@@ -1,6 +1,6 @@
 {
   "name" : "Running PCR",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.RunningPCR",
   "about" : {
     "help" : "Running PCR was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/24/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Oligos received from IDT",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "Calculating oligo water volume",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Spin down oligos before adding water",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +55,7 @@
       } ]
     }, {
       "title" : "Three grades of water",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +68,7 @@
       } ]
     }, {
       "title" : "Add water to oligos",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -81,7 +81,7 @@
       } ]
     }, {
       "title" : "Make 10uM oligo dilutions",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -94,7 +94,7 @@
       } ]
     }, {
       "title" : "Pre-plan you tip usage to avoid errors",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -107,7 +107,7 @@
       } ]
     }, {
       "title" : "Setting up a PCR reaction",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -120,7 +120,7 @@
       } ]
     }, {
       "title" : "Running a PCR on a Thermocycler",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -133,7 +133,7 @@
       } ]
     }, {
       "title" : "Putting materials away after PCR",
-      "schema" : "Trail",
+      "schema":"org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

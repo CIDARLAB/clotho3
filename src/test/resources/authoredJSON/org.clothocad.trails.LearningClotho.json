@@ -1,6 +1,6 @@
 {
   "id" : "org.clothocad.trails.LearningClotho",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "name" : "Learning Clotho",
   "description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
   "contents" : [ {

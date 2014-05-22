@@ -1,6 +1,6 @@
 {
   "id" : "org.clothocad.trails.WritingTrails-AddingFunctionality",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "name" : "Writing Trails - Adding Functionality",
   "dependencies" : [ "bb7f191e810c19729de860ab", "bb7f191e810c19729de860dd" ],
   "author" : "Max Bates",
