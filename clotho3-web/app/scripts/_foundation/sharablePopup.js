@@ -337,7 +337,7 @@ angular.module('clotho.clothoDirectives')
 					if (ClothoSchemas.isSchema(model)) {
 						scope.isSchema = true;
 						//must have a proper schema to download schema dependencies
-						Clotho.get(model.id)
+						Clotho.get(model.id, {mute: true})
 						.then(function (fullModel) {
 							ClothoSchemas.downloadSchemaDependencies(fullModel)
 							.then(function (finalSchema) {
