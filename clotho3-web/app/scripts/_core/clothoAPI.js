@@ -186,33 +186,39 @@ function generateClothoAPI() {
 	      return get_async(uuid, options);
     };
 
-    var get_async = function clothoAPI_get_async(uuid, options) {
+	var get_async = function clothoAPI_get_async(uuid, options) {
 
-		    if (angular.isUndefined(uuid)) {
-			    return createRejectedPromise();
-		    }
+		if (angular.isUndefined(uuid)) {
+			return createRejectedPromise();
+		}
 
-	      /*
-	      //check collector
-	      var retrieved = Collector.retrieveModel(uuid);
+		/*
+		note - in order to use the collector, we need a fresh localStorage, since changes made between sessions are not captured
+		currently, we just wipe local storage whenever a new tab is opened.
 
-	      if (!!retrieved) {
-	          var deferred = $q.defer();
-	          deferred.resolve(retrieved);
-	          return deferred.promise;
-	      } else {
-	          var callback = function(data) {
-	              Collector.storeModel(uuid, data);
-	          };
+		todo - better collector handling - a few options:
+		- wipe on first instance, check for existing instances (other tabs) before wiping
+		- check which objects have been loaded in this session and allow those (assuming we have watches for updates, otherwise go to server)
+		*/
 
-	          return fn.emitSubCallback('get', uuid, callback, options);
-	      }
-        */
+		//check collector
+		var retrieved = Collector.retrieveModel(uuid);
 
-	    //bypass collector so don't get a stale model
-	    //todo - reintegrate collector in a way that makes sense. Probably need to check which objects have been loaded in this session and allow those (assuming we have watches for updates, otherwise go to server)
-	    return fn.emitSubOnce('get', uuid, options);
-    };
+		if (!!retrieved) {
+			var deferred = $q.defer();
+			deferred.resolve(retrieved);
+			return deferred.promise;
+		} else {
+			var callback = function (data) {
+				Collector.storeModel(uuid, data);
+			};
+
+			return fn.emitSubCallback('get', uuid, callback, options);
+		}
+
+		//bypass collector so don't get a stale model
+		//return fn.emitSubOnce('get', uuid, options);
+	};
 
     var get_sync = function clothoAPI_get_sync(uuid, options) {
 
