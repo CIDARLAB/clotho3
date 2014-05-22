@@ -27,7 +27,7 @@
 			"path" : "partials/trails/clotho-intro/materials/courseSchedule.pdf"
 		}
 	],
-	"instructors" : ["53681df2ef864f6fb0bd29cc"],
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
 	"contents": [
 		{
 			"chapter": "Introducing Clotho",
