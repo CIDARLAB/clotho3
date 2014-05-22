@@ -624,16 +624,24 @@ public class ServerSideAPI {
             funcJSON,
             args,
             new SubprocessExec.EventHandler() {
-                @Override public void onFail(final byte[] standardError) {
-                    say(new String(standardError, StandardCharsets.UTF_8),
-                        Severity.FAILURE);
+                @Override public void
+                onFail(final byte[] out, final byte[] err) {
+                    say_helper(out, err, Severity.FAILURE);
                 }
 
-                @Override public void onSuccess(final byte[] standardError) {
-                    if (standardError.length == 0)
-                        return;
-                    say(new String(standardError, StandardCharsets.UTF_8),
-                        Severity.NORMAL);
+                @Override public void
+                onSuccess(final byte[] out, final byte[] err) {
+                    say_helper(out, err, Severity.NORMAL);
+                }
+
+                private void
+                say_helper(final byte[] out,
+                           final byte[] err,
+                           final Severity sev) {
+                    if (out.length != 0)
+                        say(new String(out, StandardCharsets.UTF_8), sev);
+                    if (err.length != 0)
+                        say(new String(err, StandardCharsets.UTF_8), sev);
                 }
             }
         );

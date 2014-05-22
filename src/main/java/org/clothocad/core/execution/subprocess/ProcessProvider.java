@@ -9,25 +9,43 @@ import java.util.Map;
 import org.clothocad.core.util.CloseableProcess;
 
 class ProcessProvider {
-    private static final Map<String, List<String>> COMMANDS = new HashMap<>();
+    private static final Map<String, ProcConfig> CONFIGS = new HashMap<>();
     static {
-        COMMANDS.put(
+        final Map<String, String> pythonenv = new HashMap<>();
+        pythonenv.put("PYTHONPATH",
+                      Paths.get("src", "main", "python", "lib").toString());
+        CONFIGS.put(
             "python2",
-            Arrays.asList(new String[] {
-                "python",
-                Paths.get("src", "main", "python", "runner.py").toString()
-            })
+            new ProcConfig(
+                new String[] {
+                    "python",
+                    Paths.get("src", "main", "python", "runner.py").toString()
+                },
+                pythonenv
+            )
         );
     }
 
     static CloseableProcess newProcess(final String language) {
-        final List<String> cmd = COMMANDS.get(language);
-        if (cmd == null)
+        final ProcConfig conf = CONFIGS.get(language);
+        if (conf.command == null)
             throw new IllegalArgumentException(language);
+        final ProcessBuilder builder = new ProcessBuilder(conf.command);
+        builder.environment().putAll(conf.environment);
         try {
-            return new CloseableProcess(new ProcessBuilder(cmd).start());
-        } catch (IOException e) {
+            return new CloseableProcess(builder.start());
+        } catch (final IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static class ProcConfig {
+        private final List<String> command;
+        private final Map<String, String> environment;
+
+        private ProcConfig(final String[] cmd, final Map<String, String> env) {
+            this.command = Arrays.asList(cmd);
+            this.environment = env;
         }
     }
 }
