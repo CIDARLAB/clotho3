@@ -1,5 +1,5 @@
 angular.module('clotho.interface')
-.controller('SharingCtrl', function($scope, $location, $window){
+.controller('SharingCtrl', function($scope, $location, $window, $q, UrlShorten){
 
 	function stdIconUrl (name) {
 		return 'images/socialmedia/' + name + '.png';
@@ -43,9 +43,15 @@ angular.module('clotho.interface')
 		}
 	];
 
-	$scope.share = function (site, url) {
-		var shareUrl = site.prefix + ( url ? url : $location.absUrl()) ;
-		$window.open(shareUrl, (site.name == 'email' ? '_self' : "_blank") );
+	$scope.share = function (site, shorten, url) {
+
+		var currentUrl = angular.isDefined(url) ? url : $location.absUrl();
+		var urlToShare = !!shorten ? UrlShorten(currentUrl) : $q.when(currentUrl);
+
+		urlToShare.then(function (shortUrl) {
+			var shareUrl = site.prefix + shortUrl ;
+			$window.open(shareUrl, (site.name == 'email' ? '_self' : "_blank") );
+		});
 	};
 
 });

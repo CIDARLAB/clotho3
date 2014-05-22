@@ -52,7 +52,7 @@
           <div style="display: inline-block; margin: 0 auto;">
           <img ng-repeat="site in social"
                ng-src="{{site.icon}}"
-               ng-click="share(site)"
+               ng-click="share(site, true)"
                ng-style="{'width' : '36px',
                           'padding-right' : ($last ? '0' : '5px') }"
                class="hoverFade"/>
