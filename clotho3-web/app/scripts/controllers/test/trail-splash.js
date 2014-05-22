@@ -211,10 +211,6 @@ angular.module('clotho.trails')
 			//note - in interim, let's just fetch the playlist and construct lazily
 			//Youtube.playlistToTrail(trail.playlist).then(function (compiled) {
 			Clotho.get(trail.id).then(function (result) {
-				//cna't use translate because not consistent across browsers (vendor prefixing)
-				$scope.highlightStyle = {
-					top: evt.target.offsetTop
-				};
 				$scope.loading = false;
 				$scope.selected = result;
 			});
