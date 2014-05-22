@@ -308,8 +308,6 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
                     map.put("description", temp.get("description"));
                 } else if(temp.containsKey("shortDescription")) {
                     map.put("description", temp.get("shortDescription"));
-                } else {
-                    map.put("description", "<no description>");
                 }
                 out.add(map);
             } catch(Exception err) {
