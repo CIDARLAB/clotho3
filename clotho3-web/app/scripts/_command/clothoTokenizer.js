@@ -36,10 +36,16 @@ angular.module('clotho.tokenizer')
 					});
 				}
 
+				function resetModel () {
+					completeQuery = '';
+					scope.tokenCollection.removeAll();
+				}
+
 				ngModelCtrl.$render = function () {
-					//todo - update query and tokens internally (e.g. on submit()) when set externally
-					//pending fix to submit because nothign goes through yet
-					console.log('rendering');
+					//fixme - model is never actually updated, so we just reset it here assuming submit triggered $render
+					console.log('tokenizer render triggered');
+					resetModel();
+					updateModel();
 				};
 
 				scope.$watchCollection('tokenCollection.tokens', function () {

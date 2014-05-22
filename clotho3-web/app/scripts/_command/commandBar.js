@@ -84,8 +84,9 @@ angular.module('clotho.commandbar')
 	};
 
 	var submit = function (input) {
+		console.log('input is "' + input + '"');
 		if (angular.isEmpty(input) || !angular.isObject(input)) {
-			input = display.query
+			input = display.query || '';
 		}
 
 		//remove trailing whitespace
