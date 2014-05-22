@@ -8,7 +8,7 @@ angular.module('clotho.tokenizer')
 			var paddingLeft = element.css('paddingLeft'),
 				paddingRight = element.css('paddingRight');
 
-			var minWidth = 75;
+			var minWidth = 100;
 
 			var $shadow = angular.element('<span></span>').css({
 				'position': 'absolute',
