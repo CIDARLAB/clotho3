@@ -59,7 +59,7 @@ angular.module('clotho.extensions', [])
 	};
 
 })
-.run(function($rootScope, $q, $timeout, $templateCache, $http, $rootElement, $document, $compile) {
+.run(function($rootScope, $q, $timeout, $templateCache, $http, $rootElement, $compile) {
 
 	//these functions are for mixing in components that are not added via the provider interface above
 	var getQueue = function() {
@@ -209,15 +209,15 @@ angular.module('clotho.extensions', [])
 		//timeout our requests at 5 seconds
 		var timeoutPromise = $timeout(function() { deferred.reject(null) }, 5000);
 
-		if ($document.createStyleSheet) { //IE
-			$document.createStyleSheet(url);
+		if (document.createStyleSheet) { //IE
+			document.createStyleSheet(url);
 			$rootScope.$safeApply(deferred.resolve());
 		} else {
-			var link = $document.createElement("link");
+			var link = document.createElement("link");
 			link.type = "text/css";
 			link.rel = "stylesheet";
 			link.href = url;
-			$document.getElementsByTagName("head")[0].appendChild(link);
+			document.getElementsByTagName("head")[0].appendChild(link);
 			$timeout.cancel(timeoutPromise);
 			$rootScope.$safeApply(deferred.resolve());
 		}
@@ -277,7 +277,7 @@ angular.module('clotho.extensions', [])
 
 
 	//todo - incorporate separately? don't need to know type this way
-	var headEl = $document.getElementsByTagName('head')[0];
+	var headEl = document.getElementsByTagName('head')[0];
 
 		/*
 		EXAMPLE USAGE
@@ -302,21 +302,21 @@ angular.module('clotho.extensions', [])
 		 */
 
 	function addTag(name, attributes, sync) {
-		var el = $document.createElement(name),
+		var el = document.createElement(name),
 			attrName;
 
 		for (attrName in attributes) {
 			el.setAttribute(attrName, attributes[attrName]);
 		}
 
-		sync ? $document.write(outerHTML(el)) : headEl.appendChild(el);
+		sync ? document.write(outerHTML(el)) : headEl.appendChild(el);
 	}
 
 	function outerHTML(node){
 		// if IE, Chrome take the internal method otherwise build one
 		return node.outerHTML || (
 			function(n){
-				var div = $document.createElement('div'), h;
+				var div = document.createElement('div'), h;
 				div.appendChild(n);
 				h = div.innerHTML;
 				div = null;
