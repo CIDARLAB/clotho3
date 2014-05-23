@@ -1,5 +1,0 @@
-{
-  "id" : "py_selfie",
-  "language" : "python2",
-  "code" : "def run(): return clotho.get('py_selfie')['code']"
-}

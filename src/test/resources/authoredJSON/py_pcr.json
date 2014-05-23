@@ -1,5 +1,0 @@
-{
-  "id" : "py_pcr",
-  "language" : "python2",
-  "code" : "from pcr import predict as run"
-}

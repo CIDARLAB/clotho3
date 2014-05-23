@@ -1,5 +1,0 @@
-{
-  "id" : "py_nucseqfetch",
-  "language" : "python2",
-  "code" : "from nucseqfetch import run"
-}
