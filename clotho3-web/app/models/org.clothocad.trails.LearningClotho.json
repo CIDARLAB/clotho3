@@ -154,17 +154,10 @@
 					"title": "The Command Bar",
 					"icon": "eye",
 					"help" : "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p>",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/searchbarIntro.js"
-					},
 					"contents": [
 						{
-							"type": "text",
-							"params": "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p><h1>UPDATE COMMANDS</h1>"
-						},
-						{
 							"type": "template",
-							"params": "partials/trails/clotho-intro/searchbarIntro.html"
+							"params": "partials/trails/clotho-intro/commandIntro.html"
 						}
 					]
 				},
@@ -276,7 +269,7 @@
 						},
 						{
 							"type": "text",
-							"params": "<h1>Add some text</h1>"
+							"params": "<p>The tool below includes a few sets of primers and backbones. You can see the alignment of the primers, and the DNA fragment that results after PCR. Notice that some will copy the inner fragment (normal PCR), and others the outer fragment (EIPCR), depending on the orientation of the primers.</p><p>Try editing the primers or sequence yourself!</p>"
 						},
 						{
 							"type": "tool",
