@@ -314,7 +314,10 @@ angular.module('clotho.clothoDirectives')
 			}
 		}
 	})
-	.directive('sharablePopupInner', function (Clotho, ClothoSchemas) {
+	.directive('sharablePopupInner', function (Clotho, ClothoSchemas, $injector) {
+		
+		var editorPresent = $injector.has('clothoEditorDirective');
+		
 		return {
 			restrict: 'EA',
 			replace: true,
@@ -347,6 +350,8 @@ angular.module('clotho.clothoDirectives')
 
 					}
 				}
+
+				scope.editorPresent = editorPresent;
 
 				scope.$watch('sharableModel', function ( val, oldval ) {
 					if (!!val) {
