@@ -176,10 +176,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/trail-browser.html',
   controller: 'TestTrailBrowserCtrl'
 })
-.when('/test/trail-overview', {
-  templateUrl: 'views/test/trail-overview.html',
-  controller: 'TestTrailOverviewCtrl'
-})
 .when('/test/playlistimport', {
   templateUrl: 'views/test/playlistimport.html',
   controller: 'TestPlaylistimportCtrl'
