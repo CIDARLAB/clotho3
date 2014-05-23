@@ -13,20 +13,6 @@
 			}
 		]
 	},
-	"materials" : [
-		{
-			"name" : "Example Syllabus",
-			"icon" : "syllabus",
-			"type" : "Syllabus",
-			"path" : "partials/trails/clotho-intro/materials/ClothoIntroSyllabus.pdf"
-		},
-		{
-			"name" : "Course Schedule",
-			"icon" : "schedule",
-			"type" : "Calendar",
-			"path" : "partials/trails/clotho-intro/materials/courseSchedule.pdf"
-		}
-	],
 	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
 	"contents": [
 		{
@@ -36,14 +22,6 @@
 				{
 					"title": "Intro to DNA",
 					"icon": "video",
-					"materials" : [
-						{
-							"name" : "Video Slides",
-							"icon" : "slides",
-							"type" : "Slides",
-							"path" : "partials/trails/clotho-intro/materials/IntroDNASlides.txt"
-						}
-					],
 					"contents": [
 						{
 							"type": "text",
