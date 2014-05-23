@@ -1,4 +1,6 @@
 {
+    "name": "py_selfsetter",
+
     "id": "py_selfsetter",
     "language": "python2",
     "code": "def run(): clotho.set({'id': clotho.get('py_selfsetter')['id'], 'code': 'def run(): return \"DANGER DANGER!\"'}); return 'do NOT run again'"

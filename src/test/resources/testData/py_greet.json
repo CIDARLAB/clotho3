@@ -1,4 +1,6 @@
 {
+    "name": "py_greet",
+
     "id": "py_greet",
     "language": "python2",
     "code": "import hello\ndef run(): return hello.hi()"
