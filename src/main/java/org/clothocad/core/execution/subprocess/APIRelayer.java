@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.ObjectId;
 
 class APIRelayer {
     private static final Map<String, Relayer> RELAYERS = new HashMap<>();
@@ -67,10 +69,10 @@ class APIRelayer {
             if (args.size() != 2)
                 throw new RuntimeException();
             final Object ret;
-            final String run_name = (String) args.get(0);
+            final String run_id = (String) args.get(0);
             final List run_args = (List) args.get(1);
             try {
-                ret = api.run2(run_name, run_args);
+                ret = api.run(args);
             } catch (final Exception e) {
                 cb.onFail(e.getMessage());
                 return;

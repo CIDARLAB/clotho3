@@ -69,11 +69,6 @@ public class ScriptAPI {
         api.destroy(id);
     }
 
-    public Object
-    run2(final String name, final List<Object> args) {
-        return api.run2(name, args);
-    }
-    
     public Object run(Object selector, Object arg) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         return run(selector, Arrays.asList(arg));
     }
