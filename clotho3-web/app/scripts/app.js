@@ -8,7 +8,8 @@ angular.module('clotho.fullPackage', [
 	//additional webapp modules
 	'clotho.editor',
 	'clotho.interface',
-	'clotho.trails'
+	'clotho.trails',
+	'clotho.construction'
 ]);
 
 //web application set up
@@ -187,6 +188,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 .when('/test/trail-splash', {
   templateUrl: 'views/test/trail-splash.html',
   controller: 'TestTrailSplashCtrl'
+})
+.when('/test/construction', {
+  templateUrl: 'views/test/construction.html',
+  controller: 'TestConstructionCtrl'
 })
 	.otherwise({
 		redirectTo:'/'

@@ -192,12 +192,33 @@ angular.module('clotho.trails')
 		];
 
 		/*
+
+		 trail.materials = [{
+		 "name" : "Course Slides",
+		 "icon" : "syllabus",
+		 "type" : "Syllabus",
+		 "path" : "partials/trails/clotho-intro/materials/ClothoIntroSyllabus.pdf"
+		 }]
+
+		//to get all the trail IDs above
+
+		 var trails = [];
+		 angular.forEach($scope.topics, function (topic) {
+		  angular.forEach(topic.trails, function (trail) {
+		    trails.push(trail.id)
+		  });
+		 });
+
+
+		as of 5/22/14, but probably not worth re-importing after all the customizations made
+
+		 var list = ["PL2aPXzks-TgOacBZ1TGGwANuld5yGmbkt", "PL2aPXzks-TgOj55WalLbDUTfmuhZvYVmW", "PL2aPXzks-TgNK702CfJaz-gTfRtv34sNt", "PL2aPXzks-TgMRN9PNtntlYoMuV5Xb8iu2", "PL2aPXzks-TgMvy4PG5wwbrw9VKBuowOR8", "PL2aPXzks-TgPIVgTQU-ajK2eCP9deCIl2", "PL2aPXzks-TgPX7HU4pogNUSBN9OK2PhBK", "PL2aPXzks-TgNkKi2lUWL65MpPsRBCb5q5", "PL2aPXzks-TgPagNtoxbU5Kqt1aZCm1ORd", "PL2aPXzks-TgPiVtQqqthOAE60E7iHz-gg", "PL2aPXzks-TgOOPfxneYJ3pBwTlqzv9Ezn", "PL2aPXzks-TgN9w3Pm49zEQJfnNDV8T1KZ", "PL2aPXzks-TgNwbIY4SU7Wd1RObYSllKqv", "PL2aPXzks-TgMgibxKB80naduiRZnqcZPR", "PL2aPXzks-TgOtngzKdocz4P50TCncRyPy", "PL2aPXzks-TgNn3gT7KNn3m2QN3x_m4NCW", "PL2aPXzks-TgN_Ztp-bRkzbtbi5Ncsh71t", "PL2aPXzks-TgPrTigCFi0P8hfWz-CEO5qL", "PL2aPXzks-TgPYH_y0UNKluRkrRHbcQLuX", "PL2aPXzks-TgNlrgM8BK3jD_aiyjoXOsRI", "PL2aPXzks-TgPMLXx10saMCO7oKp7IMKDn", "PL2aPXzks-TgMJr2fAKj5ixn9RXypJ_zaZ", "PL2aPXzks-TgPhvEG_0c44SFt03b5sUGov", "PL2aPXzks-TgNe-LNrcRmB-iHvFFZokK7R", "PL2aPXzks-TgNmfjrolgYWGblQDNzo11Yq", "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ", "PL2aPXzks-TgNu5fDsnbCOdQqdSqU6m1FF", "PL2aPXzks-TgPkmcVYYZACTbbq4bx_ZAoI", "PL2aPXzks-TgNP1FuAv0v-fS6UhCjy1waN", "PL2aPXzks-TgP45-xudcn4XXiVZfUOYMht", "PL2aPXzks-TgMz06rZlbCRKzYyVkXyIwb9", "PL2aPXzks-TgPQbhJWXI3fSsV9FZ0QLAXa", "PL2aPXzks-TgOdmDmfWSneeIdp_4jF9lI-", "PL2aPXzks-TgP0KMKfq4-fQPKClxvkYwWd", "PL2aPXzks-TgO0k9PhT__NSh2x6HNimaOy", "PL2aPXzks-TgOYRv5T9yRzwJE1QWEiY2R8", "PL2aPXzks-TgMo_x6XhYmfoZDezm4m-DcL"]
+
+
 		$scope.createAll = function () {
-			angular.forEach($scope.topics, function (topic) {
-				angular.forEach(topic.trails, function (trail) {
-					Youtube.playlistToTrail(trail.playlist).then(function (result) {
-						Clotho.create(result);
-					});
+			angular.forEach(list, function (playlistid) {
+				Youtube.playlistToTrail(playlistid).then(function (result) {
+					Clotho.create(result);
 				});
 			});
 		};

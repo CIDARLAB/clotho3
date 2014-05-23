@@ -1,0 +1,8 @@
+<div class="constructionFileView">
+  <h3>{{file.name}}</h3>
+  <p ng-show="file.description" ng-bind="file.description"></p>
+
+  <div ng-repeat="step in file.steps"
+       construction-step="$index"
+       class="panel panel-default"></div>
+</div>

@@ -280,6 +280,20 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_dna/construction-module.js"></script>
 <!--endbuild-->
 
+<!-- build:js scripts/clotho-construction-module.js -->
+<!--
+name: clotho.construction
+function: Construction File viewing, simulating, etc.
+dependencies: clotho.foundation
+-->
+<script src="scripts/_construction/_kickoff.js"></script>
+<script src="scripts/_construction/constructionReactions.js"></script>
+<script src="scripts/_construction/simulator.js"></script>
+<script src="scripts/_construction/construtionFile.js"></script>
+<script src="scripts/_construction/constructionStep.js"></script>
+<script src="scripts/_construction/constructionStepInner.js"></script>
+<!--endbuild-->
+
 
 <!-- build:js scripts/clotho-webapp-module.js -->
 <!--
@@ -311,6 +325,7 @@ function: experiments [pre-integration]
 <script src="scripts/controllers/test/playlistimport.js"></script>
 <script src="scripts/controllers/test/quiz.js"></script>
 <script src="scripts/controllers/test/trail-splash.js"></script>
+<script src="scripts/controllers/test/construction.js"></script>
 <!-- endbuild -->
 
 <!-- /process -->
