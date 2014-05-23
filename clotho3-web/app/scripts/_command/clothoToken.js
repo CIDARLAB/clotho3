@@ -20,6 +20,7 @@ angular.module('clotho.tokenizer')
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
 				element.on('click', function (evt) {
+					console.log(scope.token.isSharable());
 					//toggle whether token is active
 					scope.tokenCollection[scope.tokenActive ? 'unsetActive' : 'setActive'](scope.tokenIndex)
 				});
