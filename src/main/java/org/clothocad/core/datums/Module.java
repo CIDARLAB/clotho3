@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.datums.util.Language;
 import static org.clothocad.core.datums.util.Language.JAVASCRIPT;
 import org.clothocad.core.execution.JavaScriptScript;
+import org.clothocad.core.execution.PythonScript;
 import org.clothocad.core.execution.Script;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
@@ -76,6 +77,8 @@ public class Module extends ObjBase {
         switch (language){
             case JAVASCRIPT:
                 return new JavaScriptScript(code);
+            case PYTHON:
+                return new PythonScript(code);
             default:
                 throw new UnsupportedOperationException("unsupported language");
         }          
