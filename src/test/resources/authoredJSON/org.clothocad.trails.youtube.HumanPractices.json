@@ -1,6 +1,6 @@
 {
   "name" : "Human Practices",
-  "schema":"org.clothocad.model.Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.HumanPractices",
   "about" : {
     "help" : "Human Practices was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 3/4/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Introduction to Human Practices",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "Traditional Biological Risk Assessment",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Responsible conduct of synthetic biology",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +55,7 @@
       } ]
     }, {
       "title" : "Perception and Hypothetical Risks",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

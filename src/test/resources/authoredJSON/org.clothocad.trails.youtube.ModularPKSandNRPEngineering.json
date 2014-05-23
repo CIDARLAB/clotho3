@@ -1,6 +1,6 @@
 {
   "name" : "Modular PKS and NRP Engineering",
-  "schema":"org.clothocad.model.Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.ModularPKSandNRPEngineering",
   "about" : {
     "help" : "Modular PKS and NRP Engineering was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/9/2013.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Orthogonality and Equivalence",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "Transferring a PKS to E  coli",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Mixing and Matching PKS Modules",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -52,7 +52,7 @@
       } ]
     }, {
       "title" : "Optimization of Megasynthases with Libraries",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -65,7 +65,7 @@
       } ]
     }, {
       "title" : "Glycoprotein Engineering",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",

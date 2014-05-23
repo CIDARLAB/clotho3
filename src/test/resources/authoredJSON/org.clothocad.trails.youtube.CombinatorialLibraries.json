@@ -1,6 +1,6 @@
 {
   "name" : "Combinatorial Libraries",
-  "schema":"org.clothocad.model.Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.CombinatorialLibraries",
   "about" : {
     "help" : "Combinatorial Libraries was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/27/2013.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Combinatorial Libraries Introduction",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +26,7 @@
       } ]
     }, {
       "title" : "Diversity and Sampling",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -36,7 +36,7 @@
       } ]
     }, {
       "title" : "Combinatorial Library Design",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -46,7 +46,7 @@
       } ]
     }, {
       "title" : "Selection Methods",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",

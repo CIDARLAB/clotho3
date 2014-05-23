@@ -5,7 +5,7 @@
   "icon" : "/images/people/StephaniePaige.jpg",
   "isManagement" : "",
   "name" : "Stephanie Paige",
-  "schema":"org.clothocad.model.LabPerson",
+  "schema" : "org.clothocad.model.LabPerson",
   "surName" : "Paige",
   "title" : "Lead Developer",
   "id" : "clotho.developer.spaige"

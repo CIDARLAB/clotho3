@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Alex",
+  "nickName" : "Alex",
+  "surName" : "Han Suk Kim",
+  "name" : "alexhskim",
+  "emailAddress" : "alexhskim@gmail.com",
+  "icon" : "",
+  "imgUrl" : "",
+  "startDate" : "2011-09-01",
+  "endDate" : "2012-09-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2011-09-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.alexhskim"
+}

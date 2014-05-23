@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2101",
+  "description" : "{ChiR}",
+  "sequence" : "gatctccaccagcg",
+  "id" : "clotho.part.jtk2101"
+}

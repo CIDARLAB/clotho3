@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Milton",
+  "nickName" : "Milton",
+  "surName" : "Myoung",
+  "name" : "brightist",
+  "emailAddress" : "brightist@gmail.com",
+  "icon" : "",
+  "imgUrl" : "",
+  "startDate" : "2008-08-01",
+  "endDate" : "2009-04-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2008-08-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.brightist"
+}

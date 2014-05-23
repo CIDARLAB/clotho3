@@ -19,7 +19,7 @@
             "name": "instructors",
             "type": "array",
             "description": "Array of Instructor Clotho IDs.",
-            "example": ["clotho.developer.jcanderson"],
+            "example": "",
             "constraints": null,
             "access": "PUBLIC",
             "javaType": "java.util.List",

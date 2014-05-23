@@ -1,6 +1,6 @@
 {
   "schema" : "org.clothocad.core.schema.ClothoSchema",
-  "id" : "LabPerson",
+  "id" : "org.clothocad.model.LabPerson",
   "superClass" : "org.clothocad.model.Person",
   "name" : "LabPerson",
   "description" : "Anderson Lab Personnel schema. Needs to be changed so a subclass of Person.",

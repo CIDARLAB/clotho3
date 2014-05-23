@@ -14,7 +14,7 @@
   "name" : "J. Christopher Anderson",
   "nickName" : "Chris",
   "role" : "Principle Investigator",
-  "schema":"org.clothocad.model.LabPerson",
+  "schema" : "org.clothocad.model.LabPerson",
   "social" : "",
   "startDate" : "2007-07-01",
   "surName" : "Anderson",

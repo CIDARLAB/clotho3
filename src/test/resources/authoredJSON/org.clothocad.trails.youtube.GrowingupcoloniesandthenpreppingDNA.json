@@ -1,6 +1,6 @@
 {
   "name" : "Growing up colonies and then prepping DNA",
-  "schema":"org.clothocad.model.Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.GrowingupcoloniesandthenpreppingDNA",
   "about" : {
     "help" : "Growing up colonies and then prepping DNA was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "picking colonies into 96 well plate using sterile technique   setting up the plate",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +26,7 @@
       } ]
     }, {
       "title" : "Pick single colony and grow them in liquid media",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -36,7 +36,7 @@
       } ]
     }, {
       "title" : "Protocol: Plasmid DNA Purification using the QIAprep Spin Miniprep Kit and a Vacuum Manifold",
-      "schema":"org.clothocad.model.Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
