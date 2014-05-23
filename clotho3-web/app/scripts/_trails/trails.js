@@ -116,7 +116,10 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	//go to the location of a trail page
 	var activate = function trailActivate (indices) {
 		//if passed nothing
-		if (!indices || !angular.isString(indices)) return;
+		if (!indices || !angular.isString(indices)) {
+			$location.search('position', null);
+			return;
+		}
 
 		//if just pass chapter
 		if (indices.indexOf('-') < 0) {

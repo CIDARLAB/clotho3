@@ -11,8 +11,6 @@ angular.module('clotho.trails')
 		if ($route.current.params.position) {
 			$scope.current = $route.current.params.position;
 			$scope.currentPage = Trails.extractPage($scope.trail, $scope.current);
-		} else {
-			//todo - show landing page
 		}
 
 		$scope.activate = Trails.activate;
@@ -41,7 +39,7 @@ angular.module('clotho.trails')
 			//don't activate already active one
 			if ($scope.current == next.params.position) return;
 
-			$scope.current = next.params.position;
+			$scope.current = next.params.position || null;
 			$scope.currentPage = Trails.extractPage($scope.trail, $scope.current);
 
 			//if page doesn't exist, re-route to start
@@ -56,5 +54,5 @@ angular.module('clotho.trails')
 		});
 
 		//kickoff
-		$scope.activate($route.current.params.position || '0-0');
+		$scope.activate($scope.current);
   });

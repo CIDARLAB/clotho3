@@ -14,7 +14,8 @@ angular.module('clotho.trails')
 		replace : true,
 		templateUrl : 'views/_trails/trailHeader.html',
 		scope: {
-			trail: '=trailHeader'
+			trail: '=trailHeader',
+			onClick : '&trailHeaderOnClick'
 		},
 		link: function (scope,element,attrs) {
 			scope.$watch('trail.icon', function (newsrc) {
