@@ -13,14 +13,5 @@
     "access" : "PUBLIC",
     "javaType" : "java.util.List",
     "reference" : false
-  }, {
-    "name" : "instructors",
-    "type" : "array",
-    "description" : "Array of Instructor Clotho IDs.",
-    "example" : [ "clotho.developer.jcanderson" ],
-    "constraints" : null,
-    "access" : "PUBLIC",
-    "javaType" : "java.util.List",
-    "reference" : false
   } ]
 }

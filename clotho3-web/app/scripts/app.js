@@ -162,7 +162,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 					deferred.resolve(compiled);
 				});
 			}, function trailGetRejection () {
-				$http.get('models/bb99191e810c19729de860fe.json').then(function(data) {
+				$http.get('models/org.clothocad.trails.LearningClotho.json').then(function(data) {
 					Trails.compile(data.data).then(function (compiled) {
 						deferred.resolve(compiled);
 					});

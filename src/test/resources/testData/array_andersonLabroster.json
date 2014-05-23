@@ -115,7 +115,7 @@
 		"givenName": "Kristin",
 		"nickName": "Kristin",
 		"surName": "Fuller",
-		"name": "",
+		"name": "kristenFuller",
 		"emailAddress": "",
 		"icon": "",
 		"imgUrl": "",
@@ -129,7 +129,7 @@
 		"biography": "",
 		"title": "Bactoblood",
 		"description": "The necessity of inexpensive, disease-free, and universally compatible blood substitutes is undisputed. There are currently no blood substitutes approved for use in the US or the UK, and whole blood is almost always in short supply. Developing countries have the greatest need for blood transfusions, yet many lack the necessary donation and storage infrastructure and the required pool of healthy donors. To address this problem, we are developing a cost-effective red blood cell substitute constructed from engineered E. coli bacteria. Our system is designed to safely transport oxygen in the bloodstream without inducing sepsis, and to be stored for prolonged periods in a freeze-dried state.",
-		"id": "clotho.andersonLab.person."
+		"id": "clotho.andersonLab.person.kristenFuller"
 	},
 	{
 		"schema":"org.clothocad.model.LabPerson",
@@ -313,7 +313,7 @@
 		"givenName": "Matthew",
 		"nickName": "Matthew",
 		"surName": "Johnson",
-		"name": "",
+		"name": "matthewJohnson",
 		"emailAddress": "",
 		"icon": "",
 		"imgUrl": "",
@@ -327,7 +327,7 @@
 		"biography": "",
 		"title": "Clotho",
 		"description": "Clotho is a toolset designed in a platform-based design paradigm to consolidate all these tools into one working, integrated toolbox. Clotho is based on a core-and-hub system which manages multiple connections, each connection performing tasks in some self-sufficient manner while connected to all other connections via the core. Examples of connections include sequence viewers/editors, parts database managers, assembly algorithm GUIs, and much more. Computer-savvy biologists can create new connections which will then be integrated into Clotho. These pieces can be kept locally in ones lab or made public and shared with the community. In this tool-consolidation and customization it is hoped that, in the future, biologists need not look further for a program that provides the answer to their ever growing design needs",
-		"id": "clotho.andersonLab.person."
+		"id": "clotho.andersonLab.person.matthewJohnson"
 	},
 	{
 		"schema":"org.clothocad.model.LabPerson",
@@ -687,7 +687,7 @@
 		"givenName": "Ben",
 		"nickName": "Ben",
 		"surName": "Bubenheim",
-		"name": "",
+		"name": "benBubenheim",
 		"emailAddress": "",
 		"icon": "",
 		"imgUrl": "",
@@ -701,7 +701,7 @@
 		"biography": "",
 		"title": "ChoaChoa's Delivery Service",
 		"description": "Single-celled phagocytic eukaryotes, such as Choanoflagellates, are of great interest to developmental biologists because they may be the last living immediate precursor on the evolutionary tree to animals. These easy-to-culture and robust organisms are also a desirable low-cost eukaryotic chassis for synthetic biology, but there are few to no tools for delivering biomolecules into these organisms. We engineered E. coli to deliver proteins and/or DNA payloads into these bacteria-devouring eukaryotes. Once ingested, our E. coli are programmed to self-lyse and porate the phagosome, releasing their payloads into the cytosol. This delivery mechanism has the potential to deliver payload to any phagocytic organism with a cholesterol-based membrane. As part of our parallel software effort to rework the Clotho plugin environment and API, we made automatic biosafety handling an intrinsic feature of the core. Together, these tools provide a foundation for metazoan synthetic biology and a framework for improving safety in our field.",
-		"id": "clotho.andersonLab.person."
+		"id": "clotho.andersonLab.person.benBubenheim"
 	},
 	{
 		"schema":"org.clothocad.model.LabPerson",

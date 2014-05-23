@@ -204,6 +204,7 @@ function generateClothoAPI() {
 		//check collector
 		var retrieved = Collector.retrieveModel(uuid);
 
+		//returns false if not present, so do not only check if empty
 		if (!!retrieved) {
 			var deferred = $q.defer();
 			deferred.resolve(retrieved);

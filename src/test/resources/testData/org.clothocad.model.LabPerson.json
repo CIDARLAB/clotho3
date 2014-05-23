@@ -4,14 +4,8 @@
     "superClass" : "org.clothocad.model.Person",
     "name": "LabPerson",
     "description": "Anderson Lab Personnel schema. Needs to be changed so a subclass of Person.",
-    "language": "JAVA",
+    "language": "JSONSCHEMA",
     "fields": [
-        {
-            "javaType": "org.clothocad.model.Collection",
-            "name": "myCollection",
-            "type": "org.clothocad.model.Collection",
-            "reference": true
-        },
         {
             "javaType": "java.lang.String",
             "name": "givenName",
@@ -19,74 +13,8 @@
             "reference": false
         },
         {
-            "javaType": "org.clothocad.model.Person",
-            "name": "author",
-            "type": "org.clothocad.model.Person",
-            "reference": false
-        },
-        {
-            "javaType": "org.clothocad.model.Lab",
-            "name": "lab",
-            "type": "org.clothocad.model.Lab",
-            "reference": true
-        },
-        {
             "javaType": "java.lang.String",
             "name": "icon",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "snailMailAddress",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "java.util.Date",
-            "name": "dateCreated",
-            "type": "date",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "emailAddress",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "nickName",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "surName",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "name",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "registryName",
-            "type": "string",
-            "reference": false
-        },
-        {
-            "javaType": "org.bson.types.ObjectId",
-            "name": "id",
-            "type": "id",
-            "reference": false
-        },
-        {
-            "javaType": "java.lang.String",
-            "name": "description",
             "type": "string",
             "reference": false
         },
