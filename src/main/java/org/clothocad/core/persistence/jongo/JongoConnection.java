@@ -129,6 +129,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     @Override
     public void save(Map obj) {
         obj = mongifyIdField(obj);
+        if (obj.get("_id") == null){
+            //must create new id
+            rawDataCollection.insert(new BasicDBObject(obj));
+            return;
+        }
         DBObject idQuery = new BasicDBObject("_id", obj.get("_id"));
         obj.remove("_id");
         Map<String,Object> setExpression = new HashMap<>();

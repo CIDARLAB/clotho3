@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.util;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +12,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
@@ -33,6 +34,8 @@ import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Part.PartFunction;
 import org.clothocad.model.Person;
+import static org.clothocad.core.ReservedFieldNames.*;
+import org.clothocad.core.persistence.ClothoConnection;
 
 /**
  *
@@ -42,63 +45,46 @@ import org.clothocad.model.Person;
 public class TestUtils {
 
     public static void importTestJSON(Persistor persistor) {
-        importTestJSON("src/test/resources/testData", persistor, true);
+        importTestJSON(Paths.get("src","test","resources","testData"), persistor.getConnection(), true);
     }
 
-    public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {
-        ServerSideAPI api = new DummyAPI(persistor);
+    public static void importTestJSON(Path path, ClothoConnection connection, boolean overwrite) {
         ObjectReader reader = new ObjectMapper().reader(Map.class);
         
         List<Map> objects = new ArrayList<>();
-        for (File child : new File(path).listFiles()) {
-            if (!child.getName().endsWith(".json")) {
-                continue;
-            }
-            try {
-                MappingIterator<Map> it = reader.readValues(child);
-                while (it.hasNext()) {
-                    objects.add(it.next());
-                }
-                
-            } catch (JsonProcessingException ex) {
-                log.warn("Could not process {} as JSON", child.getAbsolutePath());
-            } catch (IOException ex) {
-                log.warn("Could not open {}", child.getAbsolutePath());
-            }
-        }
-        
-        while (objects.size() > 0) {
-            int prevSize = objects.size();
-            List<Map> newObjects = new ArrayList();
-
-            for (Map obj : objects) {
-                if (!overwrite) {
-                    try {
-                        if ( obj.containsKey("id") && persistor.has(new ObjectId(obj.get("id"))))
-                            continue;
-
-                    } catch (EntityNotFoundException e) {
-                    }
+        try {
+            for (Path child : Files.newDirectoryStream(path)) {
+                if (!child.toString().endsWith(".json")) {
+                    continue;
                 }
                 try {
-                    ObjectId result = api.create(obj);
-
-                    if (overwrite && result == null) {
-                        api.set(obj);
+                    MappingIterator<Map> it = reader.readValues(child.toFile());
+                    while (it.hasNext()) {
+                        objects.add(it.next());
                     }
-                } catch (RuntimeException e) {
-                    newObjects.add(obj);
-                } catch (ClassCircularityError e){
-                    e.getMessage();
+                    
+                } catch (JsonProcessingException ex) {
+                    log.warn("Could not process {} as JSON", child.toAbsolutePath());
+                } catch (IOException ex) {
+                    log.warn("Could not open {}", child.toAbsolutePath());
                 }
             }
+        } catch (IOException ex) {
+            log.warn("Could not open {}", path.toAbsolutePath());
+            throw new RuntimeException(ex);
+        }
+        for (Map obj : objects) {
+            if (!overwrite) {
+                try {
+                    if (obj.containsKey(ID) && connection.exists(new ObjectId(obj.get(ID)))) {
+                        //don't overwrite things
+                        continue;
+                    }
 
-            objects = newObjects;
-            if (objects.size() >= prevSize) {
-                log.error("Could not load some files: {}", objects.toString());
-                return;
+                } catch (EntityNotFoundException e) {
+                }
             }
-
+            connection.save(obj);
         }
     }
     //not sure if this should be static 

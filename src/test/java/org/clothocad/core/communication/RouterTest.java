@@ -256,7 +256,7 @@ public class RouterTest {
         submission.put("tokens", new ArrayList());
         
         TestConnection connection = new TestConnection("test");
-        submission.put("query", "clotho.get(\"bb99191e810c19729de860fe\")");
+        submission.put("query", "clotho.get(\"org.clothocad.trails.WritingTrails\")");
         sendMessage(new Message(Channel.submit, submission, "1"), connection);
         //make sure that sub-objects contain expected properties
         Map<String,Object> data = (Map) connection.messageDataByChannelAndId.get(Channel.submit.name()+"1");
