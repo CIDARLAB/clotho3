@@ -145,7 +145,7 @@ public class ServerSideAPI {
         }
 
         Object out = tryRun(tokens);
-        if(out != null) {
+        if(out != null) {   //JCA TODO:  null is a valid return, this needs to do try/catch
             return out;
         }
         

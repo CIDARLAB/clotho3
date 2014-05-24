@@ -1,9 +1,9 @@
 {
   "args" : [ {
     "type" : "string",
-    "name" : "seq"
+    "name" : "dytq"
   } ],
-  "code" : "clotho.run('org.clothocad.test.revcomp', ['ATCGAGAGAGAGAG'])",
+  "code" : "def run(args): return clotho.run('org.clothocad.test.revcomp', ['ATCGAGAGAGAGAG'])",
   "description" : "Calls a JavaScript Function from a Python Function",
   "language" : "PYTHON",
   "name" : "PY_relay_to_JSON",
