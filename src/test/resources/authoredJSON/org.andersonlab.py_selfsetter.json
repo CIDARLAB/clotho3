@@ -1,4 +1,8 @@
 {
-  "code" : "def run(): return \"DANGER DANGER!\"",
+  "code" : "def run(): clotho.set({'id': 'org.andersonlab.py_selfsetter', 'code': 'def run(): return \"modified!\"'})",
+  "description" : "Kelvin test of clotho.set in a Python Function",
+  "language" : "PYTHON",
+  "name" : "py_selfsetter",
+  "schema" : "org.clothocad.core.datums.Function",
   "id" : "org.andersonlab.py_selfsetter"
 }
