@@ -12,7 +12,7 @@ angular.module('clotho.tokenizer')
 		var Debugger = new Debug('clothoTokenizer', '#ee7711');
 
 		return {
-			restrict: 'E',
+			restrict: 'A',
 			replace: true,
 			require: 'ngModel', //avoid isolate scope so model propagates correctly
 			templateUrl: "views/_command/tokenizer.html",

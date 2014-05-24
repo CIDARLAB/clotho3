@@ -16,10 +16,17 @@ angular.module('clotho.commandbar')
 		return angular.element($document[0].querySelector('[clotho-command-bar]'));
 	};
 
+	var getTokenizerElement = function () {
+		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-tokenizer]'));
+	};
+
 	//todo - should capture from commandBar directive as possible, e.g. via controller
+	//note - call as needed, ensure exists in DOM
 	var getCommandBarInput = function () {
 		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-autocomplete]'));
 	};
+
+	var commandBarInputModel = 'query';
 
 	var getCommandBarLogButton = function () {
 		return angular.element($document[0].getElementById('clotho_logButton'));
@@ -27,6 +34,10 @@ angular.module('clotho.commandbar')
 
 	var focusInput = function() {
 		getCommandBarInput().focus();
+	};
+
+	var setInput = function (string) {
+		getCommandBarInput().scope().setQueryString(string);
 	};
 
 
@@ -143,8 +154,11 @@ angular.module('clotho.commandbar')
 
 		//interaction
 		getCommandBarElement: getCommandBarElement,
+		getTokenizerElement : getTokenizerElement,
 		getCommandBarInput : getCommandBarInput,
-		focusInput : focusInput
+		commandBarInputModel : commandBarInputModel,
+		focusInput : focusInput,
+		setInput : setInput
 	}
 
 });

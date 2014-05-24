@@ -138,11 +138,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  controller: 'WidgetsCtrl'
 	})
 
-
-.when('/test/tokenizer', {
-  templateUrl: 'views/test/tokenizer.html',
-  controller: 'TestTokenizerCtrl'
-})
 .when('/test/schemaview', {
   templateUrl: 'views/test/schemaview.html',
   controller: 'TestSchemaviewCtrl',
@@ -207,6 +202,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			return deferred.promise;
 		}]
 	}
+})
+.when('/test/focus', {
+  templateUrl: 'views/test/focus.html',
+  controller: 'TestFocusCtrl'
 })
 	.otherwise({
 		redirectTo:'/'
