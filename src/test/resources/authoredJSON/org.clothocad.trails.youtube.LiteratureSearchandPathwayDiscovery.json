@@ -12,6 +12,12 @@
   "created" : 1377896335000,
   "youtubePlaylistId" : "PL2aPXzks-TgMJr2fAKj5ixn9RXypJ_zaZ",
   "icon" : "https://i1.ytimg.com/vi/coPz2cSVa0k/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Literature Search and Pathway Discovery.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

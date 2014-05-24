@@ -12,6 +12,12 @@
   "created" : 1382394382000,
   "youtubePlaylistId" : "PL2aPXzks-TgNK702CfJaz-gTfRtv34sNt",
   "icon" : "https://i1.ytimg.com/vi/u-_cC26aypk/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Biochemical Circuits.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

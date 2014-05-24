@@ -12,6 +12,12 @@
   "created" : 1377827243000,
   "youtubePlaylistId" : "PL2aPXzks-TgPrTigCFi0P8hfWz-CEO5qL",
   "icon" : "https://i1.ytimg.com/vi/3mH8uEcvR8w/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Introduction to Biosynthesis.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

@@ -12,6 +12,18 @@
   "created" : 1392047204000,
   "youtubePlaylistId" : "PL2aPXzks-TgOtngzKdocz4P50TCncRyPy",
   "icon" : "https://i1.ytimg.com/vi/vfmuDvEgD28/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Genome-Manipulation-and-Design.pptx"
+    },
+    {
+      "name" : "Example Files",
+      "icon" : "default",
+      "type" : "slides",
+      "path" : "partials/trails/youtubeClotho/Genome-Manipulation-Examples.zip"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

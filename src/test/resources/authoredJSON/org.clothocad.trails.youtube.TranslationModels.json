@@ -12,6 +12,12 @@
   "created" : 1378788595000,
   "youtubePlaylistId" : "PL2aPXzks-TgOYRv5T9yRzwJE1QWEiY2R8",
   "icon" : "https://i1.ytimg.com/vi/iehXuSaznuY/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Transciptional Circuits.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

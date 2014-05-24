@@ -12,6 +12,12 @@
   "created" : 1378788494000,
   "youtubePlaylistId" : "PL2aPXzks-TgMz06rZlbCRKzYyVkXyIwb9",
   "icon" : "https://i1.ytimg.com/vi/A0KxP3m_fnc/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Processes and Localization.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

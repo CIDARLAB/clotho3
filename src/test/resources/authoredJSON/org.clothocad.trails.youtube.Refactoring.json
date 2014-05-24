@@ -12,6 +12,12 @@
   "created" : 1382463938000,
   "youtubePlaylistId" : "PL2aPXzks-TgPQbhJWXI3fSsV9FZ0QLAXa",
   "icon" : "https://i1.ytimg.com/vi/RZd-kA0Cdb4/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Refactoring.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

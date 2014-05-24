@@ -12,6 +12,12 @@
   "created" : 1390193153000,
   "youtubePlaylistId" : "PL2aPXzks-TgNkKi2lUWL65MpPsRBCb5q5",
   "icon" : "https://i1.ytimg.com/vi/SWDl9Yh6gx8/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Manipulation-Enzymes.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

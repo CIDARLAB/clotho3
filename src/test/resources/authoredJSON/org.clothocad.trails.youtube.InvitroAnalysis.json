@@ -12,6 +12,12 @@
   "created" : 1396884895000,
   "youtubePlaylistId" : "PL2aPXzks-TgNlrgM8BK3jD_aiyjoXOsRI",
   "icon" : "https://i1.ytimg.com/vi/EheWQRLvLWU/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/In-vitro-assays.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

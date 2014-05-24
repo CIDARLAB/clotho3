@@ -12,6 +12,12 @@
   "created" : 1393308188000,
   "youtubePlaylistId" : "PL2aPXzks-TgMvy4PG5wwbrw9VKBuowOR8",
   "icon" : "https://i1.ytimg.com/vi/tgFp72Fx4Hk/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Chassis.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
