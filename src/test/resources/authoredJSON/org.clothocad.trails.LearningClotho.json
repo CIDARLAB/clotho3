@@ -1,9 +1,4 @@
 {
-  "id" : "org.clothocad.trails.LearningClotho",
-  "schema" : "org.clothocad.model.Trail",
-  "name" : "Learning Clotho",
-  "description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
-  "icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
   "about" : {
     "help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
     "contents" : [ {
@@ -11,7 +6,6 @@
       "params" : "###Clotho Intro\n\n#### Example Markdown\n\n**wowo!**"
     } ]
   },
-  "instructors" : [ "clotho.developer.jcanderson", "clotho.developer.maxbates" ],
   "contents" : [ {
     "chapter" : "Introducing Clotho",
     "description" : "Introduce concepts of DNA and basic sequence manipulation, and learn how to use Clotho to automate those manipulations",
@@ -31,7 +25,7 @@
     }, {
       "title" : "Reverse Complement",
       "icon" : "exercise",
-      "help" : "Boxes like the one below are quizzes. This Trail will ask you to answer questions about DNA manipulation. Watch the videos on each page if you need to brush up on your knowledge (click OK and peek behind this window), but make sure you understand each quiz before moving forward.",
+      "help" : "Boxes like the one below are quizzes. This Trail will ask you to answer questions about DNA manipulation. Watch the videos on each page if you need to brush up on your knowledge, but make sure you understand each quiz before moving forward.",
       "contents" : [ {
         "type" : "video",
         "params" : {
@@ -48,7 +42,7 @@
             "title" : "Reverse Complement",
             "type" : "fillin",
             "question" : "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
-            "hint" : "Watch the video to learn about reverse complementing."
+            "hint" : "To calculate the reverse complement, replace each A, T, C, or G with its complementary base (T, A, G, or C) and then invert the sequence"
           },
           "dictionary" : {
             "dynamic" : [ {
@@ -73,7 +67,7 @@
       "help" : "Copy the sequence in the quiz into the tool to find the answer!",
       "contents" : [ {
         "type" : "text",
-        "params" : "<p>Clotho can automate several common tasks, such as reverse complementing a sequence. While you can use a UI for many of these functions, they can also be run programmatically (learn how in the next section).</p>"
+        "params" : "<p>Clotho can automate common tasks, such as reverse complementing a sequence. Try typing a different sequence into the tool below:</p>"
       }, {
         "type" : "tool",
         "params" : {
@@ -84,7 +78,7 @@
         "params" : {
           "question" : {
             "type" : "fillin",
-            "hint" : "Copy-paste the sequence into the tool",
+            "hint" : "Copy-paste the sequence into the tool, then copy-paste the result below",
             "question" : "Find the reverse complement of the sequence <code>{{ questionValue }}</code> using the tool."
           },
           "options" : {
@@ -246,5 +240,11 @@
         "params" : "partials/trails/clotho-intro/writing.html"
       } ]
     } ]
-  } ]
+  } ],
+  "description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
+  "icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
+  "instructors" : [ "clotho.developer.jcanderson", "clotho.developer.maxbates" ],
+  "name" : "Learning Clotho",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.LearningClotho"
 }
