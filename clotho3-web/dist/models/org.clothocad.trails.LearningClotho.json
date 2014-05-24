@@ -1,8 +1,8 @@
 {
-	"id": "bb99191e810c19729de860fe",
-	"schema": "Trail",
-	"name": "Learning Clotho",
-	"description": "Learn how Clotho can simplify and automate your genetic engineering workflows.",
+	"id" : "org.clothocad.trails.LearningClotho",
+	"schema":"org.clothocad.model.Trail",
+	"name" : "Learning Clotho",
+	"description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
 	"icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
 	"about" : {
 		"help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
@@ -13,20 +13,6 @@
 			}
 		]
 	},
-	"materials" : [
-		{
-			"name" : "Example Syllabus",
-			"icon" : "syllabus",
-			"type" : "Syllabus",
-			"path" : "partials/trails/clotho-intro/materials/ClothoIntroSyllabus.pdf"
-		},
-		{
-			"name" : "Course Schedule",
-			"icon" : "schedule",
-			"type" : "Calendar",
-			"path" : "partials/trails/clotho-intro/materials/courseSchedule.pdf"
-		}
-	],
 	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
 	"contents": [
 		{
@@ -36,14 +22,6 @@
 				{
 					"title": "Intro to DNA",
 					"icon": "video",
-					"materials" : [
-						{
-							"name" : "Video Slides",
-							"icon" : "slides",
-							"type" : "Slides",
-							"path" : "partials/trails/clotho-intro/materials/IntroDNASlides.txt"
-						}
-					],
 					"contents": [
 						{
 							"type": "text",
@@ -154,17 +132,10 @@
 					"title": "The Command Bar",
 					"icon": "eye",
 					"help" : "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p>",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/searchbarIntro.js"
-					},
 					"contents": [
 						{
-							"type": "text",
-							"params": "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p><h1>UPDATE COMMANDS</h1>"
-						},
-						{
 							"type": "template",
-							"params": "partials/trails/clotho-intro/searchbarIntro.html"
+							"params": "partials/trails/clotho-intro/commandIntro.html"
 						}
 					]
 				},
@@ -276,7 +247,7 @@
 						},
 						{
 							"type": "text",
-							"params": "<h1>Add some text</h1>"
+							"params": "<p>The tool below includes a few sets of primers and backbones. You can see the alignment of the primers, and the DNA fragment that results after PCR. Notice that some will copy the inner fragment (normal PCR), and others the outer fragment (EIPCR), depending on the orientation of the primers.</p><p>Try editing the primers or sequence yourself!</p>"
 						},
 						{
 							"type": "tool",
