@@ -144,19 +144,20 @@ public class ServerSideAPI {
             System.out.println("token: " + str);
         }
 
-        Object out = tryRun(tokens);
-        if(out != null) {   //JCA TODO:  null is a valid return, this needs to do try/catch
-            return out;
+        Object out = null;
+        try {
+            return tryRun(tokens);
+        } catch(Exception err) {
         }
         
-        out = trySingleWord(tokens);
-        if(out != null) {
-            return out;
+        try {
+            return trySingleWord(tokens);
+        } catch(Exception err) {
         }
         
-        out = tryAPIWord(tokens);
-        if(out != null) {
-            return out;
+        try {
+            return tryAPIWord(tokens);
+        } catch(Exception err) {
         }
         
         //Run the command assuming it's javascript
@@ -180,7 +181,7 @@ public class ServerSideAPI {
      * @param tokens
      * @return the result or null if it failed to execute
      */
-    private Object tryRun(String[] tokens) {
+    private Object tryRun(String[] tokens) throws ScriptException {
         System.out.println("+++  try RUN on args");
         Function function = null;
         List<Object> args = new ArrayList<Object>();
@@ -204,7 +205,6 @@ public class ServerSideAPI {
             Object obj = resolveSloppy(tokens[i]);
             if(obj!=null) {
                 args.add(obj);
-                continue;
             }
             //Otherwise just consider this raw String or int
             else {
@@ -219,21 +219,12 @@ public class ServerSideAPI {
             System.out.println(obj.toString());
         }
         Object out = null;
-        try {
-            out = run(function, args);
-            return out;
-        } catch (Exception ex) {
-            System.out.println("Unsuccessfully executed the sloppy command");
-            return null;
-        }
+        out = run(function, args);
+        return out;
     }
     
     private Object trySingleWord(String[] tokens) {
         System.out.println("+++  try Single Word get");
-        if(tokens.length!=1) {
-            return null;
-        }
-        System.out.println("trySingleWord has a single token " + tokens[0]);
         return resolveSloppy(tokens[0]);
     }
     
@@ -254,7 +245,7 @@ public class ServerSideAPI {
         }
     }
     
-    private Object tryAPIWord(String[] tokens) {
+    private Object tryAPIWord(String[] tokens) throws ScriptException {
         System.out.println("+++  try first word is API word");
         String firstWord = tokens[0].toLowerCase();
         
