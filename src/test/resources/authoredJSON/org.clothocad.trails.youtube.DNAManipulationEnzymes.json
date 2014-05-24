@@ -1,6 +1,6 @@
 {
   "name" : "DNA Manipulation Enzymes",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.DNAManipulationEnzymes",
   "about" : {
     "help" : "DNA Manipulation Enzymes was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 1/19/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "The DNA Manipulation Enzymes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "Endonucleases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Exonucleases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +55,7 @@
       } ]
     }, {
       "title" : "DNA Polymerases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +68,7 @@
       } ]
     }, {
       "title" : "RNA Polymerases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -81,7 +81,7 @@
       } ]
     }, {
       "title" : "Ligases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -94,7 +94,7 @@
       } ]
     }, {
       "title" : "Methyltransferases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -107,7 +107,7 @@
       } ]
     }, {
       "title" : "DNA Repair Enzymes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -120,7 +120,7 @@
       } ]
     }, {
       "title" : "Kinases and Phosphatases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -133,7 +133,7 @@
       } ]
     }, {
       "title" : "Recombinases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

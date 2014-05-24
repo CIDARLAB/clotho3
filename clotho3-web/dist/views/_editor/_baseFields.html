@@ -7,7 +7,7 @@
 </form-field>
 
 <form-field name="ID" horizontal="formHorizontal">
-    <input type="text" id="sharableId" ng-model="sharable.id">
+    <input type="text" id="sharableId" ng-model="sharable.id" ng-model-options="{updateOn : 'blur'}" popover="Note that changing the ID will create a new object (old one not deleted)">
 </form-field>
 
 <form-field name="Description" horizontal="formHorizontal">

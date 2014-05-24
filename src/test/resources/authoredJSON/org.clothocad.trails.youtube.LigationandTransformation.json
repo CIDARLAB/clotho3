@@ -1,6 +1,6 @@
 {
   "name" : "Ligation and Transformation",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.LigationandTransformation",
   "about" : {
     "help" : "Ligation and Transformation was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "cloning cycle   how to set up a ligation",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +26,7 @@
       } ]
     }, {
       "title" : "heatshock transformation of plasmid dna into chemicaly competent e coli",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -39,7 +39,7 @@
       } ]
     }, {
       "title" : "plating heatshock transformations",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

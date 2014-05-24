@@ -1,6 +1,6 @@
 {
   "name" : "Literature Search and Pathway Discovery",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.LiteratureSearchandPathwayDiscovery",
   "about" : {
     "help" : "Literature Search and Pathway Discovery was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 8/30/2013.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Guide to Biological Literature",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "How to find Biochemical Information",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Pathway Identification",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

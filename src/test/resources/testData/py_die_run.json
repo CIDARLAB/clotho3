@@ -1,5 +1,0 @@
-{
-    "id": "py_die_run",
-    "language": "python2",
-    "code": "def run(): raise Exception('good-bye, cruel world')"
-}

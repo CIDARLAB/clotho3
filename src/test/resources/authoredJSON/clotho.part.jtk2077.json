@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2077",
+  "description" : "{O7 Tag 5'}",
+  "sequence" : "gatctctcctggaacaccgttgatgtggtgaccgccgcgggcaccccggtaatgtcgaaaaccggacacgcctttattaaagaacgtatgcgcaaggaagacgccatctacggtggcgaaatgagcgcccaccactatttccgtgatttcgcttactgcgacacgggcatgatcccgtggctgctggtggccgaactggtgtgtctgaaaggaaaaacgctgggcgaactggtgcgcgaccggatggcggcgtttccggcaagcggtgagatcaacagcaaactggcgcaccccgttgaggcgattaatcgcgtcgaacagcattttagccgcgaggcgctggcggtggatcgcaccgatggcatcagcatgacctttgccgactggcgctttaacctgcggctcctcaacaccgaaccggtggtgcggttgaatgtggaatcgcgcggtgatgtaccgctgatggaagaaaagacaaaacttatccttgagttactgaacaagtaattcagg",
+  "id" : "clotho.part.jtk2077"
+}

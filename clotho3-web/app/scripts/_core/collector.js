@@ -64,6 +64,10 @@ angular.module('clotho.core').service('Collector',
             PubSub.trigger("collector_reset");
         };
 
+	      //todo - need a way to only clear if this is the first tab of clotho opening -- see #310
+	      //note - clear on first tab because want a fresh instance of clotho - don't want to load stale models
+	      clearStorage();
+
 
         // ------- FACADE -----------
 

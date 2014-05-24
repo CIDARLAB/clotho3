@@ -1,6 +1,6 @@
 {
   "name" : "Automation Tools",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.AutomationTools",
   "about" : {
     "help" : "Automation Tools was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/15/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Automation Introduction",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +26,7 @@
       } ]
     }, {
       "title" : "Robotics",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -36,7 +36,7 @@
       } ]
     }, {
       "title" : "Software Tools",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -46,7 +46,7 @@
       } ]
     }, {
       "title" : "Technical Design Tools",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -56,7 +56,7 @@
       } ]
     }, {
       "title" : "Data Management Platforms",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -66,7 +66,7 @@
       } ]
     }, {
       "title" : "Automated Compositional Design",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -76,7 +76,7 @@
       } ]
     }, {
       "title" : "Automated Assembly",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -86,7 +86,7 @@
       } ]
     }, {
       "title" : "Kinetic Models and Simulation",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",

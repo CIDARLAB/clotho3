@@ -11,7 +11,8 @@ angular.module('clotho.trails').directive('trailContents', function(Trails) {
 		replace : true,
 		templateUrl : 'views/_trails/trailContents.html',
 		scope: {
-			trail: '=trailContents'
+			trail: '=trailContents',
+			current : '='
 		},
 		link: function (scope,element,attrs) {
 			scope.activate = Trails.activate;

@@ -1,6 +1,6 @@
 {
   "name" : "Chassis and Strains",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.ChassisandStrains",
   "about" : {
     "help" : "Chassis and Strains was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 2/24/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "The Primitives: Chassis and Strains",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "E. coli as a chassis",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Lab strains of E. coli",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +55,7 @@
       } ]
     }, {
       "title" : "Primary and Secondary Processes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +68,7 @@
       } ]
     }, {
       "title" : "Understanding Bacterial Pathogenicity",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -81,7 +81,7 @@
       } ]
     }, {
       "title" : "Protein Localization",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

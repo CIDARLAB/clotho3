@@ -1,0 +1,4 @@
+{
+  "code" : "def run(): return \"DANGER DANGER!\"",
+  "id" : "org.andersonlab.py_selfsetter"
+}

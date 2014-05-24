@@ -1,0 +1,18 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from pcr import predict as run",
+  "name" : "PCRPredict",
+  "id" : "org.andersonlab.pcrpredict",
+  "description" : "Provided 3 Strings (two oligos and a template sequence), it predicts the PCR product that would result.",
+  "args" : [ {
+    "type" : "string",
+    "name" : "oligo1"
+  }, {
+    "type" : "string",
+    "name" : "oligo2"
+  }, {
+    "type" : "string",
+    "name" : "oligo3"
+  } ]
+}

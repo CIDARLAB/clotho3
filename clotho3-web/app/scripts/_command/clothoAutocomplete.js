@@ -142,6 +142,7 @@ angular.module('clotho.tokenizer')
 					resetQuery();
 
 					//return focus to the input element if a match was selected via a mouse click event
+					//need scope to update whether focused
 					// use timeout to avoid $rootScope:inprog error
 					$timeout(function() {
 						element[0].focus();
@@ -154,14 +155,18 @@ angular.module('clotho.tokenizer')
 					//keep delimiter out of HOT_KEYS check because space is a weird default hotkey
 					//if type space and not in quote, and only 1 result, will choose it (enter will not)
 					if (evt.which === tokenDelimiterCode) {
+						//if there's no query, or it's just a space, set it to empty and let default be prevented
+						if (scope.query == '') {
+							evt.preventDefault();
+						}
 						//if first letter is quote, don't end the token
-						if ( ! (initialQuoteRegexp.test(scope.query.charAt(0))) ) {
+						else if ( ! (initialQuoteRegexp.test(scope.query.charAt(0))) ) {
 							scope.$apply(function () {
 								//if there is one result, select it otherwise null (token is query)
 								scope.select(scope.autocompletions.length == 1 ? 0 : -1);
 							});
-							//return so space is not prevented
-							return;
+							//space is prevented and placeholder shown again
+							evt.preventDefault();
 						}
 					}
 
@@ -243,6 +248,7 @@ angular.module('clotho.tokenizer')
 								scope.submit();
 							});
 						}
+						scope.$digest();
 					}
 					//escape
 					else if (evt.which === 27) {

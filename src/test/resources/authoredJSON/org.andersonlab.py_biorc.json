@@ -1,0 +1,8 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "name" : "py_biorc",
+  "id" : "org.andersonlab.py_biorc",
+  "description" : "Reverse complements a DNA sequence using BioPython",
+  "code" : "import Bio.Seq\ndef run(in_seq): return str(Bio.Seq.Seq(in_seq).reverse_complement())"
+}

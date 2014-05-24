@@ -16,7 +16,7 @@ angular.module('andersonLab', ['ngRoute', 'clotho.foundation'])
 
 
 						var deferred = $q.defer();
-						Clotho.query({"schema" : "LabPerson", "lab" : "Anderson"}).then(function (result) {
+						Clotho.query({"schema" : "org.clothocad.model.LabPerson", "lab" : "Anderson"}).then(function (result) {
 							deferred.resolve(result);
 						});
 						return deferred.promise;
@@ -34,7 +34,7 @@ angular.module('andersonLab', ['ngRoute', 'clotho.foundation'])
 						var deferred = $q.defer();
 
 						Clotho.query({
-							"schema" : "LabPerson",
+							"schema" : "org.clothocad.model.LabPerson",
 							"lab" : "Anderson",
 							"name" : $route.current.params.id
 						}).then(function (result) {

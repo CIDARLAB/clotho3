@@ -1,6 +1,6 @@
 {
   "id" : "org.clothocad.trails.RavenCADIntro",
-  "schema" : "Trail",
+  "schema":"org.clothocad.model.Trail",
   "name" : "RavenCAD Intro",
   "author" : "Boston University",
   "description" : "<blockquote><p>A short introduction to RavenCAD.</p><p><small>Boston University</small></p></blockquote>",

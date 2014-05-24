@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Gabriel",
+  "nickName" : "Gabriel",
+  "surName" : "Lopez",
+  "name" : "lopez.bioe",
+  "emailAddress" : "lopez.bioe@gmail.com",
+  "icon" : "gabrielLopez.png",
+  "imgUrl" : "",
+  "startDate" : "2009-01-01",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2009-01-01",
+  "isManagement" : false,
+  "role" : "Graduate Student",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.lopez-bioe"
+}

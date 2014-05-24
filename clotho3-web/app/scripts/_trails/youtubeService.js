@@ -127,7 +127,7 @@ angular.module('clotho.youtube')
 
 			var result = {
 				name : info.snippet.title,
-				schema : "Trail",
+				schema : "org.clothocad.model.Trail",
 				id : "org.clothocad.trails.youtube." + (info.snippet.title).replace(/\s+/g, ''),
 				about : {
 					help : info.snippet.title + " was retrieved from Youtube from the channel " + info.snippet.channelTitle + ", and was created on " + (new Date(info.snippet.publishedAt)).toLocaleDateString() + ".",
@@ -154,7 +154,6 @@ angular.module('clotho.youtube')
 
 				var newPage = {
 					title : item.snippet.title,
-					schema : "Trail",
 					icon : "video",
 					contents : []
 				};

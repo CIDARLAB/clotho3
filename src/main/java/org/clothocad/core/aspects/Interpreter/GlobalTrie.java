@@ -92,8 +92,6 @@ public class GlobalTrie {
                 map.put("description", data.get("description"));
             } else if(data.containsKey("shortDescription")) {
                 map.put("description", data.get("shortDescription"));
-            } else {
-                map.put("description", "<no description>");
             }
             
             String name = (String) data.get("name");

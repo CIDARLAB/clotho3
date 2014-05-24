@@ -61,6 +61,7 @@ import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.ReservedFieldNames;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
@@ -219,7 +220,7 @@ public class ServerSideAPI {
         }
         Object out = null;
         try {
-            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId, options));
+            out = run(function, args);
             return out;
         } catch (Exception ex) {
             System.out.println("Unsuccessfully executed the sloppy command");
@@ -615,31 +616,28 @@ public class ServerSideAPI {
         }
     }
 
-    public Object
-    run2(final String name, final List<Object> args) {
+    private Object
+    run2(final Function function, final List<Object> args) {
         final Map<String, Object> funcJSON =
-            persistor.getAsJSON(new ObjectId(name));
+            persistor.getAsJSON(function.getId());
         return SubprocessExec.run(
             this,
             funcJSON,
             args,
             new SubprocessExec.EventHandler() {
                 @Override public void
-                onFail(final byte[] out, final byte[] err) {
-                    say_helper(out, err, Severity.FAILURE);
+                onFail(final byte[] err) {
+                    say_helper(err, Severity.FAILURE);
                 }
 
                 @Override public void
-                onSuccess(final byte[] out, final byte[] err) {
-                    say_helper(out, err, Severity.NORMAL);
+                onSuccess(final byte[] err) {
+                    say_helper(err, Severity.NORMAL);
                 }
 
                 private void
-                say_helper(final byte[] out,
-                           final byte[] err,
+                say_helper(final byte[] err,
                            final Severity sev) {
-                    if (out.length != 0)
-                        say(new String(out, StandardCharsets.UTF_8), sev);
                     if (err.length != 0)
                         say(new String(err, StandardCharsets.UTF_8), sev);
                 }
@@ -670,6 +668,10 @@ public class ServerSideAPI {
                 try {
                     Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
 System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
+
+                    if(function.getLanguage().equals(Language.PYTHON)) {
+                        return run2(function, args);
+                    }
 
                     return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -754,6 +756,9 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
         System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
+        if(function.getLanguage().equals(Language.PYTHON)) {
+            return run2(function, args);
+        }
 
         return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }

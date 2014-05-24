@@ -7,6 +7,7 @@ bin
 data/
 /nbactions.xml
 .orig
+*.pyc
 
 .idea
 .DS_Store

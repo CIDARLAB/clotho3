@@ -39,7 +39,7 @@
                 View {{ showingSchema ? 'Instance' : 'Schema Fields'}}
             </span>
             <a class="label label-default pull-right"
-               ng-href="#/editor?id={{sharable.id}}"
+               ng-click="edit(sharable.id)"
                ng-hide="isSchema">
             Edit
             </a>

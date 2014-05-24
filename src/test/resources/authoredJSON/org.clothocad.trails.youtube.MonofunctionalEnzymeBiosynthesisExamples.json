@@ -1,6 +1,6 @@
 {
   "name" : "Monofunctional Enzyme Biosynthesis Examples",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.MonofunctionalEnzymeBiosynthesisExamples",
   "about" : {
     "help" : "Monofunctional Enzyme Biosynthesis Examples was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/17/2013.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Small Alkyl Alcohol Biofuels from Amino Acids",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "Kinetic Trap in Butanol Biosynthesis",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -39,7 +39,7 @@
       } ]
     }, {
       "title" : "Bioremediation of Perchlorinated Biphenyls",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -49,7 +49,7 @@
       } ]
     }, {
       "title" : "Biosynthesis  of Benzylisoquinoline Alkaloids",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -62,7 +62,7 @@
       } ]
     }, {
       "title" : "Orthogonality and Equivalence",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

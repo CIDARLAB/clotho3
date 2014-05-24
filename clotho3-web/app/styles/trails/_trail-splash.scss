@@ -53,12 +53,14 @@ $trail-highlight-width : 400px;
 }
 
 .trail-highlight {
-  position: absolute;
+  width: $trail-highlight-width;
+  background: #eee;
 
   .highlightPlaceholder {
     text-align: center;
     padding: 50px;
     width: $trail-highlight-width;
+    border-radius: 4px;
 
     h3 {
       font-size: 21px;

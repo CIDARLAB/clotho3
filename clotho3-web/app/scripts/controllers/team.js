@@ -1,4 +1,7 @@
 angular.module('clotho.webapp')
 .controller('TeamCtrl', function ($scope, Clotho) {
-	$scope.ClothoTeam = Clotho.query({schema : 'LabPerson'});
+	Clotho.query({ id: { $regex: 'clotho.developer.*', $options: 'i' } }, {mute : true})
+	.then(function (data) {
+		$scope.ClothoTeam	= data;
+	});
 });

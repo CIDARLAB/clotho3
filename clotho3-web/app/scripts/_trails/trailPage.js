@@ -27,7 +27,7 @@ angular.module('clotho.trails')
 
 			function toggleHelpModal() {
 				scope.helpModalOpen = !scope.helpModalOpen;
-				if (scope.helpModalOpen) {
+				if (scope.helpModalOpen && !angular.isEmpty(scope.page.help)) {
 					$clothoModal.create({
 						title : 'Trail Help',
 						content : 'page.help',
