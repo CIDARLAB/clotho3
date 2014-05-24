@@ -75,11 +75,10 @@ angular.module('clotho.youtube')
 					scope.miniThumb = Youtube.videoThumbnail(scope.videoId, 'mqdefault');
 
 					Youtube.videoInfo(scope.videoId).then(function (json) {
-						scope.miniInfo = json.data;
-						scope.miniInfo.durationFormatted = (Math.floor(scope.miniInfo.duration / 60) + ":" + ((scope.miniInfo.duration % 60 < 10) ? '0' : '') + (scope.miniInfo.duration % 60));
+						scope.miniInfo = json;
 					});
 
-					$http.get('views/_trails/youtubeThumbnail.html')
+					$http.get('views/_trails/youtubeThumbnail.html', {cache : true})
 						.success(function (data, headers) {
 							element.html($compile(data)(scope));
 						})

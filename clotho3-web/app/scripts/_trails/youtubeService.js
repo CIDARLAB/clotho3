@@ -61,7 +61,7 @@ angular.module('clotho.youtube')
 	var videoInfo = function getYoutubeInfo (videoId) {
 		return $http.get('https://gdata.youtube.com/feeds/api/videos/'+videoId+'?&alt=json')
 			.then(function (data) {
-				return data.data
+				return data.data.entry
 			})
 	};
 
