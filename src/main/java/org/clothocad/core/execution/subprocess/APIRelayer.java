@@ -71,8 +71,12 @@ class APIRelayer {
             final Object ret;
             final String run_id = (String) args.get(0);
             final List run_args = (List) args.get(1);
+            Map obj = new HashMap();
+            obj.put("args", run_args);
+            obj.put("id", run_id);
+            
             try {
-                ret = api.run(args);
+                ret = api.run(obj);
             } catch (final Exception e) {
                 cb.onFail(e.getMessage());
                 return;
