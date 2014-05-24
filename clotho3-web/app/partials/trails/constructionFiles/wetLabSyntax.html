@@ -1,0 +1,22 @@
+<div>
+
+  <p>Construction files in the Anderson Lab at UCB Take the following form.</p>
+
+  <p>You can specify sequences (such as the primers below) directly in the construction file, or reference sequences stored in Clotho.</p>
+
+  <h1>Get construction file which matches GFP</h1>
+
+      <pre>
+PCR ca1067F/ca1067R on pSB1AK3-b0015  (pcrpdt)
+Digest pcrpdt                         (1038+10+6, L, pcrdig)
+Digest pSB1A2-I13521                  (EcoRI/SpeI, 2062+946, L, vectdig)
+Ligate pcrdig and vectdig             (pSB1A2-Bca9128)
+-----------------------------------------
+>ca1067F  Forward Biobricking of KanR of pSB1AK3
+ccagtGAATTCgtccTCTAGAgagctgatccttcaactc
+>ca1067R  Reverse Biobricking of KanR of pSB1AK3
+gcagtACTAGTtccgtcaagtcagcgtaatg
+    </pre>
+
+
+</div>
