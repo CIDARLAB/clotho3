@@ -1,10 +1,20 @@
-<div>
+<div ng-controller="constructionFiles_wetLabSyntaxCtrl">
 
-  <p>Construction files in the Anderson Lab at UCB Take the following form.</p>
+  <p>Wet labs often use human-readable construction files to succinctly describe a set of reactions.</p>
 
   <p>You can specify sequences (such as the primers below) directly in the construction file, or reference sequences stored in Clotho.</p>
 
-  <h1>Get construction file which matches GFP</h1>
+  <h1>Get GFP example. Get other examples.</h1>
+
+  <div style="text-align: center">
+    <ul class="pagination pagination-lg" style="display: inline-block">
+      <li ng-repeat="file in constructionFiles">
+        <a ng-click="viewing = file"
+           popover="{{file.name}}"
+           popover-trigger="mouseenter">Example {{$index + 1}}</a>
+      </li>
+    </ul>
+  </div>
 
       <pre>
 PCR ca1067F/ca1067R on pSB1AK3-b0015  (pcrpdt)

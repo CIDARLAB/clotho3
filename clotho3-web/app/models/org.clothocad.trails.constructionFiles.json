@@ -45,7 +45,7 @@
 					"contents": [
 						{
 							"type": "text",
-							"params": "<div><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
+							"params": "<div class=\"img-thumbnail\" style=\"padding: 10px;\"><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
 						},
 						{
 							"type": "template",
@@ -56,6 +56,9 @@
 				{
 					"title": "Wet Lab Syntax",
 					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
+					},
 					"contents": [
 						{
 							"type": "template",
