@@ -5,4 +5,6 @@
   <div ng-repeat="step in file.steps"
        construction-step="$index"
        class="panel panel-default"></div>
+
+  <pre ng-bind="file.dictionary | json"></pre>
 </div>
