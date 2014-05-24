@@ -136,25 +136,24 @@
 						{
 							"type": "template",
 							"params": "partials/trails/clotho-intro/commandIntro.html"
-						}
-					]
-				},
-				{
-					"title": "Scripting in Clotho",
-					"icon": "exercise",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/scriptingIntro.js"
-					},
-					"contents": [
+						},
 						{
-							"type" : "text",
-							"params" : "<p>Answer the quiz by running your own function!</p><p>In the Command Bar, type <code>revcomp</code> and select the reverse complement function, then copy-paste the sequence in the quiz. Grab the resulting value from the Activity Log and paste it in the quiz.</p>"
+							"type" : "video",
+							"params" : {
+								"mini" : true,
+								"id" : "Upbz_cef6-c"
+							}
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/commandIntro2.html"
 						},
 						{
 							"type": "quizQuestion",
 							"params": {
 								"question" : {
 									"type" : "fillin",
+									"hint" : "In the Command Bar, type \"revcomp\" and copy the sequence below",
 									"question" : "Find the reverse complement of the sequence <code>{{mySeq}}</code> using the Command Bar."
 								},
 								"options" : {},
