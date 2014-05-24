@@ -1,7 +1,0 @@
-{
-    "name": "py_die_early",
-
-    "id": "py_die_early",
-    "language": "python2",
-    "code": "raise Exception('dying during definition!')"
-}

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.util.CloseableProcess;
 
 class ProcessProvider {
@@ -15,7 +16,7 @@ class ProcessProvider {
         pythonenv.put("PYTHONPATH",
                       Paths.get("src", "main", "python", "lib").toString());
         CONFIGS.put(
-            "python2",
+            "Python",
             new ProcConfig(
                 new String[] {
                     "python",
@@ -26,10 +27,10 @@ class ProcessProvider {
         );
     }
 
-    static CloseableProcess newProcess(final String language) {
-        final ProcConfig conf = CONFIGS.get(language);
+    static CloseableProcess newProcess(final Language language) {
+        final ProcConfig conf = CONFIGS.get(language.prettyName);
         if (conf.command == null)
-            throw new IllegalArgumentException(language);
+            throw new IllegalArgumentException("incorrect language declaration");
         final ProcessBuilder builder = new ProcessBuilder(conf.command);
         builder.environment().putAll(conf.environment);
         try {

@@ -61,6 +61,7 @@ import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.ReservedFieldNames;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
@@ -143,19 +144,20 @@ public class ServerSideAPI {
             System.out.println("token: " + str);
         }
 
-        Object out = tryRun(tokens);
-        if(out != null) {
-            return out;
+        Object out = null;
+        try {
+            return tryRun(tokens);
+        } catch(Exception err) {
         }
         
-        out = trySingleWord(tokens);
-        if(out != null) {
-            return out;
+        try {
+            return trySingleWord(tokens);
+        } catch(Exception err) {
         }
         
-        out = tryAPIWord(tokens);
-        if(out != null) {
-            return out;
+        try {
+            return tryAPIWord(tokens);
+        } catch(Exception err) {
         }
         
         //Run the command assuming it's javascript
@@ -179,7 +181,7 @@ public class ServerSideAPI {
      * @param tokens
      * @return the result or null if it failed to execute
      */
-    private Object tryRun(String[] tokens) {
+    private Object tryRun(String[] tokens) throws ScriptException {
         System.out.println("+++  try RUN on args");
         Function function = null;
         List<Object> args = new ArrayList<Object>();
@@ -203,7 +205,6 @@ public class ServerSideAPI {
             Object obj = resolveSloppy(tokens[i]);
             if(obj!=null) {
                 args.add(obj);
-                continue;
             }
             //Otherwise just consider this raw String or int
             else {
@@ -218,21 +219,12 @@ public class ServerSideAPI {
             System.out.println(obj.toString());
         }
         Object out = null;
-        try {
-            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId, options));
-            return out;
-        } catch (Exception ex) {
-            System.out.println("Unsuccessfully executed the sloppy command");
-            return null;
-        }
+        out = run(function, args);
+        return out;
     }
     
     private Object trySingleWord(String[] tokens) {
         System.out.println("+++  try Single Word get");
-        if(tokens.length!=1) {
-            return null;
-        }
-        System.out.println("trySingleWord has a single token " + tokens[0]);
         return resolveSloppy(tokens[0]);
     }
     
@@ -253,7 +245,7 @@ public class ServerSideAPI {
         }
     }
     
-    private Object tryAPIWord(String[] tokens) {
+    private Object tryAPIWord(String[] tokens) throws ScriptException {
         System.out.println("+++  try first word is API word");
         String firstWord = tokens[0].toLowerCase();
         
@@ -615,10 +607,10 @@ public class ServerSideAPI {
         }
     }
 
-    public Object
-    run2(final String name, final List<Object> args) {
+    private Object
+    run2(final Function function, final List<Object> args) {
         final Map<String, Object> funcJSON =
-            persistor.getAsJSON(new ObjectId(name));
+            persistor.getAsJSON(function.getId());
         return SubprocessExec.run(
             this,
             funcJSON,
@@ -667,6 +659,10 @@ public class ServerSideAPI {
                 try {
                     Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
 System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
+
+                    if(function.getLanguage().equals(Language.PYTHON)) {
+                        return run2(function, args);
+                    }
 
                     return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -751,6 +747,9 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
         System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
+        if(function.getLanguage().equals(Language.PYTHON)) {
+            return run2(function, args);
+        }
 
         return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }

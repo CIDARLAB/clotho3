@@ -3,6 +3,7 @@ package org.clothocad.core.execution.subprocess;
 import java.util.List;
 import java.util.Map;
 import org.clothocad.core.communication.ServerSideAPI;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.util.CloseableProcess;
 import org.clothocad.core.util.CloseableRunnable;
 import org.clothocad.core.util.CloseableThread;
@@ -75,9 +76,12 @@ public class SubprocessExec {
         final Map<String, Object> sourceJSON,
         final List<Object> args,
         final EventHandler eventHandler) {
+        
+        String slang = (String) sourceJSON.get("language");
+        final Language lang = Language.valueOf(slang);
 
         try (final CloseableProcess proc =
-             ProcessProvider.newProcess((String) sourceJSON.get("language"));
+             ProcessProvider.newProcess(lang);
         ) {
             final Object returnValue;
             final PipeDumper errDumper =
