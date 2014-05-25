@@ -47,7 +47,8 @@ angular.module('clotho.core').service('Socket',
 	    if ($window.$clotho.socket) {
 		    socket = $window.$clotho.socket;
 	    } else {
-		    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + window.location.pathname + "websocket");
+		    var pathname = window.location.pathname;
+		    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + ( pathname.substring(0, pathname.lastIndexOf('/') + 1) ) + "websocket");
 	    }
 
 	    if (socket.readyState == 1) {
