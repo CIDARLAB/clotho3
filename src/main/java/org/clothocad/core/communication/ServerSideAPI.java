@@ -181,33 +181,25 @@ public class ServerSideAPI {
      * @param tokens
      * @return the result or null if it failed to execute
      */
-    private Object tryRun(String[] tokens) throws ScriptException {
+    private Object tryRun(String[] tokens) throws Exception {
         System.out.println("+++  try RUN on args");
         Function function = null;
         List<Object> args = new ArrayList<Object>();
         
         //Assume the first token is a Function call
         List<Map> completions = persistor.getCompletions(tokens[0]);
-        if(completions.size()>0) {
-            String uuid = (String) completions.get(0).get("id").toString();
-            try {
-                function = persistor.get(Function.class, new ObjectId(uuid));
-            } catch(java.lang.IllegalArgumentException ex) {
-                return null;
-            }
-        } 
+        String uuid = (String) completions.get(0).get("id").toString();
+        function = persistor.get(Function.class, new ObjectId(uuid));
         if(function==null) {
-            return null;
+            throw new Exception();
         }
         
         //Iterate through each subsequent token and convert to object if required
         for(int i=1; i<tokens.length; i++) {
-            Object obj = resolveSloppy(tokens[i]);
-            if(obj!=null) {
+            try {
+                Object obj = resolveSloppy(tokens[i]);
                 args.add(obj);
-            }
-            //Otherwise just consider this raw String or int
-            else {
+            } catch(Exception err) {
                 args.add(tokens[i]);
             }
         }
@@ -228,24 +220,13 @@ public class ServerSideAPI {
         return resolveSloppy(tokens[0]);
     }
     
-    private Object resolveSloppy(String gigla) {
-        Object out = null;
-        try {
-            String word = gigla;
-            List<Map> completions = persistor.getCompletions(word);
-            
-            //If the completions suggest what the things is
-            if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("id");
-                return get(uuid);
-            } 
-            return null;
-        } catch(Exception err) {
-            return null;
-        }
+    private Object resolveSloppy(String word) {
+        List<Map> completions = persistor.getCompletions(word);
+        String uuid = (String) completions.get(0).get("id");
+        return get(uuid);
     }
     
-    private Object tryAPIWord(String[] tokens) throws ScriptException {
+    private Object tryAPIWord(String[] tokens) throws Exception {
         System.out.println("+++  try first word is API word");
         String firstWord = tokens[0].toLowerCase();
         
@@ -261,7 +242,7 @@ public class ServerSideAPI {
             }
             return tryRun(newtok);
         } else {
-            return null;
+            throw new Exception();
         }
     }
     
