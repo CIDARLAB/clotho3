@@ -12,6 +12,12 @@
   "created" : 1379436132000,
   "youtubePlaylistId" : "PL2aPXzks-TgNmfjrolgYWGblQDNzo11Yq",
   "icon" : "https://i1.ytimg.com/vi/uTrw6248u18/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Monofunctional Enzyme Biosynthesis Examples.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

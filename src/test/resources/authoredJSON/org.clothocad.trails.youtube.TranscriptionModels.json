@@ -12,6 +12,12 @@
   "created" : 1380142088000,
   "youtubePlaylistId" : "PL2aPXzks-TgO0k9PhT__NSh2x6HNimaOy",
   "icon" : "https://i1.ytimg.com/vi/Can0Rfq_vdM/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Transcription Models.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

@@ -9,6 +9,7 @@ angular.module('clotho.fullPackage', [
 	'clotho.editor',
 	'clotho.interface',
 	'clotho.trails',
+	'clotho.dna',         //in here temporarily until server can handle all this
 	'clotho.construction'
 ]);
 
@@ -138,11 +139,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  controller: 'WidgetsCtrl'
 	})
 
-
-.when('/test/tokenizer', {
-  templateUrl: 'views/test/tokenizer.html',
-  controller: 'TestTokenizerCtrl'
-})
 .when('/test/schemaview', {
   templateUrl: 'views/test/schemaview.html',
   controller: 'TestSchemaviewCtrl',
@@ -192,6 +188,25 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 .when('/test/construction', {
   templateUrl: 'views/test/construction.html',
   controller: 'TestConstructionCtrl'
+})
+.when('/test/contstructionTrail', {
+  templateUrl: 'views/test/contstructiontrail.html',
+  controller: 'TestContstructiontrailCtrl',
+	resolve : {
+		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
+			var deferred = $q.defer();
+				$http.get('models/org.clothocad.trails.constructionFiles.json').then(function(data) {
+					Trails.compile(data.data).then(function (compiled) {
+						deferred.resolve(compiled);
+					});
+			});
+			return deferred.promise;
+		}]
+	}
+})
+.when('/test/focus', {
+  templateUrl: 'views/test/focus.html',
+  controller: 'TestFocusCtrl'
 })
 	.otherwise({
 		redirectTo:'/'

@@ -1,4 +1,4 @@
 {
-  "code" : "def run(): return \"DANGER DANGER!\"",
+  "code" : "def run(): return \"modified!\"",
   "id" : "org.andersonlab.py_selfsetter"
 }

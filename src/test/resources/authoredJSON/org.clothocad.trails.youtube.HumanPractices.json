@@ -12,6 +12,12 @@
   "created" : 1393996985000,
   "youtubePlaylistId" : "PL2aPXzks-TgN_Ztp-bRkzbtbi5Ncsh71t",
   "icon" : "https://i1.ytimg.com/vi/hDAnyG7zHFs/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Human-Practices.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

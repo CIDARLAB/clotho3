@@ -12,6 +12,12 @@
   "created" : 1378788371000,
   "youtubePlaylistId" : "PL2aPXzks-TgNe-LNrcRmB-iHvFFZokK7R",
   "icon" : "https://i1.ytimg.com/vi/-GPUcNu52Q8/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Modular PKS and NRP Engineering.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

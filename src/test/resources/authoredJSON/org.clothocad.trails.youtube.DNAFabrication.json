@@ -12,6 +12,17 @@
   "created" : 1391486814000,
   "youtubePlaylistId" : "PL2aPXzks-TgPX7HU4pogNUSBN9OK2PhBK",
   "icon" : "https://i1.ytimg.com/vi/_XpQgGAO0lw/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication.pptx"
+  }, {
+    "name" : "Example Files",
+    "icon" : "default",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication-Examples.zip"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

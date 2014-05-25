@@ -12,6 +12,12 @@
   "created" : 1397573963000,
   "youtubePlaylistId" : "PL2aPXzks-TgOOPfxneYJ3pBwTlqzv9Ezn",
   "icon" : "https://i1.ytimg.com/vi/1wWyTrUroGM/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Directed-Evolution.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

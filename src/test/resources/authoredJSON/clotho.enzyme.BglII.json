@@ -1,0 +1,12 @@
+{
+  "name" : "BglII",
+  "match" : "agatct",
+  "cut" : "a^gatc_t",
+  "methylation" : false,
+  "overhang" : 4,
+  "type" : "II",
+  "subtype" : "S",
+  "rebase" : "http://rebase.neb.com/rebase/enz/BglII.html",
+  "id" : "clotho.enzyme.BglII",
+  "schema" : "org.clothocad.model.RestrictionEnzyme"
+}

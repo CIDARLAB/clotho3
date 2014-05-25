@@ -12,6 +12,12 @@
   "created" : 1378477808000,
   "youtubePlaylistId" : "PL2aPXzks-TgPhvEG_0c44SFt03b5sUGov",
   "icon" : "https://i1.ytimg.com/vi/IkmH98EOhzM/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Metabolic Optimization.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

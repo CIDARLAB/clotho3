@@ -12,6 +12,12 @@
   "created" : 1378788286000,
   "youtubePlaylistId" : "PL2aPXzks-TgP45-xudcn4XXiVZfUOYMht",
   "icon" : "https://i1.ytimg.com/vi/sFHKi9szURY/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Polymeric Metabolites.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

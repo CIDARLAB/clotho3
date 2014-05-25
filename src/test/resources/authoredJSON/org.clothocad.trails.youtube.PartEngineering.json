@@ -12,6 +12,12 @@
   "created" : 1382464170000,
   "youtubePlaylistId" : "PL2aPXzks-TgPkmcVYYZACTbbq4bx_ZAoI",
   "icon" : "https://i1.ytimg.com/vi/TW06WFrn5a8/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Part Engineering.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

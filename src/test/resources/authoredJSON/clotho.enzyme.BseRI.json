@@ -1,0 +1,12 @@
+{
+  "name" : "BseRI",
+  "match" : "gaggag",
+  "cut" : "gaggag (10/8)",
+  "methylation" : { },
+  "overhang" : 2,
+  "type" : "II",
+  "subtype" : "G, S",
+  "rebase" : "http://rebase.neb.com/rebase/enz/XbaI.html",
+  "id" : "clotho.enzyme.BseRI",
+  "schema" : "org.clothocad.model.RestrictionEnzyme"
+}

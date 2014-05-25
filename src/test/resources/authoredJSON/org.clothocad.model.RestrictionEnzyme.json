@@ -5,11 +5,6 @@
   "name" : "Restriction Enzyme",
   "description" : "Restriction Enzymes are enzymes which catalyze cutting of DNA into fragments with specific sequence recognition sites.",
   "fields" : [ {
-    "name" : "steps",
-    "type" : "array",
-    "description" : "Array of steps, see wiki for form",
-    "javaType" : "java.util.List"
-  }, {
     "javaType" : "java.lang.String",
     "name" : "match",
     "type" : "string",
@@ -17,6 +12,7 @@
   }, {
     "javaType" : "java.lang.String",
     "name" : "cut",
+    "description" : "Use NEB syntax. Cut marks include ^ | _ e.g.: g^gatc_c ... non-local cuts noted e.g.: ggtctc (1/5)",
     "type" : "string",
     "reference" : false
   }, {
