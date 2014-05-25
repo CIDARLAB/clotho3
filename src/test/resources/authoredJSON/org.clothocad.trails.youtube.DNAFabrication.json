@@ -17,13 +17,12 @@
     "icon" : "slides",
     "type" : "slides",
     "path" : "partials/trails/youtubeClotho/DNA-Fabrication.pptx"
-    },
-    {
-      "name" : "Example Files",
-      "icon" : "default",
-      "type" : "slides",
-      "path" : "partials/trails/youtubeClotho/DNA-Fabrication-Examples.zip"
-    } ],
+  }, {
+    "name" : "Example Files",
+    "icon" : "default",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication-Examples.zip"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

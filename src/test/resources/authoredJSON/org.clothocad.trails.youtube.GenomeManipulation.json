@@ -17,12 +17,11 @@
     "icon" : "slides",
     "type" : "slides",
     "path" : "partials/trails/youtubeClotho/Genome-Manipulation-and-Design.pptx"
-    },
-    {
-      "name" : "Example Files",
-      "icon" : "default",
-      "type" : "slides",
-      "path" : "partials/trails/youtubeClotho/Genome-Manipulation-Examples.zip"
+  }, {
+    "name" : "Example Files",
+    "icon" : "default",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Genome-Manipulation-Examples.zip"
   } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",

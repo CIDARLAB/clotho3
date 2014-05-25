@@ -8,8 +8,8 @@
 		"help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
 		"contents" : [
 			{
-				"type" : "markdown",
-				"params" : "###Clotho Intro\n\n#### Example Markdown\n\n**wowo!**"
+				"type" : "text",
+				"params" : "<p>Get a brief overview of DNA structure and manipulation. Through a focus on reverse complementation, learn how to use Clotho to perform basic sequence manipulation, and automate your synthetic biology workflow.</p><p>This course is comprehensible by anyone with a basic understanding of Biology, but is most translational for those in a synthetic biology wet-lab, or looking to gain a greater understanding of automated genetic engineering.</p>"
 			}
 		]
 	},
