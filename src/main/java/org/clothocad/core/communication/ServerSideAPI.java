@@ -170,7 +170,7 @@ public class ServerSideAPI {
             return returnValue;
         } catch (ScriptException ex) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up
-            logAndSayError("Error while executing script: " + ex.getMessage(), ex);
+            logAndSayError("Unable to process the request", ex);
             return Void.TYPE;
         }
     }
