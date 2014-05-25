@@ -73,12 +73,14 @@ angular.module('clotho.core').service('ClientAPI',
 			 args = data.args || {},
 			 dependencies = data.dependencies || [],
 			 styles = data.styles || {},
+
+			 //NOTE - jquery reliance (not in use)
 			 target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $($clotho.appRoot).find('[ng-view]');
 
 			 $rootScope.$safeApply($http.get(template, {cache: $templateCache})
 			 .success(function(precompiled) {
 
-			 $clotho.extensions.mixin([dependencies, controller], $(precompiled).appendTo(target), args)
+			 $clotho.extensions.mixin([dependencies, controller], angular.element(precompiled).appendTo(target), args)
 			 .then(function(div) {
 			 //testing
 			 //console.log($position.position(div));

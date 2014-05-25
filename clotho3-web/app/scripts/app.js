@@ -9,6 +9,7 @@ angular.module('clotho.fullPackage', [
 	'clotho.editor',
 	'clotho.interface',
 	'clotho.trails',
+	'clotho.dna',         //in here temporarily until server can handle all this
 	'clotho.construction'
 ]);
 

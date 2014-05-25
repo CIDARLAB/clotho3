@@ -11,7 +11,6 @@
  - http://stackoverflow.com/questions/1181700/set-cursor-position-on-contenteditable-div?rq=1
  ******************/
 
-//note - jQuery dependence
 angular.module('clotho.interface').service('$caret', function($log) {
 	var functions = {};
 

@@ -1,18 +1,24 @@
-//note - jQuery reliance
 //todo - rewrite for autonomy
 angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, $parse, Clotho, CommandBar) {
 
 	//note - this is a function
 	var searchBarInput = CommandBar.getCommandBarInput;
 
-	//relies on jQuery
-	var maxZ = function() {
+	var maxZ = function(selector) {
+		return Math.max(0, Math.max.apply(null, _.map($document[0].querySelectorAll(selector || "*"),
+			function (v) {
+				return parseFloat(angular.element(v).css("z-index")) || null;
+			})
+		));
+		/*
+		// jquery version (not in use)
 		return Math.max.apply(null,
 			$.map($('body *'), function(e,n) {
-				if ($(e).css('position') != 'static')
-					return parseInt($(e).css('z-index')) || 1;
+				if (angular.element(e).css('position') != 'static')
+					return parseInt(angular.element(e).css('z-index')) || 1;
 			})
 		);
+		*/
 	};
 
 	var setZ = function(zindex, element) {

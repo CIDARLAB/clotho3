@@ -97,7 +97,7 @@ angular.module('clotho.extensions', [])
 		$rootElement.injector().invoke(function($compile, $rootScope) {
 			var scope = $rootScope.$new(true);
 			angular.extend(scope, args);
-			$compile($(element))(scope);
+			$compile(element)(scope);
 			$rootScope.$apply();
 		});
 	};
