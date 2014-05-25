@@ -61,6 +61,7 @@ import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.ReservedFieldNames;
+import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
@@ -201,6 +202,25 @@ public class ServerSideAPI {
                 args.add(obj);
             } catch(Exception err) {
                 args.add(tokens[i]);
+            }
+        }
+        
+        
+//JCA TODO: remove this section when converters become available
+        //Extract sequence strings when an object is given as argument for a String field
+        Argument[] funcargs = function.getArgs();
+        for(int i=0; i<funcargs.length; i++) {
+            try {
+                Argument arg = funcargs[i];
+                String str = arg.getType().toString();
+                if(str.equals("class java.lang.String")) {
+                    Map map = (Map) args.get(i);
+                    String newvalue = (String) map.get("sequence");
+                    args.remove(i);
+                    args.add(i, newvalue);
+                }
+            } catch(Exception err) {
+                
             }
         }
 
