@@ -7,6 +7,7 @@
     <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
 
+    <!-- not necessary until serving outside root directory / want html5 mode -->
     <base href="/">
 
     <!-- process:remove:api,dist -->
@@ -16,8 +17,6 @@
     <!-- /process -->
     <!-- process:remove:api,command -->
     <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
-
     <link rel="stylesheet" href="css/main.css">
     <!-- endbuild -->
     <!-- /process -->
@@ -320,7 +319,6 @@ function: experiments [pre-integration]
 -->
 <script src="scripts/controllers/test/schemaview.js"></script>
 <script src="scripts/controllers/test/trail.js"></script>
-<script src="scripts/controllers/test/trail-browser.js"></script>
 <script src="scripts/controllers/test/playlistimport.js"></script>
 <script src="scripts/controllers/test/quiz.js"></script>
 <script src="scripts/controllers/test/trail-splash.js"></script>
