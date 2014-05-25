@@ -227,11 +227,10 @@ angular.module('clotho.trails')
 		$scope.startTrail = Clotho.startTrail;
 
 		$scope.highlight = function (trail, evt) {
+			//highlight is trail in object above, selected is the actual trail
 			$scope.highlighted = trail;
 			$scope.loading = true;
-			//note - in interim, let's just fetch the playlist and construct lazily
-			//Youtube.playlistToTrail(trail.playlist).then(function (compiled) {
-			Clotho.get(trail.id).then(function (result) {
+			Clotho.get(trail.id, {mute : true}).then(function (result) {
 				$scope.loading = false;
 				$scope.selected = result;
 			});

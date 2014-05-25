@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clotho.webapp')
+angular.module('clotho.trails')
   .controller('TestContstructiontrailCtrl', function ($scope, $route, $timeout, Clotho, Trails, $location) {
 
 		//inherited from $routeProvider.resolve clause in application.js
