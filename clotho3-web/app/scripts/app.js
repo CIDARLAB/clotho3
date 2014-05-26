@@ -99,12 +99,15 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl'
 	})
-	.when('/trails/:id', {
+	.when('/trail', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
 		reloadOnSearch: false,
 		resolve : {
 			trail : ['Clotho', '$q', '$http', '$route', '$location', 'Trails', function (Clotho, $q, $http, $route, $location, Trails) {
+				if (angular.isUndefined($route.current.params.id)) {
+					return $q.when(null);
+				}
 				var deferred = $q.defer();
 				Clotho.get($route.current.params.id).then(function(result) {
 					Trails.compile(result).then(function (compiled) {
@@ -147,7 +150,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	]
 })
 .when('/test/trail', {
-  templateUrl: 'views/test/trail.html',
+  templateUrl: '../views/trail.html',
   controller: 'TestTrailCtrl',
 	reloadOnSearch: false,
 	resolve : {
@@ -182,7 +185,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   controller: 'TestQuizCtrl'
 })
 .when('/test/trail-splash', {
-  templateUrl: 'views/test/trail-splash.html',
+  templateUrl: '../views/test/trail-splash.html',
   controller: 'TestTrailSplashCtrl'
 })
 .when('/test/construction', {
