@@ -119,11 +119,15 @@ angular.module('clotho.tokenizer')
 
 						console.log(newval);
 
-						//todo - abstract this
+						/*
+						//note - check if query value last char is space (blocked for user input) and select if is
+						//relevant when typing out programmatically
 						if (newval.charAt(newval.length - 1) == tokenDelimiterValue && !checkInQuote(newval)) {
+							console.log('last char is space');
 							scope.select();
 							return;
 						}
+						*/
 
 						if (waitTime > 0) {
 							if (timeoutPromise) {
@@ -151,7 +155,7 @@ angular.module('clotho.tokenizer')
 
 					angular.forEach(string.split(tokenDelimiterValue), function (token) {
 						//want to call parent's add token so updates completeQuery as well
-						scope.addToken(token);
+						token.length && scope.addToken(token);
 					});
 				};
 
