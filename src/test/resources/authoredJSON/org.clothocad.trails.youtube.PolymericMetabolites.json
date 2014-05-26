@@ -1,6 +1,6 @@
 {
   "name" : "Polymeric Metabolites",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.PolymericMetabolites",
   "about" : {
     "help" : "Polymeric Metabolites was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/9/2013.",
@@ -12,11 +12,17 @@
   "created" : 1378788286000,
   "youtubePlaylistId" : "PL2aPXzks-TgP45-xudcn4XXiVZfUOYMht",
   "icon" : "https://i1.ytimg.com/vi/sFHKi9szURY/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Polymeric Metabolites.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Polymeric Metabolites",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
@@ -26,7 +32,7 @@
       } ]
     }, {
       "title" : "Fatty Acid Synthase",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -39,7 +45,7 @@
       } ]
     }, {
       "title" : "Type II Polyketides",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -52,7 +58,7 @@
       } ]
     }, {
       "title" : "Type I Polyketides",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -65,7 +71,7 @@
       } ]
     }, {
       "title" : "Non Ribosomal Peptides",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -78,7 +84,7 @@
       } ]
     }, {
       "title" : "Polymeric Carbohydrates",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -91,7 +97,7 @@
       } ]
     }, {
       "title" : "The following video is optional",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -104,7 +110,7 @@
       } ]
     }, {
       "title" : "Chaitan Khosla (Stanford) Part 1: Polyketide Biosynthesis",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

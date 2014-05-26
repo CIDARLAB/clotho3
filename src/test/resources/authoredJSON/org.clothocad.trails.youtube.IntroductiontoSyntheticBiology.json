@@ -1,6 +1,6 @@
 {
   "name" : "Introduction to Synthetic Biology",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.IntroductiontoSyntheticBiology",
   "about" : {
     "help" : "Introduction to Synthetic Biology was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
@@ -16,7 +16,7 @@
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Synthetic Biology Explained",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +29,7 @@
       } ]
     }, {
       "title" : "Kristala L. J. Prather (MIT) Part 1: Introduction to Synthetic Biology and Metabolic Engineering",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +42,7 @@
       } ]
     }, {
       "title" : "Andrew Hessel - Introduction to Synthetic Biology",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

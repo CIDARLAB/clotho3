@@ -33,22 +33,31 @@ class Context(object):
 
     Setup by initialization object
     '''
-    def __init__(self, init_obj):
+    def __init__(self, init_obj, swapper):
         if init_obj["type"] != "func":
             raise ValueError
         self.code = init_obj["code"]
         self.args = init_obj["args"]
-        self._tmpfile = open(init_obj["tmpfile"], "wb")
-
-    def __del__(self):
-        self._tmpfile.flush();
-        self._tmpfile.close();
+        self._swapper = swapper
 
     def send_value(self, value):
-        '''Send one message to host through temporary file'''
-        self._tmpfile.write(json.dumps(value).encode("UTF-8"))
-        self._tmpfile.write(b'\0')
-        self._tmpfile.flush()
+        '''Send one message to host'''
+        with self._swapper:
+            sys.stdout.write(json.dumps(value).encode("UTF-8"))
+            sys.stdout.write(b'\0')
+            sys.stdout.flush()
+
+class StdoutSwapper(object):
+    def __init__(self, orig, dest):
+        self._orig = orig
+        self._dest = dest
+
+    def __enter__(self):
+        sys.stdout = self._dest
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # need to restore stdout regardless of whether an exception occured
+        sys.stdout = self._orig
 
 def read_value():
     '''Read one message from host through standard input and return it'''
@@ -63,17 +72,25 @@ def read_value():
     return json.loads(bytes(buf).decode("UTF-8"))
 
 def main():
-    # fetch initialization object
-    context = Context(read_value())
+    # redirect prints to standard error
+    orig_stdout = sys.stdout
+    sys.stdout = sys.stderr
 
-    # execute user code body
+    # fetch initialization object
+    context = Context(read_value(), StdoutSwapper(sys.stderr, orig_stdout))
+
+    # run user code; get return value
+    user_return_value = body(context)
+
+    # send return value back to host
+    context.send_value({"type": "func", "return": user_return_value})
+
+def body(context):
+    # execute user code body with given variable bindings
     scope_dict = {"clotho": Clotho(context), "ClothoError": ClothoError}
     exec(context.code, scope_dict)
 
     # execute user function, which is always called "run"
-    user_func = scope_dict["run"]
-    user_return_value = user_func(*context.args)
-
-    context.send_value({"type": "func", "return": user_return_value})
+    return scope_dict["run"](*context.args)
 
 main()

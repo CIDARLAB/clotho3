@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Jin",
+  "nickName" : "Jin",
+  "surName" : "Huh",
+  "name" : "jinism83",
+  "emailAddress" : "jinism83@gmail.com",
+  "icon" : "jinHun.png",
+  "imgUrl" : "",
+  "startDate" : "2008-01-01",
+  "endDate" : "2013-06-01",
+  "currentLocation" : "Postdoc in Weiss Lab at MIT",
+  "current" : false,
+  "dateCreated" : "2008-01-01",
+  "isManagement" : false,
+  "role" : "Graduate Student",
+  "biography" : "",
+  "title" : "Payload Delivery Device",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.jinism83"
+}

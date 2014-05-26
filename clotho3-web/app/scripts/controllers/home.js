@@ -3,14 +3,14 @@ angular.module('clotho.webapp').controller('HomeCtrl', function ($scope, $locati
 		'<p>Clotho is a platform for automating your genetic engineering projects. Learn how to use Clotho by starting the trail below!</p>';
 
 	$scope.enterClotho = function() {
-		$location.path('/trails/bb99191e810c19729de860fe');
+		$location.path('/trails/org.clothocad.trails.LearningClotho');
 	};
 
 	$scope.enterEugene = function() {
-		$location.path('/trails/bb02191e810c19729de860aa');
+		$location.path('/trails/org.clothocad.trails.EugeneCADIntro');
 	};
 
 	$scope.enterRaven = function() {
-		$location.path('/trails/bb02191e810c19729de860bb');
+		$location.path('/trails/org.clothocad.trails.RavenCADIntro');
 	};
 });

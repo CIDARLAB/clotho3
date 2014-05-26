@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2039",
+  "description" : "{NeuS 3' UTR}",
+  "sequence" : "gatctatgaagaaaataatttattatttatttgttcaacaataatttttggcatctcagtatttttttcagttgccaaaacaataagatagttacttctcttgctaaatttttgtacaaatgactcagctttttttaattgccccaggttactaattataaaaatatttttactttttatttttaacggtgatagtagctcttcagccttgtttttagaattaaaaaaccatgagtcacggaaaaacccaattggatttacaaataatttcctcaacttctttaaactagcatcaaatatcatctttcttataccttaataaaactttatggatttttttcaatgtttttattttttttggtcctaatgagaaaaagaaattaaaaaagatcaaaaacaatataatcaatgtg",
+  "id" : "clotho.part.jtk2039"
+}

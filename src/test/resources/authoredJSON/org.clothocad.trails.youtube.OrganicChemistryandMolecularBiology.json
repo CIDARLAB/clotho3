@@ -1,6 +1,6 @@
 {
   "name" : "Organic Chemistry and Molecular Biology",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology",
   "about" : {
     "help" : "Organic Chemistry and Molecular Biology was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 1/22/2014.",
@@ -12,21 +12,27 @@
   "created" : 1390413041000,
   "youtubePlaylistId" : "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ",
   "icon" : "https://i1.ytimg.com/vi/DywiuCuDbtY/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Basics of OOP and Organic Chemistry.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Essentials Concepts of Organic Chemistry",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
         "params" : {
-          "id" : "DywiuCuDbtY"
+          "id" : "TBeWEfhmK1U"
         }
       } ]
     }, {
       "title" : "DNA structure and the Reverse Complement operation",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

@@ -1,17 +1,24 @@
-//note - jQuery reliance
 //todo - rewrite for autonomy
-angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, Clotho, CommandBar) {
+angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, $parse, Clotho, CommandBar) {
 
-	var searchBarInput = CommandBar.getCommandBarInput();
+	//note - this is a function
+	var searchBarInput = CommandBar.getCommandBarInput;
 
-	//relies on jQuery
-	var maxZ = function() {
+	var maxZ = function(selector) {
+		return Math.max(0, Math.max.apply(null, _.map($document[0].querySelectorAll(selector || "*"),
+			function (v) {
+				return parseFloat(angular.element(v).css("z-index")) || null;
+			})
+		));
+		/*
+		// jquery version (not in use)
 		return Math.max.apply(null,
 			$.map($('body *'), function(e,n) {
-				if ($(e).css('position') != 'static')
-					return parseInt($(e).css('z-index')) || 1;
+				if (angular.element(e).css('position') != 'static')
+					return parseInt(angular.element(e).css('z-index')) || 1;
 			})
 		);
+		*/
 	};
 
 	var setZ = function(zindex, element) {
@@ -25,84 +32,71 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		return $q.when(oldZ);
 	};
 
-
-
+	//fixme - need to sync up with tokenizer... use CommandBar.setInput for now
+	//for some reason can't $parse.assign string with space (though works outside command)
 	var typeOut = function(element, string, model) {
-		console.log(element, string);
+		console.log(element, string, model);
 		var inputsVal = {input: true, textarea : true, select: true},
-			valType = (!!inputsVal[angular.lowercase(element[0].nodeName)]) ? "val" : "text",
 			timeOut,
+			scope,
+			valType = (!!inputsVal[angular.lowercase(element[0].nodeName)]) ? "val" : "text",
 			txtLen = string.length,
 			charInd = 0,
+			curString,
 			deferred = $q.defer();
 
-
-		//given parent obj and desc in form 'desc.desc.child', set child with val
-		function setDescendentProperty(obj, desc, val) {
-			var arr = desc.split(".");
-			while(arr.length > 1 && (obj = obj[arr.shift()]));
-			obj[arr.shift()] = val;
+		if (!!model) {
+			scope = element.scope();
 		}
 
-		//
 		function typeIt() {
 			timeOut = $timeout(function() {
 				charInd++;
-				element[valType](string.substring(0, charInd) + '|');
+				curString = string.substring(0, charInd);
+
+				console.log(curString);
+
+				if (scope) {
+					scope.$apply($parse(model).assign(scope, curString));
+				} else {
+					element[valType](curString + '|');
+				}
+
 				typeIt();
 
 				if (charInd == txtLen) {
-					element[valType](element[valType]().slice(0, -1)); // remove the '|'
-
-					//update scope
-					if (!!model) {
-						var scope = element.scope();
-						//todo - handle two layers in
-						setDescendentProperty(scope, model, string);
-						scope.$apply();
+					if (scope) {
+						//we're fine
+					} else {
+						element[valType](element[valType]().slice(0, -1)); // remove the '|'
 					}
 
 					deferred.resolve();
 					$timeout.cancel(timeOut);
 				}
 
-			}, Math.round(Math.random() * (30 - 30)) + 30);
+			}, Math.round(Math.random() * 50) + 30);
 		}
 
 		typeIt();
 		return deferred.promise;
 	};
 
-	//can pass string
-	//todo - handle array of strings to input
 	var typeOutSearch = function(string, submit) {
+
+		//create single element for this function
+		//todo - cleanup this reference (element.remove() but not original element)
+		var commandInput = searchBarInput();
 
 		string = angular.isArray(string) ? string : [string];
 
-		return $q.when(searchBarInput.focus())
+		return $q.when(commandInput.focus())
 			.then(function() {
-				return highlightElement(searchBarInput)
+				return highlightElement(CommandBar.getTokenizerElement())
 			})
 			.then(function(unhighlight) {
-
-				/*
-				var promise = $q.when(),
-					current;
-
-				while (current = string.shift()) {
-					console.log(current);
-					promise.then(function() {
-						console.log(current);
-						return typeOut(searchBarInput, current, 'display.query');
-					});
-				}
-
-				return promise.then(function() {
-					return unhighlight;
-				});
-				*/
-
-				return typeOut(searchBarInput, string[0], 'display.query').then(function() {
+				return typeOut(commandInput, string[0], CommandBar.commandBarInputModel)
+				.then(function() {
 					return unhighlight;
 				});
 			})
@@ -111,11 +105,11 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 					if (submit) {
 						//CommandBar.display.log = true;
 						//return CommandBar.submit(string);
-						return $q.when(searchBarInput.parents('form').submit());
+						return $q.when(commandInput.parents('form').submit());
 					} else {
-						return $q.when(searchBarInput.focus());
+						return $q.when(commandInput.focus());
 					}
-				});
+				})
 			});
 	};
 

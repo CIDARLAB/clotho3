@@ -1,6 +1,6 @@
 {
   "name" : "Processes and Localization",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.ProcessesandLocalization",
   "about" : {
     "help" : "Processes and Localization was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/9/2013.",
@@ -12,11 +12,17 @@
   "created" : 1378788494000,
   "youtubePlaylistId" : "PL2aPXzks-TgMz06rZlbCRKzYyVkXyIwb9",
   "icon" : "https://i1.ytimg.com/vi/A0KxP3m_fnc/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Processes and Localization.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Processes and Devices",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Transcription and Translation Processes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "Compartments in Prokaryotes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Compartments in Eukaryotes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2131",
+  "description" : "{I-SceI Right Half}",
+  "sequence" : "gatctaagctttcaacaaactggctaacctgttcatcgttaacaacaagaaaaccattccgaacaacctggttgaaaactacctgaccccgatgtccctggcatactggttcatggacgatggtggtaaatgggattacaacaaaaactctaccaacaaatctatcgtactgaacacccagtctttcactttcgaagaagtagaatacctggttaagggtctgcgtaacaaattccaactgaactgttacgtgaaaatcaacaagaacaaaccgatcatctacatcgactctatgtcttacctgatcttctacaacctgattaaaccgtacctgattccgcagatgatgtacaaactgccgaacactatcagctccgaaactttcctgaaataag",
+  "id" : "clotho.part.jtk2131"
+}

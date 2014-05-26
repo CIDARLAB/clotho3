@@ -1,6 +1,6 @@
 {
   "id" : "org.clothocad.trails.WritingTrails",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "name" : "Writing Trails",
   "author" : "UC Berkeley",
   "description" : "This Trail will walk you through how to write a Trail, introducing you to the relevant schemas, and built-in Clotho tools and services you can access.",

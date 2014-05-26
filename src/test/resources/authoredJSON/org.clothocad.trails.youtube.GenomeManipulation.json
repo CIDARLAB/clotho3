@@ -1,6 +1,6 @@
 {
   "name" : "Genome Manipulation",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.GenomeManipulation",
   "about" : {
     "help" : "Genome Manipulation was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 2/10/2014.",
@@ -12,11 +12,22 @@
   "created" : 1392047204000,
   "youtubePlaylistId" : "PL2aPXzks-TgOtngzKdocz4P50TCncRyPy",
   "icon" : "https://i1.ytimg.com/vi/vfmuDvEgD28/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Genome-Manipulation-and-Design.pptx"
+  }, {
+    "name" : "Example Files",
+    "icon" : "default",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Genome-Manipulation-Examples.zip"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Genome Manipulation",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +40,7 @@
       } ]
     }, {
       "title" : "att Integrases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +53,7 @@
       } ]
     }, {
       "title" : "Homologous Recombination",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +66,7 @@
       } ]
     }, {
       "title" : "Conjugation, Transposition, and Transduction",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +79,7 @@
       } ]
     }, {
       "title" : "Manipulation of Non Model Genomes",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -81,7 +92,7 @@
       } ]
     }, {
       "title" : "Optimization of Biosynthesis using MAGE",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -94,7 +105,7 @@
       } ]
     }, {
       "title" : "Webinar: Genome Editing with CRISPR/Cas9",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

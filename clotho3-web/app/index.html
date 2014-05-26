@@ -4,8 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Clotho</title>
-    <meta name="description" content="">
+    <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
+
+    <!-- not necessary until serving outside root directory / want html5 mode -->
+    <base href="/">
 
     <!-- process:remove:api,dist -->
     <!-- build:css({.tmp,app}) styles/command.css -->
@@ -14,9 +17,6 @@
     <!-- /process -->
     <!-- process:remove:api,command -->
     <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="bower_components/angular-hotkeys/build/hotkeys.min.css">
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
-
     <link rel="stylesheet" href="css/main.css">
     <!-- endbuild -->
     <!-- /process -->
@@ -128,6 +128,7 @@ dependencies: clotho.core, jQuery, Lodash
 -->
 <script src="scripts/_command/_kickoff.js"></script>
 <script src="bower_components/angular-ui-utils/keypress.min.js"></script> <!-- ui.keypress module -->
+<script src="scripts/_command/autoGrow.js"></script>
 <script src="scripts/_command/commandBar.js"></script>
 <script src="scripts/_command/clothoCommandBar.js"></script>
 <script src="scripts/_command/terminal.js"></script>
@@ -217,6 +218,7 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/parsers/uiMarkdown.js"></script>
 <script src="scripts/_interface/parsers/wiki.js"></script>
 <script src="scripts/_interface/social/sharingCtrl.js"></script>
+<script src="scripts/_interface/social/urlShortener.js"></script>
 <script src="scripts/_interface/style/darkBackground.js"></script>
 <!--endbuild-->
 
@@ -244,6 +246,7 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_trails/ui/trailInstructor.js"></script>
 <script src="scripts/_trails/ui/trailMaterial.js"></script>
 <script src="scripts/_trails/ui/trailHeader.js"></script>
+<script src="scripts/_trails/ui/trailOverview.js"></script>
 <!--endbuild-->
 
 
@@ -276,6 +279,20 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_dna/construction-module.js"></script>
 <!--endbuild-->
 
+<!-- build:js scripts/clotho-construction-module.js -->
+<!--
+name: clotho.construction
+function: Construction File viewing, simulating, etc.
+dependencies: clotho.foundation
+-->
+<script src="scripts/_construction/_kickoff.js"></script>
+<script src="scripts/_construction/constructionReactions.js"></script>
+<script src="scripts/_construction/simulator.js"></script>
+<script src="scripts/_construction/construtionFile.js"></script>
+<script src="scripts/_construction/constructionStep.js"></script>
+<script src="scripts/_construction/constructionStepInner.js"></script>
+<!--endbuild-->
+
 
 <!-- build:js scripts/clotho-webapp-module.js -->
 <!--
@@ -300,14 +317,14 @@ dependencies: clotho.foundation, clotho.interface
 name: clotho.webapp
 function: experiments [pre-integration]
 -->
-<script src="scripts/controllers/test/tokenizer.js"></script>
 <script src="scripts/controllers/test/schemaview.js"></script>
 <script src="scripts/controllers/test/trail.js"></script>
-<script src="scripts/controllers/test/trail-browser.js"></script>
-<script src="scripts/controllers/test/trail-overview.js"></script>
 <script src="scripts/controllers/test/playlistimport.js"></script>
 <script src="scripts/controllers/test/quiz.js"></script>
 <script src="scripts/controllers/test/trail-splash.js"></script>
+<script src="scripts/controllers/test/construction.js"></script>
+<script src="scripts/controllers/test/contstructionTrail.js"></script>
+<script src="scripts/controllers/test/focus.js"></script>
 <!-- endbuild -->
 
 <!-- /process -->

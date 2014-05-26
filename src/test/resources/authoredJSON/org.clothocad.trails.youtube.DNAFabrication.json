@@ -1,6 +1,6 @@
 {
   "name" : "DNA Fabrication",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.DNAFabrication",
   "about" : {
     "help" : "DNA Fabrication was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 2/3/2014.",
@@ -12,11 +12,22 @@
   "created" : 1391486814000,
   "youtubePlaylistId" : "PL2aPXzks-TgPX7HU4pogNUSBN9OK2PhBK",
   "icon" : "https://i1.ytimg.com/vi/_XpQgGAO0lw/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication.pptx"
+  }, {
+    "name" : "Example Files",
+    "icon" : "default",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication-Examples.zip"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "DNA Fabrication",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +40,7 @@
       } ]
     }, {
       "title" : "Gene Synthesis",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +53,7 @@
       } ]
     }, {
       "title" : "Ad hoc Cloning",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +66,7 @@
       } ]
     }, {
       "title" : "BioBrick Standard Assembly",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +79,7 @@
       } ]
     }, {
       "title" : "PCR-based Assembly Methods",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -81,7 +92,7 @@
       } ]
     }, {
       "title" : "Site-directed Mutagenesis",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

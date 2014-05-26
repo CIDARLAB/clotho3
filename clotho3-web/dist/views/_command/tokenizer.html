@@ -1,5 +1,6 @@
 <div class="clothoTokenizerWrap">
   <div class="clothoTokenizerInputWrap" ng-click="focusInput()" ng-class="{focused : hasFocus}">
+    <div class="clothoIcon"></div>
     <div class="clothoTokenizerTokens">
       <clotho-token ng-repeat="token in tokenCollection.tokens track by $index"
                     token-collection="tokenCollection"
@@ -12,7 +13,9 @@
     <div class="clothoTokenizerAutocompleteWrap clothoAutocompleteWrap">
       <input type="text"
              clotho-autocomplete
+             auto-grow
              ng-model="query"
+             ng-trim="false"
              class="clothoAutocomplete"
              placeholder="{{placeholder}}"
              token-collection="tokenCollection"

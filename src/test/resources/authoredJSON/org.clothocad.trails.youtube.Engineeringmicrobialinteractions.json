@@ -1,6 +1,6 @@
 {
   "name" : "Engineering microbial interactions",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.Engineeringmicrobialinteractions",
   "about" : {
     "help" : "Engineering microbial interactions was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
@@ -12,11 +12,17 @@
   "created" : 1382463804000,
   "youtubePlaylistId" : "PL2aPXzks-TgN9w3Pm49zEQJfnNDV8T1KZ",
   "icon" : "https://i1.ytimg.com/vi/XkEEahBW1m8/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Engineering microbial interactions.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Transcriptional control of actuators",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Transfer Studies",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "Transfer of virulence clusters",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Live Vaccines",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +74,7 @@
       } ]
     }, {
       "title" : "Chassis modification",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

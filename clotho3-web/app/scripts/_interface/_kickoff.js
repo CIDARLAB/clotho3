@@ -4,5 +4,6 @@ angular.module('clotho.interface', [
 	'ui.codemirror',
 	'cfp.hotkeys', //defined internally to module
 	'angularFileUpload',
-	'chieffancypants.loadingBar'
+	'chieffancypants.loadingBar',
+	'clotho.urlShorten'
 ]);

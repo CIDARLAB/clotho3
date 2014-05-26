@@ -6,3 +6,7 @@
 .noPointerEvents {
   pointer-events: none;
 }
+
+[ng-click] {
+  cursor: pointer;
+}

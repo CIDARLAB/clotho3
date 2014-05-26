@@ -1,8 +1,5 @@
 /* todo - viewport container to hide scrollbar */
 
-$log-width: 400px;
-$log-button-width: 40px;
-
 #clotho_logButtonContainer {
   display: inline-block;
   float: left;
@@ -18,6 +15,7 @@ $log-button-width: 40px;
 
 #clotho_log {
   $log-width: 400px;
+  $log-button-width: 40px;
   @extend .popover;
   @extend .bottom;
   position: absolute;

@@ -1,0 +1,32 @@
+<div ng-controller="constructionFiles_wetLabSyntaxCtrl">
+
+  <p>Wet labs often use human-readable construction files to succinctly describe a set of reactions.</p>
+
+  <p>You can specify sequences (such as the primers below) directly in the construction file, or reference sequences stored in Clotho.</p>
+
+  <h1>Get GFP example. Get other examples.</h1>
+
+  <div style="text-align: center">
+    <ul class="pagination pagination-lg" style="display: inline-block">
+      <li ng-repeat="file in constructionFiles">
+        <a ng-click="viewing = file"
+           popover="{{file.name}}"
+           popover-trigger="mouseenter">Example {{$index + 1}}</a>
+      </li>
+    </ul>
+  </div>
+
+      <pre>
+PCR ca1067F/ca1067R on pSB1AK3-b0015  (pcrpdt)
+Digest pcrpdt                         (1038+10+6, L, pcrdig)
+Digest pSB1A2-I13521                  (EcoRI/SpeI, 2062+946, L, vectdig)
+Ligate pcrdig and vectdig             (pSB1A2-Bca9128)
+-----------------------------------------
+>ca1067F  Forward Biobricking of KanR of pSB1AK3
+ccagtGAATTCgtccTCTAGAgagctgatccttcaactc
+>ca1067R  Reverse Biobricking of KanR of pSB1AK3
+gcagtACTAGTtccgtcaagtcagcgtaatg
+    </pre>
+
+
+</div>

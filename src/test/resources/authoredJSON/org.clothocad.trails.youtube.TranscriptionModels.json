@@ -1,6 +1,6 @@
 {
   "name" : "Transcription Models",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.TranscriptionModels",
   "about" : {
     "help" : "Transcription Models was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/25/2013.",
@@ -12,11 +12,17 @@
   "created" : 1380142088000,
   "youtubePlaylistId" : "PL2aPXzks-TgO0k9PhT__NSh2x6HNimaOy",
   "icon" : "https://i1.ytimg.com/vi/Can0Rfq_vdM/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Transcription Models.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Constitutive Promoters",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Relative Promoter Units",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "Promoters as 'Parts'",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Why transcriptional control?",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

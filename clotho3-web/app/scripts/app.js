@@ -8,12 +8,27 @@ angular.module('clotho.fullPackage', [
 	//additional webapp modules
 	'clotho.editor',
 	'clotho.interface',
-	'clotho.trails'
+	'clotho.trails',
+	'clotho.dna',         //in here temporarily until server can handle all this
+	'clotho.construction'
 ]);
 
 //web application set up
 angular.module('clothoRoot', ['clotho.fullPackage'])
-.config(function ($routeProvider) {
+.config(function ($routeProvider, $locationProvider) {
+
+	/*
+	simulate legacy browser not supporting pushstate (add $provide to DI clause above)
+	$provide.decorator('$sniffer', function($delegate) {
+		$delegate.history = false;
+		return $delegate;
+	});
+	*/
+
+	$locationProvider
+		.html5Mode(false)
+		.hashPrefix('!');
+
 	$routeProvider
 	.when('/', {
 		templateUrl: 'views/home.html',
@@ -89,13 +104,15 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'TrailCtrl',
 		reloadOnSearch: false,
 		resolve : {
-			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
+			trail : ['Clotho', '$q', '$http', '$route', '$location', 'Trails', function (Clotho, $q, $http, $route, $location, Trails) {
 				var deferred = $q.defer();
 				Clotho.get($route.current.params.id).then(function(result) {
 					Trails.compile(result).then(function (compiled) {
 						$route.current.$$route.title = result.name;
 						deferred.resolve(compiled);
 					});
+				}, function () {
+					$location.path('/trails')
 				});
 				return deferred.promise;
 			}]
@@ -122,11 +139,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  controller: 'WidgetsCtrl'
 	})
 
-
-.when('/test/tokenizer', {
-  templateUrl: 'views/test/tokenizer.html',
-  controller: 'TestTokenizerCtrl'
-})
 .when('/test/schemaview', {
   templateUrl: 'views/test/schemaview.html',
   controller: 'TestSchemaviewCtrl',
@@ -147,7 +159,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 					deferred.resolve(compiled);
 				});
 			}, function trailGetRejection () {
-				$http.get('models/bb99191e810c19729de860fe.json').then(function(data) {
+				$http.get('models/org.clothocad.trails.LearningClotho.json').then(function(data) {
 					Trails.compile(data.data).then(function (compiled) {
 						deferred.resolve(compiled);
 					});
@@ -161,10 +173,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/trail-browser.html',
   controller: 'TestTrailBrowserCtrl'
 })
-.when('/test/trail-overview', {
-  templateUrl: 'views/test/trail-overview.html',
-  controller: 'TestTrailOverviewCtrl'
-})
 .when('/test/playlistimport', {
   templateUrl: 'views/test/playlistimport.html',
   controller: 'TestPlaylistimportCtrl'
@@ -176,6 +184,29 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 .when('/test/trail-splash', {
   templateUrl: 'views/test/trail-splash.html',
   controller: 'TestTrailSplashCtrl'
+})
+.when('/test/construction', {
+  templateUrl: 'views/test/construction.html',
+  controller: 'TestConstructionCtrl'
+})
+.when('/test/contstructionTrail', {
+  templateUrl: 'views/test/contstructiontrail.html',
+  controller: 'TestContstructiontrailCtrl',
+	resolve : {
+		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
+			var deferred = $q.defer();
+				$http.get('models/org.clothocad.trails.constructionFiles.json').then(function(data) {
+					Trails.compile(data.data).then(function (compiled) {
+						deferred.resolve(compiled);
+					});
+			});
+			return deferred.promise;
+		}]
+	}
+})
+.when('/test/focus', {
+  templateUrl: 'views/test/focus.html',
+  controller: 'TestFocusCtrl'
 })
 	.otherwise({
 		redirectTo:'/'

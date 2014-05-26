@@ -1,6 +1,6 @@
 {
   "name" : "Eukaryotic Devices",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.EukaryoticDevices",
   "about" : {
     "help" : "Eukaryotic Devices was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
@@ -12,11 +12,17 @@
   "created" : 1382464120000,
   "youtubePlaylistId" : "PL2aPXzks-TgNwbIY4SU7Wd1RObYSllKqv",
   "icon" : "https://i1.ytimg.com/vi/WRh0Z5bb2HY/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Eukaryotic Devices.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Eukaryotic Devices",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Enabling Multicellularity",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "IV 10 5 Chemotaxis",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Eukaryotic Gene Structure",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +74,7 @@
       } ]
     }, {
       "title" : "Sensing and Transduction",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

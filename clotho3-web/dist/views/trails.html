@@ -19,7 +19,7 @@
             </div>
 
             <article class="well clearfix" style="padding: 0 " ng-repeat="trail in trails | filter:{name:searchText} | limitTo:10">
-                <a class="pull-left" ng-href="#/trails/{{trail.id}}" style="padding-right: 10px;">
+                <a class="pull-left" ng-href="/trails/{{trail.id}}" style="padding-right: 10px;">
                     <img class="media-object" alt="64x64" style="width: 64px; height: 64px;" ng-src="{{trail.icon}}">
                 </a>
                 <div style="padding: 0 8px;">

@@ -36,7 +36,7 @@ function generateClothoAPI() {
 
 		//note that angular.toJson will strip $-prefixed keys, so should be avoided
     fn.send = function(pkg) {
-        Socket.send(angular.toJson(pkg));
+        Socket.send(JSON.stringify(pkg));
     };
     fn.pack = function(channel, data, requestId, options) {
         return {
@@ -180,38 +180,46 @@ function generateClothoAPI() {
     var get = function clothoAPI_get(uuid, options, synchronous) {
 
         //default to false (return promise)
-        synchronous = angular.isDefined(synchronous) ? !!synchronous : false;
+        //synchronous = angular.isDefined(synchronous) ? !!synchronous : false;
+        //return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
 
-        return synchronous ? get_sync(uuid, options) : get_async(uuid, options);
+	      return get_async(uuid, options);
     };
 
-    var get_async = function clothoAPI_get_async(uuid, options) {
+	var get_async = function clothoAPI_get_async(uuid, options) {
 
-		    if (angular.isUndefined(uuid)) {
-			    return createRejectedPromise();
-		    }
+		if (angular.isUndefined(uuid)) {
+			return createRejectedPromise();
+		}
 
-	      /*
-	      //check collector
-	      var retrieved = Collector.retrieveModel(uuid);
+		/*
+		note - in order to use the collector, we need a fresh localStorage, since changes made between sessions are not captured
+		currently, we just wipe local storage whenever a new tab is opened.
 
-	      if (!!retrieved) {
-	          var deferred = $q.defer();
-	          deferred.resolve(retrieved);
-	          return deferred.promise;
-	      } else {
-	          var callback = function(data) {
-	              Collector.storeModel(uuid, data);
-	          };
+		todo - better collector handling - a few options:
+		- wipe on first instance, check for existing instances (other tabs) before wiping
+		- check which objects have been loaded in this session and allow those (assuming we have watches for updates, otherwise go to server)
+		*/
 
-	          return fn.emitSubCallback('get', uuid, callback, options);
-	      }
-        */
+		//check collector
+		var retrieved = Collector.retrieveModel(uuid);
 
-	    //bypass collector so don't get a stale model
-	    //todo - reintegrate collector in a way that makes sense. Probably need to check which objects have been loaded in this session and allow those (assuming we have watches for updates, otherwise go to server)
-	    return fn.emitSubOnce('get', uuid, options);
-    };
+		//returns false if not present, so do not only check if empty
+		if (!!retrieved) {
+			var deferred = $q.defer();
+			deferred.resolve(retrieved);
+			return deferred.promise;
+		} else {
+			var callback = function (data) {
+				Collector.storeModel(uuid, data);
+			};
+
+			return fn.emitSubCallback('get', uuid, callback, options);
+		}
+
+		//bypass collector so don't get a stale model
+		//return fn.emitSubOnce('get', uuid, options);
+	};
 
     var get_sync = function clothoAPI_get_sync(uuid, options) {
 
@@ -489,7 +497,7 @@ function generateClothoAPI() {
      *
      */
     var edit = function clothoAPI_edit(uuid) {
-        $location.path("/editor?id=" + uuid);
+      $location.path("/editor").search('id', uuid);
     };
 
     /**
@@ -718,7 +726,7 @@ function generateClothoAPI() {
      * start a trail with a given uuid
      */
     var startTrail = function clothoAPI_startTrail(uuid) {
-      $location.path("/trails?id=" + uuid);
+      $location.path("/trails").search('id', uuid);
     };
 
     return {
@@ -755,7 +763,10 @@ function generateClothoAPI() {
         on : on,
         once : once,
         off : off,
-        share : share
+        share : share,
+
+	      //misc
+	      startTrail : startTrail
 
     }
 

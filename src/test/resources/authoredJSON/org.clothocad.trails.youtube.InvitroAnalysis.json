@@ -1,6 +1,6 @@
 {
   "name" : "In vitro Analysis",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.InvitroAnalysis",
   "about" : {
     "help" : "In vitro Analysis was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/7/2014.",
@@ -12,11 +12,17 @@
   "created" : 1396884895000,
   "youtubePlaylistId" : "PL2aPXzks-TgNlrgM8BK3jD_aiyjoXOsRI",
   "icon" : "https://i1.ytimg.com/vi/EheWQRLvLWU/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/In-vitro-assays.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "in vitro Characterization",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Protein Purification",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "Enzymatic Assays",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Binding Assays",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +74,7 @@
       } ]
     }, {
       "title" : "Product Studies",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

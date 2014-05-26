@@ -1,6 +1,6 @@
 {
   "name" : "Stochastic modeling",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.Stochasticmodeling",
   "about" : {
     "help" : "Stochastic modeling was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
@@ -12,11 +12,17 @@
   "created" : 1382463386000,
   "youtubePlaylistId" : "PL2aPXzks-TgP0KMKfq4-fQPKClxvkYwWd",
   "icon" : "https://i1.ytimg.com/vi/46ruoTTLL5g/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Stochastic modeling.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Gillespie Algorithm",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Stochastic models of translation",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

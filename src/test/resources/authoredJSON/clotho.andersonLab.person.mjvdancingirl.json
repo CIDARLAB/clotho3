@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Madhvi",
+  "nickName" : "Madhvi",
+  "surName" : "Venkatesh",
+  "name" : "mjvdancingirl",
+  "emailAddress" : "mjvdancingirl@gmail.com",
+  "icon" : "madhviVentakesh.png",
+  "imgUrl" : "",
+  "startDate" : "2007-06-01",
+  "endDate" : "2008-06-01",
+  "currentLocation" : "Graduate Student at NIH",
+  "current" : false,
+  "dateCreated" : "2007-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.mjvdancingirl"
+}

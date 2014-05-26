@@ -1,0 +1,8 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "name" : "py_die_run",
+  "id" : "org.andersonlab.py_die_run",
+  "description" : "kelvin test",
+  "code" : "def run(): raise Exception('good-bye, cruel world')"
+}

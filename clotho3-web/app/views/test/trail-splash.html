@@ -19,7 +19,7 @@
           <div class="topic-contents list-group-item"
                ng-repeat="trail in topic.trails"
                ng-mouseenter="highlight(trail, $event)"
-               ng-click="startTrail(trail)"
+               ng-click="startTrail(trail.id)"
                ng-class="{'active' : highlighted == trail}">
             <div class="trail-thumbnail">{{trail.icon}}</div>
             <div class="trail-overview">
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="trail-highlight-wrap">
-      <div class="trail-highlight" ng-style="highlightStyle">
+      <div class="trail-highlight" simple-sticky>
         <div class="shadowBackground highlightPlaceholder" ng-if="!selected">
           <h3>Select a trail</h3>
         </div>

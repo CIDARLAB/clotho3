@@ -1,0 +1,24 @@
+{
+  "id" : "526aec6144ae288aa0ce3ae5",
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "binaryName" : "org.clothocad.model.Collection",
+  "c" : "org.clothocad.model.Collection",
+  "name" : "Collection",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "org.clothocad.model.Person",
+    "name" : "author",
+    "type" : "Person",
+    "reference" : true
+  }, {
+    "javaType" : "java.util.List",
+    "name" : "items",
+    "type" : "array",
+    "reference" : true
+  }, {
+    "javaType" : "java.lang.String",
+    "name" : "description",
+    "type" : "string",
+    "reference" : false
+  } ]
+}

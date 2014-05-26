@@ -6,6 +6,7 @@
   $borderWidth-trailHeader : 1px;
 
   border: $borderWidth-trailHeader solid $borderColor-trail;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   padding: 0;
   overflow: hidden;
@@ -34,9 +35,8 @@
   }
 
   .trail-info {
-
+    margin-right: 30px; //compensate for absolute positioning
     display: block;
-    width: 100%;
     padding: 10px 0;
     position: absolute;
     bottom: 0;

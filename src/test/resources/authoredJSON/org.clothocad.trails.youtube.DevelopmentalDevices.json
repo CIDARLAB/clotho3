@@ -1,6 +1,6 @@
 {
   "name" : "Developmental Devices",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.DevelopmentalDevices",
   "about" : {
     "help" : "Developmental Devices was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
@@ -12,11 +12,17 @@
   "created" : 1382464137000,
   "youtubePlaylistId" : "PL2aPXzks-TgPagNtoxbU5Kqt1aZCm1ORd",
   "icon" : "https://i1.ytimg.com/vi/SpiNIt5o7eU/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Developmental Devices.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "miRNA Logic Gates",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Scaffolding of Kinase Cascades",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "Tissue Specific Expression",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Targeting Developmental Phases",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

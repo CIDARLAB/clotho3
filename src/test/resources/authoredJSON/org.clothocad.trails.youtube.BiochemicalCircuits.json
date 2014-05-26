@@ -1,6 +1,6 @@
 {
   "name" : "Biochemical Circuits",
-  "schema" : "Trail",
+  "schema" : "org.clothocad.model.Trail",
   "id" : "org.clothocad.trails.youtube.BiochemicalCircuits",
   "about" : {
     "help" : "Biochemical Circuits was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/21/2013.",
@@ -12,11 +12,17 @@
   "created" : 1382394382000,
   "youtubePlaylistId" : "PL2aPXzks-TgNK702CfJaz-gTfRtv34sNt",
   "icon" : "https://i1.ytimg.com/vi/u-_cC26aypk/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Biochemical Circuits.pptx"
+  } ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Biochemical Circuits",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -29,7 +35,7 @@
       } ]
     }, {
       "title" : "Sensors,  Processors, and Actuators",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -42,7 +48,7 @@
       } ]
     }, {
       "title" : "Threshold Gating",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -55,7 +61,7 @@
       } ]
     }, {
       "title" : "Split Components",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",
@@ -68,7 +74,7 @@
       } ]
     }, {
       "title" : "Transfer Functions",
-      "schema" : "Trail",
+      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

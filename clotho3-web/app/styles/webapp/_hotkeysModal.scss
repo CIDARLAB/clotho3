@@ -1,0 +1,36 @@
+.hotkeyModal {
+  display: block;
+  z-index: -1000;
+
+  &.in {
+    background: rgba(0,0,0,0.5);
+    z-index: 1100;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .hotkey-keys {
+    padding: 5px;
+    text-align: right;
+  }
+
+  .hotkey-key {
+    display: inline-block;
+    color: #fff;
+    background-color: #333;
+    border: 1px solid #333;
+    border-radius: 5px;
+    text-align: center;
+    margin-right: 5px;
+    box-shadow: inset 0 1px 0 #666, 0 1px 0 #bbb;
+    padding: 5px 9px;
+    font-size: 1em;
+  }
+
+  .hotkey-text {
+    padding-left: 10px;
+    font-size: 1em;
+  }
+}

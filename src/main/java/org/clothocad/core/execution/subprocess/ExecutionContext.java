@@ -2,7 +2,6 @@ package org.clothocad.core.execution.subprocess;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +31,10 @@ class ExecutionContext {
      * Returns the return value from the function execution
      */
     Object
-    start(final Path tmpfile, final String code, final List<Object> args) {
+    start(final String code, final List<Object> args) {
         /* send function_init message */
         final Map<String, Object> value = new HashMap<>();
         value.put("type", "func");
-        value.put("tmpfile", tmpfile.toString());
         value.put("code", code);
         value.put("args", args);
         writer.sendValue(value);

@@ -95,6 +95,13 @@ angular.module('clotho.clothoDirectives')
 						// Calculate the popup's top and left coordinates to center it with
 						// this directive.
 						switch (scope.popup_placement) {
+							//e.g. in command bar
+							case 'topRight':
+								popupPosition = {
+									top: position.top + position.height / 2 - 55,
+									left: position.left + position.width
+								};
+								break;
 							case 'right':
 								popupPosition = {
 									top: position.top + position.height / 2 - popupHeight / 2,
@@ -119,6 +126,7 @@ angular.module('clotho.clothoDirectives')
 									left: position.left + position.width / 2 - popupWidth / 2
 								};
 								break;
+							//display just under
 							default :
 							{
 								popupPosition = {
@@ -131,6 +139,9 @@ angular.module('clotho.clothoDirectives')
 
 						popupPosition.top += 'px';
 						popupPosition.left += 'px';
+
+						//check the topRight class, add right if current
+						popup.toggleClass('right', scope.popup_placement == 'topRight');
 
 						// Now set the calculated positioning.
 						popup.css(popupPosition);
@@ -247,7 +258,7 @@ angular.module('clotho.clothoDirectives')
 					});
 
 					attrs.$observe(prefix + 'Placement', function (val) {
-						scope.popup_placement = angular.isDefined(val) ? val : '';
+						scope.popup_placement = angular.isDefined(val) ? val : 'topRight';
 					});
 
 					var unregisterTriggers = function () {
@@ -303,7 +314,10 @@ angular.module('clotho.clothoDirectives')
 			}
 		}
 	})
-	.directive('sharablePopupInner', function (Clotho, ClothoSchemas) {
+	.directive('sharablePopupInner', function (Clotho, ClothoSchemas, $injector) {
+		
+		var editorPresent = $injector.has('clothoEditorDirective');
+		
 		return {
 			restrict: 'EA',
 			replace: true,
@@ -326,7 +340,7 @@ angular.module('clotho.clothoDirectives')
 					if (ClothoSchemas.isSchema(model)) {
 						scope.isSchema = true;
 						//must have a proper schema to download schema dependencies
-						Clotho.get(model.id)
+						Clotho.get(model.id, {mute: true})
 						.then(function (fullModel) {
 							ClothoSchemas.downloadSchemaDependencies(fullModel)
 							.then(function (finalSchema) {
@@ -336,6 +350,8 @@ angular.module('clotho.clothoDirectives')
 
 					}
 				}
+
+				scope.editorPresent = editorPresent;
 
 				scope.$watch('sharableModel', function ( val, oldval ) {
 					if (!!val) {
@@ -361,6 +377,8 @@ angular.module('clotho.clothoDirectives')
 					scope.showingSchema = !scope.showingSchema;
 					scope.reposition();
 				};
+
+				scope.edit = Clotho.edit;
 
 				scope.$on('$destroy', function () {
 				})

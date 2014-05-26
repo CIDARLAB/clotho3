@@ -24,15 +24,17 @@
  *
  * Assuming `$scope.myModel = 'HEY THERE';`
  *
- * `<p clotho-run="lowercase" ng-model="myModel"></p>`
+ * `<p clotho-run="lowercase" ng-model="myModel" clotho-run-update="updateMe"></p>`
  *
  * will output
  *
  * `<p clotho-run="lowercase" ng-model="myModel">hey there</p>`
  *
+ * and update the model updateMe to 'hey there' as well
+ *
  */
 angular.module('clotho.clothoDirectives')
-.directive('clothoRun', function(Clotho) {
+.directive('clothoRun', function(Clotho, $parse) {
 
 	var inputsVal = {input: true, textarea : true, select: true};
 
@@ -48,7 +50,8 @@ angular.module('clotho.clothoDirectives')
 				//avoid flicker
 				ngModel.$render = angular.noop;
 			}
-			var updateParent = false;
+
+			var updateModel = $parse(attrs.clothoRunUpdate);
 
 			//command, args
 			scope.$watch(function() {
@@ -66,18 +69,8 @@ angular.module('clotho.clothoDirectives')
 				runFunction(newval);
 			});
 
-			//update model?
-			scope.$watch(function() {
-				return attrs.clothoRunUpdateModel
-			}, function(newval, oldval) {
-				updateParent = !!newval;
-			});
-
 			function updateParentModel (newModel) {
-				if (updateParent) {
-					//todo - make sure passes up to $parent
-					ngModel.$setViewValue(newModel);
-				}
+				angular.isDefined(updateModel.assign) && updateModel.assign(scope, newModel);
 			}
 
 			function updateElement (newval) {

@@ -26,16 +26,20 @@ angular.module('clotho.tokenizer')
 		//time to wait before initiating typeahead request
 		var waitTime = 0;
 
-		//todo - easy method to submit (not requiring passage of scope.query)
-
-		//todo - add attributes (spellcheck, autocapitalize, etc. if necessary)
-
-		//todo - allow tie-in of query to model via ngModel
+		//todo - allow tie-in of query to model via ngModel, and allow programmatic input
 
 		return {
 			restrict: 'A',
 			require : '?ngModel',
 			link: function clothoAutocompleteLink(scope, element, attrs, ngModelCtrl) {
+
+				//add attributes to text area
+				element.attr({
+					autocomplete : "off",
+					autocorrect : "off",
+					autocapitalize : "off",
+					spellcheck : "false"
+				});
 
 				var initialQuoteRegexp = /^['"].*/;
 
@@ -70,6 +74,10 @@ angular.module('clotho.tokenizer')
 					scope.$digest();
 				}
 
+				function checkInQuote (query) {
+					return initialQuoteRegexp.test(query.charAt(0));
+				}
+
 				// get Clotho.autocompletions and update results
 				// checks for intiial quote, will not autocomplete empty
 				var getAutocompletions = function (inputValue) {
@@ -83,8 +91,6 @@ angular.module('clotho.tokenizer')
 					if (inputValue.length === 0) {
 						return;
 					}
-
-					var locals = {$viewValue: inputValue};
 
 					//todo - pending #248 use API option
 					Clotho.autocomplete(inputValue).then(function (results) {
@@ -111,7 +117,14 @@ angular.module('clotho.tokenizer')
 						scope.hasFocus = true;
 						scope.tokenCollection.unsetActive();
 
-						//todo - don't cancel previous until launch new
+						console.log(newval);
+
+						//todo - abstract this
+						if (newval.charAt(newval.length - 1) == tokenDelimiterValue && !checkInQuote(newval)) {
+							scope.select();
+							return;
+						}
+
 						if (waitTime > 0) {
 							if (timeoutPromise) {
 								$timeout.cancel(timeoutPromise);//cancel previous timeout
@@ -127,6 +140,21 @@ angular.module('clotho.tokenizer')
 					}
 				});
 
+				scope.setQueryString = function (string) {
+
+					string = angular.isUndefined(string) ? scope.query : string;
+
+					//reset
+					resetQuery();
+					resetMatches();
+					scope.tokenCollection.removeAll();
+
+					angular.forEach(string.split(tokenDelimiterValue), function (token) {
+						//want to call parent's add token so updates completeQuery as well
+						scope.addToken(token);
+					});
+				};
+
 				scope.select = function (activeIdx) {
 
 					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : scope.query;
@@ -138,12 +166,14 @@ angular.module('clotho.tokenizer')
 						});
 					}
 
-					resetMatches();
 					resetQuery();
 
 					//return focus to the input element if a match was selected via a mouse click event
+					//need scope to update whether focused
 					// use timeout to avoid $rootScope:inprog error
 					$timeout(function() {
+						//reset matches in here so dropdown is within element (for click listener)
+						resetMatches();
 						element[0].focus();
 					}, 0, false);
 				};
@@ -154,14 +184,18 @@ angular.module('clotho.tokenizer')
 					//keep delimiter out of HOT_KEYS check because space is a weird default hotkey
 					//if type space and not in quote, and only 1 result, will choose it (enter will not)
 					if (evt.which === tokenDelimiterCode) {
+						//if there's no query, or it's just a space, set it to empty and let default be prevented
+						if (scope.query == '') {
+							evt.preventDefault();
+						}
 						//if first letter is quote, don't end the token
-						if ( ! (initialQuoteRegexp.test(scope.query.charAt(0))) ) {
+						else if ( ! checkInQuote(scope.query) ) {
 							scope.$apply(function () {
 								//if there is one result, select it otherwise null (token is query)
 								scope.select(scope.autocompletions.length == 1 ? 0 : -1);
 							});
-							//return so space is not prevented
-							return;
+							//space is prevented and placeholder shown again
+							evt.preventDefault();
 						}
 					}
 
@@ -243,19 +277,17 @@ angular.module('clotho.tokenizer')
 								scope.submit();
 							});
 						}
+						scope.$digest();
 					}
 					//escape
 					else if (evt.which === 27) {
-						resetMatches();
-						scope.tokenCollection.unsetActive();
-						scope.$digest();
-
-						//if there is no query, blur
-						if (scope.query.length) {
-							evt.stopPropagation();
-						} else {
-							scope.hasFocus = false;
+						//if no query or autcomplete not currently open, blur
+						if (!scope.query.length || !scope.autocompletions.length) {
 							element.blur();
+							resetActive();
+						} else {
+							resetMatches();
+							scope.tokenCollection.unsetActive();
 							scope.$digest();
 						}
 					}
@@ -278,15 +310,7 @@ angular.module('clotho.tokenizer')
 					//don't want to prevent the event if we're getting it next event loop
 					//evt.preventDefault();
 
-					//get the value, split into tokens and save, reset query
-					$timeout(function () {
-						angular.forEach(scope.query.split(tokenDelimiterValue), function (token) {
-							//want to call parent's add token so updates completeQuery as well
-							scope.addToken(token);
-						});
-						resetQuery();
-						resetMatches();
-					});
+					$timeout(scope.setQueryString);
 				});
 
 				scope.$on('$locationChangeSuccess', function () {
@@ -298,7 +322,7 @@ angular.module('clotho.tokenizer')
 					//only trigger if (1) have focus (2) tokens inactive (3) autocomplete inactive
 					if ( scope.hasFocus && !scope.tokenCollection.isActive() && scope.activeIdx < 0 ) {
 						//timeout so can prevent default somewhere else
-						if (!element[0].contains(event.target)) {
+						if (angular.isUndefined(event) || !element[0].contains(event.target)) {
 							$timeout(resetActive);
 						}
 					}
