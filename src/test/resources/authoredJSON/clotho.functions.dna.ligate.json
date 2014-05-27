@@ -1,0 +1,19 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "JAVASCRIPT",
+  "name" : "ligate",
+  "id" : "clotho.functions.dna.ligate",
+  "description" : "Ligate a set of sequences with complementary ends, using NEB style cut marks: caret (^), underscore (_), and pipe (|)",
+  "code" : "function ligate (fragments) {\n var PCR = clotho.load('PCR');\n return PCR.ligate(fragments);\n}",
+  "args" : [ {
+    "type" : "array",
+    "name" : "fragments"
+  } ],
+  "tests" : [ {
+    "args" : [ [ "aaaaaaaaaaA^CATG_", "^CATG_Tttggttggttgg" ] ],
+    "output" : {
+      "value" : "aaaaaaaaaaACATGTttggttggttgg",
+      "type" : ""
+    }
+  } ]
+}

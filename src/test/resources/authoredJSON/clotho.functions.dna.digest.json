@@ -1,0 +1,28 @@
+{
+  "args" : [ {
+    "type" : "string",
+    "name" : "sequence"
+  }, {
+    "type" : "string",
+    "name" : "enzymeName"
+  }, {
+    "type" : "boolean",
+    "name" : "circularize"
+  }, {
+    "type" : "boolean",
+    "name" : "removeMarkings"
+  } ],
+  "code" : "function digest (sequence, enzymeName, circularize, removeMarkings) {\n  //todo - load enzyme either here or in tests?\n  var Digest = clotho.load('Digest');\n  var enzyme = clotho.query({\"name\" : enzymeName})[0];\n  return Digest.digest(sequence, enzyme, circularize, removeMarkings);\n}",
+  "description" : "Performs digest given a marked or unmarked sequence and a single or array of enzymes, return fragments array ordered by length",
+  "language" : "JAVASCRIPT",
+  "name" : "digest",
+  "schema" : "org.clothocad.core.datums.Function",
+  "tests" : [ {
+    "args" : [ "acgatcgaatatGAATTCacgtactgatcga", "EcoRI", false, false ],
+    "output" : {
+      "value" : [ "^aatt_cacgtactgatcga", "acgatcgaatatg^aatt_" ],
+      "type" : ""
+    }
+  } ],
+  "id" : "clotho.functions.dna.digest"
+}

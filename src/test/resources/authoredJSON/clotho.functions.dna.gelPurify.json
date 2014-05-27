@@ -1,0 +1,23 @@
+{
+  "args" : [ {
+    "type" : "array",
+    "name" : "fragments"
+  }, {
+    "type" : "number",
+    "name" : "targetLength"
+  } ],
+  "code" : "function gelPurify (fragments, targetLength) {\n\tvar Digest = clotho.load('Digest');\n  \treturn Digest.gelPurify.apply(null, arguments);\n}",
+  "dependencies" : [ "Digest" ],
+  "description" : "Simulate gel purification, selecting a fragment from an array by target length",
+  "language" : "JAVASCRIPT",
+  "name" : "gelPurify",
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "clotho.functions.dna.gelPurify",
+  "tests" : [ {
+    "args" : [ [ "^aatt_ccctaactaactaaagattaactttataaggaggaaaaacatatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaata^agct_", "gagctcg^aatt_", "^agct_taattag" ], 812 ],
+    "output" : {
+      "value" : "^aatt_ccctaactaactaaagattaactttataaggaggaaaaacatatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaata^agct_",
+      "type" : ""
+    }
+  } ]
+}
