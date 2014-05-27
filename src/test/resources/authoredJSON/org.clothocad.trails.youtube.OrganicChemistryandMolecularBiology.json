@@ -12,12 +12,7 @@
   "created" : 1390413041000,
   "youtubePlaylistId" : "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ",
   "icon" : "https://i1.ytimg.com/vi/DywiuCuDbtY/sddefault.jpg",
-  "materials" : [ {
-    "name" : "Accompanying Slides",
-    "icon" : "slides",
-    "type" : "slides",
-    "path" : "partials/trails/youtubeClotho/Basics of OOP and Organic Chemistry.pptx"
-  } ],
+  "materials" : [],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
@@ -39,18 +34,6 @@
         "type" : "video",
         "params" : {
           "id" : "gKHO0HHPsXg"
-        }
-      } ]
-    }, {
-      "title" : "Formal Descriptions of Chemical Structure",
-      "icon" : "video",
-      "contents" : [ {
-        "type" : "text",
-        "params" : "In this section, we will build up data structures to describe the state of a biological system. At any given time, you can think of a cell has being a complex data structure ultimately composed of atoms. There are changes in state of these atoms in terms of their position constantly occurring that is the mechanistic underpinning of the dynamic behavior observed in biological systems."
-        }, {
-        "type" : "video",
-        "params" : {
-          "id" : "KcVtlCwa4OM"
         }
       } ]
     } ]

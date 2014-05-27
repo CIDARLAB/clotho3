@@ -22,6 +22,10 @@ angular.module('clotho.trails')
 					{
 						"title": "Organic Chemistry and Molecular Biology",
 						"id": "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology"
+					},
+					{
+						"title" : "Basics of OOP and Organic Chemistry",
+						"id" : "org.clothocad.trails.youtube.BasicsofOOPandOrganicChemistry"
 					}
 				]
 			},
