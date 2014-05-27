@@ -104,8 +104,8 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 
 					scope.createPageComponent = function() {
 						//console.log('creating component (' +  scope.componentType + ')', scope.componentParams);
-						return loadPageComponent(scope.componentParams, scope.componentType).then(function (result) {
-							return $q.when(element.html($compile(result)(scope)));
+						loadPageComponent(scope.componentParams, scope.componentType).then(function (result) {
+							element.html($compile(result)(scope));
 						});
 					};
 				},

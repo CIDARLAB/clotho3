@@ -39,8 +39,8 @@
         </div>
         <img ng-src="{{selected.icon}}"
              class="shadowBackground"
-             ng-click="startTrail(selected)">
-        <div trail-contents="selected"></div>
+             ng-click="startTrail(selected.id)">
+        <div trail-contents="selected" activate="startTrailPage(selected.id, $position)"></div>
       </div>
     </div>
   </div>

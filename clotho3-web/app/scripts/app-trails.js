@@ -30,7 +30,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 
 		$routeProvider
 			.when('/', {
-				templateUrl: 'views/test/trail-splash.html',
+				templateUrl: '../views/test/trail-splash.html',
 				controller: 'TestTrailSplashCtrl',
 				title: 'Home',
 				hotkeys: [
@@ -46,11 +46,14 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 				controller: 'TeamCtrl'
 			})
 			.when('/trail', {
-				templateUrl: 'views/test/trail.html',
+				templateUrl: '../views/trail.html',
 				controller: 'TestTrailCtrl',
 				reloadOnSearch: false,
 				resolve: {
 					trail: ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
+						if (angular.isUndefined($route.current.params.id)) {
+							return $q.when(null);
+						}
 						var deferred = $q.defer();
 						Clotho.get($route.current.params.id).then(function (result) {
 							Trails.compile(result).then(function (compiled) {

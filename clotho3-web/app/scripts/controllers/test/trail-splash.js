@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.trails')
-	.controller('TestTrailSplashCtrl', function ($scope, Clotho, Youtube) {
+	.controller('TestTrailSplashCtrl', function ($scope, $location, Clotho) {
 		$scope.topics = [
 			{
 				"title": "Introducing Clotho",
@@ -22,6 +22,10 @@ angular.module('clotho.trails')
 					{
 						"title": "Organic Chemistry and Molecular Biology",
 						"id": "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology"
+					},
+					{
+						"title" : "Basics of OOP and Organic Chemistry",
+						"id" : "org.clothocad.trails.youtube.BasicsofOOPandOrganicChemistry"
 					}
 				]
 			},
@@ -224,7 +228,15 @@ angular.module('clotho.trails')
 		};
 		*/
 
-		$scope.startTrail = Clotho.startTrail;
+		$scope.startTrail = function (id) {
+			console.log(id);
+			Clotho.startTrail(id);
+		};
+
+		$scope.startTrailPage = function (id, pos) {
+			$location.search('position', pos);
+			Clotho.startTrail(id);
+		};
 
 		$scope.highlight = function (trail, evt) {
 			//highlight is trail in object above, selected is the actual trail

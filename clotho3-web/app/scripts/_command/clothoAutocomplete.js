@@ -11,6 +11,11 @@ angular.module('clotho.tokenizer')
     token-collection="tokenCollection"
     autocomplete-on-select="addToken($item, $query)">
 
+ todo - make token-collection unnecessary
+ todo - do not rely on ngModel being query
+ todo - pass in popup position
+ todo - isolate scope
+
  ngModel is not necessary
  */
 	.directive('clothoAutocomplete', function (Clotho, $q, $parse, $timeout, $compile, $filter, $document) {
@@ -25,8 +30,6 @@ angular.module('clotho.tokenizer')
 
 		//time to wait before initiating typeahead request
 		var waitTime = 0;
-
-		//todo - allow tie-in of query to model via ngModel, and allow programmatic input
 
 		return {
 			restrict: 'A',
@@ -70,7 +73,7 @@ angular.module('clotho.tokenizer')
 					resetQuery();
 					resetMatches();
 					scope.hasFocus = false;
-					scope.tokenCollection.unsetActive();
+					angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
 					scope.$digest();
 				}
 
@@ -115,15 +118,17 @@ angular.module('clotho.tokenizer')
 				scope.$watch('query', function (newval, oldval) {
 					if (!!newval && newval.length) {
 						scope.hasFocus = true;
-						scope.tokenCollection.unsetActive();
+						angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
 
-						console.log(newval);
-
-						//todo - abstract this
+						/*
+						//note - check if query value last char is space (blocked for user input) and select if is
+						//relevant when typing out programmatically
 						if (newval.charAt(newval.length - 1) == tokenDelimiterValue && !checkInQuote(newval)) {
+							console.log('last char is space');
 							scope.select();
 							return;
 						}
+						*/
 
 						if (waitTime > 0) {
 							if (timeoutPromise) {
@@ -147,11 +152,11 @@ angular.module('clotho.tokenizer')
 					//reset
 					resetQuery();
 					resetMatches();
-					scope.tokenCollection.removeAll();
+					angular.isDefined(scope.tokenCollection) && scope.tokenCollection.removeAll();
 
 					angular.forEach(string.split(tokenDelimiterValue), function (token) {
 						//want to call parent's add token so updates completeQuery as well
-						scope.addToken(token);
+						token.length && scope.addToken(token);
 					});
 				};
 
@@ -210,7 +215,7 @@ angular.module('clotho.tokenizer')
 							//return to handle deleting single letter or highlighted text
 							return;
 						} else {
-							if (scope.tokenCollection) {
+							if (angular.isDefined(scope.tokenCollection)) {
 								if (scope.tokenCollection.isActive()) {
 									var previousActive = scope.tokenCollection.whichActive();
 									scope.tokenCollection.removeActiveToken();
@@ -238,7 +243,7 @@ angular.module('clotho.tokenizer')
 					}
 					//left
 					else if (evt.which === 37) {
-						if (scope.tokenCollection.isActive()) {
+						if (angular.isDefined(scope.tokenCollection) && scope.tokenCollection.isActive()) {
 							scope.tokenCollection.setPrevActive();
 							scope.$digest();
 						} else {
@@ -247,7 +252,7 @@ angular.module('clotho.tokenizer')
 					}
 					//right
 					else if (evt.which === 39) {
-						if (scope.tokenCollection.isActive()) {
+						if (angular.isDefined(scope.tokenCollection) && scope.tokenCollection.isActive()) {
 							if ( scope.tokenCollection.isLastActive() ) {
 								scope.tokenCollection.unsetActive();
 							} else {
@@ -287,7 +292,7 @@ angular.module('clotho.tokenizer')
 							resetActive();
 						} else {
 							resetMatches();
-							scope.tokenCollection.unsetActive();
+							angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
 							scope.$digest();
 						}
 					}
@@ -320,7 +325,7 @@ angular.module('clotho.tokenizer')
 
 				function clothoAutocompleteBlurHandler (event) {
 					//only trigger if (1) have focus (2) tokens inactive (3) autocomplete inactive
-					if ( scope.hasFocus && !scope.tokenCollection.isActive() && scope.activeIdx < 0 ) {
+					if ( scope.hasFocus && (angular.isUndefined(scope.tokenCollection) || !scope.tokenCollection.isActive()) && scope.activeIdx < 0 ) {
 						//timeout so can prevent default somewhere else
 						if (angular.isUndefined(event) || !element[0].contains(event.target)) {
 							$timeout(resetActive);

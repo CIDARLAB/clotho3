@@ -12,27 +12,20 @@
   "created" : 1390413041000,
   "youtubePlaylistId" : "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ",
   "icon" : "https://i1.ytimg.com/vi/DywiuCuDbtY/sddefault.jpg",
-  "materials" : [ {
-    "name" : "Accompanying Slides",
-    "icon" : "slides",
-    "type" : "slides",
-    "path" : "partials/trails/youtubeClotho/Basics of OOP and Organic Chemistry.pptx"
-  } ],
+  "materials" : [],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {
       "title" : "Essentials Concepts of Organic Chemistry",
-      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "video",
         "params" : {
-          "id" : "DywiuCuDbtY"
+          "id" : "TBeWEfhmK1U"
         }
       } ]
     }, {
       "title" : "DNA structure and the Reverse Complement operation",
-      "schema" : "org.clothocad.model.Trail",
       "icon" : "video",
       "contents" : [ {
         "type" : "text",

@@ -1,0 +1,16 @@
+{
+  "description" : "Mina Li is an undergraduate student at University of California, Berkeley studying Computer Science. She joined the team in January 2014.",
+  "current" : true,
+  "currentLocation" : "Berkeley, CA",
+  "emailAddress" : "li.mina888@berkeley.edu",
+  "givenName" : "Mina",
+  "icon" : "MinaLi.png",
+  "lab" : "Anderson",
+  "name" : "Mina Li",
+  "nickName" : "Mina",
+  "role" : "Programmer",
+  "schema" : "LabPerson",
+  "surName" : "Li",
+  "title" : "Student Research Assistant (Developer)",
+  "id" : "clotho.developer.LiMina"
+}

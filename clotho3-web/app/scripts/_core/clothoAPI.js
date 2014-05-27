@@ -725,8 +725,11 @@ function generateClothoAPI() {
      * @description
      * start a trail with a given uuid
      */
-    var startTrail = function clothoAPI_startTrail(uuid) {
-      $location.path("/trails").search('id', uuid);
+    var startTrail = function clothoAPI_startTrail(uuid, pos) {
+      $location.path("/trail").search('id', uuid);
+	    if (angular.isDefined(pos)) {
+		    $location.search('position', pos);
+	    }
     };
 
     return {
