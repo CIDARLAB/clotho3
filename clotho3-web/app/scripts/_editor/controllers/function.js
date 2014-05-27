@@ -93,6 +93,8 @@ angular.module('clotho.editor')
 			data.args = $scope.sharable.tests[index].args;
 		}
 
+		//fixme - need to resolve arguments which are Clotho objects (they should be IDs)
+
 		Clotho.run(data.id, data.args).then(function onFunctionTestSuccess (result){
 			$scope.testResults[index] = angular.equals(result, $scope.sharable.tests[index].output.value);
 		}, function onFunctionTestError () {
@@ -109,8 +111,6 @@ angular.module('clotho.editor')
 	$scope.resetTests = function() {
 		$scope.testResults = {};
 	};
-
-	//todo - re-parse non-simple tests - interpolate strings to objects so run correctly
 
 	//overwrite save to reset tests and set code pristine
 	$scope.save = function() {

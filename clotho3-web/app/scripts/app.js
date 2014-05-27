@@ -192,7 +192,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/construction.html',
   controller: 'TestConstructionCtrl'
 })
-.when('/test/contstructionTrail', {
+.when('/test/constructionTrail', {
   templateUrl: 'views/test/contstructiontrail.html',
   controller: 'TestContstructiontrailCtrl',
 	resolve : {
