@@ -65,7 +65,7 @@ public class PersistorTest {
     @Test
     public void testSharedObject() {
 
-        LabPerson testPerson = new LabPerson("Test Person", null, null);
+        LabPersonForTests testPerson = new LabPersonForTests("Test Person", null, null);
 
         //class w/ composition
         Part part1 = Part.generateBasic("test part", "This part is a test", "ATCG", new FreeForm(), testPerson);
@@ -101,7 +101,7 @@ public class PersistorTest {
     public void testCircular() {
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
-        LabPerson testPerson = new LabPerson("Test Person", lab, null);
+        LabPersonForTests testPerson = new LabPersonForTests("Test Person", lab, null);
         lab.setPI(testPerson);
 
         saveAndGet(testPerson);
