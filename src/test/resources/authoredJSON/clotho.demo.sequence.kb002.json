@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.kb002",
+  "name" : "kb002",
+  "sequence" : "ccgctTctagAagtgctcagtatc",
+  "description" : "Reverse XbaI to construct Ptet part-making biobrick plasmid"
+}

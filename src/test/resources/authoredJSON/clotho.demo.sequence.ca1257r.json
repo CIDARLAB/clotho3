@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1257r",
+  "name" : "ca1257r",
+  "sequence" : "ggactCTCGAGataacttcgtataatgtatgctatacgaagttatCTGCAGaggacgtcaggtggcac",
+  "description" : "Reverse PCR of Bla with Lox and PstI"
+}

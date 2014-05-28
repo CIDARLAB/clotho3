@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca608r",
+  "name" : "ca608r",
+  "sequence" : "cgtaaCGTCTCgaattcTAGGCTACTCAGCTATCTAG",
+  "description" : "Reverse BsmBI to EcoRI for TetR gene"
+}

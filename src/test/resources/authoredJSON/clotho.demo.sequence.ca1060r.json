@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1060r",
+  "name" : "ca1060r",
+  "sequence" : "ctgagcatcctgtcttgcagc",
+  "description" : "Reverse 20mer prepcr of FMN switch"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca838r",
+  "name" : "ca838r",
+  "sequence" : "cgaaaGGTCTCAgaattcCAAAGGGAAAACTGTCCATACC",
+  "description" : "Reverse BsaI to EcoRI to clone Pbad-Red into pAC708"
+}

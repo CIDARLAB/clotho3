@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca871r",
+  "name" : "ca871r",
+  "sequence" : "GCGAAggatccGATGCAGGTGGCACTTTTC",
+  "description" : "Reverse BamHI oligo for pTS"
+}

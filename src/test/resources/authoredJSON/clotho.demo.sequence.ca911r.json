@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca911r",
+  "name" : "ca911r",
+  "sequence" : "CATAGCGTCTCtCTACCCTCTGATGAGATGG",
+  "description" : "\"Reverse oligo to mutate E54K, M56A\""
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca567f",
+  "name" : "ca567f",
+  "sequence" : "GAGTCGAATTCTTCAGCAATATCACGGGTATC",
+  "description" : "Forward oligo to introduce EcoRI site into KanR"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1291",
+  "name" : "ca1291",
+  "sequence" : "CTACTGTTTCTCCATACCCggatccTCGAGactcg",
+  "description" : "\"Reverse priming site for promoter libraries, use with ca872R\""
+}

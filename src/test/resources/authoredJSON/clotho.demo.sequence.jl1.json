@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jl1",
+  "name" : "jl1",
+  "sequence" : "gacttgaattcgcggccgcttctagagtccaagcgagctcgatatc",
+  "description" : "Forward EcoRI to make spectinomycin resistance biobrick"
+}

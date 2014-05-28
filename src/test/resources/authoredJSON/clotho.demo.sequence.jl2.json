@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jl2",
+  "name" : "jl2",
+  "sequence" : "ccgctactagtCAGCAACGATGTTACGCAGC",
+  "description" : "Reverse SpeI to make spectinomycin resistance biobrick"
+}

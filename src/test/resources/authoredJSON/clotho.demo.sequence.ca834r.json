@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca834r",
+  "name" : "ca834r",
+  "sequence" : "CGATAGGTcACCGCATGGAAAGCAGATGATCG",
+  "description" : "Reverse BstEII oligo for 5' flank"
+}

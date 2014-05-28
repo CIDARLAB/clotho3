@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1043f",
+  "name" : "ca1043f",
+  "sequence" : "GATCAggatccataaagttttattaagg",
+  "description" : "Forward oligo to clone neuS into BamHI"
+}

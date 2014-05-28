@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.rib02",
+  "name" : "rib02",
+  "sequence" : "gtccgACTAGTaaaaaaaaaacccaaaagcaagaggtgattc",
+  "description" : "Address reverse complement"
+}

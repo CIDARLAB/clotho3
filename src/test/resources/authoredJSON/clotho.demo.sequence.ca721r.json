@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca721r",
+  "name" : "ca721r",
+  "sequence" : "CACTGgaattcGTAATGACAGATAATTTTACTC",
+  "description" : "Reverse EcoRI oligo for luxIR"
+}

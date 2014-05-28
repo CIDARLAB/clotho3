@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1132r",
+  "name" : "ca1132r",
+  "sequence" : "ctctgggatccTACTTTACGTTTTTTTTTCGGCGGAGATCTcatgaattccag",
+  "description" : "Reverse construction of N-term NIS signal"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca838f",
+  "name" : "ca838f",
+  "sequence" : "GGAGAGGTCTCGGATCCATATTATTGAAGCATTTATCAG",
+  "description" : "Forward BsaI to BamHI to clone Pbad-Red into pAC708"
+}

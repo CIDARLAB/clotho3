@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca707r",
+  "name" : "ca707r",
+  "sequence" : "cctaaGGTCTCtaattGATTTAATCTGTATCAGGCTG",
+  "description" : "Reverse BsaI to EcoRI to move Pbad"
+}

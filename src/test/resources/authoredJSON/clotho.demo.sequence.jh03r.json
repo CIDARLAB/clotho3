@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jh03r",
+  "name" : "jh03r",
+  "sequence" : "ccagtGGATCCtttgttttcaactttatctttcc",
+  "description" : "Reverse BamHI w/ no STOP codon"
+}

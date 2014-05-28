@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1254r",
+  "name" : "ca1254r",
+  "sequence" : "CACTGcaattgAGATCTgtaagGATCAACCACTTTG",
+  "description" : "Forward MfeI for Gateway recipient vector"
+}

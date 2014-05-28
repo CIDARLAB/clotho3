@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca817r",
+  "name" : "ca817r",
+  "sequence" : "CAGGTGAATTCCAAATCATGCACTTGCCATATTC",
+  "description" : "Reverse oligo with stop for PNA"
+}

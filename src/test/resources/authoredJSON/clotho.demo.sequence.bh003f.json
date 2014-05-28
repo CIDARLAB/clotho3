@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.bh003f",
+  "name" : "bh003f",
+  "sequence" : "gatcgggatccATAAAAaaagcaagaggtgattctagttc",
+  "description" : "forward extension oligo to construct J23083"
+}

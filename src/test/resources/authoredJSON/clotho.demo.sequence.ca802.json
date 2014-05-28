@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca802",
+  "name" : "ca802",
+  "sequence" : "CAGGTAGTTTTCCAGTAGTGC",
+  "description" : "Reverse sequencing from N-term of GFP"
+}

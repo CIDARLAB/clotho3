@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca912r",
+  "name" : "ca912r",
+  "sequence" : "CATAGCGTCTCtGTGAAGCTTTCTCTGAG",
+  "description" : "Reverse oligo to mutate L372P"
+}

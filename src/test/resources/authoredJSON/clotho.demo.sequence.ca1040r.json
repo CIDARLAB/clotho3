@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1040r",
+  "name" : "ca1040r",
+  "sequence" : "ctcttggaTCCCAAaagcaagaggtgattctag",
+  "description" : "Reverse BamHI for lock3N"
+}

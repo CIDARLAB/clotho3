@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca889r",
+  "name" : "ca889r",
+  "sequence" : "gactGAATTCgagaccCGGCTGGTACTGTAATAGAATATAG",
+  "description" : "Reverse BsaI to EcoRI for K92 neu region"
+}

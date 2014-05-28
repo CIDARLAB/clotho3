@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca814r",
+  "name" : "ca814r",
+  "sequence" : "CGATAgaattcTGAAAACAAGTGGATCTATG",
+  "description" : "Reverse EcoRI oligo to create nahR cassette"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca622r",
+  "name" : "ca622r",
+  "sequence" : "gtaccCGTCTCtTATCCCTAGCGTAACTATAAAACGAAAGGCCCAGTC",
+  "description" : "Reverse BsmBI oligo to add I-SceI site"
+}

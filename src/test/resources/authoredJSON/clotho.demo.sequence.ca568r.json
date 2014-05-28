@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca568r",
+  "name" : "ca568r",
+  "sequence" : "CTTCTGAATTCAAAAAGGAAGAGTATGAGTATTC",
+  "description" : "Reverse oligo to introduce EcoRI site between KanR and Bla"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca853r",
+  "name" : "ca853r",
+  "sequence" : "CACTTggatccAATAGGGGCAAACCGTGACGAC",
+  "description" : "Reverse BamHI to clone fdhF promoter"
+}

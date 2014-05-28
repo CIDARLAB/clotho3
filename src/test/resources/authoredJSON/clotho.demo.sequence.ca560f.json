@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca560f",
+  "name" : "ca560f",
+  "sequence" : "GGAGACGTCTCGGATCCATAATGTGCCTGTCAAATG",
+  "description" : "Forward BsmBI to BamHI oligo to make pG80-T7560"
+}

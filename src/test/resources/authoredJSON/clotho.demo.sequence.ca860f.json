@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca860f",
+  "name" : "ca860f",
+  "sequence" : "CAGTAagatcttacctgacgctttttatcgc",
+  "description" : "Forward BglII oligo to remove BamHI site in pBAD-GFP"
+}

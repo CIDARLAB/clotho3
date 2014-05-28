@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1760",
+  "name" : "ca1760",
+  "sequence" : "cagtaCCATGGccaggcatcaaataaaacg",
+  "description" : "Forward NcoI to EIPCR open aptamer / cre plasmid"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca554r",
+  "name" : "ca554r",
+  "sequence" : "ccaaaGGTCTCATCATACACTATCTCCTGAAACTGGC",
+  "description" : "Reverse BsaI oligo to clone spvB(ATG) for ligation-PCR"
+}

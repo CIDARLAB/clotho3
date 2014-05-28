@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.bh001",
+  "name" : "bh001",
+  "sequence" : "gatcgTCTAGAaaagaggagatactagATGgcttcctccgaa",
+  "description" : "forward XbaI oligo for RBS modification of J01022"
+}

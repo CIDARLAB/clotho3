@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca819r",
+  "name" : "ca819r",
+  "sequence" : "GATCTGAATTCTTAGGCCTGAGGATGAGTGTTTCTC",
+  "description" : "Reverse EcoRI for preS1 with stop"
+}

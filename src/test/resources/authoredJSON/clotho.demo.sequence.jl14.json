@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jl14",
+  "name" : "jl14",
+  "sequence" : "CCTAGGAATTCGCGGCCGCTTCTAGatgaagctgagtatgaaatc",
+  "description" : "Forward EcoRI oligo to bioBrick trbC *internal PstI site"
+}

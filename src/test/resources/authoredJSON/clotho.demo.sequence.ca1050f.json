@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1050f",
+  "name" : "ca1050f",
+  "sequence" : "agatgggatccCATCCTgcttcctccgaagacgttatc",
+  "description" : "Forward constant BamHI oligo for RBS library"
+}

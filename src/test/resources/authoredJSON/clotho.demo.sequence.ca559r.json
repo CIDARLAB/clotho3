@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca559r",
+  "name" : "ca559r",
+  "sequence" : "gcggcgGAATTCccttagctcctgaaaatctcgc",
+  "description" : "Reverse EcoRI oligo to make pKG[LVA]559"
+}

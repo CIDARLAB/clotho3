@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1200f",
+  "name" : "ca1200f",
+  "sequence" : "CACTGtctagaAAAGGAGATATTATGGATTTCTTG",
+  "description" : "Forward Biobricking of spv without spvR promoter"
+}

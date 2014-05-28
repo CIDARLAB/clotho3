@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca907r",
+  "name" : "ca907r",
+  "sequence" : "CCATAgaattcCCGTCGACCGATCCCGTAC",
+  "description" : "Reverse EcoRI to clone tnp transposase"
+}

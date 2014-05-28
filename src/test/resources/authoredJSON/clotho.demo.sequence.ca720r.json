@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca720r",
+  "name" : "ca720r",
+  "sequence" : "cctaaGGTCTCgaattAMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNGTCGACGGCGCTATTCAGATC",
+  "description" : "Reverse NNK library for lacZ"
+}

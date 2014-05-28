@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca996r",
+  "name" : "ca996r",
+  "sequence" : "CGATGtctagaAGTGCTCAGTATCTCTATC",
+  "description" : "Reverse XbaI EIPCR for lock and key"
+}

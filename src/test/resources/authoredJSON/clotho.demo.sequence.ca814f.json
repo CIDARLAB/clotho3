@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca814f",
+  "name" : "ca814f",
+  "sequence" : "cctaaGGTCTCagatcGACCTCGCTTGGGTTATTGC",
+  "description" : "Forward BsaI to BamHI oligo to create nahR cassette"
+}

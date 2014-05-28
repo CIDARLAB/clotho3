@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca600r",
+  "name" : "ca600r",
+  "sequence" : "cgaaaGGTCTCAaattCGTCTGGCGACGGGTCAGGGTG",
+  "description" : "Reverse BsaI to PCR 3' flank"
+}

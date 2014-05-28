@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca751r",
+  "name" : "ca751r",
+  "sequence" : "CACGAggatccAATATTCTTTTCGTTGACTTTAGTC",
+  "description" : "Reverse BamHI oligo to open up upp region"
+}

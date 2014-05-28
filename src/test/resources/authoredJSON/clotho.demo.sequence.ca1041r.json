@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1041r",
+  "name" : "ca1041r",
+  "sequence" : "gaagcctgcagactagtatttcttttgggtatagcgtcgtggacagtcattcatctttctgcccctccaaaagcaaaaacccgccg",
+  "description" : "Reverse oligo to make T1 terminator"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca902r",
+  "name" : "ca902r",
+  "sequence" : "CCATAgaattcGCGGCCGCAGTGACCTGTTCGTTGCAAC",
+  "description" : "Reverse BamHI oligo for Ptet/tetR"
+}

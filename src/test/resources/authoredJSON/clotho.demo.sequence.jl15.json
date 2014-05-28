@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jl15",
+  "name" : "jl15",
+  "sequence" : "gacttACTAGTcgtttcatttcccggaatctc",
+  "description" : "Reverse SpeI oligo to bioBrick trbC *internal PstI site"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.kb017",
+  "name" : "kb017",
+  "sequence" : "CCGATCTGCAGCGGCCGCTACTAGTATCTCCTCTTCTGTCTTACCCAAAAGCAAGAG",
+  "description" : "Lock3 4 base add-on to 3' end of hairpin loop reverse oligo"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1048r",
+  "name" : "ca1048r",
+  "sequence" : "GGACTTCTAGAGGTTTTTTTTTCTCTGTTTTATACGTCC",
+  "description" : "Reverse XbaI oligo to remove SpeI of neuS"
+}

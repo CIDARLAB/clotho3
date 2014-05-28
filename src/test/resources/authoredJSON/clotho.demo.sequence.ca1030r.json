@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1030r",
+  "name" : "ca1030r",
+  "sequence" : "cagtaTCTAGACCATTTCAATGTTCTTCAG",
+  "description" : "Reverse XbaI oligo for wbbK for wbbL knockin"
+}

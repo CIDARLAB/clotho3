@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca692f",
+  "name" : "ca692f",
+  "sequence" : "cagtgCTCGAGcgcttcagccatacttttc",
+  "description" : "Forward XhoI EIPCR to delete AraC in pBAD-GFP"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1010r",
+  "name" : "ca1010r",
+  "sequence" : "cctatactagtagaagttcctattctctaAaaagtataggaacttcctctagaagcggccgcg",
+  "description" : "Reverse SpeI oligo for FRT"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca670r",
+  "name" : "ca670r",
+  "sequence" : "cctaaGGTCTCgaattcTAGATTGATTTAAAACTTC",
+  "description" : "BsaI to EcoRI to clone pKD13 by Ori end"
+}

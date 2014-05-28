@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca729r",
+  "name" : "ca729r",
+  "sequence" : "cagctCGTCTCaGATCCATCTTCAATGTTGTG",
+  "description" : "Reverse BsmBI EIPCR to silence BamHI in GFP+"
+}

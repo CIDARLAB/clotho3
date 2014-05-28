@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1061r",
+  "name" : "ca1061r",
+  "sequence" : "gaagcctgcagactagtaaaaaaagccccgaatttataaaaaattcgg",
+  "description" : "Reverse SpeI/PstI for FMN switch"
+}

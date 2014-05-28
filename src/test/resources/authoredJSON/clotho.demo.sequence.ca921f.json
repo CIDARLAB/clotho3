@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca921f",
+  "name" : "ca921f",
+  "sequence" : "GGATCAAGTgCTAGcTTAAGCTCACGAC",
+  "description" : "Forward NheI oligo to silence SpeI site in pBAC874t"
+}

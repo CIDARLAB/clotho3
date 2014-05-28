@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca936r",
+  "name" : "ca936r",
+  "sequence" : "CTCAGggatccGTGAATGCAAATGATGAGTC",
+  "description" : "Reverse BamHI to clone SpoIIE promoter"
+}

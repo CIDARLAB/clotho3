@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca679r",
+  "name" : "ca679r",
+  "sequence" : "gcagaGGTCTCcaattGCCAAGCTGTAGACCGTTTAAAC",
+  "description" : "Reverse BsaI/EcoRI oligo to transfer ORFs from pBAD/pGLN derivatives"
+}

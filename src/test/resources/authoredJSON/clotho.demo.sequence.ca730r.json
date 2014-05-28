@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca730r",
+  "name" : "ca730r",
+  "sequence" : "ccatccgtctcgCTCGTTAATCGCTTCCATGC",
+  "description" : "Reverse mutagenic oligo to do amber at S170TAG of AraC"
+}

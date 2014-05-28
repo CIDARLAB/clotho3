@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca945r",
+  "name" : "ca945r",
+  "sequence" : "CTCACgaattcTATAAACGCAGAAAGGCCCAC",
+  "description" : "Reverse EcoRI Oligo for tetR inverter"
+}

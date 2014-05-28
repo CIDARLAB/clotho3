@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca725r",
+  "name" : "ca725r",
+  "sequence" : "CAGTTCCATGGMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNMNNCATGGTTAATTCCTCAAAGCG",
+  "description" : "Reverse EIPCR random peptide library with NcoI internal"
+}

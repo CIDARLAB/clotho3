@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1064r",
+  "name" : "ca1064r",
+  "sequence" : "gcagtACTAGTgatgatcttcgcctgctcgctg",
+  "description" : "Reverse SpeI for yghD 3' landing pad"
+}

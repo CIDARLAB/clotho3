@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1255r",
+  "name" : "ca1255r",
+  "sequence" : "cactgCAATTGattaccgcctttgagtgagc",
+  "description" : "Reverse MfeI for Gateway donor construction"
+}

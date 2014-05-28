@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1012r",
+  "name" : "ca1012r",
+  "sequence" : "ctgatactagtaAGATGTGTATAAGAGACAGctctagaagcggccgcg",
+  "description" : "Forward SpeI oligo for forward Tn5"
+}

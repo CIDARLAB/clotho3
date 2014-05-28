@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca714r",
+  "name" : "ca714r",
+  "sequence" : "GAGTCGGTCTCAGAGCACCGCTGCCTTCCATTACGCCCGTCATTTTGG",
+  "description" : "Reverse BsaI to make fimC/Taz chimera"
+}

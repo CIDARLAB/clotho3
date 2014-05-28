@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jh224f",
+  "name" : "jh224f",
+  "sequence" : "GGATTTTGAGTTAcGATCCGGCTTAC",
+  "description" : "Removing BamHI site in attR1-ccdB-xis/int-attR2"
+}

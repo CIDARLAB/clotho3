@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca896r",
+  "name" : "ca896r",
+  "sequence" : "CACATggatccGATTCGTAGAGCCTCGTTGC",
+  "description" : "Reverse BamHI oligo for Lambda/Cro switch"
+}

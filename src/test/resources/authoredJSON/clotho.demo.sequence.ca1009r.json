@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1009r",
+  "name" : "ca1009r",
+  "sequence" : "ccgctactagtcaattgtataaacgcagaaaggcccac",
+  "description" : "Reverse SpeI for 3' MfeI EcoRI converter"
+}

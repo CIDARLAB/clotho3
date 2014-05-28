@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca552r",
+  "name" : "ca552r",
+  "sequence" : "gcggcggcatgcccttagctcctgaaaatctcgcc",
+  "description" : "Reverse SphI oligo to clone GFP-T locus (CAV's RgfpT0)"
+}

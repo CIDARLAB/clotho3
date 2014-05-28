@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca715r",
+  "name" : "ca715r",
+  "sequence" : "cctaaGGTCTCgaattcATTTACCCTTCTTTTGTCGTGCC",
+  "description" : "Reverse BsaI/EcoRI oligo to clone EnvZ"
+}

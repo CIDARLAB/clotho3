@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1190f",
+  "name" : "ca1190f",
+  "sequence" : "gcaaaTCTAGACTCGAGttaGGATCCgtgctcagtatctctatc",
+  "description" : "Forward oligo to add XhoI/BamHI site into pBACo"
+}

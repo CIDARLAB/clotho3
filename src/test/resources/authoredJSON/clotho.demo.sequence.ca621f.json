@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca621f",
+  "name" : "ca621f",
+  "sequence" : "gagtaGGTCTCTgatcGCACGACAGGTTTCCCGACTGG",
+  "description" : "New forward BsaI-->BamHI oligo to clone lac/T7 of BL21(DE3)"
+}

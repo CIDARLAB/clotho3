@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca565r",
+  "name" : "ca565r",
+  "sequence" : "GCTATGGATCCATTTGGCTGTTAACGGCTC",
+  "description" : "Reverse oligo to introduce BamHI insertion in spvR"
+}

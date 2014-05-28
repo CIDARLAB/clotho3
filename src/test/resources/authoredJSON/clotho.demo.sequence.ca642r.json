@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca642r",
+  "name" : "ca642r",
+  "sequence" : "ggagaCGTCTCgaattcGTTGATGTCATGTAGCCAAATC",
+  "description" : "Reverse BsaI-->EcoRI oligo to do lacZ fusions"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1264r",
+  "name" : "ca1264r",
+  "sequence" : "cgactGGATCCtactagtatataaacgcag",
+  "description" : "Reverse BamHI/SpeI for making BBa version of pBca1256"
+}

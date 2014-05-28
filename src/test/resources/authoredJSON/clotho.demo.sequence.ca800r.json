@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca800r",
+  "name" : "ca800r",
+  "sequence" : "GACATCtgcaGCATACCAACGATGCCAAACAATggatccGTCGACGGCGCTATTCAGATC",
+  "description" : "Reverse oligo to make wild-type TF peptide fusions"
+}

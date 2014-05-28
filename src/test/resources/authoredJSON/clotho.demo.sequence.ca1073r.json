@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1073r",
+  "name" : "ca1073r",
+  "sequence" : "CCAGTACTAGTgatcctaaagccccgaatttctctagaagcggccgcg",
+  "description" : "Reverse SpeI to Biobrick FMN Anti-Terminator"
+}

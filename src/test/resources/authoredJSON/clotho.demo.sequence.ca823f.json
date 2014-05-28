@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca823f",
+  "name" : "ca823f",
+  "sequence" : "gagtaGGTCTCccatgCCAAAcCGGTGGATATACGATGG",
+  "description" : "Forward BsaI to NcoI to clone inv-PNA into pKQC"
+}

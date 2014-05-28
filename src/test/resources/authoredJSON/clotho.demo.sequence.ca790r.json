@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca790r",
+  "name" : "ca790r",
+  "sequence" : "GACATAgatcTGCATACCAMNNMNNMNNMNNMNNMNNGTCGACGGCGCTATTCAGATC",
+  "description" : "Reverse C-term TF-biased library with BglII/Blunt"
+}

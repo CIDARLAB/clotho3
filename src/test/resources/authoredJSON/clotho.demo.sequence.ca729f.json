@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca729f",
+  "name" : "ca729f",
+  "sequence" : "ggataCGTCTCgGATCtGTTCAACTAGCAGACC",
+  "description" : "Forward BsmBI EIPCR to silence BamHI in GFP+"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca681f",
+  "name" : "ca681f",
+  "sequence" : "GAGTAggatccGTCCACATGGCCCCTCGCTGAG",
+  "description" : "Forward BamHI oligo to make lasB reporters"
+}

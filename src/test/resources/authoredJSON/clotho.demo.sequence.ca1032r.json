@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1032r",
+  "name" : "ca1032r",
+  "sequence" : "cagtaGAATTCccagaggcggcaTTACTTCAG",
+  "description" : "Reverse oligo to biobrick phoA of Citrobacter"
+}

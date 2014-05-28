@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca752f",
+  "name" : "ca752f",
+  "sequence" : "GGTCAagatctGTATTGTCTATGCCTATTAATG",
+  "description" : "Forward oligo to delete luxI in pSupD-lux"
+}

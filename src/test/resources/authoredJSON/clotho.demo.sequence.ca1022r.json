@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1022r",
+  "name" : "ca1022r",
+  "sequence" : "gacttACTAGTAGCTAGCAYWRTMCCTAGGACTGAGCTAGCYRTMARCTCTAGAAGCGGCCGCGAA",
+  "description" : "Reverse SpeI for promoter library"
+}

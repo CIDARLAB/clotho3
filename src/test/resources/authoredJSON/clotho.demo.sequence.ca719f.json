@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca719f",
+  "name" : "ca719f",
+  "sequence" : "GGAGAGGTCTCGGATCCATAATGTGCCTGTCAAATG",
+  "description" : "Forward BsmBI to BamHI oligo to make pG80-T7560 AraC"
+}

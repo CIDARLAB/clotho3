@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1072r",
+  "name" : "ca1072r",
+  "sequence" : "GATGAACTAGTcaaaaaagccccgaatttataaaaaattcggggctttaggatccTCAGC",
+  "description" : "Reverse SpeI to Biobrick FMN Terminator"
+}

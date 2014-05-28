@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1015r",
+  "name" : "ca1015r",
+  "sequence" : "ccgctactagtccgcttaggccacacgttc",
+  "description" : "Reverse SpeI to biobrick DHFR (TriR) of pAH145"
+}

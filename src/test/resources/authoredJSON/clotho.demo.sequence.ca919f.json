@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca919f",
+  "name" : "ca919f",
+  "sequence" : "GATGcGAATTCGATATCCCTATTCCCGGTACC",
+  "description" : "Forward EcoRI oligo to fuse C-terminus of invasin for expression"
+}

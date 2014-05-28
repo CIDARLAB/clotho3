@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca833r",
+  "name" : "ca833r",
+  "sequence" : "GATGCGAATTCGTAACCGTTACGACAACACCTC",
+  "description" : "Reverse EcoRI oligo for LEE cloning"
+}

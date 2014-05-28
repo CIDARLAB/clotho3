@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1500",
+  "name" : "ca1500",
+  "sequence" : "CATTTCATCGTCCAGTTTCTGGAGAGCCACCAGCCTGGTGTTTTCATCCC",
+  "description" : "PCA assembly of protelomerasethreeprime (Bca1485)"
+}

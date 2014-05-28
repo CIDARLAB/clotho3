@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.jl4",
+  "name" : "jl4",
+  "sequence" : "ctaattatctttcgtactgtc",
+  "description" : "reverse oligo to characterize oriTF/TraM region+50bp"
+}

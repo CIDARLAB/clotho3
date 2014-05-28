@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca607f",
+  "name" : "ca607f",
+  "sequence" : "ggactCGTCTCggatccTTAGCTCCTGAAAATCTCGCC",
+  "description" : "Forward BsmBI to BamHI for T7-GFP[LVA} (reversed)"
+}

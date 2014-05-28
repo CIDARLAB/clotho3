@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca912f",
+  "name" : "ca912f",
+  "sequence" : "CGTTACGTCTCgTCACtCctCCGCAAGCACTCAGGGC",
+  "description" : "Forward oligo to mutate L372P"
+}

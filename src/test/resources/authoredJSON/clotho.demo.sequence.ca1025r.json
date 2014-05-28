@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1025r",
+  "name" : "ca1025r",
+  "sequence" : "gtacataaccttcgggcatggcTCCTcttgaaaaagtcatgctgtttc",
+  "description" : "Reverse quickchange for GFP[S56AGGA]"
+}

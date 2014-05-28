@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca569",
+  "name" : "ca569",
+  "sequence" : "GATAGctcgagAATGTTGAATACTCATACTC",
+  "description" : "Forward XhoI oligo to move KanR fragment into pGFPuv"
+}

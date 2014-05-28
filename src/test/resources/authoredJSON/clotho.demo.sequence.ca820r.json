@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca820r",
+  "name" : "ca820r",
+  "sequence" : "GCAAAGGATCCATCACCACGCGAATTCGATTGTCTGCTGGC",
+  "description" : "Reverse BamHI EIPCR for inv-RGD"
+}

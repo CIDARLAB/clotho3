@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca784r",
+  "name" : "ca784r",
+  "sequence" : "GCTAGgaattcGATTGTCTGCTGGCCTCGAGACTGG",
+  "description" : "Reverse EcoRI to clone invasin at 907"
+}

@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca606r",
+  "name" : "ca606r",
+  "sequence" : "GTCGACGGCGCTATTCAGATCCTC",
+  "description" : "Reverse BAC/TrrnB sequencing (anneals 5' end of his tag)"
+}

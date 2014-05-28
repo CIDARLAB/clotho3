@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1167f",
+  "name" : "ca1167f",
+  "sequence" : "GTTACAAATCCTCGCATTCTTATTTTTGATG",
+  "description" : "Removing EcoRI site in type I secretion tag"
+}

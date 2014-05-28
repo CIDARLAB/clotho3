@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca1410",
+  "name" : "ca1410",
+  "sequence" : "ccataggatcctcctttccgtttacgggcttcg",
+  "description" : "Reverse oligo to remove stop in 25"
+}

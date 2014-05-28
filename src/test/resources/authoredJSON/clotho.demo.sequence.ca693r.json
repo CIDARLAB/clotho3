@@ -1,0 +1,6 @@
+{
+  "id" : "clotho.demo.sequence.ca693r",
+  "name" : "ca693r",
+  "sequence" : "gagttGGTCTCGaattATTGATAAACAAAAGTCACG",
+  "description" : "Reverse BsaI to EcoRI oligo to make pGLN-fimH"
+}
