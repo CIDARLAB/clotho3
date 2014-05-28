@@ -1,0 +1,64 @@
+{
+	"schema": "org.clothocad.model.constructionFile",
+	"steps": [
+		{
+			"reaction": "pcr",
+			"input": [
+				"pBAC874t",
+				"ca581f",
+				"ca803r"
+			],
+			"productSize": "1060",
+			"output": "pcrproduct"
+		},
+		{
+			"reaction": "digest",
+			"input": [
+				"pcrproduct",
+				[
+					"BsmBI",
+					"EcoRI"
+				]
+			],
+			"output": "digestproduct1"
+		},
+		{
+			"reaction": "gelPurify",
+			"input": [
+				"digestproduct1"
+			],
+			"length": "Largest",
+			"output": "pcrdig"
+		},
+		{
+			"reaction": "digest",
+			"input": [
+				"pGLN",
+				[
+					"BamHI",
+					"EcoRI"
+				]
+			],
+			"output": "digestproduct2"
+		},
+		{
+			"reaction": "gelPurify",
+			"input": [
+				"digestproduct2"
+			],
+			"length": "Largest",
+			"output": "vectdig"
+		},
+		{
+			"reaction": "ligate",
+			"input": [
+				[
+					"pcrdig",
+					"vectdig"
+				]
+			],
+			"output": "pHA581"
+		}
+	],
+	"dictionary": {}
+}
