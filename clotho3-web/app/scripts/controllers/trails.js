@@ -13,7 +13,6 @@ angular.module('clotho.webapp').controller('TrailsCtrl', function ($scope, $loca
 	$scope.defaultTrailIcon = 'images/trails/trails_logo.png';
 
 	$scope.startTrail = function (id) {
-		console.log(id);
 		Clotho.startTrail(id);
 	};
 

@@ -43,7 +43,6 @@ angular.module('clotho.tokenizer')
 
 				ngModelCtrl.$render = function () {
 					//fixme - model is never actually updated, so we just reset it here assuming submit triggered $render
-					console.log('tokenizer render triggered');
 					resetModel();
 					updateModel();
 				};
