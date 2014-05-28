@@ -163,8 +163,9 @@ angular.module('clotho.core').service('clothoLocalStorage',
 				}
 
 				var uuid = e.key.replace(prefix, '') || '';
+				//note - this relies on the object existing in localStorage (which it won't if reset on page load)
 				var obj = getItem(uuid);
-				Debugger.log("handle_storage_event for " + uuid);
+				Debugger.log("handle_storage_event for " + uuid, obj);
 				broadcastModelUpdate(uuid, obj)
 			};
 

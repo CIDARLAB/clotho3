@@ -181,7 +181,9 @@ angular.module('clotho.editor')
 				//cancel the last watcher, and set up a new one
 				sharableWatcher();
 				sharableWatcher = Clotho.watch(id, function (newObj) {
-					scope.sharable = newObj;
+					if (!angular.equals(scope.sharable, newObj)) {
+						scope.sharable = newObj;
+					}
 				}, scope);
 			}
 

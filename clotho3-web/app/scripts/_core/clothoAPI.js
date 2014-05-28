@@ -291,12 +291,18 @@ function generateClothoAPI() {
 		var watch = function clothoAPI_watch(uuid, action, reference) {
 			reference = typeof reference != 'undefined' ? reference : null;
 			return PubSub.on('update:'+uuid, function(model) {
-				if (angular.isFunction(action)) {
-					action.apply(reference, [model]);
-				}
-				else {
-					angular.extend(action, model);
-				}
+
+				//note - while we wipe localStorage on page load, need to do a get() because the event was triggered but we don't have the data
+
+				Debugger.log('watch triggered for ' + uuid);
+				get(uuid, {mute : true}).then(function (model) {
+					if (angular.isFunction(action)) {
+						action.apply(reference, [model]);
+					}
+					else {
+						angular.extend(action, model);
+					}
+				});
 			}, reference);
 		};
 
