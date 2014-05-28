@@ -58,6 +58,7 @@ class JavaScriptEngine extends AbstractScriptEngine implements HackEngine, Invoc
         stdObjects.put("load", stdObjects, f);
         cx.evaluateString(stdObjects, "var window = {};", "window hack", 1, null);
         cx.evaluateString(stdObjects, "var console = {}; console.log = function(){};", "console polyfill", 1, null);
+        cx.evaluateString(stdObjects, "var require = function(string){return clotho.load(string)};", "alias clotho.load to require", 1, null);
 
         try {
             cx.evaluateReader(stdObjects, new FileReader("src/main/js/lib/lodash.js"), "lodash.js", 1, null);
