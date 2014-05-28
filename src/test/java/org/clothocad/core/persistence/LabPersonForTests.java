@@ -34,7 +34,7 @@ import org.clothocad.model.*;
  * @author J. Christopher Anderson
  */
 @NoArgsConstructor
-public class LabPerson extends Person {
+public class LabPersonForTests extends Person {
 
     @Getter
     @Setter
@@ -57,7 +57,7 @@ public class LabPerson extends Person {
      */
     //unique name criterion
     //valid or nonexistent email
-    public LabPerson( String displayname, Lab alab, String rawPassword ) {
+    public LabPersonForTests( String displayname, Lab alab, String rawPassword ) {
         //XXX:  Do people have authors?
         super(displayname, null);
         lab = alab;

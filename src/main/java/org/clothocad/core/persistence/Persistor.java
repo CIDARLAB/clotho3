@@ -25,9 +25,6 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.persistence;
 
-import com.mongodb.BasicDBObject;
-import groovy.lang.Tuple;
-import java.io.IOException;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -47,7 +44,7 @@ import org.reflections.Reflections;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NonUniqueResultException;
+import lombok.Getter;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
@@ -86,6 +83,7 @@ import org.clothocad.core.util.JSON;
 public class Persistor{
     public static final int SEARCH_MAX = 5000;
     
+    @Getter
     private ClothoConnection connection;
     
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
