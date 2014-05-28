@@ -25,7 +25,10 @@ $trail-highlight-width : 400px;
   }
 
   .trail-thumbnail {
-
+    max-height: 100%;
+    height: auto;
+    max-width: 50px;
+    width: auto;
   }
 
   .trail-overview {
