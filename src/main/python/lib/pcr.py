@@ -18,7 +18,8 @@ def revComp(sequence):
                     'u':'a',
                     'w':'w','s':'s','m':'k','k':'m','r':'y','y':'r',
                     'b':'v','d':'h','h':'d','v':'b',
-                    'n':'n',' ':' '}
+                    'n':'n',' ':' ',
+                    '^':'_', '_':'^', '|':'|'} #To not crash with sticky ends
     return ''.join([baseComplement[b] for b in sequence.lower()])[::-1]
 
 
