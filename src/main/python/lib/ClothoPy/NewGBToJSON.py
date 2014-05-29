@@ -16,21 +16,24 @@ import json
 class NewGBConverter:
     def __init__(self, gb):
         self.gb = gb #this is a NewGenBank object, not a GenBank object
-        self.feats = []
-        self.annotes = {}
+        self.highs = []
+        #self.annotes = {}
         self.d = {}
         self.json = ""
 
     def convert(self):
+        self.highlight()
         self.d = {'description': self.gb.description, \
-        'type': self.gb.type, \
+        #'type': self.gb.type, \
         'sequence': self.gb.sequence, \
         'name': self.gb.name, \
-        'ID': self.gb.id, \
-        'organism': self.gb.organism, \
+        'id': self.gb.id, \
+        'accession': self.gb.accn[0], \
+        #'organism': self.gb.organism, \
         'date': self.gb.date, \
-        'data_file_division': self.gb.data_file_division, \
-        'pubmed': self.gb.pubmed, \
+        'highlight': self.highs, \
+        #'data_file_division': self.gb.data_file_division, \
+        #'pubmed': self.gb.pubmed, \
         'isLinear': self.gb.isLinear, \
         'isSingleStranded': self.gb.isSingleStranded }
 
@@ -38,6 +41,7 @@ class NewGBConverter:
         self.json = json.dumps(self.d, indent=indent)
         return self.json
 
+    """
     def annotate(self):
         self.annotes = self.gb.annotations
         ref = self.gb.annotations['references']
@@ -50,24 +54,33 @@ class NewGBConverter:
             'start': r.location[0].start.position, 'end': r.location[0].end.position, \
             'strand':r.location[0].strand, \
             'medline_id': r.medline_id, 'pubmed_id': r.pubmed_id} )
+    """
 
-    def feature(self):
-        feat = self.gb.features
+    highlighted = {'ApEinfo_fwdcolor':'forColor', 'ApEinfo_revcolor':'revColor', \
+    'inference':'inference', 'label': 'description'}
+
+    def highlight(self):
+        high = self.gb.highlight
         count = 1;
-        for f in feat:
+        for f in high:
             loc = f.location
             qual = f.qualifiers
-            self.feats.append(
-            {'start':loc.start.position, 'end': loc.end.position,\
-            'strand': loc.strand, 'type':f.type, \
-            'id:': f.id, \
-            'location operator':f.location_operator, 'ref': f.ref,\
-            'ref db': f.ref_db} )
+            self.highs.append( 
+            {'start':loc.start.position, 'end': loc.end.position, \
+            'forColor': '#000000', 'revColor': '#000000', 'inference': None, \
+            'notes': [f.type], 'description': None })
+            #'strand': loc.strand, 'type':f.type, \
+            #'id:': f.id, \
+            #'location operator':f.location_operator, 'ref': f.ref,\
+            #'ref db': f.ref_db} )
             for q in qual.keys():
-                self.feats[len(self.feats) - 1][q] = qual[q][0]
+                if q in self.highlighted.keys():
+                    self.highs[len(self.highs) - 1][self.highlighted[q]] = qual[q][0]
             count += 1
 
+    """
     def letters(self):
         let = self.gb.letter_annotations
         for l in let:
             self.lets
+    """
