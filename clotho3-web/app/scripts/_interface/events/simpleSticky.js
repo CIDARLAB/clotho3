@@ -21,7 +21,8 @@ angular.module('clotho.interface')
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs) {
-			var showFromTopSticky = attrs.simpleSticky || 20,
+			//70 because of sticky nav at top
+			var showFromTopSticky = parseInt(attrs.simpleSticky, 10) || 70,
 				showFromTopNormal = element.css('top'),
 				startFromTop;
 
