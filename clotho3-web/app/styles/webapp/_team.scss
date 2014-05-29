@@ -1,0 +1,87 @@
+.teamIntro {
+  padding-left: 140px;
+
+  h2 {
+    font-size: 22px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #777777;
+    font-weight: 400;
+  }
+
+  .lead {
+    line-height: 120%;
+    font-size: 1.1em;
+    font-style: italic;
+    margin: 0 0 35px;
+  }
+}
+
+.profile {
+  position: relative;
+  margin: 0 0 20px;
+
+  .profile:nth-child(even) {
+    clear: left;
+  }
+  .profile-header {
+    position: absolute;
+    top: 0;
+  }
+  .profile-header img {
+    float: left;
+    width: 100px; height: 100px;
+  }
+  .profile-content {
+    font-size: 14px;
+    padding: 27px 20px 0 0;
+    line-height: 1.4em;
+    margin: 0 0 0 125px;
+
+    h3 {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #b3b3b1;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .lead {
+      font-size: 1.3em;
+      line-height: 100%;
+      font-style: italic;
+      margin: 3px 0 20px;
+    }
+
+    .description {
+      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      font-weight: 300;
+    }
+
+    &:before {
+      content: '';
+      width: 36px;
+      height: 3px;
+      background: #dededc;
+      position: absolute;
+      top: 0;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+  }
+
+  .profile-footer {
+    position: absolute;
+    top: 121px;
+    width: 100px;
+    text-align: center;
+  }
+  .profile-footer a {
+    line-height: 18px;
+    margin: 0 3px;
+    display: inline-block;
+  }
+}

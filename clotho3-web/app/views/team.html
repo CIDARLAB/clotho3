@@ -1,20 +1,20 @@
 <div class="container" dark-background>
+  <div class="teamIntro">
     <h2>The Clotho Team</h2>
+    <p class="lead">“Individuals can and do make a difference, but it takes a team<br>to really mess things up.”</p>
+  </div>
 
-    <div class="row">
-        <div ng-repeat="person in ClothoTeam | orderBy:'surName'" class="col-xs-12">
-            <div class="shadowBox" style="padding: 12px 24px">
-                <div class="row">
-                    <div class="col-xs-3" ng-class="{'pull-right' : $index%2}">
-                        <img class="img-circle" ng-src="{{ (person.icon) ? person.icon :  'images/assets/user-default.png' }}" />
-                    </div>
-                    <div class="col-xs-9" ng-style="{'margin-left' : ($index%2 ? '0' : '')}">
-                        <h3>{{ person.name }}</h3>
-                        <h5>{{ person.title }}</h5>
-                        <small>{{ person.description | limitTo:600 }}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="row">
+    <article class="col-sm-6 profile" ng-repeat="person in ClothoTeam | orderBy:'surName'" >
+      <div class="profile-header">
+        <img ng-src="{{ (person.icon) ? person.icon :  'images/assets/user-default.png' }}" alt="{{person.name}}" class="img-circle">
+      </div>
+
+      <div class="profile-content">
+        <h3>{{person.name}}</h3>
+        <p class="lead position">{{person.title}}</p>
+        <p class="description" ng-bind="person.description | limitTo:600"></p>
+      </div>
+    </article>
+  </div>
 </div>
