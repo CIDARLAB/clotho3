@@ -6,18 +6,26 @@
     "type" : "number",
     "name" : "targetLength"
   } ],
-  "code" : "function gelPurify (fragments, targetLength) {\n\tvar Digest = clotho.load('Digest');\n  \treturn Digest.gelPurify.apply(null, arguments);\n}",
+  "code" : "function gelPurify (fragments, targetLength) {\n  var Digest = clotho.load('Digest');\n  var frags = _.pluck(fragments, 'sequence');\n  \n  if (_.isString(targetLength)) {\n    if (targetLength.toLowerCase() == 'l') {\n      targetLength = _.sortBy(frags, function (f) { return -f.length })[0].length;\n    } else {\n      targetLength = parseInt(targetLength, 10);\n    }\n  }\n  \n  var target = Digest.gelPurify(frags, targetLength);\n  return {\n    sequence : target\n  };\n}",
   "dependencies" : [ "Digest" ],
-  "description" : "Simulate gel purification, selecting a fragment from an array by target length",
+  "description" : "Simulate gel purification, selecting a fragment from an array of NucSeqLite objects by target length. You can pass \"L\" to retrieve the largest.",
   "language" : "JAVASCRIPT",
   "name" : "gelPurify",
   "schema" : "org.clothocad.core.datums.Function",
-  "id" : "clotho.functions.dna.gelPurify",
   "tests" : [ {
-    "args" : [ [ "^aatt_ccctaactaactaaagattaactttataaggaggaaaaacatatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaata^agct_", "gagctcg^aatt_", "^agct_taattag" ], 812 ],
+    "args" : [ [ {
+      "sequence" : "^aatt_ccctaactaactaaagattaactttataaggaggaaaaacatatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaata^agct_"
+    }, {
+      "sequence" : "gagctcg^aatt_"
+    }, {
+      "sequence" : "^agct_taattag"
+    } ], "L" ],
     "output" : {
-      "value" : "^aatt_ccctaactaactaaagattaactttataaggaggaaaaacatatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaata^agct_",
+      "value" : {
+        "sequence" : "^aatt_ccctaactaactaaagattaactttataaggaggaaaaacatatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaata^agct_"
+      },
       "type" : ""
     }
-  } ]
+  } ],
+  "id" : "clotho.functions.dna.gelPurify"
 }

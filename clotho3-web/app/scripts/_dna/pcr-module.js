@@ -847,10 +847,7 @@ angular.module('clotho.dna').service('PCR', ['DNA', 'Digest', function(DNA, Dige
 
         //console.log('LIGATE FINAL:', fragments);
 
-        if (fragments.length == 1)
-            return fragments[0].sequence;
-        else
-            return _.pluck(fragments, 'sequence');
+        return _.pluck(fragments, 'sequence');
     };
 
     return {

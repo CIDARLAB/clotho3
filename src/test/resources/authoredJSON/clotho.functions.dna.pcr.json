@@ -1,0 +1,28 @@
+{
+  "args" : [ {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "template"
+  }, {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "oligo1"
+  }, {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "oligo2"
+  } ],
+  "code" : "function pcr (template, oligo1, oligo2) {\n\tvar product = clotho.run('org.andersonlab.pcrpredict', [oligo1.sequence, oligo2.sequence, template.sequence]);\n  return {\n    sequence : product\n  }\n}",
+  "dependencies" : [ "org.andersonlab.pcrpredict" ],
+  "description" : "PCR prediction function, which predicts the product given a template and two oligos. Wrapped to input and output NucSeqs.",
+  "language" : "JAVASCRIPT",
+  "name" : "pcr",
+  "schema" : "org.clothocad.core.datums.Function",
+  "tests" : [ {
+    "args" : [ "clotho.demo.sequence.pBAC874t", "clotho.demo.sequence.ca581f", "clotho.demo.sequence.ca803r" ],
+    "output" : {
+      "value" : {
+        "sequence" : "ggagacgtctctgatcgcggccgctccctatcagtgatagagattgacatccctatcagtgatagagatactgagcacatcagcaggacgcactgaccgggatcctctgtttattttcaggagtcatcattatttatgagtaaaggagaagaacttttcactggagttgtcccaattcttgttgaattagatggtgatgttaatgggcacaaattttctgtcagtggagagggtgaaggtgatgcaacatacggaaaacttacccttaaatttatttgcactactggaaaactacctgttccatggccaacacttgtcactactttgacttatggtgttcaatgcttttcaagatacccagatcatatgaaacggcatgactttttcaagagtgccatgcccgaaggttatgtacaggaaagaactatatttttcaaagatgacgggaactacaagacacgtgctgaagtcaagtttgaaggtgatacccttgttaatagaatcgagttaaaaggtattgattttaaagaagatggaaacattcttggacacaaattggaatacaactataactcacacaatgtatacatcatggcagacaaacaaaagaatggaatcaaagttaacttcaaaattagacacaacattgaagatggaagcgttcaactagcagaccattatcaacaaaatactccaattggcgatggccctgtccttttaccagacaaccattacctgtccacacaatctgccctttcgaaagatcccaacgaaaagagagaccacatggtccttcttgagtttgtaacagctgctgggattacacatggcatggatgaactatacaaaaggcctgcagcaaacgacgaaaactacgctttagtagcttaataagcttaattagctgagcttggactcctgttgatagatccagtaatgacctcagaactccatctggatttgttcagaacgctcggttgccgccgggcgttttttattggtgagaatccaagctagcttggcgagattttcaggagctaagggaattcgagaccgttgc"
+      },
+      "type" : ""
+    }
+  } ],
+  "id" : "clotho.functions.dna.pcr"
+}

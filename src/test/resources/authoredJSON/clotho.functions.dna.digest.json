@@ -1,10 +1,10 @@
 {
   "args" : [ {
-    "type" : "string",
+    "type" : "org.clothocad.model.NucSeq",
     "name" : "sequence"
   }, {
     "type" : "array",
-    "name" : "enzyme"
+    "name" : "enzymes"
   }, {
     "type" : "boolean",
     "name" : "circularize"
@@ -12,15 +12,30 @@
     "type" : "boolean",
     "name" : "removeMarkings"
   } ],
-  "code" : "function digest (sequence, enzyme, circularize, removeMarkings) {\n  //todo - load enzyme either here or in tests?\n  var Digest = clotho.load('Digest');\n  var enzymeList = [];\n  _.forEach(enzyme, function (enz) {\n    enzymeList.push(clotho.query({\"name\" : enz})[0]);\n  });\n  return Digest.digest(sequence, enzymeList, circularize, removeMarkings);\n}",
+  "code" : "function digest (sequence, enzymes, circularize, removeMarkings) {\n  var Digest = clotho.load('Digest');\n  var seq = sequence.sequence;\n  var frags = Digest.digest(seq, enzymes, circularize, removeMarkings);\n  return _.map(frags, function (frag) {\n    return {\n      sequence : frag\n    };\n  });\n}",
   "description" : "Performs digest given a marked or unmarked sequence and a single or array of enzymes, return fragments array ordered by length",
   "language" : "JAVASCRIPT",
   "name" : "digest",
   "schema" : "org.clothocad.core.datums.Function",
   "tests" : [ {
-    "args" : [ "acgatcgaatatGAATTCacgtactgatcga", [ "EcoRI" ], false, false ],
+    "args" : [ "clotho.demo.sequence.ca1215f", [ {
+      "cut" : "a^gatc_t",
+      "match" : "agatct",
+      "methylation" : false,
+      "name" : "BglII",
+      "overhang" : 4,
+      "rebase" : "http://rebase.neb.com/rebase/enz/BglII.html",
+      "schema" : "org.clothocad.model.RestrictionEnzyme",
+      "subtype" : "S",
+      "type" : "II",
+      "id" : "clotho.enzyme.BglII"
+    } ], false, false ],
     "output" : {
-      "value" : [ "^aatt_cacgtactgatcga", "acgatcgaatatg^aatt_" ],
+      "value" : [ {
+        "sequence" : "^gatc_tgatccagatttggaaattag"
+      }, {
+        "sequence" : "cagtga^gatc_"
+      } ],
       "type" : ""
     }
   } ],
