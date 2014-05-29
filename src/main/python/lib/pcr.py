@@ -9,28 +9,28 @@ EIPCR = True
 
 def revComp(sequence):
     """Returns the reverse complement of a DNA sequence.
-
-    sequence -- A string containing only 'A', 'T', 'C', 'G'
-    """
+        
+        sequence -- A string containing only 'A', 'T', 'C', 'G'
+        """
     #Accepts degenerate codes
     #https://en.wikipedia.org/wiki/Nucleic_acid_notation
     baseComplement = {'a':'t','c':'g','t':'a','g':'c',
-                    'u':'a',
-                    'w':'w','s':'s','m':'k','k':'m','r':'y','y':'r',
-                    'b':'v','d':'h','h':'d','v':'b',
-                    'n':'n',' ':' ',
-                    '^':'_', '_':'^', '|':'|'} #To not crash with sticky ends
+        'u':'a',
+        'w':'w','s':'s','m':'k','k':'m','r':'y','y':'r',
+        'b':'v','d':'h','h':'d','v':'b',
+        'n':'n',' ':' ',
+        '^':'_', '_':'^', '|':'|'} #To not crash with sticky ends
     return ''.join([baseComplement[b] for b in sequence.lower()])[::-1]
 
 
 def matchForward(seq1, seq2):
     """Returns a list of indices where end of HEXAMER of 3' end of Forward primer seq1 matches seq2.
-
-    >>> seq1 = "aaaaaa"
-    >>> seq2 = "gaaaaaagcggggcct"
-    >>> matchForward(seq1, seq2)
-    [7]
-    """
+        
+        >>> seq1 = "aaaaaa"
+        >>> seq2 = "gaaaaaagcggggcct"
+        >>> matchForward(seq1, seq2)
+        [7]
+        """
     lenCheck = 6
     matchSeq = seq1[-lenCheck:]
     if EIPCR:
@@ -41,12 +41,12 @@ def matchForward(seq1, seq2):
 
 def matchReverse(seq1, seq2):
     """Returns a list of indices where HEXAMER of 3' end of Reverse primer matches seq2.
-
-    >>> seq1 = "tttttt"
-    >>> seq2 = "gggcccaaaaaa"
-    >>> matchReverse(seq1, seq2)
-    [5]
-    """
+        
+        >>> seq1 = "tttttt"
+        >>> seq2 = "gggcccaaaaaa"
+        >>> matchReverse(seq1, seq2)
+        [5]
+        """
     lenCheck = 6
     seq1 = revComp(seq1)
     matchSeq = seq1[0:lenCheck]
@@ -123,31 +123,31 @@ def calcBestReverse(oligo, indexes, template):
 #All functions have implicit assumption that inputs are 5' to 3'
 def predict(oligo1, oligo2, template):
     """Takes two primers and a template and returns list of possible products.
-    - This is done by simply running the algorithm twice
+        - This is done by simply running the algorithm twice
         - Case 1: Forward primer = oligo1, Reverse primer = oligo2
         - Case 2: Forward primer = oligo1, Reverse primer = oligo2, but use template = revComp(template)
-    """
+        """
     oligo1 = oligo1.lower()
     oligo2 = oligo2.lower()
     template = template.lower()
-
+    
     #CASE 1
     m1c1 = matchForward(oligo1, template)
     m2c1 = matchReverse(oligo2, template)
     best1F = calcBestForward(oligo1, m1c1, template)
     best1R = calcBestReverse(oligo2, m2c1, template)
-
+    
     #CASE 2
     rc = revComp(template)
     m1c2 = matchForward(oligo1, rc)
     m2c2 = matchReverse(oligo2, rc)
     best2F = calcBestForward(oligo1, m1c2, rc)
     best2R = calcBestReverse(oligo2, m2c2, rc)
-
+    
     #Currently best cut is highest sum of scores
     C1Score = best1F[1] + best1R[1]
     C2Score = best2F[1] + best2R[1]
-
+    
     if Debug:
         print "m1c1: " + str(m1c1)
         print "m2c1: " + str(m2c1)
@@ -155,16 +155,16 @@ def predict(oligo1, oligo2, template):
         print "m1c2: " + str(m1c1)
         print "m2c2: " + str(m2c1)
         print ("Best 2F: " + str(best2F) + " Best 2R: " + str(best2R))
-
+    
     #ADD IN NOTE BELOW
     #NOTE: If index of BestForward > index of BestReverse, WILL BE JUNK (SIGNAL ERROR, etc.)
-
+    
     #NOTE: score = pairwise2.align.globalms(oligoCheck, templateCheck, 2, -2, -1, -1, score_only = True)
     #NOTE: Threshold for viable PCR product is score >= 30
-    threshold = 24
-    if C1Score < threshold and C2Score < threshold:
-        #return "PCR Product score too low, less than threshold %s" % threshold
-        return ""
+    #threshold = 24
+    #if C1Score < threshold and C2Score < threshold:
+    #return "PCR Product score too low, less than threshold %s" % threshold
+    #    return ""
     #Find best overall, check if product otherwise FAIL
     #Case 1 better
     if C1Score >= C2Score:
@@ -175,13 +175,13 @@ def predict(oligo1, oligo2, template):
         if EIPCR:
             if forwardIndex1 > reverseIndex1:
                 retC1 = oligo1 + template[forwardIndex1:] + template[:reverseIndex1+1] + revComp(oligo2)
-
+        
         if Debug:
             print "C1Score (%s) >= C2Score (%s), so we choose Case 1 PCR Product" %(C1Score, C2Score)
             print retC1
-
+        
         return retC1
-
+    
     #Case 2 must be better
     forwardIndex2 = best2F[0]
     reverseIndex2 = best2R[0]
@@ -193,11 +193,11 @@ def predict(oligo1, oligo2, template):
     if Debug:
         print "C1Score (%s) < C2Score (%s), so we choose Case 2 PCR Product" %(C1Score, C2Score)
         print retC2
-
+    
     return retC2
 
-    #NOTE: Add on warnings if scores are equal, etc.
-    #   - EIPCR where input templates are short -> add error checking (i.e. calcBestForward loops around too much?)
+#NOTE: Add on warnings if scores are equal, etc.
+#   - EIPCR where input templates are short -> add error checking (i.e. calcBestForward loops around too much?)
 
 def SOEing(oligo1, oligo2, *templates): #Takes in 2 oligos and arbitary number of templates
-    pass
+pass
