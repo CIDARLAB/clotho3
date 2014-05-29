@@ -1,5 +1,15 @@
 #clotho_commandBar {
   @extend .navbar;
   @extend .navbar-default;
+  @extend .navbar-fixed-top;
   padding: 8px 15px;
+
+  .clotho_commandBar-inner {
+    @extend .container;
+  }
+}
+
+//compensate for fixed nav
+body {
+  margin-top: 50px;
 }
