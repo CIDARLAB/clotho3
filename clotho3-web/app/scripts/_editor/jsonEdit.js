@@ -33,7 +33,7 @@ angular.module('clotho.editor')
 
 				function JSON2String(object) {
 					// better than JSON.stringify(), because it formats + filters $$hashKey etc.
-					// NOTE that this will remove all $-prefixed values
+					// NOTE that angular.toJson will remove all $-prefixed values
 					return angular.toJson(object, true);
 				}
 

@@ -20,7 +20,7 @@ angular.module('clotho.trails').directive('trailInstructor', function(Clotho) {
 			scope.instructorIcon = defaultIcon;
 
 			scope.$watch('instructorId', function (newval) {
-				Clotho.get(newval).then(function (result) {
+				Clotho.get(newval, {mute : true}).then(function (result) {
 					scope.instructor = result;
 
 					scope.instructorIcon = result.icon || defaultIcon;

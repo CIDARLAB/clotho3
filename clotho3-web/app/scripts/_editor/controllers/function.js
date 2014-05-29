@@ -1,5 +1,5 @@
 angular.module('clotho.editor')
-.controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas, $timeout) {
+.controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, $q, codemirrorLoader, ClothoSchemas, $timeout) {
 
 	/* data types */
 
@@ -49,6 +49,7 @@ angular.module('clotho.editor')
 
 	$scope.querySchemaWrapper = function(schemaType, value) {
 		return Clotho.autocomplete(value).then(function (results) {
+			console.log(results);
 			return _.filter(results, function (result) {
 				return result.schema == schemaType;
 			});
@@ -94,12 +95,27 @@ angular.module('clotho.editor')
 		}
 
 		//fixme - need to resolve arguments which are Clotho objects (they should be IDs)
+		//future - will need to do the same for parameterized arguments
 
-		Clotho.run(data.id, data.args).then(function onFunctionTestSuccess (result){
-			$scope.testResults[index] = angular.equals(result, $scope.sharable.tests[index].output.value);
-		}, function onFunctionTestError () {
-			//todo
+		var resolvedArgs = [];
+		_.forEach(data.args, function (arg, index) {
+			if ($scope.simpleTypes[$scope.sharable.args[index].type]) {
+				resolvedArgs.push(arg);
+			} else {
+				resolvedArgs.push(Clotho.get(arg, {mute : true}).then(function (r) { return r}))
+			}
 		});
+
+		$q.all(resolvedArgs).then(function (resolved) {
+			Clotho.run(data.id, resolved)
+			.then(function onFunctionTestSuccess (result){
+				$scope.testResults[index] = angular.equals(result, $scope.sharable.tests[index].output.value);
+			}, function onFunctionTestError () {
+				Clotho.alert('test errored! See activity log.');
+			});
+		});
+
+
 	};
 
 	$scope.runAllTests = function() {
