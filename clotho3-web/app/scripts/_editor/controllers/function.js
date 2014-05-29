@@ -49,7 +49,6 @@ angular.module('clotho.editor')
 
 	$scope.querySchemaWrapper = function(schemaType, value) {
 		return Clotho.autocomplete(value).then(function (results) {
-			console.log(results);
 			return _.filter(results, function (result) {
 				return result.schema == schemaType;
 			});

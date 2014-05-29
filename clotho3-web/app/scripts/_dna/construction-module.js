@@ -1,5 +1,7 @@
 "use strict";
 
+//DEPRECATED - There is another set of functions in /scripts/_construction which should be used instead
+
 angular.module('clotho.dna').service('Construction', function(DNA, Digest, PCR, $parse, $q) {
 
     //testing

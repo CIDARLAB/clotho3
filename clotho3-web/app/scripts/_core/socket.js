@@ -44,10 +44,12 @@ angular.module('clotho.core').service('Socket',
 
 	   //usually assume the socket doesn't exist (it would have to be declared manually), but it may if need to connect to a specific port and not what is created here
 
+	    //fixme - need to handle otherfile.html/#!/ (two slashes)
 	    if ($window.$clotho.socket) {
 		    socket = $window.$clotho.socket;
 	    } else {
 		    var pathname = window.location.pathname;
+
 		    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + ( pathname.substring(0, pathname.lastIndexOf('/') + 1) ) + "websocket");
 	    }
 

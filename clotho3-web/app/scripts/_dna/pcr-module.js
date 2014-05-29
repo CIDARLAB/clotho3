@@ -958,7 +958,6 @@ angular.module('clotho.dna').directive('ligateAlign', ['PCR', 'Digest', 'DNA', '
 
             function process () {
                 var alignment = PCR.ligate(scope.fragments, true, true);
-                console.log(alignment);
 
                 if (_.isArray(alignment)) {
                     alignment = "did not ligate to completion : " + JSON.stringify(alignment);

@@ -6,11 +6,11 @@
 	"dictionary": {
 		"primer1": {
 			"name": "primer1",
-			"sequence": "tatcgatcgta"
+			"sequence": "gatcgatcgat"
 		},
 		"primer2": {
 			"name": "primer2",
-			"sequence": "gatcgatcgat"
+			"sequence": "TATCGATCGTA"
 		},
 		"template": {
 			"name": "template",
@@ -24,12 +24,12 @@
 	"steps": [
 		{
 			"reaction": "pcr",
-			"input": ["template", ["primer1", "primer2"]],
+			"input": ["template", "primer1", "primer2"],
 			"output": "pcr_product"
 		},
 		{
 			"reaction": "digest",
-			"input": ["pcr_product", "EcoRI"],
+			"input": ["pcr_product", ["EcoRI"]],
 			"output": "fragments"
 		},
 		{
@@ -39,7 +39,7 @@
 		},
 		{
 			"reaction": "digest",
-			"input": ["targetFrag", "BsmbI"],
+			"input": ["targetFrag", ["BsmBI"]],
 			"output": "fragments2"
 		},
 		{
