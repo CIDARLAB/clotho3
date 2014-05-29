@@ -6,7 +6,7 @@ angular.module('clotho.construction')
  */
 	.value('ConstructionReactions', {
 		"pcr": {
-			reactionId: "clotho.functions.dna.pcrNucseq",
+			reactionId: "clotho.functions.dna.pcr",
 			clientReaction: "PCR.predict",
 			readable: "PCR",
 			template : "views/_construction/step/pcr.html"
@@ -23,7 +23,7 @@ angular.module('clotho.construction')
 			readable: "Restriction Digest",
 			template : "views/_construction/step/digest.html"
 		},
-		"gelPurify": {
+		"gelpurify": {
 			reactionId: "clotho.functions.dna.gelPurify",
 			clientReaction: "Digest.gelPurify",
 			readable: "Gel Purify",

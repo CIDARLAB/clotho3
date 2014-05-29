@@ -155,33 +155,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		['m', 'Show Programmatic Modal', 'createModal()']
 	]
 })
-.when('/test/trail', {
-  templateUrl: '../views/trail.html',
-  controller: 'TestTrailCtrl',
-	reloadOnSearch: false,
-	resolve : {
-		trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
-			var deferred = $q.defer();
-			Clotho.get($route.current.params.id).then(function(result) {
-				Trails.compile(result).then(function (compiled) {
-					$route.current.$$route.title = result.name;
-					deferred.resolve(compiled);
-				});
-			}, function trailGetRejection () {
-				$http.get('models/org.clothocad.trails.LearningClotho.json').then(function(data) {
-					Trails.compile(data.data).then(function (compiled) {
-						deferred.resolve(compiled);
-					});
-				});
-			});
-			return deferred.promise;
-		}]
-	}
-})
-.when('/test/trail-browser', {
-  templateUrl: 'views/test/trail-browser.html',
-  controller: 'TestTrailBrowserCtrl'
-})
 .when('/test/playlistimport', {
   templateUrl: 'views/test/playlistimport.html',
   controller: 'TestPlaylistimportCtrl'
@@ -189,10 +162,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 .when('/test/quiz', {
   templateUrl: 'views/test/quiz.html',
   controller: 'TestQuizCtrl'
-})
-.when('/test/trail-splash', {
-  templateUrl: '../views/test/trail-splash.html',
-  controller: 'TestTrailSplashCtrl'
 })
 .when('/test/construction', {
   templateUrl: 'views/test/construction.html',

@@ -10,7 +10,7 @@
     <!-- not necessary until serving outside root directory / want html5 mode -->
     <base href="/">
 
-    <link rel="stylesheet" href="styles/command.css"/>
+    <link rel="stylesheet" href="styles/main.css"/>
 
     <script src="bower_components/jquery/jquery.js"></script>
 
@@ -30,13 +30,29 @@
     <div clotho-command-bar></div>
 </div>
 
+<!-- note - ignore main content for stripped down versions -->
+<div id="clothoAppNgView" ng-view ng-cloak></div>
+
+<!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
+<div id="clothoAppWidgets"></div>
+
+<!-- hotkey triggered terminal window -->
+<terminal-aside></terminal-aside>
+
+
 <!--------
 SCRIPTS
 --------->
 
+<!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
+<!--todo - only use jquery-ui modules we need, as in old version-->
+<script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+
+<script src="scripts/clotho-angular-modules.js"></script>
+
 <!--note - correct app based on the distribution, comments removed by build-->
 
-<script src="scripts/clotho-app-command.js"></script>
+<script src="scripts/clotho-app-trails.js"></script>
 
 
 <script src="scripts/clotho-core-module.js"></script>
@@ -47,6 +63,32 @@ SCRIPTS
 
 
 <script src="scripts/clotho-command-module.js"></script>
+
+<!--note - remove all scripts below this for command-only build-->
+
+<script src="scripts/angularui-modules.js"></script>
+
+
+<script src="scripts/clotho-interface-module.js"></script>
+
+
+<script src="scripts/clotho-trails-module.js"></script>
+
+<script src="scripts/clotho-construction-module.js"></script>
+
+
+<script src="scripts/clotho-webapp-module.js"></script>
+
+
+<!--note - module should be moved to server. directives need to be retained. -->
+<script src="scripts/clotho-dna-module.js"></script>
+
+<!--note - remove all scripts below this for trails-only build-->
+
+<script src="scripts/clotho-editor-module.js"></script>
+
+<script src="scripts/clotho-webapp-experiments-module.js"></script>
+
 
 </body>
 </html>

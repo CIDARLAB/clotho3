@@ -28,7 +28,10 @@ angular.module('clotho.construction')
 			//try the dictionary if its given, return result if find it
 			if (!_.isEmpty(file.dictionary)) {
 				var dictionaryResult = file.dictionary[value];
-				if (dictionaryResult) {
+
+				console.log('dictionary result ' + value, dictionaryResult);
+
+				if (!_.isUndefined(dictionaryResult)) {
 					return $q.when(dictionaryResult);
 				}
 			}
@@ -72,6 +75,7 @@ angular.module('clotho.construction')
 		function constructStepArgs (file, step) {
 
 			//helper function to handle string / array of args
+			//arg should always be a key, so we can assume it is a string.
 			function interpolateArg (array) {
 				return _.map(array, function (arg) {
 					return _.isString(arg) ? file.dictionary[arg] : interpolateArg(arg);
@@ -154,9 +158,13 @@ angular.module('clotho.construction')
 
 					console.warn('step ' + index + ' args resolved', resolved);
 
-					//add to dictionary
-					//future (perf) - shouldn't overwrite values every time
-					_.assign(file.dictionary, resolved);
+					//add to dictionary if non-primitive
+					_.forEach(resolved, function (arg, key) {
+						if ( (_.isArray(arg) || _.isObject(arg)    &&
+									_.isUndefined(file.dictionary[key]))  )  {
+							file.dictionary[key] = arg;
+						}
+					});
 
 					//run the step
 					return processStep(file, step);

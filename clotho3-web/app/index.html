@@ -10,7 +10,7 @@
     <!-- not necessary until serving outside root directory / want html5 mode -->
     <base href="/">
 
-    <!-- process:remove:api,dist -->
+    <!-- process:remove:api,dist,trails -->
     <!-- build:css({.tmp,app}) styles/command.css -->
     <link rel="stylesheet" href="css/command.css">
     <!-- endbuild -->
@@ -30,7 +30,7 @@
     <!-- note that lodash is required by several components -->
     <script src="bower_components/lodash/dist/lodash.js"></script>
 
-    <!-- process:remove:api,dist,command -->
+    <!-- process:remove -->
     <!-- note - dev only -->
     <script src="http://localhost:35729/livereload.js"></script>
     <!-- /process -->
@@ -64,11 +64,13 @@
 SCRIPTS
 --------->
 
-<!-- process:remove:command,api -->
+<!-- process:remove:command,api,trails -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
 <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+<!-- /process -->
 
+<!-- process:remove:command,api -->
 <!-- build:js scripts/clotho-angular-modules.js -->
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -76,26 +78,29 @@ SCRIPTS
 <!-- endbuild -->
 <!-- /process -->
 
-
 <!--note - correct app based on the distribution, comments removed by build-->
 
-<!-- process:remove:command,api -->
+<!-- process:remove:command,api,trails -->
 <!-- build:js scripts/clotho-app.js -->
 <script src="scripts/app.js"></script>
 <!--endbuild-->
 <!-- /process -->
 
-<!-- process:remove:dist,api -->
+<!-- process:remove:dist,api,trails -->
 <!-- build:js scripts/clotho-app-command.js -->
 <!--<script src="scripts/app-command.js"></script>-->
 <!--endbuild-->
 <!-- /process -->
 
-<!-- process:remove:dist,command -->
+<!-- process:remove:dist,command,trails -->
 <!-- build:js scripts/clotho-app-api.js -->
-<!--
-<script src="scripts/app-api.js"></script>
--->
+<!--<script src="scripts/app-api.js"></script>-->
+<!--endbuild-->
+<!-- /process -->
+
+<!-- process:remove:dist,command,api -->
+<!-- build:js scripts/clotho-app-trails.js -->
+<!--<script src="scripts/app-trails.js"></script>-->
 <!--endbuild-->
 <!-- /process -->
 
@@ -120,6 +125,26 @@ dependencies: none
 
 <!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
+
+<!-- build:js scripts/clotho-foundation-module.js -->
+<!--
+name: clotho.foundation
+function: necessary components for a Clotho-Angular web app
+dependencies: clotho.core
+-->
+<script src="scripts/_foundation/_kickoff.js"></script>
+<script src="scripts/_foundation/setup.js"></script>
+<script src="scripts/_foundation/clotho-utils.js"></script>
+<script src="scripts/_foundation/clothoSchemas.js"></script>
+<script src="scripts/_foundation/clothoRun.js"></script>
+<script src="scripts/_foundation/clothoTool.js"></script>
+<script src="scripts/_foundation/clothoShow.js"></script>
+<script src="scripts/_foundation/clothoModal.js"></script>
+<script src="scripts/_foundation/sharablePopup.js"></script>
+<script src="scripts/_foundation/extensions.js"></script>
+<!--endbuild-->
+
+
 <!-- build:js scripts/clotho-command-module.js -->
 <!--
 name: clotho.commandbar
@@ -143,29 +168,10 @@ dependencies: clotho.core, jQuery, Lodash
 <script src="scripts/_command/clothoTokenFactory.js"></script>
 <script src="scripts/_command/clothoTokenizer.js"></script>
 <!--endbuild-->
-
-<!-- build:js scripts/clotho-foundation-module.js -->
-<!--
-name: clotho.foundation
-function: necessary components for a Clotho-Angular web app
-dependencies: clotho.core
--->
-<script src="scripts/_foundation/_kickoff.js"></script>
-<script src="scripts/_foundation/setup.js"></script>
-<script src="scripts/_foundation/clotho-utils.js"></script>
-<script src="scripts/_foundation/clothoSchemas.js"></script>
-<script src="scripts/_foundation/clothoRun.js"></script>
-<script src="scripts/_foundation/clothoTool.js"></script>
-<script src="scripts/_foundation/clothoShow.js"></script>
-<script src="scripts/_foundation/clothoModal.js"></script>
-<script src="scripts/_foundation/sharablePopup.js"></script>
-<script src="scripts/_foundation/extensions.js"></script>
-<!--endbuild-->
 <!-- /process -->
 
 <!-- process:remove:api,command -->
 <!--note - remove all scripts below this for command-only build-->
-
 
 <!-- build:js scripts/angularui-modules.js -->
 <!--
@@ -177,6 +183,7 @@ dependencies: none
 <!-- note - need to copy over /template/ from UI as well as scripts we want -->
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <!-- endbuild -->
+
 
 <!-- build:js scripts/clotho-interface-module.js -->
 <!--
@@ -222,7 +229,6 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <!--endbuild-->
 
 
-
 <!-- build:js scripts/clotho-trails-module.js -->
 <!--
 name: clotho.trails
@@ -246,36 +252,6 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_trails/ui/trailMaterial.js"></script>
 <script src="scripts/_trails/ui/trailHeader.js"></script>
 <script src="scripts/_trails/ui/trailOverview.js"></script>
-<!--endbuild-->
-
-
-<!-- build:js scripts/clotho-editor-module.js -->
-<!--
-name: clotho.editor
-function: Editor components
-dependencies: clotho.foundation, clotho.interface
--->
-<script src="scripts/_editor/_kickoff.js"></script>
-<script src="scripts/_editor/clothoEditor.js"></script>
-<script src="scripts/_editor/codemirrorLoader.js"></script>
-<script src="scripts/_editor/form-field.js"></script>
-<script src="scripts/_editor/formFieldEnumeration.js"></script>
-<script src="scripts/_editor/formFieldInput.js"></script>
-<script src="scripts/_editor/jsonEdit.js"></script>
-<script src="scripts/_editor/controllers/sharable.js"></script>
-<script src="scripts/_editor/controllers/function.js"></script>
-<script src="scripts/_editor/controllers/trail.js"></script>
-<script src="scripts/_editor/controllers/schema.js"></script>
-<!--endbuild-->
-
-
-<!--note - TEMPORARY - THESE SHOULD ALL EXIST ON THE SERVER ONLY -->
-<!-- build:js scripts/clotho-dna-module.js -->
-<script src="scripts/_dna/_kickoff.js"></script>
-<script src="scripts/_dna/dna-module.js"></script>
-<script src="scripts/_dna/digest-module.js"></script>
-<script src="scripts/_dna/pcr-module.js"></script>
-<script src="scripts/_dna/construction-module.js"></script>
 <!--endbuild-->
 
 <!-- build:js scripts/clotho-construction-module.js -->
@@ -305,11 +281,46 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/controllers/team.js"></script>
 <script src="scripts/controllers/browser.js"></script>
 <script src="scripts/controllers/editor.js"></script>
-<script src="scripts/controllers/trails.js"></script>
 <script src="scripts/controllers/trail.js"></script>
 <script src="scripts/controllers/trails.js"></script>
+<script src="scripts/controllers/trail-splash.js"></script>
 <script src="scripts/controllers/widgets.js"></script>
 <!-- endbuild -->
+
+
+<!--note - module should be moved to server. directives need to be retained. -->
+<!-- build:js scripts/clotho-dna-module.js -->
+<script src="scripts/_dna/_kickoff.js"></script>
+<script src="scripts/_dna/dna-module.js"></script>
+<script src="scripts/_dna/digest-module.js"></script>
+<script src="scripts/_dna/pcr-module.js"></script>
+<script src="scripts/_dna/construction-module.js"></script>
+<!--endbuild-->
+
+<!-- /process -->
+
+
+<!-- process:remove:api,command,trails -->
+<!--note - remove all scripts below this for trails-only build-->
+
+<!-- build:js scripts/clotho-editor-module.js -->
+<!--
+name: clotho.editor
+function: Editor components
+dependencies: clotho.foundation, clotho.interface
+-->
+<script src="scripts/_editor/_kickoff.js"></script>
+<script src="scripts/_editor/clothoEditor.js"></script>
+<script src="scripts/_editor/codemirrorLoader.js"></script>
+<script src="scripts/_editor/form-field.js"></script>
+<script src="scripts/_editor/formFieldEnumeration.js"></script>
+<script src="scripts/_editor/formFieldInput.js"></script>
+<script src="scripts/_editor/jsonEdit.js"></script>
+<script src="scripts/_editor/controllers/sharable.js"></script>
+<script src="scripts/_editor/controllers/function.js"></script>
+<script src="scripts/_editor/controllers/trail.js"></script>
+<script src="scripts/_editor/controllers/schema.js"></script>
+<!--endbuild-->
 
 <!-- build:js scripts/clotho-webapp-experiments-module.js -->
 <!--
@@ -317,10 +328,8 @@ name: clotho.webapp
 function: experiments [pre-integration]
 -->
 <script src="scripts/controllers/test/schemaview.js"></script>
-<script src="scripts/controllers/test/trail.js"></script>
 <script src="scripts/controllers/test/playlistimport.js"></script>
 <script src="scripts/controllers/test/quiz.js"></script>
-<script src="scripts/controllers/test/trail-splash.js"></script>
 <script src="scripts/controllers/test/construction.js"></script>
 <script src="scripts/controllers/test/contstructionTrail.js"></script>
 <script src="scripts/controllers/test/focus.js"></script>

@@ -155,19 +155,22 @@
 
               <div ng-repeat="param in sharable.args track by $index" class="col-sm-10">
                 <div ng-if="simpleTypes[param.type]">
-                  <textarea json-edit="test.args[$index]"
-                            rows="1"
-                            class="form-control"
-                            ng-disabled="!editMode"
-                            placeholder="{{param.name + ' - enter as JSON (quote for string)'}}">
-                  </textarea>
+                  <form-field>
+                    <textarea json-edit="test.args[$index]"
+                              rows="1"
+                              class="form-control"
+                              ng-disabled="!editMode"
+                              placeholder="{{param.name + ' - enter as JSON (quote for string)'}}">
+                    </textarea>
+                  </form-field>
                 </div>
                 <div ng-if="!simpleTypes[param.type]">
+                  <!-- cannot wrap with form-field while using typeahead becuase creates sibling element -->
                   <input type="text"
                          id="functionTestArg{{ $index }}"
                          class="form-control"
                          ng-model="test.args[$index]"
-                         typeahead="opt as opt.name for opt in querySchemaWrapper(param.type, $viewValue)"
+                         typeahead="opt.id as opt.name for opt in querySchemaWrapper(param.type, $viewValue)"
                          popover="Choose sharable with schema: {{param.type}}"
                          popover-trigger="focus"
                          ng-disabled="!editMode"
@@ -181,12 +184,14 @@
                      for="functionTestResult{{$index}}">Expects</label>
 
               <div class="col-sm-10">
-                <textarea json-edit="test.output.value"
-                          rows="1"
-                          class="form-control"
-                          ng-disabled="!editMode"
-                          placeholder="Enter JSON Value - use quotes for string">
-                </textarea>
+                <form-field>
+                  <textarea json-edit="test.output.value"
+                            rows="1"
+                            class="form-control"
+                            ng-disabled="!editMode"
+                            placeholder="Enter JSON Value - use quotes for string">
+                  </textarea>
+                </form-field>
               </div>
             </div>
           </div>

@@ -1,14 +1,14 @@
 {
-	"schema": "org.clothocad.model.constructionFile",
+	"schema": "org.clothocad.model.ConstructionFile",
 	"steps": [
 		{
 			"reaction": "pcr",
 			"input": [
-				"pBAC874t",
 				"ca581f",
-				"ca803r"
+				"ca803r",
+				"pBAC874t"
 			],
-			"productSize": "1060",
+			"productSize": 1060,
 			"output": "pcrproduct"
 		},
 		{
@@ -23,11 +23,11 @@
 			"output": "digestproduct1"
 		},
 		{
-			"reaction": "gelPurify",
+			"reaction": "gelpurify",
 			"input": [
 				"digestproduct1"
 			],
-			"length": "Largest",
+			"length": "L",
 			"output": "pcrdig"
 		},
 		{
@@ -42,11 +42,11 @@
 			"output": "digestproduct2"
 		},
 		{
-			"reaction": "gelPurify",
+			"reaction": "gelpurify",
 			"input": [
 				"digestproduct2"
 			],
-			"length": "Largest",
+			"length": "L",
 			"output": "vectdig"
 		},
 		{
