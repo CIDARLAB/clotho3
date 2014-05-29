@@ -74,11 +74,12 @@ angular.module('clotho.construction')
 		 */
 		function constructStepArgs (file, step) {
 
-			//helper function to handle string / array of args
-			//arg should always be a key, so we can assume it is a string.
+			//helper function to handle primitive / string / array of args
+			//arg should is either a primitive (just return it), string (look it up), or array (recurse)
 			function interpolateArg (array) {
 				return _.map(array, function (arg) {
-					return _.isString(arg) ? file.dictionary[arg] : interpolateArg(arg);
+					return _.isString(arg) ? file.dictionary[arg] :
+								 _.isArray(arg) ? interpolateArg(arg) : arg;
 				});
 			}
 
@@ -141,10 +142,6 @@ angular.module('clotho.construction')
 
 			//iterate through steps, sequentially - need to handle sequential promises (like getting schema promises)
 			_.forEach(file.steps, function (step, index) {
-
-				console.warn('step ' + index + ' loop started');
-
-				//fixme - should only interpolate args after previous step has run
 
 				//add this step to the promise chain
 				prevStepPromise = prevStepPromise.then(function() {
