@@ -23,12 +23,19 @@ angular.module('clotho.interface')
 		link: function(scope, element, attrs) {
 			var showFromTopSticky = attrs.simpleSticky || 20,
 				showFromTopNormal = element.css('top'),
-				startFromTop = parseOffsets();
+				startFromTop;
 
-			function parseOffsets () {
-				var boundingClientRect = element[0].getBoundingClientRect();
-				return boundingClientRect.top + (angular.isDefined($window.pageYOffset) ? $window.pageYOffset : $window.document[0].documentElement.scrollTop);
+			function setOffset () {
+				if (element.hasClass('affix')) {
+					//do nothing
+				} else {
+					var boundingClientRect = element[0].getBoundingClientRect();
+					startFromTop = boundingClientRect.top + (angular.isDefined($window.pageYOffset) ? $window.pageYOffset : $window.document[0].documentElement.scrollTop);
+				}
 			}
+
+			//init
+			setOffset();
 
 			function checkPosition () {
 				var affixed = ($window.pageYOffset + showFromTopSticky) > startFromTop;
@@ -48,7 +55,8 @@ angular.module('clotho.interface')
 
 
 			var checkPositionDebounced = _.throttle(function () {
-				checkPosition()
+				checkPosition();
+				setOffset();
 			}, 50);
 
 			//bind listeners
