@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca602r",
-  "name" : "ca602r",
-  "sequence" : "ggataGGTCTCGaattCGGCAATGCTCAATGGATAC",
-  "description" : "Reverse BsaI-->EcoRI oligo to clone lac/T7 of BL21(DE3)"
-}

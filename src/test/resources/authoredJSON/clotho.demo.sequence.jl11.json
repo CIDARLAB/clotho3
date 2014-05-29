@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.jl11",
-  "name" : "jl11",
-  "sequence" : "gacttACTAGTgaagcggctcatatcgtgatc",
-  "description" : "Reverse SpeI oligo to bioBrick TraG *internal NotI site"
-}

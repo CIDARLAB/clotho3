@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca746r",
-  "name" : "ca746r",
-  "sequence" : "gagttGGTCTCgAATTgccttagctcctgaaaatctcgc",
-  "description" : "Reverse GFP BsaI to EcoRI oligo to transfer pPROBE reporters"
-}

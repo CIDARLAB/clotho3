@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca602f",
-  "name" : "ca602f",
-  "sequence" : "gagtaGGTCTCTgatcGCACCACGCTGACGTTCTAC",
-  "description" : "Forward BsaI-->BamHI oligo to clone lac/T7 of BL21(DE3)"
-}

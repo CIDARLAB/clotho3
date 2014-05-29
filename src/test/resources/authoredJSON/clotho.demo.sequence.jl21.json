@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.jl21",
-  "name" : "jl21",
-  "sequence" : "gctggCAATTGcattcgatttccagtacaggc",
-  "description" : "Reverse MfeI to EcoRI for traG-5' knockout cassette"
-}

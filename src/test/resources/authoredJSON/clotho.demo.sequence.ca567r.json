@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca567r",
-  "name" : "ca567r",
-  "sequence" : "CTAGCGAATTCGGCGGCGAATGGGCTGACCG",
-  "description" : "Reverse oligo to introduce EcoRI site into KanR"
-}

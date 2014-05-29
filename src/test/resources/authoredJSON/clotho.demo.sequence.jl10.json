@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.jl10",
-  "name" : "jl10",
-  "sequence" : "CCTAGGAATTCGCGGCCGCTTCTAGatgaagaaccgaaacaacgc",
-  "description" : "Forward EcoRI oligo to bioBrick TraG *Internal NotI site"
-}

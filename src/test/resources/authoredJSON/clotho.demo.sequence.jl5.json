@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.jl5",
-  "name" : "jl5",
-  "sequence" : "CCTAGGAATTCGCGGCCGCTTCTAGatggctaaggtgaacctgtatatcagc",
-  "description" : "Forward EcoRI oligo to bioBrick TraM"
-}

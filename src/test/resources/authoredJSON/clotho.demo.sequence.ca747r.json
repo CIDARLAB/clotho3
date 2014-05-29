@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca747r",
-  "name" : "ca747r",
-  "sequence" : "CACTGagatctGCGTTTATTCGACTATAACAAAC",
-  "description" : "Reverse Constant BglII oligo to mutate RBS of luxIR"
-}

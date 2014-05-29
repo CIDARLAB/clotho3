@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca1002r",
-  "name" : "ca1002r",
-  "sequence" : "gaagcctgcagcggccgctTctagAatataaacgcag",
-  "description" : "Reverse PstI oligo to make SpeI blunter cassette"
-}

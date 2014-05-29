@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca860r",
-  "name" : "ca860r",
-  "sequence" : "GACTAGGATCCGCTAATCTTATGG",
-  "description" : "Reverse BamHI oligo to remove BamHI site in pBAD-GFP"
-}

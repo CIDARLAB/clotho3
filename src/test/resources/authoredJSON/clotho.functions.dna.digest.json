@@ -12,8 +12,8 @@
     "type" : "boolean",
     "name" : "removeMarkings"
   } ],
-  "code" : "function digest (sequence, enzymes, circularize, removeMarkings) {\n  var Digest = clotho.load('Digest');\n  var seq = sequence.sequence;\n  var frags = Digest.digest(seq, enzymes, circularize, removeMarkings);\n  return _.map(frags, function (frag) {\n    return {\n      sequence : frag\n    };\n  });\n}",
-  "description" : "Performs digest given a marked or unmarked sequence and a single or array of enzymes, return fragments array ordered by length",
+  "code" : "function digest (sequence, enzymes, circularize, removeMarkings) {\n  var Digest = clotho.load('Digest');\n  var seq = sequence.sequence;\n  \n  //we'll allow an object too\n  if (!_.isArray(enzymes)) {\n    enzymes = [enzymes];\n  }\n  \n  var frags = Digest.digest(seq, enzymes, circularize, removeMarkings);\n  \n  return _.map(frags, function (frag) {\n    return {\n      sequence : frag\n    };\n  });\n}",
+  "description" : "Performs digest given a marked or unmarked sequence and a single or array of enzymes, return fragments array ordered by length. An enzyme object instead of array is also accepted.",
   "language" : "JAVASCRIPT",
   "name" : "digest",
   "schema" : "org.clothocad.core.datums.Function",

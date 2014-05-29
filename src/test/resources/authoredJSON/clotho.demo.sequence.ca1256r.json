@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca1256r",
-  "name" : "ca1256r",
-  "sequence" : "GGACTcctaggACGGTTATCCACAGAATCAG",
-  "description" : "AvrII EIPCR of pBca1255 to remove G00101 site"
-}

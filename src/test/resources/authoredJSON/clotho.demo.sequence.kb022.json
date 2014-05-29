@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.kb022",
-  "name" : "kb022",
-  "sequence" : "GTCGATCTAGAGAACTAGAATCACCTCAAGCTTTTGGGTAAGAAAGAGG",
-  "description" : "Lock3 two consecutive point mutations on the 3' end of the 3' homology region forward oligo"
-}

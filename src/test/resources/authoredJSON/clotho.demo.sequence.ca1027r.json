@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca1027r",
-  "name" : "ca1027r",
-  "sequence" : "gaagccaactagtatttctcctctt",
-  "description" : "Reverse SpeI to fix lock3 variant rbs spacing"
-}

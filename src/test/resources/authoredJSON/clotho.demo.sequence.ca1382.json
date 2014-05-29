@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca1382",
-  "name" : "ca1382",
-  "sequence" : "GTTCAGGGcAATTCTCTTGC",
-  "description" : "Forward oligo to remove ecoRI site in beta roll"
-}

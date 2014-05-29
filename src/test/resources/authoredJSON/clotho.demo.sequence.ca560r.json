@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca560r",
-  "name" : "ca560r",
-  "sequence" : "CGTTACGTCTCGAATTCTCAGGAGAGCGTTCACCGAC",
-  "description" : "Reverse BsmBI to EcoRI oligo to make pG80-T7560"
-}

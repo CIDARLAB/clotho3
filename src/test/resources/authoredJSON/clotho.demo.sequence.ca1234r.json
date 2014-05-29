@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca1234r",
-  "name" : "ca1234r",
-  "sequence" : "cagtgGAATTCcttgtgatcgtcccaggtc",
-  "description" : "Reverse EcoRI oligo to open up pacA targetting plasmid"
-}

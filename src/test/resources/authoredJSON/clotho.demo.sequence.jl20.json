@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.jl20",
-  "name" : "jl20",
-  "sequence" : "GAGTCAGATCTgattatgttggtgcgctg",
-  "description" : "Forward BglII to BamHI for traG-5' knockout cassette"
-}

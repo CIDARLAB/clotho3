@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.sil001",
-  "name" : "sil001",
-  "sequence" : "ctctgATGCATactagtagcggccgctgcaggcttc",
-  "description" : "Forward to add NsiI site"
-}

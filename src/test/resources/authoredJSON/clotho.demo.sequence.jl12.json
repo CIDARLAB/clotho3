@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.jl12",
-  "name" : "jl12",
-  "sequence" : "atgaagctgagtatgaaatctctggcagcactgctgatgatgctggtgCaggctggagctgcttcgaag",
-  "description" : "Forward oligo to knockout trbC"
-}

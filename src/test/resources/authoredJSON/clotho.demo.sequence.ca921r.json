@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca921r",
-  "name" : "ca921r",
-  "sequence" : "CGTCAggatcctACTAGTgGGTATGGAGAAACAGTAG",
-  "description" : "Reverse BamHI/SpeI oligo to move SpeI site in pBAC874t"
-}

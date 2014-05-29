@@ -1,6 +1,0 @@
-{
-  "id" : "clotho.demo.sequence.ca692r",
-  "name" : "ca692r",
-  "sequence" : "CAATTGACGGCTCGAGGGAGTAG",
-  "description" : "Reverse XhoI EIPCR to delete AraC in pBAD-GFP"
-}
