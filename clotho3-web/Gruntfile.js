@@ -462,7 +462,7 @@ module.exports = function (grunt) {
 	  processhtml : {
 		  options : {
 			  commentMarker : 'process', //don't want to use default 'build' bc usemin,
-			  stripUnparsed : true
+			  strip : true
 		  },
 		  api : {
 			  files : {
@@ -477,6 +477,11 @@ module.exports = function (grunt) {
 		  dist : {
 			  files : {
 				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  trails : {
+			  files : {
+				  '<%= yeoman.dist %>/index-trail.html': ['<%= yeoman.dist %>/index-trail.html']
 			  }
 		  }
 	  }
