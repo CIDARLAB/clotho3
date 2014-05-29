@@ -49,16 +49,16 @@
 			"output": "pSB1A2-Bca9128"
 		}
 	],
-	"dictionary": [
-		{
-			"key": "ca1067f",
+	"dictionary": {
+		"ca1067f": {
+			"name": "ca1067f",
 			"description": "Biobricking of KanR of pSB1AK3",
-			"value": "ccagtGAATTCgtccTCTAGAgagctgatccttcaactc"
+			"sequence": "ccagtGAATTCgtccTCTAGAgagctgatccttcaactc"
 		},
-		{
-			"key": "ca1067r",
+		"ca1067r": {
+			"name": "ca1067r",
 			"description": "Biobricking of KanR of pSB1AK3",
-			"value": "gcagtACTAGTtccgtcaagtcagcgtaatg"
+			"sequence": "gcagtACTAGTtccgtcaagtcagcgtaatg"
 		}
-	]
+	}
 }

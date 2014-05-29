@@ -145,14 +145,16 @@ angular.module('clotho.tokenizer')
 					}
 				});
 
-				scope.setQueryString = function (string) {
+				scope.setQueryString = function (string, noReset) {
 
-					string = angular.isUndefined(string) ? scope.query : string;
+					string = (angular.isUndefined(string) || angular.isEmpty(string)) ? scope.query : string;
 
 					//reset
 					resetQuery();
 					resetMatches();
-					angular.isDefined(scope.tokenCollection) && scope.tokenCollection.removeAll();
+					if (!noReset) {
+						angular.isDefined(scope.tokenCollection) && scope.tokenCollection.removeAll();
+					}
 
 					angular.forEach(string.split(tokenDelimiterValue), function (token) {
 						//want to call parent's add token so updates completeQuery as well
@@ -315,7 +317,9 @@ angular.module('clotho.tokenizer')
 					//don't want to prevent the event if we're getting it next event loop
 					//evt.preventDefault();
 
-					$timeout(scope.setQueryString);
+					$timeout(function () {
+						scope.setQueryString(null, true);
+					});
 				});
 
 				scope.$on('$locationChangeSuccess', function () {

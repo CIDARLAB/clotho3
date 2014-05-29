@@ -5,9 +5,14 @@
  * This is the client Clotho API - commands issued BY the server to be run on the client
  */
 angular.module('clotho.core').service('ClientAPI',
-	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $clothoModal, $document) {
+	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $document) {
 
 		var Debugger = new Debug('ClientAPI', '#dd99dd');
+
+		//check for presence so don't rely on module
+		if ( $injector.has('$clothoModal') ) {
+			var $clothoModal = $injector.get('$clothoModal');
+		}
 
 		/**
 		 * @name clientAPI.collect
@@ -190,7 +195,8 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var alert = function clientAPIAlert(msg) {
 
-			$clothoModal.create({
+
+			angular.isDefined('$clothoModal') && $clothoModal.create({
 				title : "Clotho Alert",
 				content : "msg"
 			})

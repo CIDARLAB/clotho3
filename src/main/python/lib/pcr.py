@@ -18,7 +18,8 @@ def revComp(sequence):
                     'u':'a',
                     'w':'w','s':'s','m':'k','k':'m','r':'y','y':'r',
                     'b':'v','d':'h','h':'d','v':'b',
-                    'n':'n',' ':' '}
+                    'n':'n',' ':' ',
+                    '^':'_', '_':'^', '|':'|'} #To not crash with sticky ends
     return ''.join([baseComplement[b] for b in sequence.lower()])[::-1]
 
 
@@ -160,10 +161,10 @@ def predict(oligo1, oligo2, template):
 
     #NOTE: score = pairwise2.align.globalms(oligoCheck, templateCheck, 2, -2, -1, -1, score_only = True)
     #NOTE: Threshold for viable PCR product is score >= 30
-    threshold = 24
-    if C1Score < threshold and C2Score < threshold:
+    #threshold = 24
+    #if C1Score < threshold and C2Score < threshold:
         #return "PCR Product score too low, less than threshold %s" % threshold
-        return ""
+    #    return ""
     #Find best overall, check if product otherwise FAIL
     #Case 1 better
     if C1Score >= C2Score:

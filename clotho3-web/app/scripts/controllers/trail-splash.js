@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.trails')
-	.controller('TestTrailSplashCtrl', function ($scope, $location, Clotho) {
+	.controller('TrailSplashCtrl', function ($scope, $location, Clotho) {
 		$scope.topics = [
 			{
 				"title": "Introducing Clotho",

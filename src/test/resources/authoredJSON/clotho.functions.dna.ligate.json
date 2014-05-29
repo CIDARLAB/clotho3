@@ -1,19 +1,25 @@
 {
-  "schema" : "org.clothocad.core.datums.Function",
-  "language" : "JAVASCRIPT",
-  "name" : "ligate",
-  "id" : "clotho.functions.dna.ligate",
-  "description" : "Ligate a set of sequences with complementary ends, using NEB style cut marks: caret (^), underscore (_), and pipe (|)",
-  "code" : "function ligate (fragments) {\n var PCR = clotho.load('PCR');\n return PCR.ligate(fragments);\n}",
   "args" : [ {
     "type" : "array",
     "name" : "fragments"
   } ],
+  "code" : "function ligate (fragments) {\n var PCR = clotho.load('PCR');\n var unwrapped = _.pluck(fragments, 'sequence');\n var product = PCR.ligate(unwrapped);\n  return _.map(product, function (frag) {\n    return {\n      sequence : frag\n    };\n  });\n}",
+  "description" : "Ligate a set of sequences with complementary ends, using NEB style cut marks: caret (^), underscore (_), and pipe (|). Accepts an array of NucSeqsLite, and outputs a NucSeqLite.",
+  "language" : "JAVASCRIPT",
+  "name" : "ligate",
+  "schema" : "org.clothocad.core.datums.Function",
   "tests" : [ {
-    "args" : [ [ "aaaaaaaaaaA^CATG_", "^CATG_Tttggttggttgg" ] ],
+    "args" : [ [ {
+      "sequence" : "aaaaaaaaaaA^CATG_"
+    }, {
+      "sequence" : "^CATG_Tttggttggttgg"
+    } ] ],
     "output" : {
-      "value" : "aaaaaaaaaaACATGTttggttggttgg",
+      "value" : [ {
+        "sequence" : "aaaaaaaaaaACATGTttggttggttgg"
+      } ],
       "type" : ""
     }
-  } ]
+  } ],
+  "id" : "clotho.functions.dna.ligate"
 }

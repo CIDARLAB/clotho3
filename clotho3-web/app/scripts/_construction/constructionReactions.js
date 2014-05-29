@@ -6,25 +6,25 @@ angular.module('clotho.construction')
  */
 	.value('ConstructionReactions', {
 		"pcr": {
-			reaction: "",
+			reactionId: "clotho.functions.dna.pcr",
 			clientReaction: "PCR.predict",
 			readable: "PCR",
 			template : "views/_construction/step/pcr.html"
 		},
 		"ligate": {
-			reaction: "",
+			reactionId: "clotho.functions.dna.ligate",
 			clientReaction: "PCR.ligate",
 			readable: "Ligation",
 			template : "views/_construction/step/ligate.html"
 		},
 		"digest": {
-			reaction: "",
+			reactionId: "clotho.functions.dna.digest",
 			clientReaction: "Digest.digest",
 			readable: "Restriction Digest",
 			template : "views/_construction/step/digest.html"
 		},
 		"gelpurify": {
-			reaction: "",
+			reactionId: "clotho.functions.dna.gelPurify",
 			clientReaction: "Digest.gelPurify",
 			readable: "Gel Purify",
 			template : "views/_construction/step/gelpurify.html"

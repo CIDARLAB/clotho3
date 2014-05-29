@@ -13,7 +13,7 @@
 			}
 		]
 	},
-	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates", "clotho.developer.billcao"],
 	"contents": [
 		{
 			"chapter": "Introduction",
@@ -63,6 +63,19 @@
 						{
 							"type": "template",
 							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
+						}
+					]
+				},
+				{
+					"title": "Wet Lab Construction Files",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabExamples.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/wetLabExamples.html"
 						}
 					]
 				}

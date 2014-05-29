@@ -1,24 +1,48 @@
 {
-  "id" : "org.clothocad.core.datums.SharableObjBase",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.datums.SharableObjBase",
-  "c" : "org.clothocad.core.datums.SharableObjBase",
+  "id" : "org.clothocad.core.datums.SharableObjBase",
   "name" : "SharableObjBase",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.String",
     "name" : "icon",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.Person",
     "name" : "author",
     "type" : "org.clothocad.model.Person",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.String",
     "name" : "description",
     "type" : "string",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.SharableObjBase",
+  "binaryName" : "org.clothocad.core.datums.SharableObjBase"
 }

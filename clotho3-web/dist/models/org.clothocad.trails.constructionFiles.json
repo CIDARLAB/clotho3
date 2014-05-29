@@ -13,7 +13,7 @@
 			}
 		]
 	},
-	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates", "clotho.developer.billcao"],
 	"contents": [
 		{
 			"chapter": "Introduction",
@@ -45,7 +45,7 @@
 					"contents": [
 						{
 							"type": "text",
-							"params": "<div><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
+							"params": "<div class=\"img-thumbnail\" style=\"padding: 10px;\"><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
 						},
 						{
 							"type": "template",
@@ -56,10 +56,26 @@
 				{
 					"title": "Wet Lab Syntax",
 					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
+					},
 					"contents": [
 						{
 							"type": "template",
 							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
+						}
+					]
+				},
+				{
+					"title": "Wet Lab Construction Files",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabExamples.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/wetLabExamples.html"
 						}
 					]
 				}

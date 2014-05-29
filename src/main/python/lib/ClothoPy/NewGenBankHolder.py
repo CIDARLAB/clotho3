@@ -17,35 +17,43 @@ from GenBankHolder import GenBank
 class NewGenBank:
 	def __init__ (self, record):
 		self.GB = GenBank(record)
-
+		
 		self.name = self.GB.name #important
 		self.description = self.GB.description #important
-		self.id = self.GB.id #important
+		#self.id = self.GB.id #important
 
 		self.sequence = self.GB.sequence.tostring() #important
-		self.alphabet = self.GB.sequence.alphabet
-		self.type = 'DNA' #important
-		if isinstance(self.alphabet, RNAAlphabet):
-			self.type = 'RNA'
-		elif isinstance(self.alphabet, ProteinAlphabet):
-			self.type = 'Protein'
-
-		self.features = self.GB.features
-		if 'references' in self.GB.annotations.keys():
-			self.references = self.GB.annotations['references']
-		self.pubmed = [] #important
-
-		self.annotations = self.GB.annotations
-		data_file_division = ''#important
-		if 'data_file_division' in self.GB.annotations.keys():
-			self.data_file_division = self.GB.annotations['data_file_division']
-		self.organism = 'Unknown'
-		if 'organism' in self.GB.annotations.keys(): #important
-			self.organism = self.GB.annotations['organism']
-		self.date = ''
+		#self.alphabet = self.GB.sequence.alphabet
+		#self.type = 'DNA' #important
+		#if isinstance(self.alphabet, RNAAlphabet):
+		#	self.type = 'RNA'
+		#elif isinstance(self.alphabet, ProteinAlphabet):
+		#	self.type = 'Protein'
+		
+		#self.features = self.GB.features
+		#if 'references' in self.GB.annotations.keys():
+		#	self.references = self.GB.annotations['references']
+		#self.pubmed = [] #important
+		
+		#self.annotations = self.GB.annotations
+		#data_file_division = ''#important
+		#if 'data_file_division' in self.GB.annotations.keys():
+		#	self.data_file_division = self.GB.annotations['data_file_division']
+		#self.organism = 'Unknown'
+		#if 'organism' in self.GB.annotations.keys(): #important
+		#	self.organism = self.GB.annotations['organism']
+		self.date = None
 		if 'date' in self.GB.annotations.keys(): #important
 			self.date = self.GB.annotations['date']
+		self.id = None
+		if 'gi' in self.GB.annotations.keys():
+			self.id = self.GB.annotations['gi']
+		self.accn = None
+		if 'accessions' in self.GB.annotations.keys():
+			self.accn = self.GB.annotations['accessions']
 
+		self.highlight = self.GB.features
+		
 		self.firstLine = self.GB.firstLine
 		self.isLinear = True #important
 		if 'circular' in self.firstLine.split():
@@ -60,3 +68,6 @@ class NewGenBank:
 			pm = ref.pubmed_id
 			if pm != "":
 				self.pubmed.append(pm)
+
+	def getRecord():
+		return self.GB.record

@@ -24,7 +24,7 @@ module.exports = function (grunt) {
       },
 	    js: {
 		    files: ['<%= yeoman.app %>/scripts/**/*.js'],
-		    tasks: ['newer:jshint:all'],
+		    //tasks: ['newer:jshint:all'],
 		    options: {
 			    livereload: true
 		    }
@@ -462,6 +462,7 @@ module.exports = function (grunt) {
 	  processhtml : {
 		  options : {
 			  commentMarker : 'process', //don't want to use default 'build' bc usemin,
+			  strip : true,
 			  stripUnparsed : true
 		  },
 		  api : {
@@ -477,6 +478,11 @@ module.exports = function (grunt) {
 		  dist : {
 			  files : {
 				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  trails : {
+			  files : {
+				  '<%= yeoman.dist %>/index-trail.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  }
 	  }

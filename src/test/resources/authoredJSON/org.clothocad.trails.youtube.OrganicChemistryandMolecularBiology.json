@@ -12,7 +12,7 @@
   "created" : 1390413041000,
   "youtubePlaylistId" : "PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ",
   "icon" : "https://i1.ytimg.com/vi/DywiuCuDbtY/sddefault.jpg",
-  "materials" : [],
+  "materials" : [ ],
   "contents" : [ {
     "chapter" : "Youtube Playlist",
     "pages" : [ {

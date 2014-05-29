@@ -144,6 +144,7 @@ angular.module('clotho.youtube')
 				contents: [
 					{
 						chapter: 'Youtube Playlist',
+						description : 'This section was imported from youtube',
 						pages: []
 					}
 				]

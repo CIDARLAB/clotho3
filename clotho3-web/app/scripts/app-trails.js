@@ -30,8 +30,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 
 		$routeProvider
 			.when('/', {
-				templateUrl: '../views/test/trail-splash.html',
-				controller: 'TestTrailSplashCtrl',
+				templateUrl: 'views/trail-splash.html',
+				controller: 'TrailSplashCtrl',
 				title: 'Home',
 				hotkeys: [
 					['h', 'Show Intro Modal', 'showHelp = !showHelp']
@@ -46,8 +46,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 				controller: 'TeamCtrl'
 			})
 			.when('/trail', {
-				templateUrl: '../views/trail.html',
-				controller: 'TestTrailCtrl',
+				templateUrl: 'views/trail.html',
+				controller: 'TrailCtrl',
 				reloadOnSearch: false,
 				resolve: {
 					trail: ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {

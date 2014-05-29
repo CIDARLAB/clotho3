@@ -40,15 +40,18 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
-	  controller: 'AboutCtrl'
+	  controller: 'AboutCtrl',
+		title : 'About'
 	})
 	.when('/team', {
 	  templateUrl: 'views/team.html',
-	  controller: 'TeamCtrl'
+	  controller: 'TeamCtrl',
+		title : 'Team'
 	})
 	.when('/browser', {
 	  templateUrl: 'views/browser.html',
-	  controller: 'BrowserCtrl'
+	  controller: 'BrowserCtrl',
+		title : 'Browser'
 	})
 	.when('/edit', {
 		redirectTo: '/editor'
@@ -88,6 +91,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/editor', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
+		title : 'Editor',
 		reloadOnSearch: false,
 		resolve : {
 			deps : ['codemirrorLoader', function(loader) {
@@ -97,11 +101,13 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	})
 	.when('/trails', {
 	  templateUrl: 'views/trails.html',
-	  controller: 'TrailsCtrl'
+	  controller: 'TrailsCtrl',
+		title : 'Trails'
 	})
 	.when('/trail', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
+		title : 'Trail',
 		reloadOnSearch: false,
 		resolve : {
 			trail : ['Clotho', '$q', '$http', '$route', '$location', 'Trails', function (Clotho, $q, $http, $route, $location, Trails) {
@@ -149,33 +155,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		['m', 'Show Programmatic Modal', 'createModal()']
 	]
 })
-.when('/test/trail', {
-  templateUrl: '../views/trail.html',
-  controller: 'TestTrailCtrl',
-	reloadOnSearch: false,
-	resolve : {
-		trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
-			var deferred = $q.defer();
-			Clotho.get($route.current.params.id).then(function(result) {
-				Trails.compile(result).then(function (compiled) {
-					$route.current.$$route.title = result.name;
-					deferred.resolve(compiled);
-				});
-			}, function trailGetRejection () {
-				$http.get('models/org.clothocad.trails.LearningClotho.json').then(function(data) {
-					Trails.compile(data.data).then(function (compiled) {
-						deferred.resolve(compiled);
-					});
-				});
-			});
-			return deferred.promise;
-		}]
-	}
-})
-.when('/test/trail-browser', {
-  templateUrl: 'views/test/trail-browser.html',
-  controller: 'TestTrailBrowserCtrl'
-})
 .when('/test/playlistimport', {
   templateUrl: 'views/test/playlistimport.html',
   controller: 'TestPlaylistimportCtrl'
@@ -184,17 +163,15 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/quiz.html',
   controller: 'TestQuizCtrl'
 })
-.when('/test/trail-splash', {
-  templateUrl: '../views/test/trail-splash.html',
-  controller: 'TestTrailSplashCtrl'
-})
 .when('/test/construction', {
   templateUrl: 'views/test/construction.html',
-  controller: 'TestConstructionCtrl'
+  controller: 'TestConstructionCtrl',
+	title : 'Construction Test'
 })
 .when('/test/constructionTrail', {
   templateUrl: 'views/test/contstructiontrail.html',
   controller: 'TestContstructiontrailCtrl',
+	title : 'Construction Trail Test',
 	resolve : {
 		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
 			var deferred = $q.defer();
