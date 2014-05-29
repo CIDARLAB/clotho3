@@ -3,7 +3,7 @@
   "schema" : "org.clothocad.model.Trail",
   "name" : "RavenCAD Intro",
   "author" : "Boston University",
-  "description" : "<blockquote><p>A short introduction to RavenCAD.</p><p><small>Boston University</small></p></blockquote>",
+  "description" : "A short introduction to RavenCAD, a platform for automated part assembly.",
   "contents" : [ {
     "chapter" : "Intro to Raven",
     "pages" : [ {

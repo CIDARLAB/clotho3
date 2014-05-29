@@ -1,36 +1,68 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.Module",
-  "binaryName" : "org.clothocad.core.datums.Function",
-  "c" : "org.clothocad.core.datums.Function",
+  "id" : "org.clothocad.core.datums.Function",
   "name" : "Function",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.Class",
-    "name" : "outputType",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "[Lorg.clothocad.core.datums.Argument;",
-    "name" : "args",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.Person",
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "reference" : true
-  }, {
-    "javaType" : "org.clothocad.core.execution.Script",
-    "name" : "precondition",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "[Lorg.clothocad.core.datums.Function$FunctionTest;",
     "name" : "tests",
     "type" : "array",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "outputType",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "precondition",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "args",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.core.datums.Function"
+  "methods" : null,
+  "superClass" : "org.clothocad.core.datums.Module",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.Function",
+  "binaryName" : "org.clothocad.core.datums.Function"
 }
