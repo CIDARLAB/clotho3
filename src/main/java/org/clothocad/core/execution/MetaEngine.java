@@ -45,6 +45,7 @@ public class MetaEngine {
                 Bindings bindings = value.get(key);
                 //api does not need to be serialized, and does not serialize cleanly
                 bindings.remove("clotho");
+                bindings.remove("require");
             }
             return value;
         }

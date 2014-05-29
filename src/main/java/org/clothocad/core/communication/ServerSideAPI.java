@@ -301,7 +301,12 @@ public class ServerSideAPI {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             String username = SecurityUtils.getSubject().getPrincipal().toString();
             mind.setUsername(username);
-            persistor.save(mind);
+            //XXX: need some kind of error recovery if mind save fails
+            try{
+                persistor.save(mind);
+            } catch (Exception e){
+                say("There was a problem saving your mind. You will still be logged out, but some settings may not be saved.", Severity.WARNING);
+            }
             SecurityUtils.getSubject().logout();
             say("Logged out", Severity.SUCCESS);
             log.info("User {} logged out", username);
