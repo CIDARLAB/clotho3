@@ -246,9 +246,36 @@ public class RouterTest {
         //check value is available again
         sendMessage(new Message(Channel.submit, submission, "11"), connection);
         data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"11");
-        assertEquals(data, 42);
+        assertEquals(42, data);
     }
     
+       @Test
+    public void crossConnectionMindPersistenceTest()  throws IOException {
+        TestConnection connection = new TestConnection("crossConnectionPersistenceTest");
+        Map<String,String> credentials = new HashMap<>();
+        credentials.put("username", "testuser");
+        credentials.put("password", "password");
+        
+        Map submission = new HashMap();
+        submission.put("tokens", new ArrayList());
+        
+        //login as testuser
+        sendMessage(new Message(Channel.login, credentials, "7"), connection);
+        Object data = connection.messageDataByChannelAndId.get(Channel.login.name()+"7");
+        assertTrue((Boolean) data);
+        //set value
+        submission.put("query", "var persistMe = 42 ");
+        sendMessage(new Message(Channel.submit, submission, "8"), connection);
+        //logout
+        sendMessage(new Message(Channel.logout, "", "9"), connection);
+        //login again as testuser on different connection
+        connection = new TestConnection("differentConnection");
+        sendMessage(new Message(Channel.login, credentials, "10"), connection);
+        //check value is available again
+        sendMessage(new Message(Channel.submit, submission, "11"), connection);
+        data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"11");
+        assertEquals(42, data);
+    } 
     
     @Test
     public void scriptedGet() throws IOException{

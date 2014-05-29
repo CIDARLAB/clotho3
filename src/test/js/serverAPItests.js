@@ -321,7 +321,7 @@ testThroughAsync("running module functions - ligate",
         });
 
 testThroughAsync("loading functions - submit", 
-        new Message("submit", "var DNA = clotho.load('DNA'); DNA.revcomp('acgtacg')"),
+        new Message("submit", "var DNA = require('DNA'); DNA.revcomp('acgtacg')"),
         function (data){
             equal(data, "cgtacgt");
         });
