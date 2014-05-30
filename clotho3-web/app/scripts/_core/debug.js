@@ -37,6 +37,9 @@ angular.module('clotho.core')
  */
 	.factory('Debug', function($log, $window) {
 
+		//set to true for chrome to call console.trace()
+		var tracingEnabled = false;
+
 		//set to false to disable all debugging
 		var disableAll = false;
 		//add a module name to prevent its writing to the console.
@@ -62,7 +65,18 @@ angular.module('clotho.core')
 			var debugFunctionality = {};
 
 			angular.forEach(['log', 'warn', 'error', 'debug', 'info'], function (term) {
-				debugFunctionality[term] = function (msg) {
+				//first argument should be message, multiple arguments supported and passed through to console
+				debugFunctionality[term] = function () {
+					
+					//add stack trace, slice out this function
+					//this will work in chrome, firefox, and node
+					var stack = (new Error()).stack.split('\n');
+					// Chrome includes a single "Error" line, FF doesn't.
+					if (stack[0].indexOf('Error') === 0) {
+						stack = stack.slice(1);
+					}
+					//slice out this wrapper's context
+					stack = stack.slice(1);
 
 					var x = new Date();
 					var readableDate = x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds() + '.' + x.getMilliseconds();
@@ -73,9 +87,19 @@ angular.module('clotho.core')
 						time : x.valueOf()
 					});
 
-					//add functionality
+					//check if emabled, add stack if option passed
 					if (namepaceEnabled(namespace)) {
-						$log[term].apply(null, ['%c' + readableDate + ' - ' + namespace + '\t', 'color: '+ color +';'].concat(Array.prototype.slice.call(arguments, 0)));
+						$log[term].apply(null,
+							//add debugger name
+							['%c' + readableDate + ' - %O - ' + namespace + '\t',
+									'color: '+ color +';',
+									stack
+							]
+							.concat(Array.prototype.slice.call(arguments, 0))
+						);
+						if (tracingEnabled) {
+							console.trace();
+						}
 					}
 				}
 			});
