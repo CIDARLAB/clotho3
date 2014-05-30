@@ -44,13 +44,21 @@ angular.module('clotho.core').service('Socket',
 
 	   //usually assume the socket doesn't exist (it would have to be declared manually), but it may if need to connect to a specific port and not what is created here
 
-	    //fixme - need to handle otherfile.html/#!/ (two slashes)
 	    if ($window.$clotho.socket) {
 		    socket = $window.$clotho.socket;
 	    } else {
 		    var pathname = window.location.pathname;
 
-		    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + ( pathname.substring(0, pathname.lastIndexOf('/') + 1) ) + "websocket");
+		    var pathDirectory = pathname.substring(0, pathname.lastIndexOf('/'));
+		    //check for .html -- if url has hash (e.g. /#!/) then need to strip file name
+		    if (/\.html/.test(pathDirectory)) {
+			    pathDirectory = pathDirectory.substring(0, pathDirectory.lastIndexOf('/'));
+		    }
+
+		    //use protocol wss: for https, default to ws:
+		    var socketProtocol = window.location.protocol == 'https:' ? 'wss:' : 'ws:';
+
+		    socket = $window.$clotho.socket = new WebSocket(socketProtocol + "//" + window.location.host + pathDirectory + "/websocket");
 	    }
 
 	    if (socket.readyState == 1) {
