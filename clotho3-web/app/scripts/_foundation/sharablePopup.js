@@ -102,6 +102,12 @@ angular.module('clotho.clothoDirectives')
 									left: position.left + position.width
 								};
 								break;
+							case 'topLeft':
+								popupPosition = {
+									top: position.top + position.height / 2 - 55,
+									left: position.left - popupWidth
+								};
+								break;
 							case 'right':
 								popupPosition = {
 									top: position.top + position.height / 2 - popupHeight / 2,
@@ -140,8 +146,9 @@ angular.module('clotho.clothoDirectives')
 						popupPosition.top += 'px';
 						popupPosition.left += 'px';
 
-						//check the topRight class, add right if current
+						//check the topRight and topLeft classes, add helper if appropriate
 						popup.toggleClass('right', scope.popup_placement == 'topRight');
+						popup.toggleClass('left', scope.popup_placement == 'topLeft');
 
 						// Now set the calculated positioning.
 						popup.css(popupPosition);
@@ -258,7 +265,8 @@ angular.module('clotho.clothoDirectives')
 					});
 
 					attrs.$observe(prefix + 'Placement', function (val) {
-						scope.popup_placement = angular.isDefined(val) ? val : 'topRight';
+						console.log('\n\n\n\n\nn\n', val);
+						scope.popup_placement = val;
 					});
 
 					var unregisterTriggers = function () {

@@ -164,6 +164,8 @@ angular.module('clotho.tokenizer')
 
 				scope.select = function (activeIdx) {
 
+					console.log('selecting ', activeIdx);
+
 					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : scope.query;
 
 					if (selected) {
@@ -267,6 +269,7 @@ angular.module('clotho.tokenizer')
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
+						console.log('hit enter', scope.activeIdx);
 						//if highlighted dropdown select it, otherwise we'll submit
 						if (scope.activeIdx >= 0) {
 							scope.$apply(function () {

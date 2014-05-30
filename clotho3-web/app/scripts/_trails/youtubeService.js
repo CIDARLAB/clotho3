@@ -1,7 +1,9 @@
 angular.module('clotho.youtube')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
-		var PUBLIC_KEY = 'AIzaSyBbk4x1xscVvwBaT0Liu8dd-G7qoDeiD30';
+		//todo - system to manage keys and change depending on build, without exposing testing keys
+		//key only works at *.synbiotrails.org/*
+		var PUBLIC_KEY = 'AIzaSyDcv-f_kDYSvRMpsfKn9gaWo3Njzr9QmDU';
 		var url_base = 'https://www.googleapis.com/youtube/v3';
 
 		//load the API and return it as promise resolution

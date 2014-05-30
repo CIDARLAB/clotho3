@@ -4,31 +4,45 @@ angular.module('clotho.tokenizer')
  *
  * @description
  * Given a name and UUID, renders a token which can display more information upon interaction via sharable-popup
+ *
+ * Can either pass token directly, or tokenModel (will overwrite)
  */
-	.directive('clothoToken', function (Clotho, clothoTokenFactory) {
+	.directive('clothoToken', function ($parse, Clotho, clothoTokenFactory) {
 		return {
 			restrict: 'E',
-			replace: true,
 			templateUrl: "views/_command/token.html",
 			scope: {
-				tokenCollection : '=',
-				tokenIndex : '=',
-				tokenActive : '=',
-				token : '=ngModel',
+				token : '=?',
+				tokenModel : '=?',
+				tokenName : '@?',
+				tokenActivePass : '@?',
+				popupPosition : '@?',
+				onClick : '&?',
 				onRemove : '&?'
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
-				element.on('click', function (evt) {
-					console.log(scope.token.isSharable());
-					//toggle whether token is active
-					scope.tokenCollection[scope.tokenActive ? 'unsetActive' : 'setActive'](scope.tokenIndex)
+				scope.$watch('tokenActivePass', function (newval) {
+					scope.tokenActive = scope.$eval(newval);
 				});
 
-				scope.removeToken = function (evt) {
-					evt.preventDefault();
-					scope.onRemove({$token : scope.token, $event : evt});
-				};
+				scope.$watch('tokenModel', function (newval) {
+					if (!angular.isEmpty(newval)) {
+						scope.token = new clothoTokenFactory(newval);
+					}
+				});
+
+				element.on('click', function (evt) {
+					scope.$apply(function () {
+						scope.tokenActive = !scope.tokenActive;
+					});
+					scope.onClick({$event : evt, $token : scope.token});
+				});
+
+				scope.$on('$destroy', function (evt) {
+					scope.tokenActive = false;
+					scope.onRemove({$token : scope.token});
+				});
 			}
 		}
 	});

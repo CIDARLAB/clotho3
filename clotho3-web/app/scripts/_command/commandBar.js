@@ -1,5 +1,5 @@
 angular.module('clotho.commandbar')
-.service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
+.service('CommandBar', function(Clotho, ClientAPI, Debug, ClothoSchemas, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -76,6 +76,18 @@ angular.module('clotho.commandbar')
 
 	function receiveMessage (data) {
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
+
+		//check if we have a sharable
+		try {
+			var json = angular.fromJson(data.text);
+			var isSharable = ClothoSchemas.isSharable(json);
+			if (isSharable) {
+				data.tokens = [json];
+			}
+		} catch (e) {
+			//not an object that could be parsed
+		}
+		
 		log.entries.unshift(data);
 		Debugger.log('LOG - entries: ', log.entries);
 		display.toggle('logSnippet', true);
@@ -95,10 +107,12 @@ angular.module('clotho.commandbar')
 	};
 
 	var submit = function (input) {
-		console.log('input is "' + input + '"');
 		if (angular.isEmpty(input) || !angular.isObject(input)) {
 			input = display.query;
 		}
+
+		//todo - if tokenized query, add to activity log as such
+		console.log('\n\n\nn\n\n', JSON.stringify(input.tokens, null, 2));
 
 		//remove trailing whitespace
 		input.query = angular.isDefined(input.query) ? input.query.trim() : '';
@@ -112,10 +126,16 @@ angular.module('clotho.commandbar')
 		if (!!input.query) {
 			var submission = {class : 'info', from : 'client', text: input.query, timestamp : Date.now()};
 
+			//check if we have a sharable
+			if (angular.isDefined(input.tokens)) {
+				submission.tokens = angular.map(input.tokens, function (token) {
+					return token.model;
+				});
+			}
+
 			ClientAPI.say(submission);
 
 			return Clotho.submit(input).then(function(result){
-				console.log('resetting query');
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});
 			}, function (rejection) {
