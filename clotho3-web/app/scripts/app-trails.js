@@ -8,6 +8,7 @@ angular.module('clotho.fullPackage', [
 	'clotho.interface',
 	'clotho.trails',
 	'clotho.construction',
+	'clotho.webapp',
 	'ngSanitize',
 	'ngRoute'
 ]);
@@ -39,11 +40,12 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			})
 			.when('/about', {
 				templateUrl: 'views/about.html',
-				controller: 'AboutCtrl'
+				title: 'About'
 			})
 			.when('/team', {
 				templateUrl: 'views/team.html',
-				controller: 'TeamCtrl'
+				controller: 'TeamCtrl',
+				title: 'Team'
 			})
 			.when('/trail', {
 				templateUrl: 'views/trail.html',

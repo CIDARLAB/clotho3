@@ -40,7 +40,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
-	  controller: 'AboutCtrl',
 		title : 'About'
 	})
 	.when('/team', {
