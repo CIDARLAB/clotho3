@@ -265,7 +265,6 @@ angular.module('clotho.clothoDirectives')
 					});
 
 					attrs.$observe(prefix + 'Placement', function (val) {
-						console.log('\n\n\n\n\nn\n', val);
 						scope.popup_placement = val;
 					});
 

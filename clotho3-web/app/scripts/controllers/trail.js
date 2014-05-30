@@ -25,11 +25,12 @@ angular.module('clotho.trails')
 		};
 
 		$scope.next = function() {
-			$scope.activate(Trails.calcNextPage($scope.trail, $scope.current));
+			console.log('activating next', $scope.current, Trails.calcNextPage($scope.trail, $scope.current));
+			Trails.activate(Trails.calcNextPage($scope.trail, $scope.current));
 		};
 
 		$scope.prev = function() {
-			$scope.activate(Trails.calcPrevPage($scope.trail, $scope.current));
+			Trails.activate(Trails.calcPrevPage($scope.trail, $scope.current));
 		};
 
 		$scope.mapIcon = Trails.mapIcon;

@@ -82,7 +82,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 
 	//bring back in logic from trail-module.js
 	var calcNextPage = function trailNextPage(Trail, oldpos) {
-		oldpos = angular.isUndefined(oldpos) ? oldpos.split("-") : [0, -1];
+		oldpos = angular.isString(oldpos) ? oldpos.split("-") : [0, -1];
 		var newpos;
 
 		//check next page
@@ -100,7 +100,7 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 	var calcPrevPage = function trailPrevPage(Trail, oldpos) {
 		if (oldpos == '0-0') return;
 
-		oldpos = (typeof oldpos != 'undefined') ? oldpos.split("-") : [0, 1];
+		oldpos = angular.isString(oldpos) ? oldpos.split("-") : [0, 1];
 		var newpos;
 
 		if (typeof Trail.contents[oldpos[0]]['pages'][+oldpos[1] - 1] != 'undefined')
