@@ -8,6 +8,7 @@ angular.module('clotho.fullPackage', [
 	'clotho.interface',
 	'clotho.trails',
 	'clotho.construction',
+	'clotho.webapp',
 	'ngSanitize',
 	'ngRoute'
 ]);
@@ -39,11 +40,12 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			})
 			.when('/about', {
 				templateUrl: 'views/about.html',
-				controller: 'AboutCtrl'
+				title: 'About'
 			})
 			.when('/team', {
 				templateUrl: 'views/team.html',
-				controller: 'TeamCtrl'
+				controller: 'TeamCtrl',
+				title: 'Team'
 			})
 			.when('/trail', {
 				templateUrl: 'views/trail.html',
@@ -80,7 +82,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			});
 
 	})
-	.run(function ($rootScope, $route, $window) {
+	.run(function ($rootScope, $route, $window, interfaceConfig) {
 
 		/****** Config *****/
 
@@ -89,5 +91,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			//can't use interpolation in document title because ng-app is within body
 			$window.document.title = 'Clotho Trails' + (angular.isDefined(title) ? ' | ' + title : '');
 		});
+
+		$rootScope.interfaceConfig = interfaceConfig;
 
 	});

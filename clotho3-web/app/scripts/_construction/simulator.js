@@ -105,7 +105,7 @@ angular.module('clotho.construction')
 			//everything already exists in the dictionary, so we just need to pull those values
 			var parsedInput = constructStepArgs(file, step);
 
-			return Clotho.run(reaction.reactionId, parsedInput)
+			return Clotho.run(reaction.reactionId, parsedInput, {mute : true})
 			.then(function(result) {
 				var obj = {};
 				obj[step.output] = result;
@@ -186,6 +186,13 @@ angular.module('clotho.construction')
 				var lastKey = _.last(file.steps).output;
 				if (lastKey != FINAL_DICT_KEY) {
 					file.dictionary[FINAL_DICT_KEY] = file.dictionary[lastKey]
+				}
+
+				//hack - remove cut marks
+				if (_.isArray(file.dictionary[FINAL_DICT_KEY])) {
+					file.dictionary[FINAL_DICT_KEY][0].sequence = file.dictionary[FINAL_DICT_KEY][0].sequence.replace(/[\^\|_]/ig, '');
+				} else if (_.isObject(file.dictionary[FINAL_DICT_KEY]) && !_.isUndefined(file.dictionary[FINAL_DICT_KEY].sequence)) {
+					file.dictionary[FINAL_DICT_KEY].sequence = file.dictionary[FINAL_DICT_KEY].sequence.replace(/[\^\|_]/ig, '');
 				}
 
 				return file;

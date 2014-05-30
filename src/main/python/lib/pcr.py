@@ -180,7 +180,7 @@ def predict(oligo1, oligo2, template):
             print "C1Score (%s) >= C2Score (%s), so we choose Case 1 PCR Product" %(C1Score, C2Score)
             print retC1
 
-        return retC1
+        return retC1.replace("_^|","") #In case of stick end special characters (remove them)
 
     #Case 2 must be better
     forwardIndex2 = best2F[0]
@@ -194,7 +194,7 @@ def predict(oligo1, oligo2, template):
         print "C1Score (%s) < C2Score (%s), so we choose Case 2 PCR Product" %(C1Score, C2Score)
         print retC2
 
-    return retC2
+    return retC2.replace("_^|","") #In case of stick end special characters (remove them)
 
     #NOTE: Add on warnings if scores are equal, etc.
     #   - EIPCR where input templates are short -> add error checking (i.e. calcBestForward loops around too much?)

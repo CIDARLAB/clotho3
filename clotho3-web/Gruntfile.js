@@ -475,14 +475,15 @@ module.exports = function (grunt) {
 				  '<%= yeoman.dist %>/index-command.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
-		  dist : {
-			  files : {
-				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
-			  }
-		  },
 		  trails : {
 			  files : {
 				  '<%= yeoman.dist %>/index-trail.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  //dist must go last because overwrites index file
+		  dist : {
+			  files : {
+				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  }
 	  }

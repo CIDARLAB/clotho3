@@ -1,10 +1,12 @@
 <nav id="clotho_commandBar" role="navigation">
 
+  <div class="clotho_commandBar-inner">
+
   <!--todo - move whole input group to directive (clotho-tokenizer-input for what exists), use in aside as well -->
   <div class="input-group" id="clotho_command_inputWrapper">
     <div clotho-tokenizer ng-model="display.query"
                       placeholder="Type command"></div>
-    <span class="input-group-btn" style="vertical-align: top;">
+    <span class="submit-button-wrap input-group-btn" style="vertical-align: top;">
       <button type="button"
               class="clothoTokenizerSubmit"
               ng-click="submit()"
@@ -50,7 +52,7 @@
 
   <!--help buttons-->
   <div class="btn-group nav navbar-right">
-    <button class="btn btn-default" ng-click="toggleLogin()" alt="Clotho Login"><i class="glyphicon glyphicon-user"></i>
+    <button class="btn btn-default" ng-if="$root.interfaceConfig.loginVisible !== false" ng-click="toggleLogin()" alt="Clotho Login"><i class="glyphicon glyphicon-user"></i>
     </button>
     <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
     <a class="btn btn-default dropdown-toggle"
@@ -68,4 +70,5 @@
     </ul>
   </div>
 
+  </div>
 </nav>

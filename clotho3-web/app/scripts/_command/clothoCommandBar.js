@@ -45,8 +45,9 @@ angular.module('clotho.commandbar')
 			/*** help icons ***/
 
 			scope.showMeHow = function() {
-				Clotho.query({name: 'Learning Clotho'}).then(function (result) {
-					$location.path('/trails/' + result[0].id);
+				Clotho.query({name: 'Learning Clotho'})
+				.then(function (results) {
+					Clotho.startTrail(results[0].id);
 				});
 			};
 

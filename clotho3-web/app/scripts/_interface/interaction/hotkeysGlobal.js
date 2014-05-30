@@ -22,7 +22,7 @@ angular.module('clotho.interface')
 				'</div><!-- /.modal-dialog -->' +
 			'</div><!-- /.modal -->';
 	})
-.run(function (hotkeys, $location, CommandBar) {
+.run(function (hotkeys, $location, $injector, $route, CommandBar) {
 	hotkeys.add('f', 'Focus Command Bar', function (event) {
 		event.preventDefault();
 		CommandBar.focusInput();
@@ -34,13 +34,21 @@ angular.module('clotho.interface')
 	hotkeys.add('g h', 'Go to Homepage', function () {
 		$location.path('/')
 	});
-	hotkeys.add('g b', 'Go to Browser', function () {
-		$location.path('/browser')
-	});
-	hotkeys.add('g e', 'Go to Editor', function () {
-		$location.path('/editor')
-	});
-	hotkeys.add('g t', 'Go to Trails', function () {
-		$location.path('/trails')
-	});
+
+	//route specific hotkeys
+	if ($route.routes['/browser']) {
+		hotkeys.add('g b', 'Go to Browser', function () {
+			$location.path('/browser')
+		});
+	}
+	if ($route.routes['/editor']) {
+		hotkeys.add('g e', 'Go to Editor', function () {
+			$location.path('/editor')
+		});
+	}
+	if ($route.routes['/trails']) {
+		hotkeys.add('g t', 'Go to Trails', function () {
+			$location.path('/trails')
+		});
+	}
 });

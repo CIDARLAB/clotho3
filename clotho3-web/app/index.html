@@ -192,12 +192,13 @@ function: Clotho-Angular Interface components
 dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angularFileUpload for file uploads
 -->
 <script src="scripts/_interface/_kickoff.js"></script>
+<script src="scripts/_interface/configuration.js"></script>
 <!-- note - modes are loaded separately by service codemirrorLoader -->
 <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script> <!-- ui.codemirror module -->
 <script src="bower_components/ng-file-upload/angular-file-upload.js"></script> <!-- angularFileUpload module -->
 <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script> <!-- hotkeys set up in /interaction/ -->
 <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
-<script src="scripts/_interface/html5/fileUpload.js"></script>
+<script src="scripts/_interface/angular-ui/form-field.js"></script>
 <script src="scripts/_interface/angular-ui/modal-ext.js"></script>
 <script src="scripts/_interface/clotho/sharable.js"></script>
 <script src="scripts/_interface/elements/aside.js"></script>
@@ -216,6 +217,7 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/filters/unique.js"></script>
 <script src="scripts/_interface/html5/contentEditable.js"></script>
 <script src="scripts/_interface/html5/code-file-drop.js"></script>
+<script src="scripts/_interface/html5/fileUpload.js"></script>
 <script src="scripts/_interface/images/backgroundImage.js"></script>
 <!--todo - remove commandBar dependence, move into separate module e.g. webapp-->
 <script src="scripts/_interface/interaction/focus.js"></script>
@@ -277,7 +279,6 @@ dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/controllers/_kickoff-webapp.js"></script>
 <script src="scripts/controllers/home.js"></script>
-<script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/team.js"></script>
 <script src="scripts/controllers/browser.js"></script>
 <script src="scripts/controllers/editor.js"></script>
@@ -312,7 +313,6 @@ dependencies: clotho.foundation, clotho.interface
 <script src="scripts/_editor/_kickoff.js"></script>
 <script src="scripts/_editor/clothoEditor.js"></script>
 <script src="scripts/_editor/codemirrorLoader.js"></script>
-<script src="scripts/_editor/form-field.js"></script>
 <script src="scripts/_editor/formFieldEnumeration.js"></script>
 <script src="scripts/_editor/formFieldInput.js"></script>
 <script src="scripts/_editor/jsonEdit.js"></script>

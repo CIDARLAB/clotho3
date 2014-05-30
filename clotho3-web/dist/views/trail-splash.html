@@ -1,12 +1,21 @@
-<div class="container">
 
-  <div class="page-header">
-    <h1>Synthetic Biology Trails</h1>
+<object type="image/svg+xml"
+        data="images/trails/trail-mono-noTop.svg"
+        class="trail-logo-background">
+</object>
+
+<div class="container" dark-background>
+
+  <object type="image/svg+xml"
+          data="images/trails/trail-logo-name.svg"
+          class="trail-splash-logo">
+  </object>
+
+  <div class="trail-splash-intro">
+      <p>The Synthetic Biology Trails introduce you to the concepts behind Synthetic Biology. Synthetic Biology allows you to write sequences of DNAs, and introduce those into cells to elicit new and useful function. We'll start by jumping right in explaining how to think through the basic cloning experiment, then we'll show you how to do it in the wetlab, then circle around and discuss the process in great detail. Finally, we introduce new topics at the bleeding edge of Synthetic Biology, or go into more detail about specific techniques and tools.</p>
   </div>
 
-  <blockquote>
-    <p>The Synthetic Biology Trails introduce you to the concepts behind Synthetic Biology. Synthetic Biology allows you to write sequences of DNAs, and introduce those into cells to elicit new and useful function. We'll start by jumping right in explaining how to think through the basic cloning experiment, then we'll show you how to do it in the wetlab, then circle around and discuss the process in great detail. Finally, we introduce new topics at the bleeding edge of Synthetic Biology, or go into more detail about specific techniques and tools.</p>
-  </blockquote>
+
 
   <div class="trail-topics-wrap">
     <div class="trail-topics">
@@ -40,6 +49,7 @@
         <img ng-src="{{selected.icon}}"
              class="shadowBackground"
              ng-click="startTrail(selected.id)">
+
         <div trail-contents="selected" activate="startTrailPage(selected.id, $position)"></div>
       </div>
     </div>
