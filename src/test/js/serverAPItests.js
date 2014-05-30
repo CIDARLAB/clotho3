@@ -54,6 +54,12 @@ testThroughAsync("get",
             equal(data.name, "Part");
         });
 
+testThroughAsync("get - more elaborate data structure", 
+        new Message("get", "clotho.functions.dna.digest"),
+        function(data) {
+            ok(data.tests[0].args[1] instanceof Array);
+        });
+
 testThroughAsync("query Parts",
         new Message("query", {"schema":"org.clothocad.model.Part"}),
         function (data) {

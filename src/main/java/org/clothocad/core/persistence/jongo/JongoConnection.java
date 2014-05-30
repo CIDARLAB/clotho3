@@ -391,28 +391,15 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
-
+        //this will have problems if there are circular dstructures, though that should be impossible
         @Override
         public Map<String,Object> map(DBObject result) {
             Map<String,Object> resultMap = toMap(result);
             //recurse on any sub objects
             for (String key : resultMap.keySet()){
                  Object value = resultMap.get(key);
-                 if (value instanceof LazyBSONList){
-                     //convert members
-                     List convertedList = new ArrayList();
-                     for (Object element : (List) value){
-                         if (element instanceof DBObject){
-                             convertedList.add(map((DBObject) element));
-                         } else {
-                             convertedList.add(element);
-                         }
-                     }
-                     resultMap.put(key,convertedList);
-                     
-                 }
-                 else if (value instanceof DBObject){
-                     resultMap.put(key, map((DBObject) value));
+                 if (value instanceof DBObject){
+                     resultMap.put(key,toMapOrList((DBObject)value));
                  }
             }
             return demongifyIdField(resultMap);
@@ -426,6 +413,24 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
             return resultMap;
         }
         
+        private Object toMapOrList(DBObject value) {
+            if (value instanceof LazyBSONList) {
+                //convert members
+                List convertedList = new ArrayList();
+                for (Object element : (List) value) {
+                    if (element instanceof DBObject) {
+                        convertedList.add(toMapOrList((DBObject) element));
+                    } else {
+                        convertedList.add(element);
+                    }
+                }
+                return convertedList;
+
+            } else {
+                return map(value);
+            }
+        }
+
         private static DemongifyHandler instance;
         
           public static DemongifyHandler get(){
