@@ -324,9 +324,14 @@ angular.module('clotho.foundation')
 
 		/* FUNCTIONALITY */
 
+		//forgiving check to see if potential sharable
+		function isSharable (sharable) {
+			return angular.isObject(sharable) && !angular.isEmpty(sharable) && angular.isDefined(sharable.id) && angular.isDefined(sharable.schema);
+		}
+
 		//returns schema of a sharable, or null
 		function determineSchema (sharable) {
-			return angular.isDefined(sharable) ? sharable.schema : null;
+			return ( !angular.isEmpty(sharable) && angular.isDefined(sharable.schema) ) ? sharable.schema : null;
 		}
 
 		//determine whether a sharable is a schema
@@ -413,6 +418,7 @@ angular.module('clotho.foundation')
 			formTypeMap : formTypeMap,
 			javaToJavascript : javaToJavascript,
 
+			isSharable : isSharable,
 			isSchema : isSchema,
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,

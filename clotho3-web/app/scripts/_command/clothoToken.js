@@ -23,7 +23,6 @@ angular.module('clotho.tokenizer')
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
 				scope.$watch('tokenActivePass', function (newval) {
-					console.log(newval, scope.$eval(newval), typeof newval);
 					scope.tokenActive = scope.$eval(newval);
 				});
 
