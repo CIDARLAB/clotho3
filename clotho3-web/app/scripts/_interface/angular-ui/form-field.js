@@ -1,4 +1,4 @@
-angular.module('clotho.editor')
+angular.module('clotho.interface')
 /**
  * @name formField
  *
@@ -34,14 +34,13 @@ angular.module('clotho.editor')
 			template: template,
 			replace: true,
 			transclude: true, //only want element contents
-			require: ['^form', '^?clothoEditor'],
+			require: ['^form'],
 			controller: function ($scope, $element, $attrs) {
 
 			},
 			link : function linkFunction(scope, element, attrs, parentCtrls, transclude) {
 
-				var formCtrl = parentCtrls[0],
-					editorCtrl = parentCtrls[1];
+				var formCtrl = parentCtrls[0];
 
 				var passedName = attrs.name,
 					passedHelp = attrs.help,
