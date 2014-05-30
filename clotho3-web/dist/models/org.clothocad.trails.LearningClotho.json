@@ -257,52 +257,6 @@
 					]
 				}
 			]
-		},
-		{
-			"chapter": "Construction Files",
-			"description" : "Construction files list a sequence of reactions to yield a final product, which can be predicted in Clotho",
-			"pages": [
-				{
-					"title": "Examining",
-					"icon": "eye",
-					"help" : "A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/examining.js"
-					},
-					"contents": [
-						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/examining.html"
-						}
-					]
-				},
-				{
-					"title": "Simulation",
-					"icon": "eye",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/simulation.js"
-					},
-					"contents": [
-						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/simulation.html"
-						}
-					]
-				},
-				{
-					"title": "Writing",
-					"icon": "exercise",
-					"dependencies" : {
-						"mixin": "partials/trails/clotho-intro/writing.js"
-					},
-					"contents": [
-						{
-							"type": "template",
-							"params": "partials/trails/clotho-intro/writing.html"
-						}
-					]
-				}
-			]
 		}
 	]
 }
