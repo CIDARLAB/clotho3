@@ -80,7 +80,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			});
 
 	})
-	.run(function ($rootScope, $route, $window) {
+	.run(function ($rootScope, $route, $window, interfaceConfig) {
 
 		/****** Config *****/
 
@@ -89,5 +89,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			//can't use interpolation in document title because ng-app is within body
 			$window.document.title = 'Clotho Trails' + (angular.isDefined(title) ? ' | ' + title : '');
 		});
+
+		$rootScope.interfaceConfig = interfaceConfig;
 
 	});

@@ -105,7 +105,7 @@ angular.module('clotho.construction')
 			//everything already exists in the dictionary, so we just need to pull those values
 			var parsedInput = constructStepArgs(file, step);
 
-			return Clotho.run(reaction.reactionId, parsedInput)
+			return Clotho.run(reaction.reactionId, parsedInput, {mute : true})
 			.then(function(result) {
 				var obj = {};
 				obj[step.output] = result;
