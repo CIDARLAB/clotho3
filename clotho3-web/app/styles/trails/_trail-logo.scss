@@ -1,0 +1,29 @@
+.trail-logo-background {
+  position: fixed;
+  top: 50px;
+  right: 0;
+  left: 0;
+  margin: -26% auto 0;
+  z-index: -5;
+  opacity: 0.35;
+}
+
+.trail-splash-logo {
+  height: 250px;
+  margin: 90px auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.trail-splash-intro {
+  margin: 450px 0 100px;
+
+  p {
+    font-size: 21px;
+    font-weight: 200;
+    padding: 20px;
+    border-radius: 4px;
+    background: #ffffff;
+  }
+}

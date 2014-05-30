@@ -131,6 +131,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			['alt+right', 'Next page of Trail', 'next()']
 		]
 	})
+	.when('/trail-splash', {
+		templateUrl: 'views/trail-splash.html',
+		controller: 'TrailSplashCtrl',
+		title : 'Trail Splash'
+	})
 	.when('/terminal', {
 		templateUrl:'views/_command/terminal.html',
 		title : 'Terminal',
