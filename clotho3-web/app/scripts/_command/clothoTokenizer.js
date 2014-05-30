@@ -76,6 +76,11 @@ angular.module('clotho.tokenizer')
 					return scope.tokenCollection.isActive(index);
 				};
 
+				scope.toggleTokenActive = function (index, event) {
+					event.preventDefault();
+					scope.tokenCollection.toggleActive(index);
+				};
+
 				scope.focusInput = function () {
 					element[0].querySelector('[clotho-autocomplete]').focus();
 				};

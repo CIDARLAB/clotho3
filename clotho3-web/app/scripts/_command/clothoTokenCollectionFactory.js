@@ -9,14 +9,13 @@ angular.module('clotho.tokenizer')
 
 		function ClothoTokenCollection (startingTokens) {
 
+			var self = this;
 			this.tokens = [];
 			this.currentTokenIndex = -1;
 
-			//todo - test initial tokens
-
-			if (angular.isArray(startingTokens)) {
+			if (angular.isArray(startingTokens) || angular.isObject(startingTokens)) {
 				angular.forEach(startingTokens, function (token) {
-					this.addToken(token);
+					self.addToken(token);
 				});
 			}
 		}
@@ -73,6 +72,10 @@ angular.module('clotho.tokenizer')
 			} else {
 				return false;
 			}
+		};
+
+		ClothoTokenCollection.prototype.toggleActive = function (index) {
+			this[this.isActive(index) ? 'unsetActive' : 'setActive'](index);
 		};
 
 		//set token at last position to be active

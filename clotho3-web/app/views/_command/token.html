@@ -2,9 +2,10 @@
      ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous(), 'sharable' : token.isSharable()}">
     <span class="clothoTokenText"
           sharable-popup
+          sharable-popup-position="{{popupPosition}}"
           sharable-popup-id="{{token.id()}}"
           sharable-popup-open="{{tokenActive && token.isSharable()}}"
           sharable-popup-trigger="none">
-      {{ token.readable() }}
+      {{ tokenName || token.readable() }}
     </span>
 </div>
