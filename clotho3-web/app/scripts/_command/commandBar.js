@@ -1,5 +1,5 @@
 angular.module('clotho.commandbar')
-.service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
+.service('CommandBar', function(Clotho, ClientAPI, Debug, ClothoSchemas, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -76,6 +76,18 @@ angular.module('clotho.commandbar')
 
 	function receiveMessage (data) {
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
+
+		//check if we have a sharable
+		try {
+			var json = angular.fromJson(data.text);
+			var isSharable = ClothoSchemas.isSharable(json);
+			if (isSharable) {
+				data.token = json;
+			}
+		} catch (e) {
+			//not an object that could be parsed
+		}
+		
 		log.entries.unshift(data);
 		Debugger.log('LOG - entries: ', log.entries);
 		display.toggle('logSnippet', true);

@@ -258,7 +258,7 @@ angular.module('clotho.clothoDirectives')
 					});
 
 					attrs.$observe(prefix + 'Placement', function (val) {
-						scope.popup_placement = angular.isDefined(val) ? val : 'topRight';
+						scope.popup_placement = val;
 					});
 
 					var unregisterTriggers = function () {

@@ -1,6 +1,12 @@
 <div ng-repeat="entry in entries | orderBy:options.timeFilter:true" class="clearfix">
-    <div ng-class="{'pull-right': entry.from == 'client', 'text-right': entry.from == 'client'}" class="logEntry {{'text-' + entry.class | lowercase}}">
-        <span tooltip="{{ entry.timestamp | date:'mediumTime' }}" tooltip-placement="{{ (entry.from == 'client') ? 'left' : 'right' }}" tooltip-append-to-body="true">{{entry.text}}</span>
-        <br />
-    </div>
+  <div ng-class="{'pull-right': entry.from == 'client', 'text-right': entry.from == 'client'}"
+       class="logEntry {{'text-' + entry.class | lowercase}}">
+    <span tooltip="{{ entry.timestamp | date:'mediumTime' }}"
+          tooltip-placement="{{ (entry.from == 'client') ? 'left' : 'right' }}"
+          tooltip-append-to-body="true">
+      <clotho-token ng-if="entry.token" token-model="entry.token"></clotho-token>
+      <span ng-if="!entry.token">{{entry.text}}</span>
+    </span>
+    <br/>
+  </div>
 </div>
