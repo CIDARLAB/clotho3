@@ -111,9 +111,6 @@ angular.module('clotho.commandbar')
 			input = display.query;
 		}
 
-		//todo - if tokenized query, add to activity log as such
-		console.log('\n\n\nn\n\n', JSON.stringify(input.tokens, null, 2));
-
 		//remove trailing whitespace
 		input.query = angular.isDefined(input.query) ? input.query.trim() : '';
 

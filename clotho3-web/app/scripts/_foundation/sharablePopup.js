@@ -193,6 +193,12 @@ angular.module('clotho.clothoDirectives')
 					// Show the popup element.
 					function show() {
 
+						//make sure there's something to show
+						if (angular.isEmpty(scope.sharable_id) && angular.isEmpty(scope.passedModel)) {
+							scope.popupOpen = false;
+							return angular.noop;
+						}
+
 						createPopup();
 
 						// Set the initial positioning.

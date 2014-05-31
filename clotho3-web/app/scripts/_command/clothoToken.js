@@ -16,7 +16,8 @@ angular.module('clotho.tokenizer')
 				tokenModel : '=?',
 				tokenName : '@?',
 				tokenActivePass : '@?',
-				popupPosition : '@?',
+				popupPlacement : '@?',
+				popupTrigger : '@?',
 				onClick : '&?',
 				onRemove : '&?'
 			},
