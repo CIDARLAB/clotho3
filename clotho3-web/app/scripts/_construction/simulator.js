@@ -131,7 +131,7 @@ angular.module('clotho.construction')
 
 			//initial checks, return if nothing to do
 			if (_.isEmpty(file.steps)) {
-				return file;
+				return $q.when(file);
 			}
 
 			//note - on client this is async, so need promises

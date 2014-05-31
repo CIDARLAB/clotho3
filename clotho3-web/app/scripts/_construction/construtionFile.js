@@ -8,7 +8,7 @@ angular.module('clotho.construction')
  * @description
  * Visualizer for construction files.
  */
-	.directive('constructionFile', function (ConstructionSimulator) {
+	.directive('constructionFile', function (ConstructionSimulator, clothoTokenCollectionFactory) {
 		return {
 			restrict : 'A',
 			templateUrl : 'views/_construction/constructionFile.html',
