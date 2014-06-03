@@ -1,5 +1,6 @@
 angular.module('clotho.clothoDirectives')
 /**
+ * @ngdoc directive
  * @name sharable-popup
  *
  * @description Displays a popup showing the basic fields of an instance. Appended to Body. Either pass Model or ID of sharable, model gets priority (should only use pruned fields or may be very large)
@@ -12,9 +13,6 @@ angular.module('clotho.clothoDirectives')
  * sharablePopupPlacement
  * sharablePopupTrigger (none | click | mouseenter | focus)
  * sharablePopupOpen
- *
- * @usage
- *
  *
  *
  */

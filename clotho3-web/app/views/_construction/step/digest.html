@@ -1,3 +1,10 @@
 <div>
-  enyzmes : {{step.input[1]}}
+  enyzmes : <span ng-repeat="enz in step.input[1]"
+                  class="clothoTokenWrap"
+                  restriction-enzyme-popup
+                  restriction-enzyme-popup-trigger="mouseenter"
+                  restriction-enzyme-popup-placement="top"
+                  restriction-enzyme-popup-model="file.dictionary[enz]">
+  {{enz}}
+                  </span>
 </div>

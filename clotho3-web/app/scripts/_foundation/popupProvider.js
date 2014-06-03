@@ -1,10 +1,9 @@
 angular.module('clotho.clothoDirectives')
 /**
- * @name sharable-popup
+ * @ngdoc provider
+ * @name $clothoPopup
  *
- * @description Displays a popup showing the basic fields of an instance. Appended to Body. Either pass Model or ID of sharable, model gets priority (should only use pruned fields or may be very large)
- *
- * @note - need to create isolate scope so properties don't overlap
+ * @description Provider for customizable popups. Extended version of Angular-UI Bootstrap's Tooltip. Used especially for sharable popup.
  *
  * @attrs
  * sharablePopupModel
@@ -14,8 +13,12 @@ angular.module('clotho.clothoDirectives')
  * sharablePopupOpen
  *
  * @usage
- *
- *
+
+ angular.module('myApp').directive('sharablePopup', function ($clothoPopup) {
+		return $clothoPopup('sharablePopup');
+	})
+ .directive('sharablePopupInner', function () { ... });
+
  *
  */
 
@@ -274,8 +277,6 @@ angular.module('clotho.clothoDirectives')
 							}
 
 							/* WATCHERS */
-
-							element.css({cursor: 'pointer'});
 
 							attrs.$observe(prefix + 'Id', function (val, oldval) {
 								if (!!val && (!oldval || val != oldval)) {

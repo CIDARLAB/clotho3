@@ -13,7 +13,7 @@ angular.module('clotho.construction')
  *
  * @example
  * <div ng-repeat="step in file.steps"
-        construction-step="$index"></div>
+        construction-step></div>
  */
 	.directive('constructionStep', function (ConstructionReactions, $parse) {
 		return {

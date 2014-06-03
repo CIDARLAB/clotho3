@@ -17,7 +17,8 @@ angular.module('clotho.construction')
 			},
 			link : function (scope, element, attrs) {
 				scope.$watch('file', function (newfile) {
-					ConstructionSimulator.process(newfile).then(function (fileResult) {
+					ConstructionSimulator.process(newfile)
+					.then(function (fileResult) {
 						scope.computed = fileResult;
 					});
 				});
