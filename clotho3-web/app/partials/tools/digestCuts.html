@@ -1,14 +1,25 @@
 <div ng-controller="clothoTool_digestCuts">
-  <ng-form name="digestPlayground" class="form-horizontal">
-    <form-field name="Enzyme Name" horizontal="true">
-      <select id="enzSelect"
-              ng-options="enz as enz.name for (name, enz) in Digest.enzymes"
-              ng-model="demo.digestEnz"
-              popover="Try BamHI for an enzyme that cuts twice, or BsmbI for an enzyme that makes non-local cuts"
-              popover-placement="left"
-              popover-trigger="focus"></select>
-    </form-field>
+  <div class="form-group" style="text-align: center;">
+    <div class="btn-group" style="display: inline-block;" id="enzymes">
+      <button ng-repeat="enz in enzymes | orderBy:'name'"
+              class="btn btn-sm btn-default"
+              ng-class="{'btn-info' : enz.active}"
+              popover="{{enz.match}}"
+              popover-trigger="mouseenter"
+              popover-append-to-body="true"
+              ng-click="enz.active = !enz.active">
+        {{enz.name}}
+      </button>
+    </div>
+  </div>
 
-    <pre id="digSites" ng-model="demo.digestSeq" digest-highlight="demo.digestEnz"></pre>
-  </ng-form>
+  <div class="form-group">
+    <textarea class="form-control" ng-model="sequence" rows="2"></textarea>
+  </div>
+
+  <pre id="digSites"
+       digest-tool-highlight
+       enzymes="enzymes"
+       sequence="sequence"
+       style="text-align: center;"></pre>
 </div>

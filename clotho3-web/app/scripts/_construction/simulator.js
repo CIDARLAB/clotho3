@@ -121,6 +121,8 @@ angular.module('clotho.construction')
 		 * @param inputFile {ConstructionFile}
 		 *
 		 * @returns {Promise} promise, resolving to object { <outputName> : <value> }
+		 *
+		 * //todo - add promise notifications
 		 */
 		var process = function processConstructionFile (inputFile) {
 

@@ -725,6 +725,7 @@ function generateClothoAPI() {
      * @name Clotho.startTrail
      *
      * @param {string} uuid
+     * @param {string} pos Either Chapter index (starting from 0, e.g. "1") or Chapter and Page in form "#-#" (e.g. "2-3")
      *
      * @description
      * start a trail with a given uuid

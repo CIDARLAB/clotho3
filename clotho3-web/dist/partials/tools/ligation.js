@@ -1,4 +1,4 @@
-$clotho.extensions.controller('clothoTool_ligation', function($scope, PCR) {
+$clotho.extensions.controller('clothoTool_ligation', function($scope, Clotho, PCR) {
 
 	//todo - reduce reliance on these modules
 
@@ -17,10 +17,21 @@ $clotho.extensions.controller('clothoTool_ligation', function($scope, PCR) {
 		$scope.fragments = $scope.ligate_demoSets[setInd];
 	};
 
+	function wrapFragments (fragments) {
+		return angular.map(fragments, function (frag) {
+			return {
+				sequence : frag
+			}
+		});
+	}
+
 	$scope.$watch(function() {
 		return $scope.fragments[0] + $scope.fragments[1]
 	}, function (newval, oldval) {
-		$scope.ligated = PCR.ligate($scope.fragments);
+		Clotho.run('clotho.functions.dna.ligate', [wrapFragments($scope.fragments)], {mute : true})
+		.then(function (result) {
+			$scope.ligated = result;
+		});
 	});
 
 	//init

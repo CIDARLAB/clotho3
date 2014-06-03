@@ -29,10 +29,7 @@
   </div>
 
   <div class="form-group">
-    <pre id="ligationAlign"
-         placeholder="Ligation Alignment"
-         ng-model="fragments"
-         ligate-align
-         style="text-align: center;"></pre>
+    <div ng-show="ligated.length != 1" class="alert alert-warning">Fragments did not ligate to completion!</div>
+    <pre><div ng-repeat="frag in ligated" ng-bind="frag.sequence" style="text-align: center;"></div></pre>
   </div>
 </div>

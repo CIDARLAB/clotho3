@@ -1,4 +1,10 @@
 <div class="constructionFileView">
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" ng-style="{width: {{completed}} + '%'};">
+      <span class="sr-only">{{completed}}% complete</span>
+    </div>
+  </div>
+
   <h3>{{file.name}}</h3>
   <p ng-show="file.description" ng-bind="file.description"></p>
 
