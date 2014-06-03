@@ -6,16 +6,12 @@
 
 <div class="container" dark-background>
 
+  <div class="trail-splash-logo-container">
   <object type="image/svg+xml"
           data="images/trails/trail-logo-name.svg"
           class="trail-splash-logo">
   </object>
-
-  <div class="trail-splash-intro">
-      <p>The Synthetic Biology Trails introduce you to the concepts behind Synthetic Biology. Synthetic Biology allows you to write sequences of DNAs, and introduce those into cells to elicit new and useful function. We'll start by jumping right in explaining how to think through the basic cloning experiment, then we'll show you how to do it in the wetlab, then circle around and discuss the process in great detail. Finally, we introduce new topics at the bleeding edge of Synthetic Biology, or go into more detail about specific techniques and tools.</p>
   </div>
-
-
 
   <div class="trail-topics-wrap">
     <div class="trail-topics">
@@ -43,8 +39,10 @@
     </div>
     <div class="trail-highlight-wrap">
       <div class="trail-highlight" simple-sticky>
-        <div class="shadowBackground highlightPlaceholder" ng-if="!selected">
-          <h3>Select a trail</h3>
+        <div class="shadowBackground highlightPlaceholder trail-splash-intro" ng-if="!selected">
+          <p>The Synthetic Biology Trails introduce you to the concepts behind Synthetic Biology.</p>
+          <p>Synthetic Biology allows you to write novel sequences of DNAs, and introduce them into cells to elicit new and useful function.</p>
+          <p>We'll start by jumping right in explaining how to think through the basic cloning experiment, then we'll show you how to do it in the wetlab, then circle around and discuss the process in great detail. Finally, we introduce new topics at the bleeding edge of Synthetic Biology, and go into more detail about specific techniques and tools.</p>
         </div>
         <img ng-src="{{selected.icon}}"
              class="shadowBackground"

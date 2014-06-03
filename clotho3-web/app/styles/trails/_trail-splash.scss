@@ -36,12 +36,16 @@ $trail-highlight-width : 400px;
   }
 
   .trail-title {
-    margin: 0;
+    margin: 5px 0;
     font-size: 14px;
   }
 
   .trail-description {
     margin: 10px 0 0;
+
+    &:empty {
+      margin: 0;
+    }
   }
 }
 

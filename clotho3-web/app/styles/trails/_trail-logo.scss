@@ -8,22 +8,28 @@
   opacity: 0.35;
 }
 
+.trail-splash-logo-container {
+  min-height: 400px;
+}
+
 .trail-splash-logo {
   height: 250px;
-  margin: 90px auto;
+  margin: 60px auto;
   position: absolute;
   left: 0;
   right: 0;
 }
 
 .trail-splash-intro {
-  margin: 450px 0 100px;
+  padding: 35px !important;
 
   p {
-    font-size: 21px;
+    font-size: 16px;
     font-weight: 200;
-    padding: 20px;
-    border-radius: 4px;
-    background: #ffffff;
+
+    &:first-child {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
   }
 }
