@@ -13,15 +13,25 @@ angular.module('clotho.construction')
 			restrict : 'A',
 			templateUrl : 'views/_construction/constructionFile.html',
 			scope : {
-				file : '=constructionFile'
+				inputFile : '=constructionFile'
 			},
 			link : function (scope, element, attrs) {
-				scope.$watch('file', function (newfile) {
-					ConstructionSimulator.process(newfile)
-					.then(function (fileResult) {
-						scope.computed = fileResult;
-					});
+				scope.$watch('inputFile', function (newfile) {
+					scope.file = newfile;
 				});
+
+				scope.process = function () {
+					scope.processing = true;
+					ConstructionSimulator.process(scope.file)
+					.then(function onCFSuccess(processed) {
+						scope.processed = true;
+					}, function onCFError(partialFile) {
+						scope.processError = true;
+					})
+					.finally(function () {
+						scope.processing = false;
+					});
+				}
 			}
 		}
 	});

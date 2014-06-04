@@ -116,20 +116,20 @@ angular.module('clotho.construction')
 		/**
 		 * @name process
 		 * @description
-		 * Given a well-formed construction file, iterate through each step and calculate final product, adding intermediates to dictionary. returns a copy of the construction file with extended dictionary, and result under the key 'final'
+		 * Given a well-formed construction file, iterate through each step and calculate final product, adding intermediates to dictionary.
 		 *
 		 * @param inputFile {ConstructionFile}
+		 * @param createNew {boolean} If true, passed file will be copied and not edited itself
 		 *
 		 * @returns {Promise} promise, resolving to object { <outputName> : <value> }
 		 *
-		 * //todo - add promise notifications
 		 */
-		var process = function processConstructionFile (inputFile) {
+		var process = function processConstructionFile (inputFile, createNew) {
 
 			//create copy, with defaults
 			var file = _.assign({
 				dictionary : {}
-			}, inputFile);
+			}, !!createNew ? _.clone(inputFile, true) : inputFile);
 
 			//initial checks, return if nothing to do
 			if (_.isEmpty(file.steps)) {

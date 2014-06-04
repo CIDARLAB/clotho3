@@ -3,17 +3,21 @@
     <span class="cf-step-input">Sequence</span>
     <span class="cf-step-arg"
           ng-init="seqName = step.input[0]"
-          popover="{{file.dictionary[seqName]['sequence'] | stringEnds}}"
-          popover-title="{{seqName}}"
-          popover-trigger="mouseenter">{{seqName}}</span>
+          ng-class="{'isDefined' : file.dictionary[seqName]}"
+          sequence-popup
+          sequence-popup-title="{{seqName}}"
+          sequence-popup-model="file.dictionary[seqName]"
+          sequence-popup-trigger="mouseenter">
+      {{seqName}}
+    </span>
   </div>
   <div class="cf-step-group">
     <span class="cf-step-input">Enzymes</span>
     <span ng-repeat="enzName in step.input[1]"
+          ng-class="{'isDefined' : file.dictionary[enzName]}"
           class="cf-step-arg"
-          popover-title="{{enzName}}"
-          popover-trigger="mouseenter"
-          popover="{{file.dictionary[enzName].cut}}">
+          restriction-enzyme-popup
+          restriction-enzyme-popup-model="file.dictionary[enzName]">
       {{enzName}}
     </span>
   </div>

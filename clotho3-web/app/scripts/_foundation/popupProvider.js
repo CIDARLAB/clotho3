@@ -6,16 +6,19 @@ angular.module('clotho.clothoDirectives')
  * @description Provider for customizable popups. Extended version of Angular-UI Bootstrap's Tooltip. Used especially for sharable popup.
  *
  * @attrs
- * sharablePopupModel
- * sharablePopupId
- * sharablePopupPlacement
- * sharablePopupTrigger (none | click | mouseenter | focus)
- * sharablePopupOpen
+ * <prefix>Model
+ * <prefix>Id
+ * <prefix>Title
+ * <prefix>Placement
+ * <prefix>Trigger (none | click | mouseenter | focus)
+ * <prefix>Open
  *
  * @usage
+ *
+ * Pass a prefix and popover defaultPosition
 
  angular.module('myApp').directive('sharablePopup', function ($clothoPopup) {
-		return $clothoPopup('sharablePopup');
+		return $clothoPopup('sharablePopup', {placement : 'topRight'});
 	})
  .directive('sharablePopupInner', function () { ... });
 
@@ -52,7 +55,7 @@ angular.module('clotho.clothoDirectives')
 		}
 
 		this.$get = function ($animate, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas, hotkeys) {
-			return function (prefix) {
+			return function (prefix, defaults) {
 
 				var bodyElement = $document.find( 'body' );
 
@@ -70,7 +73,8 @@ angular.module('clotho.clothoDirectives')
 					'<div ' + snake_case(prefix) + '-inner ' +
 					'sharable-id="sharable_id" ' +
 					'sharable-model="passedModel" ' +
-					'placement="{{popup_placement}}" ' +
+					'popup-title="popup_title" ' +
+					'popup-placement="{{popup_placement}}" ' +
 					'reposition="repositionFunction()"' +
 					'>' +
 					'</div>';
@@ -284,8 +288,14 @@ angular.module('clotho.clothoDirectives')
 								}
 							});
 
+							attrs.$observe(prefix + 'Title', function (val, oldval) {
+								if (!!val && (!oldval || val != oldval)) {
+									scope.popup_title = val;
+								}
+							});
+
 							attrs.$observe(prefix + 'Placement', function (val) {
-								scope.popup_placement = val;
+								scope.popup_placement = val || defaults.placement;
 							});
 
 							var unregisterTriggers = function () {
@@ -302,7 +312,7 @@ angular.module('clotho.clothoDirectives')
 									return;
 								}
 
-								triggers = getTriggers(val);
+								triggers = getTriggers(val || defaults.trigger);
 
 								if (triggers.show === triggers.hide) {
 									element.bind(triggers.show, togglePopupBind);

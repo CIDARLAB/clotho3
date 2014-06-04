@@ -7,7 +7,10 @@ angular.module('clotho.clothoDirectives')
  *
  */
 	.directive('restrictionEnzymePopup', function ($clothoPopup) {
-		return $clothoPopup('restrictionEnzymePopup');
+		return $clothoPopup('restrictionEnzymePopup', {
+			placement : 'top',
+			trigger : 'mouseenter'
+		});
 	})
 	.directive('restrictionEnzymePopupInner', function () {
 		return {
@@ -15,7 +18,7 @@ angular.module('clotho.clothoDirectives')
 			replace: true,
 			scope: {
 				enzyme : '=?sharableModel',
-				placement: '@',
+				placement: '@popupPlacement',
 				reposition : '&'
 			},
 			templateUrl: 'views/_interface/dna/restrictionEnzymePopup.html'

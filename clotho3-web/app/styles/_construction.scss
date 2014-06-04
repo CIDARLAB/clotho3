@@ -43,7 +43,7 @@
 
   }
 
-  &-arg {
+  &-arg, &-output {
     @extend .label;
     background-color: #cecece;
     display: inline-block;
@@ -51,10 +51,15 @@
     padding: 4px 8px;
     margin: 1px 3px;
 
-    &[popover], &.isDefined {
+    &.isComputed {
       cursor: default;
-      background-color: #5bc0de;
+      background-color: #5bdec0;
     }
+
+    &.isDefined {
+       cursor: default;
+       background-color: #5bc0de;
+     }
   }
 
 }

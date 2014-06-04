@@ -29,7 +29,7 @@ angular.module('clotho.clothoDirectives')
 			scope: {
 				sharableId: '=?',
 				sharableModel : '=?',
-				placement: '@',
+				placement: '@popupPlacement',
 				reposition : '&'
 			},
 			templateUrl: 'views/_foundation/sharableBasicFieldsPopup.html',

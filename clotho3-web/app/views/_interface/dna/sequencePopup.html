@@ -1,0 +1,13 @@
+<div class="popover {{placement}} large">
+  <div class="arrow"></div>
+
+  <div class="popover-inner">
+    <h3 class="popover-title" ng-bind="model.name || title"></h3>
+  </div>
+
+  <div class="popover-content">
+    <div ng-repeat="seq in model">
+      <span ng-bind="seq.sequence | stringEnds:20"></span>
+    </div>
+  </div>
+</div>
