@@ -4,9 +4,10 @@
       <button ng-repeat="enz in enzymes | orderBy:'name'"
               class="btn btn-sm btn-default"
               ng-class="{'btn-info' : enz.active}"
-              popover="{{enz.match}}"
-              popover-trigger="mouseenter"
-              popover-append-to-body="true"
+              restriction-enzyme-popup
+              restriction-enzyme-popup-trigger="mouseenter"
+              restriction-enzyme-popup-placement="top"
+              restriction-enzyme-popup-model="enz"
               ng-click="enz.active = !enz.active">
         {{enz.name}}
       </button>

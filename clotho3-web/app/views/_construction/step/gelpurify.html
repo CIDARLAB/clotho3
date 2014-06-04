@@ -1,3 +1,15 @@
 <div>
-  target legth : {{step.input[1] || 'largest'}}
+  <div class="cf-step-group">
+    <span class="cf-step-input">Fragments</span>
+    <span ng-repeat="frag in file.dictionary[step.input[0]]"
+          class="cf-step-arg"
+          popover="{{frag.sequence | stringEnds}}"
+          popover-title="Fragment {{$index + 1}} - {{frag.sequence.length}} bp"
+          popover-trigger="mouseenter">
+     Fragment {{$index + 1}}
+  </span>
+  </div>
+  <div class="cf-step-group">
+    <span class="cf-step-input">Target Length</span> <span class="cf-step-arg">{{step.input[1] || 'Largest'}}</span>
+  </div>
 </div>

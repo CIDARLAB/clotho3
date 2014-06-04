@@ -6,6 +6,8 @@ angular.module('clotho.tokenizer')
  * Given a name and UUID, renders a token which can display more information upon interaction via sharable-popup
  *
  * Can either pass token directly, or tokenModel (will overwrite)
+ *
+ * //todo - better handling of arrays (ambiguity)
  */
 	.directive('clothoToken', function ($parse, Clotho, clothoTokenFactory) {
 		return {

@@ -21,7 +21,7 @@ angular.module('clotho.core').service('Socket',
 
 	    var Debugger = new Debug('Socket', '#5555bb');
 
-	    //expecting a string
+	    //expecting a string or object
 	    function socket_send (data) {
 		    if (!socketReady) {
 			    Debugger.log('(not ready) queueing request: ', data);
@@ -31,7 +31,7 @@ angular.module('clotho.core').service('Socket',
 
 		    data = angular.isObject(data) ? JSON.stringify(data) : data;
 
-		    Debugger.log('sending data: ' + data);
+		    Debugger.log('sending data: ', angular.isObject(data) ? data : JSON.parse(data));
 		    socket.send(data);
 	    }
 

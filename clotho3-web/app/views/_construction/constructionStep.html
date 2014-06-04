@@ -1,7 +1,13 @@
-<div>
-  <h4>{{reaction.readable}}</h4>
-  <div construction-step-inner></div>
-  <clotho-token ng-if="file.dictionary[step.output]"
-                token-model="file.dictionary[step.output]"
-                token-name="{{step.output}}"></clotho-token>
+<div class="cf-step">
+  <div class="cf-step-overview clearfix">
+    <h5 class="cf-step-reaction">{{reaction.readable}}</h5>
+    <span class="cf-step-output">
+      <clotho-token token-model="file.dictionary[step.output]"
+                    token-name="{{step.output}}"
+                    popup-placement="left"></clotho-token>
+    </span>
+  </div>
+  <div class="cf-step-details">
+    <div construction-step-inner></div>
+  </div>
 </div>

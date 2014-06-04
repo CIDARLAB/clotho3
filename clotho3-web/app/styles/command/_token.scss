@@ -1,15 +1,20 @@
 .clothoTokenWrap {
+  $noModel : #cecece;
   $default : #5bc0de;
   $active : #eeddbb;
   $sharable : #5bdec0;
   $ambiguous : #de5bc0;
 
   @extend .label;
-  background-color: $default;
+  background-color: $noModel;
   display: inline-block;
   position: relative;
   padding: 4px 8px;
   margin: 1px 3px;
+
+  &.hasModel {
+    background-color: $default;
+  }
 
   &.sharable {
     background-color: $sharable;

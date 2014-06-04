@@ -8,7 +8,8 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 //import directly so don't duplicate bootstrap imports
 @import 'commandbar';
 
-@import 'constructionfile';
+@import 'constructionfileOld';
+@import 'construction';
 @import 'editor';
 @import 'trails';
 @import 'webapp';

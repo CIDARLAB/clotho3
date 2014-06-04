@@ -1,5 +1,20 @@
 <div>
-  template : {{step.input[2]}}, <br>
-  primers: {{step.input[0] + ',' + step.input[1]}}
-
+  <div class="cf-step-group">
+    <span class="cf-step-input">Template</span>
+    <span class="cf-step-arg"
+          ng-init="templateName = step.input[0]"
+          popover="{{file.dictionary[templateName]['sequence'] | stringEnds}}"
+          popover-title="{{templateName}}"
+          popover-trigger="mouseenter">{{templateName}}</span>
+  </div>
+  <div class="cf-step-group">
+    <span>Primers</span>
+    <span ng-repeat="ind in [1,2]"
+          class="cf-step-arg"
+          popover="{{file.dictionary[step.input[ind]]['sequence']}}"
+          popover-title="{{step.input[ind]}}"
+          popover-trigger="mouseenter">
+      {{step.input[ind]}}
+    </span>
+  </div>
 </div>

@@ -35,7 +35,7 @@ angular.module('clotho.core')
  *
  * // Will output message under namespace given, with color given
  */
-	.factory('Debug', function($log, $window) {
+	.factory('Debug', function($log, $window, $filter) {
 
 		//set to true for chrome to call console.trace()
 		var tracingEnabled = false;
@@ -79,7 +79,7 @@ angular.module('clotho.core')
 					stack = stack.slice(1);
 
 					var x = new Date();
-					var readableDate = x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds() + '.' + x.getMilliseconds();
+					var readableDate = $filter('date')(x, 'hh:mm:ss.sss');
 
 					//collect all messages
 					messages[namespace].push({

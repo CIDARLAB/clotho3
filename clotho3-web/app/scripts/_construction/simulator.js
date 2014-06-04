@@ -1,7 +1,7 @@
 angular.module('clotho.construction')
 	.service('ConstructionSimulator', function (ConstructionReactions, $q, Debug, Clotho) {
 
-		var Debugger = new Debug('ConstructionSimulator', '#88bb88');
+		var Debugger = new Debug('ConstructionSimulator', '#ee8888');
 
 		/* config */
 		var FINAL_DICT_KEY = 'final';
@@ -29,7 +29,7 @@ angular.module('clotho.construction')
 			if (!_.isEmpty(file.dictionary)) {
 				var dictionaryResult = file.dictionary[value];
 
-				console.log('dictionary result ' + value, dictionaryResult);
+				Debugger.log('dictionary result ' + value, dictionaryResult);
 
 				if (!_.isUndefined(dictionaryResult)) {
 					return $q.when(dictionaryResult);
@@ -138,7 +138,6 @@ angular.module('clotho.construction')
 
 			//note - on client this is async, so need promises
 			var prevStepPromise = $q.when();
-			var reachedLastStep = $q.defer();
 
 			/* simulate */
 
@@ -148,14 +147,14 @@ angular.module('clotho.construction')
 				//add this step to the promise chain
 				prevStepPromise = prevStepPromise.then(function() {
 
-					console.warn('step ' + index, file.dictionary, step.input, step.output);
+					Debugger.log('step ' + index, file.dictionary, step.input, step.output);
 
 					//resolve all input arguments
 					return $q.all(processStepArgs(file, step))
 				})
 				.then(function (resolved) {
 
-					console.warn('step ' + index + ' args resolved', resolved);
+					Debugger.log('step ' + index + ' args resolved', resolved);
 
 					//add to dictionary if non-primitive
 					_.forEach(resolved, function (arg, key) {
@@ -169,18 +168,14 @@ angular.module('clotho.construction')
 					return processStep(file, step);
 				})
 				.then(function (stepResult) {
-					console.warn('step ' + index + ' processed', stepResult);
+					Debugger.log('step ' + index + ' processed', stepResult);
 					//add the step result to the dictionary
 					return $q.when(_.assign(file.dictionary, stepResult));
 				});
 			});
 
-			//after we've gone through all the steps, kick it all off
-			reachedLastStep.resolve();
 
-			return reachedLastStep.promise.then(function () {
-				return prevStepPromise;
-			})
+			return prevStepPromise
 			.then(function (chain) {
 				//once we've hit this, the promise chain has resolved and file is computed
 

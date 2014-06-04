@@ -23,6 +23,10 @@ angular.module('clotho.construction')
 				scope.$watch('step', function (newval) {
 					scope.reaction = ConstructionReactions[newval.reaction];
 				});
+
+				scope.$watch('file.dictionary[step.output]', function (newval) {
+					scope.stepComputed = angular.isDefined(newval);
+				})
 			}
 		}
 	})
