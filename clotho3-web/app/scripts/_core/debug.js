@@ -104,10 +104,12 @@ angular.module('clotho.core')
 				}
 			});
 
+			//need to handle 'table' function separately
 			angular.forEach(['table'], function (term) {
 				debugFunctionality[term] = $window.console[term];
 			});
 
+			//easily pretty-print objects
 			debugFunctionality.object = function (obj) {
 				messages[namespace].push({
 					message : obj,
@@ -120,6 +122,10 @@ angular.module('clotho.core')
 					$log.log('%c' + obj, 'color: '+ color +';');
 				}
 			};
+
+			//simple wrapping for grouping input
+			debugFunctionality.group = $window.console.group || angular.noop;
+			debugFunctionality.groupEnd = $window.console.groupEnd || angular.noop;
 
 			//for strings to be interpolated etc.
 			debugFunctionality.$log = $log;
