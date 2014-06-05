@@ -3,10 +3,9 @@ Digest pcr_product			(EcoRI/HindIII, fragments)
 GelPurify fragments			(L, probeDigested)
 Digest pUC19				(EcoRI/HindIII, fragments2)
 GelPurify fragments2			(pUC19Digested)
-Ligate probeDigested and pUC19Digested	(final)
-
+Ligate probeDigested/pUC19Digested	(final)
+------------------------------------
 >primer1
 gagctcgaattccctaactaactaaag
-
 >primer2
 ctaattaagcttattaagctac

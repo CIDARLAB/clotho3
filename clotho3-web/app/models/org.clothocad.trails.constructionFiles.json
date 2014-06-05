@@ -58,23 +58,6 @@
 					]
 				},
 				{
-					"title": "Wet Lab Syntax",
-					"icon": "eye",
-					"dependencies" : {
-						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
-					},
-					"contents": [
-						{
-							"type": "text",
-							"params": "<div class=\"img-thumbnail\" style=\"padding: 10px;\"><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
-						},
-						{
-							"type": "template",
-							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
-						}
-					]
-				},
-				{
 					"title": "Wet Lab Examples",
 					"icon": "eye",
 					"dependencies" : {
@@ -84,6 +67,19 @@
 						{
 							"type": "template",
 							"params": "partials/trails/constructionFiles/wetLabExamples.html"
+						}
+					]
+				},
+				{
+					"title": "Wet Lab Syntax",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
 						}
 					]
 				}
