@@ -37,27 +37,6 @@
 					]
 				},
 				{
-					"title": "Going through the Steps",
-					"icon": "picture",
-					"dependencies" : {
-						"mixin" : "partials/trails/constructionFiles/goingThroughSteps.js"
-					},
-					"contents": [
-						{
-							"type": "text",
-							"params": "<div class=\"img-thumbnail\" style=\"padding: 10px;\"><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
-						},
-						{
-							"type": "text",
-							"params": "Borrow the github steps stype UI here?"
-						},
-						{
-							"type": "template",
-							"params": "partials/trails/constructionFiles/goingThroughSteps.html"
-						}
-					]
-				},
-				{
 					"title": "Wet Lab Examples",
 					"icon": "eye",
 					"dependencies" : {
