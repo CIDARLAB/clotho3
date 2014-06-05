@@ -36,9 +36,11 @@ angular.module('clotho.core').service('Socket',
 	    }
 
 	    function sendSocketQueue () {
+		    Debugger.group('Sending Socket Queue');
 		    angular.forEach(socketQueue, function(data, index) {
 			    socket_send(data);
 		    });
+		    Debugger.groupEnd();
 		    socketQueue = [];
 	    }
 

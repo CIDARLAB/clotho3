@@ -1,21 +1,6 @@
 
 angular.module('clotho.core')
 /**
- * decorate the angular $log to include the table message for chrome
- */
-	.config(function ($provide) {
-		$provide.decorator('$log', ['$delegate', function($delegate){
-			$delegate.table = function() {
-				var args = [].slice.call(arguments);
-				if(window.console && window.console.table)
-					console.table(args[0], args[1]);
-				else
-					$delegate.log(null, args)
-			};
-			return $delegate;
-		}]);
-	})
-/**
  * @name Debug
  *
  * @description
@@ -124,8 +109,23 @@ angular.module('clotho.core')
 			};
 
 			//simple wrapping for grouping input
-			debugFunctionality.group = $window.console.group || angular.noop;
-			debugFunctionality.groupEnd = $window.console.groupEnd || angular.noop;
+			debugFunctionality.group = function (term) {
+				if (angular.isDefined($window.console.group)) {
+					$window.console.group('%c' + namespace + '\t' + term || "Collapsing Output", 'color: '+ color +';');
+				}
+			};
+
+			debugFunctionality.groupCollapsed = function (term) {
+				if (angular.isDefined($window.console.groupCollapsed)) {
+					$window.console.groupCollapsed('%c' + namespace + '\t' + term || "Collapsing Output", 'color: ' + color + ';');
+				}
+			};
+
+			debugFunctionality.groupEnd = function () {
+				if (angular.isDefined($window.console.groupEnd)) {
+					$window.console.groupEnd();
+				}
+			};
 
 			//for strings to be interpolated etc.
 			debugFunctionality.$log = $log;

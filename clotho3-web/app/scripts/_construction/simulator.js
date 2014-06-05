@@ -147,6 +147,8 @@ angular.module('clotho.construction')
 			var dictionaryTerms = _.keys(file.dictionary);
 			var clothoInputs = {};
 
+			Debugger.groupCollapsed('Processing Input Arguments');
+
 			_.forEach(file.steps, function (step) {
 				dictionaryTerms.push(step.output);
 
@@ -159,6 +161,7 @@ angular.module('clotho.construction')
 
 			return $q.all(clothoInputs)
 			.then(function (resolvedPartialDict) {
+				Debugger.groupEnd();
 				_.assign(file.dictionary, resolvedPartialDict);
 				return file;
 			});
@@ -191,6 +194,9 @@ angular.module('clotho.construction')
 			var prevStepPromise = $q.when();
 
 			/* simulate */
+
+			//group debugger
+			Debugger.groupCollapsed('Simulating File');
 
 			//iterate through steps, sequentially - need to handle sequential promises (like getting schema promises)
 			_.forEach(file.steps, function (step, index) {
@@ -225,10 +231,12 @@ angular.module('clotho.construction')
 				});
 			});
 
-
 			return prevStepPromise
 			.then(function (chain) {
 				//once we've hit this, the promise chain has resolved and file is computed
+
+				//ungroup debugger
+				Debugger.groupEnd();
 
 				//create final key
 				var lastKey = _.last(file.steps).output;
