@@ -1,18 +1,12 @@
 <div ng-controller="constructionFiles_constructionInClothoCtrl">
-  <h2>todo</h2>
+  <p>Clotho can convert construction files using the wet lab syntax into Construction files you can simulate.</p>
 
-    <pre>
-PCR ca1067F/ca1067R on pSB1AK3-b0015  (pcrpdt)
-Digest pcrpdt                         (1038+10+6, L, pcrdig)
-Digest pSB1A2-I13521                  (EcoRI/SpeI, 2062+946, L, vectdig)
-Ligate pcrdig and vectdig             (pSB1A2-Bca9128)
------------------------------------------
->ca1067F  Forward Biobricking of KanR of pSB1AK3
-ccagtGAATTCgtccTCTAGAgagctgatccttcaactc
->ca1067R  Reverse Biobricking of KanR of pSB1AK3
-gcagtACTAGTtccgtcaagtcagcgtaatg
-    </pre>
+  <p>You can specify sequences (like <code>ca1067F</code>) directly in the construction file, or reference sequences stored in Clotho (like <code>pSB1AK3</code>).</p>
 
-    <div construction-file="parsed"></div>
+  <pre ng-bind="wetlab"></pre>
+
+  <p>The construction file is parsed, and converted from the wet lab syntax. Additional metadata easily can be added in Clotho.</p>
+
+  <div construction-file="parsed" no-process="true"></div>
 
 </div>

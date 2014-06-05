@@ -176,6 +176,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/contstructiontrail.html',
   controller: 'TestContstructiontrailCtrl',
 	title : 'Construction Trail Test',
+	reloadOnSearch: false,
 	resolve : {
 		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
 			var deferred = $q.defer();

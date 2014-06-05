@@ -1,28 +1,16 @@
 <div ng-controller="constructionFiles_wetLabExamplesCtrl">
 
-  <h1>Get GFP example. Get other examples.</h1>
+ <p>Here are a few more examples of construction files with the wet lab syntax.</p>
+
+  <p>In the next section, you'll see how Clotho can import and simulate these construction files.</p>
 
   <div style="text-align: center">
     <ul class="pagination pagination-lg" style="display: inline-block">
-      <li ng-repeat="file in constructionFiles">
-        <a ng-click="viewing = file"
-           popover="{{file.name}}"
-           popover-trigger="mouseenter">Example {{$index + 1}}</a>
+      <li ng-repeat="file in files" ng-class="{'active' : file == showing}">
+        <a ng-click="showFile(file)">{{file.name}}</a>
       </li>
     </ul>
   </div>
 
-      <pre>
-PCR ca1067F/ca1067R on pSB1AK3-b0015  (pcrpdt)
-Digest pcrpdt                         (1038+10+6, L, pcrdig)
-Digest pSB1A2-I13521                  (EcoRI/SpeI, 2062+946, L, vectdig)
-Ligate pcrdig and vectdig             (pSB1A2-Bca9128)
------------------------------------------
->ca1067F  Forward Biobricking of KanR of pSB1AK3
-ccagtGAATTCgtccTCTAGAgagctgatccttcaactc
->ca1067R  Reverse Biobricking of KanR of pSB1AK3
-gcagtACTAGTtccgtcaagtcagcgtaatg
-    </pre>
-
-
+  <pre ng-bind="showing.data"></pre>
 </div>

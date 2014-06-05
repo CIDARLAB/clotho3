@@ -2,10 +2,28 @@
 
 $clotho.extensions.controller('constructionFiles_wetLabExamplesCtrl', function($scope, $http, Clotho) {
 
-	//todo - add raw versions
+	//todo - add more versions
 
-	Clotho.query({schema : "org.clothocad.model.ConstructionFileRaw"}, {mute : true}).then(function(data) {
-		$scope.constructionFiles = data
+	$scope.files = {
+		"gfp" : {},
+		"pHA581" : {},
+		"pSB1A2" : {}
+	};
+
+	angular.forEach($scope.files, function (obj, name) {
+		$http.get('models/construction/construction_' + name + '.txt', {cache : true})
+			.success(function (data) {
+				angular.extend(obj, {
+					name : name,
+					data : data
+				});
+			})
 	});
+
+	$scope.showFile = function (file) {
+		$scope.showing = file;
+	};
+
+	$scope.showFile($scope.files.gfp)
 
 });

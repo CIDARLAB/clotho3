@@ -1,7 +1,10 @@
 'use strict';
 
-$clotho.extensions.controller('constructionFiles_wetLabSyntaxCtrl', function($scope, $http, Clotho) {
+$clotho.extensions.controller('constructionFiles_wetLabSyntaxCtrl', function ($scope, $http) {
 
-	//todo - add raw versions
+	$http.get('models/construction/construction_gfp.txt', {cache : true})
+	.success(function (data) {
+		$scope.gfpFile = data;
+	});
 
 });

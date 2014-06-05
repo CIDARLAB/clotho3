@@ -13,7 +13,8 @@ angular.module('clotho.construction')
 			restrict : 'A',
 			templateUrl : 'views/_construction/constructionFile.html',
 			scope : {
-				inputFile : '=constructionFile'
+				inputFile : '=constructionFile',
+				noProcess : '='
 			},
 			link : function (scope, element, attrs) {
 				scope.$watch('inputFile', function (newfile) {
