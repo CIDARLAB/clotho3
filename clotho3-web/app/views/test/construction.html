@@ -1,12 +1,26 @@
 <div class="container">
 
   <div class="row">
-    <div class="col-sm-6">
-     <div construction-parser-wetlab="demoParse"></div>
-    </div>
+    <h4>Construction File Simulator</h4>
 
-    <div class="col-sm-6">
-      <div construction-file="demoConstruction" auto-process></div>
+    <div class="col-sm-offset-2 col-sm-8">
+      <div construction-file="demoConstruction" no-preprocess></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h4>Parsing to JSON</h4>
+
+    <div class="col-sm-offset-2 col-sm-8">
+      <div construction-parser-json="demoWetLab"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h4>Parsing to Wet Lab Syntax</h4>
+
+    <div class="col-sm-offset-2 col-sm-8">
+      <div construction-parser-wetlab="demoParse"></div>
     </div>
   </div>
 </div>

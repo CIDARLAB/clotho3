@@ -1,6 +1,6 @@
 <div class="construction-file panel panel-default">
   <div class="cf-heading panel-heading">
-    <span ng-if="!noProcess"
+    <span ng-if="!noProcess && file"
           class="btn btn-sm btn-default pull-right"
           style="margin-top: -7px"
           ng-click="process()"
@@ -10,6 +10,8 @@
     </span>
     <h4 class="cf-title panel-title">{{file.name || 'Construction File Simulation'}}</h4>
   </div>
+
+  <div class="loading" ng-if="!file"></div>
 
   <div class="panel-body">
     <p ng-show="file.description" ng-bind="file.description" style="margin-bottom: 0;"></p>
