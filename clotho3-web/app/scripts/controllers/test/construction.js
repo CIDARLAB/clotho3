@@ -9,5 +9,6 @@ angular.module('clotho.webapp')
 	  //$http.get('models/construction/construction_gfp.json')
 		 .success(function(data) {
 			$scope.demoConstruction = data;
+			$scope.demoParse = angular.copy(data);
 		});
 	});

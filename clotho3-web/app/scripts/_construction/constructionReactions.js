@@ -7,26 +7,30 @@ angular.module('clotho.construction')
 	.value('ConstructionReactions', {
 		"pcr": {
 			reactionId: "clotho.functions.dna.pcr",
-			clientReaction: "PCR.predict",
 			readable: "PCR",
-			template : "views/_construction/step/pcr.html"
+			template_step : "views/_construction/step/pcr.html",
+			template_wetlabL : "PCR {{step.input[1]}}/{{step.input[2]}} on {{step.input[0]}}",
+			template_wetlabR : "({{step.output}})"
 		},
 		"ligate": {
 			reactionId: "clotho.functions.dna.ligate",
-			clientReaction: "PCR.ligate",
-			readable: "Ligation",
-			template : "views/_construction/step/ligate.html"
+			readable: "Ligate",
+			template_step : "views/_construction/step/ligate.html",
+			template_wetlabL : "Ligate {{step.input[0] | joinArray:'/'}}",
+			template_wetlabR : "({{step.output}})"
 		},
 		"digest": {
 			reactionId: "clotho.functions.dna.digest",
-			clientReaction: "Digest.digest",
-			readable: "Restriction Digest",
-			template : "views/_construction/step/digest.html"
+			readable: "Digest",
+			template_step : "views/_construction/step/digest.html",
+			template_wetlabL : "Digest {{step.input[0]}}",
+			template_wetlabR : "({{step.input[1] | joinArray:'/'}}, {{step.output}})"
 		},
 		"gelpurify": {
 			reactionId: "clotho.functions.dna.gelPurify",
-			clientReaction: "Digest.gelPurify",
 			readable: "Gel Purify",
-			template : "views/_construction/step/gelpurify.html"
+			template_step : "views/_construction/step/gelpurify.html",
+			template_wetlabL : "GelPurify {{step.input[0]}}",
+			template_wetlabR : "({{step.input[1] || 'L'}}, {{step.output}})"
 		}
 	});

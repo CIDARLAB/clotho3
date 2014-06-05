@@ -2,7 +2,8 @@
   position: relative;
 }
 
-.cf-heading {}
+.cf-heading {
+}
 
 .cf-overview {
   text-align: center;
@@ -57,9 +58,18 @@
     }
 
     &.isDefined {
-       cursor: default;
-       background-color: #5bc0de;
-     }
+      cursor: default;
+      background-color: #5bc0de;
+    }
+  }
+
+}
+
+.construction-file-wet {
+  @extend pre;
+
+  table td:first-child {
+    padding-right: 2em;
   }
 
 }

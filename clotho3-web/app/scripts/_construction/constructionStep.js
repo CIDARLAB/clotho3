@@ -45,7 +45,7 @@ angular.module('clotho.construction')
 		return {
 			restrict : 'A',
 			link : function (scope, element, attrs) {
-				scope.$watch('reaction.template', function (newval) {
+				scope.$watch('reaction.template_step', function (newval) {
 					angular.isDefined(newval) && $http.get(newval, {cache : true})
 					.then(function (data) {
 						element.html($compile(data.data)(scope));

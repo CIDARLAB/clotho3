@@ -1,0 +1,16 @@
+<div class="construction-file-wet">
+  <table>
+    <tr ng-repeat="step in file.steps"
+        construction-parser-wetlab-step
+        step-type="{{step.reaction}}"></tr>
+  </table>
+
+  <br>
+
+  <!--dictionary-->
+  <div ng-repeat="(key, item) in file.dictionary">
+    >{{key}} {{item.description}}<br>
+    {{item.sequence}}
+  </div>
+
+</div>
