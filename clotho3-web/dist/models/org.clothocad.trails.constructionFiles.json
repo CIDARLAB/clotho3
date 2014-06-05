@@ -48,6 +48,10 @@
 							"params": "<div class=\"img-thumbnail\" style=\"padding: 10px;\"><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
 						},
 						{
+							"type": "text",
+							"params": "Borrow the github steps stype UI here?"
+						},
+						{
 							"type": "template",
 							"params": "partials/trails/constructionFiles/goingThroughSteps.html"
 						}
@@ -55,11 +59,15 @@
 				},
 				{
 					"title": "Wet Lab Syntax",
-					"icon": "exercise",
+					"icon": "eye",
 					"dependencies" : {
 						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
 					},
 					"contents": [
+						{
+							"type": "text",
+							"params": "<div class=\"img-thumbnail\" style=\"padding: 10px;\"><img src=\"partials/trails/constructionFiles/pUC-GFP.png\"></div>"
+						},
 						{
 							"type": "template",
 							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
@@ -67,8 +75,8 @@
 					]
 				},
 				{
-					"title": "Wet Lab Construction Files",
-					"icon": "exercise",
+					"title": "Wet Lab Examples",
+					"icon": "eye",
 					"dependencies" : {
 						"mixin" : "partials/trails/constructionFiles/wetLabExamples.js"
 					},
@@ -99,12 +107,15 @@
 					]
 				},
 				{
-					"title": "Running Construction Files",
+					"title": "Simulation",
 					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/runningConstructionFiles.js"
+					},
 					"contents": [
 						{
-							"type": "text",
-							"params": "<h2>Todo</h2>"
+							"type": "template",
+							"params": "partials/trails/constructionFiles/runningConstructionFiles.html"
 						}
 					]
 				}

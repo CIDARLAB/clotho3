@@ -1,3 +1,12 @@
 <div>
-  ligate {{step.input[0]}}
+  <span class="cf-step-input">Fragments</span>
+  <span ng-repeat="frag in step.input[0]"
+        class="cf-step-arg"
+        ng-class="{'isDefined' : file.dictionary[frag]}"
+        sequence-popup
+        sequence-popup-title="{{frag}}"
+        sequence-popup-model="file.dictionary[frag]"
+        sequence-popup-trigger="mouseenter">
+    {{frag}}
+  </span>
 </div>
