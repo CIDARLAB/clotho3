@@ -6,6 +6,21 @@ angular.module('clotho.construction')
 		/* config */
 		var FINAL_DICT_KEY = 'final';
 
+		function disambiguateOnClotho (value) {
+			//make sure it's a string - just return booleans and numbers
+			if (!_.isString(value)) {
+				return $q.when(value);
+			}
+
+			//check clotho by query for name, return first result
+			return Clotho.query({name : value}, {mute : true}).then(function (results) {
+				if (results.length != 1) {
+					Debugger.log('ambiguous query! ' + results.length + ' results for ' + value);
+				}
+				return results[0];
+			});
+		}
+
 		/**
 		 * @name parseName
 		 * @description
@@ -20,7 +35,7 @@ angular.module('clotho.construction')
 		 */
 		function parseName (file, value) {
 
-			//make sure it's a string - just return booleans and numbers
+			//make sure it's a string - just return booleans and numbers - don't want to look up in dictionary
 			if (!_.isString(value)) {
 				return $q.when(value);
 			}
@@ -28,21 +43,13 @@ angular.module('clotho.construction')
 			//try the dictionary if its given, return result if find it
 			if (!_.isEmpty(file.dictionary)) {
 				var dictionaryResult = file.dictionary[value];
-
-				Debugger.log('dictionary result ' + value, dictionaryResult);
-
 				if (!_.isUndefined(dictionaryResult)) {
 					return $q.when(dictionaryResult);
 				}
 			}
 
 			//if we get here, check clotho by query for name, return first result
-			return Clotho.query({name : value}, {mute : true}).then(function (results) {
-				if (results.length != 1) {
-					Debugger.log('ambiguous query! ' + results.length + ' results for ' + value);
-				}
-				return results[0];
-			});
+			return disambiguateOnClotho(value);
 		}
 
 		/**
@@ -112,6 +119,50 @@ angular.module('clotho.construction')
 				return obj;
 			});
 		}
+
+		/**
+		 * @name preprocess
+		 * @description
+		 * Given a well-formed construction file, iterate through each step and interpolate arguments.
+		 *
+		 * @param inputFile {ConstructionFile}
+		 * @param createNew {boolean} If true, passed file will be copied and not edited itself
+		 *
+		 * @returns {Promise} promise, resolving to object { <outputName> : <value> }
+		 *
+		 */
+		//todo - check all inputs, deferring to dictionary
+		var interpolateInputs = function (inputFile, createNew) {
+
+			//create copy, with defaults
+			var file = _.assign({
+				dictionary : {}
+			}, !!createNew ? _.clone(inputFile, true) : inputFile);
+
+			//initial checks, return if nothing to do
+			if (_.isEmpty(file.steps)) {
+				return $q.when(file);
+			}
+
+			var dictionaryTerms = _.keys(file.dictionary);
+			var clothoInputs = {};
+
+			_.forEach(file.steps, function (step) {
+				dictionaryTerms.push(step.output);
+
+				_.forEach(_.flatten(step.input), function (input) {
+					if ( _.isString(input) && _.indexOf(dictionaryTerms, input) < 0 ) {
+						clothoInputs[input] = disambiguateOnClotho(input);
+					}
+				});
+			});
+
+			return $q.all(clothoInputs)
+			.then(function (resolvedPartialDict) {
+				_.assign(file.dictionary, resolvedPartialDict);
+				return file;
+			});
+		};
 
 		/**
 		 * @name process
@@ -197,6 +248,7 @@ angular.module('clotho.construction')
 		};
 
 		return {
+			interpolateInputs : interpolateInputs,
 			process : process
 		}
 
