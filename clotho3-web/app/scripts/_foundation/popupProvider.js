@@ -22,6 +22,8 @@ angular.module('clotho.clothoDirectives')
 	})
  .directive('sharablePopupInner', function () { ... });
 
+
+ //todo - add focus passthrough
  *
  */
 
@@ -33,6 +35,8 @@ angular.module('clotho.clothoDirectives')
 			'click': 'click',
 			'focus': 'blur'
 		};
+
+		var defaultOptions = {};
 
 		function getTriggers ( trigger ) {
 			var show = trigger || 'click';
@@ -56,6 +60,8 @@ angular.module('clotho.clothoDirectives')
 
 		this.$get = function ($animate, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas, hotkeys) {
 			return function (prefix, defaults) {
+
+				defaults = angular.extend({}, defaultOptions, defaults);
 
 				var bodyElement = $document.find( 'body' );
 
