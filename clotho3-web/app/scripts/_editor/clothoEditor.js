@@ -84,6 +84,8 @@ angular.module('clotho.editor')
 				var type = ClothoSchemas.determineSharableType(sharable),
 					templateUrl;
 
+				console.warn('sharable type is', type);
+
 				// if it's an instance, check for a more specific template
 				if (type == 'Instance') {
 					//todo - handle instance-specific templates
@@ -206,6 +208,9 @@ angular.module('clotho.editor')
 			scope.$watch('sharable.id', function (newval, oldval) {
 				Debugger.log('sharable id has changed', newval, oldval);
 				setNewWatch(newval);
+				if (angular.isDefined(scope.sharable) && angular.isUndefined(scope.sharable.schema)) {
+					createEditorElement(scope.sharable);
+				}
 			});
 
 		}

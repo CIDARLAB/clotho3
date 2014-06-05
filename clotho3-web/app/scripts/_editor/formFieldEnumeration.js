@@ -160,9 +160,22 @@ angular.module('clotho.editor')
 							});
 						});
 					}
-					//no schema... this shouldn't happen...
+					//no schema...
 					else {
-						schemaFieldsElement = angular.element('<div class="alert">Sharable has no schema...</div>');
+						schemaFieldsElement = angular.element('<div class="alert alert-warning">Sharable has no schema...</div>');
+
+						var strippedFields = newkeys;
+						_.remove(strippedFields, function (field) {
+							return angular.isDefined(ClothoSchemas.sharableBasicFields[field]);
+						});
+
+						var sharableFieldNames = _.map(strippedFields, function (fieldName) {
+							return {
+								name : fieldName
+							}
+						});
+						sharableFieldsElement = $compile(generateDynamicFields(sharableFieldNames))(scope);
+						replaceFieldsView();
 					}
 				}, true);
 
