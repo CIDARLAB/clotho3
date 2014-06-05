@@ -57,7 +57,7 @@ class NewGBConverter:
     """
 
     highlighted = {'ApEinfo_fwdcolor':'forColor', 'ApEinfo_revcolor':'revColor', \
-    'inference':'inference', 'label': 'description'}
+    'inference':'inference', 'label': 'description', 'note': 'notes'}
 
     def highlight(self):
         high = self.gb.highlight
@@ -68,7 +68,7 @@ class NewGBConverter:
             self.highs.append( 
             {'start':loc.start.position, 'end': loc.end.position, \
             'forColor': '#000000', 'revColor': '#000000', 'inference': None, \
-            'notes': [f.type], 'description': None })
+            'notes': None, 'description': None }) #notes is supposed to be the qualifier notes if it exists
             #'strand': loc.strand, 'type':f.type, \
             #'id:': f.id, \
             #'location operator':f.location_operator, 'ref': f.ref,\
