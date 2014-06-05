@@ -112,8 +112,8 @@
       "icon" : "eye",
       "help" : "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p>",
       "contents" : [ {
-        "type" : "template",
-        "params" : "partials/trails/clotho-intro/commandIntro.html"
+        "type" : "text",
+        "params" : "<p>The Command Bar provides a simple interface for running functions in Clotho.</p>"
       }, {
         "type" : "video",
         "params" : {
@@ -121,8 +121,11 @@
           "id" : "Upbz_cef6-c"
         }
       }, {
+        "type" : "text",
+        "params" : "<p>Words are tokenized as you input them. When they match something in the database, you'll see a list of autocompletions. These include functions, data, and schemas.</p><p>Hover over an autocompletion (or use your up and down arrows) to see more information about it.</p>"
+      }, {
         "type" : "template",
-        "params" : "partials/trails/clotho-intro/commandIntro2.html"
+        "params" : "partials/trails/clotho-intro/commandIntro-commands.html"
       }, {
         "type" : "quizQuestion",
         "params" : {
@@ -148,6 +151,9 @@
             "args" : [ "{{mySeq}}" ]
           }
         }
+      }, {
+        "type" : "template",
+        "params" : "partials/trails/clotho-intro/commandIntro-extra.html"
       } ]
     } ]
   }, {
