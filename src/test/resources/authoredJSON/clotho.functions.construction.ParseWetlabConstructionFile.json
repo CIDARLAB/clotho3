@@ -1,0 +1,12 @@
+{
+  "args" : [ {
+    "type" : "string",
+    "name" : "constructionFile"
+  } ],
+  "code" : "from parseConstruction import parse as run",
+  "description" : "Function parsing a well-formatted construction file to its json representation",
+  "language" : "PYTHON",
+  "name" : "ParseWetlabConstructionFile",
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "clotho.functions.construction.ParseWetlabConstructionFile"
+}

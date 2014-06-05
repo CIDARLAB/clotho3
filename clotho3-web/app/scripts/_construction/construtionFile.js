@@ -30,7 +30,14 @@ angular.module('clotho.construction')
 				var autoPreprocess = angular.isUndefined(attrs.noPreprocess);
 				var autoProcess = angular.isDefined(attrs.autoProcess);
 
+				function resetProcessFlags () {
+					angular.forEach(['processing', 'processed', 'processError'], function (flag) {
+						scope[flag] = false;
+					});
+				}
+
 				scope.$watch('inputFile', function (newfile) {
+					resetProcessFlags();
 					scope.file = newfile;
 					if (autoProcess) {
 						scope.process();

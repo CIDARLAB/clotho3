@@ -244,11 +244,21 @@ angular.module('clotho.construction')
 					file.dictionary[FINAL_DICT_KEY] = file.dictionary[lastKey]
 				}
 
+				function removeCutMarks (seq) {
+					if (_.isUndefined(seq)) {
+						return '';
+					} else if (_.isString(seq)) {
+						return seq.replace(/[\^\|_]/ig, '');
+					} else {
+						return seq;
+					}
+				}
+
 				//hack - remove cut marks
 				if (_.isArray(file.dictionary[FINAL_DICT_KEY])) {
-					file.dictionary[FINAL_DICT_KEY][0].sequence = file.dictionary[FINAL_DICT_KEY][0].sequence.replace(/[\^\|_]/ig, '');
-				} else if (_.isObject(file.dictionary[FINAL_DICT_KEY]) && !_.isUndefined(file.dictionary[FINAL_DICT_KEY].sequence)) {
-					file.dictionary[FINAL_DICT_KEY].sequence = file.dictionary[FINAL_DICT_KEY].sequence.replace(/[\^\|_]/ig, '');
+					file.dictionary[FINAL_DICT_KEY][0].sequence = removeCutMarks(file.dictionary[FINAL_DICT_KEY][0].sequence)
+				} else if (_.isObject(file.dictionary[FINAL_DICT_KEY])) {
+					file.dictionary[FINAL_DICT_KEY].sequence = removeCutMarks(file.dictionary[FINAL_DICT_KEY][0].sequence);
 				}
 
 				return file;

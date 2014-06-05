@@ -4,7 +4,7 @@
           class="btn btn-sm btn-default pull-right"
           style="margin-top: -7px"
           ng-click="process()"
-          ng-disabled="processing || processed"
+          ng-disabled="processing || processed || processError"
           ng-class="{'btn-success' : processed, 'btn-danger' : processError}">
       Process
     </span>
