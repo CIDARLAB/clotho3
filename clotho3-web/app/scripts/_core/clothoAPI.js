@@ -36,7 +36,7 @@ function generateClothoAPI() {
 
 		//note that angular.toJson will strip $-prefixed keys, so should be avoided
     fn.send = function(pkg) {
-        Socket.send(JSON.stringify(pkg));
+        return Socket.send(JSON.stringify(pkg));
     };
     fn.pack = function(channel, data, requestId, options) {
         return {
@@ -47,7 +47,7 @@ function generateClothoAPI() {
         };
     };
     fn.emit = function(eventName, data, requestId, options) {
-        fn.send(fn.pack(eventName, data, requestId, options));
+        return fn.send(fn.pack(eventName, data, requestId, options));
     };
 
     //helper functions
@@ -68,7 +68,10 @@ function generateClothoAPI() {
 	 * @param data {*} API Data
 	 * @param func {Function} Callback Function, run when data received from server
 	 * @param options {Object} API Options
-	 * @returns {Promise} Resolved on receipt of data from server, rejected after 5 second timeout or if data === undefined
+	 * @returns {Promise} Resolved on receipt of data from server, rejected if:
+	 * - message failed to send (e.g. too long)
+	 * - PubSub returns with data undefined (null is valid response though)
+	 * - after 5 second timeout
 	 */
 	fn.emitSubCallback = function (channel, data, func, options) {
 		var deferred = $q.defer(),
@@ -90,7 +93,12 @@ function generateClothoAPI() {
 			func(data);
 		}, '$clotho');
 
-		fn.emit(channel, data, requestId, options);
+		var sentSuccessful = fn.emit(channel, data, requestId, options);
+
+		if (sentSuccessful === false) {
+			$timeout.cancel(timeoutPromise);
+			deferred.reject(null);
+		}
 		return deferred.promise;
 	};
 
