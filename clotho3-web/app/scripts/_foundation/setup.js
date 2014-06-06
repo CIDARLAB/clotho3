@@ -3,6 +3,6 @@ angular.module('clotho.setup', [])
 	.run(function ($rootScope, Clotho) {
 
 		//extend scope with Clotho API so don't need to do this in each controller.
-		$rootScope.Clotho = $rootScope.clotho = Clotho;
+		$rootScope.Clotho = Clotho;
 
 	});
