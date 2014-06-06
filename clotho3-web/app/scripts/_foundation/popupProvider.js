@@ -179,6 +179,10 @@ angular.module('clotho.clothoDirectives')
 								popup.css(popupPosition);
 							}
 
+							function popupShouldBeOpen() {
+								return scope.popupForceOpen || scope.popupOpen;
+							}
+
 							//expose on the scope so can be passed to the inner function to trigger when it's content change
 							scope.repositionFunction = function () {
 								$timeout(function () {
@@ -211,7 +215,7 @@ angular.module('clotho.clothoDirectives')
 								if (angular.isDefined(value)) {
 									!!value ? show()() : hide();
 								} else {
-									scope.popupOpen ? show()() : hide();
+									popupShouldBeOpen() ? show()() : hide();
 								}
 							}
 
@@ -246,14 +250,15 @@ angular.module('clotho.clothoDirectives')
 							}
 
 							// Hide the popup element.
-							function hide() {
+							function hide(forceHide) {
 
-								if (scope.popupOpen) {
+								console.log('trying hiding popup', forceHide || (scope.popupOpen && !scope.popupForceOpen), scope.popupOpen, scope.popupForceOpen);
+
+								if (forceHide || !scope.popupForceOpen) {
 									scope.popupOpen = false;
-								}
-
-								if (popup) {
-									removePopup();
+									if (popup) {
+										removePopup();
+									}
 								}
 
 								hotkeys.del('esc');
@@ -268,8 +273,7 @@ angular.module('clotho.clothoDirectives')
 								// If linked DOM is removed, watchers from that DOM isn't removed.
 								// Store it for manual destruction later
 								popupScope = scope.$new();
-								popup = popupLinker(popupScope, function () {
-								});
+								popup = popupLinker(popupScope, function () {});
 
 								// Get contents rendered into the popup to position properly
 								popupScope.$digest(); //because compiling ourselves
@@ -333,6 +337,9 @@ angular.module('clotho.clothoDirectives')
 							scope.$watch(function () {
 								return attrs[prefix + 'Open'];
 							}, function (val) {
+								//todo - if set something on click, mouseout trigger will still run
+								console.log('open value has changed', scope.$eval(val));
+								scope.popupForceOpen = scope.$eval(val);
 								scope.popupOpen = scope.$eval(val);
 								setTimeout(function () {
 									toggle(scope.popupOpen);
@@ -344,14 +351,14 @@ angular.module('clotho.clothoDirectives')
 							// by the change.
 							scope.$on('$locationChangeSuccess', function closePopupOnLocationChangeSuccess() {
 								if (scope.popupOpen) {
-									hide();
+									hide(true);
 								}
 							});
 
 							// Make sure popup is destroyed and removed.
 							scope.$on('$destroy', function onDestroyPopup() {
 								unregisterTriggers();
-								hide();
+								hide(true);
 							});
 						}
 					}
