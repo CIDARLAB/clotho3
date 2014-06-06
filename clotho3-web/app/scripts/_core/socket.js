@@ -82,7 +82,8 @@ angular.module('clotho.core').service('Socket',
 
       socket.onclose = function(evt) {
 	      socketReady = false;
-        ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"});
+	      Debugger.error('socket closed', evt);
+        ClientAPI.say({class : "error", text : "Socket Connection Closed (Please Reload)" + (evt.reason ? ' - ' + evt.reason : ''), from : "client"});
 	      //todo - re-establish connection on loss
       };
 
