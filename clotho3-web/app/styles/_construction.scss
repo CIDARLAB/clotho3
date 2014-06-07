@@ -53,13 +53,15 @@
     margin: 1px 3px;
 
     &.isComputed {
-      cursor: default;
-      background-color: #5bdec0;
+      background-color: $color-token-sharable;
     }
 
     &.isDefined {
-      cursor: default;
-      background-color: #5bc0de;
+      background-color: $color-token-default;
+    }
+
+    &.isSelected {
+      background-color: $color-token-active;
     }
   }
 

@@ -1,32 +1,26 @@
 .clothoTokenWrap {
-  $noModel : #cecece;
-  $default : #5bc0de;
-  $active : #eeddbb;
-  $sharable : #5bdec0;
-  $ambiguous : #de5bc0;
-
   @extend .label;
-  background-color: $noModel;
+  background-color: $color-token-noModel;
   display: inline-block;
   position: relative;
   padding: 4px 8px;
   margin: 1px 3px;
 
   &.hasModel {
-    background-color: $default;
+    background-color: $color-token-default;
   }
 
   &.sharable {
-    background-color: $sharable;
+    background-color: $color-token-sharable;
   }
 
   &.ambiguous {
-    background-color: $ambiguous;
+    background-color: $color-token-ambiguous;
   }
 
   //last gets priority...
   &.active {
-    background-color: $active;
+    background-color: $color-token-active;
   }
 }
 
