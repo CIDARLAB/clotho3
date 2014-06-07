@@ -1,5 +1,5 @@
 {
-	"name": "Vio Construct",
+	"name": "Vio Construct - Golden Gate",
 	"id": "clotho.construction.GoldenGateVio",
 	"schema": "org.clothocad.model.ConstructionFile",
 	"description": "The Construction File automates the Golden Gate construction of vio",
@@ -30,17 +30,17 @@
 	"steps": [
 		{
 			"reaction": "digest",
-			"input": ["VioA6", "BsaI"],
+			"input": ["VioA6", ["BsaI"]],
 			"output": "VioAdig"
 		},
 		{
 			"reaction": "digest",
-			"input": ["VioB7", "BsaI"],
+			"input": ["VioB7", ["BsaI"]],
 			"output": "VioBdig"
 		},
 		{
 			"reaction": "digest",
-			"input": ["VioE8", "BsaI"],
+			"input": ["VioE8", ["BsaI"]],
 			"output": "VioEdigests"
 		},
 		{
@@ -50,22 +50,32 @@
 		},
 		{
 			"reaction": "digest",
-			"input": ["VioD9", "BsaI"],
+			"input": ["VioD9", ["BsaI"]],
+			"output": "VioDdigests"
+		},
+		{
+			"reaction": "gelpurify",
+			"input": ["VioDdigests"],
 			"output": "VioDdig"
 		},
 		{
 			"reaction": "digest",
-			"input": ["VioC10", "BsaI"],
+			"input": ["VioC10", ["BsaI"]],
+			"output": "VioCdigests"
+		},
+		{
+			"reaction": "gelpurify",
+			"input": ["VioCdigests"],
 			"output": "VioCdig"
 		},
 		{
 			"reaction": "digest",
-			"input": ["pcrpdt11", "BsaI"],
+			"input": ["pcrpdt11", ["BsaI"]],
 			"output": "filler"
 		},
 		{
 			"reaction": "digest",
-			"input": ["vector", "BsaI", true],
+			"input": ["vector", ["BsaI"]],
 			"output": "vectordig"
 		},
 		{
