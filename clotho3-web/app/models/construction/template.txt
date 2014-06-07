@@ -4,7 +4,7 @@ Digest pcrproduct                       (BsmBI/EcoRI, digestproduct1)
 GelPurify digestproduct1                (L, pcrdig)
 Digest pGLN                             (BamHI/EcoRI, digestproduct2)
 GelPurify digestproduct2                (L, vectdig)
-Ligate pcrdig and vectdig               (pHA581)
+Ligate pcrdig/vectdig               	(pHA581)
 
 See that the first word in each line is used as a key to determine the meaning of that line.
 Currently supported first words and their meaning are listed below, in the format [first word] -> [meaning]:
@@ -36,7 +36,7 @@ Digest [template name] ([enzymes], [product name], *[sizes], *[choice])
 Note: [enzymes] should contain no spaces, and names should be separated by a '/' (i.e. EcoRI/SpeI). Numerical values inside [sizes] should be delimited by a '+' (i.e. [1038+10+6]). Currently supported [choice] argument is 'L' for choosing the largest product.
 
 For a Ligation reaction:
-Ligate [sequence one] [sequence two] ([product name])
+Ligate [sequence one]/[sequence two]/*[...] ([product name])
 
 For a Gel Purification reaction:
 gelPurify [template name] ([product name], *[target length])

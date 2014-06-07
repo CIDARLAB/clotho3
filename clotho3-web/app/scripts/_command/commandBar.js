@@ -89,7 +89,7 @@ angular.module('clotho.commandbar')
 		}
 		
 		log.entries.unshift(data);
-		Debugger.log('LOG - entries: ', log.entries);
+		//Debugger.log('LOG - entries: ', log.entries);
 		display.toggle('logSnippet', true);
 		log.startLogTimeout();
 	}

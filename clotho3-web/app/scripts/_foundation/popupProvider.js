@@ -251,9 +251,6 @@ angular.module('clotho.clothoDirectives')
 
 							// Hide the popup element.
 							function hide(forceHide) {
-
-								console.log('trying hiding popup', forceHide || (scope.popupOpen && !scope.popupForceOpen), scope.popupOpen, scope.popupForceOpen);
-
 								if (forceHide || !scope.popupForceOpen) {
 									scope.popupOpen = false;
 									if (popup) {
@@ -337,8 +334,6 @@ angular.module('clotho.clothoDirectives')
 							scope.$watch(function () {
 								return attrs[prefix + 'Open'];
 							}, function (val) {
-								//todo - if set something on click, mouseout trigger will still run
-								console.log('open value has changed', scope.$eval(val));
 								scope.popupForceOpen = scope.$eval(val);
 								scope.popupOpen = scope.$eval(val);
 								setTimeout(function () {

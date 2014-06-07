@@ -115,6 +115,9 @@ angular.module('clotho.construction')
 			return Clotho.run(reaction.reactionId, parsedInput, {mute : true})
 			.then(function(result) {
 				var obj = {};
+				if (_.isObject(result)) {
+					_.assign(result, {name : step.output});
+				}
 				obj[step.output] = result;
 				return obj;
 			});

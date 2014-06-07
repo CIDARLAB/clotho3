@@ -13,8 +13,8 @@
 
   <div class="loading" ng-if="!file"></div>
 
-  <div class="panel-body">
-    <p ng-show="file.description" ng-bind="file.description" style="margin-bottom: 0;"></p>
+  <div class="panel-body" ng-show="file.description">
+    <p ng-bind="file.description" style="margin-bottom: 0;"></p>
   </div>
 
   <div ng-repeat="step in file.steps"

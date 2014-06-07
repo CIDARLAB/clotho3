@@ -16,7 +16,7 @@
   <div class="cf-step-group">
     <span>Primers</span>
     <span ng-repeat="ind in [1,2]"
-          ng-init="primerName = step.input[ind]"
+          ng-init="primerName = step.input[ind]; forceOpen = false;"
           class="cf-step-arg"
           ng-class="{'isDefined' : file.dictionary[primerName], 'isSelected' : forceOpen}"
           sequence-popup
