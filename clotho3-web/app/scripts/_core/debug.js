@@ -55,13 +55,16 @@ angular.module('clotho.core')
 					
 					//add stack trace, slice out this function
 					//this will work in chrome, firefox, and node
-					var stack = (new Error()).stack.split('\n');
-					// Chrome includes a single "Error" line, FF doesn't.
-					if (stack[0].indexOf('Error') === 0) {
+					var stack = (new Error()).stack;
+					if (angular.isDefined(stack)) {
+						stack = stack.split('\n');
+						// Chrome includes a single "Error" line, FF doesn't.
+						if (stack[0].indexOf('Error') === 0) {
+							stack = stack.slice(1);
+						}
+						//slice out this wrapper's context
 						stack = stack.slice(1);
 					}
-					//slice out this wrapper's context
-					stack = stack.slice(1);
 
 					var x = new Date();
 					var readableDate = $filter('date')(x, 'hh:mm:ss.sss');
