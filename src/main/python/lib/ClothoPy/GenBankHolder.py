@@ -47,7 +47,7 @@ class GenBank:
         else:
             raise TypeError
 
-
+   
     def setDescription(self, desc = ""):
         self.description = desc
 
@@ -66,7 +66,7 @@ class GenBank:
 
     def setComment(self, comm = ""):
         if isinstance(comm, str):
-            self.annotations['comment'] = comm
+            self.annotations['comment'] = comm 
         else:
             print "Please enter in a string."
 
@@ -151,7 +151,7 @@ class GenBank:
     def addLocationToReference(self, title, authors, start, end, strand=None):
         for ref in self.annotations['references']:
            if ref.title == title and ref.authors == authors:
-                ref.location.append(FeatureLocation(start, end, strand))
+                ref.location.append(FeatureLocation(start, end, strand)) 
 
     def removeLocationFromReference(self, title, authors, start, end, strand=None):
         for ref in self.annotations['references']:
@@ -270,7 +270,7 @@ class GenBank:
                     if len(build) > 0 and build[0] == " ":
                         spl = build.split(' /')
                         if len(spl) == 3:
-                            build = spl[0] + ' /' + spl[1] + "\n"
+                            build = spl[0] + ' /' + spl[1] + "\n" + spl[2] + "\n" 
                             #potentially want to add spl[2] back in as + spl[2] + "\n"
                     else:
                         featStart = False
@@ -297,3 +297,5 @@ class GenBank:
         if length == "":
             return self.sequence[start:]
         return self.sequence[start:start+length]
+
+    
