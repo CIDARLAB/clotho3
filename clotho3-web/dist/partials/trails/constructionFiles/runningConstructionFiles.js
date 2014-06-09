@@ -2,8 +2,29 @@
 
 $clotho.extensions.controller('constructionFiles_runningCFCtrl', function($scope, $http) {
 
-	$http.get('models/construction/construction_pSB1A2.json').success(function(data) {
-		$scope.parsed = data;
+	//todo - add more versions
+
+	$scope.files = {
+		"gfp" : {},
+		"pHA581" : {},
+		"pSB1A2" : {},
+		"vio" : {}
+	};
+
+	angular.forEach($scope.files, function (obj, name) {
+		$http.get('models/construction/construction_' + name + '.json', {cache : true})
+			.success(function (data) {
+				angular.extend(obj, {
+					name : name,
+					data : data
+				});
+			})
 	});
+
+	$scope.showFile = function (file) {
+		$scope.showing = file;
+	};
+
+	$scope.showFile($scope.files.gfp)
 
 });

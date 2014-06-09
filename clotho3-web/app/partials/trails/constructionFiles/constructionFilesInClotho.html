@@ -1,13 +1,27 @@
 <div ng-controller="constructionFiles_constructionInClothoCtrl">
-  <p>Clotho can convert construction files using the wet lab syntax into Construction files you can simulate.</p>
 
-  <p>You can specify sequences (like <code>ca1067F</code>) directly in the construction file, or reference sequences stored in Clotho (like <code>pSB1AK3</code>).</p>
+  <p>The GFP cloning experiment is represented in the construction file interface below. After familiarizing yourself with the interface, in the next section you'll see how Clotho can parse wet-lab construction files.</p>
 
-  <pre ng-bind="wetlab"></pre>
+  <p>Sequences input into each step are represented as a token, like the one below.</p>
 
-  <p>The construction file is parsed, and converted from the wet lab syntax. Additional metadata easily can be added in Clotho.</p>
+  <p>Tokens which are defined will be colored. Clotho will automatically check the database for terms not defined in the Construction File dictionary.</p>
 
-  <p>Terms which are defined will be colored. Clotho will automatically check the database for terms not defined in the Construction File dictionary.</p>
+  <p>
+    <span class="cf-step-arg"
+           ng-class="{'isDefined' : demoseq, 'isSelected' : forceDemoTermOpen}"
+           sequence-popup
+           ng-click="forceDemoTermOpen = !forceDemoTermOpen"
+           sequence-popup-open="{{forceDemoTermOpen}}"
+           sequence-popup-title="{{demoseq.name}}"
+           sequence-popup-model="demoseq"
+           sequence-popup-placement="topRight">
+        {{demoseq.name}}
+      </span>
+  </p>
+
+  <p><b>Hover</b> to see more info about the sequence. <b>Click</b> to make the popup sticky.</p>
+
+  <p>Click the <span class="glyphicon glyphicon-download"></span> to download a FASTA file containing it's sequence.</p>
 
   <div construction-file="parsed" no-process="true"></div>
 

@@ -1,13 +1,13 @@
 'use strict';
 
-$clotho.extensions.controller('constructionFiles_constructionInClothoCtrl', function($scope, $timeout, $http, Clotho) {
+$clotho.extensions.controller('constructionFiles_constructionInClothoCtrl', function($scope, $http, Clotho) {
 
-	$http.get('models/construction/construction_pSB1A2.txt', {cache : true}).success(function (data) {
-		$scope.wetlab = data;
+	$http.get('models/construction/construction_gfp.json').success(function(data) {
+		$scope.parsed = data;
 	});
 
-	$http.get('models/construction/construction_pSB1A2.json').success(function(data) {
-		$scope.parsed = data;
+	Clotho.get('clotho.demo.sequence.pPROBE-GFP').then(function (result) {
+		$scope.demoseq = result;
 	});
 
 });

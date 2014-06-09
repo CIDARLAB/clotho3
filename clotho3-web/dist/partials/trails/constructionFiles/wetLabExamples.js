@@ -7,7 +7,8 @@ $clotho.extensions.controller('constructionFiles_wetLabExamplesCtrl', function($
 	$scope.files = {
 		"gfp" : {},
 		"pHA581" : {},
-		"pSB1A2" : {}
+		"pSB1A2" : {},
+		"vio" : {}
 	};
 
 	angular.forEach($scope.files, function (obj, name) {
@@ -24,6 +25,6 @@ $clotho.extensions.controller('constructionFiles_wetLabExamplesCtrl', function($
 		$scope.showing = file;
 	};
 
-	$scope.showFile($scope.files.gfp)
+	$scope.showFile($scope.files.gfp);
 
 });
