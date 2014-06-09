@@ -73,11 +73,28 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 		return deferred.promise;
 	};
 
+	//in form <Chapter>-<page>
+	var pageExists = function trailPageExists (Trail, indices) {
+		if (angular.isUndefined(indices)) {
+			return false;
+		}
+		var pos = angular.isString(indices) ? indices.split("-") : [0,0];
+		var chapter = Trail.contents[pos[0]];
+		if (angular.isUndefined(chapter)) {
+			return false;
+		}
+		var page = chapter['pages'][pos[1]];
+		return angular.isDefined(page);
+	};
+
 	//in form <Chapter>-<Page>
 	var extractPage = function trailExtractPage (Trail, indices) {
 		var pos = angular.isString(indices) ? indices.split("-") : [0,0];
-		var page = Trail.contents[pos[0]]['pages'][pos[1]];
-		return page;
+		if (pageExists(Trail, indices)) {
+			return Trail.contents[pos[0]]['pages'][pos[1]];
+		} else {
+			return null;
+		}
 	};
 
 	//bring back in logic from trail-module.js
