@@ -2,7 +2,9 @@ angular.module('clotho.youtube')
 	.service('Youtube', function($http, $rootScope, $q, $timeout, $window) {
 
 		//todo - system to manage keys and change depending on build, without exposing testing keys
+		//other keys at https://console.developers.google.com/project/apps~clotho-bio/apiui/credential
 		//key only works at *.synbiotrails.org/*
+
 		var PUBLIC_KEY = 'AIzaSyDcv-f_kDYSvRMpsfKn9gaWo3Njzr9QmDU';
 		var url_base = 'https://www.googleapis.com/youtube/v3';
 

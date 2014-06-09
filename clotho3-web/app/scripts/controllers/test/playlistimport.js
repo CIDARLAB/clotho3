@@ -19,14 +19,14 @@ angular.module('clotho.webapp')
 			});
 		});
 
-		/*
-		These have already been imported. This is just to illustrate flow at this point
-
 		$scope.create = function () {
 			if (!angular.isEmpty($scope.playlistTrail)) {
 				Clotho.create($scope.playlistTrail);
 			}
 		};
+
+		/*
+		These have already been imported. This is just to illustrate flow at this point
 
 		$scope.playlists = [
 			'PL2aPXzks-TgMbE-b15ezcHQmGVTfMuHcZ',
