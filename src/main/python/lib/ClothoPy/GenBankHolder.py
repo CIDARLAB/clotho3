@@ -270,7 +270,8 @@ class GenBank:
                     if len(build) > 0 and build[0] == " ":
                         spl = build.split(' /')
                         if len(spl) == 3:
-                            build = spl[0] + ' /' + spl[1] + "\n" + spl[2] + "\n" 
+                            build = spl[0] + ' /' + spl[1] + "\n"  + \
+                            "                     " + spl[2] + "\n" 
                             #potentially want to add spl[2] back in as + spl[2] + "\n"
                     else:
                         featStart = False
