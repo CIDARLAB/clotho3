@@ -184,5 +184,18 @@
 				"id": "org.clothocad.trails.youtube.GrowingupcoloniesandthenpreppingDNA"
 			}
 		]
+	},
+	{
+		"title": "Advanced Tools",
+		"trails": [
+			{
+				"title": "Introduction to Raven",
+				"id": "org.clothocad.trails.youtube.Clotho3.0-RavenSynBioTrails"
+			},
+			{
+				"title": "Introduction to Eugene",
+				"id": "org.clothocad.trails.youtube.Clotho3.0EugeneSynBioTrails"
+			}
+		]
 	}
 ]
