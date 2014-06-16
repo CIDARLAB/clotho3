@@ -23,7 +23,8 @@ class NewGBConverter:
 
     def convert(self):
         self.highlight()
-        self.d = {'description': self.gb.description, \
+        self.d = {'schema': 'org.clothocad.model.Polynucleotide',
+        'description': self.gb.description, \
         #'type': self.gb.type, \
         'sequence': self.gb.sequence, \
         'name': self.gb.name, \
