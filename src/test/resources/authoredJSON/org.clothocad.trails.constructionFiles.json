@@ -2,14 +2,14 @@
 	"id" : "org.clothocad.trails.constructionFiles",
 	"schema":"org.clothocad.model.Trail",
 	"name" : "Construction Files",
-	"description" : "Discover how Clotho can parse your wet lab construction file to predict your assemblies.",
+	"description" : "Clotho can help you design and document your DNA fabrication experiment using Construction Files and simulation algorithms",
 	"icon" : "partials/trails/constructionFiles/pUC-GFP.png",
 	"about" : {
 		"help" : "This trail will introduce you to construction files, and provide you with several examples to work with",
 		"contents" : [
 			{
 				"type" : "text",
-				"params" : "<p>Construction Files define a series of unit operations which constitute a cloning experiment.</p><p>We'll first go through a practical example, mapping the construction file to the flow of the reaction. Then you'll see what the construction files look like in a UC Berkeley Synthetic Biology wet lab, and how they are parsed and automated in Clotho. Clotho can save all the intermediate sequences of your construction file, or simply show you the expected result.</p>"
+				"params" : "<p>Construction Files define a series of unit operations which constitute a cloning experiment including PCR, restriction digestion, and ligation.</p><p>We'll first go through a practical example, mapping the construction file to the flow of the reaction. Then you'll see what the construction files look like in a UC Berkeley Synthetic Biology wet lab, and how they are parsed and automated in Clotho. Clotho can save all the intermediate sequences of your construction file, or simply show you the expected result.</p>There are many ways to fabricate DNAs, but all methods rely on a short list of DNA modification reactions that include PCR, digestion, and ligation. These reactions are applied to DNAs from natural or synthetic sources such as genomic DNAs, plasmids, and oligonucleotides.  Different named experiments such as ‘Golden Gate’ or ‘QuikChange’ refer to more specific protocols that can all be generalized as a list of input DNAs and a sequence of reactions.  A ‘Construction File’ is a standardized representation of these fabrication strategies. In this Trail, you’ll learn how to author Construction Files and simulate the intermediate and product sequences that would result."
 			}
 		]
 	},
