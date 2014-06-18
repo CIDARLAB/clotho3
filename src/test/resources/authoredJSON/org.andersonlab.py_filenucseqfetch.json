@@ -2,7 +2,7 @@
   "schema" : "org.clothocad.core.datums.Function",
   "language" : "PYTHON",
   "code" : "from filenucseqfetch import run",
-  "name" : "FileNucSeqFetch",
+  "name" : "FileFetchSequence",
   "id" : "org.andersonlab.py_filenucseqfetch",
   "description" : "Converts a Genbank file and turns it into a NucSeq",
   "args" : [ {
