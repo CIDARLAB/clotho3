@@ -38,13 +38,13 @@ public void testScript() throws ScriptException {
         Persistor persistor = injector.getInstance(Persistor.class);
         Router router = injector.getInstance(Router.class);
         persistor.deleteAll();
-        String script = "var newobjid = clotho.create( {\"name\":\"UCM\",\"state\":\"MA\",\"schema\":\"Institution\",\"country\":\"United States of America\",\"city\":\"Baltizam\"} );\n" +
+        String script = "var newobjid = clotho.create( {\"name\":\"UCM\",\"state\":\"MA\",\"schema\":\"org.clothocad.model.Institution\",\"country\":\"United States of America\",\"city\":\"Baltizam\"} );\n" +
                         "var result = clotho.get(newobjid);\n" +
                         "if(result.name != \"UCM\") {\n" +
                         "    throw \"wrong name: \" + result.name;\n" +
                         "}";
         mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
-        script = "result = clotho.get('UCM');\n" +
+        script = "result = clotho.get(newobjid);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";

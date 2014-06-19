@@ -1,0 +1,94 @@
+/* topics */
+
+$trail-highlight-width : 400px;
+
+.trail-topics-wrap {
+  position: relative;
+}
+
+.trail-topics {
+  display: block;
+  padding-right: 30px;
+  margin-right: $trail-highlight-width;
+
+  .topic {
+  }
+
+  .topic-title {
+  }
+
+  .topic-contents {
+
+    &:hover {
+      //todo - hover over version
+    }
+  }
+
+  .trail-thumbnail {
+    max-height: 100%;
+    height: auto;
+    max-width: 50px;
+    width: auto;
+  }
+
+  .trail-overview {
+
+  }
+
+  .trail-title {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+
+  .trail-description {
+    margin: 10px 0 0;
+
+    &:empty {
+      margin: 0;
+    }
+  }
+}
+
+/* highlight */
+
+.trail-highlight-wrap {
+  display: block;
+  width: $trail-highlight-width;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.trail-highlight {
+  width: $trail-highlight-width;
+
+  .highlightPlaceholder {
+    text-align: center;
+    padding: 50px;
+    width: $trail-highlight-width;
+    border-radius: 4px;
+    background: #ffffff;
+
+    h3 {
+      font-size: 21px;
+      font-weight: 200;
+    }
+  }
+
+  .shadowBackground {
+    box-shadow: 0 0 6px 1px rgba(200, 200, 200, 0.5);
+  }
+
+  img {
+    margin-bottom: 15px;
+    border-radius: 4px;
+  }
+
+  .trail-chapter-info {
+    display: none;
+  }
+
+  .trail-pages {
+    margin-bottom: 15px;
+  }
+}

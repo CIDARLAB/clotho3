@@ -4,6 +4,9 @@ module("Server API Tests");
 var Message = function (channel, data, requestId) {
     this.channel = channel;
     this.data = data;
+    if (channel == "submit" && typeof this.data == "string"){
+        this.data = {query:this.data, tokens:[]};
+    } 
 };
 
 var getSocket = function (addr) {
@@ -46,9 +49,15 @@ var testThroughAsync = function (name, message, callback) {
 };
 
 testThroughAsync("get",
-        new Message("get", "Test Part 1"),
+        new Message("get", "org.clothocad.model.Part"),
         function (data) {
-            equal(data.name, "Test Part 1");
+            equal(data.name, "Part");
+        });
+
+testThroughAsync("get - more elaborate data structure", 
+        new Message("get", "clotho.functions.dna.digest"),
+        function(data) {
+            ok(data.tests[0].args[1] instanceof Array);
         });
 
 testThroughAsync("query Parts",
@@ -106,7 +115,7 @@ asyncTest("create with schema", function () {
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
         socket.send( new Message("create", {"name":"Created Part 2", "sequence":"CCCC", "schema":"org.clothocad.model.BasicPart"}), function (data) {
-            socket.send(new Message("get", "Created Part 2"), function (data2) {
+            socket.send(new Message("get", data), function (data2) {
                 ok(data2.hasOwnProperty("schema"));
                 ok(!(data2.hasOwnProperty("className")));
                 //tear down created data
@@ -130,8 +139,8 @@ testThroughAsync("validation failure",
         new Message("validate", {schema:"org.clothocad.model.NucSeq", sequence:null}),
         function (errors){
             equal(errors.length, 1);
-            equal(errors[0].interpolatedMessage, "may not be null");
-            equal(errors[0].propertyPath.nodeList[1].name, "sequence");
+            equal(errors[0].message, "may not be null");
+            equal(errors[0].propertyPath.currentLeafNode.name, "sequence");
         });
 
 testThroughAsync("validation success", 
@@ -146,9 +155,11 @@ asyncTest("authoring schema constraints", function (){
         socket.send(new Message("create", {id:"org.clothocad.model.SimpleFeature", language:"JSONSCHEMA", schema:"org.clothocad.core.schema.ClothoSchema", name:"SimpleFeature", description:"A simple and sloppy representation of a Feature or other DNA sequence", "fields":[{name:"sequence", type:"string", example:"ATACCGGA", access:"PUBLIC", constraints:[{constraintType:"javax.validation.constraints.Pattern", values:{flags:["CASE_INSENSITIVE"], regexp:"[ATUCGRYKMSWBDHVN]*"}}], description:"the sequence of the feature"}]}), function (response) {
             socket.send(new Message("validate", {schema:"org.clothocad.model.SimpleFeature", sequence:"this is not a valid sequence"}), function (errors) {
                 equal(errors.length, 1);
-                equal(errors[0].interpolatedMessage, "must match \"[ATUCGRYKMSWBDHVN]*\"");
-                equal(errors[0].propertyPath.nodeList[1].name, "sequence");
-                start();
+                equal(errors[0].message, "must match \"[ATUCGRYKMSWBDHVN]*\"");
+                equal(errors[0].propertyPath.currentLeafNode.name, "sequence");
+                socket.send(new Message("destroy", "org.clothocad.model.SimpleFeature"), function(response){
+                    start();
+                });
             });
         });
     };
@@ -157,12 +168,12 @@ asyncTest("authoring schema constraints", function (){
 asyncTest("set", function (){
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
-        socket.send(new Message("get", "Test Part 1"), function (data) {
+        socket.send(new Message("get", "org.clothocad.model.Part"), function (data) {
             var id = data.id;
             socket.send(new Message("set", {"id":id, "name":"Set Part"}), function(data){
                 socket.send(new Message("get", id), function (data){
                     equal(data.name, "Set Part");
-                    socket.send(new Message("set", {"id":id, "name":"Test Part 1"}), function(data){
+                    socket.send(new Message("set", {"id":id, "name":"Part"}), function(data){
                         start();
                     });
                 });
@@ -201,13 +212,14 @@ asyncTest("login/logout", function(){
 });
 // TODO: add tests for listener dereg
 
+//this is probably not necessary now that schemas have deterministic ids
 asyncTest("reload models", function(){
     var socket = getSocket(clothosocket);
     socket.onopen = function () {
-        socket.send(new Message("get", "ClothoSchema"), function(data){
+        socket.send(new Message("get", "org.clothocad.core.schema.ClothoSchema"), function(data){
             id = data.id;
             socket.send(new Message("reloadModels", {}), function (response) {
-                socket.send(new Message("get", "ClothoSchema"), function(data){
+                socket.send(new Message("get", "org.clothocad.core.schema.ClothoSchema"), function(data){
                     equal(data.id, id);
                     start();
                 });
@@ -240,55 +252,40 @@ asyncTest("changing function", function(){
 });
 
 testThroughAsync("functions with arguments",
-        new Message("submit", "clotho.run('lowercase', ['HEY'])"),
+        new Message("submit", "clotho.run('org.clothocad.test.lowercase', ['HEY'])"),
         function(data){
             equal(data, "hey");
         });
 testThroughAsync("module scoping",
-        new Message("run", {id:"moduleTestFunction", args:[1]}),
+        new Message("run", {id:"org.clothocad.test.moduleTestFunction", args:[1]}),
         function(data){
             equal(data, 4);
         });
 
 testThroughAsync("invoke module method",
-        new Message("run", {id:"testModule", "function":"moduleMethod", args:[]}),
+        new Message("run", {id:"org.clothocad.test.testModule", "function":"moduleMethod", args:[]}),
         function(data){
             equal(data, 2);
         });
 
 testThroughAsync("module depends on module",
-        new Message("run", {id:"testModule2","function":"moduleMethod", args:[]}),
+        new Message("run", {id:"org.clothocad.test.testModule2","function":"moduleMethod", args:[]}),
         function(data){
             equal(data,2);
         });
 
 testThroughAsync("function depends on function",
-        new Message("run", {id:"moduleTestFunction", args:[1]}),
+        new Message("run", {id:"org.clothocad.test.moduleTestFunction", args:[1]}),
         function(data){
             equal(data,4);
         });
 
-testThroughAsync("importing external library",
-        new Message("submit", "load(\"yepnope.js\")"),
-        function (data) {
-            equal(data, null);
-        });
 //TODO: test case for multiple dependencies
 
 testThroughAsync("use lodash",
-        new Message("run", {id: "useLodash", args:[]}),
+        new Message("run", {id: "org.clothocad.test.useLodash", args:[]}),
         function(data){
             deepEqual(data, [2,3,4]);
-        });
-testThroughAsync("run revcomp",
-        new Message("run", {id:'DNA', "function":"revcomp", args:['acgtac']}),
-        function(data){
-            equal(data,'gtacgt');
-        });
-testThroughAsync("run ligate",
-        new Message("run", {id:'PCR', "function":"ligate", args:[['aaaaaaaaaaA^CATG_', '^CATG_Tttggttggttgg']]}),
-        function (data){
-            equal(data, "aaaaaaaaaaACATGTttggttggttgg");
         });
 
 asyncTest("package module", function (){
@@ -312,7 +309,7 @@ asyncTest("package module", function (){
 module("SynBERC demo issues - all through submit channel")
 
 testThroughAsync("console.log",
-        new Message("submit", "clotho.run('consoleTest',[])"),
+        new Message("submit", "clotho.run('org.clothocad.test.consoleTest',[])"),
         function(data){
             equal(data, 'This worked!');
         });
@@ -330,13 +327,13 @@ testThroughAsync("running module functions - ligate",
         });
 
 testThroughAsync("loading functions - submit", 
-        new Message("submit", "var DNA = clotho.load('DNA'); DNA.revcomp('acgtacg')"),
+        new Message("submit", "var DNA = require('DNA'); DNA.revcomp('acgtacg')"),
         function (data){
             equal(data, "cgtacgt");
         });
 
 testThroughAsync("loading functions - load in function", 
-        new Message("submit", "clotho.run('clothoLoadTest', [])"),
+        new Message("submit", "clotho.run('org.clothocad.test.clothoLoadTest', [])"),
         function (data){
             equal(data, 'cgtacgt');
         });

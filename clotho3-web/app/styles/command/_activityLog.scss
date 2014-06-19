@@ -10,23 +10,30 @@
 #clotho_logButton {
   @extend .btn;
   @extend .btn-default;
+
 }
 
 #clotho_log {
+  $log-width: 400px;
+  $log-button-width: 40px;
   @extend .popover;
   @extend .bottom;
   position: absolute;
   z-index:999;
-  max-width: 400px;
-  width: 400px;
+  max-width: $log-width;
+  width: $log-width;
   display: block; /*override bootstrap*/
+
+  //positioning
+  top: 100%;
+  left: -($log-width - $log-button-width) / 2;
 }
 
 #clotho_logSnippet {
   padding: 0px 12px;
   margin: 0 10px 0 15px;
   line-height: 2em;
-  max-width: 300px;
+  max-width: 325px;
   max-height: 34px;
   overflow: hidden;
   text-overflow: ellipsis;

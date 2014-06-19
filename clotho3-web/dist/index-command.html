@@ -4,16 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Clotho</title>
-    <meta name="description" content="">
+    <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
 
-    <!-- process:remove:api,dist -->
-    <link rel="stylesheet" href="styles/command.css"/>
-    <!-- /process -->
+    <!-- not necessary until serving outside root directory / want html5 mode -->
+    <base href="/">
 
-    <!-- process:remove:api -->
+    <link rel="stylesheet" href="styles/command.css"/>
+
     <script src="bower_components/jquery/jquery.js"></script>
-    <!-- /process -->
 
     <!-- note that angular is required for any clotho functionality -->
     <script src="bower_components/angular/angular.js"></script>
@@ -27,31 +26,27 @@
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
 
-<!-- process:remove:api -->
 <div class="container">
     <div clotho-command-bar></div>
 </div>
-<!-- /process -->
 
 <!--------
 SCRIPTS
 --------->
 
-
 <!--note - correct app based on the distribution, comments removed by build-->
 
-<!-- process:remove:dist,api -->
 <script src="scripts/clotho-app-command.js"></script>
-<!-- /process -->
 
 
 <script src="scripts/clotho-core-module.js"></script>
 
-
-<!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
+
+<script src="scripts/clotho-foundation-module.js"></script>
+
+
 <script src="scripts/clotho-command-module.js"></script>
-<!-- /process -->
 
 </body>
 </html>

@@ -9,9 +9,9 @@ angular.module('clotho.core').service('ClientAPI',
 
 		var Debugger = new Debug('ClientAPI', '#dd99dd');
 
-		var $modal;
-		if ($injector.has('$modal')) {
-			$modal = $injector.get('$modal');
+		//check for presence so don't rely on module
+		if ( $injector.has('$clothoModal') ) {
+			var $clothoModal = $injector.get('$clothoModal');
 		}
 
 		/**
@@ -78,12 +78,14 @@ angular.module('clotho.core').service('ClientAPI',
 			 args = data.args || {},
 			 dependencies = data.dependencies || [],
 			 styles = data.styles || {},
+
+			 //NOTE - jquery reliance (not in use)
 			 target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $($clotho.appRoot).find('[ng-view]');
 
 			 $rootScope.$safeApply($http.get(template, {cache: $templateCache})
 			 .success(function(precompiled) {
 
-			 $clotho.extensions.mixin([dependencies, controller], $(precompiled).appendTo(target), args)
+			 $clotho.extensions.mixin([dependencies, controller], angular.element(precompiled).appendTo(target), args)
 			 .then(function(div) {
 			 //testing
 			 //console.log($position.position(div));
@@ -193,18 +195,11 @@ angular.module('clotho.core').service('ClientAPI',
 		 */
 		var alert = function clientAPIAlert(msg) {
 
-			PubSub.trigger('serverAlert');
 
-			if (angular.isDefined($modal)) {
-				$rootScope.$safeApply($modal.serverAlert(msg)
-					.result
-					.then(function (result) {
-						Debugger.log('dialog closed with result: ' + result);
-					})
-				);
-			} else {
-				$window.alert(msg);
-			}
+			angular.isDefined('$clothoModal') && $clothoModal.create({
+				title : "Clotho Alert",
+				content : "msg"
+			})
 		};
 
 		/**

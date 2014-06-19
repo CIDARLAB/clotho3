@@ -870,14 +870,14 @@ angular.module('clotho.dna').service('Digest', ['DNA', function(DNA) {
      * @param {string} sequence with or without marks already
      * @param {Enzyme} enzyme
      * @param {boolean} circularize default false (defined in makeCuts)
-     * @param {boolean} removeMarks default false
+     * @param {boolean} removeMarkings remove existing marks (only should be applied here) default false
      * @returns {*}
      */
-    var digest = function(sequence, enzyme, circularize, removeMarks) {
+    var digest = function(sequence, enzyme, circularize, removeMarkings) {
         if (!enzyme)
             return 'no enzyme provided';
 
-        if (removeMarks)
+        if (removeMarkings)
             sequence = removeMarks(sequence);
 
         sequence = markCuts(sequence, enzyme);

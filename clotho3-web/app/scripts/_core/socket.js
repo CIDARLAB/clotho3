@@ -21,7 +21,15 @@ angular.module('clotho.core').service('Socket',
 
 	    var Debugger = new Debug('Socket', '#5555bb');
 
-	    //expecting a string
+	    //todo + handle error callbacks
+	    function checkMessageValid (msgString) {
+		    return msgString.length < 16348;
+	    }
+
+	    //expecting a string or object
+	    // returns: undefined - put in queue
+	    //          true - sent successfully
+	    //          false - failed to send
 	    function socket_send (data) {
 		    if (!socketReady) {
 			    Debugger.log('(not ready) queueing request: ', data);
@@ -31,14 +39,23 @@ angular.module('clotho.core').service('Socket',
 
 		    data = angular.isObject(data) ? JSON.stringify(data) : data;
 
-		    Debugger.log('sending data: ' + data);
-		    socket.send(data);
+		    if (checkMessageValid(data)) {
+			    Debugger.log('sending data: ', angular.isObject(data) ? data : JSON.parse(data));
+			    socket.send(data);
+			    return true;
+		    } else {
+			    Debugger.warn('Message did not pass validation!');
+			    ClientAPI.say({class : "error", text : "Message could not be sent to server", from : "client"});
+			    return false;
+		    }
 	    }
 
 	    function sendSocketQueue () {
+		    Debugger.group('Sending Socket Queue');
 		    angular.forEach(socketQueue, function(data, index) {
 			    socket_send(data);
 		    });
+		    Debugger.groupEnd();
 		    socketQueue = [];
 	    }
 
@@ -47,7 +64,18 @@ angular.module('clotho.core').service('Socket',
 	    if ($window.$clotho.socket) {
 		    socket = $window.$clotho.socket;
 	    } else {
-		    socket = $window.$clotho.socket = new WebSocket("wss://" + window.location.host + window.location.pathname + "websocket");
+		    var pathname = window.location.pathname;
+
+		    var pathDirectory = pathname.substring(0, pathname.lastIndexOf('/'));
+		    //check for .html -- if url has hash (e.g. /#!/) then need to strip file name
+		    if (/\.html/.test(pathDirectory)) {
+			    pathDirectory = pathDirectory.substring(0, pathDirectory.lastIndexOf('/'));
+		    }
+
+		    //use protocol wss: for https, default to ws:
+		    var socketProtocol = window.location.protocol == 'https:' ? 'wss:' : 'ws:';
+
+		    socket = $window.$clotho.socket = new WebSocket(socketProtocol + "//" + window.location.host + pathDirectory + "/websocket");
 	    }
 
 	    if (socket.readyState == 1) {
@@ -69,7 +97,8 @@ angular.module('clotho.core').service('Socket',
 
       socket.onclose = function(evt) {
 	      socketReady = false;
-        ClientAPI.say({class : "error", text : "Socket Connection Closed", from : "client"});
+	      Debugger.error('socket closed', evt);
+        ClientAPI.say({class : "error", text : "Socket Connection Closed (Please Reload)" + (evt.reason ? ' - ' + evt.reason : ''), from : "client"});
 	      //todo - re-establish connection on loss
       };
 
@@ -167,20 +196,25 @@ angular.module('clotho.core').service('Socket',
 			        return socket.readyState;
 		        },
             //send a JSON on an arbitrary channel [ repackaged using send() ]
-            //note - callback is run on send, not really a callback
+            //note - callback is run on send, not really a callback - use PubSub
+	          // returns boolean of whether message was sent (not if invalid)
             emit: function (channel, data, callback) {
                 var packaged = {
                     "channel" : channel,
                     "data" : data
                 };
-                socket_send(packaged);
 
-                if (typeof callback == 'function') {
+                var wasSent = socket_send(packaged);
+
+                if (wasSent && typeof callback == 'function') {
 	                callback(packaged);
                 }
+
+	              return wasSent;
             },
 
             //send properly packaged and formatted string
+	          //returns boolean whether message was sent or not
             send: socket_send
         }
     }

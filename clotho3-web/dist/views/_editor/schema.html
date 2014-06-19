@@ -1,6 +1,6 @@
 <div ng-controller="Editor_SchemaCtrl"
      class="panel"
-     ng-class="sharableType.class ? 'panel-' + sharableType.class :  'panel-default'">
+     ng-class="'panel-' + panelClass">
     <div class="panel-heading">
         <h3 class="panel-title">Schema Editor</h3>
     </div>
@@ -12,6 +12,10 @@
             <input type="text" id="schemaName" ng-model="sharable.name" required restrict-input="findSpacesRegExp">
         </form-field>
 
+      <form-field name="ID" horizontal="formHorizontal">
+        <input type="text" ng-model="sharable.id" required ng-model-options="{updateOn : 'blur'}" popover="Create a semantic ID, e.g. username.CamelCaseSchemaName">
+      </form-field>
+
         <form-field name="SuperClass" horizontal="formHorizontal">
             <select id="superClass" ng-model="sharable.superClass" ng-options="schema.id as schema.name for schema in schemas">
                 <option value="">-</option>
@@ -19,15 +23,15 @@
         </form-field>
 
         <form-field name="Description" horizontal="formHorizontal">
-            <textarea id="schemaDesc" class="input-lg" ng-model="sharable.description" style="width: 100%; height: 3em"></textarea>
+            <textarea id="schemaDesc" ng-model="sharable.description" rows="3"></textarea>
         </form-field>
 
-
+        <!--
         <div class="form-group">
             <label class="control-label col-sm-3">Methods</label>
             <div class="col-sm-9">
                 <div class="input-group">
-                    <input type="text" class="form-control" ng-model="newMethodObj" ng-init="newMethodObj = newMethod()" typeahead="opt.id as opt.name for opt in clothoFunctions | filter:$viewValue" typeahead-min-length="0">
+                    <input type="text" class="form-control" ng-model="newMethodObj" ng-init="newMethodObj = newMethod()" typeahead="opt.id as opt.name for opt in clothoFunctionWrap($viewValue) | filter:$viewValue" typeahead-min-length="0">
                         <span class="input-group-btn">
                             <button class="btn pull-right" type="button" ng-click="addNewMethod()" ng-disabled="!newMethodObj"><i class="glyphicon glyphicon-plus"></i></button>
                         </span>
@@ -43,6 +47,7 @@
                 </div>
             </div>
         </div>
+        -->
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -65,7 +70,7 @@
             </div>
 
             <div class="list-group">
-                <div class="list-group-item clearfix" ng-repeat="field in sharable.fields">
+                <div class="list-group-item clearfix" ng-repeat="field in sharable.fields track by $index">
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -89,8 +94,19 @@
 
                     <div class="row">
                         <div class="col-sm-9">
-                            <input ng-if="!field.reference" class="form-control" type="text" ng-model="field.example" placeholder="Field Example">
-                            <input ng-if="field.reference" class="form-control" type="text" ng-model="field.example"placeholder="Field Example" typeahead="opt for opt in querySchemaWrapper(field.type) | filter:$viewValue" typeahead-min-length="0" />
+                          <textarea ng-if="!field.reference"
+                                    json-edit="field.example"
+                                    name="newFieldVal"
+                                    rows="1"
+                                    class="form-control"
+                                    placeholder="Enter JSON Value - use quotes for string"></textarea>
+                            <input ng-if="field.reference"
+                                   class="form-control"
+                                   type="text"
+                                   ng-model="field.example"
+                                   placeholder="Field Example"
+                                   typeahead="opt for opt in querySchemaWrapper(field.type) | filter:$viewValue"
+                                   typeahead-min-length="0" />
                         </div>
                         <div class="col-sm-3">
                             <button class="btn btn-default" type="button" ng-click="addConstraint($index)"><i class="glyphicon glyphicon-plus"></i>Add Constraint</button>
@@ -99,7 +115,7 @@
 
                     <div class="row" ng-show="!!field.constraints">
                         <div class="col-sm-12">
-                            <div ng-repeat="constraint in field.constraints" class="row">
+                            <div ng-repeat="constraint in field.constraints track by $index" class="row">
                                 <div class="col-sm-4">
                                     <select ng-model="constraint.type" class="form-control" ng-options="t.value as t.name for t in constraintTypes"></select>
                                 </div>

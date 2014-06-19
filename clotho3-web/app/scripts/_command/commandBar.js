@@ -1,6 +1,5 @@
-//rename directive
-
-angular.module('clotho.commandbar').service('CommandBar', function(Clotho, ClientAPI, Debug, $timeout, $q, $document) {
+angular.module('clotho.commandbar')
+.service('CommandBar', function(Clotho, ClientAPI, Debug, ClothoSchemas, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -12,15 +11,22 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 	/******* elements ******/
 
-	//todo - should capture from commandBar directive as possible
 
 	var getCommandBarElement = function() {
 		return angular.element($document[0].querySelector('[clotho-command-bar]'));
 	};
 
-	var getCommandBarInput = function () {
-		return angular.element($document[0].getElementById('clotho_command_input'));
+	var getTokenizerElement = function () {
+		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-tokenizer]'));
 	};
+
+	//todo - should capture from commandBar directive as possible, e.g. via controller
+	//note - call as needed, ensure exists in DOM
+	var getCommandBarInput = function () {
+		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-autocomplete]'));
+	};
+
+	var commandBarInputModel = 'query';
 
 	var getCommandBarLogButton = function () {
 		return angular.element($document[0].getElementById('clotho_logButton'));
@@ -30,21 +36,13 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		getCommandBarInput().focus();
 	};
 
-	function showActivityLog () {
-		display.log = true;
-	}
-
+	var setInput = function (string) {
+		getCommandBarInput().scope().setQueryString(string);
+	};
 
 
 	/******* log data *******/
 	var log = {};
-
-	var autocomplete = {};
-	autocomplete.autocompletions = [];
-	autocomplete.autoDetail = {};
-	autocomplete.detailTemplate = {};
-	autocomplete.detailModel = {};
-	autocomplete.detailUUID = -1;
 
 	log.entries = [
 		{
@@ -55,96 +53,22 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		}
 	];
 
-
 	/****** display ******/
 	var display = {};
 	display.query = '';
-	display.queryHistory = [];
-	display.autocomplete = false; // autocomplete list
-	display.autocompleteDetail = false; //pane to left of autocomplete
-	display.autocompleteDetailInfo = false; // e.g. command or author
-	display.help = false; // help menu far right
 	display.log = false; // activity log
 	display.logSnippet = false; // snippet right of log button
 
-	//basic toggles
-	display.show = function (field) {
-		if (!display[field])
-			display[field] = true;
+	display.toggle = function(field, value) {
+		display[field] = angular.isDefined(value) ? value : !display[field];
 	};
 
-	display.hide = function(field) {
-		if (display[field])
-			display[field] = false;
-	};
-
-	display.toggle = function(field) {
-		display[field] = !display[field];
-	};
-
-	// todo - should be CSS
-	display.genLogPos = function() {
-		var target = getCommandBarLogButton()[0];
-		display.logpos = {
-			left : (target.offsetLeft + (target.scrollWidth / 2) - 200) + "px",
-			top : (target.offsetTop + target.scrollHeight)  + "px"
-		};
-	};
-
-	/*
-	//note - now in css
-	display.genAutocompletePos = function() {
-		var target = getCommandBarInput()[0];
-		display.autocompletePos = {
-			left : (target.offsetLeft) + "px",
-			top : (target.offsetTop + target.clientHeight)  + "px"
-		};
-	};
-	*/
-
-
-	display.detail = function(uuid) {
-		if (typeof uuid == 'undefined') return;
-
-		if (uuid != autocomplete.detailUUID) {
-			display.hide('autocompleteDetailInfo');
-			autocomplete.detailUUID = uuid;
+	display.toggleActivityLog = function () {
+		display.log = !display.log;
+		if (display.log) {
+			log.unread = '';
 		}
-
-		Clotho.autocompleteDetail(autocomplete.detailUUID).then(function(result) {
-			autocomplete.autoDetail = result;
-			display.show('autocompleteDetail');
-		});
 	};
-
-	display.undetail = function() {
-		display.hide('autocompleteDetail');
-		display.hide('autocompleteDetailInfo');
-		autocomplete.detailModel = {};
-	};
-
-	//todo - avoid using index in case sort - have to namespace
-	display.detailInfo = function (type, index) {
-		//choose template
-		switch (type) {
-			case 'command' : {
-				autocomplete.detailTemplate = 'views/_command/detail-command.html';
-				break;
-			}
-			case 'author' : {
-				autocomplete.detailTemplate = 'views/_command/detail-author.html';
-				break;
-			}
-			default : {}
-		}
-		//choose model
-		autocomplete.detailModel = autocomplete.autoDetail.sharables[index];
-		if (type == "author")
-			autocomplete.detailModel = autocomplete.detailModel.author;
-
-		display.show('autocompleteDetailInfo');
-	};
-
 
 	/***** functions *****/
 
@@ -152,9 +76,21 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 
 	function receiveMessage (data) {
 		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
+
+		//check if we have a sharable
+		try {
+			var json = angular.fromJson(data.text);
+			var isSharable = ClothoSchemas.isSharable(json);
+			if (isSharable) {
+				data.tokens = [json];
+			}
+		} catch (e) {
+			//not an object that could be parsed
+		}
+		
 		log.entries.unshift(data);
-		Debugger.log('LOG - entries: ', log.entries);
-		display.show('logSnippet');
+		//Debugger.log('LOG - entries: ', log.entries);
+		display.toggle('logSnippet', true);
 		log.startLogTimeout();
 	}
 
@@ -162,7 +98,7 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		log.cancelLogTimeout();
 
 		log.timeout = $timeout( function() {
-			display.hide('logSnippet');
+			display.toggle('logSnippet', false);
 		}, 10000);
 	};
 
@@ -170,16 +106,13 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		$timeout.cancel(log.timeout);
 	};
 
-	var execute = function (command) {
-		Debugger.log("execute called (not implemented) " + command);
-		display.hide('autocomplete');
-		display.undetail();
-	};
-
-	var submit = function (query) {
-		if (!query) {
-			query = display.query;
+	var submit = function (input) {
+		if (angular.isEmpty(input) || !angular.isObject(input)) {
+			input = display.query;
 		}
+
+		//remove trailing whitespace
+		input.query = angular.isDefined(input.query) ? input.query.trim() : '';
 
 		/*
 		 Debugger.log(query);
@@ -187,22 +120,19 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		 Debugger.log(log.entries)
 		 */
 
-		if (!!query) {
-			var submission = {class : 'info', from : 'client', text: query, timestamp : Date.now()};
-			display.queryHistory.push(submission);
+		if (!!input.query) {
+			var submission = {class : 'info', from : 'client', text: input.query, timestamp : Date.now()};
 
-			//display.autocomplete = false;
-			display.undetail();
+			//check if we have a sharable
+			if (angular.isDefined(input.tokens)) {
+				submission.tokens = angular.map(input.tokens, function (token) {
+					return token.model;
+				});
+			}
 
 			ClientAPI.say(submission);
 
-			//note - temporary, patch as object pending tokenizer
-			query = {
-				query : query,
-				tokens : []
-			};
-
-			return Clotho.submit(query).then(function(result){
+			return Clotho.submit(input).then(function(result){
 				display.query = '';
 				ClientAPI.say({text: result, class: 'success'});
 			}, function (rejection) {
@@ -229,24 +159,23 @@ angular.module('clotho.commandbar').service('CommandBar', function(Clotho, Clien
 		display : display,
 		log : log,
 		setQuery : function(item, $event) {
-			if (typeof $event != 'undefined')
+			if (angular.isDefined( $event )) {
 				$event.preventDefault();
-			/*if (item.type != 'command') {
-			 display.undetail();
-			 }*/
+			}
+
 			if (!item) return;
 
-			display.query = !!item.value ? item.value : item.text;
+			display.query = !angular.isEmpty(item.value) ? item.value : item.text;
 		},
-		autocomplete : autocomplete,
 		submit : submit,
-		execute : execute,
 
 		//interaction
 		getCommandBarElement: getCommandBarElement,
+		getTokenizerElement : getTokenizerElement,
 		getCommandBarInput : getCommandBarInput,
+		commandBarInputModel : commandBarInputModel,
 		focusInput : focusInput,
-		showActivityLog : showActivityLog
+		setInput : setInput
 	}
 
 });

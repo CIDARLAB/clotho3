@@ -1,20 +1,38 @@
 {
-  "id" : "org.clothocad.model.BasicPart",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.model.Part",
-  "binaryName" : "org.clothocad.model.BasicPart",
-  "c" : "org.clothocad.model.BasicPart",
+  "id" : "org.clothocad.model.BasicPart",
   "name" : "BasicPart",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "org.clothocad.model.Part$PartType",
     "name" : "partType",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.NucSeq",
     "name" : "sequence",
     "type" : "org.clothocad.model.NucSeq",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org.clothocad.model.Part",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.BasicPart",
+  "binaryName" : "org.clothocad.model.BasicPart"
 }

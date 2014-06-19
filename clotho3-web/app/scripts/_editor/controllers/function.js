@@ -1,7 +1,7 @@
-//todo - handle loading of markdown, codemirror, etc.
-//todo - handle initial coloring of code based on language
+angular.module('clotho.editor')
+.controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, $q, codemirrorLoader, ClothoSchemas, $timeout) {
 
-angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scope, Clotho, $filter, codemirrorLoader, ClothoSchemas, $timeout) {
+	/* data types */
 
 	$scope.langTypes = [
 		{name:'JavaScript', value:'JAVASCRIPT'},
@@ -43,9 +43,19 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 
 	// todo - this will likely not be practical after release
 	$scope.clothoFunctions = [];
-	Clotho.query(ClothoSchemas.sharableTypes.Function.schema).then(function(result) {
+	Clotho.query({schema : ClothoSchemas.sharableTypes.Function.schema}, {mute : true}).then(function(result) {
 		$scope.clothoFunctions = result;
 	});
+
+	$scope.querySchemaWrapper = function(schemaType, value) {
+		return Clotho.autocomplete(value).then(function (results) {
+			return _.filter(results, function (result) {
+				return result.schema == schemaType;
+			});
+		});
+	};
+
+	/* args + deps */
 
 	$scope.addArg = function() {
 		if (angular.isEmpty($scope.sharable.args)) {
@@ -61,7 +71,10 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		if ($scope.newDependencyModel != '') {
 			$scope.sharable.dependencies.push($scope.newDependencyModel);
 		}
+		$scope.newDependencyModel = '';
 	};
+
+	/* tests */
 
 	$scope.addTest = function() {
 		if (angular.isEmpty($scope.sharable.tests)) {$scope.sharable.tests = [];}
@@ -80,15 +93,28 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 			data.args = $scope.sharable.tests[index].args;
 		}
 
-		Clotho.run(data.id, data.args).then(function (result){
-			console.log(result, $scope.sharable.tests[index].output.value, result == $scope.sharable.tests[index].output.value);
-			$scope.testResults[index] = (result == $scope.sharable.tests[index].output.value);
-			/* if (result == angular.fromJson($scope.sharable.testResult)) {
-			 ClientAPI.say({text:"test success!"});
-			 } else {
-			 ClientAPI.say({text:"test failed!"});
-			 }*/
+		//fixme - need to resolve arguments which are Clotho objects (they should be IDs)
+		//future - will need to do the same for parameterized arguments
+
+		var resolvedArgs = [];
+		_.forEach(data.args, function (arg, index) {
+			if ($scope.simpleTypes[$scope.sharable.args[index].type]) {
+				resolvedArgs.push(arg);
+			} else {
+				resolvedArgs.push(Clotho.get(arg, {mute : true}).then(function (r) { return r}))
+			}
 		});
+
+		$q.all(resolvedArgs).then(function (resolved) {
+			Clotho.run(data.id, resolved)
+			.then(function onFunctionTestSuccess (result){
+				$scope.testResults[index] = angular.equals(result, $scope.sharable.tests[index].output.value);
+			}, function onFunctionTestError () {
+				Clotho.alert('test errored! See activity log.');
+			});
+		});
+
+
 	};
 
 	$scope.runAllTests = function() {
@@ -101,23 +127,10 @@ angular.module('clotho.editor').controller('Editor_FunctionCtrl', function($scop
 		$scope.testResults = {};
 	};
 
-	$scope.querySchemaWrapper = function(schemaType, value) {
-		return Clotho.query({schema: schemaType, name : value}, {maxResults : 10})
-		.then(function (results) {
-			return results;
-		});
-	};
-
-	$scope.testPopoverText = function (ind) {
-		var args = $scope.sharable.tests[ind].args;
-		return !!args ? $filter('json')(args) : 'Search for an object of type {{ param.type }}';
-	};
-
-	//todo - re-parse non-simple tests - interpolate strings to objects so run correctly
-
-	//overwrite save to reset tests
+	//overwrite save to reset tests and set code pristine
 	$scope.save = function() {
 		$scope.resetTests();
+		$scope.Code.$setPristine();
 		$scope.$parent.save()
 	};
 

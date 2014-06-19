@@ -1,0 +1,19 @@
+{
+  "args" : [ {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "template"
+  }, {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "oligo1"
+  }, {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "oligo2"
+  } ],
+  "code" : "function pcrNucseq (template, oligo1, oligo2) {\n\treturn clotho.run('org.andersonlab.pcrpredict', [oligo1.sequence, oligo2.sequence, template.sequence])\n}",
+  "dependencies" : [ "org.andersonlab.pcrpredict" ],
+  "description" : "Delegate to the PCR function after unwrapping a NucSeq",
+  "language" : "JAVASCRIPT",
+  "name" : "pcrNucseq",
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "clotho.functions.dna.pcrNucseq"
+}

@@ -2,7 +2,7 @@
 
 $clotho.extensions.controller('clothoIntro_ExaminingCtrl', function($scope, $focus, $timeout, $http, Construction, Clotho) {
 
-    $http.get('models/construction_gfp.json').then(function(data) {
+    $http.get('models/construction-old/construction_gfp.json').then(function(data) {
         $scope.constructionFile = data.data
     });
 

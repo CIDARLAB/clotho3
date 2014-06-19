@@ -1,0 +1,58 @@
+{
+  "name" : "Basics of OOP and Organic Chemistry",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.BasicsofOOPandOrganicChemistry",
+  "about" : {
+    "help" : "Basics of OOP and Organic Chemistry was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 1/22/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "The essential concepts behind object oriented programming, organic chemistry, and the connections between them."
+    } ]
+  },
+  "created" : 1390413041000,
+  "youtubePlaylistId" : "PL2aPXzks-TgOv8a6ycw13PCY0UcsTxNkA",
+  "icon" : "https://i1.ytimg.com/vi/NeM4L-59Hnc/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Basics of OOP and Organic Chemistry.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Essentials Concepts of Organic Chemistry",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "TBeWEfhmK1U"
+        }
+      } ]
+    }, {
+      "title" : "Object Oriented Programming",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "In object oriented programming, \"Objects\" usually refer to bundles of information. For example, you can describe a Car as having 'number_of_wheels = 4' and 'license_plate = 4BIUO11', and this bolus of electronic information represents the physical entity in a computer. In these lectures, we will use Objects to describe the chemistry, design, and simulation concepts associated with genetic engineering."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "NeM4L-59Hnc"
+        }
+      } ]
+    }, {
+      "title" : "Formal Descriptions of Chemical Structure",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "In this section, we will build up data structures to describe the state of a biological system. At any given time, you can think of a cell has being a complex data structure ultimately composed of atoms. There are changes in state of these atoms in terms of their position constantly occurring that is the mechanistic underpinning of the dynamic behavior observed in biological systems."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "KcVtlCwa4OM"
+        }
+      } ]
+    } ]
+  } ]
+}

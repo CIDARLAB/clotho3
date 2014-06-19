@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2056",
+  "description" : "{GalE 3' UTR}",
+  "sequence" : "gatctacactcgatgaaatggcgcaggacacctggcactggcagtcacgccatccacagggatatcccgattaaggaacgaccatgacgcaatttaatcccgttgatcatccacatcgccgctacaacccgctcaccgggcaatggattctggtttcaccgcaccgcgctaagcgcccctggcagggggcgcaggaaacgccagccaaacaggtgttacctgcgcacgatccagattgcttcctctgcgcaggtaatgtgcgggtgacaggcgataaaaaccccgattacaccgggacttacgttttcactaatgactttgcggctttgatgtctgacacgccagatgcgccagaaagtcacgatccgctgatgcgttgccagagcgcgcgcggcaccagccgggtgatctgcttttcaccggatcacagtaaaacgctgccagagctcagcgttgcagcattgacggaaatcgtcaaaacctggcaggagcaag",
+  "id" : "clotho.part.jtk2056"
+}

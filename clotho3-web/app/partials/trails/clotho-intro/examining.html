@@ -1,10 +1,11 @@
 <div ng-controller="clothoIntro_ExaminingCtrl">
-    <blockquote><p>Construction Files define a series of unit operations which constitute a cloning experiment.</p>
+    <blockquote>
+      <p>Construction Files define a series of unit operations which constitute a cloning experiment.</p>
     </blockquote>
 
-    <!--<p>A simple workflow involves the amplification of your gene of interest via PCR, and digesting it to give it specific sticky ends on each side. A plasmid backbone is cut with restriction enzymes to yield ends complimentary to those of the fragment containing your gene of interest, and a ligation adds your fragment to the backbone. Your final product could then be transformed into bacteria, which would synthesize your gene of interest.</p>-->
+    <p ng-init="showVideo = false" >Let's go through the process of ligating GFP into a backbone called pUC19.</p>
 
-    <p ng-init="showVideo = false" >Let's go through the process of ligating GFP into a backbone called pUC19. <a ng-if="showVideo == false" ng-click="revealVideo()">Show me the Video!</a></p>
+    <p><a ng-if="showVideo == false" ng-click="revealVideo()">Show me the Video!</a></p>
 
     <div ng-if="!!showVideo">
         <div youtube="U4qrf9MhSxE" on-complete="hideVideo()" autoplay="true"></div>
@@ -15,12 +16,12 @@
     </div>
 
 
-    <div class="pagination pagination-large pagination-centered">
-        <ul>
-            <li ng-repeat="step in constructionFile.steps" ng-class="{'disabled' : hideOpts.uptostep == $index + 1}">
-                <a ng-click="hideOpts.uptostep = $index + 1" popover="{{reactions[step.reaction].readable}}" popover-trigger="mouseenter">Step {{ $index + 1 }}</a>
-            </li>
-        </ul>
+    <div style="text-align: center">
+      <ul class="pagination pagination-lg" style="display: inline-block">
+          <li ng-repeat="step in constructionFile.steps" ng-class="{'disabled' : hideOpts.uptostep == $index + 1}">
+              <a ng-click="hideOpts.uptostep = $index + 1" popover="{{reactions[step.reaction].readable}}" popover-trigger="mouseenter">Step {{ $index + 1 }}</a>
+          </li>
+      </ul>
     </div>
 
     <div class="alert alert-info" ng-if="hideOpts.uptostep == 0">

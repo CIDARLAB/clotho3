@@ -7,30 +7,45 @@ import java.util.List;
 import java.util.Map;
 import org.clothocad.core.communication.ServerSideAPI;
 
+/** A helper class for SubprocessExec
+ *
+ * All this could be easily implemented with purely static methods.
+ * We use a class here just for syntactic convenience.
+ */
 class ExecutionContext {
     private final ServerSideAPI api;
     private final JSONStreamReader reader;
-    private final OutputStream output;
-    private final String code;
-    private final List<Object> args;
+    private final JSONStreamWriter writer;
 
     ExecutionContext(final ServerSideAPI api,
                      final JSONStreamReader reader,
-                     final OutputStream output,
-                     final String code,
-                     final List<Object> args) {
+                     final JSONStreamWriter writer) {
         this.api = api;
         this.reader = reader;
-        this.output = output;
-        this.code = code;
-        this.args = args;
+        this.writer = writer;
     }
 
-    /** Communicate with subprocess */
+    /** Communicate with subprocess
+     *
+     * This method cannot be called more than once.
+     * Returns the return value from the function execution
+     */
     Object
-    start() {
-        sendFunctionDefcall();
+    start(final String code, final List<Object> args) {
+        /* send function_init message */
+        final Map<String, Object> value = new HashMap<>();
+        value.put("type", "func");
+        value.put("code", code);
+        value.put("args", args);
+        writer.sendValue(value);
 
+        /* do rest of communication */
+        return interact();
+    }
+
+    /** Interact with subprocess (handle API calls, get return value) */
+    private Object
+    interact() {
         while (true) {
             final Map value;
             try {
@@ -58,38 +73,22 @@ class ExecutionContext {
     }
 
     private void
-    handleAPICall(final Map in_value) {
-        final Map<String, Object> out_value = new HashMap<>();
-        out_value.put("type", "api");
-        out_value.put(
-            "return",
-            APIRelayer.relay(
-                api,
-                (String) in_value.get("name"),
-                (List) in_value.get("args")
-            )
-        );
-        sendValue(out_value);
-    }
-
-    private void
-    sendFunctionDefcall() {
-        final Map<String, Object> val = new HashMap<>();
-        val.put("type", "func");
-        val.put("code", code);
-        val.put("args", args);
-        sendValue(val);
-    }
-
-    private void
-    sendValue(final Object value) {
-        final byte[] bytes = JSONUtil.toBytes(value);
-        try {
-            output.write(bytes);
-            output.write(0);
-            output.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    handleAPICall(final Map value) {
+        final Map<String, Object> reply = new HashMap<>();
+        final APIRelayer.Callback cb = new APIRelayer.Callback() {
+            @Override public void onSuccess(final Object ret) {
+                reply.put("type", "api");
+                reply.put("return", ret);
+            }
+            @Override public void onFail(final String message) {
+                reply.put("type", "api_error");
+                reply.put("message", message);
+            }
+        };
+        APIRelayer.relay(api,
+                         (String) value.get("name"),
+                         (List) value.get("args"),
+                         cb);
+        writer.sendValue(reply);
     }
 }

@@ -12,8 +12,8 @@
  * onComplete {function}
  */
 
-angular.module('clotho.trails')
-	.directive('youtube', function (Trails, Youtube, $compile, $timeout, $http) {
+angular.module('clotho.youtube')
+	.directive('youtube', function (Youtube, $compile, $timeout, $http) {
 
 		return {
 			restrict: 'EA',
@@ -70,15 +70,15 @@ angular.module('clotho.trails')
 					createYoutubePlayer();
 				};
 
+				//init()
 				if (!!scope.startMini && scope.startMini != 'false') {
-					scope.miniThumb = Youtube.thumbnail(scope.videoId, 'mqdefault');
+					scope.miniThumb = Youtube.videoThumbnail(scope.videoId, 'mqdefault');
 
-					Youtube.info(scope.videoId).then(function (json) {
-						scope.miniInfo = json.data;
-						scope.miniInfo.durationFormatted = (Math.floor(scope.miniInfo.duration / 60) + ":" + ((scope.miniInfo.duration % 60 < 10) ? '0' : '') + (scope.miniInfo.duration % 60));
+					Youtube.videoInfo(scope.videoId).then(function (json) {
+						scope.miniInfo = json;
 					});
 
-					$http.get('views/_trails/youtubeThumbnail.html')
+					$http.get('views/_trails/youtubeThumbnail.html', {cache : true})
 						.success(function (data, headers) {
 							element.html($compile(data)(scope));
 						})
@@ -87,7 +87,7 @@ angular.module('clotho.trails')
 						});
 
 				} else {
-					element.html('<div class="youtubeLoading" width="' + scope.params.width + '" height="' + scope.params.height + '"></div>');
+					element.html('<div class="loading" width="' + scope.params.width + '" height="' + scope.params.height + '"></div>');
 					createYoutubePlayer()
 				}
 

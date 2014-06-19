@@ -1,0 +1,15 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from convertid import run",
+  "name" : "ConvertID",
+  "id" : "org.andersonlab.py_convertID",
+  "description" : "Fetches a sequence from NCBI and turns it into Genbank",
+  "args" : [ {
+    "type" : "string",
+    "name" : "arg0"
+  }, {
+    "type" : "string",
+    "name" : "arg1"
+  } ]
+}

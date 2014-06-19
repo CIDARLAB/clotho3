@@ -105,8 +105,7 @@ public class Argument {
         if (c != null) {
             return c;
         }
-        ObjectId id;
-        id = IdUtils.resolveSelector(s, true);
+        ObjectId id = new ObjectId(s);
         try {
             return IdUtils.getClass(id);
         } catch (ClassNotFoundException ex) {

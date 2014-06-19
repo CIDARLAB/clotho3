@@ -10,8 +10,8 @@ import org.clothocad.core.execution.Mind;
 public class ExecTimingTest {
     private static final SubprocessExec.EventHandler noopHandler =
     new SubprocessExec.EventHandler () {
-        @Override public void onFail(final String x) {}
-        @Override public void onSuccess(final String x) {}
+        @Override public void onFail(final byte[] x) {}
+        @Override public void onSuccess(final byte[] x) {}
     };
 
     public static void

@@ -6,9 +6,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	
 	//check for updates to editable's id, update URL
 	$scope.$watch('editable.id', function (newval, oldval) {
-		if (!!newval) {
-			$location.search('id', newval);
-		}
+		$location.search('id', newval || null);
 	});
 
 	//check for updates to URL - this will only be triggered when URL is not set by above action
@@ -16,15 +14,19 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		var updateId = next.params.id;
 
 		// only activate if new -- won't happen if dropdown changed this already
-		if ($scope.editable.id != updateId && $scope.editable != updateId) {
-			console.log('updating editable from route');
-			$scope.editable = updateId;
+		if (!angular.isEmpty($scope.editable) && $scope.editable.id != updateId) {
+			$scope.editableId = updateId;
 		}
 	});
 
 	$scope.$on('$destroy', function () {
 		$location.search('id', null).replace();
 	});
+
+	//initial query handling
+	if ( $route.current.params.id ) {
+		$scope.editableId = $route.current.params.id;
+	}
 
 	/*
 	initial route handling:
@@ -62,25 +64,22 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		});
 	};
 
-	$scope.createNew = function (type) {
-		if (type == 'Instance') {
-			$scope.chooseSubtype = !$scope.chooseSubtype;
-		} else {
-			$scope.editable = ClothoSchemas.createScaffold(type);
-			$scope.chooseSubtype = false;
-			$scope.editModePass = true;
-		}
+	$scope.createNewNonInstance = function (type) {
+		$scope.editable = ClothoSchemas.createScaffold(type);
+		$scope.editModePass = true;
 	};
 
 	$scope.createNewInstance = function (item, model, label) {
 		$scope.editable = ClothoSchemas.createScaffold(model);
-		$scope.chooseSubtype = false;
 		$scope.editModePass = true;
 	};
 
 	$scope.editExisting = function (item, model, label) {
-		console.log(item, model);
-		$scope.editable = model;
-		$scope.editModePass = true;
+		Clotho.get(model).then(function (result) {
+			$scope.editable = result;
+			$scope.editModePass = true;
+		}, function () {
+			console.log('for some reason could not get that sharable...')
+		});
 	};
 });

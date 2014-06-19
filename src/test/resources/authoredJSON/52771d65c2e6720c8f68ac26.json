@@ -1,8 +1,0 @@
-{
-  "id" : "52771d65c2e6720c8f68ac26",
-  "schema" : "org.clothocad.core.datums.Function",
-  "dependencies" : [ "522af4b4b22548ae323e4475" ],
-  "name" : "moduleTestFunction",
-  "code" : "function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
-  "language" : "JAVASCRIPT"
-}

@@ -12,6 +12,10 @@
             <input type="text" id="schemaName" ng-model="sharable.name" required restrict-input="findSpacesRegExp">
         </form-field>
 
+      <form-field name="ID" horizontal="formHorizontal">
+        <input type="text" ng-model="sharable.id" required ng-model-options="{updateOn : 'blur'}" popover="Create a semantic ID, e.g. username.CamelCaseSchemaName">
+      </form-field>
+
         <form-field name="SuperClass" horizontal="formHorizontal">
             <select id="superClass" ng-model="sharable.superClass" ng-options="schema.id as schema.name for schema in schemas">
                 <option value="">-</option>
@@ -66,7 +70,7 @@
             </div>
 
             <div class="list-group">
-                <div class="list-group-item clearfix" ng-repeat="field in sharable.fields">
+                <div class="list-group-item clearfix" ng-repeat="field in sharable.fields track by $index">
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -111,7 +115,7 @@
 
                     <div class="row" ng-show="!!field.constraints">
                         <div class="col-sm-12">
-                            <div ng-repeat="constraint in field.constraints" class="row">
+                            <div ng-repeat="constraint in field.constraints track by $index" class="row">
                                 <div class="col-sm-4">
                                     <select ng-model="constraint.type" class="form-control" ng-options="t.value as t.name for t in constraintTypes"></select>
                                 </div>

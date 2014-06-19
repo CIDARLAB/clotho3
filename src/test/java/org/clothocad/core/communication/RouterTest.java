@@ -74,7 +74,7 @@ public class RouterTest {
         TestConnection connection = new TestConnection("getTest");
         final Message message = new Message(
             Channel.getAll,
-            new String[] {"Test Part 1"},
+            new String[] {ids.get(0).toString()},
             "1",
             null
         );
@@ -199,12 +199,16 @@ public class RouterTest {
                 + "data.code = \"function(sequence) { return sequence.split('').reverse().join('');};\";\n"
                 + "data.arguments = [{name:'sequence', type:'String'}];\n"
                 + "\n"
-                + "clotho.create(data);\n"
+                + "reverse1 = clotho.create(data);\n"
                 + "\n"
-                + "clotho.run(\"reverse1\", [\"AAACCC\"]);";
+                + "clotho.run(reverse1, [\"AAACCC\"]);";
         TestConnection connection = new TestConnection("constructFunction");
         
-        sendMessage(new Message(Channel.submit, script, "6"), connection);
+        Map submission = new HashMap();
+        submission.put("query", script);
+        submission.put("tokens", new ArrayList());
+
+        sendMessage(new Message(Channel.submit, submission, "6"), connection);
         
         assertEquals("CCCAAA", connection.messages.get(1).getData());
         
@@ -220,31 +224,67 @@ public class RouterTest {
         credentials.put("username", "testuser");
         credentials.put("password", "password");
         
+        Map submission = new HashMap();
+        submission.put("tokens", new ArrayList());
+        
         //login as testuser
         sendMessage(new Message(Channel.login, credentials, "7"), connection);
         Object data = connection.messageDataByChannelAndId.get(Channel.login.name()+"7");
         assertTrue((Boolean) data);
         //set value
-        sendMessage(new Message(Channel.submit, "var persistMe = 42 ", "8"), connection);
+        submission.put("query", "var persistMe = 42 ");
+        sendMessage(new Message(Channel.submit, submission, "8"), connection);
         //logout
         sendMessage(new Message(Channel.logout, "", "9"), connection);
         //check that value is not available to anonymous user
-        sendMessage(new Message(Channel.submit, "persistMe", "9"), connection);
+        submission.put("query", "persistMe");
+        sendMessage(new Message(Channel.submit, submission, "9"), connection);
         data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"9");
         assertNotEquals(data, 42);
         //login again as testuser
         sendMessage(new Message(Channel.login, credentials, "10"), connection);
         //check value is available again
-        sendMessage(new Message(Channel.submit, "persistMe", "11"), connection);
+        sendMessage(new Message(Channel.submit, submission, "11"), connection);
         data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"11");
-        assertEquals(data, 42);
+        assertEquals(42, data);
     }
     
+       @Test
+    public void crossConnectionMindPersistenceTest()  throws IOException {
+        TestConnection connection = new TestConnection("crossConnectionPersistenceTest");
+        Map<String,String> credentials = new HashMap<>();
+        credentials.put("username", "testuser");
+        credentials.put("password", "password");
+        
+        Map submission = new HashMap();
+        submission.put("tokens", new ArrayList());
+        
+        //login as testuser
+        sendMessage(new Message(Channel.login, credentials, "7"), connection);
+        Object data = connection.messageDataByChannelAndId.get(Channel.login.name()+"7");
+        assertTrue((Boolean) data);
+        //set value
+        submission.put("query", "var persistMe = 42 ");
+        sendMessage(new Message(Channel.submit, submission, "8"), connection);
+        //logout
+        sendMessage(new Message(Channel.logout, "", "9"), connection);
+        //login again as testuser on different connection
+        connection = new TestConnection("differentConnection");
+        sendMessage(new Message(Channel.login, credentials, "10"), connection);
+        //check value is available again
+        sendMessage(new Message(Channel.submit, submission, "11"), connection);
+        data = connection.messageDataByChannelAndId.get(Channel.submit.name()+"11");
+        assertEquals(42, data);
+    } 
     
     @Test
     public void scriptedGet() throws IOException{
+        Map submission = new HashMap();
+        submission.put("tokens", new ArrayList());
+        
         TestConnection connection = new TestConnection("test");
-        sendMessage(new Message(Channel.submit, "clotho.get(\"bb99191e810c19729de860fe\")", "1"), connection);
+        submission.put("query", "clotho.get(\"org.clothocad.trails.WritingTrails\")");
+        sendMessage(new Message(Channel.submit, submission, "1"), connection);
         //make sure that sub-objects contain expected properties
         Map<String,Object> data = (Map) connection.messageDataByChannelAndId.get(Channel.submit.name()+"1");
         assertNotNull(data);

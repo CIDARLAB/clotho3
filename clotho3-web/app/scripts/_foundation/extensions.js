@@ -97,7 +97,7 @@ angular.module('clotho.extensions', [])
 		$rootElement.injector().invoke(function($compile, $rootScope) {
 			var scope = $rootScope.$new(true);
 			angular.extend(scope, args);
-			$compile($(element))(scope);
+			$compile(element)(scope);
 			$rootScope.$apply();
 		});
 	};
@@ -106,6 +106,24 @@ angular.module('clotho.extensions', [])
 	//not really recommended for use...
 	$clotho.extensions.extendPrimaryRootscope = function(args) {
 		$clotho.extensions.extend($rootScope, args);
+	};
+
+
+	$clotho.extensions.downloadDependencies = function downloadDependencies(dependencies) {
+		if (angular.isEmpty(dependencies)) {
+			return $q.when(angular.noop);
+		}
+		return $q.all([
+			$clotho.extensions.css(dependencies.css),
+			$clotho.extensions.mixin(dependencies.mixin),
+			$clotho.extensions.script(dependencies.script)
+		]).then(function () {
+			return function () {
+				$timeout(function () {
+					$clotho.extensions.script(dependencies.onload);
+				});
+			};
+		});
 	};
 
 

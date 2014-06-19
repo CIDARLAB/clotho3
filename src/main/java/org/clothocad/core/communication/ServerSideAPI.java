@@ -26,6 +26,7 @@ package org.clothocad.core.communication;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -34,9 +35,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
@@ -47,23 +48,25 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.SecurityUtils;
-import org.clothocad.core.aspects.Interpreter.AutoComplete;
+import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.execution.subprocess.SubprocessExec;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.execution.ScriptAPI;
+import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.ReservedFieldNames;
+import org.clothocad.core.datums.Argument;
+import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
-import static org.clothocad.core.ReservedFieldNames.*;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -87,7 +90,6 @@ import static org.clothocad.core.ReservedFieldNames.*;
 @Slf4j
 public class ServerSideAPI {
 
-    private final AutoComplete completer;
     private final Router router;
     private final Persistor persistor;
     private final String requestId;
@@ -103,7 +105,6 @@ public class ServerSideAPI {
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
-        this.completer = new AutoComplete(persistor);
         this.options = options;
     }
 
@@ -111,22 +112,10 @@ public class ServerSideAPI {
         //This is needed because the subString is in the format {query=[subString]}
         userText = userText.substring(7, userText.length()-1);
         
-        //TODO: This should be changed to an int provided from the client
-        int cursorIndex = userText.length();  
-
-        //Grab the last word fragment up to the cursor position
-        String[] words = userText.substring(0, cursorIndex).split("\\s+");
-        String lastWord = words[words.length-1];
-        
-        //Fetch any words in the Mind's <String,String> Trie
-        //List<Map> comps = mind.getMindCompletions(lastWord);
-        List<Map> comps = new ArrayList<Map>();
-        
         //Add the word suggestions from the global Trie
-        List<Map> globalComps = completer.getCompletions(lastWord);
-        comps.addAll(globalComps);
+        List<Map> globalComps = persistor.getCompletions(userText);
         
-        return comps;
+        return globalComps;
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
     public final String autocompleteDetail(String uuid) {
@@ -156,19 +145,20 @@ public class ServerSideAPI {
             System.out.println("token: " + str);
         }
 
-        Object out = tryRun(tokens);
-        if(out != null) {
-            return out;
+        Object out = null;
+        try {
+            return tryRun(tokens);
+        } catch(Exception err) {
         }
         
-        out = trySingleWord(tokens);
-        if(out != null) {
-            return out;
+        try {
+            return trySingleWord(tokens);
+        } catch(Exception err) {
         }
         
-        out = tryAPIWord(tokens);
-        if(out != null) {
-            return out;
+        try {
+            return tryAPIWord(tokens);
+        } catch(Exception err) {
         }
         
         //Run the command assuming it's javascript
@@ -180,7 +170,7 @@ public class ServerSideAPI {
             return returnValue;
         } catch (ScriptException ex) {
             //disambiguate(command);  //JCA:  temporarily disabled for testing, also not fully hooked up
-            logAndSayError("Error while executing script: " + ex.getMessage(), ex);
+            logAndSayError("Unable to process the request", ex);
             return Void.TYPE;
         }
     }
@@ -192,39 +182,45 @@ public class ServerSideAPI {
      * @param tokens
      * @return the result or null if it failed to execute
      */
-    private Object tryRun(String[] tokens) {
+    private Object tryRun(String[] tokens) throws Exception {
         System.out.println("+++  try RUN on args");
         Function function = null;
         List<Object> args = new ArrayList<Object>();
         
         //Assume the first token is a Function call
-        List<Map> completions = completer.getCompletions(tokens[0]);
-        if(completions.size()>0) {
-            String uuid = (String) completions.get(0).get("uuid");
-            try {
-                function = persistor.get(Function.class, persistor.resolveSelector(uuid, true));
-            } catch(java.lang.IllegalArgumentException ex) {
-                return null;
-            }
-        } 
+        List<Map> completions = persistor.getCompletions(tokens[0]);
+        String uuid = (String) completions.get(0).get("id").toString();
+        function = persistor.get(Function.class, new ObjectId(uuid));
         if(function==null) {
-            return null;
+            throw new Exception();
         }
         
         //Iterate through each subsequent token and convert to object if required
         for(int i=1; i<tokens.length; i++) {
-            String token = tokens[i];
-            completions = completer.getCompletions(token);
-            
-            //If the completions suggest what the things is
-            if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("uuid");
-                ObjBase shar = persistor.get(ObjBase.class, persistor.resolveSelector(uuid, true));
-                args.add(shar);
-            } 
-            //Otherwise just consider this raw String or int
-            else {
-                args.add(token);
+            try {
+                Object obj = resolveSloppy(tokens[i]);
+                args.add(obj);
+            } catch(Exception err) {
+                args.add(tokens[i]);
+            }
+        }
+        
+        
+//JCA TODO: remove this section when converters become available
+        //Extract sequence strings when an object is given as argument for a String field
+        Argument[] funcargs = function.getArgs();
+        for(int i=0; i<funcargs.length; i++) {
+            try {
+                Argument arg = funcargs[i];
+                String str = arg.getType().toString();
+                if(str.equals("class java.lang.String")) {
+                    Map map = (Map) args.get(i);
+                    String newvalue = (String) map.get("sequence");
+                    args.remove(i);
+                    args.add(i, newvalue);
+                }
+            } catch(Exception err) {
+                
             }
         }
 
@@ -235,45 +231,29 @@ public class ServerSideAPI {
             System.out.println(obj.toString());
         }
         Object out = null;
-        try {
-            out = mind.invoke(function, args, new ScriptAPI(mind, persistor, router, requestId, options));
-            return out;
-        } catch (Exception ex) {
-            System.out.println("Unsuccessfully executed the sloppy command");
-            return null;
-        }
+        out = run(function, args);
+        return out;
     }
     
     private Object trySingleWord(String[] tokens) {
         System.out.println("+++  try Single Word get");
-        if(tokens.length!=1) {
-            return null;
-        }
-        System.out.println("trySingleWord has a single token " + tokens[0]);
-        Object out = null;
-        try {
-            String word = tokens[0];
-            List<Map> completions = completer.getCompletions(word);
-            
-            //If the completions suggest what the things is
-            if(completions.size()>0) {
-                String uuid = (String) completions.get(0).get("uuid");
-                return get(uuid);
-            } 
-            return null;
-        } catch(Exception err) {
-            return null;
-        }
+        return resolveSloppy(tokens[0]);
     }
     
-    private Object tryAPIWord(String[] tokens) {
+    private Object resolveSloppy(String word) {
+        List<Map> completions = persistor.getCompletions(word);
+        String uuid = (String) completions.get(0).get("id");
+        return get(uuid);
+    }
+    
+    private Object tryAPIWord(String[] tokens) throws Exception {
         System.out.println("+++  try first word is API word");
         String firstWord = tokens[0].toLowerCase();
         
         //Example:  get pBca1256
         if(firstWord.equals("get")) {
             //Interpret the next token as a clotho.get request
-            return get(tokens[1]);
+            return resolveSloppy(tokens[1]);
             
         } else if(firstWord.equals("run")) {
             String[] newtok = new String[tokens.length-1];
@@ -282,7 +262,7 @@ public class ServerSideAPI {
             }
             return tryRun(newtok);
         } else {
-            return null;
+            throw new Exception();
         }
     }
     
@@ -321,7 +301,12 @@ public class ServerSideAPI {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             String username = SecurityUtils.getSubject().getPrincipal().toString();
             mind.setUsername(username);
-            persistor.save(mind);
+            //XXX: need some kind of error recovery if mind save fails
+            try{
+                persistor.save(mind);
+            } catch (Exception e){
+                say("There was a problem saving your mind. You will still be logged out, but some settings may not be saved.", Severity.WARNING);
+            }
             SecurityUtils.getSubject().logout();
             say("Logged out", Severity.SUCCESS);
             log.info("User {} logged out", username);
@@ -426,7 +411,7 @@ public class ServerSideAPI {
 
     public Map<String, Object> get(Object o) {
         o = unwrap(o);
-        return get(persistor.resolveSelector(o.toString(), false));
+        return get(new ObjectId(o));
     }
 
     public Map<String, Object> get(ObjectId id) {
@@ -447,7 +432,7 @@ public class ServerSideAPI {
     public final List<Map<String, Object>> getAll(List objects) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         for (Object obj : objects) {
-            returnData.add(get(persistor.resolveSelector(obj.toString(), false)));
+            returnData.add(get(obj));
         }
         return returnData;
     }
@@ -587,10 +572,11 @@ public class ServerSideAPI {
     }
 
     public final ObjectId destroy(Object id) {
-        ObjectId resolvedId = persistor.resolveSelector(id.toString(), false);
-        if (resolvedId == null) {
+        if (id == null) {
             return null;
         }
+        
+        ObjectId resolvedId = new ObjectId(id);
         try {
             try {
                 persistor.delete(resolvedId);
@@ -627,22 +613,30 @@ public class ServerSideAPI {
         }
     }
 
-    public Object
-    run2(final String name, final List<Object> args) {
+    private Object
+    run2(final Function function, final List<Object> args) {
         final Map<String, Object> funcJSON =
-            persistor.getAsJSON(persistor.resolveSelector(name, true));
+            persistor.getAsJSON(function.getId());
         return SubprocessExec.run(
             this,
             funcJSON,
             args,
             new SubprocessExec.EventHandler() {
-                @Override public void onFail(final String standardError) {
-                    say(standardError, Severity.FAILURE);
+                @Override public void
+                onFail(final byte[] err) {
+                    say_helper(err, Severity.FAILURE);
                 }
 
-                @Override public void onSuccess(final String standardError) {
-                    if (!standardError.isEmpty())
-                        say(standardError, Severity.NORMAL);
+                @Override public void
+                onSuccess(final byte[] err) {
+                    say_helper(err, Severity.NORMAL);
+                }
+
+                private void
+                say_helper(final byte[] err,
+                           final Severity sev) {
+                    if (err.length != 0)
+                        say(new String(err, StandardCharsets.UTF_8), sev);
                 }
             }
         );
@@ -664,13 +658,17 @@ public class ServerSideAPI {
             return null;
         }
 
-        if (data.containsKey(ID)) {
+        if (data.containsKey(ReservedFieldNames.ID)) {
             //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(persistor.resolveSelector(data.get("id").toString(), true));
+            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id")));
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("id").toString(), true));
+                    Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
 System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
+
+                    if(function.getLanguage().equals(Language.PYTHON)) {
+                        return run2(function, args);
+                    }
 
                     return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -684,7 +682,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             //XXX: this whole function is still a mess
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
-                    Module module = persistor.get(Module.class, persistor.resolveSelector(data.get("id").toString(), true));
+                    Module module = persistor.get(Module.class, new ObjectId(data.get("id")));
 
                     return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -733,7 +731,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             return Void.TYPE;
         }
 
-        Function function = persistor.get(Function.class, persistor.resolveSelector(data.get("function").toString(), Function.class, false));
+        Function function = persistor.get(Function.class, new ObjectId(data.get("function")));
         List arguments;
         try {
             arguments = data.containsKey("arguments")
@@ -755,6 +753,9 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
 
     public final Object run(Function function, List<Object> args) throws ScriptException {
         System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
+        if(function.getLanguage().equals(Language.PYTHON)) {
+            return run2(function, args);
+        }
 
         return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }
@@ -969,7 +970,11 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
      */
     public static final String replaceWidgetId(String script, String widgetIdPrefix) {
         try {
-            return XMLParser.addPrefixToTagAttribute(script, ID, widgetIdPrefix);
+            return XMLParser.addPrefixToTagAttribute(
+                script,
+                ReservedFieldNames.ID,
+                widgetIdPrefix
+            );
         } catch (Exception ex) {
             log.error("", ex);
         }

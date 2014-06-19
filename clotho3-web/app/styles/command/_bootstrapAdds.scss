@@ -40,3 +40,17 @@ pre.transparent {
   padding: 8px 14px;
   line-height: 18px;
 }
+
+//sharable Popup
+
+.popover.topRight, .popover.topLeft {
+  .arrow {
+    top: 55px;
+  }
+}
+
+[sharable-popup-inner] {
+  .popover-content {
+    overflow: hidden;
+  }
+}

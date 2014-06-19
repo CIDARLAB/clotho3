@@ -24,10 +24,6 @@ public class IdUtils {
         return persistor.get(ObjBase.class, id);
     }
     
-    public static ObjectId resolveSelector(String selector, boolean strict){
-        return persistor.resolveSelector(selector, strict);
-    }
-    
     public static Class getClass(ObjectId schemaId) throws ClassNotFoundException{
         Map<String,Object> schemaData = persistor.getAsJSON(schemaId);
         if (schemaData.get("schema").toString().equals("BuiltInSchema")){

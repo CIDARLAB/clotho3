@@ -4,11 +4,37 @@
   .trail-contents {
 
     .trail-chapter {
+      @extend .panel;
+      @extend .panel-info;
+    }
 
+    .trail-chapter-info {
+      @extend .panel-heading;
+    }
+
+    .trail-chapter-title {
+      @extend .panel-title;
+
+      &:hover {
+        text-decoration: none;
+        cursor: default;
+      }
+    }
+
+    .trail-chapter-description {
+      display: none;
     }
 
     .trail-pages {
-
+      @extend .list-group;
     }
   }
+}
+
+.trail-page-materials {
+  margin-bottom: 15px;
+}
+
+[trail-page-component] {
+  margin-bottom: 15px;
 }

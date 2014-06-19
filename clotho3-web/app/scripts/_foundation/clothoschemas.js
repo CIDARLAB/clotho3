@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('clotho.foundation')
-  .service('ClothoSchemas', function EditorSchemas(Clotho, $q) {
+  .service('ClothoSchemas', function EditorSchemas(Clotho, Debug, $q) {
+
+		var Debugger = new Debug('clothoSchemas', '#992299');
 
 		var SCHEMA_ALL = 'org.clothocad.core.schema.Schema';
 		var SCHEMA_BUILTIN = 'org.clothocad.core.schema.BuiltInSchema';
@@ -273,10 +275,7 @@ angular.module('clotho.foundation')
 
 		Clotho.query({"schema" : SCHEMA_ALL}, {mute : true})
 		.then(function (resultSchemas) {
-			_.remove(resultSchemas, function (schema) {
-				return !!sharableTypes[schema.name];
-			});
-				retrievedSchemas.resolve(resultSchemas)
+			retrievedSchemas.resolve(resultSchemas);
 		});
 
 		var downloadSchemaDependencies = function (schema) {
@@ -296,13 +295,16 @@ angular.module('clotho.foundation')
 			function getSuperClass (passedSchema) {
 				if (passedSchema.superClass) {
 					promiseChain.then(function () {
-						//testing console.log('retriving ' + passedSchema.superClass);
 						return Clotho.get(passedSchema.superClass)
 							.then(function (retrieved) {
 								//testing console.log('retrieved ' + retrieved.id + ' - ' + retrieved.name, _.pluck(retrieved.fields, 'name'), retrieved);
 								finalSchema.fields = finalSchema.fields.concat(retrieved.fields);
 								//testing console.log('finalSchema now', _.pluck(finalSchema.fields, 'name'));
 								return getSuperClass(retrieved)
+							}, function (err) {
+								Debugger.warn('couldnt get parent schema ' + passedSchema.superClass);
+								//couldn't get parent schema
+								reachedBottom.reject(finalSchema);
 							});
 					});
 				} else {
@@ -315,16 +317,21 @@ angular.module('clotho.foundation')
 			return reachedBottom.promise.then(function() {
 				return promiseChain;
 			})
-				.then(function (chain) {
-					return finalSchema;
-				});
+			.then(function (chain) {
+				return finalSchema;
+			});
 		};
 
 		/* FUNCTIONALITY */
 
+		//forgiving check to see if potential sharable
+		function isSharable (sharable) {
+			return angular.isObject(sharable) && !angular.isEmpty(sharable) && angular.isDefined(sharable.id) && angular.isDefined(sharable.schema);
+		}
+
 		//returns schema of a sharable, or null
 		function determineSchema (sharable) {
-			return sharable.schema || null;
+			return ( !angular.isEmpty(sharable) && angular.isDefined(sharable.schema) ) ? sharable.schema : null;
 		}
 
 		//determine whether a sharable is a schema
@@ -344,7 +351,8 @@ angular.module('clotho.foundation')
 		}
 
 		function isFunction (sharable) {
-			return determineSchema(sharable) == sharableTypes.Function.schema;
+			var sharableSchema = determineSchema(sharable);
+			return sharableSchema == sharableTypes.Function.schema || sharableSchema == 'org.clothocad.core.datums.Module';
 		}
 
 		function isView (sharable) {
@@ -352,7 +360,7 @@ angular.module('clotho.foundation')
 		}
 
 		//determines main type: Instance, Function, View, Schema
-		function determineInstanceType (sharable) {
+		function determineSharableType (sharable) {
 			if (isSchema(sharable)) {
 				return 'Schema';
 			} else if (isFunction(sharable)) {
@@ -362,6 +370,19 @@ angular.module('clotho.foundation')
 			} else {
 				return 'Instance';
 			}
+		}
+
+		var sharableIconMap = {
+			Instance : "glyphicon glyphicon-file",
+			Function : "glyphicon glyphicon-play-circle",
+			View : "glyphicon glyphicon-picture",
+			Schema : "glyphicon glyphicon-cog",
+			default : "glyphicon glyphicon-file"
+		};
+
+		//returns class for icon of sharable type given
+		function determineSharableIcon (type) {
+			return sharableIconMap[type] || sharableIconMap["default"];
 		}
 
 		//creates scaffold given SchemaName, does not create on server
@@ -397,11 +418,13 @@ angular.module('clotho.foundation')
 			formTypeMap : formTypeMap,
 			javaToJavascript : javaToJavascript,
 
+			isSharable : isSharable,
 			isSchema : isSchema,
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,
 
-			determineInstanceType : determineInstanceType,
+			determineSharableType : determineSharableType,
+			determineSharableIcon : determineSharableIcon,
 			determineFieldType : determineFieldType,
 			determineSchema : determineSchema,
 			createScaffold : createScaffold,

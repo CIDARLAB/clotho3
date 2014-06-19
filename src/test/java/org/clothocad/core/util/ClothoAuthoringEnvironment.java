@@ -49,17 +49,10 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
                 Path storageFolder = injector.getInstance(
                     Key.get(Path.class, Names.named("storagefolder"))
                 );
-                if (isBoringDirectory(storageFolder))
-                    persistor.initializeBuiltInSchemas();
+                persistor.initializeBuiltInSchemas();
 
                 TestUtils.importTestJSON(
-                    Paths.get("src", "test", "resources").toString(),
-                    persistor,
-                    false
-                );
-                TestUtils.importTestJSON(
-                    storageFolder.toString(), persistor, true);
-                TestUtils.importTestJSON(persistor);
+                    storageFolder, persistor.getConnection(), true);
                 TestUtils.setupTestUsers(realm);
             }
 

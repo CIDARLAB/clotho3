@@ -1,0 +1,262 @@
+{
+	"id" : "org.clothocad.trails.LearningClotho",
+	"schema":"org.clothocad.model.Trail",
+	"name" : "Learning Clotho",
+	"description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
+	"icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
+	"about" : {
+		"help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
+		"contents" : [
+			{
+				"type" : "text",
+				"params" : "<p>Get a brief overview of DNA structure and manipulation. Through a focus on reverse complementation, learn how to use Clotho to perform basic sequence manipulation, and automate your synthetic biology workflow.</p><p>This course is comprehensible by anyone with a basic understanding of Biology, but is most translational for those in a synthetic biology wet-lab, or looking to gain a greater understanding of automated genetic engineering.</p>"
+			}
+		]
+	},
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates"],
+	"contents": [
+		{
+			"chapter": "Introducing Clotho",
+			"description" : "Introduce concepts of DNA and basic sequence manipulation, and learn how to use Clotho to automate those manipulations",
+			"pages": [
+				{
+					"title": "Intro to DNA",
+					"icon": "video",
+					"contents": [
+						{
+							"type": "text",
+							"params": "<div><blockquote><p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p></blockquote><p>Videos like this will help you get up to speed. This one will give you a brief introduction to DNA and Synthetic Biology. Feel free to skip ahead if this isn't new to you.</p></div>"
+						},
+						{
+							"type": "video",
+							"params": {
+								"id": "http://www.youtube.com/watch?v=Gm2gzlW-bi8",
+								"autoplay": true
+							}
+						}
+					]
+				},
+				{
+					"title": "Reverse Complement",
+					"icon": "exercise",
+					"help" : "Boxes like the one below are quizzes. This Trail will ask you to answer questions about DNA manipulation. Watch the videos on each page if you need to brush up on your knowledge (click OK and peek behind this window), but make sure you understand each quiz before moving forward.",
+					"contents": [
+						{
+							"type": "video",
+							"params": {
+								"id": "https://www.youtube.com/watch?v=gKHO0HHPsXg",
+								"params": {
+									"height": 394,
+									"width": 700
+								}
+							}
+						},
+						{
+							"type": "quizQuestion",
+							"params": {
+								"question" : {
+									"title": "Reverse Complement",
+									"type": "fillin",
+									"question": "What is the reverse complement of the sequence <code>{{ questionValue }}</code>?",
+									"hint" : "Watch the video to learn about reverse complementing."
+								},
+								"dictionary" : {
+									"dynamic" : [
+										{
+											"questionValue": {
+												"id" : "org.clothocad.test.randomSequence",
+												"args" : [6]
+											}
+										}
+									]
+								},
+								"grade": {
+									"answer" : {
+										"type" : "function",
+										"value" : "org.clothocad.test.revcomp"
+									},
+									"args" : ["{{questionValue}}"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"title": "Tools in Clotho",
+					"icon": "exercise",
+					"help" : "Copy the sequence in the quiz into the tool to find the answer!",
+					"contents": [
+						{
+							"type": "text",
+							"params": "<p>Clotho can automate several common tasks, such as reverse complementing a sequence. While you can use a UI for many of these functions, they can also be run programmatically (learn how in the next section).</p>"
+						},
+						{
+							"type": "tool",
+							"params": {
+								"name" : "revcomp"
+							}
+						},
+						{
+							"type": "quizQuestion",
+							"params": {
+								"question" : {
+									"type" : "fillin",
+									"hint" : "Copy-paste the sequence into the tool",
+									"question" : "Find the reverse complement of the sequence <code>{{ questionValue }}</code> using the tool."
+								},
+								"options" : {
+									"showAnswer" : true
+								},
+								"dictionary" : {
+									"dynamic" : [
+										{
+											"questionValue": {
+												"id" : "org.clothocad.test.randomSequence",
+												"args" : [15]
+											}
+										}
+									]
+								},
+								"grade": {
+									"answer" : {
+										"type" : "function",
+										"value" : "org.clothocad.test.revcomp"
+									},
+									"args" : ["{{questionValue}}"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"title": "The Command Bar",
+					"icon": "eye",
+					"help" : "<p>The Command Bar provides a simple interface for running functions in clotho.</p><p>Type <code>f</code> to focus the Command Bar input. Autocompletions are presented as you type.</p><p>Type <code>a</code> to show the Activity Log, which shows your recent interaction with Clotho.</p>",
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/commandIntro.html"
+						},
+						{
+							"type" : "video",
+							"params" : {
+								"mini" : true,
+								"id" : "Upbz_cef6-c"
+							}
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/commandIntro2.html"
+						},
+						{
+							"type": "quizQuestion",
+							"params": {
+								"question" : {
+									"type" : "fillin",
+									"hint" : "In the Command Bar, type \"revcomp\" and copy the sequence below",
+									"question" : "Find the reverse complement of the sequence <code>{{mySeq}}</code> using the Command Bar."
+								},
+								"options" : {},
+								"dictionary" : {
+									"dynamic" : [
+										{
+											"mySeq": {
+												"id" : "org.clothocad.test.randomSequence",
+												"args" : [15]
+											}
+										}
+									]
+								},
+								"grade": {
+									"answer" : {
+										"type" : "function",
+										"value" : "org.clothocad.test.revcomp"
+									},
+									"args" : ["{{mySeq}}"]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter": "Manipulating DNA",
+			"description" : "Move beyond simple sequence manipulation to DNA-enzyme and DNA-DNA interactions, and predicting them in Clotho",
+			"pages": [
+				{
+					"title": "Restriction Digests",
+					"icon": "exercise",
+					"contents": [
+						{
+							"type": "video",
+							"params": "https://www.youtube.com/watch?v=JruotWQmZxg"
+						},
+						{
+							"type": "text",
+							"params": "Select an Enzyme from the tool below to see where it will cut the sequence. Cut marks are denoted by arrows, and the recognition site is colored in."
+						},
+						{
+							"type" : "tool",
+							"params" : {
+								"name" : "digestCuts"
+							}
+						}
+					]
+				},
+				{
+					"title": "Ligation",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/Ligation.js"
+					},
+					"contents": [
+						{
+							"type": "video",
+							"params": {
+								"id": "https://www.youtube.com/watch?v=ytHETbIjBV4",
+								"params": {
+									"height": 394,
+									"width": 700
+								}
+							}
+						},
+						{
+							"type": "template",
+							"params": "partials/trails/clotho-intro/Ligation.html"
+						},
+						{
+							"type": "tool",
+							"params": {
+								"name" : "ligation"
+							}
+						}
+					]
+				},
+				{
+					"title": "PCR",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin": "partials/trails/clotho-intro/PCR.js"
+					},
+					"contents": [
+						{
+							"type": "video",
+							"params": "20a-mp4YXRQ"
+						},
+						{
+							"type": "text",
+							"params": "<p>The tool below includes a few sets of primers and backbones. You can see the alignment of the primers, and the DNA fragment that results after PCR. Notice that some will copy the inner fragment (normal PCR), and others the outer fragment (EIPCR), depending on the orientation of the primers.</p><p>Try editing the primers or sequence yourself!</p>"
+						},
+						{
+							"type": "tool",
+							"params": {
+								"name" : "pcr"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

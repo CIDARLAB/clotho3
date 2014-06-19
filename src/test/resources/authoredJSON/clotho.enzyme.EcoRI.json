@@ -1,0 +1,12 @@
+{
+  "name" : "EcoRI",
+  "match" : "gaattc",
+  "cut" : "g^aatt_c",
+  "methylation" : { },
+  "overhang" : 4,
+  "type" : "II",
+  "subtype" : "P",
+  "rebase" : "http://rebase.neb.com/rebase/enz/EcoRI.html",
+  "id" : "clotho.enzyme.EcoRI",
+  "schema" : "org.clothocad.model.RestrictionEnzyme"
+}

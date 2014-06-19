@@ -69,11 +69,6 @@ public class ScriptAPI {
         api.destroy(id);
     }
 
-    public Object
-    run2(final String name, final List<Object> args) {
-        return api.run2(name, args);
-    }
-    
     public Object run(Object selector, Object arg) throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         return run(selector, Arrays.asList(arg));
     }
@@ -100,9 +95,9 @@ public class ScriptAPI {
         isFunction = api.get(selector).get("schema").toString().endsWith("Function");
         Module module;
         if (isFunction){
-            module = persistor.get(Function.class, persistor.resolveSelector(selector.toString(), Function.class, true));
+            module = persistor.get(Function.class, new ObjectId(selector));
         } else {
-            module = persistor.get(Module.class, persistor.resolveSelector(selector.toString(), Module.class, true));
+            module = persistor.get(Module.class, new ObjectId(selector));
         }
         
         //some kind of circular dependency detection would be good

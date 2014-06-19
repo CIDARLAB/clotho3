@@ -1,0 +1,64 @@
+{
+  "name" : "Literature Search and Pathway Discovery",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.LiteratureSearchandPathwayDiscovery",
+  "about" : {
+    "help" : "Literature Search and Pathway Discovery was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 8/30/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "How to find information in the biological literature and design pathways"
+    } ]
+  },
+  "created" : 1377896335000,
+  "youtubePlaylistId" : "PL2aPXzks-TgMJr2fAKj5ixn9RXypJ_zaZ",
+  "icon" : "https://i1.ytimg.com/vi/coPz2cSVa0k/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Literature Search and Pathway Discovery.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Guide to Biological Literature",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The journals related to biology and what they are good for."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "coPz2cSVa0k"
+        }
+      } ]
+    }, {
+      "title" : "How to find Biochemical Information",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Biochemical information exists at multiple levels of granularity.  In coarse form, data about proteins and RNAs exists in various public databases on the internet.  However, most of the info you want will require that you read papers."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "QqJAqutYDZE"
+        }
+      } ]
+    }, {
+      "title" : "Pathway Identification",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Let's say you want to make a chemical in E. coli or yeast.  The first question to ask is whether you know of any enzymatic pathway from a native metabolite to the product of interest. This is the pathway identification problem."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "mxcpmbKSFEg"
+        }
+      } ]
+    } ]
+  } ]
+}

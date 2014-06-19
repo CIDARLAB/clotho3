@@ -15,7 +15,7 @@ angular.module('clotho.angularAdditions', [])
 		 */
 		ext.isEmpty = function isEmpty(value) {
 			if (angular.isNumber(value)) {
-				return value === value;
+				return value !== value;
 			}
 			else if (value === true || value === false) {
 				return false;

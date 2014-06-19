@@ -1,7 +1,7 @@
 [
 {
     "name":"uppercase",
-    "id":"5232a9e95ce620f042e5825f",
+    "id":"org.clothocad.test.uppercase",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
     "code":"function (str) {return str.toUpperCase();};",
@@ -9,6 +9,7 @@
 },
 {
     "name":"lowercase",
+    "id":"org.clothocad.test.lowercase",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
     "code":"function (str) {return str.toLowerCase();}",
@@ -16,14 +17,28 @@
 },
 {
     "name":"spaceout",
+    "id":"org.clothocad.test.spaceout",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
     "code":"function (str) {return str.split('').join(' ');};",
     "args":[{"name":"str", "type":"string"}]
 },
+{  
+  "name": "complement",
+  "schema": "org.clothocad.core.datums.Function",
+  "id": "org.clothocad.test.complement",
+  "language": "JAVASCRIPT",
+  "code": "function (seq) {\n  var map = { a : 't', c : 'g', g : 'c', t: 'a' }\n  return seq.replace(/[acgt]/ig, function (n) { return map[n.toLowerCase()] })\n}",
+  "args": [
+    {
+      "type": "string",
+      "name": "seq"
+    }
+  ]
+},
 {
     "name":"reverse",
-    "id":"5232624a7054e77e5d370961",
+    "id":"org.clothocad.test.reverse",
     "language" : "JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
     "args":[{"type":"string","name":"str"}],
@@ -37,41 +52,50 @@
 },
 {
     "name":"testModule",
-    "id":"522af4b4b22548ae323e4475",
+    "id":"org.clothocad.test.testModule",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Module",
     "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
 },
 {
     "name":"moduleTestFunction",
+    "id":"org.clothocad.test.moduleTestFunction",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
     "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
     "args":[],
-    "dependencies":["522af4b4b22548ae323e4475"]
+    "dependencies":["org.clothocad.test.testModule"]
 },
 {
     "name":"testModule2",
-    "id":"522f4b5c9f915de6a1023297",
+    "id":"org.clothocad.test.testModule2",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Module",
-    "dependencies":["522af4b4b22548ae323e4475"],
+    "dependencies":["org.clothocad.test.testModule"],
     "code":"(function f() {var my = {}; my.moduleMethod = testModule.moduleMethod; return my;}());"
 },
 {
     "name":"moduleTestFunction2",
+    "id":"org.clothocad.test.moduleTestFunction2",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
-    "dependencies":["522f58729f915de6a1023298"],
+    "dependencies":["org.clothocad.test.moduleTestFunction"],
     "code":"function(i) {return moduleTestFunction(i);};",
     "args":[{"type":"number", "name":"i"}]
 },
 {
     "name":"useLodash",
+    "id":"org.clothocad.test.useLodash",
     "language":"JAVASCRIPT",
     "schema":"org.clothocad.core.datums.Function",
     "code":"function() {return _.map([1,2,3],function(i){return i+1;});};"
 },
-{"schema":"org.clothocad.core.datums.Function","id":"5239d733c2e6c7521ab9b254","name":"randomSequence","language":"JAVASCRIPT","args":[{"type":"number","name":"length"}],"code":"function randomSequence (length) { \nvar units = 'acgt'.split('');\nvar seq = \"\";\nfor (var i = 0; i < +length; i++) {\nseq += units[_.random(3)];\n}\nreturn seq;\n};","tests":[{"args":["5"],"output":{"value":"","type":"VALUE"}}]}
+{"schema":"org.clothocad.core.datums.Function",
+"id":"org.clothocad.test.randomSequence",
+"name":"randomSequence",
+"language":"JAVASCRIPT",
+"args":[{"type":"number","name":"length"}],
+"code":"function randomSequence (length) { \nvar units = 'acgt'.split('');\nvar seq = \"\";\nfor (var i = 0; i < +length; i++) {\nseq += units[_.random(3)];\n}\nreturn seq;\n};",
+"tests":[{"args":["5"],"output":{"value":"","type":"VALUE"}}]}
 ]
 

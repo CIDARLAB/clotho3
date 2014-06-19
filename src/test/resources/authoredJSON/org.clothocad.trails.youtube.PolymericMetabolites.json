@@ -1,0 +1,126 @@
+{
+  "name" : "Polymeric Metabolites",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.PolymericMetabolites",
+  "about" : {
+    "help" : "Polymeric Metabolites was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/9/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Polymeric Metabolites are usually biosynthesized by large modular proteinaceous megasynthase enzymes. Here we'll discuss the various types that have been observed and their mechanisms."
+    } ]
+  },
+  "created" : 1378788286000,
+  "youtubePlaylistId" : "PL2aPXzks-TgP45-xudcn4XXiVZfUOYMht",
+  "icon" : "https://i1.ytimg.com/vi/sFHKi9szURY/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Polymeric Metabolites.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Polymeric Metabolites",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "sFHKi9szURY"
+        }
+      } ]
+    }, {
+      "title" : "Fatty Acid Synthase",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Fatty acid synthases produce long lipid chains in the cell such as the acyl chain components of membrane lipids."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "DYc4lgQUvJU"
+        }
+      } ]
+    }, {
+      "title" : "Type II Polyketides",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "There are 3 classes of Polyketides.  The simplest to describe are the Type II."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "4G1amorTq4o"
+        }
+      } ]
+    }, {
+      "title" : "Type I Polyketides",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "When people speak of polyketides, they most often are talking about Type I polyketides."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "NJuonb1g9i4"
+        }
+      } ]
+    }, {
+      "title" : "Non Ribosomal Peptides",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Non-ribosomal peptides chemically look like proteins, but are biosynthesized in a way that resembles polyketides."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "7pbsFJ8sbF8"
+        }
+      } ]
+    }, {
+      "title" : "Polymeric Carbohydrates",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Ribosomes, Fatty Acids, Polyketides, Non-ribosomal Peptides, and polymeric carbohydrates all share a common property that they involve enzymes that perform multiple chemical reactions during each round of substrate binding.  This poses challenges and opportunities for genetically encoding these biomolecules."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "KYkVgfg2Prc"
+        }
+      } ]
+    }, {
+      "title" : "The following video is optional",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "For more detail on polyketide synthase systems, Chaitan Khosla is the master!"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "IAZ3xVJ5IOo"
+        }
+      } ]
+    }, {
+      "title" : "Chaitan Khosla (Stanford) Part 1: Polyketide Biosynthesis",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "http://www.ibiology.org/ibioseminars/chaitan-khosla-part-1.html\n\nIn the first part, an overview of polyketides and polyketide biosynthesis is presented. A rationale for investigating polyketide biosynthesis is also presented. In the second part, the contributions of genetics and molecular biology on investigations into erythromycin biosynthesis are summarized. The impact of these fields on biosynthetic engineering is also explained. In the final part, the enzymology of the erythromycin polyketide synthase is discussed."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "NEXFK04IVVs"
+        }
+      } ]
+    } ]
+  } ]
+}

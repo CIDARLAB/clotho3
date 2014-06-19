@@ -6,7 +6,7 @@
           {{sharable.name }}
           <small class="label pull-right"
                  ng-class="labelClass">
-            {{type}}
+            <span ng-class="iconClass"></span> {{type}}
           </small>
         </h3>
         <div class="popover-content">
@@ -32,15 +32,15 @@
         </div>
         <div class="popover-footer clearfix">
             <span class="label label-default pull-right"
-                  ng-click="showingSchema = !showingSchema"
+                  ng-click="toggleSchema($event)"
                   ng-show="isSchema"
                   style="cursor: pointer;">
                 <span class="glyphicon glyphicon-eye-open"></span>
                 View {{ showingSchema ? 'Instance' : 'Schema Fields'}}
             </span>
             <a class="label label-default pull-right"
-               ng-href="#/editor/{{sharable.id}}"
-               ng-hide="isSchema">
+               ng-click="edit(sharable.id)"
+               ng-hide="isSchema || !editorPresent">
             Edit
             </a>
         </div>

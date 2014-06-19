@@ -4,17 +4,19 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Clotho</title>
-    <meta name="description" content="">
+    <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
 
-    <!-- process:remove:api,dist -->
+    <!-- not necessary until serving outside root directory / want html5 mode -->
+    <base href="/">
+
+    <!-- process:remove:api,dist,trails -->
     <!-- build:css({.tmp,app}) styles/command.css -->
     <link rel="stylesheet" href="css/command.css">
     <!-- endbuild -->
     <!-- /process -->
     <!-- process:remove:api,command -->
     <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="bower_components/angular-hotkeys/build/hotkeys.min.css">
     <link rel="stylesheet" href="css/main.css">
     <!-- endbuild -->
     <!-- /process -->
@@ -28,7 +30,7 @@
     <!-- note that lodash is required by several components -->
     <script src="bower_components/lodash/dist/lodash.js"></script>
 
-    <!-- process:remove:api,dist,command -->
+    <!-- process:remove -->
     <!-- note - dev only -->
     <script src="http://localhost:35729/livereload.js"></script>
     <!-- /process -->
@@ -62,11 +64,13 @@
 SCRIPTS
 --------->
 
-<!-- process:remove:command,api -->
+<!-- process:remove:command,api,trails -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
 <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+<!-- /process -->
 
+<!-- process:remove:command,api -->
 <!-- build:js scripts/clotho-angular-modules.js -->
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -74,26 +78,29 @@ SCRIPTS
 <!-- endbuild -->
 <!-- /process -->
 
-
 <!--note - correct app based on the distribution, comments removed by build-->
 
-<!-- process:remove:command,api -->
+<!-- process:remove:command,api,trails -->
 <!-- build:js scripts/clotho-app.js -->
 <script src="scripts/app.js"></script>
 <!--endbuild-->
 <!-- /process -->
 
-<!-- process:remove:dist,api -->
+<!-- process:remove:dist,api,trails -->
 <!-- build:js scripts/clotho-app-command.js -->
 <!--<script src="scripts/app-command.js"></script>-->
 <!--endbuild-->
 <!-- /process -->
 
-<!-- process:remove:dist,command -->
+<!-- process:remove:dist,command,trails -->
 <!-- build:js scripts/clotho-app-api.js -->
-<!--
-<script src="scripts/app-api.js"></script>
--->
+<!--<script src="scripts/app-api.js"></script>-->
+<!--endbuild-->
+<!-- /process -->
+
+<!-- process:remove:dist,command,api -->
+<!-- build:js scripts/clotho-app-trails.js -->
+<!--<script src="scripts/app-trails.js"></script>-->
 <!--endbuild-->
 <!-- /process -->
 
@@ -118,26 +125,6 @@ dependencies: none
 
 <!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
-<!-- build:js scripts/clotho-command-module.js -->
-<!--
-name: clotho.commandbar
-function: CommandBar and related directives, services, etc.
-dependencies: clotho.core, jQuery, Lodash
--->
-<script src="scripts/_command/_kickoff.js"></script>
-<script src="bower_components/angular-ui-utils/keypress.min.js"></script> <!-- ui.keypress module -->
-<script src="scripts/_command/commandBar.js"></script>
-<script src="scripts/_command/clothoCommandBar.js"></script>
-<script src="scripts/_command/terminal.js"></script>
-<script src="scripts/_command/autocomplete.js"></script>
-<script src="scripts/_command/logEntries.js"></script>
-<script src="scripts/_command/tokenizer.js"></script>
-<script src="scripts/_command/loginCtrl.js"></script>
-<!--endbuild-->
-<!-- /process -->
-
-<!-- process:remove:api,command -->
-<!--note - remove all scripts below this for command-only build-->
 
 <!-- build:js scripts/clotho-foundation-module.js -->
 <!--
@@ -150,13 +137,42 @@ dependencies: clotho.core
 <script src="scripts/_foundation/clotho-utils.js"></script>
 <script src="scripts/_foundation/clothoSchemas.js"></script>
 <script src="scripts/_foundation/clothoRun.js"></script>
+<script src="scripts/_foundation/clothoTool.js"></script>
 <script src="scripts/_foundation/clothoShow.js"></script>
 <script src="scripts/_foundation/clothoModal.js"></script>
+<script src="scripts/_foundation/popupProvider.js"></script>
 <script src="scripts/_foundation/sharablePopup.js"></script>
 <script src="scripts/_foundation/extensions.js"></script>
 <!--endbuild-->
 
 
+<!-- build:js scripts/clotho-command-module.js -->
+<!--
+name: clotho.commandbar
+function: CommandBar and related directives, services, etc.
+dependencies: clotho.core, jQuery, Lodash
+-->
+<script src="scripts/_command/_kickoff.js"></script>
+<script src="bower_components/angular-ui-utils/keypress.min.js"></script> <!-- ui.keypress module -->
+<script src="scripts/_command/autoGrow.js"></script>
+<script src="scripts/_command/commandBar.js"></script>
+<script src="scripts/_command/clothoCommandBar.js"></script>
+<script src="scripts/_command/terminal.js"></script>
+<script src="scripts/_command/logEntries.js"></script>
+<script src="scripts/_command/loginCtrl.js"></script>
+<!-- tokenizer -->
+<script src="scripts/_command/clothoAutocomplete.js"></script>
+<script src="scripts/_command/clothoAutocompleteListing.js"></script>
+<script src="scripts/_command/clothoAutocompleteMatch.js"></script>
+<script src="scripts/_command/clothoToken.js"></script>
+<script src="scripts/_command/clothoTokenCollectionFactory.js"></script>
+<script src="scripts/_command/clothoTokenFactory.js"></script>
+<script src="scripts/_command/clothoTokenizer.js"></script>
+<!--endbuild-->
+<!-- /process -->
+
+<!-- process:remove:api,command -->
+<!--note - remove all scripts below this for command-only build-->
 
 <!-- build:js scripts/angularui-modules.js -->
 <!--
@@ -165,8 +181,10 @@ function: Angular-UI project components
 dependencies: none
 -->
 <!--todo - use development version and build selected components with grunt-->
+<!-- note - need to copy over /template/ from UI as well as scripts we want -->
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <!-- endbuild -->
+
 
 <!-- build:js scripts/clotho-interface-module.js -->
 <!--
@@ -174,38 +192,49 @@ name: clotho.interface
 function: Clotho-Angular Interface components
 dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angularFileUpload for file uploads
 -->
-<!--future - refactor ui-bootstrap dependencies here-->
 <script src="scripts/_interface/_kickoff.js"></script>
-<!-- modes are loaded separately by service codemirrorLoader -->
+<script src="scripts/_interface/configuration.js"></script>
+<!-- note - modes are loaded separately by service codemirrorLoader -->
 <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script> <!-- ui.codemirror module -->
 <script src="bower_components/ng-file-upload/angular-file-upload.js"></script> <!-- angularFileUpload module -->
-<script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
-<script src="scripts/_interface/html5/fileUpload.js"></script>
+<script src="bower_components/angular-hotkeys/build/hotkeys.js"></script> <!-- hotkeys set up in /interaction/ -->
+<script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+<script src="scripts/_interface/angular-ui/form-field.js"></script>
 <script src="scripts/_interface/angular-ui/modal-ext.js"></script>
+<script src="scripts/_interface/angular-ui/popoverHtmlUnsafe.js"></script>
 <script src="scripts/_interface/clotho/sharable.js"></script>
+<script src="scripts/_interface/dna/restrictionEnzymePopup.js"></script>
+<script src="scripts/_interface/dna/sequencePopup.js"></script>
+<script src="scripts/_interface/download/textfileDownload.js"></script>
 <script src="scripts/_interface/elements/aside.js"></script>
 <script src="scripts/_interface/elements/closeable.js"></script>
 <script src="scripts/_interface/elements/hintButton.js"></script>
 <script src="scripts/_interface/events/uiEvent.js"></script>
 <script src="scripts/_interface/events/restrictInput.js"></script>
 <script src="scripts/_interface/events/clickOutside.js"></script>
+<script src="scripts/_interface/events/simpleSticky.js"></script>
 <script src="scripts/_interface/filters/breakLines.js"></script>
 <script src="scripts/_interface/filters/categorize.js"></script>
 <script src="scripts/_interface/filters/highlight.js"></script>
+<script src="scripts/_interface/filters/joinArray.js"></script>
 <script src="scripts/_interface/filters/plaintext.js"></script>
 <script src="scripts/_interface/filters/shuffle.js"></script>
 <script src="scripts/_interface/filters/stringEnds.js"></script>
 <script src="scripts/_interface/filters/unique.js"></script>
 <script src="scripts/_interface/html5/contentEditable.js"></script>
+<script src="scripts/_interface/html5/code-file-drop.js"></script>
+<script src="scripts/_interface/html5/fileUpload.js"></script>
 <script src="scripts/_interface/images/backgroundImage.js"></script>
 <!--todo - remove commandBar dependence, move into separate module e.g. webapp-->
 <script src="scripts/_interface/interaction/focus.js"></script>
+<script src="scripts/_interface/interaction/hotkeysGlobal.js"></script>
 <script src="scripts/_interface/jquery-ui/jqSortable.js"></script>
 <script src="scripts/_interface/parsers/uiMarkdown.js"></script>
 <script src="scripts/_interface/parsers/wiki.js"></script>
+<script src="scripts/_interface/social/sharingCtrl.js"></script>
+<script src="scripts/_interface/social/urlShortener.js"></script>
 <script src="scripts/_interface/style/darkBackground.js"></script>
 <!--endbuild-->
-
 
 
 <!-- build:js scripts/clotho-trails-module.js -->
@@ -215,46 +244,37 @@ function: Trails components
 dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/_trails/_kickoff.js"></script>
-<script src="scripts/_trails/trails.js"></script>
-<script src="scripts/_trails/trailQuiz.js"></script>
+
 <script src="scripts/_trails/youtube.js"></script>
 <script src="scripts/_trails/youtubeService.js"></script>
+
+<script src="scripts/_trails/quizQuestionService.js"></script>
+<script src="scripts/_trails/quizQuestion.js"></script>
+
+<script src="scripts/_trails/trails.js"></script>
+<script src="scripts/_trails/trailQuiz.js"></script>
 <script src="scripts/_trails/trailPage.js"></script>
 <script src="scripts/_trails/trailPageComponent.js"></script>
 <script src="scripts/_trails/ui/trailContents.js"></script>
 <script src="scripts/_trails/ui/trailInstructor.js"></script>
 <script src="scripts/_trails/ui/trailMaterial.js"></script>
+<script src="scripts/_trails/ui/trailHeader.js"></script>
+<script src="scripts/_trails/ui/trailOverview.js"></script>
 <!--endbuild-->
 
-
-<!-- build:js scripts/clotho-editor-module.js -->
+<!-- build:js scripts/clotho-construction-module.js -->
 <!--
-name: clotho.editor
-function: Editor components
-dependencies: clotho.foundation, clotho.interface
+name: clotho.construction
+function: Construction File viewing, simulating, etc.
+dependencies: clotho.foundation
 -->
-<script src="scripts/_editor/_kickoff.js"></script>
-<script src="scripts/_editor/clothoEditor.js"></script>
-<script src="scripts/_editor/codemirrorLoader.js"></script>
-<script src="scripts/_editor/form-field.js"></script>
-<script src="scripts/_interface/html5/code-file-drop.js"></script>
-<script src="scripts/_editor/formFieldEnumeration.js"></script>
-<script src="scripts/_editor/formFieldInput.js"></script>
-<script src="scripts/_editor/jsonEdit.js"></script>
-<script src="scripts/_editor/controllers/sharable.js"></script>
-<script src="scripts/_editor/controllers/function.js"></script>
-<script src="scripts/_editor/controllers/trail.js"></script>
-<script src="scripts/_editor/controllers/schema.js"></script>
-<!--endbuild-->
-
-
-<!--note - TEMPORARY - THESE SHOULD ALL EXIST ON THE SERVER ONLY -->
-<!-- build:js scripts/clotho-dna-module.js -->
-<script src="scripts/_dna/_kickoff.js"></script>
-<script src="scripts/_dna/dna-module.js"></script>
-<script src="scripts/_dna/digest-module.js"></script>
-<script src="scripts/_dna/pcr-module.js"></script>
-<script src="scripts/_dna/construction-module.js"></script>
+<script src="scripts/_construction/_kickoff.js"></script>
+<script src="scripts/_construction/constructionReactions.js"></script>
+<script src="scripts/_construction/simulator.js"></script>
+<script src="scripts/_construction/construtionFile.js"></script>
+<script src="scripts/_construction/constructionStep.js"></script>
+<script src="scripts/_construction/constructionParserWetlab.js"></script>
+<script src="scripts/_construction/constructionParserJson.js"></script>
 <!--endbuild-->
 
 
@@ -266,19 +286,60 @@ dependencies: clotho.foundation, clotho.interface
 -->
 <script src="scripts/controllers/_kickoff-webapp.js"></script>
 <script src="scripts/controllers/home.js"></script>
-<script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/team.js"></script>
 <script src="scripts/controllers/browser.js"></script>
 <script src="scripts/controllers/editor.js"></script>
-<script src="scripts/controllers/trails.js"></script>
 <script src="scripts/controllers/trail.js"></script>
 <script src="scripts/controllers/trails.js"></script>
+<script src="scripts/controllers/trail-splash.js"></script>
 <script src="scripts/controllers/widgets.js"></script>
-<script src="scripts/controllers/test/tokenizer.js"></script>
+<!-- endbuild -->
+
+
+<!--note - module should be moved to server. directives need to be retained. -->
+<!-- build:js scripts/clotho-dna-module.js -->
+<script src="scripts/_dna/_kickoff.js"></script>
+<script src="scripts/_dna/dna-module.js"></script>
+<script src="scripts/_dna/digest-module.js"></script>
+<script src="scripts/_dna/pcr-module.js"></script>
+<script src="scripts/_dna/construction-module.js"></script>
+<!--endbuild-->
+
+<!-- /process -->
+
+
+<!-- process:remove:api,command,trails -->
+<!--note - remove all scripts below this for trails-only build-->
+
+<!-- build:js scripts/clotho-editor-module.js -->
+<!--
+name: clotho.editor
+function: Editor components
+dependencies: clotho.foundation, clotho.interface
+-->
+<script src="scripts/_editor/_kickoff.js"></script>
+<script src="scripts/_editor/clothoEditor.js"></script>
+<script src="scripts/_editor/codemirrorLoader.js"></script>
+<script src="scripts/_editor/formFieldEnumeration.js"></script>
+<script src="scripts/_editor/formFieldInput.js"></script>
+<script src="scripts/_editor/jsonEdit.js"></script>
+<script src="scripts/_editor/controllers/sharable.js"></script>
+<script src="scripts/_editor/controllers/function.js"></script>
+<script src="scripts/_editor/controllers/trail.js"></script>
+<script src="scripts/_editor/controllers/schema.js"></script>
+<!--endbuild-->
+
+<!-- build:js scripts/clotho-webapp-experiments-module.js -->
+<!--
+name: clotho.webapp
+function: experiments [pre-integration]
+-->
 <script src="scripts/controllers/test/schemaview.js"></script>
-<script src="scripts/controllers/test/trail.js"></script>
-<script src="scripts/controllers/test/trail-browser.js"></script>
-<script src="scripts/controllers/test/trail-overview.js"></script>
+<script src="scripts/controllers/test/playlistimport.js"></script>
+<script src="scripts/controllers/test/quiz.js"></script>
+<script src="scripts/controllers/test/construction.js"></script>
+<script src="scripts/controllers/test/contstructionTrail.js"></script>
+<script src="scripts/controllers/test/focus.js"></script>
 <!-- endbuild -->
 
 <!-- /process -->

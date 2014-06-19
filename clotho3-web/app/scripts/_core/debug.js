@@ -1,21 +1,6 @@
 
 angular.module('clotho.core')
 /**
- * decorate the angular $log to include the table message for chrome
- */
-	.config(function ($provide) {
-		$provide.decorator('$log', ['$delegate', function($delegate){
-			$delegate.table = function() {
-				var args = [].slice.call(arguments);
-				if(window.console && window.console.table)
-					console.table(args[0], args[1]);
-				else
-					$delegate.log(null, args)
-			};
-			return $delegate;
-		}]);
-	})
-/**
  * @name Debug
  *
  * @description
@@ -35,7 +20,10 @@ angular.module('clotho.core')
  *
  * // Will output message under namespace given, with color given
  */
-	.factory('Debug', function($log, $window) {
+	.factory('Debug', function($log, $window, $filter) {
+
+		//set to true for chrome to call console.trace()
+		var tracingEnabled = false;
 
 		//set to false to disable all debugging
 		var disableAll = false;
@@ -62,10 +50,24 @@ angular.module('clotho.core')
 			var debugFunctionality = {};
 
 			angular.forEach(['log', 'warn', 'error', 'debug', 'info'], function (term) {
-				debugFunctionality[term] = function (msg) {
+				//first argument should be message, multiple arguments supported and passed through to console
+				debugFunctionality[term] = function () {
+					
+					//add stack trace, slice out this function
+					//this will work in chrome, firefox, and node
+					var stack = (new Error()).stack;
+					if (angular.isDefined(stack)) {
+						stack = stack.split('\n');
+						// Chrome includes a single "Error" line, FF doesn't.
+						if (stack[0].indexOf('Error') === 0) {
+							stack = stack.slice(1);
+						}
+						//slice out this wrapper's context
+						stack = stack.slice(1);
+					}
 
 					var x = new Date();
-					var readableDate = x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds() + '.' + x.getMilliseconds();
+					var readableDate = $filter('date')(x, 'hh:mm:ss.sss');
 
 					//collect all messages
 					messages[namespace].push({
@@ -73,17 +75,29 @@ angular.module('clotho.core')
 						time : x.valueOf()
 					});
 
-					//add functionality
+					//check if emabled, add stack if option passed
 					if (namepaceEnabled(namespace)) {
-						$log[term].apply(null, ['%c' + readableDate + ' - ' + namespace + '\t', 'color: '+ color +';'].concat(Array.prototype.slice.call(arguments, 0)));
+						$log[term].apply(null,
+							//add debugger name
+							['%c' + readableDate + ' - %O - ' + namespace + '\t',
+									'color: '+ color +';',
+									stack
+							]
+							.concat(Array.prototype.slice.call(arguments, 0))
+						);
+						if (tracingEnabled) {
+							console.trace();
+						}
 					}
 				}
 			});
 
+			//need to handle 'table' function separately
 			angular.forEach(['table'], function (term) {
 				debugFunctionality[term] = $window.console[term];
 			});
 
+			//easily pretty-print objects
 			debugFunctionality.object = function (obj) {
 				messages[namespace].push({
 					message : obj,
@@ -94,6 +108,25 @@ angular.module('clotho.core')
 					$log.log('%c' + JSON.stringify(obj, null, 2), 'color: '+ color +';')
 				} else {
 					$log.log('%c' + obj, 'color: '+ color +';');
+				}
+			};
+
+			//simple wrapping for grouping input
+			debugFunctionality.group = function (term) {
+				if (angular.isDefined($window.console.group)) {
+					$window.console.group('%c' + namespace + '\t' + term || "Collapsing Output", 'color: '+ color +';');
+				}
+			};
+
+			debugFunctionality.groupCollapsed = function (term) {
+				if (angular.isDefined($window.console.groupCollapsed)) {
+					$window.console.groupCollapsed('%c' + namespace + '\t' + term || "Collapsing Output", 'color: ' + color + ';');
+				}
+			};
+
+			debugFunctionality.groupEnd = function () {
+				if (angular.isDefined($window.console.groupEnd)) {
+					$window.console.groupEnd();
 				}
 			};
 

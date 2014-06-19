@@ -1,7 +1,7 @@
 angular.module('clotho.interface').filter('stringEnds', function() {
 	return function (input, length) {
 
-		length = length || 15;
+		length = length || 20;
 		var process = function(input) {
 			return input.substr(0, length) + '...' + input.substring(input.length - length);
 		};
@@ -16,6 +16,10 @@ angular.module('clotho.interface').filter('stringEnds', function() {
 				return '<Object>' + (key ? 'Object.key:\n' + key : '');
 			}
 			else return input
+		} else {
+			if (input.length <= length * 2) {
+				return input;
+			}
 		}
 
 		return process(input)

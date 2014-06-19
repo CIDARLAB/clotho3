@@ -29,6 +29,7 @@
      * Cheat sheet template in the event you want to totally customize it.
      * @type {String}
      */
+
     this.template = '<div class="cfp-hotkeys-container fade" ng-class="{in: helpVisible}"><div class="cfp-hotkeys">' +
                       '<h4 class="cfp-hotkeys-title">{{ title }}</h4>' +
                       '<table><tbody>' +
@@ -41,7 +42,6 @@
                       '</tbody></table>' +
                       '<div class="cfp-hotkeys-close" ng-click="closeCheatSheet()">×</div>' +
                     '</div></div>';
-
 
     this.$get = ['$rootElement', '$rootScope', '$compile', '$window', function ($rootElement, $rootScope, $compile, $window) {
 
@@ -165,7 +165,6 @@
       if (this.includeCheatSheet) {
 
 	      scope.closeCheatSheet = function () {
-		      console.log('closing cheetsheet');
 		      scope.helpVisible = false;
 		      _del('esc');
 	      };

@@ -23,7 +23,7 @@ public class BasicPartConverter extends Converter<BasicPart> {
             names.add("eugene.dom.components.Part");
         }
     public BasicPartConverter(Persistor p) {
-        super(p.get(Schema.class, p.resolveSelector("BasicPart", false)), new HashSet<Schema>(), names);
+        super(p.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart")), new HashSet<Schema>(), names);
     }
 
     @Override

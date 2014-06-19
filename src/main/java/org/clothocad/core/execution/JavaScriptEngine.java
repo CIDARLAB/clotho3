@@ -227,7 +227,7 @@ class JavaScriptEngine extends AbstractScriptEngine implements HackEngine, Invoc
                 Context cx = Context.enter();
                 cx.setWrapFactory(wrapFactory);
                 context.setAttribute(API_NAME, wrapFactory.wrap(cx, getRuntimeScope(context), api, null), ScriptContext.ENGINE_SCOPE);
-
+                cx.evaluateString(getRuntimeScope(context), "var require = function(string){return clotho.load(string)};", "alias clotho.load to require", 1, null);
             } finally {
                 Context.exit();
             }

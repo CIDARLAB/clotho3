@@ -3,7 +3,12 @@
   $dim-icon: 75px;
 
   display: block;
+  margin-bottom: 10px;
   @extend .clearfix;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   .trail-instructor-icon {
     display: block;
@@ -12,7 +17,8 @@
     height: $dim-icon;
     border-radius: $dim-icon * 2;
     border: 3px solid #ffffff;
-    box-shadow: 0 0 2px 0 $borderColor-trail;
+    box-shadow: 0 0 4px 0 #ccc;
+    margin-right: 15px;
   }
 
   .trail-instructor-info {

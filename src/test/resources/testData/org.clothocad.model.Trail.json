@@ -1,0 +1,19 @@
+{
+    "id" : "org.clothocad.model.Trail",
+    "schema":"org.clothocad.core.schema.ClothoSchema",
+    "language": "JSONSCHEMA",
+    "name": "Trail",
+    "description": "Container for Trail. Trails consist primarily of Chapters, which contain either a transclude or list of Pages.",
+    "fields": [
+        {
+            "name": "contents",
+            "type": "array",
+            "description": "Array of Chapters. The contents of the trail. Refer to Chapter and Page schemas.",
+            "example": "",
+            "constraints": null,
+            "access": "PUBLIC",
+            "javaType": "java.util.List",
+            "reference": false
+        }
+    ]
+}

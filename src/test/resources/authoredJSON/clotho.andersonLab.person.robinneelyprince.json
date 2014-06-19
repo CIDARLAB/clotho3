@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Robin",
+  "nickName" : "Robin",
+  "surName" : "Prince",
+  "name" : "robinneelyprince",
+  "emailAddress" : "robinneelyprince@gmail.com",
+  "icon" : "robin_prince.png",
+  "imgUrl" : "",
+  "startDate" : "2011-09-01",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2011-09-01",
+  "isManagement" : false,
+  "role" : "Postdoc",
+  "biography" : "",
+  "title" : "Stress and Load, Glucaric Acid Biosynthesis",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.robinneelyprince"
+}

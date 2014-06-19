@@ -1,0 +1,55 @@
+{
+  "name" : "Ligation and Transformation",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.LigationandTransformation",
+  "about" : {
+    "help" : "Ligation and Transformation was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Ligation is the process of joining linear DNAs with similar ends together forming covalent bonds between them.  This 'closes the circle' on a plasmid DNA making them amenable to replication in vivo.  We then introduce them into cells by transformation.  By incubating specially-treated E. coli bacteria with the DNA and applying a heat pulse, the DNA enters the cell and begin replicating."
+    } ]
+  },
+  "created" : 1400194830000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPMLXx10saMCO7oKp7IMKDn",
+  "icon" : "https://i1.ytimg.com/vi/ouB2m9qllt4/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "cloning cycle   how to set up a ligation",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "ouB2m9qllt4"
+        }
+      } ]
+    }, {
+      "title" : "heatshock transformation of plasmid dna into chemicaly competent e coli",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "I created this video at http://www.youtube.com/editor"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "UJrIM-XUGBA"
+        }
+      } ]
+    }, {
+      "title" : "plating heatshock transformations",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "I created this video at http://www.youtube.com/editor"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "wFzAqn-grtE"
+        }
+      } ]
+    } ]
+  } ]
+}

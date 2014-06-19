@@ -2,60 +2,95 @@ import importlib
 import json
 import sys
 
-class IncompleteReadError(Exception):
+class ClothoError(Exception):
     pass
 
+class ClothoMethod(object):
+    def __init__(self, name, context):
+        self._name = name
+        self._context = context
+
+    def __call__(self, *args):
+        self._context.send_value(
+            {"type": "api", "name": self._name, "args": args})
+        reply_value = read_value()
+        reply_type = reply_value["type"]
+        if reply_type == "api":
+            return reply_value["return"]
+        elif reply_type == "api_error":
+            raise ClothoError(reply_value["message"])
+        raise RuntimeError("bad API reply")
+
 class Clotho(object):
-    @staticmethod
-    def get(id):
-        send_val({"type": "api", "name": "get", "args": [id]})
-        api_return = read_val()
-        assert api_return["type"] == "api"
-        return api_return["return"]
+    def __init__(self, context):
+        self._context = context
 
-    @staticmethod
-    def set(val):
-        send_val({"type": "api", "name": "set", "args": [val]})
-        api_return = read_val()
-        assert api_return["type"] == "api"
-        return api_return["return"]
+    def __getattr__(self, name):
+        return ClothoMethod(name, self._context)
 
-    @staticmethod
-    def run(name, args):
-        send_val({"type": "api", "name": "run", "args": [name, args]})
-        api_return = read_val()
-        assert api_return["type"] == "api"
-        return api_return["return"]
+class Context(object):
+    '''Execution context object
 
-def read_val():
+    Setup by initialization object
+    '''
+    def __init__(self, init_obj, swapper):
+        if init_obj["type"] != "func":
+            raise ValueError
+        self.code = init_obj["code"]
+        self.args = init_obj["args"]
+        self._swapper = swapper
+
+    def send_value(self, value):
+        '''Send one message to host'''
+        with self._swapper:
+            sys.stdout.write(json.dumps(value).encode("UTF-8"))
+            sys.stdout.write(b'\0')
+            sys.stdout.flush()
+
+class StdoutSwapper(object):
+    def __init__(self, orig, dest):
+        self._orig = orig
+        self._dest = dest
+
+    def __enter__(self):
+        sys.stdout = self._dest
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # need to restore stdout regardless of whether an exception occured
+        sys.stdout = self._orig
+
+def read_value():
+    '''Read one message from host through standard input and return it'''
     buf = bytearray()
     while 1:
         c = sys.stdin.read(1)
         if c == "":
-            raise IncompleteReadError
+            raise ValueError("received incomplete JSON value")
         if c == "\0":
             break
         buf.append(c)
     return json.loads(bytes(buf).decode("UTF-8"))
 
-def send_val(val):
-    sys.stdout.write(json.dumps(val).encode("UTF-8"))
-    sys.stdout.write(b'\0')
-    sys.stdout.flush()
-
 def main():
-    # fetch defcall object
-    defcall_obj = read_val()
-    assert defcall_obj["type"] == "func"
+    # redirect prints to standard error
+    orig_stdout = sys.stdout
+    sys.stdout = sys.stderr
 
-    # execute user code body
-    scope_dict = {"clotho": Clotho()}
-    exec(defcall_obj["code"], scope_dict)
+    # fetch initialization object
+    context = Context(read_value(), StdoutSwapper(sys.stderr, orig_stdout))
+
+    # run user code; get return value
+    user_return_value = body(context)
+
+    # send return value back to host
+    context.send_value({"type": "func", "return": user_return_value})
+
+def body(context):
+    # execute user code body with given variable bindings
+    scope_dict = {"clotho": Clotho(context), "ClothoError": ClothoError}
+    exec(context.code, scope_dict)
 
     # execute user function, which is always called "run"
-    user_func = scope_dict["run"]
-    user_return_value = user_func(*defcall_obj["args"])
-
-    send_val({"type": "func", "return": user_return_value})
+    return scope_dict["run"](*context.args)
 
 main()

@@ -1,5 +1,7 @@
 "use strict";
 
+//DEPRECATED - There is another set of functions in /scripts/_construction which should be used instead
+
 angular.module('clotho.dna').service('Construction', function(DNA, Digest, PCR, $parse, $q) {
 
     //testing
@@ -379,7 +381,7 @@ angular.module('clotho.dna').directive('constructionField', ['$compile', '$filte
     }
 }]);
 
-angular.module('clotho.dna').directive('constructionStep', function(Construction, $parse, $compile, $http, $templateCache, $filter, $timeout, $modal) {
+angular.module('clotho.dna').directive('constructionStepOld', function(Construction, $parse, $compile, $http, $templateCache, $filter, $timeout, $modal) {
     return {
         restrict : "EA",
         require: "ngModel",
@@ -389,7 +391,7 @@ angular.module('clotho.dna').directive('constructionStep', function(Construction
             dictionaryObject : '=constructionDictionaryObject',
             index : '=constructionIndex',
             editable : '=constructionEditable',
-            fields : '=constructionStep',
+            fields : '=constructionStepOld',
             removeStep : '&constructionRemove',
             processto : '=constructionProcessto'
         },

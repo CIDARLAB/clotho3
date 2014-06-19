@@ -1,40 +1,78 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.model.Part",
-  "c" : "org.clothocad.model.Part",
+  "id" : "org.clothocad.model.Part",
   "name" : "Part",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "org.clothocad.model.Part$PartFunction",
-    "name" : "type",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "org.slf4j.Logger",
-    "name" : "log",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.Person",
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.Short",
-    "name" : "riskGroup",
-    "type" : "number",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "shortDescription",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.Format",
     "name" : "format",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "log",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "riskGroup",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "type",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "shortDescription",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.model.Part"
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Part",
+  "binaryName" : "org.clothocad.model.Part"
 }

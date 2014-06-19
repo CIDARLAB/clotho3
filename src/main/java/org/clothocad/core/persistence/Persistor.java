@@ -25,9 +25,6 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.persistence;
 
-import com.mongodb.BasicDBObject;
-import groovy.lang.Tuple;
-import java.io.IOException;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -47,8 +44,9 @@ import org.reflections.Reflections;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NonUniqueResultException;
+import lombok.Getter;
 import static org.clothocad.core.ReservedFieldNames.*;
+import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
 import org.clothocad.core.schema.BuiltInSchema;
@@ -85,11 +83,14 @@ import org.clothocad.core.util.JSON;
 public class Persistor{
     public static final int SEARCH_MAX = 5000;
     
+    @Getter
     private ClothoConnection connection;
     
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     private Converters converters;
+    
+    private GlobalTrie globalTrie;
     
     @Inject
     public Persistor(final ClothoConnection connection){
@@ -103,6 +104,7 @@ public class Persistor{
         if (initializeBuiltins) initializeBuiltInSchemas();
         
         converters = new Converters();       
+        globalTrie = new GlobalTrie(connection.getCompletionData());
     }
     
     protected void validate(ObjBase obj){
@@ -160,6 +162,9 @@ public class Persistor{
             data.put(ID, id.toString());
         }
         connection.save(data);
+        
+        //Update the GlobalTrie with the new object
+        globalTrie.put(data);
         
         return new ObjectId(data.get(ID).toString());
     }
@@ -560,44 +565,8 @@ public class Persistor{
         return connection.getOne(Schema.class, query);
     }
     
-    public ObjectId resolveSelector(String selector, boolean strict) {
-        return resolveSelector(selector, null, strict);
-    }
-
-    public ObjectId resolveSelector(String selector, Class<? extends ObjBase> type, boolean strict) {
-        //XXX: needs to go away b/c name for id shorthand is going away
-        //uuid?
-        ObjectId id;
-
-        if (org.bson.types.ObjectId.isValid(selector)){
-            return new ObjectId(selector);
-        }
-
-        Map<String, Object> spec = new HashMap<>();
-        spec.put("name", selector);
-        /* TODO: class & superclass discrimination
-         * if (type != null) {
-            spec.put(SCHEMA, type);
-        }*/
-
-        //name of something?
-        List<Map<String, Object>> results = findAsBSON(spec);
-
-        if (results.isEmpty()) throw new EntityNotFoundException(selector);
-        
-        id = new ObjectId(results.get(0).get(ID).toString());
-        if (results.size() == 1 || !strict) {
-            return id;
-        }
-
-        //complain about ambiguity
-        log.warn("Unable to strictly resolve selector {}", selector);
-        throw new NonUniqueResultException();
-    }
-    /*
-     * Used to pass the data collection from the MongoDBConnection
-     */
-    public Tuple[] getTuplesMongo(){
-        return connection.getTuples();
+ 
+    public List<Map> getCompletions(String word){
+        return globalTrie.getCompletions(word);
     }
 }

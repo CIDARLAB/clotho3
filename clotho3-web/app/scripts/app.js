@@ -8,32 +8,49 @@ angular.module('clotho.fullPackage', [
 	//additional webapp modules
 	'clotho.editor',
 	'clotho.interface',
-	'clotho.trails'
+	'clotho.trails',
+	'clotho.dna',         //in here temporarily until server can handle all this
+	'clotho.construction'
 ]);
 
 //web application set up
 angular.module('clothoRoot', ['clotho.fullPackage'])
-.config(function ($routeProvider) {
+.config(function ($routeProvider, $locationProvider) {
+
+	/*
+	simulate legacy browser not supporting pushstate (add $provide to DI clause above)
+	$provide.decorator('$sniffer', function($delegate) {
+		$delegate.history = false;
+		return $delegate;
+	});
+	*/
+
+	$locationProvider
+		.html5Mode(false)
+		.hashPrefix('!');
+
 	$routeProvider
 	.when('/', {
 		templateUrl: 'views/home.html',
 		controller: 'HomeCtrl',
 		title : 'Home',
 		hotkeys : [
-			['h', 'Show Intro Modal', 'showHelp = true']
+			['h', 'Show Intro Modal', 'showHelp = !showHelp']
 		]
 	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
-	  controller: 'AboutCtrl'
+		title : 'About'
 	})
 	.when('/team', {
 	  templateUrl: 'views/team.html',
-	  controller: 'TeamCtrl'
+	  controller: 'TeamCtrl',
+		title : 'Team'
 	})
 	.when('/browser', {
 	  templateUrl: 'views/browser.html',
-	  controller: 'BrowserCtrl'
+	  controller: 'BrowserCtrl',
+		title : 'Browser'
 	})
 	.when('/edit', {
 		redirectTo: '/editor'
@@ -73,6 +90,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/editor', {
 	  templateUrl: 'views/editor.html',
 	  controller: 'EditorCtrl',
+		title : 'Editor',
 		reloadOnSearch: false,
 		resolve : {
 			deps : ['codemirrorLoader', function(loader) {
@@ -82,20 +100,27 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	})
 	.when('/trails', {
 	  templateUrl: 'views/trails.html',
-	  controller: 'TrailsCtrl'
+	  controller: 'TrailsCtrl',
+		title : 'Trails'
 	})
-	.when('/trails/:id', {
+	.when('/trail', {
 		templateUrl: 'views/trail.html',
 		controller: 'TrailCtrl',
+		title : 'Trail',
 		reloadOnSearch: false,
 		resolve : {
-			trail : ['Clotho', '$q', '$http', '$route', 'Trails', function (Clotho, $q, $http, $route, Trails) {
+			trail : ['Clotho', '$q', '$http', '$route', '$location', 'Trails', function (Clotho, $q, $http, $route, $location, Trails) {
+				if (angular.isUndefined($route.current.params.id)) {
+					return $q.when(null);
+				}
 				var deferred = $q.defer();
 				Clotho.get($route.current.params.id).then(function(result) {
 					Trails.compile(result).then(function (compiled) {
 						$route.current.$$route.title = result.name;
 						deferred.resolve(compiled);
 					});
+				}, function () {
+					$location.path('/trails')
 				});
 				return deferred.promise;
 			}]
@@ -105,12 +130,17 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			['alt+right', 'Next page of Trail', 'next()']
 		]
 	})
+	.when('/trail-splash', {
+		templateUrl: 'views/trail-splash.html',
+		controller: 'TrailSplashCtrl',
+		title : 'Trail Splash'
+	})
 	.when('/terminal', {
 		templateUrl:'views/_command/terminal.html',
 		title : 'Terminal',
 		resolve : {
 			deps : function() {
-				return $clotho.extensions.mixin('_command/terminal.js')
+				return $clotho.extensions.mixin('scripts/_command/terminal.js')
 			}
 		}
 	})
@@ -122,49 +152,63 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	  controller: 'WidgetsCtrl'
 	})
 
-
-.when('/test/tokenizer', {
-  templateUrl: 'views/test/tokenizer.html',
-  controller: 'TestTokenizerCtrl'
-})
 .when('/test/schemaview', {
   templateUrl: 'views/test/schemaview.html',
-  controller: 'TestSchemaviewCtrl'
+  controller: 'TestSchemaviewCtrl',
+	hotkeys : [
+		['m', 'Show Programmatic Modal', 'createModal()']
+	]
 })
-.when('/test/trail', {
-  templateUrl: 'views/test/trail.html',
-  controller: 'TestTrailCtrl'
+.when('/test/playlistimport', {
+  templateUrl: 'views/test/playlistimport.html',
+  controller: 'TestPlaylistimportCtrl'
 })
-.when('/test/trail-browser', {
-  templateUrl: 'views/test/trail-browser.html',
-  controller: 'TestTrailBrowserCtrl'
+.when('/test/quiz', {
+  templateUrl: 'views/test/quiz.html',
+  controller: 'TestQuizCtrl'
 })
-.when('/test/trail-overview', {
-  templateUrl: 'views/test/trail-overview.html',
-  controller: 'TestTrailOverviewCtrl'
+.when('/test/construction', {
+  templateUrl: 'views/test/construction.html',
+  controller: 'TestConstructionCtrl',
+	title : 'Construction Test'
+})
+.when('/test/constructionTrail', {
+  templateUrl: 'views/test/contstructiontrail.html',
+  controller: 'TestContstructiontrailCtrl',
+	title : 'Construction Trail Test',
+	reloadOnSearch: false,
+	resolve : {
+		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
+			var deferred = $q.defer();
+				$http.get('models/org.clothocad.trails.constructionFiles.json').then(function(data) {
+					Trails.compile(data.data).then(function (compiled) {
+						deferred.resolve(compiled);
+					});
+			});
+			return deferred.promise;
+		}]
+	}
+})
+.when('/test/focus', {
+  templateUrl: 'views/test/focus.html',
+  controller: 'TestFocusCtrl'
 })
 	.otherwise({
 		redirectTo:'/'
 	});
 
 })
-.run(function($rootScope, $route, $window, $location, Clotho, CommandBar, hotkeys) {
+.run(function($rootScope, $route, $window, interfaceConfig) {
 
 	/****** Config *****/
 
 	$rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
-		var title = current.$$route.title;
+		var title = angular.isDefined(current.$$route) ? current.$$route.title : null;
 		//can't use interpolation in document title because ng-app is within body
 		$window.document.title = 'Clotho' + (angular.isDefined(title) ? ' | ' + title : '');
 	});
 
-	/******* Global Hotkeys ******/
-
-	hotkeys.add('f', 'Focus Command Bar', function (event) {event.preventDefault(); CommandBar.focusInput(); } );
-	hotkeys.add('a', 'Show Activity Log', function (event) {event.preventDefault(); CommandBar.showActivityLog(); } );
-	hotkeys.add('g h', 'Go to Homepage', function () {$location.path('/') });
-	hotkeys.add('g e', 'Go to Editor', function () { $location.path('/editor') });
-	hotkeys.add('g t', 'Go to Trails', function () { $location.path('/trails') });
+	$rootScope.interfaceConfig = interfaceConfig;
 
 });
 

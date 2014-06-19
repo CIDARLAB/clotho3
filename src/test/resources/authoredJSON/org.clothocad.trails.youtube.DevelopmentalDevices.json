@@ -1,0 +1,77 @@
+{
+  "name" : "Developmental Devices",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.DevelopmentalDevices",
+  "about" : {
+    "help" : "Developmental Devices was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 10/22/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "One of the most salient distinguishing features of higher eukaryotes is their ability to perform complicated developmental processes.  Here we examine several examples of engineering the types of processes involved in developmental programs."
+    } ]
+  },
+  "created" : 1382464137000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPagNtoxbU5Kqt1aZCm1ORd",
+  "icon" : "https://i1.ytimg.com/vi/SpiNIt5o7eU/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Developmental Devices.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "miRNA Logic Gates",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "When discussing genetic circuits, we saw many designs involving transcription factors and other proteins.  It is also possible to construct genetic circuits using microRNAs in eukaryotes."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "SpiNIt5o7eU"
+        }
+      } ]
+    }, {
+      "title" : "Scaffolding of Kinase Cascades",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The dynamic crosstalk of signal transduction cascades is a subject of great interest to biologists.  At the molecular level, there have been questions about how specificity amongst MAP kinases is determined."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "eC3jHu7iCv0"
+        }
+      } ]
+    }, {
+      "title" : "Tissue Specific Expression",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "One of the more interesting things you can do with multicellular organisms is tissue-specific expression. In this study, Dowd and coworkers rearrange two DNA sequences found in the Maize genome to create a transgene that activates production of a pesticide in the corn silk."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "TpRyM2B8BXE"
+        }
+      } ]
+    }, {
+      "title" : "Targeting Developmental Phases",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "In multicellular organisms, there are distinct tissues that are often distinguishable by characteristic transcription factors.  By identifying promoters under the control of these transcription factors, you can restrict a gene's expression to specific tissues.  Additionally, some promoters are only transiently expressed during a particular phase of development allowing temporal restriction of gene expression.In this study, Liu and coworkers employ a transcriptional control element specific to flower development to control a toxic protein's production.  Thus, they can programmatically eliminate flower formation."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "aoGLQCguGRQ"
+        }
+      } ]
+    } ]
+  } ]
+}

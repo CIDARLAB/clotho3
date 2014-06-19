@@ -1,8 +1,6 @@
 // Generated on 2013-11-18 using generator-angular 0.6.0-rc.1
 'use strict';
 
-var shell = require('shelljs');
-
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
@@ -26,7 +24,7 @@ module.exports = function (grunt) {
       },
 	    js: {
 		    files: ['<%= yeoman.app %>/scripts/**/*.js'],
-		    tasks: ['newer:jshint:all'],
+		    //tasks: ['newer:jshint:all'],
 		    options: {
 			    livereload: true
 		    }
@@ -287,9 +285,9 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'images/**/*',
             'fonts/*',
-	          'extensions/*',
-	          'lib/*',
-	          'models/*',
+	          'extensions/**/*',
+	          'lib/**/*',
+	          'models/**/*',
 	          'partials/**/*',
 	          'views/**/*'
           ]
@@ -384,18 +382,26 @@ module.exports = function (grunt) {
 				  async: true
 			  }
 		  },
+		  clothoCleanBuild: {
+			  command: 'cd ..; mvn clean install'
+		  },
+
+		  /*
+		   * The following commands for running the server require mvn command line tools installed:
+	     * export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
+			 */
+
+		  /**
+		   * Run the test server, from app (client source files)
+		   */
 		  clothoTestServer: {
 			  /*
-			   requires mvn command line tools installed:
-			   export PATH=/usr/local/apache-maven-3.1.1/bin:$PATH
+
 			  */
 			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
 			  }
-		  },
-		  clothoCleanBuild: {
-			  command: 'cd ..; mvn clean install'
 		  },
 			clothoTestServerVerbose: {
 			  command: 'cd ..; mvn "-Dexec.args= -classpath %classpath org.clothocad.core.util.ClothoTestEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
@@ -403,8 +409,19 @@ module.exports = function (grunt) {
 				  async: true
 			  }
 		  },
+		  /**
+		   * Run the Production server, from app (client source files)
+		   */
+		  clothoAuthoringAppServer: {
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment -clientdirectory clotho3-web/app" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
+		  },
+		  /**
+		   * Run the Production server, from dist (client compiled files)
+		   */
 		  clothoProdServer: {
-			  //todo - update to proper server etc (currently just uses /dist/)
 			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment -clientdirectory clotho3-web/dist" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
 			  options: {
 				  async: true
@@ -445,6 +462,7 @@ module.exports = function (grunt) {
 	  processhtml : {
 		  options : {
 			  commentMarker : 'process', //don't want to use default 'build' bc usemin,
+			  strip : true,
 			  stripUnparsed : true
 		  },
 		  api : {
@@ -457,6 +475,12 @@ module.exports = function (grunt) {
 				  '<%= yeoman.dist %>/index-command.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
+		  trails : {
+			  files : {
+				  '<%= yeoman.dist %>/index-trail.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  //dist must go last because overwrites index file
 		  dist : {
 			  files : {
 				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
@@ -464,12 +488,6 @@ module.exports = function (grunt) {
 		  }
 	  }
   });
-
-
-	grunt.registerTask('update:npm', 'Update NPM packages.', function () {
-		shell.exec('npm install');
-	});
-
 
 	grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
@@ -488,6 +506,16 @@ module.exports = function (grunt) {
 	grunt.registerTask('dev', [
 		'shell:mongo',
 		'shell:clothoTestServer',
+		'clean:server',
+		'concurrent:server',
+		'autoprefixer',
+		'open',
+		'watch'
+	]);
+
+	grunt.registerTask('authoring', [
+		'shell:mongo',
+		'shell:clothoAuthoringAppServer',
 		'clean:server',
 		'concurrent:server',
 		'autoprefixer',

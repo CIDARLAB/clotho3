@@ -98,6 +98,41 @@ public class MessageOptionsTest {
     }
     
     @Test
+    public void testMuteRunModuleMethod() throws IOException{
+        TestConnection conn = new TestConnection("mute");
+        Map<String,Object> data = new HashMap<>();
+        data.put("id", "org.clothocad.test.testModule2");
+        data.put("function", "moduleMethod");
+        data.put("args", new String[]{});
+        Map<MessageOption,Object> options = new HashMap<>();
+        options.put(MessageOption.mute, true);
+        final Message message = new Message(Channel.run , data, "1", options);
+        sendMessage(message,conn);
+        
+        for (Message clientMessage : conn.messages){
+            assertNotEquals(Channel.say,clientMessage.getChannel());
+        }
+        assertEquals(2, conn.messageDataByChannelAndId.get("run1"));
+    }
+    
+    @Test
+    public void testMuteRunFunctionMethod() throws IOException{
+        TestConnection conn = new TestConnection("mute");
+        Map<String,Object> data = new HashMap<>();
+        data.put("id", "org.clothocad.test.moduleTestFunction");
+        data.put("args", new Integer[]{1});
+        Map<MessageOption,Object> options = new HashMap<>();
+        options.put(MessageOption.mute, true);
+        final Message message = new Message(Channel.run , data, "1", options);
+        sendMessage(message,conn);
+        
+        for (Message clientMessage : conn.messages){
+            assertNotEquals(Channel.say,clientMessage.getChannel());
+        }
+        assertEquals(4.0, conn.messageDataByChannelAndId.get("run1"));
+    }
+    
+    @Test
     public void testFilter() throws IOException{
         TestConnection conn = new TestConnection("mute");
         Map<String,Object> data = new HashMap<>();

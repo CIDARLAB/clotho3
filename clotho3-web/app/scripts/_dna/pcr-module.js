@@ -847,10 +847,7 @@ angular.module('clotho.dna').service('PCR', ['DNA', 'Digest', function(DNA, Dige
 
         //console.log('LIGATE FINAL:', fragments);
 
-        if (fragments.length == 1)
-            return fragments[0].sequence;
-        else
-            return _.pluck(fragments, 'sequence');
+        return _.pluck(fragments, 'sequence');
     };
 
     return {
@@ -961,7 +958,6 @@ angular.module('clotho.dna').directive('ligateAlign', ['PCR', 'Digest', 'DNA', '
 
             function process () {
                 var alignment = PCR.ligate(scope.fragments, true, true);
-                console.log(alignment);
 
                 if (_.isArray(alignment)) {
                     alignment = "did not ligate to completion : " + JSON.stringify(alignment);

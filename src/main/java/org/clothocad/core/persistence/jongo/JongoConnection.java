@@ -129,6 +129,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     @Override
     public void save(Map obj) {
         obj = mongifyIdField(obj);
+        if (obj.get("_id") == null){
+            //must create new id
+            rawDataCollection.insert(new BasicDBObject(obj));
+            return;
+        }
         DBObject idQuery = new BasicDBObject("_id", obj.get("_id"));
         obj.remove("_id");
         Map<String,Object> setExpression = new HashMap<>();
@@ -292,23 +297,30 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         cred.drop();
     }
     @Override
-    public Tuple[] getTuples(){
+    public List<Map> getCompletionData(){
         DBCursor cursor = rawDataCollection.find();
         Iterator<DBObject> iter = cursor.iterator();
-        Tuple[] output = new Tuple[cursor.length()];
+        List<Map> out = new ArrayList<Map>();
         int i = 0;
         while(iter.hasNext()){
-            DBObject temp = iter.next();
-            Object name = temp.get("name");
-            Object uuid = temp.get("_id");
-            Object[] elem = new Object[2];
-            elem[0] = name;
-            elem[1] = uuid;
-            Tuple input = new Tuple(elem);
-            output[i] = input;
+            try {
+                DBObject temp = iter.next();
+                Map map = new HashMap();
+                map.put("name", temp.get("name"));
+                map.put("schema", temp.get("schema"));
+                map.put("id", temp.get("_id").toString());
+                if(temp.containsKey("description")) {
+                    map.put("description", temp.get("description"));
+                } else if(temp.containsKey("shortDescription")) {
+                    map.put("description", temp.get("shortDescription"));
+                }
+                out.add(map);
+            } catch(Exception err) {
+                err.printStackTrace();
+            }
             i++;
         }
-        return output;
+        return out;
     }
     private List<Map<String, Object>> mappify(Iterable<JSONFilter> objs) {
         List<Map<String, Object>> out = new ArrayList<>();
@@ -379,28 +391,15 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
-
+        //this will have problems if there are circular dstructures, though that should be impossible
         @Override
         public Map<String,Object> map(DBObject result) {
             Map<String,Object> resultMap = toMap(result);
             //recurse on any sub objects
             for (String key : resultMap.keySet()){
                  Object value = resultMap.get(key);
-                 if (value instanceof LazyBSONList){
-                     //convert members
-                     List convertedList = new ArrayList();
-                     for (Object element : (List) value){
-                         if (element instanceof DBObject){
-                             convertedList.add(map((DBObject) element));
-                         } else {
-                             convertedList.add(element);
-                         }
-                     }
-                     resultMap.put(key,convertedList);
-                     
-                 }
-                 else if (value instanceof DBObject){
-                     resultMap.put(key, map((DBObject) value));
+                 if (value instanceof DBObject){
+                     resultMap.put(key,toMapOrList((DBObject)value));
                  }
             }
             return demongifyIdField(resultMap);
@@ -414,6 +413,24 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
             return resultMap;
         }
         
+        private Object toMapOrList(DBObject value) {
+            if (value instanceof LazyBSONList) {
+                //convert members
+                List convertedList = new ArrayList();
+                for (Object element : (List) value) {
+                    if (element instanceof DBObject) {
+                        convertedList.add(toMapOrList((DBObject) element));
+                    } else {
+                        convertedList.add(element);
+                    }
+                }
+                return convertedList;
+
+            } else {
+                return map(value);
+            }
+        }
+
         private static DemongifyHandler instance;
         
           public static DemongifyHandler get(){

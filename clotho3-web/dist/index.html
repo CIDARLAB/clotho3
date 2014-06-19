@@ -4,15 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Clotho</title>
-    <meta name="description" content="">
+    <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
-    <!-- process:remove:api,command -->
-    <link rel="stylesheet" href="styles/main.css"/>
-    <!-- /process -->
 
-    <!-- process:remove:api -->
+    <!-- not necessary until serving outside root directory / want html5 mode -->
+    <base href="/">
+
+    <link rel="stylesheet" href="styles/main.css"/>
+
     <script src="bower_components/jquery/jquery.js"></script>
-    <!-- /process -->
 
     <!-- note that angular is required for any clotho functionality -->
     <script src="bower_components/angular/angular.js"></script>
@@ -26,13 +26,10 @@
 <script src="bower_components/json3/lib/json3.min.js"></script>
 <![endif]-->
 
-<!-- process:remove:api -->
 <div class="container">
     <div clotho-command-bar></div>
 </div>
-<!-- /process -->
 
-<!-- process:remove:command,api -->
 <!-- note - ignore main content for stripped down versions -->
 <div id="clothoAppNgView" ng-view ng-cloak></div>
 
@@ -42,62 +39,56 @@
 <!-- hotkey triggered terminal window -->
 <terminal-aside></terminal-aside>
 
-<!-- /process -->
 
 <!--------
 SCRIPTS
 --------->
 
-<!-- process:remove:command,api -->
 <!--note - skip jquery-ui and angular route etc. modules in stripped builds-->
 <!--todo - only use jquery-ui modules we need, as in old version-->
 <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
 
 <script src="scripts/clotho-angular-modules.js"></script>
-<!-- /process -->
-
 
 <!--note - correct app based on the distribution, comments removed by build-->
 
-<!-- process:remove:command,api -->
 <script src="scripts/clotho-app.js"></script>
-<!-- /process -->
 
 
 <script src="scripts/clotho-core-module.js"></script>
 
-
-<!-- process:remove:api -->
 <!--note - remove all scripts below this for api-only build-->
-<script src="scripts/clotho-command-module.js"></script>
-<!-- /process -->
-
-<!-- process:remove:api,command -->
-<!--note - remove all scripts below this for command-only build-->
 
 <script src="scripts/clotho-foundation-module.js"></script>
 
 
+<script src="scripts/clotho-command-module.js"></script>
+
+<!--note - remove all scripts below this for command-only build-->
 
 <script src="scripts/angularui-modules.js"></script>
+
 
 <script src="scripts/clotho-interface-module.js"></script>
 
 
-
 <script src="scripts/clotho-trails-module.js"></script>
 
-
-<script src="scripts/clotho-editor-module.js"></script>
-
-
-<!--note - TEMPORARY - THESE SHOULD ALL EXIST ON THE SERVER ONLY -->
-<script src="scripts/clotho-dna-module.js"></script>
+<script src="scripts/clotho-construction-module.js"></script>
 
 
 <script src="scripts/clotho-webapp-module.js"></script>
 
-<!-- /process -->
+
+<!--note - module should be moved to server. directives need to be retained. -->
+<script src="scripts/clotho-dna-module.js"></script>
+
+<!--note - remove all scripts below this for trails-only build-->
+
+<script src="scripts/clotho-editor-module.js"></script>
+
+<script src="scripts/clotho-webapp-experiments-module.js"></script>
+
 
 </body>
 </html>

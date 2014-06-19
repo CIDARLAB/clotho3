@@ -1,37 +1,14 @@
 <div class="container">
-    <div class="page-header">
-        <h1>{{trail.name}} <small>{{trail.author}}</small></h1>
-    </div>
 
-    <div class="col-xs-3">
-        <div ng-repeat="chapter in trail.contents">
-            <h4 class="text-muted">{{chapter.chapter}}</h4>
-            <div class="list-group">
-                <a class="list-group-item" ng-repeat="page in chapter.pages"
-                        ng-init="page.index = $parent.$index + '-' + $index" ng-class="{active: (page.index == current)}"
-                        ng-click="activate(page.index)"
-                    ng-disabled="!page.type">
-                <i ng-class="mapIcon(page.icon)"></i>
-                {{page.title}}
-                </a>
-            </div>
-        </div>
-    </div>
+  <div trail-header="trail" trail-header-on-click="activate(null)"></div>
 
-        <!--<div class="btn-toolbar pagination-centered">
-            <div class="btn-group">
-                <button ng-click="favorite()" class="btn" ng-class="{'btn-warning' : favorited}"><i class="glyphicon glyphicon-star"></i></button>
-                <button ng-click="share()" class="btn" alt="share"><i class="glyphicon glyphicon-share"></i></button>
-            </div>
-
-            <div class="btn-group">
-                <button ng-click="prev()" class="btn"><i class="glyphicon glyphicon-arrow-left"></i></button>
-                <button ng-click="next()" class="btn"><i class="glyphicon glyphicon-arrow-right"></i></button>
-            </div>
-        </div>-->
+  <div ng-if="current" class="row trail-page">
+      <div class="col-xs-3" trail-contents="trail" current="current"></div>
 
     <div class="col-xs-9" id="trail_view">
-        <div trail-page="currentPage" next="next" prev="prev"></div>
+      <div trail-page="currentPage" next="next" prev="prev"></div>
     </div>
+  </div>
 
+  <div ng-if="!current" trail-overview="trail"></div>
 </div>

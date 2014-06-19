@@ -1,0 +1,8 @@
+{
+  "name" : "testModule2",
+  "id" : "org.clothocad.test.testModule2",
+  "language" : "JAVASCRIPT",
+  "schema" : "org.clothocad.core.datums.Module",
+  "dependencies" : [ "org.clothocad.test.testModule" ],
+  "code" : "(function f() {var my = {}; my.moduleMethod = testModule.moduleMethod; return my;}());"
+}

@@ -1,0 +1,64 @@
+.clothoQuizQuestion {
+
+  @extend .panel;
+
+
+  &.ungraded {
+    @extend .panel-default;
+  }
+
+  &.correct {
+    @extend .panel-success;
+  }
+
+  &.incorrect {
+    @extend .panel-danger;
+  }
+
+  .quizQuestionHeading {
+    @extend .panel-heading;
+  }
+
+  .quizQuestionTitle {
+    @extend .panel-title;
+  }
+
+  .quizQuestionContent {
+    @extend .panel-body;
+    position: relative;
+  }
+
+  .quizQuestionHint {
+    @extend .btn;
+    @extend .btn-default;
+    float: right;
+    margin-top: -8px;
+  }
+
+  .quizQuestionQuestion {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .quizQuestionTemplate {
+
+  }
+
+  .quizQuestionFeedback {
+    @extend .alert;
+    margin: 10px 0 0;
+
+    &.correct {
+      @extend .alert-success;
+    }
+
+    &.incorrect {
+      @extend .alert-danger;
+    }
+  }
+
+  .quizQuestionActions {
+    @extend .panel-footer;
+  }
+
+}

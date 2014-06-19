@@ -80,7 +80,14 @@ public class Router {
                     break;
                 case login:
                     Map map = (Map) data;
+                    boolean wasAuthenticated = subject.isAuthenticated();
                     response = api.login(map.get("username").toString(), map.get("password").toString());
+                    if (!wasAuthenticated){
+                        //remove the 'anonymous' mind
+                        //currently this means you lose environment state if you login
+                        //we could do something more sophisticated like merge the anonymous environment and the persisted mind, but that could get complicated
+                        minds.remove(connection.getId());
+                    }
                     break;
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    

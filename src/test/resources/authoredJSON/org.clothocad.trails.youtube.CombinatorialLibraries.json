@@ -1,0 +1,65 @@
+{
+  "name" : "Combinatorial Libraries",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.CombinatorialLibraries",
+  "about" : {
+    "help" : "Combinatorial Libraries was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/27/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Combinatorial methods involve permuting many related genetic variants and filtering them for new or improved activity."
+    } ]
+  },
+  "created" : 1369680857000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPIVgTQU-ajK2eCP9deCIl2",
+  "icon" : "https://i1.ytimg.com/vi/8BDTS9NK7Zg/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Combinatorial-Libraries.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Combinatorial Libraries Introduction",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "8BDTS9NK7Zg"
+        }
+      } ]
+    }, {
+      "title" : "Diversity and Sampling",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "TcokQWySo4Y"
+        }
+      } ]
+    }, {
+      "title" : "Combinatorial Library Design",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "rhguyAUGN6A"
+        }
+      } ]
+    }, {
+      "title" : "Selection Methods",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "08MUBVp2RQ4"
+        }
+      } ]
+    } ]
+  } ]
+}

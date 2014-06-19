@@ -1,1 +1,6 @@
-@import 'editor/formActions';
+.ng-invalid {}
+
+//using ng-form in editor instead of div, compensate
+ng-form {
+  display: block;
+}

@@ -1,0 +1,12 @@
+{
+  "name" : "AlwnI",
+  "match" : "cagnnnctg",
+  "cut" : "cag_nnn^ctg",
+  "methylation" : { },
+  "overhang" : 3,
+  "type" : "II",
+  "subtype" : "P",
+  "rebase" : "http://rebase.neb.com/rebase/enz/AlwnI.html",
+  "id" : "clotho.enzyme.AlwnI",
+  "schema" : "org.clothocad.model.RestrictionEnzyme"
+}

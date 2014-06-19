@@ -1,9 +1,11 @@
 <div class="clothoTokenWrap"
-     ng-class="{'active' : tokenActive, 'ambiguous' : token.isAmbiguous(), 'sharable' : token.isSharable()}">
+     ng-class="{'hasModel' : token, 'active' : tokenActive, 'sharable' : token.isSharable()}">
     <span class="clothoTokenText"
           sharable-popup
+          sharable-popup-placement="{{popupPlacement}}"
           sharable-popup-id="{{token.id()}}"
-          sharable-popup-open="tokenActive && token.isSharable()">
-      {{ token.readable() }}
+          sharable-popup-open="{{tokenActive && token.isSharable()}}"
+          sharable-popup-trigger="{{popupTrigger || 'none'}}">
+      {{ tokenName || token.readable() }}
     </span>
 </div>
