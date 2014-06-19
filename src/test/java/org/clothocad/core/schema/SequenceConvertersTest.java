@@ -7,6 +7,8 @@
 package org.clothocad.core.schema;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.model.NucSeq;
 import org.clothocad.model.SimpleSequence;
@@ -77,13 +79,19 @@ public class SequenceConvertersTest {
      */
     @Test
     public void testConvertNucSeqToSimpleSeq() {
-        System.out.println("convertNucSeqToSimpleSeq");
-        NucSeq nucObj = new NucSeq("atttccccggggaccccccctttt");
-        SimpleSequence expResult = null;
-        SimpleSequence result = SequenceConverters.convertNucSeqToSimpleSeq(nucObj);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        try {
+            System.out.println("convertNucSeqToSimpleSeq");
+            NucSeq nucObj = new NucSeq("atttccccggggaccccccctttt");
+            SimpleSequence expResult = null;
+            SimpleSequence result = SequenceConverters.convertNucSeqToSimpleSeq(nucObj);
+            assertEquals(expResult, result);
+            // TODO review the generated test code and remove the default call to fail.
+            fail("The test case is a prototype.");
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(SequenceConvertersTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(SequenceConvertersTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
