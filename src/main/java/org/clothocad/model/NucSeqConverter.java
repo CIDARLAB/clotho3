@@ -38,7 +38,7 @@ public class NucSeqConverter extends Converter<NucSeq>
     {
         switch(schemaName)
         {
-            case "org.clothocad.model.SimpleSeqeuence":      //If Schema is of Type Simple Seq
+            case "org.clothocad.model.SimpleSequence":      //If Schema is of Type Simple Seq
                 return convertSimpleSeqToNucSeq(data);
             default:
                 return null;
@@ -47,6 +47,8 @@ public class NucSeqConverter extends Converter<NucSeq>
     
     public static NucSeq convertSimpleSeqToNucSeq(Map<String,Object> simpleSeq)
     {
+        System.out.println("Reached the simpleSeq to NucSeq");
+        
         NucSeq nseq = new NucSeq(simpleSeq.get("sequence").toString()); //Invoke the NucSeq Constructor that creates an object with the Sequence as the input argument. 
         if(simpleSeq.containsKey("_id"))
         {

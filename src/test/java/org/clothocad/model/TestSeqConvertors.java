@@ -6,6 +6,9 @@
 
 package org.clothocad.model;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.clothocad.core.schema.SequenceConvertersTest;
 
 /**
@@ -14,9 +17,16 @@ import org.clothocad.core.schema.SequenceConvertersTest;
  */
 public class TestSeqConvertors {
     public static void main(String[] args) {
-        //SimpleSequenceTest.testFromNucSeq();
-        SequenceConvertersTest x = new SequenceConvertersTest();
-        x.testConvertNucSeqToSimpleSeq();
+       
+        try {
+            SimpleSequenceTest x = new SimpleSequenceTest();
+            x.testCanConvert();
+            x.testConvertsTo();
+            x.testConvert();
+        } catch (IOException ex) {
+            Logger.getLogger(TestSeqConvertors.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
 }
