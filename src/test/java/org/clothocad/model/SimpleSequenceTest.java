@@ -9,7 +9,10 @@ package org.clothocad.model;
 import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.Converter;
@@ -128,11 +131,14 @@ public class SimpleSequenceTest {
     }
 
    
-    public void testConvert() throws JsonParseException, IOException {
+    public void testConvert() throws JsonParseException, IOException 
+    {
         Converter<NucSeq> converter = new NucSeqConverter(p);
         Schema simpleSeqSchema = new InferredSchema("org.clothocad.model.SimpleSequence");
         Map<String, Object> simlpleSjson = new HashMap<String,Object>();
         
+        
+
         simlpleSjson.put("Name","Just_Another_SimpleSeq");
         simlpleSjson.put("schema","org.clothocad.model.SimpleSequence");
         simlpleSjson.put("sequence","CCAGGCATCARATAAA");
@@ -150,7 +156,30 @@ public class SimpleSequenceTest {
         {
             System.out.println("Degenerate Sequence");
         }
-       }
+        
+        
+        /*Map<String,Object> nucseqmap = new HashMap<String,Object>();
+        try {
+            nucseqmap =  convertedPart.getNucSeqMap();
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(SimpleSequenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(SimpleSequenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        
+        //System.out.println("Iterator Map: ");
+        
+        /*Iterator nsit = nucseqmap.entrySet().iterator();
+        while(nsit.hasNext())
+        {
+            Map.Entry pairs = (Map.Entry)nsit.next();
+            System.out.println(pairs.getKey() +" : "+pairs.getValue());
+        }*/
+        
+        //System.out.println("sequence : " +nucseqmap.get("sequence").toString());
+        
+    }
     
     
     @Test
