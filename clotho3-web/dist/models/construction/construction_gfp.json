@@ -1,7 +1,7 @@
 {
 	"name": "pUC19-GFP Cloning",
 	"schema": "org.clothocad.model.ConstructionFile",
-	"description": "The Construction File automates the construction of pUC19-GFP, ligating the GFP gene into the pUC19 plasmid backbone",
+	"description": "A basic cloning experiment involving PCR, cut, and paste of GFP from one plasmid to another",
 	"dictionary": {
 		"primer1": {
 			"name": "primer1",
@@ -15,7 +15,7 @@
 "steps": [
 		{
 			"reaction": "pcr",
-			"input": ["pPROBE-GFP", "primer1", "primer2"],
+			"input": ["pPROBE-GFP[LVA]", "primer1", "primer2"],
 			"output": "pcr_product"
 		},
 		{
