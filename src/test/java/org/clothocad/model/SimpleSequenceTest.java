@@ -158,26 +158,26 @@ public class SimpleSequenceTest {
         }
         
         
-        /*Map<String,Object> nucseqmap = new HashMap<String,Object>();
+        Map<String,Object> nucseqmap = new HashMap<String,Object>();
         try {
             nucseqmap =  convertedPart.getNucSeqMap();
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(SimpleSequenceTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(SimpleSequenceTest.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
         
         
-        //System.out.println("Iterator Map: ");
+        System.out.println("Iterator Map: ");
         
-        /*Iterator nsit = nucseqmap.entrySet().iterator();
+        Iterator nsit = nucseqmap.entrySet().iterator();
         while(nsit.hasNext())
         {
             Map.Entry pairs = (Map.Entry)nsit.next();
             System.out.println(pairs.getKey() +" : "+pairs.getValue());
-        }*/
+        }
         
-        //System.out.println("sequence : " +nucseqmap.get("sequence").toString());
+        System.out.println("sequence : " +nucseqmap.get("sequence").toString());
         
     }
     

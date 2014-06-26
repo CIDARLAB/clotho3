@@ -6,13 +6,18 @@
 
 package org.clothocad.model;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.InferredSchema;
+import org.clothocad.core.schema.RunScripts;
 import org.clothocad.core.schema.Schema;
 
 /**
@@ -39,15 +44,44 @@ public class NucSeqConverter extends Converter<NucSeq>
         switch(schemaName)
         {
             case "org.clothocad.model.SimpleSequence":      //If Schema is of Type Simple Seq
-                return convertSimpleSeqToNucSeq(data);
+                try 
+                {
+                    return convertSimpleSeqToNucSeq(data);
+                } 
+                catch (Exception ex) 
+                {
+                    Logger.getLogger(NucSeqConverter.class.getName()).log(Level.SEVERE, null, ex);
+                }
             default:
                 return null;
         }
     }
     
-    public static NucSeq convertSimpleSeqToNucSeq(Map<String,Object> simpleSeq)
+    public static NucSeq convertSimpleSeqToNucSeq(Map<String,Object> simpleSeq) throws Exception
     {
-        NucSeq nseq = new NucSeq(simpleSeq.get("sequence").toString()); //Invoke the NucSeq Constructor that creates an object with the Sequence as the input argument. 
+        
+        String ConvertedSequence = "";
+        
+        Map<Object,Method> functionMap = new HashMap<Object,Method>();
+        HashMap<Object,Map<Object,Method>> conversionMap = new HashMap<Object,Map<Object,Method>>();
+        
+        
+        //String inpSequence = 
+        Class[] parameterTypes = new Class[1];
+        //parameterTypes[0] = simpleSeq.get("sequence").toString().getClass();
+        parameterTypes[0] = simpleSeq.get("sequence").getClass();
+        Method getSequence = SequenceConverters.class.getMethod("getSequence", parameterTypes);
+        
+        functionMap.put("sequence", getSequence);
+        conversionMap.put("sequence", functionMap);
+        
+        RunScripts mapper = new RunScripts();
+        String res ="";
+        res = (String)mapper.runningfunction(mapper, conversionMap.get("sequence").get("sequence"), simpleSeq.get("sequence").toString());
+        
+        System.out.println("This is the result of the function :"+res);
+        
+        NucSeq nseq = new NucSeq(res); 
         if(simpleSeq.containsKey("_id"))
         {
             nseq.setId(new ObjectId(simpleSeq.get("_id").toString()));
