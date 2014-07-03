@@ -42,7 +42,15 @@ public class scripttest {
         engine.put("eggs", j_eggs);
 
         /* Feed file handle of script into engine and execute */
-        File f = new File("test/org/clothocad/core/scripting/scripttest.js");
+        
+        String Filepath;
+        Filepath = scripttest.class.getClassLoader().getResource(".").getPath();
+        System.out.println("Filepath  "+Filepath);
+        if(Filepath.contains("build/classes/"))
+            Filepath = Filepath.substring(0,Filepath.lastIndexOf("build/classes/")); 
+        else if(Filepath.contains("src"))
+            Filepath = Filepath.substring(0,Filepath.lastIndexOf("src/"));
+        File f = new File("/home/prashantvaidyanathan/cidar/clotho3/src/test/java/org/clothocad/core/execution/scripttest.js");
         engine.eval(new FileReader(f));
 
         /* Get output */

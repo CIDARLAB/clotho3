@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.clothocad.core.datums.Function;
 import org.clothocad.core.schema.ConverterMapper;
 import org.clothocad.core.schema.RunScripts;
 
@@ -27,6 +28,9 @@ public class TestSeqConvertors {
 
         TestSeqConvertors demo = new TestSeqConvertors();
         demo.method2(demo, method1, "Hello World");*/
+        
+        testFunction();
+        
         testclasstester();
         
         try {
@@ -45,6 +49,14 @@ public class TestSeqConvertors {
         TestSeq tseq = new TestSeq("ATTAATTCT");
         ConverterMapper convmap = new ConverterMapper();
         convmap.testclass(tseq,"sequence");
+    }
+    
+    public static void testFunction()
+    {
+        Function testFunc = new Function();
+        testFunc.setName("convObj");
+        
+        System.out.println(testFunc.getClass());
     }
     
 }

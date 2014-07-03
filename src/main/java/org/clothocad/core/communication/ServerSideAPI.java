@@ -750,7 +750,14 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
         return Void.TYPE;
 
     }
-
+    
+    public final Object convert(Object obj, String schema)
+    {
+        System.out.println("Call that converter function here");
+        return null; 
+    }
+    
+    
     public final Object run(Function function, List<Object> args) throws ScriptException {
         System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
         if(function.getLanguage().equals(Language.PYTHON)) {
@@ -831,7 +838,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
          *
          */
     }
-
+    
     public final void listen(String args) {
         say("not yet implemented", Severity.FAILURE);
     }
