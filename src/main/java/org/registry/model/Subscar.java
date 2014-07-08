@@ -1,4 +1,6 @@
-package org.clothocad.model;
+package org.registry.model;
+
+
 
 public interface Subscar {
 
