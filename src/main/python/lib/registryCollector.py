@@ -1,8 +1,5 @@
 import urllib
 import xml.etree.ElementTree as ET
-#import time
-#filename = "all_parts.fasta"
-#id_array = []
 
 def regToJSON(filename):
 	tree = ET.parse(filename)
@@ -40,19 +37,3 @@ def _grabRegistry(theID):
 	
 def run(*ids):
 	return map(_grabRegistry, ids)
-
-"""
-with open(filename, 'r') as f:
-	for line in f:
-		split = line.split()
-		if line.startswith(">BBa_"): #and split[0][1:] > 'BBa_K777107':
-			first = split[0][1:]
-			print first
-			id_array.append(first)
-
-for i in id_array:
-	url = base + i
-	print url
-	urllib.urlretrieve(url, "registry/" + i + ".xml")
-	time.sleep(.5)
-"""
