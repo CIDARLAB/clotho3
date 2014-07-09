@@ -11,7 +11,8 @@ class JSONUtil {
 
     static Object decodeUTF8(final byte[] bytes) {
         try {
-            return mapper.readValue(new String(bytes, UTF_8), Object.class);
+            String jsonstr = new String(bytes, UTF_8);
+            return mapper.readValue(jsonstr, Object.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
