@@ -1,9 +1,8 @@
 import urllib
 import xml.etree.ElementTree as ET
 
-def regToJSON(filename):
-	tree = ET.parse(filename)
-	root = tree.getroot()
+def regRoot(data):
+	root = ET.fromstring(data)
 	return root
 
 def recTraverse(root):
@@ -20,9 +19,11 @@ def recTraverse(root):
 				tree[child.tag].append(recTraverse(child))
 		return tree
 
-def regParse(inName):
-	root = regToJSON(inName)
-	fin = {root.tag: [recTraverse(root)], "schema":"org.registry.model.Part"}
+def regParse(inString):
+	root = regRoot(inString)
+	fin = recTraverse(root)['part_list'][0]['part'][0]
+	fin["schema"] = "org.registry.model.Part"
+	fin['id'] = 'org.registry.part.' + fin['part_short_name']
 	import json
 	j = json.dumps(fin, indent=4)
 	return j
@@ -31,8 +32,11 @@ def _grabRegistry(theID):
 	base = "http://parts.igem.org/xml/part."
 	url = base + theID
 	filename = theID + ".xml"
-	urllib.urlretrieve(url, filename)
-	jReg = regParse(filename)
+	socket = urllib.urlopen(url)
+	hold = ""
+	for line in socket:
+		hold += line
+	jReg = regParse(hold)
 	return jReg
 	
 def run(*ids):
