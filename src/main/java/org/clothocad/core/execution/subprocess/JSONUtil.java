@@ -14,29 +14,23 @@ class JSONUtil {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     //clotho.get("org.andersonlab.py_fetchRegistry");
-    //clotho.run("org.andersonlab.py_fetchRegistry", ["BBa_b0015"]);
+    //var bob = clotho.run("org.andersonlab.py_fetchRegistry", ["BBa_b0015"]);
     static Object decodeUTF8(final byte[] bytes) {
         try {
             String msg = new String(bytes, UTF_8);
             LinkedHashMap out = (LinkedHashMap) mapper.readValue(msg, Object.class);
             //If the out is a wrapped JSON string, then unwrap it
             try {
+                //Extract out any JSON
                 Object ret = out.get("return");
                 List obs = (List) ret;
                 String jsonstr = (String) obs.get(0);
-                
-
                 Object json = JSON.deserializeObjectToMap(jsonstr);
-                System.out.println(json);
-                
-                //Repackage
-                obs.remove(0);
-                obs.add(0, json);
-                out.put("return", obs);
-                
-                
+
+                //Repackage the wrapping with a Map
+                out.put("return", json);
             } catch(Exception err) {
-                
+                //I think it is a normal scenario for this to fail, so no error msg
             }
             return out;
         } catch (IOException e) {
