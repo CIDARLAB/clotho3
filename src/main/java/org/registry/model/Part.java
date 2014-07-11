@@ -8,10 +8,11 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.SharableObjBase;
 
 @Data()
 @NoArgsConstructor
-public class Part extends ObjBase {
+public class Part extends SharableObjBase {
 
 	private List<Feature> features = new ArrayList<Feature>();
 	private List<Subscar> specified_subscars = new ArrayList<Subscar>();

@@ -9,7 +9,7 @@ import org.clothocad.core.datums.SharableObjBase;
 
 @Data()
 @NoArgsConstructor
-public class Feature extends ObjBase {
+public class Feature extends SharableObjBase {
 
 	private boolean direction;
 	private String title, type;

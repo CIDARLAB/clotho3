@@ -484,9 +484,7 @@ public class Persistor{
                 //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
                 //not sure if this is a problem
 
-                if (c.getSuperclass() == ObjBase.class){
-                    makeBuiltIns(c, null, models);
-                }
+                makeBuiltIns(c, null, models);
             }
         }
     }
