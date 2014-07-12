@@ -1,0 +1,7 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "name" : "jtk2087",
+  "description" : "{Upp 5' UTR}",
+  "sequence" : "gatctcacatggcgaccagatcaataccaatggtgtcgtgacgttttaagtccattgccagacgcagcttggtacctacgccgtcagtgccagaaaccagcacgggttcacgatatttttgcggcaatgcacacagcgcaccgaagccgcccagaccgcccatcacttccggacgacgcgttttcttcactacgcctttgattcttccaaccagagcattacccgcgtcaatatcaacaccggcatctttgtagctaagagaggttttatcggtcactgcttgggtccccacgcgttacttgcggtagaaaaataaaattcggcgcaattctaacagggaaagcaaacgtttgcgagactgctttacacaacctttttgcacgtcttttccccaggcgcgcggcgaaagaagacttgtgccagggtaaaggttagttttcggatggaataatcttctttcataaccatctgaatataaaataactttatctcaaaccgttatcattttgactaaagtcaacgaaaagaatattgcg",
+  "id" : "clotho.part.jtk2087"
+}

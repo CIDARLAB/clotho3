@@ -1,0 +1,113 @@
+{
+	"id" : "org.clothocad.trails.constructionFiles",
+	"schema":"org.clothocad.model.Trail",
+	"name" : "Construction Files",
+	"description" : "Design and document your DNA fabrication experiment using Construction Files",
+	"icon" : "partials/trails/constructionFiles/pUC-GFP.png",
+	"about" : {
+		"help" : "This trail will introduce you to construction files, and provide you with several examples to work with",
+		"contents" : [
+			{
+				"type" : "text",
+				"params" : "Construction Files describe a DNA fabrication experiment as a set of input sequences and a series of DNA modification operations.  These operations include PCR, restriction digestion, and ligation. This Trail explains the structure of a Construction File, how to author one, and how to predict its product."
+			}
+		]
+	},
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates", "clotho.developer.billcao"],
+	"contents": [
+		{
+			"chapter": "Introduction",
+			"description" : "Introduce you to construction files, and the information they contain",
+			"pages": [
+				{
+					"title": "Video Overview",
+					"icon": "video",
+					"contents": [
+						{
+							"type": "text",
+							"params": "Construction Files describe a DNA fabrication experiment as a set of input sequences and a series of DNA modification operations.  These operations include PCR, restriction digestion, and ligation. From such a specification, Clotho can simulate the product sequence that would result. "
+						},
+						{
+							"type": "video",
+							"params": {
+								"id": "OQmwSunY3tY",
+								"autoplay": true
+							}
+						}
+					]
+				},
+				{
+					"title": "Human-readable format",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
+						}
+					]
+				},
+				{
+					"title": "Parsing and simulation",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/parsingConstructionFiles.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/parsingConstructionFiles.html"
+						}
+					]
+				},
+                                {
+					"title": "More Examples",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/runningConstructionFiles.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/runningConstructionFiles.html"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter": "Automated Design",
+			"description" : "Automatically design Construction Files for common experiments",
+			"pages": [
+				{
+					"title": "BioBricks",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/runningConstructionFiles.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/runningConstructionFiles.html"
+						}
+					]
+				},
+                                {
+					"title": "Golden Gate Assembly",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/runningConstructionFiles.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/runningConstructionFiles.html"
+						}
+					]
+				}
+			]
+		}
+	]
+}

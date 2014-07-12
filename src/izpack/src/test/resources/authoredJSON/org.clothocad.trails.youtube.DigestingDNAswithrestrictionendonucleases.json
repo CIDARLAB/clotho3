@@ -1,0 +1,42 @@
+{
+  "name" : "Digesting DNAs with restriction endonucleases",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.DigestingDNAswithrestrictionendonucleases",
+  "about" : {
+    "help" : "Digesting DNAs with restriction endonucleases was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Any pure DNA sample can be subjected to digestion with restriction endonucleases.  These enzymes make precise double-stranded cuts to specific regions of sequence within the DNA.  You can digest genomic DNAs, plasmid DNAs, PCR products, and the like. However, the DNA must be purified by an appropriate cleanup or extraction kit prior to digestion.  First we'll see how to purify PCR products with the DNA Clean & Concentrator™ from Zymo Research, then we'll do a digestion."
+    } ]
+  },
+  "created" : 1400193018000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPiVtQqqthOAE60E7iHz-gg",
+  "icon" : "https://i1.ytimg.com/vi/vRUKHOyB40Q/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "DCC (DNA Clean & Concentrator) - High quality, inhibitor-free DNA in just 2 minutes!",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "High quality, inhibitor-free DNA with the DCC (DNA Clean & Concentrator)\n\n6 µl elution in 2 minutes with 0 µl carryover!\n\nHigh quality, inhibitor-free DNA is crucial to ensure success with qPCR, DNA ligation/cloning, sequencing, arrays, etc. The scientists at Zymo Research have developed the most consolidated assortment of technologies for DNA clean-up and concentration from any preparation with the DNA Clean & Concentrator (DCC).\n\nApplications: PCR Clean-up • Enzyme Removal • Nucleotide/Dye Removal • cDNA/ssDNA Purification cDNA/ssDNA Purification • Probe Purification • Lysate DNA Clean-up • M13 Phage ssDNA\n\nFor more information or to request your sample kit, visit http://www.zymoresearch.com/dna-purification/dna-clean-up/pcr-dna-clean-up-concentration/dna-clean-concentrator-5"
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "vRUKHOyB40Q"
+        }
+      } ]
+    }, {
+      "title" : "cloning cycle - how to set up a resctriction digest on plasmid or pcr DNA",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "Xl_c0a6GZKM"
+        }
+      } ]
+    } ]
+  } ]
+}

@@ -1,0 +1,84 @@
+{
+  "name" : "Monofunctional Enzyme Biosynthesis Examples",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.MonofunctionalEnzymeBiosynthesisExamples",
+  "about" : {
+    "help" : "Monofunctional Enzyme Biosynthesis Examples was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/17/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "Examples of biosynthetic devices based on monofunctional enzymes"
+    } ]
+  },
+  "created" : 1379436132000,
+  "youtubePlaylistId" : "PL2aPXzks-TgNmfjrolgYWGblQDNzo11Yq",
+  "icon" : "https://i1.ytimg.com/vi/uTrw6248u18/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Monofunctional Enzyme Biosynthesis Examples.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Small Alkyl Alcohol Biofuels from Amino Acids",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Small reduced hydrocarbons such as butanol have been pursued for biofuel applications with great intensity for the past few years. Butanol in particular has received major attention. In this paper, Liao and coworkers demonstrate an alternate pathway for butanol and related compounds by rerouting of amino acid biosynthesis intermediates."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "uTrw6248u18"
+        }
+      } ]
+    }, {
+      "title" : "Kinetic Trap in Butanol Biosynthesis",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "rupeOEL-WJo"
+        }
+      } ]
+    }, {
+      "title" : "Bioremediation of Perchlorinated Biphenyls",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "IjC1jn2w5QI"
+        }
+      } ]
+    }, {
+      "title" : "Biosynthesis  of Benzylisoquinoline Alkaloids",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The production of pharmaceutical intermediates is a key interest of metabolic engineers.  The biosynthetic production of bioactive compounds is important for reducing the environmental footprint of pharmaceutical production, but it also poses biosafety and biosecurity concerns around the production of controlled substances."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "d1XEC6CXGrE"
+        }
+      } ]
+    }, {
+      "title" : "Orthogonality and Equivalence",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The cell can be thought of as a big state machine.  When you take the chemical specifics out of the description of the system, you are left with a mathematical object, and many principles from other areas of engineering can be applied to those models. Two terms that pertain to models of this type are orthogonality and equivalence."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "-GPUcNu52Q8"
+        }
+      } ]
+    } ]
+  } ]
+}

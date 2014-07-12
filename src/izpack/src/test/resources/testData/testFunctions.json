@@ -1,0 +1,101 @@
+[
+{
+    "name":"uppercase",
+    "id":"org.clothocad.test.uppercase",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "code":"function (str) {return str.toUpperCase();};",
+    "args":[{"name":"str", "type":"string"}]
+},
+{
+    "name":"lowercase",
+    "id":"org.clothocad.test.lowercase",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "code":"function (str) {return str.toLowerCase();}",
+    "args":[{"name":"str", "type":"string"}]
+},
+{
+    "name":"spaceout",
+    "id":"org.clothocad.test.spaceout",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "code":"function (str) {return str.split('').join(' ');};",
+    "args":[{"name":"str", "type":"string"}]
+},
+{  
+  "name": "complement",
+  "schema": "org.clothocad.core.datums.Function",
+  "id": "org.clothocad.test.complement",
+  "language": "JAVASCRIPT",
+  "code": "function (seq) {\n  var map = { a : 't', c : 'g', g : 'c', t: 'a' }\n  return seq.replace(/[acgt]/ig, function (n) { return map[n.toLowerCase()] })\n}",
+  "args": [
+    {
+      "type": "string",
+      "name": "seq"
+    }
+  ]
+},
+{
+    "name":"reverse",
+    "id":"org.clothocad.test.reverse",
+    "language" : "JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "args":[{"type":"string","name":"str"}],
+    "code":"function(str) { return str.split('').reverse().join('') };",
+    "tests":[
+    {
+        "args":["blah"],
+        "output":{"value":"halb","type":"VALUE"}
+    }
+    ]
+},
+{
+    "name":"testModule",
+    "id":"org.clothocad.test.testModule",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Module",
+    "code":"(function f() {var my = {}; var privateVariable = 2; function privateMethod() { return privateVariable; } my.moduleProperty = 1; my.moduleMethod = function () { return privateMethod(); }; return my; }());"
+},
+{
+    "name":"moduleTestFunction",
+    "id":"org.clothocad.test.moduleTestFunction",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "code":"function(i) {return i + testModule.moduleMethod() + testModule.moduleProperty;};",
+    "args":[],
+    "dependencies":["org.clothocad.test.testModule"]
+},
+{
+    "name":"testModule2",
+    "id":"org.clothocad.test.testModule2",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Module",
+    "dependencies":["org.clothocad.test.testModule"],
+    "code":"(function f() {var my = {}; my.moduleMethod = testModule.moduleMethod; return my;}());"
+},
+{
+    "name":"moduleTestFunction2",
+    "id":"org.clothocad.test.moduleTestFunction2",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "dependencies":["org.clothocad.test.moduleTestFunction"],
+    "code":"function(i) {return moduleTestFunction(i);};",
+    "args":[{"type":"number", "name":"i"}]
+},
+{
+    "name":"useLodash",
+    "id":"org.clothocad.test.useLodash",
+    "language":"JAVASCRIPT",
+    "schema":"org.clothocad.core.datums.Function",
+    "code":"function() {return _.map([1,2,3],function(i){return i+1;});};"
+},
+{"schema":"org.clothocad.core.datums.Function",
+"id":"org.clothocad.test.randomSequence",
+"name":"randomSequence",
+"language":"JAVASCRIPT",
+"args":[{"type":"number","name":"length"}],
+"code":"function randomSequence (length) { \nvar units = 'acgt'.split('');\nvar seq = \"\";\nfor (var i = 0; i < +length; i++) {\nseq += units[_.random(3)];\n}\nreturn seq;\n};",
+"tests":[{"args":["5"],"output":{"value":"","type":"VALUE"}}]}
+]
+

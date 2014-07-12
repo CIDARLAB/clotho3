@@ -1,0 +1,43 @@
+{
+  "args" : [ {
+    "type" : "org.clothocad.model.NucSeq",
+    "name" : "sequence"
+  }, {
+    "type" : "array",
+    "name" : "enzymes"
+  }, {
+    "type" : "boolean",
+    "name" : "circularize"
+  }, {
+    "type" : "boolean",
+    "name" : "removeMarkings"
+  } ],
+  "code" : "function digest (sequence, enzymes, circularize, removeMarkings) {\n  var Digest = clotho.load('Digest');\n  var seq = sequence.sequence;\n  \n  //we'll allow an object too\n  if (!_.isArray(enzymes)) {\n    enzymes = [enzymes];\n  }\n  \n  var frags = Digest.digest(seq, enzymes, circularize, removeMarkings);\n  \n  return _.map(frags, function (frag) {\n    return {\n      sequence : frag\n    };\n  });\n}",
+  "description" : "Performs digest given a marked or unmarked sequence and a single or array of enzymes, return fragments array ordered by length. An enzyme object instead of array is also accepted.",
+  "language" : "JAVASCRIPT",
+  "name" : "digest",
+  "schema" : "org.clothocad.core.datums.Function",
+  "tests" : [ {
+    "args" : [ "clotho.demo.sequence.ca1215f", [ {
+      "cut" : "a^gatc_t",
+      "match" : "agatct",
+      "methylation" : false,
+      "name" : "BglII",
+      "overhang" : 4,
+      "rebase" : "http://rebase.neb.com/rebase/enz/BglII.html",
+      "schema" : "org.clothocad.model.RestrictionEnzyme",
+      "subtype" : "S",
+      "type" : "II",
+      "id" : "clotho.enzyme.BglII"
+    } ], false, false ],
+    "output" : {
+      "value" : [ {
+        "sequence" : "^gatc_tgatccagatttggaaattag"
+      }, {
+        "sequence" : "cagtga^gatc_"
+      } ],
+      "type" : ""
+    }
+  } ],
+  "id" : "clotho.functions.dna.digest"
+}

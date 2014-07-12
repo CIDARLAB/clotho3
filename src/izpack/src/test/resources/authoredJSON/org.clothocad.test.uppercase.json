@@ -1,0 +1,11 @@
+{
+  "name" : "uppercase",
+  "id" : "org.clothocad.test.uppercase",
+  "language" : "JAVASCRIPT",
+  "schema" : "org.clothocad.core.datums.Function",
+  "code" : "function (str) {return str.toUpperCase();};",
+  "args" : [ {
+    "name" : "str",
+    "type" : "string"
+  } ]
+}

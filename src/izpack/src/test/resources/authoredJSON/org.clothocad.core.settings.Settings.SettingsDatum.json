@@ -1,0 +1,25 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "binaryName" : "org.clothocad.core.settings.Settings.SettingsDatum",
+  "c" : "org.clothocad.core.settings.Settings$SettingsDatum",
+  "name" : "SettingsDatum",
+  "language" : "JAVA",
+  "fields" : [ {
+    "javaType" : "java.lang.String",
+    "name" : "id",
+    "type" : "string",
+    "reference" : false
+  }, {
+    "javaType" : "org.clothocad.core.settings.Settings",
+    "name" : "this$0",
+    "type" : "object",
+    "reference" : false
+  }, {
+    "javaType" : "java.lang.Boolean",
+    "name" : "recordAllDoos",
+    "type" : "boolean",
+    "reference" : false
+  } ],
+  "_id" : "{new=false}",
+  "id" : "org.clothocad.core.settings.Settings.SettingsDatum"
+}

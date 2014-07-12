@@ -1,0 +1,1 @@
+compile install.xml -b . -o install.jar -k standard

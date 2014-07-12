@@ -1,0 +1,14 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "org.clothocad.test.consoleTest",
+  "name" : "consoleTest",
+  "code" : "function() { console.log('log testing'); return 'This worked!' };",
+  "tests" : [ {
+    "args" : [ ],
+    "output" : {
+      "value" : "This worked!",
+      "type" : "VALUE"
+    }
+  } ],
+  "language" : "JAVASCRIPT"
+}

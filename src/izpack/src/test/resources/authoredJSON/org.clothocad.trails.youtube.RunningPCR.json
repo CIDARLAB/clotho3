@@ -1,0 +1,149 @@
+{
+  "name" : "Running PCR",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.RunningPCR",
+  "about" : {
+    "help" : "Running PCR was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 4/24/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "After designing the cloning experiment and ordering your oligos, it's time to start the PCR reaction."
+    } ]
+  },
+  "created" : 1398359253000,
+  "youtubePlaylistId" : "PL2aPXzks-TgOdmDmfWSneeIdp_4jF9lI-",
+  "icon" : "https://i1.ytimg.com/vi/y3wIUv1iQ20/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Oligos received from IDT",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "We've received the oligos we designed from IDT, so we can begin the experiment by running PCRs."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "y3wIUv1iQ20"
+        }
+      } ]
+    }, {
+      "title" : "Calculating oligo water volume",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "When you obtain oligos from IDT, typically they will be lyophilized (dried out).  So, you must resuspend the oligos in ddH20.  First you need to calculate how much water to add.  The math comes out as multiplying the \"nm\" number on the tube by 10 to get the number of microliters of water, and the result is a 100uM stock."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "MKKBvEor7yc"
+        }
+      } ]
+    }, {
+      "title" : "Spin down oligos before adding water",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Because the oligo material may become dislodged during shipment, it is wise to give the IDT-supplied tubes a quick spin before you open the lid."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "SPmbw_mUjQk"
+        }
+      } ]
+    }, {
+      "title" : "Three grades of water",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "There are three grades of water:  tap, house deionized, and doubly-deionized (ddH20). You want the highest grade, ddH20, for any reactions involving nucleic acids and for resuspending your oligos."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "0dEQBgR0Hho"
+        }
+      } ]
+    }, {
+      "title" : "Add water to oligos",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Add ddH2O to each IDT-supplied tube of oligos with the volume you calculated for the number of nmols present in the tube.  A brief shake of the tube is sufficient to get the oligos re-dissolved."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "rXi_wnF2Svg"
+        }
+      } ]
+    }, {
+      "title" : "Make 10uM oligo dilutions",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "The working concentration for our PCR protocol involves 10uM oligos.  From our stocks we have 100uM.  So, we need to prepare 10x dilutions in ddH2O."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "xJTGHZfgKAg"
+        }
+      } ]
+    }, {
+      "title" : "Pre-plan you tip usage to avoid errors",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "When setting up multiple reactions, you'll find it helpful to pre-plan which tips you will use for each transfer step.  This is an easy way to prevent yourself from omitting a reagent accidentally."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "2wcrhDjuE5o"
+        }
+      } ]
+    }, {
+      "title" : "Setting up a PCR reaction",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Here we set up the PCR reaction in a PCR tube.  We add ddH2O, phusion buffer, dNTPs, two oligos, template, and phusion polymerase.  We then thoroughly mix the reaction by vortexing or slamming the reaction on the bench."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "GNsmlRJ4qvs"
+        }
+      } ]
+    }, {
+      "title" : "Running a PCR on a Thermocycler",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Now we run the PCR reaction by placing it in the thermocycler and running the 2K55 program. This is a timed program containing 30 cycles of denaturing, annealing, and extension temperatures. The particular program you choose will depend on the polymerase and size of the expected PCR product."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "1Dsx-q_pYWg"
+        }
+      } ]
+    }, {
+      "title" : "Putting materials away after PCR",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Put your enzymes, dNTPs, buffers, templates, and oligos back in the freezer when you are done working with them."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "coy6-FELHyY"
+        }
+      } ]
+    } ]
+  } ]
+}

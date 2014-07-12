@@ -1,0 +1,11 @@
+{
+  "name" : "lowercase",
+  "id" : "org.clothocad.test.lowercase",
+  "language" : "JAVASCRIPT",
+  "schema" : "org.clothocad.core.datums.Function",
+  "code" : "function (str) {return str.toLowerCase();}",
+  "args" : [ {
+    "name" : "str",
+    "type" : "string"
+  } ]
+}

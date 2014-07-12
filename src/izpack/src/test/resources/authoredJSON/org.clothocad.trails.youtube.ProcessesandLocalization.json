@@ -1,0 +1,77 @@
+{
+  "name" : "Processes and Localization",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.ProcessesandLocalization",
+  "about" : {
+    "help" : "Processes and Localization was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 9/9/2013.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "A process is a recognized series of events or molecular functions, with a defined beginning and end. Here we examine the definition of a process and examine several universally-present processes occurring in cells."
+    } ]
+  },
+  "created" : 1378788494000,
+  "youtubePlaylistId" : "PL2aPXzks-TgMz06rZlbCRKzYyVkXyIwb9",
+  "icon" : "https://i1.ytimg.com/vi/A0KxP3m_fnc/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/Processes and Localization.pptx"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "Processes and Devices",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "A Biological Process is another one of these hard-to-define-precisely terms.  Examples include biosynthetic pathways, translation, transcription, and replication, and secretion."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "A0KxP3m_fnc"
+        }
+      } ]
+    }, {
+      "title" : "Transcription and Translation Processes",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Transcription and translation are examples of biological processes composed of many interacting biomolecules."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "P_QImSFYkFw"
+        }
+      } ]
+    }, {
+      "title" : "Compartments in Prokaryotes",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Localization processes exist in all cells and affect where your protein ends up after translation.  Placing proteins in different parts of the cell is a common activity in genetic engineering."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "gMTHK0p9DXc"
+        }
+      } ]
+    }, {
+      "title" : "Compartments in Eukaryotes",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "There are many differences between prokaryotic and eukaryotic cells, but one of the most obvious is the presence of organelles."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "jUJ0eCN4Pzo"
+        }
+      } ]
+    } ]
+  } ]
+}

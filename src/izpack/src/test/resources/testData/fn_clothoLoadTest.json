@@ -1,0 +1,9 @@
+{
+    "schema":"org.clothocad.core.datums.Function",
+    "id": "org.clothocad.test.clothoLoadTest",
+    "name": "clothoLoadTest",
+    "code": "function() {\nvar DNA = clotho.load('DNA');\nreturn DNA.revcomp('acgtacg');\n};",
+    "tests":[{"args":[],"output":{"value":"cgtacgt","type":""}}],
+    "language":"JAVASCRIPT"
+
+}

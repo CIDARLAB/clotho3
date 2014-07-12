@@ -1,0 +1,108 @@
+{
+  "name" : "DNA Fabrication",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.DNAFabrication",
+  "about" : {
+    "help" : "DNA Fabrication was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 2/3/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "DNA Fabrication is done using different methods at different scales.  Single bases can be joined into oligonucleotide-length DNAs (up to ~100 bp), oligonucleotides can be combined into gene-length DNAs in gene synthesis, and gene length DNAs can be assembled into yet larger compositions."
+    } ]
+  },
+  "created" : 1391486814000,
+  "youtubePlaylistId" : "PL2aPXzks-TgPX7HU4pogNUSBN9OK2PhBK",
+  "icon" : "https://i1.ytimg.com/vi/_XpQgGAO0lw/sddefault.jpg",
+  "materials" : [ {
+    "name" : "Accompanying Slides",
+    "icon" : "slides",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication.pptx"
+  }, {
+    "name" : "Example Files",
+    "icon" : "default",
+    "type" : "slides",
+    "path" : "partials/trails/youtubeClotho/DNA-Fabrication-Examples.zip"
+  } ],
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "DNA Fabrication",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "DNA fabrication is the process of writing a physical DNA with a specific sequence."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "_XpQgGAO0lw"
+        }
+      } ]
+    }, {
+      "title" : "Gene Synthesis",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Gene Synthesis refers to the construction of gene-length DNA, typically 800bp to 3kb in length, at base-level precision."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "LmdH9u_WTqI"
+        }
+      } ]
+    }, {
+      "title" : "Ad hoc Cloning",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Ad hoc cloning means any non-standardized method of constructing DNAs.  There are no constraints on the methodologies employed and these approaches make full use of the catalog of available enzymes and techniques to perform a cloning experiment.  The other methodologies we'll discuss correspond to standardized methods of fabrication.  Though ad hoc cloning would be difficult both computationally and physically to automate, automation is not the catch-all-scenario solution to DNA manipulation.  For example, various library generation methods are best implemented with ad hoc methods.  Additionally, until the price of commercial DNA fabrication comes down one more order of magnitide, there will still be some motivation to use these methods in the wetlab in contexts where the change to a sequence is fairly simple."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "gIl1wj5z-38"
+        }
+      } ]
+    }, {
+      "title" : "BioBrick Standard Assembly",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "BioBrick standard assembly was the first proposed method of fabricating multi-gene DNAs using one standardized chemistry.  It was proposed by Tom Knight at MIT and was popularized through the international genetically engineered machines competition."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "F1mXoy1-Vr0"
+        }
+      } ]
+    }, {
+      "title" : "PCR-based Assembly Methods",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "There are many strategies for assembling synthon or gene-length DNAs into larger molecules.  In PCR-based methods, DNAs are stitched together into full length products through polymerase-based reactions."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "KrZ_3I-Iidg"
+        }
+      } ]
+    }, {
+      "title" : "Site-directed Mutagenesis",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Site-directed mutagenesis involves making localized edits to a preexisting DNA sequence.  Typically it is used to introduce point mutations into a sequence such as to mutate a protein's active site or alter the strength of a ribosome binding site.  In a previous lecture we discussed an old-school method, Kunkel mutagenesis. That was the original technique.  However, much simpler protocols exist today."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "WYAvlvx786w"
+        }
+      } ]
+    } ]
+  } ]
+}

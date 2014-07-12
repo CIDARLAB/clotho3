@@ -1,0 +1,8 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "name" : "py_die_abrupt",
+  "id" : "org.andersonlab.py_die_abrupt",
+  "description" : "Something kelvin wrote to test something",
+  "code" : "import os; os.kill(os.getpid(), 9)"
+}
