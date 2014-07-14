@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.communication;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,13 +12,10 @@ import java.util.Map;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.testers.ClothoTestModule;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import static org.junit.Assert.*;
@@ -30,23 +26,13 @@ import org.python.google.common.collect.Lists;
  *
  * @author spaige
  */
-public class MessageOptionsTest {
+public class MessageOptionsTest extends AuthorizedShiroTest{
     private static Router router;
-    private static Injector injector;
     private static List<ObjectId> ids;
-    
-    @BeforeClass
-    public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        router = injector.getInstance(Router.class);
-        org.apache.shiro.mgt.SecurityManager securityManager = injector.getInstance(org.apache.shiro.mgt.SecurityManager.class);
-        SecurityUtils.setSecurityManager(securityManager);
-        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-        TestUtils.setupTestUsers(realm);
-    }
 
-    @AfterClass
-    public static void tearDownClass() {
+    public MessageOptionsTest() {
+        super();
+        router = injector.getInstance(Router.class);
     }
 
     @Before
@@ -55,13 +41,6 @@ public class MessageOptionsTest {
         ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
     }
 
-    @After
-    public void tearDown() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-        
-    }
-    
     private void sendMessage(Message message, ClientConnection connection) throws IOException {
         String stringMessage = JSON.serializeForExternal(message);
         message = JSON.mapper.readValue(stringMessage, Message.class);

@@ -30,7 +30,7 @@ import org.junit.Test;
  * @author yu
  * @version 1.0
  */
-public class CreatorCheckTest {
+public class CreatorCheckTest extends AbstractShiroTest {
 
     private Router router;
     private Persistor persistor;
@@ -80,24 +80,13 @@ public class CreatorCheckTest {
      *
      * @exception no exception expected
      */
-    @Ignore("not implemented yet") @Test
+    @Test
     public void testRead() {
         initAPI("0000");
         Map<String, Object> newObj = initObj();
 
-        try {
-            Subject currentUser = SecurityUtils.getSubject();
-            /*
-             * set permission here
-             */
-            UsernamePasswordToken token = new UsernamePasswordToken("write", "write");
-            currentUser.login(token);
-            token.setRememberMe(true);
-            api.login("write", "write");
-            api.get(newObj);
-        } catch (UnavailableSecurityManagerException e) {
-        }
-
+        api.login("write", "write");
+        api.get(newObj);
     }
 
     /**

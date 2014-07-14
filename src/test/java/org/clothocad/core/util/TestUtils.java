@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,8 +19,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
@@ -145,6 +146,34 @@ public class TestUtils {
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+    
+    public static class SetupTestData implements Callable {
+        public SetupTestData(Persistor persistor){
+            this.persistor = persistor;
+        }
+        
+        private Persistor persistor;
+        
+        @Override
+        public Object call() throws Exception {
+            setupTestData(persistor);
+            return persistor;
+        }
+        
+    }
+    
+    public static class SetupTestRealm implements Callable {
+        public SetupTestRealm(ClothoRealm realm){
+            this.realm = realm;
+        }
+        private ClothoRealm realm;
+
+        @Override
+        public Object call() throws Exception {
+            setupTestUsers(realm);
+            return realm;
         }
     }
 }

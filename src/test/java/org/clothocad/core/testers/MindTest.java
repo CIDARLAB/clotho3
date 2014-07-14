@@ -9,29 +9,18 @@ import javax.script.ScriptException;
 import org.clothocad.core.communication.MessageOptions;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.execution.ScriptAPI;
-import org.junit.Before;
 import org.junit.Test;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.communication.TestConnection;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
-import org.junit.After;
 
-public class MindTest {
+public class MindTest extends AuthorizedShiroTest{
     Mind mind = new Mind();
     
-    @Before
-    public void setUp() {
-        System.out.println("setup");
-    }
-    
-    @After
-    public void tearDown() {
-        System.out.println("tear");
-    }
-    
     @Test
-public void testScript() throws ScriptException {
+    public void testScript() throws ScriptException {
         TestConnection connection = new TestConnection("testScriptGet");
         mind.setConnection(connection);
         Injector injector = TestUtils.getDefaultTestInjector();

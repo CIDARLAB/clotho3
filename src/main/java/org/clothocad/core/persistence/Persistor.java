@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
@@ -101,7 +104,7 @@ public class Persistor{
         this.connection = connection;
         connect();
         
-        if (initializeBuiltins) initializeBuiltInSchemas();
+       // if (initializeBuiltins) initializeBuiltInSchemas();
         
         converters = new Converters();       
         globalTrie = new GlobalTrie(connection.getCompletionData());
@@ -124,7 +127,12 @@ public class Persistor{
     }
     
     
-    public <T extends ObjBase> T get(Class<T> type, ObjectId id){
+    public <T extends ObjBase> T get(Class<T> type, ObjectId id) throws EntityNotFoundException {
+        try {
+            checkPriv(id, "view");
+        } catch (AuthorizationException e){
+            throw new EntityNotFoundException(id.toString());
+        }
         T obj = connection.get(type, id);
         if (obj == null) throw new EntityNotFoundException(id.toString());
         validate(obj);
@@ -137,8 +145,21 @@ public class Persistor{
         return save(obj, false);
     }
     
+    private void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
+        if (id == null) throw new IllegalArgumentException("Null ObjectId");
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (has(id)) {
+            if (!currentSubject.isPermitted("data:"+ priviliege + ":" + id.toString())) {
+                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), id);
+                throw new AuthorizationException("Not authorized.");
+            }
+        }
+    }
+    
     public ObjectId save(ObjBase obj, boolean overwrite) {
+        if (obj.getId() != null) checkPriv(obj.getId(), "edit");
         validate(obj);
+        
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
 
         
@@ -156,11 +177,16 @@ public class Persistor{
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
+       if (!SecurityUtils.getSubject().isAuthenticated()){
+           throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+       }
        if (!data.containsKey(ID)){
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
             data.put(ID, id.toString());
-        }
+       } else {
+           checkPriv(new ObjectId(data.get(ID)), "edit");
+       }
         connection.save(data);
         
         //Update the GlobalTrie with the new object
@@ -169,7 +195,8 @@ public class Persistor{
         return new ObjectId(data.get(ID).toString());
     }
     
-    public void delete(ObjectId id){
+    public void delete(ObjectId id) throws AuthorizationException{
+        checkPriv(id, "delete");
         connection.delete(id);
     }
     
@@ -177,9 +204,15 @@ public class Persistor{
         return getAsJSON(uuid, null);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId uuid, Set<String> fields){
-        Map<String,Object> result = connection.getAsBSON(uuid, fields);
-        if (result == null) throw new EntityNotFoundException(uuid.toString());
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields){
+        try {
+            checkPriv(id, "view");
+        } catch (AuthorizationException e){
+            throw new EntityNotFoundException(id.toString());
+        }        
+        
+        Map<String,Object> result = connection.getAsBSON(id, fields);
+        if (result == null) throw new EntityNotFoundException(id.toString());
         return result;
     }
     
@@ -323,6 +356,15 @@ public class Persistor{
         query = addSubSchemas(query);
         List<ObjBase> result = connection.get(query, hitmax);
         //TODO: also add converted instances
+        
+        //filter results for permission
+        for (ObjBase obj : result){
+            try{
+                checkPriv(obj.getId(), "view");
+            } catch (AuthorizationException e){
+                result.remove(obj);
+            }
+        }
         return result;
     }
 
@@ -436,7 +478,18 @@ public class Persistor{
                 }
             }
         }
-        return filterDuplicatesById(out);
+        out = filterDuplicatesById(out);
+        
+        //filter results for permission
+        for (Map<String,Object> obj : out){
+            try{
+                checkPriv(new ObjectId(obj.get(ID)), "view");
+            } catch (AuthorizationException e){
+                out.remove(obj);
+            }
+        }
+        
+        return out;
     }
     
     private List<Map<String,Object>> filterDuplicatesById(List<Map<String,Object>> objects){

@@ -6,6 +6,7 @@ package org.clothocad.core.util;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.security.CredentialStore;
 
@@ -20,7 +21,7 @@ public class JongoTestModule extends AbstractModule {
         bind(CredentialStore.class).to(TestEnvConnection.class);
         bind(TestEnvConnection.class).in(Singleton.class);
         bind(ClothoConnection.class).to(TestEnvConnection.class);
-
+        bind(RolePermissionResolver.class).to(TestEnvConnection.class);
     }
 
 }

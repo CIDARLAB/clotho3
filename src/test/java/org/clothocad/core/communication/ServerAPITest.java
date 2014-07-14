@@ -18,6 +18,7 @@ import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -31,7 +32,7 @@ import org.junit.Ignore;
  *
  * @author spaige
  */
-public class ServerAPITest {
+public class ServerAPITest extends AuthorizedShiroTest {
 
     private static ServerSideAPI api;
     private static ServerSideAPI unprivilegedUser;
@@ -41,12 +42,8 @@ public class ServerAPITest {
     private static Router router;
 
     public ServerAPITest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-        Injector injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        persistor = injector.getInstance(Persistor.class);
+        super();
+                persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
         mind = new Mind();
         api = new ServerSideAPI(mind, persistor, router, null);
@@ -54,18 +51,10 @@ public class ServerAPITest {
         mind.setConnection(new TestConnection("test"));
     }
 
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
         persistor.deleteAll();
         ids = TestUtils.setupTestData(persistor);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test

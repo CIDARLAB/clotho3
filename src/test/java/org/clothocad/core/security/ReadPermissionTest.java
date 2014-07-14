@@ -54,7 +54,7 @@ public class ReadPermissionTest {
         persistor = injector.getInstance(Persistor.class);
         //ServerSideAPI api = new DummyAPI(persistor);
         api = new ServerSideAPI(null, persistor, null, id);
-        util = new SecurityTestUtils(persistor);
+        util = injector.getInstance(SecurityTestUtils.class);
     }
 
     /**

@@ -17,5 +17,9 @@ public interface CredentialStore {
     
     public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt);
     
+    public void addPermission(String username, String permission);
+    
+    public void removePermission(String username, String permission);
+    
     public void deleteAllCredentials();
 }

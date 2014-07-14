@@ -15,10 +15,9 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,28 +27,21 @@ import static org.junit.Assert.*;
  *
  * @author spaige
  */
-public class RouterTest {
+public class RouterTest extends AuthorizedShiroTest{
 
     private static Router router;
-    private static Injector injector;
     private static List<ObjectId> ids;
 
     public RouterTest() {
+            router = injector.getInstance(Router.class);
+
     }
 
     @BeforeClass
     public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        router = injector.getInstance(Router.class);
-        SecurityManager securityManager = injector.getInstance(SecurityManager.class);
-        SecurityUtils.setSecurityManager(securityManager);
-        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-        TestUtils.setupTestUsers(realm);
+
     }
 
-    @AfterClass
-    public static void tearDownClass() {
-    }
 
     @Before
     public void setUp() {
@@ -57,12 +49,6 @@ public class RouterTest {
         ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
     }
 
-    @After
-    public void tearDown() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-        
-    }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //

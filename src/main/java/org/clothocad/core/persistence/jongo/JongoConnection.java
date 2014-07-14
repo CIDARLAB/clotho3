@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -18,12 +19,13 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import static com.mongodb.MongoException.DuplicateKey;
-import groovy.lang.Tuple;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.permission.RolePermissionResolver;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 import org.bson.BSONObject;
@@ -52,7 +57,7 @@ import org.python.google.common.collect.Lists;
  * @author spaige
  */
 @Slf4j
-public class JongoConnection implements ClothoConnection, CredentialStore {
+public class JongoConnection implements ClothoConnection, CredentialStore, RolePermissionResolver {
 
     protected RefJongo jongo;
     protected DB db;
@@ -61,6 +66,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     //TODO: split into separate collections per top-level schema
     protected RefMongoCollection data;
     protected DBCollection cred;
+    protected DBCollection roles;
     protected DBCollection rawDataCollection;
     
     protected DBClassLoader classLoader;
@@ -72,6 +78,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
         cred = db.getCollection("cred");
+        roles = db.getCollection("roles");
         classLoader = dbClassLoader;
     }
 
@@ -279,6 +286,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         }
 
         SimpleAccount account = new SimpleAccount(username, accountData.get("hash"), ByteSource.Util.bytes(accountData.get("salt")), "clotho");
+        Object permissions = accountData.get("permissions");
+        if (permissions != null && permissions instanceof Collection) {
+            Set<String> stringPerms = new HashSet<>((Collection) permissions);
+            account.setStringPermissions(stringPerms);
+        }
         return account;
     }
 
@@ -288,7 +300,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         DBObject account = new BasicDBObject("_id", username);
         account.put("hash", hashedPw.getBytes());
         account.put("salt", salt.getBytes());
-
+        account.put("permissions", new BasicDBList());
         cred.save(account);
     }
 
@@ -388,6 +400,37 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         builder.append("}");
         
         return builder.toString();
+    }
+
+    @Override
+    public Collection<Permission> resolvePermissionsInRole(String roleString) {
+        Collection<Permission> permissions = Collections.emptySet();
+        DBObject roleData = roles.findOne(new BasicDBObject("_id", roleString));
+        
+        Object permissionStrings = roleData.get("permissions");
+        if (permissionStrings != null && permissionStrings instanceof Collection) {
+            Set<String> stringPerms = new HashSet<>((Collection) permissionStrings);
+            for (String permission : stringPerms){
+                permissions.add(new WildcardPermission(permission));
+            }
+        }
+        return permissions;
+    }
+
+    @Override
+    public void addPermission(String username, String permission) {
+        DBObject query = new BasicDBObject("_id", username);
+        DBObject update = new BasicDBObject("$addToSet", new BasicDBObject("permissions", permission));
+        
+        cred.update(query, update);
+    }
+
+    @Override
+    public void removePermission(String username, String permission) {
+        DBObject query = new BasicDBObject("_id", username);
+        DBObject update = new BasicDBObject("$pull", new BasicDBObject("permissions", permission));
+        
+        cred.update(query, update);    
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
