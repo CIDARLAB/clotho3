@@ -5,6 +5,7 @@ from registryCollector import _grabRegistry
 def _regToPoly(registry):
     change = json.loads(registry)
     fin = {}
+    fin['schema'] = 'org.clothocad.model.Polynucleotide'
     fin['isLinear'] = True
     fin['isSingleStranded'] = False
     for key in change.keys():
