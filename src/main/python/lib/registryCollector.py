@@ -23,7 +23,7 @@ def regParse(inString):
 	root = regRoot(inString)
 	fin = recTraverse(root)['part_list'][0]['part'][0]
 	fin["schema"] = "org.registry.model.Part"
-	fin['id'] = 'org.registry.part.' + fin['part_short_name']
+	fin['id'] = 'org.registry.part.' + fin['part_name']
 	import json
 	j = json.dumps(fin, indent=4)
 	return j

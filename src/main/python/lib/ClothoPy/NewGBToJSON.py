@@ -32,7 +32,7 @@ class NewGBConverter:
         'accession': self.gb.accn[0], \
         #'organism': self.gb.organism, \
         'date': self.gb.date, \
-        'highlight': self.highs, \
+        'highlights': self.highs, \
         #'data_file_division': self.gb.data_file_division, \
         #'pubmed': self.gb.pubmed, \
         'isLinear': self.gb.isLinear, \
@@ -61,6 +61,10 @@ class NewGBConverter:
     'inference':'inference', 'label': 'description', 'note': 'notes'}
 
     def highlight(self):
+        import random
+        r = lambda: random.randint(0,255)
+        color1 = '#%02X%02X%02X' % (r(),r(),r())
+        color2 = '#%02X%02X%02X' % (r(),r(),r())
         high = self.gb.highlight
         count = 1;
         for f in high:
@@ -68,7 +72,7 @@ class NewGBConverter:
             qual = f.qualifiers
             self.highs.append( 
             {'start':loc.start.position, 'end': loc.end.position, \
-            'forColor': '#000000', 'revColor': '#000000', 'inference': None, \
+            'forColor': color1, 'revColor': color2, 'inference': None, \
             'notes': None, 'description': None }) #notes is supposed to be the qualifier notes if it exists
             #'strand': loc.strand, 'type':f.type, \
             #'id:': f.id, \
