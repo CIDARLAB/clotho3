@@ -721,9 +721,9 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
                 }
             } else {
                 if (result instanceof ObjBase) {
-                    results.add(persistor.save((ObjBase) result));
+                    return persistor.save((ObjBase) result);
                 } else {
-                    results.add(result);
+                    return result;
                 }
             }
             Message message = new Message(Channel.run, results, requestId, null);
