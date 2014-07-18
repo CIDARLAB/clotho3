@@ -1,20 +1,13 @@
 package org.clothocad.core.communication;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.mgt.SecurityManager;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
