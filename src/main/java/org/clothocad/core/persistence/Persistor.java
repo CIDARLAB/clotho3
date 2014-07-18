@@ -525,7 +525,7 @@ public class Persistor{
         initializeBuiltInSchemas();
    }
 
-    protected void initializeBuiltInSchemas() {
+    public void initializeBuiltInSchemas() {
         //XXX: just built-in models for now
         Reflections models = new Reflections("org.clothocad");
 

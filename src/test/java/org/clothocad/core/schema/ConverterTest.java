@@ -26,6 +26,7 @@ public class ConverterTest extends AuthorizedShiroTest {
     public ConverterTest() {
         super();
         p = injector.getInstance(Persistor.class);
+        p.initializeBuiltInSchemas();
         basicPartSchema = p.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
     }
     public Persistor p;

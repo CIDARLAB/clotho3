@@ -23,6 +23,7 @@ public class ConvertersTest extends AuthorizedShiroTest {
     {
         Injector injector = TestUtils.getDefaultTestInjector();
         persistor = injector.getInstance(Persistor.class);
+        persistor.initializeBuiltInSchemas();
     } 
 
     public ConvertersTest() {
