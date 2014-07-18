@@ -660,10 +660,10 @@ public class ServerSideAPI {
 
         if (data.containsKey(ReservedFieldNames.ID)) {
             //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id")));
+            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id")), null, true);
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
-                    Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
+                    Function function = persistor.get(Function.class, new ObjectId(data.get("id")), true);
 System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
 
                     if(function.getLanguage().equals(Language.PYTHON)) {
@@ -682,7 +682,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             //XXX: this whole function is still a mess
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
-                    Module module = persistor.get(Module.class, new ObjectId(data.get("id")));
+                    Module module = persistor.get(Module.class, new ObjectId(data.get("id")), true);
 
                     return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
@@ -698,12 +698,18 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             for (int i = 0; i < args.size(); i++) {
                 try {
                     ObjectId id = new ObjectId(args.get(i).toString());
+                    //must have read privs on args
                     args.set(i, persistor.get(ObjBase.class, id));
                 } catch (EntityNotFoundException e) {
+                    //XXX: warn here? fail here?
                 }
             }
+                        //check for permissions
+            ObjectId id = new ObjectId(data.get("id").toString());
+            persistor.checkPriv(id, "run");
             //reflectively (ugh) run function of instance
-            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
+            ObjBase instance = persistor.get(ObjBase.class, id, true);
+
 
             Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
             Object result = method.invoke(instance, args.toArray());
@@ -731,7 +737,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             return Void.TYPE;
         }
 
-        Function function = persistor.get(Function.class, new ObjectId(data.get("function")));
+        Function function = persistor.get(Function.class, new ObjectId(data.get("function")), true);
         List arguments;
         try {
             arguments = data.containsKey("arguments")

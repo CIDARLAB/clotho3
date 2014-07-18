@@ -47,6 +47,7 @@ import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
@@ -126,10 +127,14 @@ public class Persistor{
         }
     }
     
-    
     public <T extends ObjBase> T get(Class<T> type, ObjectId id) throws EntityNotFoundException {
+        return get(type,id,false);
+    }    
+    
+    public <T extends ObjBase> T get(Class<T> type, ObjectId id, boolean forRun) throws EntityNotFoundException {
         try {
-            checkPriv(id, "view");
+            if (forRun) checkPriv(id, "run"); 
+            else checkPriv(id, "view");
         } catch (AuthorizationException e){
             throw new EntityNotFoundException(id.toString());
         }
@@ -145,13 +150,13 @@ public class Persistor{
         return save(obj, false);
     }
     
-    private void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
+    public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
         if (id == null) throw new IllegalArgumentException("Null ObjectId");
         Subject currentSubject = SecurityUtils.getSubject();
         if (has(id)) {
             if (!currentSubject.isPermitted("data:"+ priviliege + ":" + id.toString())) {
                 log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), id);
-                throw new AuthorizationException("Not authorized.");
+                throw new UnauthorizedException("Not authorized.");
             }
         }
     }
@@ -200,13 +205,18 @@ public class Persistor{
         connection.delete(id);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId uuid){
-        return getAsJSON(uuid, null);
+    public Map<String, Object> getAsJSON(ObjectId id){
+        return getAsJSON(id, null, false);
     }
     
     public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields){
+        return getAsJSON(id, fields, false);
+    }
+    
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun){
         try {
-            checkPriv(id, "view");
+            if (forRun) checkPriv(id, "run");
+            else checkPriv(id, "view");
         } catch (AuthorizationException e){
             throw new EntityNotFoundException(id.toString());
         }        
