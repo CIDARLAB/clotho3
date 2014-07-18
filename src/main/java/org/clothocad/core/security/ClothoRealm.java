@@ -48,6 +48,8 @@ public class ClothoRealm extends AuthorizingRealm {
         setCredentialsMatcher(matcher);
         
         setRolePermissionResolver(roleResolver);
+        
+        //set up role info
     }
 
     @Override

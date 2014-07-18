@@ -291,6 +291,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
             Set<String> stringPerms = new HashSet<>((Collection) permissions);
             account.setStringPermissions(stringPerms);
         }
+        //TODO - temp until roles implemented
+        account.setRoles(new HashSet<String>());
         return account;
     }
 
@@ -406,6 +408,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     public Collection<Permission> resolvePermissionsInRole(String roleString) {
         Collection<Permission> permissions = Collections.emptySet();
         DBObject roleData = roles.findOne(new BasicDBObject("_id", roleString));
+        
+        if (roleData == null) return permissions;
         
         Object permissionStrings = roleData.get("permissions");
         if (permissionStrings != null && permissionStrings instanceof Collection) {
