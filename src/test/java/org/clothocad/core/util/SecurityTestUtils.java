@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
@@ -32,17 +33,28 @@ public class SecurityTestUtils {
         privateInstitution.setVisibility(Visibility.PRIVATE);
         p.save(privateInstitution);
         Institution publicInstitution = new Institution("Public Institution", "", "", "");
-        privateInstitution.setVisibility(Visibility.PUBLIC);
         p.save(publicInstitution);
+        //XXX: need dummy function
+        Module privateModule = new SecurityTester();
+        //privateModule.setId(new ObjectId(privateModule.getId().toString() + "$Private"));
+        p.save(privateModule);
+        Module publicModule = new SecurityTester();
+        //publicModule.setId(new ObjectId(publicModule.getId().toString() + "$Public"));
+        p.save(publicModule);
+        
         objects = new HashMap<>();
         objects.put(("private"), privateInstitution);
         objects.put(("public"), publicInstitution);
+        objects.put(("privateModule"), privateModule);
+        objects.put(("publicModule"), publicModule);
         
         Set<ObjectId> ids = new HashSet<>();
         ids.add(privateInstitution.getId());
         ids.add(publicInstitution.getId());
+        ids.add(publicModule.getId());
+        ids.add(privateModule.getId());
         
-        //make users - just credentials for now
+        //make users
         realm.addAccount("none", "none");
         realm.addAccount("read", "read");
         addPermission("read", READ, ids, realm);
@@ -59,6 +71,8 @@ public class SecurityTestUtils {
         credentials.put("write", "write");
         credentials.put("run", "run");
         credentials.put("owner", "owner");
+        
+        
     }
     
     private static void addPermission(String username, Set<String> permissions, Set<ObjectId> ids, ClothoRealm realm){
@@ -76,6 +90,23 @@ public class SecurityTestUtils {
     */
     public Map<String,String>  credentials;
     public Map<String, ObjBase> objects;
+    
+    
+    public ObjBase getPublic(){
+        return objects.get("public");
+    }
+    
+    public ObjBase getPrivate(){
+        return objects.get("private");
+    }
+    
+    public Module getPublicModule(){
+        return (Module) objects.get("publicModule");
+    }
+    
+    public Module getPrivateModule(){
+        return (Module) objects.get("privateModule");
+    }
     
     public static final Set<String> READ = ImmutableSet.of("view", "run");
     public static final Set<String> WRITE = ImmutableSet.of("view", "edit", "run");

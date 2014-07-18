@@ -4,23 +4,22 @@
  */
 package org.clothocad.core.security;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.common.collect.Lists;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.EntityNotFoundException;
+import javax.script.ScriptException;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.UnavailableSecurityManagerException;
-import org.apache.shiro.authc.*;
 
 import org.apache.shiro.subject.Subject;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ServerSideAPI;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
-import org.clothocad.core.testers.ClothoTestModule;
-import org.clothocad.core.util.SecurityTestUtils;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.model.Institution;
 import org.junit.Ignore;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * test case of user with 'owner' permission test actions of read, edit, delete
@@ -29,92 +28,68 @@ import org.junit.Test;
  * @author yu
  * @version 1.0
  */
-public class OwnPermissionTest {
-
-    private Router router;
-    private Persistor persistor;
-    private Injector injector;
-    private ServerSideAPI api;
-    private SecurityTestUtils util;
+public class OwnPermissionTest extends AbstractSecurityTest {
 
     /**
      * constructor
      */
     public OwnPermissionTest() {
-    }
-
-    /**
-     * create a new instance of ServerSideAPI
-     *
-     * @param id String format id of ServerSideAPI
-     */
-    public void initAPI(String id) {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        persistor = injector.getInstance(Persistor.class);
-        //ServerSideAPI api = new DummyAPI(persistor);
-        api = new ServerSideAPI(null, persistor, null, id);
-    }
-
-    /**
-     * create a new instance of ServerSideAPI
-     *
-     * @return returns the default object in ServerSideAPI
-     */
-    public Map<String, Object> initObj() {
-        Map<String, Object> defObj = new HashMap<>();
-        Subject currentUser = SecurityUtils.getSubject();
-        currentUser.checkPermission(util.credentials.get("owner"));
-        defObj.put("private", util.objects.get("private"));
-
-        UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
-        currentUser.login(token);
-        api.login("owner", "owner");
-        api.create(defObj);
-        api.logout();
-        return defObj;
+        super();
     }
 
     /**
      * test read action
      *
-     * @exception no exception expected
      */
-    @Ignore("not implemented yet") @Test
+    @Test
     public void testRead() {
         initAPI("0000");
-        Map<String, Object> newObj = initObj();
 
-        try {
-            Subject currentUser = SecurityUtils.getSubject();
-
-            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
-            currentUser.login(token);
-            token.setRememberMe(true);
-            api.login("owner", "owner");
-            api.get(newObj);
-        } catch (UnavailableSecurityManagerException e) {
-        }
-
+        ObjBase priv = util.getPrivate();
+        api.login("owner", "owner");
+        assertEquals(priv.getId(), persistor.get(Institution.class, priv.getId()).getId());
     }
 
+    
+    @Test
+    public void testFind() {
+        initAPI("ownerFind");
+        api.login("owner", "owner");
+        Map<String, Object> query = new HashMap<>();
+        query.put("schema", Institution.class.getName());
+        assertEquals(2, Lists.newArrayList(persistor.find(query)).size());
+    }
+    
+    @Test
+    public void testRun() throws Exception {
+        initAPI("ownerRun");
+        login("owner");
+        Map<String,Object> command = new HashMap<>();
+        command.put("args", new ArrayList());
+        command.put("id", util.getPrivateModule().getId());
+        command.put("function", "function");
+        assertEquals("function ran!", api.run(command));
+    }
+    
+    //TODO: test run script
     /**
      * test edit action
-     *
-     * @exception no exception expected
      */
-    @Ignore("not implemented yet") @Test
+    @Test
     public void testEdit() {
         initAPI("0001");
-        Map<String, Object> newObj = initObj();
-
+        ObjBase priv = util.getPrivate();
         try {
-            Subject currentUser = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
-            currentUser.login(token);
-            token.setRememberMe(true);
+
+            Map<String, Object> edit = new HashMap<>();
+            edit.put("id", priv.getId());
+            edit.put("name", "Changed Name");
             api.login("owner", "owner");
-            api.set(newObj);
-        } catch (UnavailableSecurityManagerException e) {
+            persistor.save(edit);
+            assertEquals("Changed Name", persistor.get(Institution.class, priv.getId()).getName());
+        } finally {
+            //reset state of persistor
+            persistor.save(priv);
         }
 
     }
@@ -122,47 +97,41 @@ public class OwnPermissionTest {
     /**
      * test delete action
      *
-     * @exception no exception expected
      */
-    @Ignore("not implemented yet") @Test
+    @Test
     public void testDelete() {
-        initAPI("0002");
-        Map<String, Object> newObj = initObj();
 
         try {
-            Subject currentUser = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
-            currentUser.login(token);
-            token.setRememberMe(true);
+                    initAPI("0002");
+        ObjectId id = util.getPrivate().getId();
             api.login("owner", "owner");
-            api.destroy(newObj);
-        } catch (UnavailableSecurityManagerException e) {
+            persistor.delete(id);
+            try {
+                persistor.getAsJSON(id);
+                fail();
+            } catch (EntityNotFoundException e){
+                
+            }
+
+        } finally {
+            persistor.save(util.getPrivate());
         }
 
     }
 
     /**
      * test edit permission
-     *
-     * @exception UnauthorizedException expected
      */
-    @Ignore("not implemented yet") @Test
+    @Ignore
+    @Test
     public void testEditPermission() {
         initAPI("0003");
-        Map<String, Object> newObj = initObj();
 
-        try {
-            Subject currentUser = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken("owner", "owner");
-            currentUser.login(token);
-            token.setRememberMe(true);
-            api.login("owner", "owner");
-            /*
-             *code here to edit permission 
-             */
-
-        } catch (UnavailableSecurityManagerException e) {
-        }
+        Subject currentUser = SecurityUtils.getSubject();
+        api.login("owner", "owner");
+        /*
+         *code here to edit permission 
+         */
 
     }
 }
