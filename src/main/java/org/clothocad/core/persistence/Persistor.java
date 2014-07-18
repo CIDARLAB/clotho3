@@ -368,14 +368,15 @@ public class Persistor{
         //TODO: also add converted instances
         
         //filter results for permission
+        List<ObjBase> filteredResult = new ArrayList<>();
         for (ObjBase obj : result){
             try{
                 checkPriv(obj.getId(), "view");
+                filteredResult.add(obj);
             } catch (AuthorizationException e){
-                result.remove(obj);
             }
         }
-        return result;
+        return filteredResult;
     }
 
     private List<Map<String,Object>> getConvertedData(Schema originalSchema, Set<String> fields){
