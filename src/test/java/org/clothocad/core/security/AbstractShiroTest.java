@@ -13,12 +13,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.LifecycleUtils;
 import org.apache.shiro.util.ThreadState;
-import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.testers.ClothoTestModule;
-import org.junit.After;
+import org.clothocad.core.util.JongoTestModule;
 import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
  
 /**
  * Abstract test case enabling Shiro in test environments.
@@ -29,7 +26,7 @@ public abstract class AbstractShiroTest {
     protected Injector injector;
     
     public AbstractShiroTest() {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new JongoTestModule());
         setSecurityManager(injector.getInstance(SecurityManager.class));
     }
     

@@ -33,6 +33,10 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 public class ClothoTestModule extends ClothoModule {
     public ClothoTestModule(Properties config) {
         super(config);
+        //if dbName not set, set dbName
+        if (config == null || !config.containsKey("dbname")){
+            this.config.setProperty("dbname", "testClotho");
+        }
     }
 
     public ClothoTestModule() {

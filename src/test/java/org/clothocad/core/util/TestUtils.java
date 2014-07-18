@@ -99,7 +99,7 @@ public class TestUtils {
     }
 
     public static Injector getDefaultTestInjector() {
-        return Guice.createInjector(new ClothoTestModule(), new JongoModule());
+        return Guice.createInjector(new ClothoTestModule(), new JongoTestModule());
     }
 
     public static List<ObjectId> setupTestData(Persistor persistor) {

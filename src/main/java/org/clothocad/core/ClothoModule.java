@@ -23,7 +23,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  * @author spaige
  */
 public class ClothoModule extends AbstractModule {
-    private final Properties config;
+    protected final Properties config;
 
     public ClothoModule(Properties config) {
         this.config = config == null ?
