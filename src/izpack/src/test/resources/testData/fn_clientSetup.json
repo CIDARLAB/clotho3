@@ -1,7 +1,0 @@
-{
-    "schema":"org.clothocad.core.datums.Function",
-    "id": "clientSetup",
-    "name": "clientSetup",
-    "code": "function() {\nDNA = clotho.load('DNA');\nDigest = clotho.load('Digest');\nPCR = clotho.load('PCR');\n};",
-    "language":"JAVASCRIPT"
-}

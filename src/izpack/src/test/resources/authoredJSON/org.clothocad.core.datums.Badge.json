@@ -1,9 +1,0 @@
-{
-  "id" : "org.clothocad.core.datums.Badge",
-  "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
-  "binaryName" : "org.clothocad.core.datums.Badge",
-  "c" : "org.clothocad.core.datums.Badge",
-  "name" : "Badge",
-  "language" : "JAVA"
-}

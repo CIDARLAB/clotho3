@@ -1,9 +1,0 @@
-{
-  "id" : "org.clothocad.core.schema.InferredSchema",
-  "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.schema.Schema",
-  "binaryName" : "org.clothocad.core.schema.InferredSchema",
-  "c" : "org.clothocad.core.schema.InferredSchema",
-  "name" : "InferredSchema",
-  "language" : "JAVA"
-}
