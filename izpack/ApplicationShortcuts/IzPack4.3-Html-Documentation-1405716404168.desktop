@@ -1,0 +1,25 @@
+[Desktop Entry]
+Categories=
+Comment=This opens a WebBrowser to look into the IzPack 4.3.5 (HTML) user documentation
+Comment[en]=This opens a WebBrowser to look into the IzPack 4.3.5 (HTML) user documentation
+Encoding=UTF-8
+Exec=/home/prashantvaidyanathan/IzPack/bin/start.sh /home/prashantvaidyanathan/IzPack/doc/izpack/html/index.html
+GenericName=
+GenericName[en]=
+Icon=help
+MimeType=
+Name=IzPack4.3 Html Documentation
+Name[en]=IzPack4.3 Html Documentation
+Path=
+ServiceTypes=
+SwallowExec=
+SwallowTitle=
+Terminal=
+TerminalOptions=
+Type=Application
+URL=/home/prashantvaidyanathan/IzPack/doc/izpack/html/index.html
+X-KDE-SubstituteUID=false
+X-KDE-Username=root
+
+# created by com.izforge.izpack.util.os.Unix_Shortcut $Revision$
+# $Id$

@@ -1,0 +1,25 @@
+[Desktop Entry]
+Categories=
+Comment=This uninstalls IzPack 4.3.5
+Comment[en]=This uninstalls IzPack 4.3.5
+Encoding=UTF-8
+Exec=java -jar "/home/prashantvaidyanathan/IzPack/Uninstaller/uninstaller.jar"
+GenericName=
+GenericName[en]=
+Icon=trashcan_full
+MimeType=
+Name=Izpack4.3 Uninstaller
+Name[en]=Izpack4.3 Uninstaller
+Path=
+ServiceTypes=
+SwallowExec=
+SwallowTitle=
+Terminal=
+TerminalOptions=
+Type=Application
+URL=
+X-KDE-SubstituteUID=true
+X-KDE-Username=root
+
+# created by com.izforge.izpack.util.os.Unix_Shortcut $Revision$
+# $Id$
