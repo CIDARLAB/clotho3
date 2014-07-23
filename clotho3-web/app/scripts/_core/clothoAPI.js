@@ -113,18 +113,6 @@ function generateClothoAPI() {
 		return deferred.promise;
 	}
 
-
-
-    /**********
-       Config
-     **********/
-
-
-    /**********
-      Testing
-     **********/
-
-
     /**********
          API
      **********/
@@ -136,25 +124,46 @@ function generateClothoAPI() {
      * @param password
      *
      * @description
-     * Authenticate with Clotho
+     * Authenticate with Clotho. $broadcasts a message on 'clotho:login' on login with user info
      *
      * @returns {Promise} result of login
      */
     var login = function clothoAPI_login(username, password) {
-        var cred = {username: username, password: password};
-        return fn.emitSubOnce('login', cred);
+	    var cred = {username: username, password: password};
+
+	    function loginCallback(loginResult) {
+		    //todo - standardize credentials which are broadcasted
+				if (loginResult) {
+					PubSub.trigger('auth:login', loginResult);
+				} else {
+					PubSub.trigger('auth:error', 'Could not Login');
+				}
+	    }
+
+	    return fn.emitSubCallback('login', cred, loginCallback);
     };
 
 		/**
 		 * @name Clotho.logout
 		 *
 		 * @description
-		 * Logout of Clotho
+		 * Logout of Clotho. $broadcasts a message on 'clotho:logout' on logout.
 		 *
-		 * @returns {Promise} result of login
+		 * @returns {Promise} Promise which is fulfilled or rejected
 		 */
 		var logout = function clothoAPI_logout() {
-			return fn.emitSubOnce('logout', '');
+
+			function logoutCallback(logoutResult) {
+				//Will only be called if the server returns true, not if the promise is rejected because of timeout etc.
+				if (logoutResult) {
+					//return null to reset user info
+					PubSub.trigger('auth:logout', null);
+				} else {
+					PubSub.trigger('auth:error', 'Could not Logout');
+				}
+			}
+
+			return fn.emitSubCallback('logout', '', logoutCallback);
 		};
 
     /**
