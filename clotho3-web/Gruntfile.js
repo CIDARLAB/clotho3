@@ -480,6 +480,11 @@ module.exports = function (grunt) {
 				  '<%= yeoman.dist %>/index-trail.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
+		  priary : {
+			  files : {
+				  '<%= yeoman.dist %>/index-primary.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
 		  //dist must go last because overwrites index file
 		  dist : {
 			  files : {

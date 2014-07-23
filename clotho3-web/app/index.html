@@ -113,6 +113,7 @@ dependencies: none
 -->
 <script src="scripts/_core/_kickoff.js"></script>
 <script src="scripts/_core/angularAdditions.js"></script>
+<script src="scripts/_core/auth.js"></script>
 <script src="scripts/_core/debug.js"></script>
 <script src="scripts/_core/clothoAPI.js"></script>
 <script src="scripts/_core/clientAPI.js"></script>
@@ -284,15 +285,15 @@ name: clotho.webapp
 function: Controllers etc. specific to this instance of clotho
 dependencies: clotho.foundation, clotho.interface
 -->
-<script src="scripts/controllers/_kickoff-webapp.js"></script>
-<script src="scripts/controllers/home.js"></script>
-<script src="scripts/controllers/team.js"></script>
-<script src="scripts/controllers/browser.js"></script>
-<script src="scripts/controllers/editor.js"></script>
-<script src="scripts/controllers/trail.js"></script>
-<script src="scripts/controllers/trails.js"></script>
-<script src="scripts/controllers/trail-splash.js"></script>
-<script src="scripts/controllers/widgets.js"></script>
+<script src="scripts/_webapp/_kickoff-webapp.js"></script>
+<script src="scripts/_webapp/home.js"></script>
+<script src="scripts/_webapp/team.js"></script>
+<script src="scripts/_webapp/browser.js"></script>
+<script src="scripts/_webapp/editor.js"></script>
+<script src="scripts/_webapp/trail.js"></script>
+<script src="scripts/_webapp/trails.js"></script>
+<script src="scripts/_webapp/trail-splash.js"></script>
+<script src="scripts/_webapp/widgets.js"></script>
 <!-- endbuild -->
 
 
@@ -334,14 +335,22 @@ dependencies: clotho.foundation, clotho.interface
 name: clotho.webapp
 function: experiments [pre-integration]
 -->
-<script src="scripts/controllers/test/schemaview.js"></script>
-<script src="scripts/controllers/test/playlistimport.js"></script>
-<script src="scripts/controllers/test/quiz.js"></script>
-<script src="scripts/controllers/test/construction.js"></script>
-<script src="scripts/controllers/test/contstructionTrail.js"></script>
-<script src="scripts/controllers/test/focus.js"></script>
+<script src="scripts/_webapp/test/schemaview.js"></script>
+<script src="scripts/_webapp/test/playlistimport.js"></script>
+<script src="scripts/_webapp/test/quiz.js"></script>
+<script src="scripts/_webapp/test/construction.js"></script>
+<script src="scripts/_webapp/test/contstructionTrail.js"></script>
+<script src="scripts/_webapp/test/focus.js"></script>
 <!-- endbuild -->
 
+<!-- /process -->
+
+<!-- process:include:trails app/partials/buildSpecific/googleAnalytics-trails.html -->
+<!-- this is the google analytics code for the trails release -->
+<!-- /process -->
+
+<!-- process:include:primary app/partials/buildSpecific/googleAnalytics-primary.html -->
+<!-- this is the google analytics code for the primary release -->
 <!-- /process -->
 
 </body>
