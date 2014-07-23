@@ -486,6 +486,16 @@ module.exports = function (grunt) {
 				  '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  }
+	  },
+	  plato: {
+		  overviewReport: {
+			  options : {
+				  exclude: /\.min\.js$/    // excludes source files finishing with ".min.js"
+			  },
+			  files: {
+				  'reports': ['app/scripts/**/*.js']
+			  }
+		  }
 	  }
   });
 
