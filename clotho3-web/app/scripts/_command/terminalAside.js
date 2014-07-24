@@ -49,8 +49,8 @@ angular.module('clotho.commandbar')
 				terminalAsideOptions.visible = true;
 			};
 
-			scope.$toggle = function () {
-				terminalAsideOptions.visible = !terminalAsideOptions.visible;
+			scope.$toggle = function (force) {
+				terminalAsideOptions.visible = angular.isDefined(force) ? force : !terminalAsideOptions.visible;
 				angular.element('body').attr('aside-status', !!terminalAsideOptions.visible ? 'active' : '');
 			};
 
@@ -75,9 +75,6 @@ angular.module('clotho.commandbar')
 					element.removeClass('active');
 				}
 			});
-
-			hotkeys.add('t', "Toggle Clotho Terminal", scope.$toggle)
-
 		}
 	};
 })
@@ -91,7 +88,7 @@ angular.module('clotho.commandbar')
 			scope.toggle = function() {
 
 				//trigger the terminal, update classes after $digest
-				Clotho.trigger('toggleTerminalActive', scope.$toggle, scope);
+				Clotho.trigger('toggleTerminalActive');
 				$timeout(function () {
 					scope.activeClass = terminalAsideOptions.visible;
 					angular.element('body').attr('aside-status', !!terminalAsideOptions.visible ? 'active' : '');
