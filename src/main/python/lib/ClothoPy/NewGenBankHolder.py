@@ -22,7 +22,7 @@ class NewGenBank:
 		self.description = self.GB.description #important
 		#self.id = self.GB.id #important
 
-		self.sequence = self.GB.sequence.tostring() #important
+		self.sequence = str(self.GB.sequence) #important
 		#self.alphabet = self.GB.sequence.alphabet
 		#self.type = 'DNA' #important
 		#if isinstance(self.alphabet, RNAAlphabet):

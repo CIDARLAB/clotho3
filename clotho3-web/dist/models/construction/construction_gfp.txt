@@ -1,4 +1,4 @@
-PCR primer1/primer2 on pPROBE-GFP	(pcr_product)
+PCR primer1/primer2 on pPROBE-GFP[LVA]	(pcr_product)
 Digest pcr_product			(EcoRI/HindIII, fragments)
 GelPurify fragments			(L, probeDigested)
 Digest pUC19				(EcoRI/HindIII, fragments2)

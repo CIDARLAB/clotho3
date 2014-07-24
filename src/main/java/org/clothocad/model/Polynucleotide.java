@@ -1,7 +1,7 @@
 package org.clothocad.model;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class Polynucleotide extends ObjBase implements Serializable {
 	private Date submissionDate;
 
 	//@Getter
-	private Set<Highlight> highlights;
+	private List<Highlight> highlights;
 
 	@NotNull
 	private String sequence;

@@ -16,6 +16,7 @@ import java.util.List;
 import javassist.Modifier;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.util.BasicObjBase;
 
 /**
  *
@@ -64,8 +65,9 @@ public class InstantiatedReferencesCache extends InjectableValues.Std{
                     //todo: also if no-args
                     
                     //make a proxy and return that
-                    ObjBase newValue = HotSwapping.proxy(c).with(null).build(new CglibProxyFactory());
+                    ObjBase newValue = HotSwapping.proxy(c).with(new BasicObjBase()).build(new CglibProxyFactory());
                     this.addProxy(valueId.toString(), newValue);
+                    newValue.setId(new ObjectId(valueId.toString()));
                     return newValue;
                 }
                 

@@ -474,13 +474,16 @@ public class Persistor{
 
     protected void initializeBuiltInSchemas() {
         //XXX: just built-in models for now
-        Reflections models = new Reflections("org.clothocad");
+        List<String> packages = new ArrayList<String>();
+        packages.add("org.clothocad");
+        packages.add("org.registry");
+        for(String pack : packages) {
+            Reflections models = new Reflections(pack);
 
-        for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
-            //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
-            //not sure if this is a problem
-            
-            if (c.getSuperclass() == ObjBase.class){
+            for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
+                //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
+                //not sure if this is a problem
+
                 makeBuiltIns(c, null, models);
             }
         }

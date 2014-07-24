@@ -1,0 +1,8 @@
+{
+  "description" : "AC1R EcoRI to transfer spv into BAC",
+  "language" : "JSONSCHEMA",
+  "name" : "ca803r",
+  "schema" : "org.clothocad.model.Oligo",
+  "sequence" : "GCAACGGTCTCGAATTCCCTTAGCTCCTGAAAATCTCGC",
+  "id" : "org.andersonlab.oligo.ca803r"
+}
