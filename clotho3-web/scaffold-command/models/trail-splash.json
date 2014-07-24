@@ -1,0 +1,205 @@
+[
+	{
+		"title": "Introducing Clotho",
+		"trails": [
+			{
+				"title": "Introduction to Clotho",
+				"id": "org.clothocad.trails.LearningClotho"
+			},
+			{
+				"title": "Construction Files",
+				"id": "org.clothocad.trails.constructionFiles"
+			}
+		]
+	},
+	{
+		"title": "Basic Molecular Biology",
+		"trails": [
+			{
+				"title": "Introduction to Synthetic Biology",
+				"id": "org.clothocad.trails.youtube.IntroductiontoSyntheticBiology"
+			},
+			{
+				"title": "Organic Chemistry and Molecular Biology",
+				"id": "org.clothocad.trails.youtube.OrganicChemistryandMolecularBiology"
+			},
+			{
+				"title" : "Basics of OOP and Organic Chemistry",
+				"id" : "org.clothocad.trails.youtube.BasicsofOOPandOrganicChemistry"
+			}
+		]
+	},
+	{
+		"title": "Fabrication",
+		"trails": [
+			{
+				"title": "DNA Manipulation Enzymes",
+				"id": "org.clothocad.trails.youtube.DNAManipulationEnzymes"
+			},
+			{
+				"title": "DNA Fabrication",
+				"id": "org.clothocad.trails.youtube.DNAFabrication"
+			},
+			{
+				"title": "Genome Manipulation",
+				"id": "org.clothocad.trails.youtube.GenomeManipulation"
+			},
+			{
+				"title": "Chassis and Strains",
+				"id": "org.clothocad.trails.youtube.ChassisandStrains"
+			},
+			{
+				"title": "Parts",
+				"id": "org.clothocad.trails.youtube.Parts"
+			},
+			{
+				"title": "Human Practices",
+				"id": "org.clothocad.trails.youtube.HumanPractices"
+			}
+		]
+	},
+	{
+		"title": "Analysis",
+		"trails": [
+			{
+				"title": "Whole-Cell Analysis",
+				"id": "org.clothocad.trails.youtube.Whole-CellAnalysis"
+			},
+			{
+				"title": "In vitro Analysis",
+				"id": "org.clothocad.trails.youtube.InvitroAnalysis"
+			},
+			{
+				"title": "Directed Evolution",
+				"id": "org.clothocad.trails.youtube.DirectedEvolution"
+			},
+			{
+				"title": "Combinatorial Libraries",
+				"id": "org.clothocad.trails.youtube.CombinatorialLibraries"
+			},
+			{
+				"title": "Automation Tools",
+				"id": "org.clothocad.trails.youtube.AutomationTools"
+			}
+		]
+	},
+	{
+		"title": "Design",
+		"trails": [
+			{
+				"title": "Introduction to Biosynthesis",
+				"id": "org.clothocad.trails.youtube.IntroductiontoBiosynthesis"
+			},
+			{
+				"title": "Literature Search and Pathway Discovery",
+				"id": "org.clothocad.trails.youtube.LiteratureSearchandPathwayDiscovery"
+			},
+			{
+				"title": "Metabolic Optimization",
+				"id": "org.clothocad.trails.youtube.MetabolicOptimization"
+			},
+			{
+				"title": "Monofunctional Enzyme Biosynthesis Examples ",
+				"id": "org.clothocad.trails.youtube.MonofunctionalEnzymeBiosynthesisExamples"
+			},
+			{
+				"title": "Polymeric Metabolites",
+				"id": "org.clothocad.trails.youtube.PolymericMetabolites"
+			},
+			{
+				"title": "Modular PKS and NRP Engineering",
+				"id": "org.clothocad.trails.youtube.ModularPKSandNRPEngineering"
+			},
+			{
+				"title": "Processes and Localization",
+				"id": "org.clothocad.trails.youtube.ProcessesandLocalization"
+			},
+			{
+				"title": "Transcription Models",
+				"id": "org.clothocad.trails.youtube.TranscriptionModels"
+			},
+			{
+				"title": "Translation Models",
+				"id": "org.clothocad.trails.youtube.TranslationModels"
+			},
+			{
+				"title": "Biochemical Circuits",
+				"id": "org.clothocad.trails.youtube.BiochemicalCircuits"
+			},
+			{
+				"title": "Stochastic modeling",
+				"id": "org.clothocad.trails.youtube.Stochasticmodeling"
+			},
+			{
+				"title": "Biological Relationships",
+				"id": "org.clothocad.trails.youtube.BiologicalRelationships"
+			},
+			{
+				"title": "Engineering microbial interactions",
+				"id": "org.clothocad.trails.youtube.Engineeringmicrobialinteractions"
+			},
+			{
+				"title": "Refactoring",
+				"id": "org.clothocad.trails.youtube.Refactoring"
+			},
+			{
+				"title": "Advanced microbial processes",
+				"id": "org.clothocad.trails.youtube.Advancedmicrobialprocesses"
+			},
+			{
+				"title": "Eukaryotic Devices",
+				"id": "org.clothocad.trails.youtube.EukaryoticDevices"
+			},
+			{
+				"title": "Developmental Devices",
+				"id": "org.clothocad.trails.youtube.DevelopmentalDevices"
+			},
+			{
+				"title": "Part Engineering",
+				"id": "org.clothocad.trails.youtube.PartEngineering"
+			}
+		]
+	},
+	{
+		"title": "Wetlab: Cloning Experiment",
+		"trails": [
+			{
+				"title": "Overview of Basic Cloning",
+				"id": "org.clothocad.trails.youtube.OverviewofBasicCloning"
+			},
+			{
+				"title": "Running PCR",
+				"id": "org.clothocad.trails.youtube.RunningPCR"
+			},
+			{
+				"title": "Digesting DNAs with restriction endonucleases",
+				"id": "org.clothocad.trails.youtube.DigestingDNAswithrestrictionendonucleases"
+			},
+			{
+				"title": "Gel Purification",
+				"id": "org.clothocad.trails.youtube.GelPurification"
+			},
+			{
+				"title": "Ligation and Transformation",
+				"id": "org.clothocad.trails.youtube.LigationandTransformation"
+			},
+			{
+				"title": "Growing up colonies and then prepping DNA",
+				"id": "org.clothocad.trails.youtube.GrowingupcoloniesandthenpreppingDNA"
+			}
+		]
+	},
+	{
+		"title": "Advanced Tools",
+		"trails": [
+			{
+				"title": "Introduction to Raven",
+				"id": "org.clothocad.trails.youtube.Clotho3.0-RavenSynBioTrails"
+			},
+			{
+				"title": "Introduction to Eugene",
+				"id": "org.clothocad.trails.youtube.Clotho3.0EugeneSynBioTrails"
+			}
+		]
+	}
+]

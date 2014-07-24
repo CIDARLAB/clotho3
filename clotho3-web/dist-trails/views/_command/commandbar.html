@@ -1,0 +1,74 @@
+<nav id="clotho_commandBar" role="navigation">
+
+  <div class="clotho_commandBar-inner">
+
+  <!--todo - move whole input group to directive (clotho-tokenizer-input for what exists), use in aside as well -->
+  <div class="input-group" id="clotho_command_inputWrapper">
+    <div clotho-tokenizer ng-model="display.query"
+                      placeholder="Type command"></div>
+    <span class="submit-button-wrap input-group-btn" style="vertical-align: top;">
+      <button type="button"
+              class="clothoTokenizerSubmit"
+              ng-click="submit()"
+              ng-disabled="!display.query.query">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    </span>
+  </div>
+
+
+  <!--log-->
+  <div id="clotho_logButtonContainer"
+       click-outside="display.toggle('log', false);"
+       click-outside-active="display.log">
+    <button id="clotho_logButton" ng-click="display.toggleActivityLog()">
+      <i class="glyphicon glyphicon-tasks" style="top: 3px;"></i>
+      <span class="badge badge-info" ng-bind="log.unread || ''"></span>
+    </button>
+
+    <div id="clotho_log" ng-show="display.log">
+      <div class="arrow"></div>
+      <h3 class="popover-title">
+        Activity Log
+        <a class="close" ng-click="display.log = false">&times;</a>
+      </h3>
+
+      <div id="clotho_logEntries">
+        <div log-entries="log.entries"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--log snippet-->
+  <div id="clotho_logSnippet"
+       class="alert alert-{{log.entries[0].class}}"
+       ng-show="display.logSnippet"
+       ng-mouseenter="log.cancelLogTimeout()"
+       ng-mouseleave="log.startLogTimeout()">
+    <small>{{log.entries[0].text}}</small>
+  </div>
+
+
+  <!--help buttons-->
+  <div class="btn-group nav navbar-right">
+    <button class="btn btn-default" ng-if="$root.interfaceConfig.loginVisible !== false" ng-click="toggleLogin()" alt="Clotho Login"><i class="glyphicon glyphicon-user"></i>
+    </button>
+    <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
+    <a class="btn btn-default dropdown-toggle"
+       ng-click="showHelpDropdown = !showHelpDropdown"
+       style="padding-left: 12px; padding-right: 12px;"
+       id="commandbar_helpbutton"
+       click-outside-active="showHelpDropdown"
+       click-outside="showHelpDropdown = false">
+      <i class="glyphicon glyphicon-question-sign"></i>
+    </a>
+    <ul class="dropdown-menu" ng-style="{'display' : showHelpDropdown ? 'block' : 'none'}">
+      <li><a ng-click="showMeHow()" tabindex="-1"><i class="glyphicon glyphicon-eye-open"></i> Clotho Introduction</a></li>
+      <li><a ng-click="aboutClotho()" tabindex="-1"><i class="clotho-icon"></i> About Clotho</a></li>
+      <li><a ng-click="teamClotho()" tabindex="-1"><i class="glyphicon glyphicon-user"></i> The Clotho Team</a></li>
+    </ul>
+  </div>
+
+  </div>
+</nav>

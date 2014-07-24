@@ -1,0 +1,14 @@
+<div class="container">
+
+  <div trail-header="trail" trail-header-on-click="activate(null)"></div>
+
+  <div ng-if="current" class="row trail-page">
+      <div class="col-xs-3" trail-contents="trail" current="current"></div>
+
+    <div class="col-xs-9" id="trail_view">
+      <div trail-page="currentPage" next="next" prev="prev"></div>
+    </div>
+  </div>
+
+  <div ng-if="!current" trail-overview="trail"></div>
+</div>

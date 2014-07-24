@@ -1,0 +1,43 @@
+<div class="container">
+
+  <div trail-header="headerMockTrail"></div>
+
+  <div class="trail-topics-wrap">
+    <div class="trail-topics">
+
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Filter Trails by Title" ng-model="searchText">
+      </div>
+
+      <div class="topic-trails list-group">
+        <div class="topic-contents list-group-item clearfix"
+             ng-repeat="trail in trails | filter:{name:searchText} | limitTo:30"
+             ng-mouseenter="highlight(trail, $event)"
+             ng-click="startTrail(trail.id)"
+             ng-class="{'active' : highlighted == trail}">
+          <img class="media-object pull-left" alt="64x64" style="width: 64px; height: 64px; margin-right: 15px; " ng-src="{{trail.icon}}">
+          <div class="trail-overview">
+            <h4 class="trail-title">{{trail.name}}</h4>
+            <p class="trail-description">{{trail.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trail-highlight-wrap">
+      <div class="trail-highlight" simple-sticky>
+        <div class="shadowBackground highlightPlaceholder" ng-if="!selected">
+          <h3>Select a trail</h3>
+        </div>
+        <img ng-if="selected"
+             ng-src="{{selected.icon || defaultTrailIcon}}"
+             class="shadowBackground"
+             ng-click="startTrail(selected.id)">
+        <div trail-contents="selected" activate="startTrailPage(selected.id, $position)"></div>
+      </div>
+    </div>
+
+    </div>
+
+  </div>
+</div>

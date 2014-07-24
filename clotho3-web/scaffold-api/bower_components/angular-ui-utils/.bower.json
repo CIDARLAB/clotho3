@@ -1,0 +1,17 @@
+{
+  "name": "angular-ui-keypress",
+  "main": "./keypress.js",
+  "dependencies": {
+    "angular": ">= 1.0.2"
+  },
+  "homepage": "https://github.com/angular-ui/ui-utils",
+  "_release": "469672cf43",
+  "_resolution": {
+    "type": "branch",
+    "branch": "bower-keypress",
+    "commit": "469672cf4395a93e2baa507c754c9e8cd83294c4"
+  },
+  "_source": "git://github.com/angular-ui/ui-utils.git",
+  "_target": "bower-keypress",
+  "_originalSource": "angular-ui-utils"
+}

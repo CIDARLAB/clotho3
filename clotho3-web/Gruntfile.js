@@ -9,9 +9,14 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',
+
+	    //build specific paths
       dist: 'dist',
-	    api: 'api',
-	    command: 'command'
+	    trails : 'dist-trails',
+	    //scaffold builds
+	    api: 'scaffold-api',
+	    command: 'scaffold-command',
+	    full: 'scaffold-full'
     },
     watch: {
       coffee: {
@@ -56,7 +61,6 @@ module.exports = function (grunt) {
         ]
       }
     },
-	  //todo - update to /css/ not /.tmp/ layout
     autoprefixer: {
       options: ['last 1 version'],
       dist: {
@@ -108,7 +112,11 @@ module.exports = function (grunt) {
             '.tmp',
 	          '<%= yeoman.app %>/css',
             '<%= yeoman.dist %>/*',
-            '!<%= yeoman.dist %>/.git*'
+            '!<%= yeoman.dist %>/.git*',
+            '<%= yeoman.api %>/*',
+            '<%= yeoman.command %>/*',
+            '<%= yeoman.trails %>/*',
+            '<%= yeoman.full %>/*'
           ]
         }]
       },
@@ -214,18 +222,6 @@ module.exports = function (grunt) {
 	    options: {
 		    dest: '<%= yeoman.dist %>'
 	    }
-	    /*dist: {
-		    src: '<%= yeoman.app %>/index-dist.html',
-	      dest: '<%= yeoman.dist %>'
-	    }
-	    api: {
-		    src: '<%= yeoman.app %>/index-api.html',
-		    dest: '<%= yeoman.dist %>'
-	    },
-	    command: {
-		    src: '<%= yeoman.app %>/index-command.html',
-		    dest: '<%= yeoman.dist %>'
-	    }*/
     },
     usemin: {
       html: ['<%= yeoman.dist %>/**/*.html'],
@@ -305,7 +301,36 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: 'css/',
         src: '**/*.css'
-      }
+      },
+	    //hack-- not DRY but works for now...
+	    handleApiBuild : {
+		    expand: true,
+		    dot: true,
+		    cwd: '<%= yeoman.dist %>',
+		    dest: '<%= yeoman.api %>',
+		    src: ['**/*']
+	    },
+	    handleCommandBuild : {
+		    expand: true,
+		    dot: true,
+		    cwd: '<%= yeoman.dist %>',
+		    dest: '<%= yeoman.command %>',
+		    src: ['**/*', '!index.html']
+	    },
+	    handleTrailsBuild : {
+		    expand: true,
+		    dot: true,
+		    cwd: '<%= yeoman.dist %>',
+		    dest: '<%= yeoman.trails %>',
+		    src: ['**/*', '!index.html']
+	    },
+	    handleFullBuild : {
+		    expand: true,
+		    dot: true,
+		    cwd: '<%= yeoman.dist %>',
+		    dest: '<%= yeoman.full %>',
+		    src: ['**/*', '!index.html']
+	    }
     },
     concurrent: {
       server: [
@@ -426,6 +451,12 @@ module.exports = function (grunt) {
 			  options: {
 				  async: true
 			  }
+		  },
+		  clothoTrailsServer : {
+			  command: 'cd ..; mvn "-Dexec.args=-Dloglevel="OFF" -classpath %classpath org.clothocad.core.util.ClothoAuthoringEnvironment -clientdirectory clotho3-web/dist-trails" -Dexec.executable=java -Dexec.classpathScope=test process-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec',
+			  options: {
+				  async: true
+			  }
 		  }
 	  },
 	  open : {
@@ -467,22 +498,22 @@ module.exports = function (grunt) {
 		  },
 		  api : {
 			  files : {
-				  '<%= yeoman.dist %>/index-api.html': ['<%= yeoman.dist %>/index.html']
+				  '<%= yeoman.api %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
 		  command : {
 			  files : {
-				  '<%= yeoman.dist %>/index-command.html': ['<%= yeoman.dist %>/index.html']
+				  '<%= yeoman.command %>/index.html': ['<%= yeoman.dist %>/index.html']
+			  }
+		  },
+		  full : {
+			  files : {
+				  '<%= yeoman.full %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
 		  trails : {
 			  files : {
-				  '<%= yeoman.dist %>/index-trail.html': ['<%= yeoman.dist %>/index.html']
-			  }
-		  },
-		  priary : {
-			  files : {
-				  '<%= yeoman.dist %>/index-primary.html': ['<%= yeoman.dist %>/index.html']
+				  '<%= yeoman.trails %>/index.html': ['<%= yeoman.dist %>/index.html']
 			  }
 		  },
 		  //dist must go last because overwrites index file
@@ -548,6 +579,16 @@ module.exports = function (grunt) {
 		'watch'
 	]);
 
+	grunt.registerTask('trails', [
+		'shell:mongo',
+		'shell:clothoTrailsServer',
+		'clean:server',
+		'concurrent:server',
+		'autoprefixer',
+		'open',
+		'watch'
+	]);
+
   grunt.registerTask('test', [
     'clean:server',
     'concurrent:test',
@@ -567,16 +608,15 @@ module.exports = function (grunt) {
     //'cdnify',
     'cssmin',
     'uglify',
-    //'rev',
+    'rev',
     'usemin',
 	  'processhtml',
+	  'copy:handleApiBuild',
+	  'copy:handleCommandBuild',
+	  'copy:handleTrailsBuild',
+	  'copy:handleFullBuild',
 	  'htmlmin'
   ]);
-
-	grunt.registerTask('build-uncss', [
-		'build',
-		'uncss'
-	]);
 
   grunt.registerTask('default', [
     'newer:jshint',

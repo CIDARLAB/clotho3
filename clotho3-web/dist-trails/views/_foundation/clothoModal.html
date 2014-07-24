@@ -1,0 +1,25 @@
+<div class="modal fade"
+     ng-show="open"
+     ng-class="{in : open}"
+     style="display: block; background: rgba(100,100,100,0.7);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="$close()">&times;</button>
+                <h4 class="modal-title">{{ title || 'Clotho Modal'}}</h4>
+            </div>
+            <div class="modal-body">
+                <div ng-transclude></div>
+                <div ng-if="content" ng-bind-html="contentTrusted"></div>
+                <div template-insert ng-show="hasTemplate"></div>
+                <clotho-show ng-if="id" id="{{id}}"></clotho-show>
+            </div>
+            <div class="modal-footer" ng-if="actions">
+              <button ng-repeat="act in actions"
+                      class="btn"
+                      ng-class="'btn-' + act.class || 'default'"
+                      ng-click="act.action()">{{act.text}}</button>
+            </div>
+        </div>
+    </div>
+</div>

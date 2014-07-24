@@ -1,0 +1,43 @@
+<!--todo - reintroduce progress -->
+
+<div ng-form class="form" style="margin: 10px 0;">
+    <div class="alert alert-warning" ng-show="!dropSupported">File Drop support not present!!</div>
+
+    <div class="form-group">
+        <label class="control-label" for="fileName">File Name</label>
+        <input id="fileName" type="text" class="form-input" ng-model="fileName">
+    </div>
+
+    <div class="form-group">
+        <label for="fileInput">File input</label>
+        <input id="fileInput" ng-file-select="onFileSelect($files)" type="file" multiple>
+    </div>
+
+    <div ng-show="dropSupported" style="background: #efefff; padding: 10px 5px;" ng-file-drop="onFileSelect($files);" ng-file-drop-available="dropSupported=true">or drop files here</div>
+    <label class="checkbox">
+        <input type="checkbox" ng-model="uploadRightAway">Upload right away
+    </label>
+</div>
+
+<div ng-if="selectedFiles.length > 0">
+    <div class="sel-file" ng-repeat="f in selectedFiles">
+        <img ng-show="dataUrls[$index]" ng-src="{{dataUrls[$index]}}">
+        <button class="button" ng-click="start($index)" ng-show="!started[$index]">Start</button>
+        {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+    </div>
+</div>
+<div class="response" ng-if="uploadResult.length > 0">
+    Server Response:
+    <ul>
+        <li ng-repeat="result in uploadResult">
+            <ul>
+                <li ng-repeat="item in result">
+                    <div data-ng-show="item.name">file name: {{item.name}}</div>
+                    <div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+                    <div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+                    <div data-ng-show="item.value">value: {{item.value}}</div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

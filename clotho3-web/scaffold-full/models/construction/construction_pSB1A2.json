@@ -1,0 +1,86 @@
+{
+	"name": "BioBricking of Kanamycin Gene",
+	"id": "clotho.construction.pSB1A2",
+	"schema": "org.clothocad.model.ConstructionFile",
+	"description": "BioBricks is a standard assembly using a defined set of enzymes, enabling easy, directional addition of parts",
+	"steps": [
+		{
+			"reaction": "pcr",
+			"input": [
+				"pSB1AK3",
+				"ca1067F",
+				"ca1067R"
+			],
+			"output": "pcrpdt"
+		},
+		{
+			"reaction": "digest",
+			"input": [
+				"pcrpdt",
+				[
+					"EcoRI",
+					"SpeI"
+				]
+			],
+			"sizes": [
+				"1038",
+				"10",
+				"6"
+			],
+			"output": "pcrdig_frags"
+		},
+		{
+			"reaction": "gelpurify",
+			"input": [
+				"pcrdig_frags"
+			],
+			"length": "L",
+			"output": "pcrdig"
+		},
+		{
+			"reaction": "digest",
+			"input": [
+				"pSB1A2",
+				[
+					"EcoRI",
+					"SpeI"
+				]
+			],
+			"sizes": [
+				"2062",
+				"946"
+			],
+			"output": "vectdig_frags"
+		},
+		{
+			"reaction": "gelpurify",
+			"input": [
+				"vectdig_frags"
+			],
+			"length": "L",
+			"output": "vectdig"
+		},
+		{
+			"reaction": "ligate",
+			"input": [
+				[
+					"pcrdig",
+					"vectdig"
+				]
+			],
+			"output": "pSB1A2-Bca9128"
+		}
+	],
+	"dictionary": {
+		"ca1067F": {
+			"name": "ca1067F",
+			"description": "Biobricking of KanR of pSB1AK3",
+			"sequence": "ccagtGAATTCgtccTCTAGAgagctgatccttcaactc"
+		},
+		"ca1067R": {
+			"name": "ca1067R",
+			"description": "Biobricking of KanR of pSB1AK3",
+			"sequence": "gcagtACTAGTtccgtcaagtcagcgtaatg"
+		}
+	}
+}

@@ -1,0 +1,108 @@
+<div class="container">
+
+    <!-- clotho directives -->
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Demo of clotho-run:
+                <code>&lt;input clotho-run="lowercase" ng-model="myModel"&gt;</code></h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group col-xs-6">
+                <input type="text" ng-model="myModel" class="form-control">
+            </div>
+            <div class="form-group col-xs-6">
+                <input clotho-run="lowercase" ng-model="myModel" class="form-control">
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Demo of clotho-run:
+                <code>&lt;input clotho-run="DNA.revcomp" ng-model="myDNAmodel"&gt;</code></h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-group col-xs-6">
+                <input type="text" ng-model="myDNAmodel" class="form-control">
+            </div>
+            <div class="form-group col-xs-6">
+                <input clotho-run="DNA.revcomp" ng-model="myDNAmodel" class="form-control">
+            </div>
+        </div>
+    </div>
+
+    <!-- widgets -->
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Clotho Modals</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-xs-6">
+
+                <button class="btn btn-default" ng-click="modalTranscludeOpen = true"> Open transclude modal</button>
+
+                <p>myObj.myProp : {{myObj.myProp}}</p>
+
+
+                <clotho-modal title="testModal" open="modalTranscludeOpen">
+                    <p ng-init="myModalModel = 'i am interpolated!'">internal binding: {{ myModalModel }}</p>
+
+                    <p>external (transcluded, so bound to parent): {{myObj.myProp}}</p>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>external object</p>
+
+                            <p>prototypical inheritance (will impact model outside modal)</p>
+
+                            <p><code>myObj.myProp</code>: {{myObj.myProp}}</p>
+                            <button class="btn btn-default" ng-click="myObj.myProp = 'ACGTTTTGGCA'">
+                                <code>myObj.myProp</code> = 'ACGTTTTGGCA'
+                            </button>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>external primitive</p>
+
+                            <p>no prototypical inheritance (won't impact model outside modal)</p>
+
+                            <p><code>myModel</code>: {{myModel}}</p>
+                            <button class="btn btn-default" ng-click="myModel = 'HEYO brah'">
+                                <code>myModel</code> = 'HEYO brah'
+                            </button>
+                        </div>
+                    </div>
+                </clotho-modal>
+            </div>
+            <div class="col-xs-6">
+
+                <button class="btn btn-default" ng-click="modalShowOpen = true"> Open clotho.show() Modal</button>
+
+                <clotho-modal id="813579135" open="modalShowOpen" on-open="openCallback()" on-close="closeCallback()">
+                    <p>This is widget #813579135 (this paragraph is transcluded content)</p>
+                </clotho-modal>
+            </div>
+        </div>
+    </div>
+
+    <div class="jumbotron">
+        <p>
+            <a class="btn btn-lg btn-success" ng-click="bootstrapNewApp()">Bootstrap Inside ng-view</a>
+            <a class="btn btn-lg btn-info" ng-click="bootstrapNewAppExternal()">Bootstrap Outside</a>
+            <a class="btn btn-lg btn-default" ng-click="bootstrapSimple()">Bootstrap Simple</a>
+        </p>
+    </div>
+
+    <div class="marketing">
+        <h4>Content</h4>
+
+        <p>
+            Widget will be inserted below
+        </p>
+    </div>
+
+    <insert-widgets-here></insert-widgets-here>
+</div>

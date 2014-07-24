@@ -1,0 +1,46 @@
+<!-- fifth way --- bootstrap a widget every time -->
+
+<div>
+    <h2>Bootstrapping vs. Mixins</h2>
+
+    <p>Bootstrapping an app is different from mixing in necessary components.</p>
+
+    <p>We have already see Mixins in several forms.</p>
+
+    <p>Bootstrapping does not rely necessarily on mixing in components - components may be added to the primary app stack (which is encouraged for functionality that can be shared), but here the widget is its own angular app.</p>
+    <p>This approach calls Application.script(), a cache-busting function to execute a script every time by time-stamping it. Continue to see examples.</p>
+
+    <div>
+        <div class="col-xs-6">
+            <h4 class="text-success">Advantages</h4>
+            <dl>
+                <dt>More Native</dt>
+                <dd>Adding components is not natively supported (though doesn't seem to cause problems)</dd>
+                <dt>Avoid Recompiling</dt>
+                <dd>Recompiling existing content will basically ruin the app. This way we know what we're inserting, rather than telling angular to compile a div that may have already been compiled.</dd>
+                <dt>Avoid Primary App $scope Lifecycle</dt>
+                <dd>Separating your widget from the parent app would avoid unnecessary processing / dirty-checking -- e.g. click listeners, timers, etc. set by other components.</dd>
+                <dt>Autonomy</dt>
+                <dd>App remains separate from the Primary app in several respects</dd>
+                <dt>Separate Functionality</dt>
+                <dd>If desired, components can be kept out of the Primary angular app.</dd>
+                <dt>Avoid Namespace Collisions</dt>
+                <dd>Namespace collisions are more likely to be avoided because they are not shared across apps.</dd>
+                <dt>Anti-paternalism</dt>
+                <dd>The route is more complicated, and probably will be less common, but why restrict it?</dd>
+            </dl>
+
+        </div>
+        <div class="col-xs-6">
+            <h4 class="text-danger">Disadvantages</h4>
+            <dl>
+                <dt>Manual $scope destruction</dt>
+                <dd>Need to manually unwrap and destroy the app if it's not tied to a parent scope within container in which it is relevant.</dd>
+                <dt>Encourage Functionality in Main Stack</dt>
+                <dd>Bootstrapping apps separately may discourage developers from adding components directly to the parent stack, and keep them separate in their own module (don't think this will be a big deal though)</dd>
+                <dt>Services shared anyway</dt>
+                <dd>Services like PubSub, Collector, Socket etc. exist as per-page singletons, so there is little benefit in bootstrapping a separate widget in that respect. Currently, however, the ClothoAPI and ClientAPIs do not exist as singletons...</dd>
+            </dl>
+        </div>
+    </div>
+</div>

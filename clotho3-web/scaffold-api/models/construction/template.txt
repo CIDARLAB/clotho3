@@ -1,0 +1,46 @@
+This example construction file demonstrates proper format:
+PCR ca581F/ca803R on pBAC874t	        (1060 bp, pcrproduct)
+Digest pcrproduct                       (BsmBI/EcoRI, digestproduct1)
+GelPurify digestproduct1                (L, pcrdig)
+Digest pGLN                             (BamHI/EcoRI, digestproduct2)
+GelPurify digestproduct2                (L, vectdig)
+Ligate pcrdig/vectdig               	(pHA581)
+
+See that the first word in each line is used as a key to determine the meaning of that line.
+Currently supported first words and their meaning are listed below, in the format [first word] -> [meaning]:
+Digest -> Digest reaction
+gelPurify -> GelPurify reaction
+Ligate -> Ligation reaction
+PCR -> PCR reaction
+EIPCR -> EIPCR reaction
+
+Also note that the product of each reaction step must be explicitly referenced. This is necessary to resolve any possible ambiguity.
+
+Arguments in square brackets ("[]") are necessary, arguments with a * in front of them ("*[]") are optional and can be left out without consequence.
+
+Parentheses are required. Arguments within the parentheses can be in any order, and must be delimited using commas.
+
+For a PCR reaction:
+PCR [oligo names] on [template name] ([product name], *[numerical product size])
+
+Note: [oligo names] should contain no spaces, and names should be separated by a '/' (i.e. ca1015F/R or 605F/803R)
+
+For an EIPCR reaction:
+EIPCR [oligo names] on [template name] ([product name], *[numerical product size])
+
+Formatting requirements are the same as for PCR. Note that this is necessary to tell Clotho that [template name] is circular.
+
+For a Digestion reaction:
+Digest [template name] ([enzymes], [product name], *[sizes], *[choice])
+
+Note: [enzymes] should contain no spaces, and names should be separated by a '/' (i.e. EcoRI/SpeI). Numerical values inside [sizes] should be delimited by a '+' (i.e. [1038+10+6]). Currently supported [choice] argument is 'L' for choosing the largest product.
+
+For a Ligation reaction:
+Ligate [sequence one]/[sequence two]/*[...] ([product name])
+
+For a Gel Purification reaction:
+gelPurify [template name] ([product name], *[target length])
+
+Note: Currently supported [target length] argument is 'L' for choosing the largest product.
+
+SOEing and PCA to be added.

@@ -1,0 +1,28 @@
+<div>
+
+    <h5 ng-bind="quiz.question"></h5>
+
+    <ul class="thumbnails">
+        <li ng-repeat="choice in quiz.options" class="col-xs-3">
+            <a class="thumbnail" ng-click="quiz.answer = choice.value">
+                <img ng-src="{{choice.img_url}}" alt="{{choice.value}}" onerror="this.src='{{base64icon}}'">
+                <p class="caption">{{choice.value}}</p>
+            </a>
+        </li>
+    </ul>
+
+    <p>Your answer: {{quiz.answer}}</p>
+
+    <div class="input-group" >
+        <span class="input-group-addon" ng-if="quiz.hint" popover="{{ quiz.hint }}" popover-trigger="mouseenter"><i
+                class="glyphicon glyphicon-info-sign"></i></span>
+        <button class="btn" ng-click="submitQuestion(quiz)" ng-disabled="answerUndefined(quiz) || quiz.submitted" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Submit Answer</button>
+        <button class="btn" ng-click="retryQuiz()" ng-if="quiz.submitted && !quiz.response.result" ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Retry</button>
+    </div>
+
+    <span class="alert alert-success help-inline quizResult" ng-if="quiz.response.result"><i
+            class="glyphicon glyphicon-ok"></i> Correct!</span>
+    <span class="alert alert-danger help-inline quizResult" ng-if="quiz.response && !quiz.response.result"><i
+            class="glyphicon glyphicon-remove"></i> Nope...</span>
+
+</div>

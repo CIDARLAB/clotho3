@@ -1,0 +1,15 @@
+<div>
+    <h2>Assume directive etc. included, use ng-init</h2>
+
+    <p>Notice restrict-input doesn't work - DNA service not attached to scope via controller. Directives work (already included in default stack).</p>
+    <div class="form-group" ng-init="sequence = 'acgatcgatcgat'">
+        <div class="col-xs-6">
+            <label class="control-label" for="seq">Sequence</label>
+                <input type="text" id="seq" placeholder="Sequence" ng-model="sequence" restrict-input="DNA.regexps.strip.dna" />
+        </div>
+        <div class="col-xs-6">
+            <label class="control-label" for="revcomp">Revcomp</label>
+                <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp disabled>
+        </div>
+    </div>
+</div>
