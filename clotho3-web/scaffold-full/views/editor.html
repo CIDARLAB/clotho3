@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+      <form clotho-editor
+            sharable="editable"
+            sharable-id="editableId"
+            edit-mode="editModePass"
+            form-horizontal="true"></form>
+    </div>
+
+    <div class="col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h5>Create new</h5>
+        </div>
+        <div class="list-group">
+          <div class="list-group-item">
+            <p>Instance</p>
+            <input id="chooseSubtype"
+                   type="text"
+                   class="form-control"
+                   ng-model="selectedSubtype"
+                   typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10"
+                   typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';"
+                   popover="Type and select a schema to create an object with pre-determined fields"
+                   popover-title="Choose a Schema"
+                   popover-trigger="focus"
+                   popover-append-to-body="true">
+          </div>
+          <a class="list-group-item"
+             ng-repeat="type in ['Function', 'Schema', 'View']"
+             ng-click="createNewNonInstance(type)">{{ type }}</a>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h5>Edit Existing Object</h5>
+        </div>
+        <div class="panel-body">
+          <input id="chooseInstance"
+                 type="text"
+                 class="form-control"
+                 ng-model="selectedInstance"
+                 typeahead="c.id as c.name for c in queryWrapper($viewValue)"
+                 typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
+                 popover="Type to search for and edit an existing object"
+                 popover-trigger="focus"
+                 popover-append-to-body="true">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

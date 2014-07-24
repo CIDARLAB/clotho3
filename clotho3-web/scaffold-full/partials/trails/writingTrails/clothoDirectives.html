@@ -1,0 +1,31 @@
+<div>
+
+    <h2>Clotho Run Wrapper</h2>
+
+    <p>This is a directive wrapper you can use for running functions on the server. use the attribute ng-model to define the input, and clotho-run to define your function. Single arity models will be wrapped in an array. Otherwise your model should be an array for higher arity functions.</p>
+
+    <form name="dnaPlayground" class="col-xs-12 form-horizontal">
+
+        <div class="form-group">
+            <label class="control-label" for="seq">Sequence</label>
+                <input type="text" id="seq" placeholder="Sequence" ng-model="sequence" ng-init="sequence = 'acgtaACGTACatca'">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="clothorun">Clotho.run (choose below)</label>
+                <input type="text" id="clothorun" placeholder="remote Reverse" ng-model="sequence" clotho-run="{{ chooseFunction }}" disabled>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="clothofn">Choose Clotho Function</label>
+                <input type="text" id="clothofn" placeholder="Choose a function to Run" ng-model="chooseFunction" ng-init="chooseFunction = 'lowercase'" typeahead="fn.name for fn in clothoFunctions">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="clothorunpre">Clotho.run 'reverse'</label>
+                <pre id="clothorunpre" placeholder="Remote reverse" ng-model="sequence" clotho-run="reverse"></pre>
+        </div>
+
+    </form>
+
+</div>

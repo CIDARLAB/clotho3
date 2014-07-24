@@ -1,0 +1,29 @@
+<div>
+    <!--assumes presence of $scope.demoSchema-->
+    <p>{{ demoSchema.description }}</p>
+
+    <!--this is a dumb hack-->
+    <pre class="pre-scrollable" ng-if="demoSchema.name == 'Page'">{{ PageExample | json }}</pre>
+
+    <table class="table table-bordered table-striped code-table">
+        <thead>
+            <tr><th>Param</th><th>Type</th><th>Details</th><th>Example</th></tr>
+        </thead>
+        <tbody ng-repeat="field in demoSchema.fields">
+            <tr>
+                <td>{{ field.name }}</td>
+                <td>
+                    <a class="label" ng-class="{'label-info' : field.type == 'string', 'label-warning' : field.type == 'array', 'label-danger' : field.type == 'object', 'label-success' : field.type == 'number'}">{{ field.type }}</a>
+                </td>
+                <td>
+                    <p>{{ field.description }}</p>
+                </td>
+                <td>
+                    <p>{{ field.example }}</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <pre class="pre-scrollable">{{ demoSchema | json }}</pre>
+</div>
