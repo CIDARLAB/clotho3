@@ -11,7 +11,7 @@ angular.module('clotho.commandbar')
 	.value('terminalAsideOptions', {
 		visible : false
 	})
-	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, hotkeys, Clotho) {
+	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, ClothoCommandHistory, hotkeys, Clotho) {
 
 	return {
 		restrict: 'EA',
@@ -68,7 +68,12 @@ angular.module('clotho.commandbar')
 			scope.$watch(function () {
 				return terminalAsideOptions.visible
 			}, function (newval) {
-				!!newval ? element.addClass('active') : element.removeClass('active');
+				if (!!newval) {
+					element.addClass('active');
+					ClothoCommandHistory.setLastView();
+				} else {
+					element.removeClass('active');
+				}
 			});
 
 			hotkeys.add('t', "Toggle Clotho Terminal", scope.$toggle)

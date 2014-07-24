@@ -48,7 +48,7 @@ angular.module('clotho.commandbar')
 			var logTimeout = null;
 			var logTimeoutDelay = 10000;
 
-			$scope.logstartLogTimeout = function() {
+			$scope.startLogTimeout = function() {
 				$scope.cancelLogTimeout();
 
 				logTimeout = $timeout( function() {
@@ -59,6 +59,12 @@ angular.module('clotho.commandbar')
 			$scope.cancelLogTimeout = function() {
 				$timeout.cancel(logTimeout);
 			};
+			
+			//listen for changes to logEntries
+			$scope.$watchCollection('logEntries', function () {
+				$scope.display.toggle('logSnippet', true);
+				$scope.startLogTimeout();
+			});
 
 		},
 		link : function clothoCommandBarLink(scope, element, attrs, controller) {
