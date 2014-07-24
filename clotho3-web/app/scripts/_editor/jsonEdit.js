@@ -8,6 +8,7 @@
  As far as I know, there is currently no way to achieve this using $parsers (other than one of the function errors and kills the pipeline)
 
  //todo - refactor so can use ngModel... but can't create element inside.
+ //todo - NEED TO REMOVE REPLACE - see GH#412
  */
 
 angular.module('clotho.editor')
