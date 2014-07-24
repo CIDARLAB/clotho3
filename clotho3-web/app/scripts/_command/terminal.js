@@ -1,3 +1,4 @@
-angular.module('clotho.commandbar').controller('TerminalCtrl', function($scope, CommandBar) {
-    $scope.log = CommandBar.log;
+angular.module('clotho.commandbar')
+.controller('TerminalCtrl', function($scope, ClothoCommandHistory) {
+  $scope.logEntries = ClothoCommandHistory.entries;
 });

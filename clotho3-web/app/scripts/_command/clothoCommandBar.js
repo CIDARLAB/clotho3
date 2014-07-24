@@ -9,7 +9,7 @@
  */
 
 angular.module('clotho.commandbar')
-.directive('clothoCommandBar', function(Clotho, CommandBar, $location, $window, $compile, $clothoModal) {
+.directive('clothoCommandBar', function(Clotho, CommandBar, ClothoCommandHistory, terminalAsideOptions, $location, $window, $compile, $timeout, $clothoModal) {
 
 	return {
 		restrict: 'A',
@@ -20,12 +20,15 @@ angular.module('clotho.commandbar')
 
 			$scope.options = CommandBar.options;
 			$scope.log = CommandBar.log;
+			$scope.logEntries = ClothoCommandHistory.entries;
 			$scope.autocomplete = CommandBar.autocomplete;
 			$scope.display = CommandBar.display;
 
 			$scope.setQuery = CommandBar.setQuery;
 			$scope.submit = CommandBar.submit;
 			$scope.execute = CommandBar.execute;
+
+			//login
 
 			var showClothoLoginModal = false;
 			$scope.toggleLogin = function (force) {
@@ -39,8 +42,28 @@ angular.module('clotho.commandbar')
 					$clothoModal.destroy();
 				}
 			};
+
+			//log and snippet
+
+			var logTimeout = null;
+			var logTimeoutDelay = 10000;
+
+			$scope.logstartLogTimeout = function() {
+				$scope.cancelLogTimeout();
+
+				logTimeout = $timeout( function() {
+					$scope.display.toggle('logSnippet', false);
+				}, logTimeoutDelay);
+			};
+
+			$scope.cancelLogTimeout = function() {
+				$timeout.cancel(logTimeout);
+			};
+
 		},
 		link : function clothoCommandBarLink(scope, element, attrs, controller) {
+
+			scope.toggleTerminalAside = ClothoCommandHistory.toggleTerminal;
 
 			/*** help icons ***/
 

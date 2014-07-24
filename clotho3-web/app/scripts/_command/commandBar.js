@@ -1,5 +1,5 @@
 angular.module('clotho.commandbar')
-.service('CommandBar', function(Clotho, ClientAPI, Debug, ClothoSchemas, $timeout, $q, $document) {
+.service('CommandBar', function(Clotho, ClientAPI, ClothoCommandHistory, Debug, ClothoSchemas, $timeout, $q, $document) {
 
 	/******* config ******/
 	var options = {
@@ -41,18 +41,6 @@ angular.module('clotho.commandbar')
 	};
 
 
-	/******* log data *******/
-	var log = {};
-
-	log.entries = [
-		{
-			"text" : "Welcome to Clotho!",
-			"from" : "server",
-			"class" : "success",
-			"timestamp" : Date.now()
-		}
-	];
-
 	/****** display ******/
 	var display = {};
 	display.query = '';
@@ -70,41 +58,7 @@ angular.module('clotho.commandbar')
 		}
 	};
 
-	/***** functions *****/
-
-	log.timeout = null;
-
-	function receiveMessage (data) {
-		log.unread = (!!log.unread && !display.log) ? log.unread + 1 : 1;
-
-		//check if we have a sharable
-		try {
-			var json = angular.fromJson(data.text);
-			var isSharable = ClothoSchemas.isSharable(json);
-			if (isSharable) {
-				data.tokens = [json];
-			}
-		} catch (e) {
-			//not an object that could be parsed
-		}
-		
-		log.entries.unshift(data);
-		//Debugger.log('LOG - entries: ', log.entries);
-		display.toggle('logSnippet', true);
-		log.startLogTimeout();
-	}
-
-	log.startLogTimeout = function() {
-		log.cancelLogTimeout();
-
-		log.timeout = $timeout( function() {
-			display.toggle('logSnippet', false);
-		}, 10000);
-	};
-
-	log.cancelLogTimeout = function() {
-		$timeout.cancel(log.timeout);
-	};
+	//submitting is high up so children can access
 
 	var submit = function (input) {
 		if (angular.isEmpty(input) || !angular.isObject(input)) {
@@ -114,21 +68,23 @@ angular.module('clotho.commandbar')
 		//remove trailing whitespace
 		input.query = angular.isDefined(input.query) ? input.query.trim() : '';
 
-		/*
-		 Debugger.log(query);
-		 Debugger.log(display.queryHistory);
-		 Debugger.log(log.entries)
-		 */
-
 		if (!!input.query) {
-			var submission = {class : 'info', from : 'client', text: input.query, timestamp : Date.now()};
+			var submission = {
+				class : 'info',
+				from : 'client',
+				text: input.query,
+				timestamp : Date.now()
+			};
 
+			/*
+			//DEPRECATED - will allow element to check for delimiter as described in GH#399
 			//check if we have a sharable
 			if (angular.isDefined(input.tokens)) {
 				submission.tokens = angular.map(input.tokens, function (token) {
 					return token.model;
 				});
 			}
+			*/
 
 			ClientAPI.say(submission);
 
@@ -144,20 +100,11 @@ angular.module('clotho.commandbar')
 		}
 	};
 
-	/****** listeners *****/
-
-	//called by clientAPI.say(), so will be called indirectly in submit a few lines above
-	Clotho.listen("activityLog", function (data) {
-		receiveMessage(data);
-	}, 'searchbar');
-
-
 	/****** facade ******/
 
 	return {
 		options : options,
 		display : display,
-		log : log,
 		setQuery : function(item, $event) {
 			if (angular.isDefined( $event )) {
 				$event.preventDefault();
