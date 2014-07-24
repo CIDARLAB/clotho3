@@ -6,7 +6,7 @@ $clotho.extensions.controller('constructionFiles_constructionInClothoCtrl', func
 		$scope.parsed = data;
 	});
 
-	Clotho.get('clotho.demo.sequence.pPROBE-GFP[LVA]').then(function (result) {
+	Clotho.get('clotho.plasmid.pPROBE-GFP[LVA]').then(function (result) {
 		$scope.demoseq = result;
 	});
 

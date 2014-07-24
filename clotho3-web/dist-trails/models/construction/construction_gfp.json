@@ -15,7 +15,7 @@
 "steps": [
 		{
 			"reaction": "pcr",
-			"input": ["pPROBE-GFP", "primer1", "primer2"],
+			"input": ["pPROBE-GFP[LVA]", "primer1", "primer2"],
 			"output": "pcr_product"
 		},
 		{

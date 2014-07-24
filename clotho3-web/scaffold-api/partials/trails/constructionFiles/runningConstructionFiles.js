@@ -5,10 +5,10 @@ $clotho.extensions.controller('constructionFiles_runningCFCtrl', function($scope
 	//todo - add more versions
 
 	$scope.files = {
-		"gfp" : {},
-		"pHA581" : {},
-		"pSB1A2" : {},
-		"vio" : {}
+                "pSB1A2-Bca9128" : {},
+                "vio" : {},
+		"pHA581" : {}
+
 	};
 
 	angular.forEach($scope.files, function (obj, name) {

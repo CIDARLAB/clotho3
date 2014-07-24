@@ -18,35 +18,21 @@
 
 
   <!--log-->
-  <div id="clotho_logButtonContainer"
-       click-outside="display.toggle('log', false);"
-       click-outside-active="display.log">
-    <button id="clotho_logButton" ng-click="display.toggleActivityLog()">
+  <div id="clotho_logButtonContainer">
+    <button id="clotho_logButton" ng-click="toggleTerminalAside()">
       <i class="glyphicon glyphicon-tasks" style="top: 3px;"></i>
-      <span class="badge badge-info" ng-bind="log.unread || ''"></span>
+      <span class="badge badge-info" ng-bind="logEntries.unread > 0 ? logEntries.unread : ''"></span>
     </button>
-
-    <div id="clotho_log" ng-show="display.log">
-      <div class="arrow"></div>
-      <h3 class="popover-title">
-        Activity Log
-        <a class="close" ng-click="display.log = false">&times;</a>
-      </h3>
-
-      <div id="clotho_logEntries">
-        <div log-entries="log.entries"></div>
-      </div>
-    </div>
   </div>
 
 
   <!--log snippet-->
   <div id="clotho_logSnippet"
-       class="alert alert-{{log.entries[0].class}}"
+       class="alert alert-{{logEntries[0].class}}"
        ng-show="display.logSnippet"
-       ng-mouseenter="log.cancelLogTimeout()"
-       ng-mouseleave="log.startLogTimeout()">
-    <small>{{log.entries[0].text}}</small>
+       ng-mouseenter="cancelLogTimeout()"
+       ng-mouseleave="startLogTimeout()">
+    <small>{{logEntries[0].text}}</small>
   </div>
 
 

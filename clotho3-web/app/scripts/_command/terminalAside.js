@@ -76,7 +76,7 @@ angular.module('clotho.commandbar')
 		}
 	};
 })
-.directive('terminalAsideTrigger', function (terminalAsideOptions) {
+.directive('terminalAsideTrigger', function (Clotho, $timeout, terminalAsideOptions) {
 	return {
 		restrict: 'A',
 		template: '<div id="terminalAsideTrigger" ng-click="toggle()" ng-attr-status="{{activeClass ? \'active\' : \'\'}}" ng-class="{active : activeClass}"></div>',
@@ -84,11 +84,15 @@ angular.module('clotho.commandbar')
 		scope: true,
 		link: function postLink(scope, element, attrs, transclusion) {
 			scope.toggle = function() {
-				terminalAsideOptions.visible = !terminalAsideOptions.visible;
-				scope.activeClass = terminalAsideOptions.visible;
-				angular.element('body').attr('aside-status', !!terminalAsideOptions.visible ? 'active' : '');
-			};
 
+				//trigger the terminal, update classes after $digest
+				Clotho.trigger('toggleTerminalActive', scope.$toggle, scope);
+				$timeout(function () {
+					scope.activeClass = terminalAsideOptions.visible;
+					angular.element('body').attr('aside-status', !!terminalAsideOptions.visible ? 'active' : '');
+				});
+
+			};
 		}
 	}
 });
