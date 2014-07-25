@@ -145,6 +145,20 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		}
 	})
 
+	.when('/import', {
+		templateUrl:'views/import/intro.html',
+		controller : 'ImportCtrl',
+		title : 'Import Wizard'
+	})
+	.when('/import/youtubePlaylist', {
+		templateUrl: 'views/import/youtubePlaylist.html',
+		controller: 'YoutubePlaylistImportCtrl'
+	})
+	.when('/import/ape', {
+		templateUrl: 'views/import/ape.html',
+		controller: 'ApeImportCtrl'
+	})
+
 
 	//testing
 	.when('/widgets', {
@@ -158,10 +172,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	hotkeys : [
 		['m', 'Show Programmatic Modal', 'createModal()']
 	]
-})
-.when('/test/playlistimport', {
-  templateUrl: 'views/test/playlistimport.html',
-  controller: 'TestPlaylistimportCtrl'
 })
 .when('/test/quiz', {
   templateUrl: 'views/test/quiz.html',

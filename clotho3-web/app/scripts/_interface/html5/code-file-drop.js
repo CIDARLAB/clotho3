@@ -3,7 +3,7 @@ angular.module('clotho.interface')
 	.directive('functionCodeDrop', function ($upload, $window, $timeout) {
 		return {
 			restrict: 'A',
-			templateUrl: '../../../views/_interface/codeDrop.html',
+			templateUrl: 'views/_interface/codeDrop.html',
 			scope : {
 				updateOnRead : '=',
 				showDrop: '@',

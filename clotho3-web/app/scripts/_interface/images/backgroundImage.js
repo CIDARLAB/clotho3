@@ -1,9 +1,12 @@
 angular.module('clotho.interface')
 /**
- * todo - avoid ngSrc because delegates to $sce out of our control? Or is that ok because want to use whitelist anyway?
- *
  * @ngdoc directive
  * @name backgroundImage
+ *
+ * @description
+ * Prefer to use ngSrc as way of giving image URL
+ *
+ * use backgroundImage directly when have base64 etc. which is not whitelisted
  */
 .directive('backgroundImage', function () {
 		return {
@@ -19,7 +22,16 @@ angular.module('clotho.interface')
 					element.css({
 						'background-image': 'url(' + newsrc + ')'
 					});
-				})
+				});
+
+				//prefer ngSrc, because of SCE, but doesn't allow for base64
+				scope.$watch(function () {
+					return attrs.backgroundImage
+				}, function (newsrc, oldsrc) {
+					element.css({
+						'background-image': 'url(' + newsrc + ')'
+					});
+				});
 			}
 		}
 });

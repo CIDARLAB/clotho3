@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.webapp')
-	.controller('TestPlaylistimportCtrl', function ($scope, Youtube, Clotho, $q) {
+	.controller('YoutubePlaylistImportCtrl', function ($scope, Youtube, Clotho, $q) {
 
 		$scope.playlistId = 'PL2aPXzks-TgO0k9PhT__NSh2x6HNimaOy';
 
