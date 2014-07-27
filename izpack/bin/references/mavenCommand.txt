@@ -1,0 +1,30 @@
+cd D:\Studies\CIDAR\Clotho\installer\clotho3; 
+"JAVA_HOME=C:\\Program Files\\Java\\jdk1.8.0_05" 
+C:\Program Files\\NetBeans 8.0\\java\\maven\\bin\\mvn.bat\" -Dexec.args="-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment" -Dexec.executable="C:\Program Files\Java\jdk1.8.0_05\bin\java.exe" -Dexec.classpathScope=test  -Dfile.encoding=UTF-8 process-test-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec
+
+D:\Studies\pvClotho\apache_maven3_2_2\bin\mvn -f D:\Studies\pvClotho\clotho3\pom.xml -Dexec.args="-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment" -Dexec.executable="C:\Program Files\Java\jdk1.8.0_05\bin\java.exe" -Dexec.classpathScope=test  -Dfile.encoding=UTF-8 process-test-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec
+
+
+
+
+??? -Dmaven.ext.class.path=\"C:\\Program Files\\NetBeans 8.0\\java\\maven-nblib\\netbeans-eventspy.jar\"
+
+
+Clean:
+C:\"Program Files"\"NetBeans 8.0"\java\maven\bin\mvn.bat -Dmaven.test.skip=true -Dmaven.ext.class.path="C:\Program Files\NetBeans 8.0\java\maven-nblib\netbeans-eventspy.jar" -Dfile.encoding=UTF-8 process-test-classes clean install
+
+Generating Jar:
+C:\"Program Files"\"NetBeans 8.0"\java\maven\bin\mvn.bat -Dmaven.test.skip=true -Dmaven.ext.class.path="C:\Program Files\NetBeans 8.0\java\maven-nblib\netbeans-eventspy.jar" -Dfile.encoding=UTF-8 -Dexec.classpathScope=test org.apache.maven.plugins:maven-shade-plugin:1.4:shade:package
+
+Set Java Home: 
+set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_05
+
+Running Test File:
+C:\"Program Files"\"NetBeans 8.0"\java\maven\bin\mvn.bat -Dexec.args="-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment" -Dexec.executable="C:\Program Files\Java\jdk1.8.0_05\bin\java.exe" -Dexec.classpathScope=test -Dmaven.ext.class.path="C:\Program Files\NetBeans 8.0\java\maven-nblib\netbeans-eventspy.jar" -Dfile.encoding=UTF-8 process-test-classes org.codehaus.mojo:exec-maven-plugin:1.2.1:exec
+
+
+
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-assembly-plugin:2.2-beta-5:single (default-cli) on project clotho: Error reading assemblies: No assembly descriptors found. -> [Help 1]
+
+
+C:\"Program Files"\"NetBeans 8.0"\java\maven\bin\mvn.bat -Dmaven.test.skip=true -Dexec.args="-classpath %classpath org.clothocad.core.util.ClothoTestEnvironment" -Dexec.executable="C:\Program Files\Java\jdk1.8.0_05\bin\java.exe" -Dexec.classpathScope=test -Dmaven.ext.class.path="C:\Program Files\NetBeans 8.0\java\maven-nblib\netbeans-eventspy.jar" -Dfile.encoding=UTF-8 process-test-classes clean package

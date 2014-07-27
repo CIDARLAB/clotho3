@@ -1,0 +1,179 @@
+<!--Linux Packs -->	
+<!--32 Bit-->
+	<packs>
+		<pack name="Clotho EXE" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/exe/" targetdir="${INSTALL_PATH}" override="true"/>
+			<fileset dir="resources/clothoExe/" targetdir="${INSTALL_PATH}" override="true"/>
+			
+			<executable targetfile="$INSTALL_PATH/ClothoTestStarter.jar" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/StartClothoTest.jar" stage="never" keep="true" />
+			<!-- <parsable targetfile="${INSTALL_PATH}/test.properties"/> -->
+		</pack>
+		<pack name="Clotho Source Files" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/testsource/" targetdir="${INSTALL_PATH}" override="true"/>
+		</pack>
+		<pack name="MongoDB" required="yes">
+			<description>Mongo DB installation</description>
+			<fileset dir="resources/mongodb/linux/mongodb_64lin_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/bsondump" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongo" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongod" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongodump" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongoexport" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongofiles" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongoimport" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongooplog" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongoperf" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongorestore" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongos" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongosniff" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongostat" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongotop" stage="never" keep="true" />
+
+		</pack>
+		<pack name="MongoDB - Database Folder" required="yes">
+			<description>Mongo DB - Database Folder</description>
+			<fileset dir="resources/mongodb/dbFolder/data/" targetdir="${INSTALL_PATH}/mongodb/data" override="true"/>
+		</pack>
+	</packs>
+<!--64 Bit-->
+	<packs>
+		<pack name="Clotho EXE" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/exe/" targetdir="${INSTALL_PATH}" override="true"/>
+			<fileset dir="resources/clothoExe/" targetdir="${INSTALL_PATH}" override="true"/>
+			
+			<executable targetfile="$INSTALL_PATH/ClothoTestStarter.jar" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/StartClothoTest.jar" stage="never" keep="true" />
+			<!-- <parsable targetfile="${INSTALL_PATH}/test.properties"/> -->
+		</pack>
+		<pack name="Clotho Source Files" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/testsource/" targetdir="${INSTALL_PATH}" override="true"/>
+		</pack>
+		<pack name="MongoDB" required="yes">
+			<description>Mongo DB installation</description>
+			<fileset dir="resources/mongodb/linux/mongodb_64lin_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/bsondump" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongo" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongod" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongodump" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongoexport" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongofiles" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongoimport" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongooplog" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongoperf" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongorestore" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongos" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongosniff" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongostat" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongotop" stage="never" keep="true" />
+
+		</pack>
+		<pack name="MongoDB - Database Folder" required="yes">
+			<description>Mongo DB - Database Folder</description>
+			<fileset dir="resources/mongodb/dbFolder/data/" targetdir="${INSTALL_PATH}/mongodb/data" override="true"/>
+		</pack>
+	</packs>
+
+<!--Windows Packs -->	
+<!--32 Bit-->
+	<packs>
+		<pack name="Clotho EXE" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/exe/" targetdir="${INSTALL_PATH}" override="true"/>
+			<fileset dir="resources/clothoExe/" targetdir="${INSTALL_PATH}" override="true"/>
+			
+			<executable targetfile="$INSTALL_PATH/ClothoTestStarter.jar" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/StartClothoTest.jar" stage="never" keep="true" />
+			<!-- <parsable targetfile="${INSTALL_PATH}/test.properties"/> -->
+		</pack>
+		<pack name="Clotho Source Files" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/testsource/" targetdir="${INSTALL_PATH}" override="true"/>
+		</pack>
+		<pack name="MongoDB" required="yes">
+			<description>Mongo DB installation</description>
+			<fileset dir="resources/mongodb/win/mongodb_32win_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+		</pack>
+		<pack name="MongoDB - Database Folder" required="yes">
+			<description>Mongo DB - Database Folder</description>
+			<fileset dir="resources/mongodb/dbFolder/data/" targetdir="${INSTALL_PATH}/mongodb/data" override="true"/>
+		</pack>
+	</packs>
+
+<!--64 Bit-->
+	<packs>
+		<pack name="Clotho EXE" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/exe/" targetdir="${INSTALL_PATH}" override="true"/>
+			<fileset dir="resources/clothoExe/" targetdir="${INSTALL_PATH}" override="true"/>
+			
+			<executable targetfile="$INSTALL_PATH/ClothoTestStarter.jar" stage="never" keep="true" />
+			<executable targetfile="$INSTALL_PATH/StartClothoTest.jar" stage="never" keep="true" />
+			<!-- <parsable targetfile="${INSTALL_PATH}/test.properties"/> -->
+		</pack>
+		<pack name="Clotho Source Files" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/testsource/" targetdir="${INSTALL_PATH}" override="true"/>
+		</pack>
+		<pack name="MongoDB" required="yes">
+			<description>Mongo DB installation</description>
+			<fileset dir="resources/mongodb/win/mongodb_64win_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+		</pack>
+		<pack name="MongoDB - Database Folder" required="yes">
+			<description>Mongo DB - Database Folder</description>
+			<fileset dir="resources/mongodb/dbFolder/data/" targetdir="${INSTALL_PATH}/mongodb/data" override="true"/>
+		</pack>
+	</packs>
+
+
+<!--Mac Packs -->	
+<!--32 Bit-->
+	<packs>
+		<pack name="Clotho EXE" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/exe/" targetdir="${INSTALL_PATH}" override="true"/>
+			<fileset dir="resources/clothoExe/" targetdir="${INSTALL_PATH}" override="true"/>
+
+			<!-- <parsable targetfile="${INSTALL_PATH}/test.properties"/> -->
+		</pack>
+		<pack name="Clotho Source Files" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="src" targetdir="${INSTALL_PATH}" override="true"/>
+		</pack>
+		<pack name="MongoDB" required="yes">
+			<description>Mongo DB installation</description>
+			<fileset dir="resources/mongodb/mac/mongodb_64osx_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+		</pack>
+		<pack name="MongoDB - Database Folder" required="yes">
+			<description>Mongo DB - Database Folder</description>
+			<fileset dir="resources/mongodb/dbFolder/data/" targetdir="${INSTALL_PATH}/mongodb/data" override="true"/>
+		</pack>
+	</packs>
+
+<!--64 Bit-->
+	<packs>
+		<pack name="Clotho EXE" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="resources/exe/" targetdir="${INSTALL_PATH}" override="true"/>
+			<fileset dir="resources/clothoExe/" targetdir="${INSTALL_PATH}" override="true"/>
+
+			<!-- <parsable targetfile="${INSTALL_PATH}/test.properties"/> -->
+		</pack>
+		<pack name="Clotho Source Files" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="src" targetdir="${INSTALL_PATH}" override="true"/>
+		</pack>
+		<pack name="MongoDB" required="yes">
+			<description>Mongo DB installation</description>
+			<fileset dir="resources/mongodb/mac/mongodb_64osx_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+		</pack>
+		<pack name="MongoDB - Database Folder" required="yes">
+			<description>Mongo DB - Database Folder</description>
+			<fileset dir="resources/mongodb/dbFolder/data/" targetdir="${INSTALL_PATH}/mongodb/data" override="true"/>
+		</pack>
+	</packs>
+
