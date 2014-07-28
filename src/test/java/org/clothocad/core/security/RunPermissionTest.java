@@ -48,6 +48,24 @@ public class RunPermissionTest extends AbstractSecurityTest {
         api.login("run", "run");
         persistor.get(Institution.class, priv.getId());
     }
+    
+    @Test
+    public void testSneakyRead() throws Exception  {
+        initAPI("sneakyRead");
+        api.login("run", "run");        
+        Map<String,Object> function = new HashMap<>();
+        function.put("schema", "org.clothocad.core.datums.Function");
+        function.put("code", " function (){\n" +
+        "     return clotho.get(\""+ util.getPrivateModule().getId().toString() +"\");\n" +
+        " }");
+        function.put("language", "JAVASCRIPT");
+        
+        ObjectId functionId = api.create(function);
+        Map<String,Object> arguments = new HashMap();
+        arguments.put("id", functionId.toString());
+        arguments.put("args", new String[0]);
+        assertEquals(Void.TYPE, api.run(arguments));
+    }
 
     @Test
     public void testFind() {

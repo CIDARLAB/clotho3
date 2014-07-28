@@ -4,7 +4,9 @@
  */
 package org.clothocad.core.security;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
+import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.Account;
@@ -22,6 +24,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.clothocad.core.datums.ObjectId;
 
 /**
  *
@@ -32,6 +35,11 @@ import org.apache.shiro.util.ByteSource;
  */
 @Slf4j
 public class ClothoRealm extends AuthorizingRealm {
+        
+    public static final Set<String> READ = ImmutableSet.of("view", "run");
+    public static final Set<String> WRITE = ImmutableSet.of("view", "edit", "run");
+    public static final Set<String> RUN = ImmutableSet.of("run");
+    public static final Set<String> OWN = ImmutableSet.of("view", "run", "edit", "delete", "grant");
     
     private CredentialStore store;
     
@@ -86,6 +94,21 @@ public class ClothoRealm extends AuthorizingRealm {
 
     public void removePermission(String username, String permission){
         store.removePermission(username, permission);
+    }
+    
+    
+    public void addPermissions(String username, Set<String> permissions, Set<ObjectId> ids){
+        for (String permission : permissions){
+            for (ObjectId id : ids){
+                addPermission(username, "data:" + permission + ":" + id.toString());
+            }
+        }
+    }
+
+    public void addPermissions(String username, Set<String> permissions, ObjectId id){
+        for (String permission : permissions){
+            addPermission(username, "data:" + permission + ":" + id.toString());
+        }
     }
     
     public void deleteAll(){

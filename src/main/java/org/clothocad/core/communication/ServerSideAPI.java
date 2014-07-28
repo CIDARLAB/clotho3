@@ -33,10 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
@@ -48,14 +45,12 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.SecurityUtils;
-import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.execution.subprocess.SubprocessExec;
@@ -541,11 +536,12 @@ public class ServerSideAPI {
 
                 obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
-            //TODO: create sets author to current user
+
             
             try {
                 ObjectId id = persistor.save(obj);
                 //TODO: Relay the data change to listening clients
+                //TODO: create sets author to current user
 
                 //Return the JSON of the new object as a String
                 say(String.format("Created object #%s named %s", id.toString(), obj.get("name")), Severity.SUCCESS);

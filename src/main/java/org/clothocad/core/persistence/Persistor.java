@@ -58,6 +58,9 @@ import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.ClothoRealm;
+import static org.clothocad.core.security.ClothoRealm.OWN;
+
 import org.clothocad.core.util.JSON;
 
 /**
@@ -90,6 +93,8 @@ public class Persistor{
     @Getter
     private ClothoConnection connection;
     
+    private ClothoRealm realm;
+    
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
     private Converters converters;
@@ -97,12 +102,13 @@ public class Persistor{
     private GlobalTrie globalTrie;
     
     @Inject
-    public Persistor(final ClothoConnection connection){
-        this(connection, true);
+    public Persistor(final ClothoConnection connection, ClothoRealm realm){
+        this(connection, realm, true);
     }
     
-    public Persistor(final ClothoConnection connection, boolean initializeBuiltins){
+    public Persistor(final ClothoConnection connection, ClothoRealm realm, boolean initializeBuiltins){
         this.connection = connection;
+        this.realm = realm;
         connect();
         
        // if (initializeBuiltins) initializeBuiltInSchemas();
@@ -181,25 +187,29 @@ public class Persistor{
         return obj.getId();
     }
     
-    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
-       if (!SecurityUtils.getSubject().isAuthenticated()){
-           throw new AuthorizationException("Anonymous users cannot create or edit objects.");
-       }
-       if (!data.containsKey(ID)){
+    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+        }
+        if (!data.containsKey(ID)) {
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
             data.put(ID, id.toString());
-       } else {
-           checkPriv(new ObjectId(data.get(ID)), "edit");
-       }
+        } else {
+            checkPriv(new ObjectId(data.get(ID)), "edit");
+        }
+        ObjectId id = new ObjectId(data.get(ID));
+        if (!has(id)) {
+            realm.addPermissions(SecurityUtils.getSubject().getPrincipal().toString(), OWN, id);
+        }
         connection.save(data);
-        
+
         //Update the GlobalTrie with the new object
         globalTrie.put(data);
-        
+
         return new ObjectId(data.get(ID).toString());
     }
-    
+
     public void delete(ObjectId id) throws AuthorizationException{
         checkPriv(id, "delete");
         connection.delete(id);

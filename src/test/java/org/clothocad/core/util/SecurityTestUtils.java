@@ -18,6 +18,7 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.security.Visibility;
 import org.clothocad.model.Institution;
+import static org.clothocad.core.security.ClothoRealm.*;
 
 /**
  *
@@ -57,13 +58,13 @@ public class SecurityTestUtils {
         //make users
         realm.addAccount("none", "none");
         realm.addAccount("read", "read");
-        addPermission("read", READ, ids, realm);
+        realm.addPermissions("read", READ, ids);
         realm.addAccount("write", "write");
-        addPermission("write", WRITE, ids, realm);
+        realm.addPermissions("write", WRITE, ids);
         realm.addAccount("run", "run");
-        addPermission("run", RUN, ids, realm);
+        realm.addPermissions("run", RUN, ids);
         realm.addAccount("owner", "owner");
-        addPermission("owner", OWN, ids, realm);
+        realm.addPermissions("owner", OWN, ids);
         
         credentials = new HashMap<>();
         credentials.put("none", "none");
@@ -73,14 +74,6 @@ public class SecurityTestUtils {
         credentials.put("owner", "owner");
         
         
-    }
-    
-    private static void addPermission(String username, Set<String> permissions, Set<ObjectId> ids, ClothoRealm realm){
-        for (String permission : permissions){
-            for (ObjectId id : ids){
-                realm.addPermission(username, "data:" + permission + ":" + id.toString());
-            }
-        }
     }
     
     /*
@@ -107,9 +100,5 @@ public class SecurityTestUtils {
     public Module getPrivateModule(){
         return (Module) objects.get("privateModule");
     }
-    
-    public static final Set<String> READ = ImmutableSet.of("view", "run");
-    public static final Set<String> WRITE = ImmutableSet.of("view", "edit", "run");
-    public static final Set<String> RUN = ImmutableSet.of("run");
-    public static final Set<String> OWN = ImmutableSet.of("view", "run", "edit", "delete", "grant");
+
 }
