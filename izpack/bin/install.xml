@@ -62,7 +62,7 @@
 		</pack>
 		<pack name="MongoDB" required="yes">
 			<description>Mongo DB installation</description>
-			<fileset dir="resources/mongodb/linux/mongodb_64lin_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
+			<fileset dir="resources/mongodb/win/mongodb_64win_2_4_10/" targetdir="${INSTALL_PATH}/mongodb" override="true"/>
 			<executable targetfile="$INSTALL_PATH/mongodb/bin/bsondump" stage="never" keep="true" />
 			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongo" stage="never" keep="true" />
 			<executable targetfile="$INSTALL_PATH/mongodb/bin/mongod" stage="never" keep="true" />
