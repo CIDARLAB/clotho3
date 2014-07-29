@@ -10,6 +10,8 @@ angular.module('clotho.foundation')
 		var SCHEMA_CLOTHOSCHEMA = 'org.clothocad.core.schema.ClothoSchema';
 
 		var retrievedSchemas = $q.defer();
+		//map from schema ID to schema name, ready once retrievedSchemas resolves
+		var schemaNameMap = {};
 
 		//Main types of instances, and basic scaffold for creating each
 		var sharableTypes = {
@@ -136,7 +138,8 @@ angular.module('clotho.foundation')
 				type : "array",
 				input : {
 					type : 'text',
-					"ng-list" : ""
+					"ng-list" : "",
+					placeholder: "Enter comma-separated list"
 				}
 			},
 			"org.bson.types.ObjectId" : {
@@ -275,8 +278,18 @@ angular.module('clotho.foundation')
 
 		Clotho.query({"schema" : SCHEMA_ALL}, {mute : true})
 		.then(function (resultSchemas) {
+			//populate name map
+			angular.forEach(resultSchemas, function (schema) {
+				schemaNameMap[schema.id] = schema.name;
+			});
+
 			retrievedSchemas.resolve(resultSchemas);
 		});
+
+		//depends on resolution of retrievedSchemas
+		function mapSchemaIdToName (id) {
+			return schemaNameMap[id] || '';
+		}
 
 		var downloadSchemaDependencies = function (schema) {
 
@@ -372,6 +385,20 @@ angular.module('clotho.foundation')
 			}
 		}
 
+		//todo - currently this only checks name, but should check for child as well
+		function isInstanceOfSchema (sharable, schema) {
+
+			if (angular.isUndefined(schema)) {
+				return false;
+			}
+			//hack - handle NucSeqs
+			if (schema == 'org.clothocad.model.NucSeq') {
+				return /clotho.demo.sequence.*/.test(sharable.id) || _.indexOf(['org.clothocad.model.NucSeq', 'Part', 'Vector'], determineSchema(sharable)) > 0;
+			}
+
+			return determineSchema(sharable) == schema;
+		}
+
 		var sharableIconMap = {
 			Instance : "glyphicon glyphicon-file",
 			Function : "glyphicon glyphicon-play-circle",
@@ -412,6 +439,13 @@ angular.module('clotho.foundation')
 			downloadSchemaDependencies : downloadSchemaDependencies,
 
 			sharableTypes : sharableTypes,
+			//checks if a key is a basic sharable field (name, author, id, etc.)
+			isBasicField : function (fieldType) {
+				return angular.isDefined(sharableBasicFields[angular.lowercase(fieldType)]);
+			},
+			isPrimitiveField : function (fieldType) {
+				return angular.isDefined(primitiveToJava[angular.lowercase(fieldType)]);
+			},
 			accessTypes : accessTypes,
 			constraintTypes : constraintTypes,
 			primitiveToJava : primitiveToJava,
@@ -419,9 +453,12 @@ angular.module('clotho.foundation')
 			javaToJavascript : javaToJavascript,
 
 			isSharable : isSharable,
+			isFunction : isFunction,
 			isSchema : isSchema,
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,
+			mapSchemaIdToName : mapSchemaIdToName,
+			isInstanceOfSchema : isInstanceOfSchema,
 
 			determineSharableType : determineSharableType,
 			determineSharableIcon : determineSharableIcon,

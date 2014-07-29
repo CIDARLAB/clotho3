@@ -98,6 +98,12 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			}]
 		}
 	})
+	.when('/executor', {
+		templateUrl: 'views/executor.html',
+		controller: 'ExecutorCtrl',
+		title : 'Function Executor',
+		reloadOnSearch: false
+	})
 	.when('/trails', {
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl',

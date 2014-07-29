@@ -9,13 +9,17 @@ angular.module('clotho.editor')
  *
  * Each type is given it's own section (fields, schema, sharable), where sharable fields not matching the schema will appear in the sharable section
  *
- * - fields: pass fields to generate form fields for a specified list of fields. Fields are given priority over schema and sharable
- * - sharable: pass a sharable (containing a schema) to generate a form containing its fields, and the fields of its schema
+ * @attr fields: pass fields to generate form fields for a specified list of fields. Fields are given priority over schema and sharable
+ * @attr sharable: pass a sharable (containing a schema) to generate a form containing its fields, and the fields of its schema
+ * @attr formHorizontal {Boolean} Horizontal form styling, in case not using editor controller upstream
+ * @attr hideWarnings {Boolean} If present, do not sure warning divs
  */
 	.directive('formFieldEnumeration', function (Clotho, ClothoSchemas, $q, $compile) {
 
 		//todo - handle ID differently
 		//future - incorporate select and radios
+
+		//todo - pass custom string for ngModel
 
 		function generateDynamicFields (fields) {
 			var allFields = angular.element('<div ng-form>');
@@ -63,13 +67,36 @@ angular.module('clotho.editor')
 					}
 				}
 				else {
+
+					inputElement = angular.element('<div class="input-group" ng-init="showTypeahead = true">');
+
 					//didn't map, handle as default, allow specification via JSON
-					inputElement = angular.element('<textarea>');
-					inputElement.attr({
+					var textareaElement = angular.element('<textarea>');
+					textareaElement.attr({
 						'json-edit': 'sharable.' + field.name,
 						rows: 1,
-						placeholder: "Edit JSON directly, use quotes for strings"
+						placeholder: "Edit JSON directly, use quotes for strings",
+						"ng-if" : "!showTypeahead",
+						class: "form-control"
 					});
+
+					//todo - offer typeahead
+					//todo - tie to model
+
+					var typeaheadElement = angular.element('<input>');
+					typeaheadElement.attr({
+						"ng-if" : "showTypeahead",
+						class: "form-control"
+					});
+
+					var toggler = angular.element('<span class="input-group-btn">');
+					toggler.append(angular.element('<button class="btn btn-default" type="button" ng-click="showTypeahead = !showTypeahead"><span class="glyphicon glyphicon-refresh"></span></button>'));
+
+					formField.attr('no-styling', true);
+					inputElement.append(textareaElement);
+					inputElement.append(typeaheadElement);
+					inputElement.append(toggler);
+
 				}
 
 				inputElement.attr({
@@ -99,14 +126,17 @@ angular.module('clotho.editor')
 			controller: function($scope, $element, $attrs) {},
 			link: function (scope, element, attrs) {
 
-				if (angular.isUndefined(attrs.fields) &&
-						angular.isUndefined(attrs.sharable)) {
-					element.html('no schema information passed');
+				var hideWarnings = angular.isDefined(attrs.hideWarnings);
+
+				if (angular.isUndefined(attrs.fields) && angular.isUndefined(attrs.sharable)) {
+					if (!hideWarnings) {
+						element.html('no schema information passed');
+					}
 					return;
 				}
 
 				//styling pass-through
-				scope.formHorizontal = scope.$parent.formHorizontal;
+				scope.formHorizontal = angular.isDefined(attrs.formHorizontal) || scope.$parent.formHorizontal;
 
 				//container elements for each set of fields
 				var schemaFieldsElement = angular.element('<div>'),
@@ -162,7 +192,9 @@ angular.module('clotho.editor')
 					}
 					//no schema...
 					else {
-						schemaFieldsElement = angular.element('<div class="alert alert-warning">Sharable has no schema...</div>');
+						schemaFieldsElement = hideWarnings ?
+							angular.element('') :
+							angular.element('<div class="alert alert-warning">Sharable has no schema...</div>');
 
 						var strippedFields = newkeys;
 						_.remove(strippedFields, function (field) {

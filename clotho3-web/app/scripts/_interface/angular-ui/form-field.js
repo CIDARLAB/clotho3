@@ -10,6 +10,11 @@ angular.module('clotho.interface')
  *
  * @usage Use in form on elements: input, textarea, select, etc. Not button. Should have one and only one direct child (the field element). That child may have it's own children (e.g. options in a select). If pass removable="fieldName" then will delete key sharable.fieldName. Can pass hide-label to hide label and just show the element and help, but will be overriden for input types that surround the input with the label (e.g. checkbox, radio)
  *
+ * @attr name
+ * @attr removable
+ * @attr help
+ * @attr noStyling
+ *
  * @example
  <form-field name="Long Input" help="Enter a short biography about yourself"  removable="true" horizontal="true">
  <textarea rows="3" id="exampleTextarea" ng-model="model.bio" placeholder="Write a short biography"></textarea>
@@ -67,8 +72,9 @@ angular.module('clotho.interface')
 					childElement.attr('id', elemId);
 				}
 
-				//add form-control class to child
-				if (!regNoFormCtrlClass.test(elemType)){
+				//add form-control class to child UNLESS bootstrap says no, or noStyling attr is set
+				if (! ( regNoFormCtrlClass.test(elemType) || angular.isDefined(attrs.noStyling) )) {
+					console.log('adding form control class,',  angular.isDefined(attrs.noStyling), element);
 					childElement.addClass('form-control');
 				}
 
