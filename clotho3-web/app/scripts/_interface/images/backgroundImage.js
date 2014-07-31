@@ -3,6 +3,8 @@ angular.module('clotho.interface')
  * @ngdoc directive
  * @name backgroundImage
  *
+ * @attr background-contain {Boolean} If truthy, set background-size to contain. Default is cover. (Can only be set initially - no $watch in place)
+ *
  * @description
  * Prefer to use ngSrc as way of giving image URL
  *
@@ -15,7 +17,7 @@ angular.module('clotho.interface')
 				element.css({
 					'background-position' : '50% 50%',
 					'background-repeat' : 'none',
-					'background-size' : 'cover'
+					'background-size' : (scope.$eval(attrs.backgroundContain) ? 'contain' : 'cover')
 				});
 
 				attrs.$observe('ngSrc', function (newsrc, oldsrc) {
