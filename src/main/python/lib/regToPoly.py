@@ -2,10 +2,10 @@ import json
 import random
 from registryCollector import _grabRegistry
 
+"""Assumes that registry is in JSON string."""
 def _regToPoly(registry):
     change = json.loads(registry)
     fin = {}
-    fin['schema'] = 'org.clothocad.model.Polynucleotide'
     fin['isLinear'] = True
     fin['isSingleStranded'] = False
     for key in change.keys():
@@ -60,6 +60,16 @@ def _regToPoly(registry):
                                 temp['plusStrand'] = False
                     fin['highlights'].append(temp)
                 else:
+                    temp['start'] = f['startpos']
+                    temp['end'] = f['endpos']
+                    if f['title'] == None or f['title'] == "":
+                        temp['name'] = 'unnamed'
+                    else:
+                        temp['name'] = f['title']
+                    if f['direction'] == 'forward':
+                        temp['plusStrand'] = True
+                    else:
+                        temp['plusStrand'] = False
                     jj = _grabRegistry(f['title'])
                     res = _regToPoly(jj)
                     load = json.loads(res)
