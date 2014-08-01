@@ -2,4 +2,23 @@
   <p>import genbank files</p>
 
   <clotho-file-upload auto-upload-visible start-function="processGenbankFile(file, content,index)"></clotho-file-upload>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Converted Files
+    </div>
+    <div class="list-group">
+      <div class="list-group-item"
+           ng-repeat="item in converted track by item.id">
+        <button class="btn btn-primary pull-left"
+                ng-click="createNucSeq(item)">
+          Create
+        </button>
+
+        <span class="badge">{{item.sequence.length}} bp</span>
+        <h4 class="list-group-item-heading">{{item.name}}</h4>
+        <p>{{item.description}}</p>
+      </div>
+    </div>
+  </div>
 </div>

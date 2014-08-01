@@ -75,6 +75,15 @@
 
       <div class="row">
         <!-- todo - arrange by type and show header when do -->
+
+<!--
+  <div ng-repeat="section in section">
+    <div ng-repeat="post in section.posts | filter:searchText">
+         <span ng-if="$first">{{section.name}}</span>
+         {{post.title}}
+    </div>
+  </div>
+-->
         <div clotho-sharable="instance"
              ng-repeat="instance in resultArray"
              class="col-sm-4 col-xs-6"></div>

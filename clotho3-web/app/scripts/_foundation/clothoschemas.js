@@ -454,7 +454,11 @@ angular.module('clotho.foundation')
 
 			isSharable : isSharable,
 			isFunction : isFunction,
+			isView : isView,
 			isSchema : isSchema,
+			isInstance : function (sharable) {
+				return determineSharableType(sharable) == 'Instance';
+			},
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,
 			mapSchemaIdToName : mapSchemaIdToName,
