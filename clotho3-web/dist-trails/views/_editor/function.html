@@ -96,6 +96,19 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
+          <span class="panel-title">Output Type</span>
+        </div>
+        <div class="panel-body">
+          <select ng-model="sharable.outputType"
+                  class="form-control"
+                  ng-required
+                  ng-options="c.id as c.name group by c.category for c in paramTypes">
+          </select>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
           <span class="panel-title">Code Editor</span>
         </div>
         <div>
@@ -108,7 +121,10 @@
                     ng-required>
           </div>
         </div>
-        <div function-code-drop update-on-read="sharable.code" show-drop="true" show-browser="false"></div>
+        <div function-code-drop
+             update-on-read="sharable.code"
+             show-drop="true"
+             show-browser="false"></div>
       </div>
 
     </fieldset>

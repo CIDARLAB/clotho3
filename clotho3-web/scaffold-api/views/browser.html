@@ -1,49 +1,94 @@
-<div class="container" ng-init="setCurrent('user')">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="page-header" style="position:relative">
-                <div class="clearfix" style="position: absolute; bottom: 0; right: 20px; display: block;">
-                    <ul class="nav nav-tabs pull-right" style=" margin-bottom:0; border-bottom: 0;">
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="list-group">
+        <a class="list-group-item"
+           ng-click="setCurrentQuery(queryItem.query)"
+           ng-repeat="queryItem in savedQueries">
+          <span class="badge"></span>
+          {{queryItem.name}}
+        </a>
+        <a class="list-group-item list-group-item-info"
+           ng-click="createQueryMode = true"> Create new Query </a>
+      </div>
 
-                        <li ng-repeat="mode in nav" ng-class="{'active' : mode.value == current}">
-                            <a ng-click="setCurrent(mode.value)">{{mode.text}}</a>
-                        </li>
-                    </ul>
-                    <div class="btn-group pull-left" style="padding: 0 15px 0 0; margin: 0;">
-                        <button class="btn" ng-click="sort(false)" ng-class="{'btn-info' : !catSort}"
-                                ng-disabled="!catSort"><i class="glyphicon glyphicon-time"></i> Date</button>
-                        <button class="btn" ng-click="sort(true)" ng-class="{'btn-info' : !!catSort}"
-                                ng-disabled="!!catSort"><i class="glyphicon glyphicon-comment"></i> Type</button>
-                    </div>
-                </div>
-
-
-                <h1>
-                    {{nav[current].text}}
-                    <small>{{nav[current].subtext}}</small>
-                </h1>
-
-
-            </div>
-        </div>
+      <div ng-repeat="i in ['Type', 'Date', 'Stats']">
+        <select class="form-control">
+          <option selected disabled>{{i}}</option>
+          <option>1</option>
+          <option>2</option>
+        </select>
+      </div>
     </div>
 
-    <div class="row" ng-repeat="(type, fields) in recent">
-        <div ng-if="type != 'entries'" class="col-xs-12">
-            <h3 class="text-info">{{type}}</h3>
-        </div>
-        <div ng-switch="type">
-            <div ng-switch-when="Instance">
-                <div ng-repeat="(instType, instFields) in fields">
-                    <div class="col-xs-12"><h4>{{instType}}</h4></div>
-                    <sharable ng-repeat="item in instFields" content="item"></sharable>
-                </div>
-            </div>
-            <div ng-switch-default>
-                <sharable ng-repeat="item in fields" content="item"></sharable>
-            </div>
-        </div>
+    <div class="col-sm-9">
 
+      <div class="panel panel-info" ng-show="createQueryMode">
+        <div class="panel-heading">Create a new Query</div>
+        <div class="panel-body">
+          <div ng-form="queryConstruct" class="row">
+            <div class="col-sm-6">
+              <form-field>
+                <textarea class="form-control" json-edit="newQuery.query" rows="4"></textarea>
+              </form-field>
+            </div>
+            <div class="col-sm-6">
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text"
+                         class="form-control"
+                         ng-model="newQuery.name"
+                         placeholder="Query Name">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary"
+                            ng-click="saveNewQuery()"
+                            ng-disabled="queryConstruct.$invalid || !newQuery.name.length">
+                      Save Query
+                    </button>
+                  </span>
+                </div>
+              </div>
+
+              <button class="btn btn-default" ng-click="testNewQuery()" ng-disabled="queryConstruct.$invalid">
+                Test Query
+              </button>
+              <p ng-show="!!newQueryResults">Query generates {{constructQuery.results.length || 0}} results</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="well well-small">
+        <p>Add in collections (libraries)</p>
+
+        <p>Notion of filters? Don't want to confuse Mongo vs Angular</p>
+
+        <p>add badge counts</p>
+      </div>
+
+
+      <div ng-show="!resultArray">
+        <p>Select a saved query</p>
+      </div>
+
+      <div class="row">
+        <!-- todo - arrange by type and show header when do -->
+
+<!--
+  <div ng-repeat="section in section">
+    <div ng-repeat="post in section.posts | filter:searchText">
+         <span ng-if="$first">{{section.name}}</span>
+         {{post.title}}
+    </div>
+  </div>
+-->
+        <div clotho-sharable="instance"
+             ng-repeat="instance in resultArray"
+             class="col-sm-4 col-xs-6"></div>
+      </div>
     </div>
 
+  </div>
 </div>
