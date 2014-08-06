@@ -136,31 +136,31 @@ public class ServerSideAPI {
         //Extract the query String and tokens
         Map<String, Object> json = JSON.mappify(data);
         String query = (String) json.get("query");
-        List<Object> clientTokens = (List<Object>) json.get("tokens");
+//        List<Object> clientTokens = (List<Object>) json.get("tokens");
         
-        //Resolve the commands to tokens
-        System.out.println("++ The command submitted is: " + query);
-        String[] tokens = query.split("\\s+");
-        for(String str : tokens) {
-            System.out.println("token: " + str);
-        }
-
-        Object out = null;
-        try {
-            return tryRun(tokens);
-        } catch(Exception err) {
-        }
-        
-        try {
-            return trySingleWord(tokens);
-        } catch(Exception err) {
-        }
-        
-        try {
-            return tryAPIWord(tokens);
-        } catch(Exception err) {
-        }
-        
+//        //Resolve the commands to tokens
+//        System.out.println("++ The command submitted is: " + query);
+//        String[] tokens = query.split("\\s+");
+//        for(String str : tokens) {
+//            System.out.println("token: " + str);
+//        }
+//
+//        Object out = null;
+//        try {
+//            return tryRun(tokens);
+//        } catch(Exception err) {
+//        }
+//        
+//        try {
+//            return trySingleWord(tokens);
+//        } catch(Exception err) {
+//        }
+//        
+//        try {
+//            return tryAPIWord(tokens);
+//        } catch(Exception err) {
+//        }
+//        
         //Run the command assuming it's javascript
         //say(command, Severity.MUTED, null, true);
         try {
@@ -182,90 +182,90 @@ public class ServerSideAPI {
      * @param tokens
      * @return the result or null if it failed to execute
      */
-    private Object tryRun(String[] tokens) throws Exception {
-        System.out.println("+++  try RUN on args");
-        Function function = null;
-        List<Object> args = new ArrayList<Object>();
-        
-        //Assume the first token is a Function call
-        List<Map> completions = persistor.getCompletions(tokens[0]);
-        String uuid = (String) completions.get(0).get("id").toString();
-        function = persistor.get(Function.class, new ObjectId(uuid));
-        if(function==null) {
-            throw new Exception();
-        }
-        
-        //Iterate through each subsequent token and convert to object if required
-        for(int i=1; i<tokens.length; i++) {
-            try {
-                Object obj = resolveSloppy(tokens[i]);
-                args.add(obj);
-            } catch(Exception err) {
-                args.add(tokens[i]);
-            }
-        }
-        
-        
-//JCA TODO: remove this section when converters become available
-        //Extract sequence strings when an object is given as argument for a String field
-        Argument[] funcargs = function.getArgs();
-        for(int i=0; i<funcargs.length; i++) {
-            try {
-                Argument arg = funcargs[i];
-                String str = arg.getType().toString();
-                if(str.equals("class java.lang.String")) {
-                    Map map = (Map) args.get(i);
-                    String newvalue = (String) map.get("sequence");
-                    args.remove(i);
-                    args.add(i, newvalue);
-                }
-            } catch(Exception err) {
-                
-            }
-        }
-
-        //Invoke run with the ScriptEngine
-        System.out.println("Running the resolved sloppy arguments with function:\n " + function.toString());
-        System.out.println("And args: " );
-        for(Object obj : args) {
-            System.out.println(obj.toString());
-        }
-        Object out = null;
-        out = run(function, args);
-        return out;
-    }
-    
-    private Object trySingleWord(String[] tokens) {
-        System.out.println("+++  try Single Word get");
-        return resolveSloppy(tokens[0]);
-    }
-    
-    private Object resolveSloppy(String word) {
-        List<Map> completions = persistor.getCompletions(word);
-        String uuid = (String) completions.get(0).get("id");
-        return get(uuid);
-    }
-    
-    private Object tryAPIWord(String[] tokens) throws Exception {
-        System.out.println("+++  try first word is API word");
-        String firstWord = tokens[0].toLowerCase();
-        
-        //Example:  get pBca1256
-        if(firstWord.equals("get")) {
-            //Interpret the next token as a clotho.get request
-            return resolveSloppy(tokens[1]);
-            
-        } else if(firstWord.equals("run")) {
-            String[] newtok = new String[tokens.length-1];
-            for(int i=0; i<newtok.length; i++) {
-                newtok[i] = tokens[i+1];
-            }
-            return tryRun(newtok);
-        } else {
-            throw new Exception();
-        }
-    }
-    
+//    private Object tryRun(String[] tokens) throws Exception {
+//        System.out.println("+++  try RUN on args");
+//        Function function = null;
+//        List<Object> args = new ArrayList<Object>();
+//        
+//        //Assume the first token is a Function call
+//        List<Map> completions = persistor.getCompletions(tokens[0]);
+//        String uuid = (String) completions.get(0).get("id").toString();
+//        function = persistor.get(Function.class, new ObjectId(uuid));
+//        if(function==null) {
+//            throw new Exception();
+//        }
+//        
+//        //Iterate through each subsequent token and convert to object if required
+//        for(int i=1; i<tokens.length; i++) {
+//            try {
+//                Object obj = resolveSloppy(tokens[i]);
+//                args.add(obj);
+//            } catch(Exception err) {
+//                args.add(tokens[i]);
+//            }
+//        }
+//        
+//        
+////JCA TODO: remove this section when converters become available
+//        //Extract sequence strings when an object is given as argument for a String field
+//        Argument[] funcargs = function.getArgs();
+//        for(int i=0; i<funcargs.length; i++) {
+//            try {
+//                Argument arg = funcargs[i];
+//                String str = arg.getType().toString();
+//                if(str.equals("class java.lang.String")) {
+//                    Map map = (Map) args.get(i);
+//                    String newvalue = (String) map.get("sequence");
+//                    args.remove(i);
+//                    args.add(i, newvalue);
+//                }
+//            } catch(Exception err) {
+//                
+//            }
+//        }
+//
+//        //Invoke run with the ScriptEngine
+//        System.out.println("Running the resolved sloppy arguments with function:\n " + function.toString());
+//        System.out.println("And args: " );
+//        for(Object obj : args) {
+//            System.out.println(obj.toString());
+//        }
+//        Object out = null;
+//        out = run(function, args);
+//        return out;
+//    }
+//    
+//    private Object trySingleWord(String[] tokens) {
+//        System.out.println("+++  try Single Word get");
+//        return resolveSloppy(tokens[0]);
+//    }
+//    
+//    private Object resolveSloppy(String word) {
+//        List<Map> completions = persistor.getCompletions(word);
+//        String uuid = (String) completions.get(0).get("id");
+//        return get(uuid);
+//    }
+//    
+//    private Object tryAPIWord(String[] tokens) throws Exception {
+//        System.out.println("+++  try first word is API word");
+//        String firstWord = tokens[0].toLowerCase();
+//        
+//        //Example:  get pBca1256
+//        if(firstWord.equals("get")) {
+//            //Interpret the next token as a clotho.get request
+//            return resolveSloppy(tokens[1]);
+//            
+//        } else if(firstWord.equals("run")) {
+//            String[] newtok = new String[tokens.length-1];
+//            for(int i=0; i<newtok.length; i++) {
+//                newtok[i] = tokens[i+1];
+//            }
+//            return tryRun(newtok);
+//        } else {
+//            throw new Exception();
+//        }
+//    }
+//    
     public final void learn(Object data) {
         //might already be data?
         Map<String, Object> json = JSON.mappify(data);
@@ -617,7 +617,7 @@ public class ServerSideAPI {
     run2(final Function function, final List<Object> args) {
         final Map<String, Object> funcJSON =
             persistor.getAsJSON(function.getId());
-        return SubprocessExec.run(
+        Object out = SubprocessExec.run(
             this,
             funcJSON,
             args,
@@ -640,6 +640,7 @@ public class ServerSideAPI {
                 }
             }
         );
+        return out;
     }
 
     //TODO: needs serious cleaning up
