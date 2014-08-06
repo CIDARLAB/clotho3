@@ -196,7 +196,9 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	resolve : {
 		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
 			var deferred = $q.defer();
-				$http.get('models/org.clothocad.trails.constructionFiles.json').then(function(data) {
+				//Clotho.get('org.clothocad.trails.constructionFiles')
+				$http.get('models/org.clothocad.trails.constructionFiles.json')
+				.then(function(data) {
 					Trails.compile(data.data).then(function (compiled) {
 						deferred.resolve(compiled);
 					});
