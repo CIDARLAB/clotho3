@@ -29,7 +29,7 @@ class NewGBConverter:
         'sequence': self.gb.sequence, \
         'name': self.gb.name, \
         'id': self.gb.id, \
-        'accession': self.gb.accn[0], \
+        'accession': None if self.gb.accn is None else self.gb.accn[0], \
         #'organism': self.gb.organism, \
         'date': self.gb.date, \
         'highlights': self.highs, \
