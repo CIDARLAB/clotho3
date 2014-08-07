@@ -308,7 +308,7 @@ module.exports = function (grunt) {
 		    dot: true,
 		    cwd: '<%= yeoman.dist %>',
 		    dest: '<%= yeoman.api %>',
-		    src: ['**/*']
+		    src: ['**/*', '!index.html']
 	    },
 	    handleCommandBuild : {
 		    expand: true,

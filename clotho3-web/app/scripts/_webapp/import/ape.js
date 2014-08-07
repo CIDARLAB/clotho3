@@ -7,7 +7,7 @@ angular.module('clotho.webapp')
 
 	$scope.processGenbankFile = function (file, content, index) {
 		Clotho.run('org.andersonlab.py_convertGB', [content]).then(function (r) {
-			console.log(r[0]);
+			console.log(r);
 			$scope.converted.push(r[0]);
 		});
 	};
