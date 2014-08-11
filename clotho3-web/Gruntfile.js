@@ -548,8 +548,7 @@ module.exports = function (grunt) {
 	  gitpush: {
 		  trails: {
 			  options: {
-				  branch: 'trails-release',
-				  all: true,
+				  branch: 'trails-release'
 			  }
 		  }
 	  }

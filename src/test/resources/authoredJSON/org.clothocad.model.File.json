@@ -1,0 +1,30 @@
+{
+  "schema" : "org.clothocad.core.schema.ClothoSchema",
+  "language" : "JSONSCHEMA",
+  "name" : "File",
+  "id" : "org.clothocad.model.File",
+  "superClass" : "526aec6144ae288aa0ce3af0",
+  "description" : "Schema for uploaded files, saving them in database as binary strings",
+  "fields" : [ {
+    "name" : "contents",
+    "description" : "Binary string of file contents",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC",
+    "type" : "string"
+  }, {
+    "name" : "contentType",
+    "description" : "",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC",
+    "type" : "string"
+  }, {
+    "name" : "size",
+    "description" : "Number of Bytes",
+    "example" : 47283,
+    "constraints" : null,
+    "access" : "PUBLIC",
+    "type" : "number"
+  } ]
+}
