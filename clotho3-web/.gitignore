@@ -4,3 +4,7 @@ node_modules
 app/bower_components
 app/css
 reports
+dist-trails
+scaffold-api
+scaffold-command
+scaffold-full
