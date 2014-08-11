@@ -1022,7 +1022,7 @@ class GenBankScanner(InsdcScanner):
                 raise ValueError('Line must start with LOCUS')
             else:
                 if m.group(2) is not None:
-                    consumer.locus(m.group(2))
+                    consumer.locus(m.group(2).strip())
                 else:
                     consumer.locus("")
                 consumer.size(m.group(3))
