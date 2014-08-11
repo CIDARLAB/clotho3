@@ -1016,7 +1016,7 @@ class GenBankScanner(InsdcScanner):
         # LOCUS line                        #
         #####################################
         import re
-        m = re.search(r"(LOCUS)\s+([\w\\\(\)-_+]+)?\s+(\d+)\s+(bp|rc|aa)\s+(ds-|ss-|ms-)?(DNA|RNA|tRNA|mRNA|uRNA|snRNA|cDNA)?\s+(circular|linear)?\s+(\w{3})?\s+(\d{1,2}-\w{3}-\d{4})?", line)
+        m = re.search(r"(LOCUS)\s+([\w\\\(\)-_+\s]+)?\s+(\d+)\s+(bp|rc|aa)\s+(ds-|ss-|ms-)?(DNA|RNA|tRNA|mRNA|uRNA|snRNA|cDNA)?\s+(circular|linear)?\s+(\w{3})?\s+(\d{1,2}-\w{3}-\d{4})?", line)
         if m is not None:
             if m.group(1) != 'LOCUS':
                 raise ValueError('Line must start with LOCUS')
@@ -1339,7 +1339,7 @@ FEATURES             Location/Qualifiers
                      KDDQIITETEVFDEFRSSLNSLIMHLEKLPKVNDDTITFEAVINAIELELGHKLDRNR
                      RVDSLEEKAEIERDSNWVKCQEDENLPDNNGFQPPKIKLTSLVGSDVGPLIIHQFSEK
                      LISGDDKILNGVYSQYEEGESIFGSLF"
-ORIGIN
+ORIGIN      
         1 gatcctccat atacaacggt atctccacct caggtttaga tctcaacaac ggaaccattg
        61 ccgacatgag acagttaggt atcgtcgaga gttacaagct aaaacgagca gtagtcagct
       121 ctgcatctga agccgctgaa gttctactaa gggtggataa catcatccgt gcaagaccaa
