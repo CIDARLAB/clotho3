@@ -38,9 +38,9 @@ class CallAccn:
             except:
                 print("Failed.")
                 failed.append(acc)
-        print "Finished. %d successful retrievals and %d unsuccessful retrievals." % (len(success), len(failed))
-        print "Successful: ", success
-        print "Failed: ", failed
+        #print "Finished. %d successful retrievals and %d unsuccessful retrievals." % (len(success), len(failed))
+        #print "Successful: ", success
+        #print "Failed: ", failed
 
     """Writes a document holding the Genbank files."""
     def write_gb(self, file_name):
