@@ -4,6 +4,7 @@ from ClothoPy.GenBankHolder import GenBank
 from ClothoPy.NewGenBankHolder import NewGenBank
 from ClothoPy.NewGBToJSON import NewGBConverter
 from Bio.SeqRecord import SeqRecord
+from StringIO import StringIO
 import ClothoPy.ClothoSeqIO
 
 def _convertGB(gb):
@@ -11,7 +12,6 @@ def _convertGB(gb):
     #genbank = GenBank('temp.gb')
     #os.remove('temp.gb')
 
-    from StringIO import StringIO
     gb_handle = StringIO(gb)
     record = ClothoPy.ClothoSeqIO.read(gb_handle, 'gb')
     
