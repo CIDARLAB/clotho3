@@ -481,6 +481,9 @@ function generateClothoAPI() {
 	    if (angular.isUndefined(obj)) {
 		    return null;
 	    }
+	    if (obj.id === null) {
+		    delete obj.id;
+	    }
       return fn.emitSubOnce('create', obj);
     };
 

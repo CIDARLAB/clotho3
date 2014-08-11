@@ -1,27 +1,43 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-3">
-      <div class="list-group">
-        <a class="list-group-item"
-           ng-click="setCurrentQuery(queryItem.query)"
-           ng-repeat="queryItem in savedQueries">
-          <span class="badge"></span>
-          {{queryItem.name}}
-        </a>
-        <a class="list-group-item list-group-item-info"
-           ng-click="createQueryMode = true"> Create new Query </a>
+      <div class="panel panel-default">
+        <div class="panel-heading">Queries</div>
+        <div class="list-group">
+          <a class="list-group-item"
+             ng-click="setCurrentQuery(queryItem.query)"
+             ng-repeat="queryItem in queries">
+            <span class="badge"></span>
+            {{queryItem.name}}
+          </a>
+          <a class="list-group-item list-group-item-info"
+             ng-click="createQueryMode = true"> Create new Query </a>
+        </div>
       </div>
 
-      <div ng-repeat="i in ['Type', 'Date', 'Stats']">
-        <select class="form-control">
-          <option selected disabled>{{i}}</option>
-          <option>1</option>
-          <option>2</option>
-        </select>
+      <div class="panel panel-default">
+        <div class="panel-heading">Collections</div>
+        <div class="list-group">
+          <a class="list-group-item"
+             ng-click="setCurrentQuery(queryItem.query)"
+             ng-repeat="coll in collections">
+            <span class="badge" ng-bind="coll.items.length"></span>
+            {{coll.name}}
+          </a>
+          <a class="list-group-item list-group-item-info"
+             ng-click="createCollectionMode = true"> Create new Collection </a>
+        </div>
       </div>
     </div>
 
     <div class="col-sm-9">
+
+      <div class="row" style="margin-bottom: 10px">
+        <div ng-repeat="filter in filters" class="col-sm-3">
+          <!--todo - dropdown buttons-->
+          <button class="btn btn-default" ng-click="curFilter = filter.filter">{{filter.name}}</button>
+        </div>
+      </div>
 
       <div class="panel panel-info" ng-show="createQueryMode">
         <div class="panel-heading">Create a new Query</div>

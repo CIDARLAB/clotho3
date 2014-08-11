@@ -1,16 +1,62 @@
 'use strict';
 
 angular.module('clotho.webapp').controller('BrowserCtrl',
-function($scope, Clotho, $filter) {
+function($scope, Clotho, $filter, ClothoSchemas) {
 
 	//todo - pending this working... see GH#410
-	Clotho.recent().then(function(result) {
+	//Clotho.recent().then(function(result) {
+	Clotho.query({}, {maxResults: 50}).then(function (result) {
 		$scope.resultArray = result;
 		$scope.sort(false);
 	});
 
+	/* filters */
+
+	//todo - some order, some filter... separate
+	$scope.filters = [
+		{
+			name : "Name",
+			filter : "name"
+		},
+		{
+			name : "Time",
+			filter : "name"
+		},
+		{
+			name : "Type",
+			filter : "typeFilter"
+		},
+		{
+			name : "Schema",
+			filter : "schema"
+		}
+	];
+
+	$scope.typeFilter = function (item) {
+		return ClothoSchemas.determineType(item);
+	};
+
+
+	//todo - update when pulling from server
+	$scope.collections = [
+		{
+			name : "My Collection",
+			items : {
+				"mySharable" : {
+					"note1" : "blah blah blah blah"
+				},
+				"anotherSharable" : {
+					"note1" : "yad yad ayayayayy"
+				},
+				"oneMoreSharable" : {
+					"note2" : "bling bling blang"
+				}
+			}
+		}
+	];
+
 	//todo - store on server and pull
-	$scope.savedQueries = [
+	$scope.queries = [
 		{
 			name : "Schemas",
 			query : {
@@ -18,9 +64,9 @@ function($scope, Clotho, $filter) {
 			}
 		},
 		{
-			name : "Contains pBca",
+			name : "Contains pBAC",
 			query : {
-				name: "{$regex : '[pBca]', $options : 'gi'}"
+				name: "{$regex : 'pBAC', $options : 'gi'}"
 			}
 		}
 	];
@@ -33,7 +79,7 @@ function($scope, Clotho, $filter) {
 	};
 	$scope.saveNewQuery = function () {
 		//todo - update once saving user queries on server
-		$scope.savedQueries.push($scope.newQuery);
+		$scope.queries.push($scope.newQuery);
 		$scope.newQuery = {};
 		$scope.newQueryResults = '';
 	};
@@ -51,6 +97,9 @@ function($scope, Clotho, $filter) {
 			}
 		]
 	};
+
+
+	/* query construction */
 
 	$scope.setCurrentQuery = function(value) {
 		$scope.currentQuery = value;
@@ -76,18 +125,3 @@ function($scope, Clotho, $filter) {
 		}
 	};
 });
-
-	[
-		{
-			name : "Schemas",
-			query : {
-				schema: "org.clothocad.core.schema.Schema"
-			}
-		},
-		{
-			name : "Contains pBca",
-			query : {
-				name: "{$regex : '[pBca]', $options : 'gi'}"
-			}
-		}
-	]

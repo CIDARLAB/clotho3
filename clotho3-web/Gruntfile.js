@@ -532,6 +532,26 @@ module.exports = function (grunt) {
 				  'reports': ['app/scripts/**/*.js']
 			  }
 		  }
+	  },
+	  gitcommit : {
+		  trails: {
+			  options: {
+				  message: 'Trails Deploy',
+				  noVerify: true,
+				  noStatus: false
+			  },
+			  files: {
+				  src: '<%= yeoman.trails %>'
+			  }
+		  }
+	  },
+	  gitpush: {
+		  trails: {
+			  options: {
+				  branch: 'trails-release',
+				  all: true,
+			  }
+		  }
 	  }
   });
 
