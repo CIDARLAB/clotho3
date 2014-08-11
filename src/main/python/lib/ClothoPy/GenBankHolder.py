@@ -38,7 +38,10 @@ class GenBank:
             self.description = seq_record.description
             self.sequence = seq_record.seq
             self.name = seq_record.name
-            self.id = seq_record.id
+            if seq_record.id is None or seq_record.id == "":
+                self.id = seq_record.name
+            else:
+                self.id = seq_record.id
             self.annotations = seq_record.annotations
             self.features = seq_record.features
             self.dbxrefs = seq_record.dbxrefs
