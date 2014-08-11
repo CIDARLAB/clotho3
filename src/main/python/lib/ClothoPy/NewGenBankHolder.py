@@ -45,7 +45,10 @@ class NewGenBank:
 		self.date = None
 		if 'date' in self.GB.annotations.keys(): #important
 			self.date = self.GB.annotations['date']
-		self.id = None
+		if self.GB.id is None or self.GB.id == "":
+			self.id == self.GB.name
+		else:
+			self.id = self.GB.id
 		if 'gi' in self.GB.annotations.keys():
 			self.id = self.GB.annotations['gi']
 		self.accn = None
