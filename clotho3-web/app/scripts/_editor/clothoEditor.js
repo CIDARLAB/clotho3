@@ -81,31 +81,32 @@ angular.module('clotho.editor')
 					return;
 				}
 
-				var type = ClothoSchemas.determineSharableType(sharable),
-					templateUrl;
+				ClothoSchemas.determineSharableType(sharable).then(function (type) {
+					var templateUrl;
 
-				console.warn('sharable type is', type);
+					console.warn('sharable type is', type);
 
-				// if it's an instance, check for a more specific template
-				if (type == 'Instance') {
-					//todo - handle instance-specific templates
-					templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
-				} else {
-					templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
-				}
+					// if it's an instance, check for a more specific template
+					if (type == 'Instance') {
+						//todo - handle instance-specific templates
+						templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
+					} else {
+						templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
+					}
 
-				//gets partial for type of sharable and compiles editor HTML
-				$http.get(templateUrl, {cache: $templateCache})
-				.success(function (data) {
-					scope.showJsonEditor = false;
-					scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
+					//gets partial for type of sharable and compiles editor HTML
+					$http.get(templateUrl, {cache: $templateCache})
+						.success(function (data) {
+							scope.showJsonEditor = false;
+							scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
 
-					var el = $compile(data)(scope);
-					element.html(el);
-				})
-				.error(function (data) {
-					Debugger.error('Could not retrieve template: ' + templateUrl);
-					element.html('<p class="text-center">Please select an Object</p>');
+							var el = $compile(data)(scope);
+							element.html(el);
+						})
+						.error(function (data) {
+							Debugger.error('Could not retrieve template: ' + templateUrl);
+							element.html('<p class="text-center">Please select an Object</p>');
+						});
 				});
 			}
 

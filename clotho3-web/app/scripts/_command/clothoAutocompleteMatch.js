@@ -21,7 +21,7 @@ angular.module('clotho.tokenizer')
 				});
 
 				scope.$watch('match', function (match) {
-					scope.iconClass = ClothoSchemas.determineSharableIcon(ClothoSchemas.determineSharableType(match));
+					scope.iconClass = ClothoSchemas.determineSharableIcon(ClothoSchemas.dirtyDetermineType(match));
 				});
 			}
 		};

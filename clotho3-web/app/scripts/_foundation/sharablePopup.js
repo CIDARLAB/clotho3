@@ -38,7 +38,7 @@ angular.module('clotho.clothoDirectives')
 				//given a model (should be pruned), sets related scope variables
 				function setSharable (model) {
 					scope.sharable = model;
-					scope.type = ClothoSchemas.determineSharableType(model);
+					scope.type = ClothoSchemas.dirtyDetermineType(model);
 					scope.iconClass = ClothoSchemas.determineSharableIcon(scope.type);
 					scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(scope.type);
 

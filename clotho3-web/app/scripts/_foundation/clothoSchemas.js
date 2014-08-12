@@ -296,6 +296,10 @@ angular.module('clotho.foundation')
 			});
 		}
 
+		var getParentSchemaIds = function (schemaId) {
+			return Clotho.run('clotho.functions.schema.getParents', [schemaId]);
+		};
+
 		var getSuperclassFields = function (schemaSharable) {
 
 			var fields = [];
@@ -308,7 +312,7 @@ angular.module('clotho.foundation')
 			var promiseChain = $q.when();
 			var reachedBottom = $q.defer();
 
-			//todo - retrieveSuperclass returns null -- loop until don't return null
+			//todo - retrieveSuperclass returns null -- loop until don't return null instead of crazy promises (or use getParentSchemaIds)
 			function getSuperClass (passedSchema) {
 				if (passedSchema.superClass) {
 					promiseChain.then(function () {
@@ -418,8 +422,13 @@ angular.module('clotho.foundation')
 			return determineSchema(sharable) == sharableTypes.View.schema;
 		}
 
-		//determines main type: Instance, Function, View, Schema
+		//determines main type: Instance, Function, View, Schema -- ASYNC so kinda slow...
 		function determineSharableType (sharable) {
+			return Clotho.run('clotho.functions.schema.determineSharableType', [sharable.id]);
+		}
+
+		//this is a synchronous version for things like autocomplete where we're running a lot of these
+		function dirtyDetermineType (sharable) {
 			if (isSchema(sharable)) {
 				return 'Schema';
 			} else if (isFunction(sharable)) {
@@ -432,6 +441,7 @@ angular.module('clotho.foundation')
 		}
 
 		//todo - currently this only checks name, but should check for child as well
+		//hack
 		function isInstanceOfSchema (sharable, schema) {
 
 			if (angular.isUndefined(schema)) {
@@ -484,6 +494,7 @@ angular.module('clotho.foundation')
 			retrievedSchemas : retrievedSchemas.promise,
 			downloadSchemaDependencies : downloadSchemaDependencies,
 			getSuperclassFields : getSuperclassFields,
+			getParentSchemaIds : getParentSchemaIds,
 
 			sharableTypes : sharableTypes,
 			//checks if a key is a basic sharable field (name, author, id, etc.)
@@ -504,13 +515,14 @@ angular.module('clotho.foundation')
 			isView : isView,
 			isSchema : isSchema,
 			isInstance : function (sharable) {
-				return determineSharableType(sharable) == 'Instance';
+				return dirtyDetermineType(sharable) == 'Instance';
 			},
 			isBuiltIn : isBuiltIn,
 			isClothoSchema : isClothoSchema,
 			mapSchemaIdToName : mapSchemaIdToName,
 			isInstanceOfSchema : isInstanceOfSchema,
 
+			dirtyDetermineType : dirtyDetermineType,
 			determineSharableType : determineSharableType,
 			determineSharableIcon : determineSharableIcon,
 			determineFieldType : determineFieldType,
