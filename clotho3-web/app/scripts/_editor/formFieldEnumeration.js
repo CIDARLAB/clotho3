@@ -48,16 +48,17 @@ angular.module('clotho.editor')
 				var javascriptType = ClothoSchemas.formTypeMap[field.type] || false;
 
 				var inputElement;
-				if (javascriptType) {
+				if (javascriptType && javascriptType['input']) {
 					//if we have an input field, just create an input and extend with attrs given
-					if (javascriptType['input']) {
+					//if () {
 						inputElement = angular.element('<input>');
 						inputElement.attr(javascriptType['input']);
 						inputElement.attr({
 							'ng-model': 'sharable.' + field.name
 						});
-					}
+					//}
 					//otherwise, e.g. object
+					/*
 					else {
 						inputElement = angular.element('<textarea>');
 						inputElement.attr({
@@ -65,10 +66,11 @@ angular.module('clotho.editor')
 							rows: 3
 						});
 					}
+					*/
 				}
 				else {
 
-					inputElement = angular.element('<div class="input-group" ng-init="showTypeahead = true">');
+					inputElement = angular.element('<div class="input-group" ng-init="showTypeahead = false">');
 
 					//didn't map, handle as default, allow specification via JSON
 					var textareaElement = angular.element('<textarea>');
@@ -157,36 +159,31 @@ angular.module('clotho.editor')
 					if (scope.sharable && scope.sharable.schema) {
 
 						Clotho.get(scope.sharable.schema)
-						.then(function (schema) {
+						.then(function (retrievedSchema) {
 
-							ClothoSchemas.downloadSchemaDependencies(schema)
-							.then(function(compiledSchema) {
+							ClothoSchemas.getSuperclassFields(retrievedSchema)
+							.then(function (retrievedSuperClassFields) {
 
-								var schemaFieldNames = _.pluck(compiledSchema.fields, 'name');
-								var sharableFieldNames = _.keys(scope.sharable);
-								var sharableOnlyFieldNames = _.difference(sharableFieldNames, schemaFieldNames);
-
-								//todo - handle field types if defined --- where to define?
-								var sharableOnlyFields = _.map(sharableOnlyFieldNames, function (fieldName) {
+								//create array of fields mirroring a simple schema for the sharable's fields present, don't worry about type and just show with json editor
+								var sharableFields = _.map(_.keys(scope.sharable), function (fieldName) {
 									return {
 										name : fieldName
-									}
+									};
 								});
 
 								if (scope.stripBasicFields) {
-									_.remove(compiledSchema.fields, function (field) {
+									_.remove(retrievedSuperClassFields, function (field) {
 										return angular.isDefined(ClothoSchemas.sharableBasicFields[field.name]);
 									});
-									_.remove(sharableOnlyFields, function (field) {
+									_.remove(sharableFields, function (field) {
 										return angular.isDefined(ClothoSchemas.sharableBasicFields[field.name]);
 									});
 								}
 
-								schemaFieldsElement = $compile(generateDynamicFields(compiledSchema.fields))(scope);
-
-								sharableFieldsElement = $compile(generateDynamicFields(sharableOnlyFields))(scope);
-
+								schemaFieldsElement = $compile(generateDynamicFields(retrievedSuperClassFields))(scope);
+								sharableFieldsElement = $compile(generateDynamicFields(sharableFields))(scope);
 								replaceFieldsView();
+
 							});
 						});
 					}

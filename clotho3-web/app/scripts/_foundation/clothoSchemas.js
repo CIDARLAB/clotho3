@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.foundation')
-  .service('ClothoSchemas', function EditorSchemas(Clotho, Debug, $q) {
+  .service('ClothoSchemas', function EditorSchemas(Clotho, Debug, $filter, $q) {
 
 		var Debugger = new Debug('clothoSchemas', '#992299');
 
@@ -135,12 +135,7 @@ angular.module('clotho.foundation')
 				}
 			},
 			"array" : {
-				type : "array",
-				input : {
-					type : 'text',
-					"ng-list" : "",
-					placeholder: "Enter comma-separated list"
-				}
+				type : "array"
 			},
 			"org.bson.types.ObjectId" : {
 				type : "id",
@@ -215,18 +210,10 @@ angular.module('clotho.foundation')
 				}
 			},
 			"java.util.Set" : {
-				type : "array",
-				input : {
-					type : 'text',
-					"ng-list" : spaceRegexpEscaped
-				}
+				type : "array"
 			},
 			"java.util.List" : {
-				type : "array",
-				input : {
-					type : 'text',
-					"ng-list" : spaceRegexpEscaped
-				}
+				type : "array"
 			},
 			"org.bson.types.ObjectId" : {
 				type : "id",
@@ -240,7 +227,7 @@ angular.module('clotho.foundation')
 			"java.util.HashMap" : {
 				type: "object"
 			},
-			//suggest do not just use this catch, but allow further specification in UI or something
+			//suggest do not just use this catch, but allow further specification in UI or something (json-edit directive)
 			"default" : {
 				type : "string",
 				input : {
@@ -291,17 +278,76 @@ angular.module('clotho.foundation')
 			return schemaNameMap[id] || '';
 		}
 
-		var downloadSchemaDependencies = function (schema) {
+		function retrieveSuperclass (schemaSharable) {
+
+			var superclassId = schemaSharable.superClass;
+
+			if (!superclassId) {
+				return $q.when(null);
+			}
+
+			return retrievedSchemas.promise.then(function (schemas) {
+				var inPromise = $filter('filter')(schemas, {id : superclassId})[0];
+				if (angular.isEmpty(inPromise)) {
+					return $q.when(inPromise);
+				} else {
+					return Clotho.get(superclassId);
+				}
+			});
+		}
+
+		var getSuperclassFields = function (schemaSharable) {
+
+			var fields = [];
 
 			//initial checks
-			if (angular.isUndefined(schema)) {
-				return $q.when();
-			}
-			if (!schema.superClass) {
-				return $q.when(schema);
+			if (angular.isUndefined(schemaSharable) || !schemaSharable.superClass) {
+				return $q.when(fields);
 			}
 
-			var finalSchema = angular.copy(schema);
+			var promiseChain = $q.when();
+			var reachedBottom = $q.defer();
+
+			//todo - retrieveSuperclass returns null -- loop until don't return null
+			function getSuperClass (passedSchema) {
+				if (passedSchema.superClass) {
+					promiseChain.then(function () {
+						return retrieveSuperclass(passedSchema).then(function (retrieved) {
+							fields = fields.concat(retrieved.fields);
+							return getSuperClass(retrieved);
+						}, function (err) {
+							Debugger.warn('couldnt get parent schema ' + passedSchema.superClass);
+							reachedBottom.reject(fields);
+						});
+					});
+				} else {
+					reachedBottom.resolve();
+				}
+			}
+
+			getSuperClass(schemaSharable);
+
+			return reachedBottom.promise.then(function() {
+				return promiseChain;
+			})
+			.then(function (chain) {
+				return fields;
+			});
+
+		};
+
+		//fixme - DEPRECATE
+		var downloadSchemaDependencies = function (schemaSharable) {
+
+			//initial checks
+			if (angular.isUndefined(schemaSharable)) {
+				return $q.when();
+			}
+			if (!schemaSharable.superClass) {
+				return $q.when(schemaSharable);
+			}
+
+			var finalSchema = angular.copy(schemaSharable);
 			var promiseChain = $q.when();
 			var reachedBottom = $q.defer();
 
@@ -325,7 +371,7 @@ angular.module('clotho.foundation')
 				}
 			}
 
-			getSuperClass(schema);
+			getSuperClass(schemaSharable);
 
 			return reachedBottom.promise.then(function() {
 				return promiseChain;
@@ -437,6 +483,7 @@ angular.module('clotho.foundation')
 		return {
 			retrievedSchemas : retrievedSchemas.promise,
 			downloadSchemaDependencies : downloadSchemaDependencies,
+			getSuperclassFields : getSuperclassFields,
 
 			sharableTypes : sharableTypes,
 			//checks if a key is a basic sharable field (name, author, id, etc.)

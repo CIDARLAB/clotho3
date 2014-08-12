@@ -74,7 +74,7 @@ angular.module('clotho.interface')
 
 				//add form-control class to child UNLESS bootstrap says no, or noStyling attr is set
 				if (! ( regNoFormCtrlClass.test(elemType) || angular.isDefined(attrs.noStyling) )) {
-					console.log('adding form control class,',  angular.isDefined(attrs.noStyling), element);
+					//console.log('adding form control class,',  angular.isDefined(attrs.noStyling), element);
 					childElement.addClass('form-control');
 				}
 

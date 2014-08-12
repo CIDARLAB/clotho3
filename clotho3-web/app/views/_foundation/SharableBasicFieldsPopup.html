@@ -28,6 +28,17 @@
                         <p class="form-control-static">{{field.type}}</p>
                     </div>
                 </div>
+                <div ng-show="inheritedFields.length">
+                  <div class="form-group" ng-repeat="field in inheritedFields" style="margin: 0 0 5px;">
+                    <label class="control-label col-sm-4">{{field.name}}</label>
+                    <div class="col-sm-8">
+                      <p class="form-control-static">{{field.type}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div ng-hide="inheritedFields.length">
+                  <p>no inherited fields</p>
+                </div>
             </div>
         </div>
         <div class="popover-footer clearfix">
