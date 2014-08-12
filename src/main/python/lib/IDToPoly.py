@@ -11,6 +11,7 @@ def changer(registry):
     fin = {}
     fin['isLinear'] = True
     fin['isSingleStranded'] = False
+    fin['schema'] = 'org.clothocad.model.Polynucleotide'
     for key in change.keys():
         if key == 'part_short_desc':
             fin['description'] = change[key]
