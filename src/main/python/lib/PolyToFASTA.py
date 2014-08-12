@@ -1,5 +1,5 @@
 from StringIO import StringIO
-from ClothoPy.convertpoly import _convert_polynucleotide_to_genbank
+from convertpoly import _convert_polynucleotide_to_genbank
 import ClothoPy.ClothoSeqIO
 
 def _PolyToFASTA(poly):
