@@ -6,7 +6,7 @@
   "id" : "org.andersonlab.py_covertpoly",
   "description" : "Converts a Polynucleotide into Genbank string",
   "args" : [ {
-    "type" : "string",
+    "type" : "object",
     "name" : "arg0"
   }]
 }
