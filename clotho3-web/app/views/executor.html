@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Function Executor{{function.name ? ' : ' + function.name : '' }}
+        </div>
+        <div class="panel-body">
+          <div clotho-function-executor function="function" on-execute="onExecute($result)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h5>Select Another Function</h5>
+      </div>
+      <div class="panel-body">
+        <input id="chooseInstance"
+               type="text"
+               class="form-control"
+               ng-model="selectedInstance"
+               typeahead="c.id as c.name for c in queryWrapper($viewValue, 'function')"
+               typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
+               popover="Integrate Autocomplete popovers here!"
+               popover-trigger="focus"
+               popover-append-to-body="true">
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
