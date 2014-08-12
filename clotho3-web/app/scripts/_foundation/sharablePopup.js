@@ -19,9 +19,11 @@ angular.module('clotho.clothoDirectives')
 	.directive('sharablePopup', function ($clothoPopup) {
 		return $clothoPopup('sharablePopup');
 	})
-	.directive('sharablePopupInner', function (Clotho, ClothoSchemas, $injector) {
+	.directive('sharablePopupInner', function (Clotho, ClothoSchemas, $timeout, $injector) {
 
 		var editorPresent = $injector.has('clothoEditorDirective');
+
+		//future - check for $route and /executor --- if not present then executor should popup a modal
 
 		return {
 			restrict: 'EA',
@@ -38,9 +40,19 @@ angular.module('clotho.clothoDirectives')
 				//given a model (should be pruned), sets related scope variables
 				function setSharable (model) {
 					scope.sharable = model;
-					scope.type = ClothoSchemas.dirtyDetermineType(model);
-					scope.iconClass = ClothoSchemas.determineSharableIcon(scope.type);
-					scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(scope.type);
+
+					//let's make sure this is right and defer to the server version
+					ClothoSchemas.determineSharableType(model)
+					.then(function (detType) {
+						scope.type = detType;
+					}, function (err) {
+						scope.type = ClothoSchemas.dirtyDetermineType(model);
+					})
+					.then(function () {
+						scope.iconClass = ClothoSchemas.determineSharableIcon(scope.type);
+						scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(scope.type);
+					});
+
 
 					if (ClothoSchemas.isSchema(model)) {
 						scope.isSchema = true;
@@ -63,10 +75,15 @@ angular.module('clotho.clothoDirectives')
 						setSharable(val);
 						//no need to reposition if we pass in the model, since the initial $digest will fill it
 					}
+					if (val.id) {
+						Clotho.get(val.id, {mute : true}).then(function (retrievedSharable) {
+							scope.fullSharable = retrievedSharable;
+						});
+					}
 				});
 
 				scope.$watch('sharableId', function ( val, oldval ) {
-					if (!!val && angular.isEmpty(scope.sharableModel)) {
+					if (!!val) {
 						Clotho.get(val, {mute : true}).then(function (retrievedSharable) {
 							scope.fullSharable = retrievedSharable;
 							setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
@@ -76,17 +93,17 @@ angular.module('clotho.clothoDirectives')
 					}
 				});
 
-				//remove focus from autocomplete input... hard to hide popup.
-				scope.toggleSchema = function (evt) {
-					evt.preventDefault();
-					scope.showingSchema = !scope.showingSchema;
-					scope.reposition();
+				scope.showView = function (evt) {
+					scope.activeView = scope.activeView ? '' : scope.type;
+					$timeout(function () {
+						scope.reposition();
+					});
 				};
 
 				scope.edit = Clotho.edit;
 
 				scope.$on('$destroy', function () {
-				})
+				});
 			}
 		};
 	});

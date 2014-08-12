@@ -24,25 +24,14 @@ angular.module('clotho.webapp')
 		$scope.functionId = $route.current.params.id;
 	}
 
-	function resetFunctionArgs (functionObject) {
-		functionObject = functionObject || $scope.function;
-		$scope.functionArgs = {};
-		/*angular.forEach(functionObject.args, function (arg) {
-			$scope.functionArgs[arg.name] = null;
-		});*/
-	}
-
 	//check for updates to function ID, and retrieve it
 	$scope.$watch('functionId', function (newval, oldval) {
 		Clotho.get(newval).then(function(r) {
 			if (ClothoSchemas.isFunction(r)) {
 				$scope.function = r;
-				resetFunctionArgs(r);
 			}
 		});
 	});
-
-
 
 	//functionality
 
@@ -64,38 +53,7 @@ angular.module('clotho.webapp')
 		});
 	};
 
-	$scope.isPrimitiveField = ClothoSchemas.isPrimitiveField;
-	$scope.schemaReadable = ClothoSchemas.mapSchemaIdToName;
+	$scope.onExecute = function (result) {
 
-	//future - filter
-	$scope.capitalize = function (word) {
-		return word.substring(0,1).toUpperCase() + word.substr(1);
 	};
-
-	function flattenArgs (functionObject, argsObject) {
-		var arr = [];
-		angular.forEach(functionObject.args, function (arg) {
-			arr.push(argsObject[arg.name]);
-		});
-		return arr;
-	}
-
-	$scope.executeFunction = function () {
-		Clotho.run($scope.functionId, flattenArgs($scope.function, $scope.functionArgs))
-		.then(function (result) {
-			$scope.functionResult = result;
-		});
-	};
-
-	$scope.clearArguments = function () {
-		resetFunctionArgs();
-		$scope.functionResult = null;
-	};
-
-	$scope.setArgument = function (name, id) {
-		Clotho.get(id, {mute : true}).then(function (r) {
-			$scope.functionArgs[name] = r;
-		});
-	}
-
 });

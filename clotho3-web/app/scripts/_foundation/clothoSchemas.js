@@ -297,7 +297,7 @@ angular.module('clotho.foundation')
 		}
 
 		var getParentSchemaIds = function (schemaId) {
-			return Clotho.run('clotho.functions.schema.getParents', [schemaId]);
+			return Clotho.run('clotho.functions.schema.getParents', [schemaId], {mute : true});
 		};
 
 		var getSuperclassFields = function (schemaSharable) {
@@ -424,7 +424,7 @@ angular.module('clotho.foundation')
 
 		//determines main type: Instance, Function, View, Schema -- ASYNC so kinda slow...
 		function determineSharableType (sharable) {
-			return Clotho.run('clotho.functions.schema.determineSharableType', [sharable.id]);
+			return Clotho.run('clotho.functions.schema.determineSharableType', [sharable.id], {mute : true});
 		}
 
 		//this is a synchronous version for things like autocomplete where we're running a lot of these
