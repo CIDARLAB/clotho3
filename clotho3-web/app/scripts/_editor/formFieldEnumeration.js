@@ -88,6 +88,7 @@ angular.module('clotho.editor')
 					var typeaheadElement = angular.element('<input>');
 					typeaheadElement.attr({
 						"ng-if" : "showTypeahead",
+						"placeholder" : "Select object with autocompletion",
 						class: "form-control"
 					});
 

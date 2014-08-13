@@ -76,7 +76,7 @@
            ng-show="type && type != 'Instance'"
            style="cursor: pointer;">
           <span class="glyphicon glyphicon-eye-open"></span>
-          Show {{ activeView ? 'Basic Info' : type + ' Fields'}}
+          Show {{ activeView ? 'Basic Info' : type + (type == 'Function' ? ' Executor' : ' Fields')}}
         </a>
 
 

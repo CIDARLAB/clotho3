@@ -3,60 +3,101 @@
 angular.module('clotho.webapp').controller('BrowserCtrl',
 function($scope, Clotho, $filter, ClothoSchemas) {
 
-	//todo - pending this working... see GH#410
-	//Clotho.recent().then(function(result) {
-	Clotho.query({}, {maxResults: 50}).then(function (result) {
-		$scope.resultArray = result;
-		$scope.sort(false);
-	});
+	//todo - pending recent() (see GH#410), incorporate recent list of items
 
-	/* filters */
+	/* ordering */
 
-	//todo - some order, some filter... separate
-	$scope.filters = [
+	$scope.orderers = [
 		{
 			name : "Name",
-			filter : "name"
+			criteria : "name",
+			class: "glyphicon-sort-by-alphabet"
 		},
 		{
-			name : "Time",
-			filter : "name"
-		},
-		{
-			name : "Type",
-			filter : "typeFilter"
+			name : "type",
+			criteria : ClothoSchemas.dirtyDetermineType,
+			class: "glyphicon-th-list"
 		},
 		{
 			name : "Schema",
-			filter : "schema"
+			criteria : "schema",
+			class : "glyphicon-cog"
 		}
 	];
 
-	$scope.typeFilter = function (item) {
-		return ClothoSchemas.determineType(item);
+	$scope.setOrder = function (orderer) {
+		$scope.currentOrder = (orderer === $scope.currentOrder) ? null : orderer;
 	};
+
+	/* filters */
+
+	$scope.filters = [
+		{
+			name : "Made by me",
+			filter : function (sharable) {
+				//todo - update pending users
+				return angular.isDefined(sharable.author) && sharable.author == true;
+			},
+			"class" : "glyphicon glyphicon-user"
+		},
+		{
+			name : "Has Description",
+			filter : function (sharable) {
+				return angular.isDefined(sharable.description) && sharable.description.length;
+			},
+			"class" : "glyphicon glyphicon-comment"
+		}
+	];
+
+	$scope.currentFilter = function () {return true};
+	$scope.setFilter = function (filter) {
+		$scope.currentFilter = (filter === $scope.currentFilter) ?
+			function () {return true} :
+			filter;
+	};
+
 
 
 	//todo - update when pulling from server
 	$scope.collections = [
 		{
 			name : "My Collection",
+			author : "uniqueUserID",
+			description : "my Collection of all the things.",
 			items : {
-				"mySharable" : {
+				"clotho.developer.maxbates" : {
 					"note1" : "blah blah blah blah"
 				},
-				"anotherSharable" : {
+				"clotho.enzyme.BglII" : {
 					"note1" : "yad yad ayayayayy"
 				},
-				"oneMoreSharable" : {
+				"clotho.part.jtk2134" : {
 					"note2" : "bling bling blang"
 				}
 			}
 		}
 	];
 
+	$scope.setCollection = function (coll) {
+		if ($scope.currentQuery == coll) {
+			return;
+		}
+		$scope.currentQuery = coll;
+		$scope.resultArray = [];
+
+		angular.forEach(coll.items, function (notes, id) {
+		 Clotho.get(id, {mute : true}).then(function (result) {
+			 $scope.resultArray.push(result);
+		 });
+		});
+	};
+
 	//todo - store on server and pull
 	$scope.queries = [
+		{
+			name: "Random",
+			query : {}
+		},
 		{
 			name : "Schemas",
 			query : {
@@ -64,46 +105,41 @@ function($scope, Clotho, $filter, ClothoSchemas) {
 			}
 		},
 		{
+			name: "NucSeqs",
+			query : {
+				"schema" : "org.clothocad.model.NucSeq"
+			}
+		},
+		{
+			name: "Vectors",
+			query : {
+				"schema" : "Vector"
+			}
+		},
+		{
 			name : "Contains pBAC",
 			query : {
-				name: "{$regex : 'pBAC', $options : 'gi'}"
+				name : {"$regex"  : 'pBAC'}
 			}
 		}
 	];
 
 	$scope.newQuery = {};
-	$scope.testNewQuery = function () {
-		Clotho.query($scope.newQuery).then(function (results) {
-			$scope.newQueryResults = results;
-		});
-	};
 	$scope.saveNewQuery = function () {
-		//todo - update once saving user queries on server
+		//todo - persist on server (requires users)
 		$scope.queries.push($scope.newQuery);
 		$scope.newQuery = {};
-		$scope.newQueryResults = '';
 	};
-
-
-	//todo - update pending collection schema update - GH#411
-	$scope.demoCollection = {
-		name : "My Collection",
-		author : "uniqueUserID",
-		description : "my Collection of all the things.",
-		items : [
-			{
-				id : "myReferentObjectId",
-				note : "Note relevant to this collection"
-			}
-		]
-	};
-
 
 	/* query construction */
 
-	$scope.setCurrentQuery = function(value) {
+	$scope.setCurrentQuery = function(value, limit) {
+		if ($scope.currentQuery == value) {
+			return;
+		}
+		limit = limit || 200;
 		$scope.currentQuery = value;
-		Clotho.query(value).then(function (result) {
+		Clotho.query(value, {maxResults : limit}).then(function (result) {
 			$scope.resultArray = result;
 		});
 	};
@@ -124,4 +160,15 @@ function($scope, Clotho, $filter, ClothoSchemas) {
 			}
 		}
 	};
+
+	/* styling */
+
+	$scope.collectionIconClass = 'glyphicon glyphicon-briefcase';
+	$scope.filterIconClass = 'glyphicon glyphicon-filter';
+	$scope.queryIconClass = 'glyphicon glyphicon-wrench';
+
+	//init
+
+	$scope.setCurrentQuery($scope.queries[0].query);
+
 });
