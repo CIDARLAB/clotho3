@@ -92,18 +92,17 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <span class="panel-title">Output Type</span>
-        </div>
-        <div class="panel-body">
-          <select ng-model="sharable.outputType"
-                  class="form-control"
-                  ng-required
-                  ng-options="c.id as c.name group by c.category for c in paramTypes">
-          </select>
+        <div class="panel-footer">
+          <div class="form-group clearfix" style="margin-bottom: 0px;">
+            <label class="col-sm-3 control-label">Output Type</label>
+            <div class="col-sm-9">
+              <select ng-model="sharable.outputType"
+                      class="form-control"
+                      ng-required
+                      ng-options="c.id as c.name group by c.category for c in paramTypes">
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 

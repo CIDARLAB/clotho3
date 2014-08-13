@@ -7,7 +7,7 @@ $clotho.extensions.controller('constructionFiles_wetLabExamplesCtrl', function($
 	$scope.files = {
 		"gfp" : {},
 		"pHA581" : {},
-		"pSB1A2" : {},
+		"pSB1A2-Bca9128" : {},
 		"vio" : {}
 	};
 

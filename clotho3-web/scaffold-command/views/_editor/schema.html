@@ -58,13 +58,13 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="form-group" ng-repeat="field in superClassObj.fields" style="margin: 0 0 5px;">
+                <div class="form-group" ng-repeat="field in superClassFields" style="margin: 0 0 5px;">
                     <label class="control-label col-sm-4">{{field.name}}</label>
                     <div class="col-sm-8">
                         <p class="form-control-static">{{field.type}}</p>
                     </div>
                 </div>
-                <div ng-show="!superClassObj.fields.length">
+                <div ng-show="!superClassFields.length">
                     <p style="text-align: center">No inherited Fields</p>
                 </div>
             </div>
@@ -72,7 +72,63 @@
             <div class="list-group">
                 <div class="list-group-item clearfix" ng-repeat="field in sharable.fields track by $index">
 
-                    <div class="row">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="input-group">
+
+                        <div class="input-group-btn">
+                          <button type="button"
+                                  class="btn btn-default dropdown-toggle"
+                                  popover="{{field.access}}"
+                                  popover-append-to-body="true"
+                                  popover-trigger="mouseenter">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="type in accessTypes"
+                                ng-class="{'active' : field.access == type.value}">
+                              <a ng-click="field.access = type.value">{{type.name}}</a>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <input type="text"
+                               ng-model="field.name"
+                               class="form-control"
+                               placeholder="Field Name (no spaces)"
+                               restrict-input="findSpacesRegExp"
+                               required>
+
+                        <div class="input-group-btn">
+                          <button type="button"
+                                  class="btn btn-default dropdown-toggle"
+                                  popover="{{field.type}}"
+                                  popover-append-to-body="true"
+                                  popover-trigger="mouseenter">
+                            {{field.type}}
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="type in paramTypes | orderBy:'category'"
+                                ng-class="{'active' : field.type == type.name}">
+                              <a ng-click="field.type = type.name">{{type.name}}</a>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <input class="form-control"
+                             type="text"
+                             ng-model="field.description"
+                             placeholder="Field Description">
+                    </div>
+                  </div>
+
+                  <!--
+                  <div class="row">
                         <div class="col-sm-3">
                             <select ng-model="field.type" class="form-control" ng-options="t.name as t.name group by t.category for t in paramTypes" ng-change="parseField(field)" required>
                                 <option value="" disabled>Type</option>
@@ -126,19 +182,12 @@
                             </div>
                         </div>
                     </div>
+                    -->
 
                 </div>
             </div>
         </div>
     </fieldset>
-
-    <button ng-show="editMode && !showJsonEditor" type="button" class="btn btn-default" ng-click="toggleJsonEdit()">Edit Json</button>
-    <div ng-show="showJsonEditor">
-        <hr>
-        <form-field name="Edit JSON directly">
-            <textarea json-edit="$parent.$parent.sharable" rows="12"></textarea>
-        </form-field>
-    </div>
 
     </div>
     <div class="panel-footer" ng-include="_formActions"></div>
