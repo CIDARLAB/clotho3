@@ -1,0 +1,75 @@
+<form class="form-horizontal"
+      name="functionArgForm"
+      novalidate>
+
+  <p ng-bind="function.description"></p>
+
+  <div class="form-group"
+       ng-repeat="arg in function.args"
+       ng-form="formGroup"
+       ng-class="{'has-error' : formGroup.$invalid}">
+    <label class="col-sm-2 control-label"> {{arg.name}} </label>
+
+    <div class="col-sm-10" ng-if="isPrimitiveField(arg.type)">
+      <div class="input-group">
+
+        <textarea json-edit="functionArgs[arg.name]"
+                  rows="1"
+                  class="form-control"
+                  placeholder="Enter JSON value"></textarea>
+
+                  <span class="input-group-addon"
+                        ng-bind="capitalize(arg.type)"></span>
+      </div>
+    </div>
+
+    <div class="col-sm-10"
+         ng-if="!isPrimitiveField(arg.type)"
+         ng-init="showTypeahead = true">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-default"
+                  type="button"
+                  ng-click="showTypeahead = !showTypeahead">
+            <span class="glyphicon"
+                  ng-class="{'glyphicon-edit' : !showTypeahead,
+                             'glyphicon-list-alt' : showTypeahead}"></span>
+          </button>
+        </span>
+
+        <textarea json-edit="functionArgs[arg.name]"
+                  rows="1"
+                  class="form-control"
+                  ng-if="!showTypeahead"
+                  placeholder="Enter JSON value"></textarea>
+
+        <input type="text"
+               class="form-control"
+               ng-if="showTypeahead"
+               ng-model="functionArgs[arg.name]"
+               placeholder="Select object using autocomplete"
+               typeahead="c.id as c.name for c in queryWrapper($viewValue, arg.type)"
+               typeahead-on-select="setArgument(arg.name, $model)">
+
+        <span class="input-group-addon"
+              ng-bind="schemaReadable(arg.type)"></span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="pre-scrollable alert alert-success" ng-show="functionResult">
+{{functionResult | json}}
+  </pre>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button ng-click="executeFunction()"
+              class="btn btn-primary"
+              ng-disabled="functionArgForm.$invalid">Execute
+      </button>
+      <button ng-click="clearArguments()"
+              class="btn btn-default">Reset
+      </button>
+    </div>
+  </div>
+</form>

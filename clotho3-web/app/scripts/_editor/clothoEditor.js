@@ -75,37 +75,47 @@ angular.module('clotho.editor')
 
 			function createEditorElement (sharable) {
 
+				console.log(sharable);
+
 				if (angular.isUndefined(sharable) || !angular.isObject(sharable) || angular.isEmpty(sharable)) {
 					Debugger.warn('editor must be created from object, was given: ', sharable);
 					createEmptyEditor();
 					return;
 				}
 
-				var type = ClothoSchemas.determineSharableType(sharable),
-					templateUrl;
-
-				console.warn('sharable type is', type);
-
-				// if it's an instance, check for a more specific template
-				if (type == 'Instance') {
-					//todo - handle instance-specific templates
-					templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
-				} else {
-					templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
-				}
-
-				//gets partial for type of sharable and compiles editor HTML
-				$http.get(templateUrl, {cache: $templateCache})
-				.success(function (data) {
-					scope.showJsonEditor = false;
-					scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
-
-					var el = $compile(data)(scope);
-					element.html(el);
+				ClothoSchemas.determineSharableType(sharable).then(function (type) {
+					return type;
+				}, function (err) {
+					//hack - need to update server version to handle scaffolds (i.e. not in DB)
+					//if return null, do dirty check ourselves
+					return ClothoSchemas.dirtyDetermineType(sharable)
 				})
-				.error(function (data) {
-					Debugger.error('Could not retrieve template: ' + templateUrl);
-					element.html('<p class="text-center">Please select an Object</p>');
+				.then(function (type) {
+					var templateUrl;
+
+					console.warn('sharable type is', type);
+
+					// if it's an instance, check for a more specific template
+					if (type == 'Instance') {
+						//todo - handle instance-specific templates
+						templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
+					} else {
+						templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
+					}
+
+					//gets partial for type of sharable and compiles editor HTML
+					$http.get(templateUrl, {cache: $templateCache})
+						.success(function (data) {
+							scope.showJsonEditor = false;
+							scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
+
+							var el = $compile(data)(scope);
+							element.html(el);
+						})
+						.error(function (data) {
+							Debugger.error('Could not retrieve template: ' + templateUrl);
+							element.html('<p class="text-center">Please select an Object</p>');
+						});
 				});
 			}
 

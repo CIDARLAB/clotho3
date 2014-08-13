@@ -10,6 +10,10 @@ angular.module('clotho.webapp')
 			{
 				name : "ApE Files",
 				route : '/import/ape'
+			},
+			{
+				name : "NCBI Entrez Gene",
+				route : '/import/ncbi'
 			}
 		];
 

@@ -71,7 +71,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.model.NucSeq",
   "innerClasses" : null,
   "c" : "org.clothocad.model.Part",
   "binaryName" : "org.clothocad.model.Part"

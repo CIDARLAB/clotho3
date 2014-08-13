@@ -162,9 +162,14 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	})
 	.when('/import/ape', {
 		templateUrl: 'views/import/ape.html',
-		controller: 'ApeImportCtrl'
+		controller: 'ApeImportCtrl',
+		title: 'GenBank Import'
 	})
-
+	.when('/import/ncbi', {
+		templateUrl: 'views/import/ncbi.html',
+		controller: 'NCBIImportCtrl',
+		title: 'NCBI Import'
+	})
 
 	//testing
 	.when('/widgets', {

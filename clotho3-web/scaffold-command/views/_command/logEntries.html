@@ -4,7 +4,10 @@
     <!--<div tooltip="{{ entry.timestamp | date:'mediumTime' }}"
          tooltip-placement="{{ (entry.from == 'client') ? 'left' : 'right' }}"
          tooltip-append-to-body="true">-->
-    <div>
+    <div tooltip="{{entry.timestamp | date:'mediumTime'}}"
+         tooltip-append-to-body="true"
+         tooltip-trigger="mouseenter"
+         tooltip-placement="left">
       <span ng-if="entry.tokens" ng-repeat="token in entry.tokens">
         <clotho-token token-model="token"
                       popup-placement="{{ (entry.from == 'client') ? 'topLeft' : 'topRight' }}"
