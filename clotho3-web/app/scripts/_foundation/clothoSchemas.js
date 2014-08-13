@@ -28,9 +28,7 @@ angular.module('clotho.foundation')
 				readable : "Function",
 				editor_template_url : 'views/_editor/function.html',
 				schema: "org.clothocad.core.datums.Function",
-				scaffold : {
-					language: "JSONSCHEMA"
-				},
+				scaffold : {},
 				class : 'success' //green
 			},
 			"Schema": {
@@ -46,9 +44,7 @@ angular.module('clotho.foundation')
 				readable : "View",
 				editor_template_url : 'views/_editor/view.html',
 				schema: "org.clothocad.core.datums.View",
-				scaffold : {
-					language: "JSONSCHEMA"
-				},
+				scaffold : {},
 				class : 'warning' //pink
 			}
 		};

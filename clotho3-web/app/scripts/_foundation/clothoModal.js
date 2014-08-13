@@ -45,7 +45,8 @@ angular.module('clotho.clothoDirectives')
 				title : '@?',
 				content : '=?',
 				templateUrl : '=?',
-				actions : '=?'
+				actions : '=?',
+				onlySmall : '@'
 			},
 			controller : function ($scope, $element, $attrs) {
 				//define on controller so available outside template

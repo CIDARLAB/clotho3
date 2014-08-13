@@ -75,6 +75,8 @@ angular.module('clotho.editor')
 
 			function createEditorElement (sharable) {
 
+				console.log(sharable);
+
 				if (angular.isUndefined(sharable) || !angular.isObject(sharable) || angular.isEmpty(sharable)) {
 					Debugger.warn('editor must be created from object, was given: ', sharable);
 					createEmptyEditor();
@@ -82,6 +84,13 @@ angular.module('clotho.editor')
 				}
 
 				ClothoSchemas.determineSharableType(sharable).then(function (type) {
+					return type;
+				}, function (err) {
+					//hack - need to update server version to handle scaffolds (i.e. not in DB)
+					//if return null, do dirty check ourselves
+					return ClothoSchemas.dirtyDetermineType(sharable)
+				})
+				.then(function (type) {
 					var templateUrl;
 
 					console.warn('sharable type is', type);

@@ -10,7 +10,7 @@
  */
 
 angular.module('clotho.commandbar')
-.directive('clothoFunctionExecutor', function (Clotho, ClothoSchemas) {
+.directive('clothoFunctionExecutor', function ($filter, Clotho, ClothoSchemas) {
 	return {
 		scope : {
 			"function" : '=',
@@ -38,6 +38,24 @@ angular.module('clotho.commandbar')
 				});
 				return arr;
 			}
+
+			scope.queryWrapper = function (text, schema) {
+				return Clotho.autocomplete(text)
+					.then(function (results) {
+
+						if (angular.isUndefined(schema)) {
+							return results;
+						}
+
+						return $filter('filter')(results, function (r) {
+							if (schema == 'function') {
+								return ClothoSchemas.isFunction(r);
+							} else {
+								return ClothoSchemas.isInstanceOfSchema(r, schema);
+							}
+						});
+					});
+			};
 
 			scope.executeFunction = function () {
 				Clotho.run(scope.function.id, flattenArgs(scope.function, scope.functionArgs))
