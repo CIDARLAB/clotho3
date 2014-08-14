@@ -38,6 +38,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			['h', 'Show Intro Modal', 'showHelp = !showHelp']
 		]
 	})
+	.when('/settings', {
+		templateUrl: 'views/settings.html',
+	  controller: 'SettingsCtrl',
+		title : 'Settings'
+	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
 		title : 'About'
