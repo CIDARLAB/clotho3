@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  * @author yu
  * @version 1.0
  */
-public class UnauthPublicTest extends AbstractSecurityTest {
+public class UnauthPublicTest extends AnonymousSecurityTest {
 
     /**
      * constructor
@@ -40,12 +40,12 @@ public class UnauthPublicTest extends AbstractSecurityTest {
      * test read action
      *
      */
-    @Test(expected = EntityNotFoundException.class)
+    @Test
     public void testRead() {
         initAPI("0000");
 
-        ObjBase priv = util.getPublic();
-        assertEquals(priv.getId(), persistor.get(Institution.class, priv.getId()).getId());
+        ObjBase pub = util.getPublic();
+        assertEquals(pub.getId(), persistor.get(Institution.class, pub.getId()).getId());
 
     }
 

@@ -29,6 +29,7 @@ import static org.clothocad.core.security.ClothoRealm.*;
 public class SecurityTestUtils {
     
     public SecurityTestUtils(Persistor p, ClothoRealm realm){
+        realm.deleteAll();
         //make objects
         Institution privateInstitution = new Institution("Private Institution", "", "", "");
         privateInstitution.setVisibility(Visibility.PRIVATE);
@@ -65,6 +66,10 @@ public class SecurityTestUtils {
         realm.addPermissions("run", RUN, ids);
         realm.addAccount("owner", "owner");
         realm.addPermissions("owner", OWN, ids);
+        
+        //make public objects public
+        realm.setPublic(publicInstitution.getId());
+        realm.setPublic(publicModule.getId());
         
         credentials = new HashMap<>();
         credentials.put("none", "none");

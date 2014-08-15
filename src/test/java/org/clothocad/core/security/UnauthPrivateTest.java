@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  * @author yu
  * @version 1.0
  */
-public class UnauthPrivateTest extends AbstractSecurityTest {
+public class UnauthPrivateTest extends AnonymousSecurityTest {
 
     /**
      * constructor

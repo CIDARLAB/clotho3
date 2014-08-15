@@ -17,7 +17,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
@@ -25,6 +24,7 @@ import static org.clothocad.core.communication.Channel.submit;
 
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 
 @Slf4j
@@ -61,6 +61,8 @@ public class Router {
             mind.setConnection(connection);
         } else {
             mind = getMind(connection);
+            //Find a better way to become anonymous user?
+            subject.login(ClothoRealm.getAnonymousUserToken());
         }
         ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()));
 
@@ -183,6 +185,10 @@ public class Router {
             //TODO: message client with failure
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
+        } finally {
+            if (SecurityUtils.getSubject().getPrincipal() == ClothoRealm.ANONYMOUS_USER){
+                SecurityUtils.getSubject().logout();
+            }
         }
     }
 

@@ -24,9 +24,11 @@ import org.apache.shiro.subject.support.SubjectRunnable;
  */
 public class ServerSubject implements Subject {
 
+    public static String SERVER_USER = "_server";
+    
     @Override
     public Object getPrincipal() {
-        return "SERVER USER";
+        return SERVER_USER;
     }
 
     @Override

@@ -167,6 +167,16 @@ public class Persistor{
         }
     }
     
+    public Set<String> getUserPermissionInfo(ObjectId id){
+        return null;
+    }
+    
+    public Set<String> getAllPermissionInfo(ObjectId id){
+        //must be owner
+        checkPriv(id, "grant");
+        return null;
+    }
+    
     public ObjectId save(ObjBase obj, boolean overwrite) {
         if (obj.getId() != null) checkPriv(obj.getId(), "edit");
         validate(obj);

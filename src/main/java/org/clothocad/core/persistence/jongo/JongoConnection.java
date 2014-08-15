@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -22,7 +21,6 @@ import static com.mongodb.MongoException.DuplicateKey;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,12 +31,9 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.authz.permission.WildcardPermission;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 import org.bson.BSONObject;
 import org.bson.LazyBSONList;
 import static org.clothocad.core.ReservedFieldNames.*;
@@ -47,8 +42,12 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.AuthGroup;
+import org.clothocad.core.security.ClothoAccount;
 import org.clothocad.core.security.CredentialStore;
+import org.clothocad.core.security.PermissionsOnObject;
 import org.clothocad.core.util.JSON;
+import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
 
@@ -65,8 +64,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     protected ObjectMapper mapper;
     //TODO: split into separate collections per top-level schema
     protected RefMongoCollection data;
-    protected DBCollection cred;
-    protected DBCollection roles;
+    protected MongoCollection cred;
+    protected MongoCollection roles;
     protected DBCollection rawDataCollection;
     
     protected DBClassLoader classLoader;
@@ -77,8 +76,6 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
-        cred = db.getCollection("cred");
-        roles = db.getCollection("roles");
         classLoader = dbClassLoader;
     }
 
@@ -104,6 +101,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
 
         jongo = new RefJongo(db, new ClothoMapper());
         data = jongo.getCollection("data");
+        cred = jongo.getCollection("cred");
+        roles = jongo.getCollection("roles");
     }
 
     //Do we really need this?
@@ -279,37 +278,29 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     }
 
     @Override
-    public SimpleAccount getAccount(String username) {
-        DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
-        if (accountData == null) {
-            return null;
-        }
-
-        SimpleAccount account = new SimpleAccount(username, accountData.get("hash"), ByteSource.Util.bytes(accountData.get("salt")), "clotho");
-        Object permissions = accountData.get("permissions");
-        if (permissions != null && permissions instanceof Collection) {
-            Set<String> stringPerms = new HashSet<>((Collection) permissions);
-            account.setStringPermissions(stringPerms);
-        }
-        //TODO - temp until roles implemented
-        account.setRoles(new HashSet<String>());
-        return account;
+    public ClothoAccount getAccount(String username) {
+        return cred.findOne("{_id:#}", username).as(ClothoAccount.class);
     }
 
     @Override
-    public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt) {
-        //create account needs to fail if username exists
-        DBObject account = new BasicDBObject("_id", username);
-        account.put("hash", hashedPw.getBytes());
-        account.put("salt", salt.getBytes());
-        account.put("permissions", new BasicDBList());
+    public void saveAccount(ClothoAccount account) {
         cred.save(account);
+    }
+    
+    public AuthGroup getGroup(String groupName){
+        return roles.findOne("{_id:#}", groupName).as(AuthGroup.class);
+    }
+    
+    public void saveGroup (AuthGroup group){
+        roles.save(group);
     }
 
     @Override
     public void deleteAllCredentials() {
         cred.drop();
+        roles.drop();
     }
+    
     @Override
     public List<Map> getCompletionData(){
         DBCursor cursor = rawDataCollection.find();
@@ -405,36 +396,18 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     }
 
     @Override
-    public Collection<Permission> resolvePermissionsInRole(String roleString) {
-        Collection<Permission> permissions = Collections.emptySet();
-        DBObject roleData = roles.findOne(new BasicDBObject("_id", roleString));
+    public Collection<Permission> resolvePermissionsInRole(String role) {
+        Collection<Permission> permissions = new HashSet<>();
+        AuthGroup group = roles.findOne("{_id:#}", role).as(AuthGroup.class);
         
-        if (roleData == null) return permissions;
+        if (group == null) return permissions;
         
-        Object permissionStrings = roleData.get("permissions");
-        if (permissionStrings != null && permissionStrings instanceof Collection) {
-            Set<String> stringPerms = new HashSet<>((Collection) permissionStrings);
-            for (String permission : stringPerms){
-                permissions.add(new WildcardPermission(permission));
+        for (PermissionsOnObject p : group.getPermissions().values()){
+            for (String permString : p.getPermissions()){
+                permissions.add(new WildcardPermission(permString));
             }
         }
         return permissions;
-    }
-
-    @Override
-    public void addPermission(String username, String permission) {
-        DBObject query = new BasicDBObject("_id", username);
-        DBObject update = new BasicDBObject("$addToSet", new BasicDBObject("permissions", permission));
-        
-        cred.update(query, update);
-    }
-
-    @Override
-    public void removePermission(String username, String permission) {
-        DBObject query = new BasicDBObject("_id", username);
-        DBObject update = new BasicDBObject("$pull", new BasicDBObject("permissions", permission));
-        
-        cred.update(query, update);    
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
