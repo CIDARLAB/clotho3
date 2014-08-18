@@ -89,8 +89,8 @@ public class TestUtils {
     }
     //not sure if this should be static 
     private Injector injector;
-
-    public <T> T getA(Class<T> type) {
+ 
+   public <T> T getA(Class<T> type) {
         if (injector == null) {
             injector = getDefaultTestInjector();
         }

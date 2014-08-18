@@ -112,7 +112,9 @@ public class Router {
                 case alert:
                     api.alert(data.toString());
                     break;
-
+                case convert:
+                    response = api.convert(data);
+                    break;
                 case get:
                     response = api.get(data);
                     break;

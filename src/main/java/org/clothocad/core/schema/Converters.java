@@ -5,7 +5,9 @@
 package org.clothocad.core.schema;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import org.clothocad.core.datums.ObjBase;
 
 /**
  *
@@ -33,6 +35,7 @@ public class Converters {
     public Converter getConverter(Schema from, Schema to){
         //TODO: graph search for multi-step conversion
         //TODO: CompositeConvereter
+        
         
         for (Converter converter : converters){
             if (converter.convertsTo().equals(to) && converter.canConvert(from)){

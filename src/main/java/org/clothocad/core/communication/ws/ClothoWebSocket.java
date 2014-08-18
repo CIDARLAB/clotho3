@@ -84,6 +84,7 @@ public class ClothoWebSocket
 
     @Override
     public void onOpen(Connection connection) {
+        log.debug("New connection opened. Connection id is {}.", this.getId());
         this.connection = connection;
         //Close out after 1 hour idle time
         connection.setMaxIdleTime(3600000);
