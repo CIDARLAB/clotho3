@@ -15,7 +15,7 @@ angular.module('clotho.commandbar')
 
 	return {
 		restrict: 'EA',
-		templateUrl : 'views/_interface/terminalAside.html',
+		templateUrl : 'views/_command/terminalAside.html',
 		replace: true,
 		scope: {
 			title: '=?asideTitle',
