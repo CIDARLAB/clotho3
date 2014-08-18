@@ -112,11 +112,13 @@ module.exports = function (grunt) {
             '.tmp',
 	          '<%= yeoman.app %>/css',
             '<%= yeoman.dist %>/*',
-            '!<%= yeoman.dist %>/.git*',
             '<%= yeoman.api %>/*',
             '<%= yeoman.command %>/*',
             '<%= yeoman.trails %>/*',
-            '<%= yeoman.full %>/*'
+            '<%= yeoman.full %>/*',
+            '!.git*',
+            '!.git/**/*',
+	          '!*.md'
           ]
         }]
       },
@@ -543,12 +545,29 @@ module.exports = function (grunt) {
 			  files: {
 				  src: '<%= yeoman.trails %>'
 			  }
+		  },
+		  //todo
+		  command: {
+			  options: {
+				  message: 'Command Scaffold Deploy',
+				  noVerify: true,
+				  noStatus: false
+			  },
+			  files: {
+				  src: '<%= yeoman.command %>'
+			  }
 		  }
 	  },
 	  gitpush: {
 		  trails: {
 			  options: {
 				  branch: 'trails-release'
+			  }
+		  },
+		  //todo
+		  command: {
+			  options: {
+				  branch: 'clotho-scaffold-command'
 			  }
 		  }
 	  }
@@ -617,7 +636,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'clean:dist',
+		'clean:dist',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
