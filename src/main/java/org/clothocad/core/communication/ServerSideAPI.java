@@ -35,35 +35,37 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
-import org.apache.shiro.SecurityUtils;
+import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
+import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.execution.ConverterFunction;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.execution.ScriptAPI;
 import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.ReservedFieldNames;
-import org.clothocad.core.datums.Argument;
-import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
+import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
@@ -391,7 +393,7 @@ public class ServerSideAPI {
 
         say("I've stored your note (but not really): " + message, Severity.MUTED);
     }
-
+    
     protected void send(Message message) {
         router.sendMessage(mind.getConnection(), message);
     }
@@ -436,7 +438,8 @@ public class ServerSideAPI {
         }
         return returnData;
     }
-
+    
+            
     private ObjectId resolveId(String id) {
         ObjectId uuid;
         try {
@@ -570,7 +573,7 @@ public class ServerSideAPI {
         log.error(message, e);
         say(message, Severity.FAILURE);
     }
-
+    
     public final ObjectId destroy(Object id) {
         if (id == null) {
             return null;
@@ -611,6 +614,100 @@ public class ServerSideAPI {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+    
+    
+    public final Object convert(Object o)
+    {
+        final Map<String, Object> data = JSON.mappify(o);
+        Object result = null;
+        Object convertThis = null;
+        Schema targetSchema = null;
+        Schema currentSchema = null;
+        for(Map.Entry<String,Object> entry: data.entrySet())
+        {
+                if(entry.getKey().equals("convertTo"))
+                {
+                    targetSchema = persistor.get(Schema.class, new ObjectId(((HashMap)(entry.getValue())).get("id")));
+                }
+                else if(entry.getKey().equals("convert"))
+                {
+                    convertThis = entry.getValue();
+                }
+        }
+        if(convertThis == null || targetSchema==null)
+        {
+            if(convertThis == null)
+            {
+                say("Object to convert to was null", Severity.FAILURE);
+            }
+            if(targetSchema == null)
+            {
+                say("Convert To Schema was null", Severity.FAILURE);
+            }
+        }
+        {
+            result = convert(convertThis,targetSchema);
+        }
+        return result;
+    }
+    
+    public final Object convert(Object obj, Schema schema)
+    {
+        Object result = null;
+        String idVal = (String)((HashMap)obj).get("id");
+        Map<String,Object> objMap = persistor.getAsJSON(new ObjectId(idVal));
+        Schema currentSchema = persistor.get(Schema.class, new ObjectId(objMap.get("schema")));
+        
+        
+        boolean foundFunc = false;
+        ConverterFunction resultCFunc = null;
+        Collection<ConverterFunction> convlist = persistor.getAll(ConverterFunction.class);
+        for(ConverterFunction xconvfunc : convlist)
+        {
+            if(xconvfunc.convertTo.equals(schema))
+            {
+                if(xconvfunc.convertFrom.equals(currentSchema))
+                {
+                    foundFunc = true;
+                    resultCFunc = xconvfunc;
+                    String convfuncName = xconvfunc.getName();
+                    if(convfuncName != null)
+                    {
+                        say("Converter Funcion : " +xconvfunc.getName()+ "found and will now be executed.",Severity.SUCCESS);
+                    }
+                    else
+                    {
+                        say("Converter Function Found, but no name found",Severity.WARNING);
+                    }
+                    break;
+                }
+            }
+        }
+        List<Object> args = new ArrayList<Object>();
+        args.add(obj);
+        if(foundFunc)
+        {
+            if(resultCFunc.getFunction() == null)
+            {
+                say("Converter has a null function.",Severity.FAILURE);
+            }
+            else 
+            {
+                try {
+                    result = run(resultCFunc.getFunction(), args);
+                } catch (ScriptException ex) {
+                    Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        else
+        {
+            say("No suitable Converter Found.",Severity.FAILURE);
+        }
+             
+        
+        return result; 
     }
 
     private Object
@@ -750,13 +847,6 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
         return Void.TYPE;
 
     }
-    
-    public final Object convert(Object obj, String schema)
-    {
-        System.out.println("Call that converter function here");
-        return null; 
-    }
-    
     
     public final Object run(Function function, List<Object> args) throws ScriptException {
         System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());

@@ -6,6 +6,7 @@
 
 package org.clothocad.model;
 
+import org.clothocad.core.execution.SequenceConverters;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;

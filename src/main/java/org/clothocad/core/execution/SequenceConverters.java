@@ -4,14 +4,13 @@
  * and open the template in the editor.
  */
 
-package org.clothocad.model;
+package org.clothocad.core.execution;
 
 /**
  *
  * @author prashantvaidyanathan
  */
 public class SequenceConverters {
-    
     
     public static String getSequence(String sequence)
     {

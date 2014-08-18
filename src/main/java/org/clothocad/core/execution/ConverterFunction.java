@@ -22,6 +22,7 @@ public class ConverterFunction extends ConverterSchema
     ConverterFunction()
     {
         this.convFunction = new Function();
+        
     }
     ConverterFunction(Schema convTo, Schema convFrom, Function func)
     {
@@ -29,10 +30,18 @@ public class ConverterFunction extends ConverterSchema
         this.convertTo = convTo;
         this.convFunction = func;
     }
-    ConverterFunction(Schema convTo, Schema convFrom, String funcName, Argument[] args, Class outputType, String source, Language lang)
+    public Schema getConvertToSchema()
     {
-        this.convertFrom = convFrom;
-        this.convertTo = convTo;
-        this.convFunction = new Function(funcName,args,outputType,source,lang);
+            return convertTo;
     }
+    public Schema getConvertFromSchema()
+    {
+            return convertFrom;
+    }
+    public Function getFunction()
+    {
+        return convFunction;
+    }
+    
+    
 }

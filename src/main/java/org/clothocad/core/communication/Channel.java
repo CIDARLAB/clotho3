@@ -31,6 +31,8 @@ public enum Channel {
     destroy, //Delete a sharable with this uuid
     query, //Find all Sharables that satisfy this formally-expressed constraint
     
+    convert,
+    
     getAll,
     createAll,
     destroyAll,
