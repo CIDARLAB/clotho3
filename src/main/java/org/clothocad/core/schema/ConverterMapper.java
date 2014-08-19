@@ -6,16 +6,6 @@
 
 package org.clothocad.core.schema;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import javafx.util.Pair;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.model.NucSeq;
-import org.clothocad.model.SimpleSequence;
-
 /**
  *
  * @author prashantvaidyanathan
@@ -34,14 +24,6 @@ public class ConverterMapper
             nucMap.put(xfield.getName(), xfield.get(nucObj));
         }
     */
-    
-    public static void testclass(Object seqobj,String propname) throws Exception
-    {
-        Field xfield;
-        seqobj.getClass().getDeclaredField(propname).setAccessible(true);
-        xfield = seqobj.getClass().getDeclaredField(propname);
-        xfield.setAccessible(true);
-        System.out.println("Property "+propname + ", of Object "+ seqobj.getClass() +  " : "+ xfield.get(seqobj));
-    }
+
     
 }
