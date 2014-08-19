@@ -42,6 +42,7 @@ public class scripttest {
         engine.put("eggs", j_eggs);
 
         /* Feed file handle of script into engine and execute */
+        
         File f = new File("test/org/clothocad/core/scripting/scripttest.js");
         engine.eval(new FileReader(f));
 

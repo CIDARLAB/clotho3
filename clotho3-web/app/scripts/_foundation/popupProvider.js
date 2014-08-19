@@ -58,7 +58,18 @@ angular.module('clotho.clothoDirectives')
 			});
 		}
 
-		this.$get = function ($animate, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas, hotkeys) {
+		this.$get = function ($animate, $injector, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas) {
+
+			//todo - just use native API
+			var hotkeys = $injector.has('hotkeys') ?
+				$injector.get('hotkeys') :
+				{
+					add : angular.noop,
+					del : angular.noop
+				};
+
+			console.log($injector.has('hotkeys'), hotkeys);
+
 			return function (prefix, defaults) {
 
 				defaults = angular.extend({}, defaultOptions, defaults);

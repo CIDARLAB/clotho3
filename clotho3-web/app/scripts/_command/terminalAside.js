@@ -11,11 +11,11 @@ angular.module('clotho.commandbar')
 	.value('terminalAsideOptions', {
 		visible : false
 	})
-	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, ClothoCommandHistory, hotkeys, Clotho) {
+	.directive('terminalAside', function($http, $q, $templateCache, $window, $animate, $compile, terminalAsideOptions, ClothoCommandHistory, Clotho) {
 
 	return {
 		restrict: 'EA',
-		templateUrl : '../../views/_interface/terminalAside.html',
+		templateUrl : 'views/_command/terminalAside.html',
 		replace: true,
 		scope: {
 			title: '=?asideTitle',
