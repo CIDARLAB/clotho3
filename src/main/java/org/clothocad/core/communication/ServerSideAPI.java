@@ -40,6 +40,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -86,8 +87,10 @@ import org.clothocad.model.Person;
 public class ServerSideAPI {
 
     private final Router router;
+    @Getter
     private final Persistor persistor;
     private final String requestId;
+    @Getter
     private final Mind mind;
     private final MessageOptions options;
 
@@ -1014,6 +1017,6 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
     }
 
     private ScriptAPI getScriptAPI() {
-        return new ScriptAPI(mind, persistor, router, requestId, options);
+        return new ScriptAPI(this);
     }
 }

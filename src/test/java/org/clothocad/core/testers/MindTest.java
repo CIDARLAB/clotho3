@@ -8,6 +8,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.clothocad.core.communication.MessageOptions;
 import org.clothocad.core.communication.Router;
+import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.execution.ScriptAPI;
 import org.junit.Test;
 import org.clothocad.core.execution.Mind;
@@ -26,25 +27,26 @@ public class MindTest extends AuthorizedShiroTest{
         Injector injector = TestUtils.getDefaultTestInjector();
         Persistor persistor = injector.getInstance(Persistor.class);
         Router router = injector.getInstance(Router.class);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, router, "");
         persistor.deleteAll();
         String script = "var newobjid = clotho.create( {\"name\":\"UCM\",\"state\":\"MA\",\"schema\":\"org.clothocad.model.Institution\",\"country\":\"United States of America\",\"city\":\"Baltizam\"} );\n" +
                         "var result = clotho.get(newobjid);\n" +
                         "if(result.name != \"UCM\") {\n" +
                         "    throw \"wrong name: \" + result.name;\n" +
                         "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(api));
         script = "result = clotho.get(newobjid);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(api));
         script = "wrapper = [];\n" +
                  "wrapper[0] = newobjid;\n" +
                  "result = clotho.get(wrapper);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(api));
         
         script = "var listy = clotho.query({\"city\" : \"Baltizam\"});\n" +
                  "if (listy.length != 1) {\n" +
@@ -54,7 +56,7 @@ public class MindTest extends AuthorizedShiroTest{
                  "if(existing.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + existing.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(api));
         
         script = "var args = {};\n" +
                  "args.id = newobjid;\n" +
@@ -63,7 +65,7 @@ public class MindTest extends AuthorizedShiroTest{
                  "if(result.city != \"Paris\") {\n" +
                  "    throw \"wrong city: \" + result.city;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(api)); 
         
         script = "existing.name = \"Shamoo University\"; \n" +
                  "existing.city = \"Whaletown\"; \n" +
@@ -75,20 +77,20 @@ public class MindTest extends AuthorizedShiroTest{
                  "if(result.state != \"NR\") {\n" +
                  "    throw \"wrong state: \" + result.state;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(api)); 
         
         script = "var finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=1) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(api)); 
         
         script = "clotho.destroy(newobjid);\n" +
                  "finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=0) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(api)); 
     }
     
     @Test
