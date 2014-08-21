@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from ProteinByGene import run",
+  "name" : "ProteinByGene",
+  "id" : "org.andersonlab.py_proteinbygene",
+  "description" : "Searches for a protein by gene and returns a Polypeptide",
+  "args" : [ {
+    "type" : "array",
+    "name" : "arg0"
+  }]
+}
