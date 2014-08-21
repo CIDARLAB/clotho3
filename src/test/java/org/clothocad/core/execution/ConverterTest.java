@@ -52,7 +52,7 @@ import org.junit.Test;
  * @author prashantvaidyanathan
  */
 public class ConverterTest {
-     private static ServerSideAPI api;
+    private static ServerSideAPI api;
     private static ServerSideAPI unprivilegedUser;
     private static Persistor persistor;
     private static List<ObjectId> ids;

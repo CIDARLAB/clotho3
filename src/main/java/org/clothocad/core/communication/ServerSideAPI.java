@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,15 +48,13 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.ReservedFieldNames;
-import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
-import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.datums.User;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.execution.ConverterFunction;
 import org.clothocad.core.execution.Mind;
@@ -287,15 +284,33 @@ public class ServerSideAPI {
         }
     }
 
-    public final boolean login(String username, String password) {
+    public final Object login(String username, String password) {
+        ObjectId userId = null;
         try {
-            SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            SecurityUtils.getSubject().login(token);
+           
+            
+                    
+            // Map<String, Object> 
             say("Welcome, " + username, Severity.SUCCESS);
             log.info("User {} logged in", username);
-            return true;
+            
+            
+            
+            User newUser = new User();
+            newUser.setName(username);
+            userId = persistor.save(newUser);
+            System.out.println(newUser.getAuthKey());
+            /*Map<String,Object> userQuery = new HashMap<>();
+            userQuery.put("schema","org.clothocad.core.datums.User");
+            List<Map<String, Object>> res = query(userQuery);*/
+            return userId;
+            
+
         } catch (AuthenticationException e) {
             logAndSayError("Authentication attempt failed for username " + username, e);
-            return false;
+            return null;
         }
     }
 

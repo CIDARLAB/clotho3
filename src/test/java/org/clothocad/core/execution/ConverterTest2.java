@@ -9,11 +9,9 @@ package org.clothocad.core.execution;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityNotFoundException;
 import org.apache.shiro.SecurityUtils;
 import static org.clothocad.core.ReservedFieldNames.ID;
 import org.clothocad.core.communication.Channel;
@@ -36,14 +34,8 @@ import org.clothocad.model.NucSeq;
 import org.clothocad.model.SimpleSequence;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  *
