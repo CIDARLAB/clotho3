@@ -2,7 +2,7 @@
      ng-show="open"
      ng-class="{in : open}"
      style="display: block; background: rgba(100,100,100,0.7);">
-    <div class="modal-dialog" ng-class="{'modal-lg' : !onlySmall}">
+    <div class="modal-dialog" ng-class="{'modal-lg' : modalSize == 'lg', 'modal-sm' : modalSize == 'sm'}">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" ng-click="$close()">&times;</button>

@@ -88,8 +88,8 @@ function generateClothoAPI() {
 
 		PubSub.once(channel + ':' + requestId, function (data) {
 			$timeout.cancel(timeoutPromise);
-			//if null or undefined (not valid in JSON), reject
-			(angular.isUndefined(data)) ? deferred.reject(null) : deferred.resolve(data);
+			//if undefined (not valid in JSON), reject
+			(angular.isUndefined(data)) ? deferred.reject() : deferred.resolve(data);
 			func(data);
 		}, '$clotho');
 

@@ -83,7 +83,7 @@
     </ul>
 </div>
 
-<clotho-modal title="File Preview" open="showPreview">
+<clotho-modal title="File Preview" open="showPreview" modal-size="lg">
   <img ng-if="modalFileIsImage" ng-src="{{modalFile}}">
   <!-- todo - codemirror? -->
   <pre class="transparent" ng-if="!modalFileIsImage" ng-bind="modalFile"></pre>
