@@ -63,11 +63,11 @@ class NewGBConverter:
     def highlight(self):
         import random
         r = lambda: random.randint(0,255)
-        color1 = '#%02X%02X%02X' % (r(),r(),r())
-        color2 = '#%02X%02X%02X' % (r(),r(),r())
         high = self.gb.highlight
         count = 1;
         for f in high:
+            color1 = '#%02X%02X%02X' % (r(),r(),r())
+            color2 = '#%02X%02X%02X' % (r(),r(),r())
             loc = f.location
             qual = f.qualifiers
             self.highs.append( 

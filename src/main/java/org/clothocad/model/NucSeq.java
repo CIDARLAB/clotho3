@@ -7,6 +7,7 @@ package org.clothocad.model;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -144,7 +145,21 @@ public class NucSeq
         sequence = seq.toString();
         return true;
     }
-
+    
+    
+    public Map<String,Object> getNucSeqMap() throws IllegalArgumentException, IllegalAccessException
+    {
+        Map<String,Object> nucsmap = new HashMap<String,Object>();
+        
+        Field nseqFields[] = NucSeq.class.getDeclaredFields();
+        for(Field nsfield:nseqFields)
+        {
+            nsfield.setAccessible(true);
+            nucsmap.put(nsfield.getName(), nsfield.get(this));
+        }
+        
+        return nucsmap;
+    }
 
      /**
      * Finds indices of Open Reading Frames in a given nucleotide sequence and

@@ -13,6 +13,7 @@ def _OligoToPoly(oligo):
 	fin['isLinear'] = True
 	fin['isSingleStranded'] = True
 	fin['submissionDate'] = None
+	fin['accession'] = None
 	fin['highlights'] = []
 	fin['schema'] = 'org.clothocad.model.Polynucleotide'
 	return fin

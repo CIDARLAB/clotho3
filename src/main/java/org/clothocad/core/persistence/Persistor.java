@@ -572,4 +572,8 @@ public class Persistor{
     public List<Map> getCompletions(String word){
         return globalTrie.getCompletions(word);
     }
+
+    public Object get(ObjectId objectId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
