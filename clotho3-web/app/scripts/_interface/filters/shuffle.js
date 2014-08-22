@@ -11,7 +11,7 @@
  * @return {Array} The same array, shuffled
  *
  */
-angular.module('filters.shuffle').filter('shuffle',  function() {
+angular.module('clotho.interface').filter('shuffle',  function() {
 	return function(array, filterOn) {
 		if (filterOn === false || !angular.isArray(items)) {
 			return items;

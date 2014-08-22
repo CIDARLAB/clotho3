@@ -65,7 +65,9 @@ angular.module('clotho.extensions', [])
 	var getQueue = function() {
 		return angular.module('clotho.extensions')._invokeQueue;
 	};
+
 	var registeredQueue = getQueue().length;
+
 	//Only needs to be called when not using the provider interface above, i.e. components that have been prefaced, e.g. angular.module('clotho.extensions').controller() instead of $clotho.extensions.controller()
 		//todo - verify that processing queue after adding components using provider-based mechanism doesn't cause problems with queue length mismatch
 	var processQueue = function() {
@@ -103,12 +105,29 @@ angular.module('clotho.extensions', [])
 	};
 
 
-	//not really recommended for use...
+	// If you just want to add a property to the $rootScope, given an object to extend() it, though not really recommended as will slow the $digest cycle
 	$clotho.extensions.extendPrimaryRootscope = function(args) {
 		$clotho.extensions.extend($rootScope, args);
 	};
 
-
+	/**
+	 * @name downloadDependencies
+	 *
+	 * @param {Object} dependencies [see format below]
+	 *
+	 * @returns {Promise} promise which resolves when css, mixins, scripts are downloaded, and a $timeout() for the onload script
+	 *
+	 * @description
+	 *
+	 * Given a dependencies object, e.g.: {
+	 *   css : <dep>,
+	 *   mixin : <dep>,
+	 *   script : <dep>,
+	 *   onload : <dep>,
+	 * }
+	 *
+	 * where <dep> is either a file path, or array of paths, this function downloads all dependencies, and returns a promise containing a $timeout() which will run the onload() on the next $digest()
+	 */
 	$clotho.extensions.downloadDependencies = function downloadDependencies(dependencies) {
 		if (angular.isEmpty(dependencies)) {
 			return $q.when(angular.noop);
@@ -267,6 +286,12 @@ angular.module('clotho.extensions', [])
 	$clotho.extensions.bootstrap = angular.bootstrap;
 
 
+		/**
+		 * @name determineUrlExtension
+		 * @description Given an arbitrary URL, determine file name extension
+		 * @param url {String}
+		 * @returns {String}
+		 */
 	$clotho.extensions.determineUrlExtension = function ( url ) {
 		//The extension is always the last characters before the ? and after a period.
 		//accounting for the possibility of a period in the query string
