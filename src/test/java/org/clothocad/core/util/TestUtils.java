@@ -108,7 +108,13 @@ public class TestUtils {
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
         Person person = new Person("Test Person",null);
         lab.setPI(person);
-
+        
+        Person newperson = new Person("testuser","password");
+        Person newperson2 = new Person("maxbates","password2");
+        persistor.save(newperson);
+        persistor.save(newperson2);
+        
+        
         Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);
         part1.setType(PartFunction.CDS);
 
@@ -133,9 +139,12 @@ public class TestUtils {
 
         return Arrays.asList(part1.getId(), part2.getId(), part3.getId(), eugeneID);
     }
-
     public static void setupTestUsers(ClothoRealm realm) {
+        Persistor persistor = getDefaultTestInjector().getInstance(Persistor.class);
+        importTestJSON(persistor);
         realm.addAccount("testuser", "password");
+        realm.addAccount("maxbates","password2");
+        
     }
     
     public static Map<String, Object> serializeForExternalAsMap(Object o){

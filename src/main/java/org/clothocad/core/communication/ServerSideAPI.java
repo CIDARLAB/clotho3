@@ -287,8 +287,7 @@ public class ServerSideAPI {
     public final Object login(String username, String password) {
         ObjectId userId = null;
         try {
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-            SecurityUtils.getSubject().login(token);
+            SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
            
             
                     
@@ -296,15 +295,17 @@ public class ServerSideAPI {
             say("Welcome, " + username, Severity.SUCCESS);
             log.info("User {} logged in", username);
             
+            Collection<Person> personlist = persistor.getAll(Person.class);
+            for(Person p : personlist)
+            {
+                
+                if(p.getDisplayName().equals(username))
+                {
+                    userId = p.getId();
+                }
+            }
             
             
-            User newUser = new User();
-            newUser.setName(username);
-            userId = persistor.save(newUser);
-            System.out.println(newUser.getAuthKey());
-            /*Map<String,Object> userQuery = new HashMap<>();
-            userQuery.put("schema","org.clothocad.core.datums.User");
-            List<Map<String, Object>> res = query(userQuery);*/
             return userId;
             
 

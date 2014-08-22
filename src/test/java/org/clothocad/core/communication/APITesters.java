@@ -68,6 +68,7 @@ public class APITesters {
         //ids = TestUtils.setupTestData(persistor);
         injector.getInstance(Persistor.class).deleteAll();
         ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
+        
     }
 
     @After
@@ -121,9 +122,10 @@ public class APITesters {
        
         //convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence")));
         Map<String,String> credentials = new HashMap<>();
-        credentials.put("username", "testuser");
-        credentials.put("password", "password");
-        
+        credentials.put("username", "maxbates");
+        credentials.put("password", "password2");
+        //credentials.put("username", "testuser");
+        //credentials.put("password", "password");
         final Message message = new Message(
             Channel.createAll,
             new Map[] {simpleseqData},
@@ -133,7 +135,7 @@ public class APITesters {
         //sendMessage(message, connection);
         sendMessage(new Message(Channel.login, credentials, "1"), connection);
         
-        System.out.println("Created");
+        //System.out.println("Created");
         
         
         
