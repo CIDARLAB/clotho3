@@ -27,6 +27,7 @@ import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.NucSeq;
+import org.clothocad.model.Person;
 import org.clothocad.model.SimpleSequence;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -136,9 +137,9 @@ public class APITesters {
         sendMessage(new Message(Channel.login, credentials, "1"), connection);
         
         //System.out.println("Created");
-        
-        
-        
+        Map<String, Object> operson = persistor.getAsJSON(new ObjectId("clotho.developer.maxbates"));
+        System.out.println(operson);
+       
     }
     
     public static void main(String args[]) throws IOException

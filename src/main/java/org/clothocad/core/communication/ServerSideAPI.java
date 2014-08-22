@@ -295,17 +295,16 @@ public class ServerSideAPI {
             say("Welcome, " + username, Severity.SUCCESS);
             log.info("User {} logged in", username);
             
+            
+            
             Collection<Person> personlist = persistor.getAll(Person.class);
             for(Person p : personlist)
             {
-                
                 if(p.getDisplayName().equals(username))
                 {
                     userId = p.getId();
                 }
             }
-            
-            
             return userId;
             
 

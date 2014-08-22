@@ -109,8 +109,43 @@ public class TestUtils {
         Person person = new Person("Test Person",null);
         lab.setPI(person);
         
+        
+        
         Person newperson = new Person("testuser","password");
-        Person newperson2 = new Person("maxbates","password2");
+        //Person newperson2 = new Person("maxbates","password2");
+        /*newperson2.setId(new ObjectId("clotho.testuser.maxbates"));
+        newperson2.setDescription("Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.");
+        newperson2.setGivenName("Maxwell");
+        newperson2.setIcon("images/people/MaxwellBates.jpg");
+        newperson2.setEmailAddress("maxbates@gmail.com");
+        newperson2.setSurName("Bates");
+        newperson2.setName("Maxwell Bates");
+        newperson2.setNickName("Max");*/
+        Map<String, Object> newperson2 = new HashMap();
+  newperson2.put("displayname","maxbates");
+  newperson2.put("rawPassword","password2");
+  newperson2.put("description" , "Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.");
+  newperson2.put("current" , true);
+  newperson2.put("currentLocation" , "Oakland, CA");
+  newperson2.put("dateCreated" , "2012-06-01");
+  newperson2.put("emailAddress" , "maxbates@gmail.com");
+  newperson2.put("endDate", "");
+  newperson2.put("givenName" , "Maxwell");
+  newperson2.put("icon" , "images/people/MaxwellBates.jpg");
+  newperson2.put("imgUrl" , "");
+  newperson2.put("isManagement" , false);
+  newperson2.put("lab" , "Anderson");
+  newperson2.put("name" , "maxbates");
+  newperson2.put("nickName" , "Max");
+  newperson2.put("role" , "Programmer");
+  newperson2.put("schema" , "org.clothocad.model.Person");
+  newperson2.put("social" , "");
+  newperson2.put("startDate" ,"2012-06-01");
+  newperson2.put("surName" , "Bates");
+  newperson2.put("title" , "Front End Developer");
+  newperson2.put("id" , "clotho.testuser.maxbates");
+        
+        
         persistor.save(newperson);
         persistor.save(newperson2);
         
