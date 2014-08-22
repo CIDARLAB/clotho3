@@ -187,6 +187,19 @@ angular.module('clotho.tokenizer')
 					}, 0, false);
 				};
 
+				//we need to abstract this out so that we can bind/unbind beyond scope of element
+				function escapeHandler () {
+					if (!scope.query.length || !scope.autocompletions.length) {
+						element[0].blur();
+						resetActive();
+					} else {
+						resetMatches();
+						element[0].focus();
+						angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
+						scope.$digest();
+					}
+				}
+
 				//bind keyboard events from HOT_KEYS + delimiter
 				element.bind('keydown', function (evt) {
 
@@ -291,26 +304,34 @@ angular.module('clotho.tokenizer')
 					}
 					//escape
 					else if (evt.which === 27) {
+						console.log('escape pressed');
 						//if no query or autcomplete not currently open, blur
-						if (!scope.query.length || !scope.autocompletions.length) {
-							element.blur();
-							resetActive();
-						} else {
-							resetMatches();
-							angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
-							scope.$digest();
-						}
+						escapeHandler();
 					}
 
 					//at bottom so can return out and continue normal action
 					evt.preventDefault();
 				});
 
+				var escapeCheckHandler = function (evt) {
+					if (evt.which === 27) {
+						escapeHandler();
+					}
+				};
+				var documentEscapeBinding = angular.noop;
+
 				//$timeout so runs after document click
 				element.on('focus', function (event) {
+					$document.off('keydown', escapeCheckHandler);
 					$timeout(function () {
 						scope.hasFocus = true;
 					});
+				});
+
+				element.on('blur', function (event) {
+					if (scope.hasFocus) {
+						$document.on('keydown', escapeCheckHandler)
+					}
 				});
 
 				//on pasting text, break up into tokens (unless quoted) and reset query
