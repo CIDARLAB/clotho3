@@ -131,7 +131,7 @@ angular.module('clotho.core').service('PubSub',
 
 				//ensure arguments are array
 				//undefined is not a JSON value, so means nothing was sent over the socket
-				if (angular.isUndefined(args) || args === null) {
+				if (angular.isUndefined(args)) {
 					args = null;
 				} else {
 					args = [args];
