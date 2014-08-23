@@ -175,6 +175,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'NCBIImportCtrl',
 		title: 'NCBI Import'
 	})
+	.when('/import/facebook', {
+		templateUrl: 'views/import/facebook.html',
+		controller: 'FacebookImportCtrl',
+		title: 'Facebook Import'
+	})
 
 	//testing
 	.when('/widgets', {

@@ -117,8 +117,9 @@ module.exports = function (grunt) {
             '<%= yeoman.trails %>/*',
             '<%= yeoman.full %>/*',
             '!.git*',
+            '!.git',
             '!.git/**/*',
-	          '!*.md'
+	          '!**/*.md'
           ]
         }]
       },
@@ -310,28 +311,28 @@ module.exports = function (grunt) {
 		    dot: true,
 		    cwd: '<%= yeoman.dist %>',
 		    dest: '<%= yeoman.api %>',
-		    src: ['**/*', '!index.html']
+		    src: ['**/*', '!index.html', '!**/*.ppt', '!**/*.pptx']
 	    },
 	    handleCommandBuild : {
 		    expand: true,
 		    dot: true,
 		    cwd: '<%= yeoman.dist %>',
 		    dest: '<%= yeoman.command %>',
-		    src: ['**/*', '!index.html']
+		    src: ['**/*', '!index.html', '!**/*.ppt', '!**/*.pptx']
 	    },
 	    handleTrailsBuild : {
 		    expand: true,
 		    dot: true,
 		    cwd: '<%= yeoman.dist %>',
 		    dest: '<%= yeoman.trails %>',
-		    src: ['**/*', '!index.html']
+		    src: ['**/*', '!index.html', '!**/*.ppt', '!**/*.pptx']
 	    },
 	    handleFullBuild : {
 		    expand: true,
 		    dot: true,
 		    cwd: '<%= yeoman.dist %>',
 		    dest: '<%= yeoman.full %>',
-		    src: ['**/*', '!index.html']
+		    src: ['**/*', '!index.html', '!**/*.ppt', '!**/*.pptx']
 	    }
     },
     concurrent: {

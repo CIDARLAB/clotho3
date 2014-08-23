@@ -125,7 +125,7 @@ angular.module('clotho.core').service('PubSub',
 			 @description
 			 Publish some data on a topic
 			 @param topic {string} channel to publish on, can be multiple space-separated
-			 @param args {*}  Array of arguments to apply to callback.
+			 @param args {*}  Array of arguments to apply to callback. If you want to pass a single arg, you don't need to wrap it in an array.
 			 */
 			var trigger = function pubsub_trigger (topic, args) {
 

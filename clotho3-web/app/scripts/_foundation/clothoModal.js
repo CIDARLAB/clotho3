@@ -1,6 +1,6 @@
 angular.module('clotho.clothoDirectives')
 /**
- * @name clotho-show
+ * @name clotho-modal
  *
  * @description simple modal service which does not rely on $modal from angular.ui, and allows transclusion of child content, or clotho-show if pass widget ID.
  *
@@ -30,7 +30,14 @@ angular.module('clotho.clothoDirectives')
  * @description
  * This implementation is a bit different than UI Bootstrap and Angular Strap in that most of the logic is placed in the modal, rather than the service. Usage is similar, though less programmatic manipulation, in favor of ease of creation and ability to support transclusion.
  */
-	.directive('clothoModal', function ($parse, $timeout, $http, $compile, $sce, hotkeys) {
+	.directive('clothoModal', function ($parse, $timeout, $http, $compile, $sce, $injector) {
+
+		var hasHotkeys = $injector.has('hotkeys');
+
+		var hotkeys;
+		if (hasHotkeys) {
+			hotkeys = $injector.get('hotkeys');
+		}
 
 		return {
 			restrict : 'E',
@@ -46,7 +53,7 @@ angular.module('clotho.clothoDirectives')
 				content : '=?',
 				templateUrl : '=?',
 				actions : '=?',
-				onlySmall : '@'
+				modalSize : '@' //'lg' or 'sm'
 			},
 			controller : function ($scope, $element, $attrs) {
 				//define on controller so available outside template
@@ -91,7 +98,7 @@ angular.module('clotho.clothoDirectives')
 				scope.$watch('open', function (newval, oldval) {
 					if (!!newval) {
 						scope.open = true;
-						hotkeys.add('esc', scope.$close);
+						hasHotkeys && hotkeys.bindTo(scope).add('esc', scope.$close);
 						angular.isFunction(scope.onOpen) && scope.onOpen();
 					}
 				});
