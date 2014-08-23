@@ -122,18 +122,21 @@ public class APITesters {
        Map<String,Object> convertparams = new HashMap<>();
        
         //convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence")));
-        Map<String,String> credentials = new HashMap<>();
-        credentials.put("username", "maxbates");
-        credentials.put("password", "password2");
-        //credentials.put("username", "testuser");
+         //credentials.put("username", "testuser");
         //credentials.put("password", "password");
-        final Message message = new Message(
+         /*final Message message = new Message(
             Channel.createAll,
             new Map[] {simpleseqData},
             "1",
             null
-        );
-        //sendMessage(message, connection);
+        );*/
+       //sendMessage(message, connection);
+        Map<String,String> credentials = new HashMap<>();
+        credentials.put("username", "maxbates");
+        credentials.put("password", "password2");
+       
+       
+        
         sendMessage(new Message(Channel.login, credentials, "1"), connection);
         
         //System.out.println("Created");
