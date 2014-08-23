@@ -226,7 +226,9 @@ function generateClothoAPI() {
 			return $q.when(retrieved);
 		} else {
 			var callback = function (data) {
-				Collector.storeModel(uuid, data);
+				if (!angular.isEmpty(data)) {
+					Collector.storeModel(uuid, data);
+				}
 			};
 
 			return fn.emitSubCallback('get', uuid, callback, options);
