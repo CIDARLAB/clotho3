@@ -1,5 +1,7 @@
-angular.module('clotho.interface')
+angular.module('clotho.foundation')
 .service('Facebook', function ($q, $window, $filter) {
+
+	//todo - incorporate Auth service
 
 	var self = this;
 
@@ -85,6 +87,13 @@ angular.module('clotho.interface')
 
 			//put this in the callback so we don't call until doing the first check
 			sdkReadyDeferred.resolve(FB);
+		});
+
+		FB.Event.subscribe('auth.login', function (evt) {
+			//todo
+		});
+		FB.Event.subscribe('auth.logout', function (evt) {
+			//todo
 		});
 };
 
@@ -178,7 +187,7 @@ angular.module('clotho.interface')
 			id : input.email,
 			name : input.name,
 			emailAddress : input.email,
-			dateCreated : $filter('date')('yyyy-MM-dd'),
+			dateCreated : $filter('date')(Date.now().valueOf(), 'yyyy-MM-dd'),
 			icon : input.icon,
 			social : {
 				facebook : input.link
