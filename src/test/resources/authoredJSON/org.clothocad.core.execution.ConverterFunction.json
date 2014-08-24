@@ -1,7 +1,7 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "id" : "org.clothocad.model.ICEDataSource",
-  "name" : "ICEDataSource",
+  "id" : "org.clothocad.core.execution.ConverterFunction",
+  "name" : "ConverterFunction",
   "dateCreated" : null,
   "visibility" : null,
   "author" : null,
@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "canImport",
-    "type" : "boolean",
+    "name" : "convFunction",
+    "type" : "org.clothocad.core.datums.Function",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -21,8 +21,8 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.DataSource",
+  "superClass" : "org.clothocad.model.ConverterSchema",
   "innerClasses" : null,
-  "c" : "org.clothocad.model.ICEDataSource",
-  "binaryName" : "org.clothocad.model.ICEDataSource"
+  "c" : "org.clothocad.core.execution.ConverterFunction",
+  "binaryName" : "org.clothocad.core.execution.ConverterFunction"
 }

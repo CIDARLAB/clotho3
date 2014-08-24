@@ -1,35 +1,68 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.datums.User",
-  "c" : "org.clothocad.core.datums.User",
+  "id" : "org.clothocad.core.datums.User",
   "name" : "User",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.String",
-    "name" : "passwordHash",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.Set",
-    "name" : "personUUIDs",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "authKey",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.Boolean",
     "name" : "isLoggedIn",
     "type" : "boolean",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.util.Set",
     "name" : "clients",
     "type" : "array",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "personUUIDs",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "passwordHash",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.core.datums.User"
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.User",
+  "binaryName" : "org.clothocad.core.datums.User"
 }

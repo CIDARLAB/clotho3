@@ -1,25 +1,48 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.settings.Settings.SettingsDatum",
-  "c" : "org.clothocad.core.settings.Settings$SettingsDatum",
+  "id" : "org.clothocad.core.settings.Settings.SettingsDatum",
   "name" : "SettingsDatum",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.String",
-    "name" : "id",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.core.settings.Settings",
     "name" : "this$0",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.Boolean",
+    "name" : "id",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "recordAllDoos",
     "type" : "boolean",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.core.settings.Settings.SettingsDatum"
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.settings.Settings$SettingsDatum",
+  "binaryName" : "org.clothocad.core.settings.Settings.SettingsDatum"
 }

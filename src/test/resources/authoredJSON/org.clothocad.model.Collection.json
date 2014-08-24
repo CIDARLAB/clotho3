@@ -1,24 +1,48 @@
 {
-  "id" : "org.clothocad.model.Collection",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.model.Collection",
-  "c" : "org.clothocad.model.Collection",
+  "id" : "org.clothocad.model.Collection",
   "name" : "Collection",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.util.List",
-    "name" : "items",
-    "type" : "array",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "description",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.Person",
     "name" : "author",
     "type" : "org.clothocad.model.Person",
-    "reference" : true
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "items",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Collection",
+  "binaryName" : "org.clothocad.model.Collection"
 }

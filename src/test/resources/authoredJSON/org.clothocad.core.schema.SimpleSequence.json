@@ -1,14 +1,28 @@
 {
-  "id" : "org.clothocad.core.schema.SimpleSequence",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.schema.SimpleSequence",
-  "c" : "org.clothocad.core.schema.SimpleSequence",
+  "id" : "org.clothocad.core.schema.SimpleSequence",
   "name" : "SimpleSequence",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.String",
     "name" : "sequence",
     "type" : "string",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.SimpleSequence",
+  "binaryName" : "org.clothocad.core.schema.SimpleSequence"
 }

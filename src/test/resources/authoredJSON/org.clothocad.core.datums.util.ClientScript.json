@@ -1,25 +1,48 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.datums.util.ClientScript",
-  "c" : "org.clothocad.core.datums.util.ClientScript",
+  "id" : "org.clothocad.core.datums.util.ClientScript",
   "name" : "ClientScript",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "org.clothocad.core.datums.util.Language",
-    "name" : "language",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "onShowScript",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.String",
     "name" : "graphicsCode",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "language",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.core.datums.util.ClientScript"
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.util.ClientScript",
+  "binaryName" : "org.clothocad.core.datums.util.ClientScript"
 }

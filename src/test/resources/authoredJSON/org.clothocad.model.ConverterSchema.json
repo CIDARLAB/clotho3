@@ -1,7 +1,7 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "id" : "org.clothocad.model.BasicPart",
-  "name" : "BasicPart",
+  "id" : "org.clothocad.model.ConverterSchema",
+  "name" : "ConverterSchema",
   "dateCreated" : null,
   "visibility" : null,
   "author" : null,
@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "partType",
-    "type" : "object",
+    "name" : "convertTo",
+    "type" : "org.clothocad.core.schema.Schema",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
+    "name" : "convertFrom",
+    "type" : "org.clothocad.core.schema.Schema",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -33,6 +33,6 @@
   "methods" : null,
   "superClass" : null,
   "innerClasses" : null,
-  "c" : "org.clothocad.model.BasicPart",
-  "binaryName" : "org.clothocad.model.BasicPart"
+  "c" : "org.clothocad.model.ConverterSchema",
+  "binaryName" : "org.clothocad.model.ConverterSchema"
 }

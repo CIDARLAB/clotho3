@@ -1,54 +1,118 @@
 {
-  "id" : "org.clothocad.core.execution.Mind",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.execution.Mind",
-  "c" : "org.clothocad.core.execution.Mind",
+  "id" : "org.clothocad.core.execution.Mind",
   "name" : "Mind",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.util.Map",
-    "name" : "commandHistory",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Integer",
-    "name" : "MAX_SIZE_LAST_SHARABLES",
-    "type" : "number",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "name" : "lastSharables",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.core.execution.MetaEngine",
-    "name" : "engine",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "org.slf4j.Logger",
-    "name" : "logger",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.List",
-    "name" : "lastCommands",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.Person",
     "name" : "person",
     "type" : "org.clothocad.model.Person",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.String",
+    "name" : "lastSharables",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "username",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.core.communication.ClientConnection",
+    "name" : "userDictionary",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "engine",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "MAX_SIZE_LAST_SHARABLES",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "logger",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "connection",
     "type" : "object",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "commandHistory",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "lastCommands",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.execution.Mind",
+  "binaryName" : "org.clothocad.core.execution.Mind"
 }

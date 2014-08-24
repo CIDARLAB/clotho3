@@ -1,35 +1,68 @@
 {
-  "id" : "org.clothocad.model.Lab",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
-  "binaryName" : "org.clothocad.model.Lab",
-  "c" : "org.clothocad.model.Lab",
+  "id" : "org.clothocad.model.Lab",
   "name" : "Lab",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "org.clothocad.model.Person",
-    "name" : "PI",
-    "type" : "org.clothocad.model.Person",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "department",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.String",
-    "name" : "address",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.Institution",
-    "name" : "institution",
-    "type" : "org.clothocad.model.Institution",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "website",
     "type" : "string",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "address",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "PI",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "institution",
+    "type" : "org.clothocad.model.Institution",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Lab",
+  "binaryName" : "org.clothocad.model.Lab"
 }

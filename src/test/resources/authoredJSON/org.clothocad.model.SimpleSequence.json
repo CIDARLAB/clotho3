@@ -1,7 +1,7 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "id" : "org.clothocad.model.BasicPart",
-  "name" : "BasicPart",
+  "id" : "org.clothocad.model.SimpleSequence",
+  "name" : "SimpleSequence",
   "dateCreated" : null,
   "visibility" : null,
   "author" : null,
@@ -10,18 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "partType",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -33,6 +23,6 @@
   "methods" : null,
   "superClass" : null,
   "innerClasses" : null,
-  "c" : "org.clothocad.model.BasicPart",
-  "binaryName" : "org.clothocad.model.BasicPart"
+  "c" : "org.clothocad.model.SimpleSequence",
+  "binaryName" : "org.clothocad.model.SimpleSequence"
 }

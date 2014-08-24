@@ -1,54 +1,108 @@
 {
-  "id" : "org.clothocad.model.Annotation",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.model.Annotation",
-  "c" : "org.clothocad.model.Annotation",
+  "id" : "org.clothocad.model.Annotation",
   "name" : "Annotation",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.Integer",
     "name" : "end",
     "type" : "number",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.awt.Color",
     "name" : "reverseColor",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.awt.Color",
-    "name" : "forwardColor",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "symbol",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.Person",
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.Integer",
-    "name" : "start",
-    "type" : "number",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Boolean",
     "name" : "isForwardStrand",
     "type" : "boolean",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.NucSeq",
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
-    "reference" : true
-  }, {
-    "javaType" : "org.clothocad.model.Feature",
     "name" : "feature",
     "type" : "org.clothocad.model.Feature",
-    "reference" : true
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "start",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "sequence",
+    "type" : "org.clothocad.model.NucSeq",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "forwardColor",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Annotation",
+  "binaryName" : "org.clothocad.model.Annotation"
 }
