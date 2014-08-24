@@ -38,6 +38,10 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			['h', 'Show Intro Modal', 'showHelp = !showHelp']
 		]
 	})
+	.when('/login', {
+		templateUrl: 'views/login.html',
+		controller: 'loginCtrl' //from command module
+	})
 	.when('/settings', {
 		templateUrl: 'views/settings.html',
 	  controller: 'SettingsCtrl',

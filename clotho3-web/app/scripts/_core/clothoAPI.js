@@ -88,7 +88,7 @@ function generateClothoAPI() {
 
 		PubSub.once(channel + ':' + requestId, function (data) {
 			$timeout.cancel(timeoutPromise);
-			//if undefined (not valid in JSON), reject
+			//if undefined (not valid in JSON), reject. null is valid response
 			(angular.isUndefined(data)) ? deferred.reject() : deferred.resolve(data);
 			func(data);
 		}, '$clotho');
@@ -226,7 +226,9 @@ function generateClothoAPI() {
 			return $q.when(retrieved);
 		} else {
 			var callback = function (data) {
-				Collector.storeModel(uuid, data);
+				if (!angular.isEmpty(data)) {
+					Collector.storeModel(uuid, data);
+				}
 			};
 
 			return fn.emitSubCallback('get', uuid, callback, options);

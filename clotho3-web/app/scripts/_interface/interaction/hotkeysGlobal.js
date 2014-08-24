@@ -5,7 +5,7 @@ angular.module('clotho.interface')
 				'<div class="modal-dialog">' +
 					'<div class="modal-content">' +
 						'<div class="modal-header">' +
-							'<button type="button" class="close" ng-click="closeCheatSheet()">&times;</button>' +
+							'<button type="button" class="close" ng-click="toggleCheatSheet()">&times;</button>' +
 							'<h4 class="modal-title">{{ title }}</h4>' +
 						'</div>' +
 						'<div class="modal-body">' +

@@ -62,7 +62,10 @@ module.exports = function (grunt) {
       }
     },
     autoprefixer: {
-      options: ['last 1 version'],
+      options: {
+	      browers: ['last 1 version'],
+	      map: true
+      },
       dist: {
         files: [{
           expand: true,
@@ -191,12 +194,14 @@ module.exports = function (grunt) {
       dist: {
 	      options: {
 		      debugInfo : false,
-		      generatedImagesDir: '<%= yeoman.dist %>/images/generated'
+		      generatedImagesDir: '<%= yeoman.dist %>/images/generated',
+          sourcemap : false
 	      }
       },
       server: {
         options: {
-          debugInfo: true
+	        sourcemap : true,
+          debugInfo: false
         }
       }
     },

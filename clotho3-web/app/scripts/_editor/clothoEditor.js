@@ -218,7 +218,7 @@ angular.module('clotho.editor')
 			scope.$watch('sharable.id', function (newval, oldval) {
 				Debugger.log('sharable id has changed', newval, oldval);
 				setNewWatch(newval);
-				if (angular.isDefined(scope.sharable) && angular.isUndefined(scope.sharable.schema)) {
+				if (!angular.isEmpty(scope.sharable) && angular.isUndefined(scope.sharable.schema)) {
 					createEditorElement(scope.sharable);
 				}
 			});
