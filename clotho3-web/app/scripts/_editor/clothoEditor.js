@@ -199,6 +199,8 @@ angular.module('clotho.editor')
 				}, scope);
 			}
 
+			//note - to just listen to changes from parent coming in, you could use attrs.$observe instead of a scope watch
+
 			//watch the input id if attr is present
 			scope.$watch('sharableId', function (newval, oldval) {
 				Debugger.log('new id input', newval, oldval);

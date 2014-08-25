@@ -40,21 +40,18 @@ angular.module('clotho.commandbar')
 			//will only get here if form is valid
 			Clotho.login($scope.cred.username, $scope.cred.password)
 			.then(function (result) {
-				$scope.notification = {class: "alert-success", message: "Log in Success"};
+				if (result) {
+					$scope.notification = {class: "alert-success", message: "Log in Success"};
+				} else {
+					$scope.notification = {class: "alert-danger", message: "Log in Error"};
+					resetPassword();
+				}
 			}, function (err) {
-				$scope.notification = {class: "alert-danger", message: "Log in Error"};
-				resetPassword();
+				//error communicating
 			});
 		};
 
 		$scope.$watch('cred.username', function (newval) {
-
-			if ($scope.retrieved) {
-
-			} else {
-
-			}
-
 			newval && Clotho.get(newval, {mute : true}).then(function (retrieved) {
 				if (retrieved && retrieved.id) {
 					$scope.retrieved = retrieved;

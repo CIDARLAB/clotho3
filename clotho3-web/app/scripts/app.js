@@ -230,6 +230,9 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/focus.html',
   controller: 'TestFocusCtrl'
 })
+	.when('/test/playground', {
+		templateUrl: 'views/test/playground.html'
+	})
 	.otherwise({
 		redirectTo:'/'
 	});
