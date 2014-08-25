@@ -43,6 +43,31 @@ angular.module('clotho.tokenizer')
 
 	})
 /**
+ * @ngdoc directive
+ * @name clothoReferenceParser
+ * @description
+ * Will go through text model and replace references with HTML (default) or Wiki, then COMPILE and set as text contents
+ *
+ * For now, only replaces text and not value (i.e. don't use on textarea)
+ *
+ * @attr clothoReferenceParser Model string to parse
+ * @attr clothoReferenceType Conversion type e.g. `clotho-reference-type="wiki"`. Default is html
+ *
+ */
+	.directive('clothoReferenceParser', function (ClothoReference, $compile, $timeout, $parse) {
+		return function (scope, element, attrs) {
+			scope.$watch(attrs.clothoReferenceParser, function (newval) {
+				if (attrs.clothoReferenceType === 'wiki') {
+					element.text(ClothoReference.convertWiki(newval));
+				} else {
+					element.html(ClothoReference.convertHtml(newval));
+					console.log(element.contents());
+					$compile(element.contents())(scope);
+				}
+			});
+		};
+	})
+/**
  * @ngdoc filter
  *
  * @description simple filter to parse wiki or html. note that html isn't compiled. can't pass many options either
@@ -66,30 +91,5 @@ angular.module('clotho.tokenizer')
 					return ClothoReference.convertWiki(input);
 				}
 			}
-		};
-	})
-	/**
-	 * @ngdoc directive
-	 * @name clothoReferenceParser
-	 * @description
-	 * Will go through text model and replace references with HTML (default) or Wiki, then COMPILE and set as text contents
-	 *
-	 * For now, only replaces text and not value (i.e. don't use on textarea)
-	 *
-	 * @attr clothoReferenceParser Model string to parse
-	 * @attr clothoReferenceType Conversion type e.g. `clotho-reference-type="wiki"`. Default is html
-	 *
-	 */
-	.directive('clothoReferenceParser', function (ClothoReference, $compile, $timeout, $parse) {
-		return function (scope, element, attrs) {
-			scope.$watch(attrs.clothoReferenceParser, function (newval) {
-				if (attrs.clothoReferenceType === 'wiki') {
-					element.text(ClothoReference.convertWiki(newval));
-				} else {
-					element.html(ClothoReference.convertHtml(newval));
-					console.log(element.contents());
-					$compile(element.contents())(scope);
-				}
-			});
 		};
 	});

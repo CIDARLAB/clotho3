@@ -10,7 +10,8 @@ angular.module('clotho.tokenizer')
 				index:'=',
 				match:'=',
 				//active : '@',
-				query:'='
+				query:'=',
+				passedPlacement : '@'
 			},
 			templateUrl : 'views/_command/autocompleteMatch.html',
 			link : function (scope, element, attrs) {

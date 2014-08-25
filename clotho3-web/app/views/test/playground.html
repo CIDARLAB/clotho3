@@ -8,6 +8,12 @@
 
   <div class="panel panel-default" ng-init="sample = '@hey you baby@girl whats up @clotho.developer.maxbates with ya?'">
     <div class="panel-heading">Reference parsing + listening</div>
+
+    <div class="panel-body">
+      <clotho-terminal-input></clotho-terminal-input>
+
+    </div>
+
     <div class="panel-body">
 
       <p>sample text:</p>
@@ -17,6 +23,10 @@
       <p>Parsing sample to wiki</p>
 
       <p ng-bind="sample | clothoReferenceParse:'wiki'"></p>
+
+      <p>and parsed wiki to html</p>
+
+      <div wiki="sample"></div>
 
       <p>Note that this doesn't get compiled:</p>
 

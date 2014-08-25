@@ -109,7 +109,7 @@ function generateClothoAPI() {
 
 	function createRejectedPromise () {
 		var deferred = $q.defer();
-		deferred.reject();
+		deferred.reject(null);
 		return deferred.promise;
 	}
 

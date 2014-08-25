@@ -86,10 +86,12 @@ angular.module('clotho.clothoDirectives')
 				scope.$watch('sharableId', function ( val, oldval ) {
 					if (!!val) {
 						Clotho.get(val, {mute : true}).then(function (retrievedSharable) {
-							scope.fullSharable = retrievedSharable;
-							setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
-							//if we're getting it remotely, the size probably changed, so let's reposition it.
-							scope.reposition();
+							if (!angular.isEmpty(retrievedSharable)) {
+								scope.fullSharable = retrievedSharable;
+								setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
+								//if we're getting it remotely, the size probably changed, so let's reposition it.
+								scope.reposition();
+							}
 						});
 					}
 				});

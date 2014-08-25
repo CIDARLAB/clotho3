@@ -5,6 +5,12 @@ use as element to parse interally
 use as attribute with model to parse dynamically based on variable (e.g. ngModel)
 conversion based on http://en.wikipedia.org/wiki/Wikipedia:Cheatsheet,
 however, interpolation of {{ }}  templating is left to angular
+
+example:
+
+<wiki>Here is soime [wiki](http://www.wiki.org)<wiki>
+
+<div wiki="myModel"></div>
  */
 angular.module('clotho.interface')
   .directive('wiki', function () {
@@ -82,8 +88,6 @@ angular.module('clotho.interface')
 		}
 
     return {
-      template: '<div></div>',
-	    replace : true,
       restrict: 'EA',
 	    scope: {},
       link: function postLink(scope, element, attrs) {
