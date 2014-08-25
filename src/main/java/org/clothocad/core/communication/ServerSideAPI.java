@@ -310,7 +310,7 @@ public class ServerSideAPI {
 
         } catch (AuthenticationException e) {
             logAndSayError("Authentication attempt failed for username " + username, e);
-            return null;
+            return false;
         }
     }
 

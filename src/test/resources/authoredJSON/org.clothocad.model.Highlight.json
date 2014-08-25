@@ -10,27 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "end",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "inference",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
+    "name" : "revColor",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -50,6 +30,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "end",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "notes",
     "type" : "array",
     "subtype" : null,
@@ -60,7 +50,27 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "forColor",
+    "name" : "start",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "inference",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -80,18 +90,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "revColor",
+    "name" : "forColor",
     "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "start",
-    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,

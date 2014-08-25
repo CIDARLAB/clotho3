@@ -1,0 +1,30 @@
+{
+  "schema" : "org.clothocad.model.BasicPart",
+  "id" : "53f9849de4b0f896a3d741f5",
+  "name" : "Test Part 1",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : "53f9849de4b0f896a3d741f6",
+  "format" : {
+    "schema" : "org.clothocad.model.FreeForm"
+  },
+  "shortDescription" : "the first test part",
+  "type" : "CDS",
+  "riskGroup" : 0,
+  "sequence" : {
+    "schema" : "org.clothocad.model.NucSeq",
+    "id" : null,
+    "name" : "nucseq",
+    "dateCreated" : null,
+    "visibility" : null,
+    "isSingleStranded" : false,
+    "isCircular" : false,
+    "isDegenerate" : false,
+    "isLinear" : false,
+    "isRNA" : false,
+    "isLocked" : false,
+    "annotations" : null,
+    "sequence" : "AAAAAAAAAAAAAAAAAAA",
+    "lowerArray" : [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ]
+  }
+}

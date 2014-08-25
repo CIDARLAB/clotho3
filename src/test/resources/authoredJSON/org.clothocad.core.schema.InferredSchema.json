@@ -1,9 +1,18 @@
 {
-  "id" : "org.clothocad.core.schema.InferredSchema",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.schema.Schema",
-  "binaryName" : "org.clothocad.core.schema.InferredSchema",
-  "c" : "org.clothocad.core.schema.InferredSchema",
+  "id" : "org.clothocad.core.schema.InferredSchema",
   "name" : "InferredSchema",
-  "language" : "JAVA"
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ ],
+  "methods" : null,
+  "superClass" : "org.clothocad.core.schema.Schema",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.InferredSchema",
+  "binaryName" : "org.clothocad.core.schema.InferredSchema"
 }

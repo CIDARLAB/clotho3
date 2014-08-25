@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "riskGroup",
-    "type" : "number",
+    "name" : "shortDescription",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "type",
-    "type" : "object",
+    "name" : "riskGroup",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,7 +50,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "log",
+    "name" : "type",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -60,8 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "shortDescription",
-    "type" : "string",
+    "name" : "log",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -71,7 +71,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.NucSeq",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Part",
   "binaryName" : "org.clothocad.model.Part"
