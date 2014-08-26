@@ -10,11 +10,21 @@ angular.module('clotho.tokenizer')
 				query:'=',
 				active:'=',
 				hasFocus: '=',
-				select:'&'
+				select:'&',
+				passedPlacement : '@?',
+				forceVisible : '@?'
 			},
 			replace:true,
 			templateUrl:'views/_command/autocompleteListing.html',
 			link:function (scope, element, attrs) {
+
+				scope.isVisible = function () {
+					if (angular.isBoolean(scope.forceVisible)) {
+						return scope.forceVisible;
+					} else {
+						return scope.hasFocus && scope.autocompletions.length;
+					}
+				};
 
 				scope.isOpen = function () {
 					return scope.hasFocus && scope.matches.length > 0;

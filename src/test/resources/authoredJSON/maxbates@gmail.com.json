@@ -1,0 +1,11 @@
+{
+  "schema" : "org.clothocad.model.Person",
+  "id" : "maxbates@gmail.com",
+  "name" : "Max Bates",
+  "emailAddress" : "maxbates@gmail.com",
+  "dateCreated" : "2014-08-23",
+  "icon" : "//graph.facebook.com/10203810793925922/picture?width=500&height=500",
+  "social" : {
+    "facebook" : "https://www.facebook.com/app_scoped_user_id/10203810793925922/"
+  }
+}
