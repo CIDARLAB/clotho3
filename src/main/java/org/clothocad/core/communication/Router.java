@@ -89,6 +89,12 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
+                case createuser:
+                    Map newusermap = (Map) data;
+                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString(), newusermap.get("displayname").toString());
+                    break;
+                
+                
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();

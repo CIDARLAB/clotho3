@@ -24,6 +24,7 @@
 package org.clothocad.core.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.google.inject.Injector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +65,7 @@ import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
@@ -283,13 +286,32 @@ public class ServerSideAPI {
             Interpreter.get().learnNative(userInput, JSON.mappify(command));
         }
     }
+    public final boolean createuser(String username, String password, String displayname)
+    {
+        
+        Person existingperson = persistor.get(Person.class, new ObjectId(username));
+        if(existingperson != null )
+        {
+            Map<String, Object> newperson = new HashMap();
+            newperson.put("displayname", displayname);
+            newperson.put("rawPassword", password);
+            newperson.put("id", username);
+            newperson.put("emailAddress", username);
+            persistor.save(newperson);
+            say("New user " + username +" created.", Severity.SUCCESS);
+            return true;
+        }
+        else
+        {
+            say("User " + username +" exists.", Severity.FAILURE);
+            return false;
+        }
 
+    }
     public final Object login(String username, String password) {
         ObjectId userId = null;
         try {
             SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
-           
-            
                     
             // Map<String, Object> 
             say("Welcome, " + username, Severity.SUCCESS);
