@@ -22,8 +22,6 @@ def _ORFByName(terms):
         start = start + 50
 
     call.retrieve_gb(ids)
-    
-    print ids[0]
 
     if len(call.records) == 0:
         return None
@@ -41,8 +39,6 @@ def _ORFByName(terms):
 
     if not trigger:
         return None
-
-    print coded_by
     
     spl = coded_by[0].split('.')
     key = spl[0]
