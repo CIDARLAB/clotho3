@@ -1,46 +1,81 @@
 angular.module('clotho.tokenizer')
 /**
+ * @ngdoc directive
+ * @name clothoReferenceAutocomplete
+ *
  * @description
  * As a directive on an input element, renders an autocomplete with typeahead
  *
  * uses directives clothoAutocompleteListing to create the listing
  *
- * tokenCollection is not necessary
+ * bindings
  *
- * @attr tokenCollection will update token collection selection etc. if passed in
- * @attr autocompleteOnSelect {Function} passed $item, $query
+ * @attr ngModel {Model=} binding for query. optional (e.g. just use callback)
+ * @attr forceVisible {Boolean=} if true, force open. if false, force hidden.
+ * @attr autocompletions {Array=} Bind to the list of autocompletions
+ * @attr autocompleteHasFocus {Boolean=} Bind to whether the input has focus
  *
- * @example
+ * event
+ *
+ * @attr autocompleteOnSelect {Function=}
+ * passed $item, $query (current query string)
+ * @attr autocompleteOnQuery {Function=}
+ * when query changes. passed $query (new query string) and $old (old query string)
+ * @attr autocompleteOnKeydown {Function=}
+ * passed $event and $keycode
+ *
+ * style config
+ *
+ * @attr autocompletePopupPosition {String=}
+ * Position passed to sharablePopupPosition
+ * @attr autocompleteWaitTime {Number}
+ * Milliseconds before show autocomplete
+ * @attr autocompleteTrigger {Number} Keycode for triggering autocomplete. Defaults to reference delimiter in ClothoReferenceDelimiter //todo
+ * @attr autocompleteAllowSpaces {Boolean=} Allow spaces in query. This may lead to weird autocompleting behavior. By default, a space will select the current token (or first if none selected). //todo
+ *
+ * @example //todo
  <input type="text"
-    clotho-autocomplete
-    ng-model="query"
-    placeholder="{{placeholder}}"
-    token-collection="tokenCollection"
-    autocomplete-on-select="addToken($item, $query)">
+ clotho-autocomplete
+ ng-model="query"
+ placeholder="{{placeholder}}"
+ autocomplete-on-query="unsetTokenCollectionActive()"
+ autocomplete-on-select="addToken($item, $query)">
 
- todo - do not rely on ngModel being query
- todo - pass in popup position
- todo - isolate scope
-
- ngModel is not necessary
+ It is the responsibility of other directives to deal with token collection
  */
-	.directive('clothoAutocomplete', function (Clotho, $q, $parse, $timeout, $compile, $filter, $document) {
+	.directive('clothoReferenceAutocomplete', function ($q, $parse, $timeout, $compile, $filter, $document, Clotho, ClothoReferenceDelimiter) {
 
 		//              backspace tab enter   escape  left  up  right down
 		var HOT_KEYS = [8,        9,  13,     27,     37,   38, 39,   40];
-		var SPACE_KEY = 32;
-		var ENTER_KEY = 13;
+		const SPACE_KEY = 32,
+					ENTER_KEY = 13,
+					ESCAPE_KEY = 27;
 
 		var tokenDelimiterCode = SPACE_KEY;
 		var tokenDelimiterValue = ' ';
 
-		//time to wait before initiating typeahead request
-		var waitTime = 0;
+		//todo - incorporate reference delimiter
 
 		return {
 			restrict: 'A',
-			require : '?ngModel',
+			scope: {
+				query: '=?ngModel',
+				autocompleteTrigger: '@?',
+				forceVisible: '=?',
+				autocompletions : '=?',
+				autocompleteHasFocus : '=?',
+				autocompleteOnSelect: '&?',
+				autocompleteOnKeydown : '&?',
+				autocompleteOnQuery : '&?',
+				autocompletePopupPosition: '@?',
+				autocompleteAllowSpaces : '@?',
+				autocompleteWaitTime : '@?'
+			},
 			link: function clothoAutocompleteLink(scope, element, attrs, ngModelCtrl) {
+
+				if (element[0].nodeName !== 'INPUT') {
+					return;
+				}
 
 				//add attributes to text area
 				element.attr({
@@ -52,19 +87,25 @@ angular.module('clotho.tokenizer')
 
 				var initialQuoteRegexp = /^['"].*/;
 
-				var onSelectCallback = $parse(attrs.autocompleteOnSelect);
-
 				//pop-up element used to display matches
 				var listingEl = angular.element('<clotho-autocomplete-listing></clotho-autocomplete-listing>');
 				listingEl.attr({
 					autocompletions: 'autocompletions',
 					active: 'activeIdx',
 					select: 'select(activeIdx)',
-					"has-focus": 'hasFocus',
-					query: 'query'
+					"has-focus": 'autocompleteHasFocus',
+					query: 'query',
+					"force-visible" : "{{forceVisible}}",
+					"passed-placement" : "{{autocompletePopupPosition}}"
 				});
 
-				scope.hasFocus = false;
+				/* set up scope values */
+				
+				//whether the input has focus
+				scope.autocompleteHasFocus = scope.autocompleteHasFocus || false;
+				//query needs to have value, whether passed in or empty for init
+				scope.query = scope.query || '';
+
 
 				function resetQuery () {
 					scope.query = '';
@@ -78,8 +119,7 @@ angular.module('clotho.tokenizer')
 				function resetActive () {
 					resetQuery();
 					resetMatches();
-					scope.hasFocus = false;
-					angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
+					scope.autocompleteHasFocus = false;
 					scope.$digest();
 				}
 
@@ -104,78 +144,21 @@ angular.module('clotho.tokenizer')
 					//todo - pending #248 use API option
 					Clotho.autocomplete(inputValue).then(function (results) {
 						//it no results, or query now empty
-						if ( !results || !results.length || !scope.query.length ) {
+						if ( !results || !results.length ) {
 							resetMatches();
 						} else {
 							scope.autocompletions = $filter('limitTo')(results, 10);
 						}
 					});
-
-					/*scope.autocompletions = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];*/
 				};
 
-				//we need to propagate user's query so we can higlight matches
-				//this string represents what is in the autocompete input element
-				scope.query = '';
-
-				//Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
-				var timeoutPromise;
-
-				scope.$watch('query', function (newval, oldval) {
-					if (!!newval && newval.length) {
-						scope.hasFocus = true;
-						angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
-
-						/*
-						//note - check if query value last char is space (blocked for user input) and select if is
-						//relevant when typing out programmatically
-						if (newval.charAt(newval.length - 1) == tokenDelimiterValue && !checkInQuote(newval)) {
-							console.log('last char is space');
-							scope.select();
-							return;
-						}
-						*/
-
-						if (waitTime > 0) {
-							if (timeoutPromise) {
-								$timeout.cancel(timeoutPromise);//cancel previous timeout
-							}
-							timeoutPromise = $timeout(function () {
-								getAutocompletions(newval);
-							}, waitTime);
-						} else {
-							getAutocompletions(newval);
-						}
-					} else {
-						resetMatches();
-					}
-				});
-
-				scope.setQueryString = function (string, noReset) {
-
-					string = (angular.isUndefined(string) || angular.isEmpty(string)) ? scope.query : string;
-
-					//reset
-					resetQuery();
-					resetMatches();
-					if (!noReset) {
-						angular.isDefined(scope.tokenCollection) && scope.tokenCollection.removeAll();
-					}
-
-					angular.forEach(string.split(tokenDelimiterValue), function (token) {
-						//want to call parent's add token so updates completeQuery as well
-						token.length && scope.addToken(token);
-					});
-				};
-
+				//select current one, otherwise select first
 				scope.select = function (activeIdx) {
 
-					console.log('selecting ', activeIdx);
-
-					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : scope.query;
+					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : scope.autocompletions[0];
 
 					if (selected) {
-						onSelectCallback(scope, {
+						scope.autocompleteOnSelect({
 							$item: selected,
 							$query : scope.query
 						});
@@ -193,6 +176,31 @@ angular.module('clotho.tokenizer')
 					}, 0, false);
 				};
 
+				//Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
+				var timeoutPromise;
+
+				scope.$watch('query', function (newval, oldval) {
+
+					scope.autocompleteOnQuery({$query: newval, $old : oldval});
+
+					if (!!newval && newval.length) {
+						scope.autocompleteHasFocus = true;
+
+						if (scope.autocompleteWaitTime > 0) {
+							if (timeoutPromise) {
+								$timeout.cancel(timeoutPromise);//cancel previous timeout
+							}
+							timeoutPromise = $timeout(function () {
+								getAutocompletions(newval);
+							}, scope.autocompleteWaitTime);
+						} else {
+							getAutocompletions(newval);
+						}
+					} else {
+						resetMatches();
+					}
+				});
+
 				//we need to abstract this out so that we can bind/unbind beyond scope of element
 				function escapeHandler () {
 					if (!scope.query.length || !scope.autocompletions.length) {
@@ -201,7 +209,6 @@ angular.module('clotho.tokenizer')
 					} else {
 						resetMatches();
 						element[0].focus();
-						angular.isDefined(scope.tokenCollection) && scope.tokenCollection.unsetActive();
 						scope.$digest();
 					}
 				}
@@ -209,8 +216,13 @@ angular.module('clotho.tokenizer')
 				//bind keyboard events from HOT_KEYS + delimiter
 				element.bind('keydown', function (evt) {
 
+					scope.autocompleteOnKeydown({$event : evt, $keycode : evt.which});
+
 					//keep delimiter out of HOT_KEYS check because space is a weird default hotkey
 					//if type space and not in quote, and only 1 result, will choose it (enter will not)
+
+					//todo - update selecting this way
+
 					if (evt.which === tokenDelimiterCode) {
 						//if there's no query, or it's just a space, set it to empty and let default be prevented
 						if (scope.query == '') {
@@ -235,19 +247,9 @@ angular.module('clotho.tokenizer')
 					//backspace
 					if (evt.which === 8) {
 						if (scope.query.length) {
-							//return to handle deleting single letter or highlighted text
+							// return to handle deleting single letter or highlighted text
+							// (don't prevent default)
 							return;
-						} else {
-							if (angular.isDefined(scope.tokenCollection)) {
-								if (scope.tokenCollection.isActive()) {
-									var previousActive = scope.tokenCollection.whichActive();
-									scope.tokenCollection.removeActiveToken();
-									scope.tokenCollection.setActive(previousActive);
-								} else {
-									scope.tokenCollection.setLastActive();
-								}
-							}
-							scope.$digest();
 						}
 					}
 					//down
@@ -329,12 +331,12 @@ angular.module('clotho.tokenizer')
 				element.on('focus', function (event) {
 					$document.off('keydown', escapeCheckHandler);
 					$timeout(function () {
-						scope.hasFocus = true;
+						scope.autocompleteHasFocus = true;
 					});
 				});
 
 				element.on('blur', function (event) {
-					if (scope.hasFocus) {
+					if (scope.autocompleteHasFocus) {
 						$document.on('keydown', escapeCheckHandler)
 					}
 				});
@@ -358,7 +360,7 @@ angular.module('clotho.tokenizer')
 
 				function clothoAutocompleteBlurHandler (event) {
 					//only trigger if (1) have focus (2) tokens inactive (3) autocomplete inactive
-					if ( scope.hasFocus && (angular.isUndefined(scope.tokenCollection) || !scope.tokenCollection.isActive()) && scope.activeIdx < 0 ) {
+					if ( scope.autocompleteHasFocus && (angular.isUndefined(scope.tokenCollection) || !scope.tokenCollection.isActive()) && scope.activeIdx < 0 ) {
 						//timeout so can prevent default somewhere else
 						if (angular.isUndefined(event) || !element[0].contains(event.target)) {
 							$timeout(resetActive);

@@ -150,16 +150,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'TrailSplashCtrl',
 		title : 'Trail Splash'
 	})
-	.when('/terminal', {
-		templateUrl:'views/_command/terminal.html',
-		title : 'Terminal',
-		resolve : {
-			deps : function() {
-				return $clotho.extensions.mixin('scripts/_command/terminal.js')
-			}
-		}
-	})
-
 	.when('/import', {
 		templateUrl:'views/import/intro.html',
 		controller : 'ImportCtrl',
@@ -230,6 +220,9 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/focus.html',
   controller: 'TestFocusCtrl'
 })
+	.when('/test/playground', {
+		templateUrl: 'views/test/playground.html'
+	})
 	.otherwise({
 		redirectTo:'/'
 	});

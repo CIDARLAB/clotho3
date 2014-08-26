@@ -6,6 +6,8 @@
  *
  * Used by terminal and activity log
  *
+ * //todo - API should feed through this... decorate API or PubSub
+ *
  * //todo - CommandBar should use this
  * //todo - handle publishing on PubSub (clotho.trigger)
  * //todo - handle subscribing so can easily post to it (clotho.listen)

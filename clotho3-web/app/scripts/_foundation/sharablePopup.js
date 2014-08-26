@@ -74,21 +74,24 @@ angular.module('clotho.clothoDirectives')
 					if (!!val) {
 						setSharable(val);
 						//no need to reposition if we pass in the model, since the initial $digest will fill it
-					}
-					if (val.id) {
-						Clotho.get(val.id, {mute : true}).then(function (retrievedSharable) {
-							scope.fullSharable = retrievedSharable;
-						});
+						
+						if (val.id) {
+							Clotho.get(val.id, {mute : true}).then(function (retrievedSharable) {
+								scope.fullSharable = retrievedSharable;
+							});
+						}
 					}
 				});
 
 				scope.$watch('sharableId', function ( val, oldval ) {
 					if (!!val) {
 						Clotho.get(val, {mute : true}).then(function (retrievedSharable) {
-							scope.fullSharable = retrievedSharable;
-							setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
-							//if we're getting it remotely, the size probably changed, so let's reposition it.
-							scope.reposition();
+							if (!angular.isEmpty(retrievedSharable)) {
+								scope.fullSharable = retrievedSharable;
+								setSharable( ClothoSchemas.pruneToBasicFields(retrievedSharable) );
+								//if we're getting it remotely, the size probably changed, so let's reposition it.
+								scope.reposition();
+							}
 						});
 					}
 				});
