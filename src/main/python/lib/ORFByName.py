@@ -1,5 +1,6 @@
 from Bio import Entrez, SeqIO
 from ClothoPy.ProteinRetrieval import CallAccn
+from ClothoPy.ProteinHolder import Polypeptide
 
 def _ORFByName(terms):
     Entrez.email = 'nobody@example.com'
@@ -22,7 +23,7 @@ def _ORFByName(terms):
 
     call.retrieve_gb(ids)
     
-    #print ids
+    print ids[0]
 
     if len(call.records) == 0:
         return None
@@ -41,7 +42,7 @@ def _ORFByName(terms):
     if not trigger:
         return None
 
-    #print coded_by
+    print coded_by
     
     spl = coded_by[0].split('.')
     key = spl[0]
