@@ -98,16 +98,10 @@ public class APITesters {
         //Argument arg2 = new Argument();
         
         
-     
-        
-        
-       
         ObjectId id1 = new ObjectId();
         String name = "testConv";
         
-        
         TestConnection connection = new TestConnection("LoginTest");
-        
         
         Map<String,Object> simpleseqData = new HashMap<>();
         simpleseqData.put("name", "SimplestSequence");
@@ -115,11 +109,7 @@ public class APITesters {
         simpleseqData.put("sequence","ATTGGCCTTAAACCC");
         persistor.save(ns);
         
-        
-     
-        
-        
-       Map<String,Object> convertparams = new HashMap<>();
+        Map<String,Object> convertparams = new HashMap<>();
        
         //convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence")));
          //credentials.put("username", "testuser");
@@ -144,6 +134,33 @@ public class APITesters {
         System.out.println(operson);
        
     }
+    public void createnewusertest() throws IOException
+    {
+        
+        
+        TestConnection connection = new TestConnection("LoginTest");
+        
+        
+        Map<String,String> credentials = new HashMap<>();
+        credentials.put("username", "vprashant1@live.com");
+        credentials.put("password", "mypassword");
+        credentials.put("displayname", "PrashantVaidyanathan");
+       
+        Map<String,String> logincred = new HashMap<>();
+        logincred.put("username", "vprashant1@live.com");
+        logincred.put("password", "mypassword");
+        
+        
+        sendMessage(new Message(Channel.createuser, credentials, "1"), connection);
+        sendMessage(new Message(Channel.login, logincred, "3"), connection);
+        
+        //System.out.println("Created");
+        /*Map<String, Object> operson = persistor.getAsJSON(new ObjectId("clotho.developer.maxbates"));
+        System.out.println(operson);
+        */
+    }
+    
+    
     
     public static void main(String args[]) throws IOException
     {
@@ -151,7 +168,8 @@ public class APITesters {
         
         setUpClass();
         x.setUp();
-        x.logintest();
+        //x.logintest();
+        x.createnewusertest();
     }
     
     

@@ -8,14 +8,15 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.clothocad.core.communication.MessageOptions;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.execution.ScriptAPI;
-import org.junit.Before;
-import org.junit.Test;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.communication.TestConnection;
+import org.clothocad.core.execution.Mind;
+import org.clothocad.core.execution.ScriptAPI;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.TestUtils;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class MindTest {
     Mind mind = new Mind();
@@ -43,19 +44,19 @@ public void testScript() throws ScriptException {
                         "if(result.name != \"UCM\") {\n" +
                         "    throw \"wrong name: \" + result.name;\n" +
                         "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(), injector.getInstance(ClothoRealm.class)));
         script = "result = clotho.get(newobjid);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class)));
         script = "wrapper = [];\n" +
                  "wrapper[0] = newobjid;\n" +
                  "result = clotho.get(wrapper);\n" +
                  "if(result.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + result.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class)));
         
         script = "var listy = clotho.query({\"city\" : \"Baltizam\"});\n" +
                  "if (listy.length != 1) {\n" +
@@ -65,7 +66,7 @@ public void testScript() throws ScriptException {
                  "if(existing.name != \"UCM\") {\n" +
                  "    throw \"wrong name: \" + existing.name;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions()));
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class)));
         
         script = "var args = {};\n" +
                  "args.id = newobjid;\n" +
@@ -74,7 +75,7 @@ public void testScript() throws ScriptException {
                  "if(result.city != \"Paris\") {\n" +
                  "    throw \"wrong city: \" + result.city;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class))); 
         
         script = "existing.name = \"Shamoo University\"; \n" +
                  "existing.city = \"Whaletown\"; \n" +
@@ -86,20 +87,20 @@ public void testScript() throws ScriptException {
                  "if(result.state != \"NR\") {\n" +
                  "    throw \"wrong state: \" + result.state;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class))); 
         
         script = "var finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=1) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class))); 
         
         script = "clotho.destroy(newobjid);\n" +
                  "finalSet = clotho.query({\"city\" : \"Whaletown\"});\n" +
                  "if(finalSet.length!=0) {\n" +
                  "   throw \"wrong number of results: \" + finalSet.size;\n" +
                  "}";
-        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions())); 
+        mind.runCommand(script, new ScriptAPI(mind, persistor, router, "", new MessageOptions(),injector.getInstance(ClothoRealm.class))); 
     }
     
     @Test

@@ -21,7 +21,7 @@ public class ScriptEngineTest {
     MetaEngine engine;
     
     public ScriptAPI genAPI(){
-        return new ScriptAPI(null, TestUtils.getDefaultTestInjector().getInstance(Persistor.class), null, null, null);
+        return new ScriptAPI(null, TestUtils.getDefaultTestInjector().getInstance(Persistor.class), null, null, null,null);
     }
     
     @Before

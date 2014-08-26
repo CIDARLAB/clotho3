@@ -4,6 +4,7 @@
  */
 package org.clothocad.core.util;
 
+import com.google.inject.Injector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +24,8 @@ import org.clothocad.core.persistence.Persistor;
 public class TestRouter extends Router {
 
     @Inject
-    public TestRouter(Persistor persistor) {
-        super(persistor);
+    public TestRouter(Persistor persistor,Injector inject) {
+        super(persistor,inject);
     }
 
     @Override
