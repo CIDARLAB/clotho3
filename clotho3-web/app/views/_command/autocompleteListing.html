@@ -1,7 +1,7 @@
 <ul class="clothoAutocompleteListing"
     ng-style="{display: isVisible() ? 'block' : 'none'}">
   <li
-      ng-repeat="match in autocompletions"
+      ng-repeat="match in autocompletions track by match.id"
       ng-class="{'active' : isActive($index) }"
       ng-mouseenter="selectActive($index)">
     <div clotho-autocomplete-match

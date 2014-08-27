@@ -89,13 +89,12 @@ angular.module('clotho.interface')
 
     return {
       restrict: 'EA',
-	    scope: {},
       link: function postLink(scope, element, attrs) {
 	      if (attrs.wiki) {
 		      scope.$watch(attrs.wiki, function (newval, oldval) {
-			      if (oldval != newval)
-				      element.html(wiki2html(newval));
-		      })
+			      console.log(newval);
+			      element.html(wiki2html(newval));
+		      });
 	      } else {
 		      element.html(wiki2html(element.text()));
 	      }

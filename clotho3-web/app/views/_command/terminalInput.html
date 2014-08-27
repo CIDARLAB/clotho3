@@ -1,9 +1,28 @@
-<input type="text"
-       clotho-autocomplete
-       auto-grow
-       ng-model="query"
-       ng-trim="false"
-       class="clothoAutocomplete"
-       placeholder="{{placeholder}}"
-       token-collection="tokenCollection"
-       autocomplete-on-select="">
+<div class="clothoTokenizerWrap">
+  <div class="clothoTokenizerInputWrap" ng-click="focusInput()" ng-class="{'focused' : hasFocus}">
+    <div class="clothoIcon"></div>
+
+    <span ng-bind="soFar"></span>
+
+    <div class="clothoTokenizerAutocompleteWrap clothoAutocompleteWrap">
+      <input type="text"
+             ng-model="query"
+             class="clothoAutocomplete"
+             clotho-reference-autocomplete
+             auto-grow
+             ng-trim="false"
+             placeholder="type query"
+             autocomplete-has-focus="hasFocus"
+             autocomplete-on-select="selectAutocompletion($item, $query)"
+             autocomplete-on-backout="trimSoFar()">
+    </div>
+  </div>
+  <span class="input-group-btn">
+    <button type="button"
+            class="btn btn-default"
+            ng-click="submit()">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </button>
+  </span>
+</div>
+

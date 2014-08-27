@@ -10,33 +10,10 @@
     <div class="panel-heading">Reference parsing + listening</div>
 
     <div class="panel-body">
-      <clotho-terminal-input></clotho-terminal-input>
-
+      <div class="col-sm-6">
+        <clotho-terminal-input></clotho-terminal-input>
+      </div>
     </div>
-
-    <div class="panel-body">
-
-      <p>sample text:</p>
-
-      <p ng-bind="sample"></p>
-
-      <p>Parsing sample to wiki</p>
-
-      <p ng-bind="sample | clothoReferenceParse:'wiki'"></p>
-
-      <p>and parsed wiki to html</p>
-
-      <div wiki="sample"></div>
-
-      <p>Note that this doesn't get compiled:</p>
-
-      <p ng-bind-html="sample | clothoReferenceParse:'html'"></p>
-
-      <p>Using the directive should parse:</p>
-
-      <div clotho-reference-parser="sample"></div>
-    </div>
-
   </div>
 
 </div>
