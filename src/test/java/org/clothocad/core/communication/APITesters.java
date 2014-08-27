@@ -156,11 +156,16 @@ public class APITesters {
         logincred.put("username", "vprashant1@gmail.com");
         logincred.put("password", "mypassword");
         
+        Map<String,String> logincred2 = new HashMap<>();
+        logincred2.put("username", "vprashant1@live.com");
+        logincred2.put("password", "mypassword");
+        
         
         sendMessage(new Message(Channel.createUser, credentials, "1"), connection);
         sendMessage(new Message(Channel.createUser, credentials2, "2"), connection);
         
         sendMessage(new Message(Channel.login, logincred, "3"), connection);
+        sendMessage(new Message(Channel.login, logincred2, "4"), connection);
         
         //System.out.println("Created");
         /*Map<String, Object> operson = persistor.getAsJSON(new ObjectId("clotho.developer.maxbates"));

@@ -303,11 +303,9 @@ public class ServerSideAPI {
        
         if(!personexists)
         {
-            Map<String, Object> newperson = new HashMap();
-            newperson.put("schema", "org.clothocad.model.Person");
-            newperson.put("rawPassword", password);
-            newperson.put("id", username);
-            newperson.put("emailAddress", username);
+            Person newperson = new Person (username);
+            newperson.setEmailAddress(username);
+            newperson.setId(new ObjectId(username));
             persistor.save(newperson);
             realm.addAccount(username, password);
             say("New user " + username +" created.", Severity.SUCCESS);

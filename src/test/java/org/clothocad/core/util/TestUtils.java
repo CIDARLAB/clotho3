@@ -104,10 +104,10 @@ public class TestUtils {
     public static void setupAuthoringTestData(Persistor persistor)
     {
         importTestJSON(persistor);
-        Person newperson = new Person("testuser", "password");
+        Person newperson = new Person("testuser");
         Map<String, Object> newperson2 = new HashMap();
         newperson2.put("displayname", "maxbates");
-        newperson2.put("rawPassword", "password2");
+        //newperson2.put("rawPassword", "password2");
         newperson2.put("description", "Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.");
         newperson2.put("current", true);
         newperson2.put("currentLocation", "Oakland, CA");
@@ -139,14 +139,14 @@ public class TestUtils {
 
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
-        Person person = new Person("Test Person",null);
+        Person person = new Person("Test Person");
         lab.setPI(person);
         
         
-                Person newperson = new Person("testuser", "password");
+        Person newperson = new Person("testuser");
         Map<String, Object> newperson2 = new HashMap();
         newperson2.put("displayname", "maxbates");
-        newperson2.put("rawPassword", "password2");
+        //newperson2.put("rawPassword", "password2");
         newperson2.put("description", "Maxwell Bates graduated from UC Berkeley in 2012 with a B.S. in Bioengineering and focus on Genetic Engineering. He began working on the Clotho project in the summer prior to his graduation, and has been on board as the primary front end developer since. Prior to Clotho, he worked with Dr. Eric Topol at the Scripps Translational Science Institute. His interests revolve around the empowerment of individuals through online education, and the empowerment of patients toward personalizing medicine.");
         newperson2.put("current", true);
         newperson2.put("currentLocation", "Oakland, CA");

@@ -39,10 +39,10 @@ public class Router {
     protected ClothoRealm realm;
     
     @Inject
-    public Router(Persistor persistor, Injector inject) {
+    public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
         this.persistor = persistor;
-        this.realm = inject.getInstance(ClothoRealm.class);
+        this.realm = realm;
         
     }
 

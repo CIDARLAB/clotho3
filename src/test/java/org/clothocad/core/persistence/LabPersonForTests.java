@@ -59,7 +59,7 @@ public class LabPersonForTests extends Person {
     //valid or nonexistent email
     public LabPersonForTests( String displayname, Lab alab, String rawPassword ) {
         //XXX:  Do people have authors?
-        super(displayname, null);
+        super(displayname);
         lab = alab;
         //changePassword( rawPassword );
         myCollection = new Collection();
