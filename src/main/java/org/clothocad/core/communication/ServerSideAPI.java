@@ -24,6 +24,7 @@
 package org.clothocad.core.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.google.inject.Injector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +65,7 @@ import org.clothocad.core.execution.subprocess.SubprocessExec;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.ReflectionUtils;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
@@ -94,17 +97,19 @@ public class ServerSideAPI {
     private final String requestId;
     private final Mind mind;
     private final MessageOptions options;
+    private final ClothoRealm realm;
 
-    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
-        this(mind, persistor, router, requestId, new MessageOptions());
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId,ClothoRealm realm) {
+        this(mind, persistor, router, requestId, new MessageOptions(), realm);
     }    
     
-    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options) {
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options, ClothoRealm realm) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
         this.router = router;
         this.options = options;
+        this.realm = realm;
     }
 
     public final List<Map> autocomplete(String userText){
@@ -283,28 +288,66 @@ public class ServerSideAPI {
             Interpreter.get().learnNative(userInput, JSON.mappify(command));
         }
     }
+    public final boolean createuser(String username, String password, String displayname)
+    {
+        boolean personexists = false;
+        Collection<Person> personlist = persistor.getAll(Person.class);
+            for(Person p : personlist)
+            {
+                if(p.getId().toString().equals(username))
+                {
+                    personexists = true;
+                    break;
+                }
+            }
+       
+        if(!personexists)
+        {
+            Map<String, Object> newperson = new HashMap();
+            newperson.put("schema", "org.clothocad.model.Person");
+            newperson.put("displayname", displayname);
+            newperson.put("rawPassword", password);
+            newperson.put("id", username);
+            newperson.put("emailAddress", username);
+            persistor.save(newperson);
+            realm.addAccount(username, password);
+            say("New user " + username +" created.", Severity.SUCCESS);
+            return true;
+        }
+        else
+        {
+            say("User " + username +" exists.", Severity.FAILURE);
+            return false;
+        }
 
+    }
     public final Object login(String username, String password) {
         ObjectId userId = null;
         try {
             SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
-           
-            
                     
             // Map<String, Object> 
-            say("Welcome, " + username, Severity.SUCCESS);
-            log.info("User {} logged in", username);
+          
             
             
             
             Collection<Person> personlist = persistor.getAll(Person.class);
             for(Person p : personlist)
             {
-                if(p.getDisplayName().equals(username))
+                if(p.getId().toString().equals(username))
                 {
                     userId = p.getId();
                 }
             }
+            if(userId == null)
+            {
+                say("Error. User:"+username+" does not exist in database. Please try creating the user." , Severity.FAILURE);
+                return false;
+            }
+            
+            
+            say("Welcome, " + username, Severity.SUCCESS);
+            log.info("User {} logged in", username);
             return userId;
             
 
@@ -1125,6 +1168,6 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
     }
 
     private ScriptAPI getScriptAPI() {
-        return new ScriptAPI(mind, persistor, router, requestId, options);
+        return new ScriptAPI(mind, persistor, router, requestId, options, realm);
     }
 }

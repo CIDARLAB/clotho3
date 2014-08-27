@@ -31,6 +31,7 @@ import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -68,7 +69,7 @@ public class ConverterTest {
         persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
         mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, null);
+        api = new ServerSideAPI(mind, persistor, router, null,injector.getInstance(ClothoRealm.class));
         persistor.connect();
         mind.setConnection(new TestConnection("test"));
     }

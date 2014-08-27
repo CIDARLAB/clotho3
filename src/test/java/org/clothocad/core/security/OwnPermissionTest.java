@@ -52,7 +52,7 @@ public class OwnPermissionTest {
         injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         //ServerSideAPI api = new DummyAPI(persistor);
-        api = new ServerSideAPI(null, persistor, null, id);
+        api = new ServerSideAPI(null, persistor, null, id, injector.getInstance(ClothoRealm.class));
     }
 
     /**

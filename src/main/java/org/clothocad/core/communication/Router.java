@@ -1,6 +1,7 @@
 package org.clothocad.core.communication;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Injector;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -15,16 +16,16 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
 import static org.clothocad.core.communication.Channel.submit;
-
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 
 @Slf4j
@@ -33,11 +34,16 @@ public class Router {
 
     @Getter
     protected Persistor persistor;
-   
+    
+    @Getter
+    protected ClothoRealm realm;
+    
     @Inject
-    public Router(Persistor persistor) {
+    public Router(Persistor persistor, Injector inject) {
         minds = new HashMap<>();
         this.persistor = persistor;
+        this.realm = inject.getInstance(ClothoRealm.class);
+        
     }
 
     // send message    
@@ -62,7 +68,7 @@ public class Router {
         } else {
             mind = getMind(connection);
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()));
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()),realm);
 
         Object data = request.getData();
         
@@ -89,6 +95,12 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
+                case createuser:
+                    Map newusermap = (Map) data;
+                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString(), newusermap.get("displayname").toString());
+                    break;
+                
+                
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();

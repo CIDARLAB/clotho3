@@ -17,15 +17,16 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.TestUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -49,7 +50,7 @@ public class ServerAPITest {
         persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
         mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, null);
+        api = new ServerSideAPI(mind, persistor, router, null, injector.getInstance(ClothoRealm.class));
         persistor.connect();
         mind.setConnection(new TestConnection("test"));
     }

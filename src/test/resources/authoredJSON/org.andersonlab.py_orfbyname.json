@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from ORFByName import run",
+  "name" : "ORFByName",
+  "id" : "org.andersonlab.py_orfbyname",
+  "description" : "Searches for a protein by name and returns the ORF as a Polypeptide",
+  "args" : [ {
+    "type" : "array",
+    "name" : "arg0"
+  }]
+}

@@ -8,6 +8,7 @@ public enum Channel {
     recent,  //Return N most recently used sharables
     submit, //Run this sloppy or concrete command
     clear, //Replace the scriptengine behind mind with a fresh version
+    createuser, //Create a new user account for me.
     login, //Log me into Clotho on this client with this login/password
     logout, //Log me out of Clotho
     changePassword, //Change my password to this new value
@@ -31,7 +32,7 @@ public enum Channel {
     destroy, //Delete a sharable with this uuid
     query, //Find all Sharables that satisfy this formally-expressed constraint
     
-    convert,
+    convert, //Convert one data object from one type to another. 
     
     getAll,
     createAll,
