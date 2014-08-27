@@ -288,7 +288,7 @@ public class ServerSideAPI {
             Interpreter.get().learnNative(userInput, JSON.mappify(command));
         }
     }
-    public final boolean createuser(String username, String password, String displayname)
+    public final boolean createuser(String username, String password)
     {
         boolean personexists = false;
         Collection<Person> personlist = persistor.getAll(Person.class);
@@ -305,7 +305,6 @@ public class ServerSideAPI {
         {
             Map<String, Object> newperson = new HashMap();
             newperson.put("schema", "org.clothocad.model.Person");
-            newperson.put("displayname", displayname);
             newperson.put("rawPassword", password);
             newperson.put("id", username);
             newperson.put("emailAddress", username);
@@ -324,19 +323,17 @@ public class ServerSideAPI {
     public final Object login(String username, String password) {
         ObjectId userId = null;
         try {
-            SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
-                    
+            //SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
             // Map<String, Object> 
-          
-            
-            
-            
             Collection<Person> personlist = persistor.getAll(Person.class);
             for(Person p : personlist)
             {
                 if(p.getId().toString().equals(username))
                 {
                     userId = p.getId();
+                    
+                    SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
+                    break;
                 }
             }
             if(userId == null)

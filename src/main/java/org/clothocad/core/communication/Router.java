@@ -95,9 +95,9 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
-                case createuser:
+                case createUser:
                     Map newusermap = (Map) data;
-                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString(), newusermap.get("displayname").toString());
+                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
                     break;
                 
                 

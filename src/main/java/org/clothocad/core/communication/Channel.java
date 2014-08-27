@@ -3,12 +3,13 @@ package org.clothocad.core.communication;
 public enum Channel {
 
 //HUMAN INTERACTION
+//HUMAN INTERACTION
     autocomplete, //Return potential commands that start with this substring
     autocompleteDetail, //Return the metadata for a Sharable
     recent,  //Return N most recently used sharables
     submit, //Run this sloppy or concrete command
     clear, //Replace the scriptengine behind mind with a fresh version
-    createuser, //Create a new user account for me.
+    createUser, //Create a new user account for me.
     login, //Log me into Clotho on this client with this login/password
     logout, //Log me out of Clotho
     changePassword, //Change my password to this new value
