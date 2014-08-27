@@ -166,6 +166,27 @@ function generateClothoAPI() {
 			return fn.emitSubCallback('logout', '', logoutCallback);
 		};
 
+	/**
+	 * @name Clotho.createUser
+	 *
+	 * @param username
+	 * @param password
+	 *
+	 * @description
+	 * Create a new user account with Clotho. username must be the ID of an associated Person sharable (probably email address)
+	 *
+	 * @returns {Promise} result of creating user
+	 */
+	var createUser = function clothoAPI_createUser(username, password) {
+		var cred = {username: username, password: password};
+
+		function createUserCallback(loginResult) {
+			//todo - login as that user
+		}
+
+		return fn.emitSubCallback('createUser', cred, createUserCallback);
+	};
+
     /**
      * @name Clotho.get
      *
@@ -351,22 +372,6 @@ function generateClothoAPI() {
      */
     var trigger = function clothoAPI_trigger(channel, data) {
         PubSub.trigger(channel, data);
-    };
-
-
-    /**
-     * @name Clotho.silence
-     *
-     * @param {string} reference Reference used when registering listeners. Will destroy all listeners associated with this reference.
-     * Passing "all" destroys all listeners.
-     *
-     * @description
-     * Destroys listener functions associated with a given reference
-     *
-     */
-	   //todo - deprecate
-    var silence = function clothoAPI_silence(reference) {
-        PubSub.destroy(reference);
     };
 
     /**
