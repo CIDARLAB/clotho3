@@ -768,6 +768,7 @@ function generateClothoAPI() {
         //api
         login : login,
         logout : logout,
+        createUser : createUser,
         get : get,
         set : set,
         query : query,
@@ -791,7 +792,6 @@ function generateClothoAPI() {
         //toolkit
         watch : watch,
         listen : listen,
-        silence : silence,
         trigger: trigger,
         emit : emit,
         broadcast : broadcast,

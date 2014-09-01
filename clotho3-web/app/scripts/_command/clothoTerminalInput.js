@@ -1,5 +1,6 @@
 angular.module('clotho.commandbar')
-	.directive('clothoTerminalInput', function () {
+	//todo - allow delegation of options in clotho-reference-input
+	.directive('clothoTerminalInput', function (Clotho, ClothoReferenceDelimiter) {
 
 		return {
 			restrict: 'E',
@@ -13,15 +14,8 @@ angular.module('clotho.commandbar')
 					element.find('[clotho-reference-autocomplete]').focus();
 				};
 
-				scope.soFar = '';
-
-				scope.selectAutocompletion = function (item, query) {
-					console.log('you selected for ' + query, item);
-					scope.soFar += query;
-				};
-
-				scope.trimSoFar = function () {
-					scope.soFar = scope.soFar.substring(0, scope.soFar.length - 1);
+				scope.submit = function () {
+					Clotho.submit(scope.query);
 				}
 			}
 		};

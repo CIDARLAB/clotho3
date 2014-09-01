@@ -310,7 +310,6 @@ angular.module('clotho.tokenizer')
 					}
 					//escape
 					else if (evt.which === 27) {
-						console.log('escape pressed');
 						//if no query or autcomplete not currently open, blur
 						escapeHandler();
 					}

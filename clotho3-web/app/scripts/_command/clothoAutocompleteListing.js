@@ -12,6 +12,7 @@ angular.module('clotho.tokenizer')
 				query:'=',
 				active:'=',
 				hasFocus: '=',
+				triggerHide: '=',
 				select:'&',
 				passedPlacement : '@?',
 				forceVisible : '@?'
@@ -24,12 +25,8 @@ angular.module('clotho.tokenizer')
 					if (scope.forceVisible === true || scope.forceVisible === false) {
 						return scope.forceVisible;
 					} else {
-						return scope.hasFocus && scope.autocompletions.length;
+						return scope.hasFocus && !scope.triggerHide && scope.autocompletions.length;
 					}
-				};
-
-				scope.isOpen = function () {
-					return scope.hasFocus && scope.matches.length > 0;
 				};
 
 				scope.isActive = function (matchIdx) {
