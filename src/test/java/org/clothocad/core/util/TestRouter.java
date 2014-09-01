@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import org.clothocad.core.communication.Channel;
+import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 
 /**
  *
@@ -24,8 +25,8 @@ import org.clothocad.core.persistence.Persistor;
 public class TestRouter extends Router {
 
     @Inject
-    public TestRouter(Persistor persistor,Injector inject) {
-        super(persistor,inject);
+    public TestRouter(Persistor persistor,ClothoRealm realm) {
+        super(persistor,realm);
     }
 
     @Override

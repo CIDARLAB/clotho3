@@ -39,10 +39,10 @@ public class Router {
     protected ClothoRealm realm;
     
     @Inject
-    public Router(Persistor persistor, Injector inject) {
+    public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
         this.persistor = persistor;
-        this.realm = inject.getInstance(ClothoRealm.class);
+        this.realm = realm;
         
     }
 
@@ -95,9 +95,9 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
-                case createuser:
+                case createUser:
                     Map newusermap = (Map) data;
-                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString(), newusermap.get("displayname").toString());
+                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
                     break;
                 
                 
