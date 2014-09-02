@@ -40,23 +40,24 @@ public class RestApi extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, 
-    	HttpServletResponse response) throws ServletException, IOException {
+        HttpServletResponse response) throws ServletException, IOException {
 
-    	response.setContentType("application/json");
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
 
-    	String[] pathID = request.getPathInfo().split("/");
-    	
-    	if (pathID.length == 0) {
-    		response.setStatus(HttpServletResponse.SC_OK);
-    		response.getWriter().write("{\"greeting\": \"Hello Friend!\"}");
-    		return;
-    	}
+        String[] pathID = request.getPathInfo().split("/");
+
+        if (pathID.length == 0) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write("{\"greeting\": \"Hello Friend!\"}");
+            return;
+        }
 
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
 
         login(unamePass);
 
-    	String id = pathID[1];
+        String id = pathID[1];
 
         if (id.equals("query")) {
             Map<String, String> p = getRequestBody(request.getReader());
@@ -142,9 +143,9 @@ public class RestApi extends HttpServlet {
         Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
-        	response.getWriter().write("{\"Required\": \"new data to create item with\"}");
-        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        	return;
+            response.getWriter().write("{\"Required\": \"new data to create item with\"}");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
         }
 
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
@@ -195,9 +196,9 @@ public class RestApi extends HttpServlet {
         Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
-        	response.getWriter().write("{\"Required\": \"new data to set item to\"}");
-        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        	return;
+            response.getWriter().write("{\"Required\": \"new data to set item to\"}");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
         }
 
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
@@ -241,20 +242,20 @@ public class RestApi extends HttpServlet {
     }
 
     private void login(String[] userPass) {
-    	if (userPass != null) {
-    	    loginMap = new HashMap<String, String>();
-    	    loginMap.put("username", userPass[0]);
-    	    loginMap.put("password", userPass[1]);
-    	    loginMessage = new Message(Channel.login, loginMap, null, null);
-    	    this.router.receiveMessage(this.rc, loginMessage);
-    	}
+        if (userPass != null) {
+            loginMap = new HashMap<String, String>();
+            loginMap.put("username", userPass[0]);
+            loginMap.put("password", userPass[1]);
+            loginMessage = new Message(Channel.login, loginMap, null, null);
+            this.router.receiveMessage(this.rc, loginMessage);
+        }
     }
 
     private void logout(String[] userPass) {
-    	if (userPass != null) {
-    	    logoutMessage = new Message(Channel.logout, loginMap, null, null);
-    	    this.router.receiveMessage(this.rc, logoutMessage);
-    	}
+        if (userPass != null) {
+            logoutMessage = new Message(Channel.logout, loginMap, null, null);
+            this.router.receiveMessage(this.rc, logoutMessage);
+        }
     }
 
     private Map<String, String> getRequestBody(BufferedReader reader) {
@@ -274,7 +275,7 @@ public class RestApi extends HttpServlet {
         } catch (IOException ie) {
             map = new HashMap<String, String>();
         } catch (NullPointerException ne) {
-        	map = new HashMap<String, String>();
+            map = new HashMap<String, String>();
         }
 
         return map;
