@@ -14,6 +14,24 @@
         <clotho-terminal-input></clotho-terminal-input>
       </div>
     </div>
-  </div>
 
+    <hr>
+
+    <div class="panel-body"
+         style="position: relative;"
+         ng-init="myModel = 'hey @clotho.testuser.maxbates how are you? and you @maxbates@gmail.com ?'">
+      <textarea clotho-reference-autocomplete
+                class="form-control"
+                ng-model="myModel"
+                ng-trim="false"
+                placeholder="enter a bunch of text"
+                autocomplete-trigger="true"
+                autocomplete-trigger-include="true"
+                autocomplete-popup-position="topRight"></textarea>
+    </div>
+
+    <div class="panel-body" style="position: relative;">
+      <div clotho-reference-parser="myModel"></div>
+    </div>
+  </div>
 </div>

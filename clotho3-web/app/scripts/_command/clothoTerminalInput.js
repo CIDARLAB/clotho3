@@ -1,6 +1,6 @@
 angular.module('clotho.commandbar')
 	//todo - allow delegation of options in clotho-reference-input
-	.directive('clothoTerminalInput', function (Clotho, ClothoReferenceDelimiter) {
+	.directive('clothoTerminalInput', function (Clotho, ClientAPI, ClothoReferenceDelimiter) {
 
 		return {
 			restrict: 'E',
@@ -15,8 +15,22 @@ angular.module('clotho.commandbar')
 				};
 
 				scope.submit = function () {
-					Clotho.submit(scope.query);
-				}
+					ClientAPI.say({
+						from: 'client',
+						channel: 'submit',
+						class: 'info',
+						text: scope.query
+					});
+					Clotho.submit(scope.query).then(function (response) {
+						ClientAPI.say({
+							from: 'server',
+							channel: 'submit',
+							class: 'success',
+							text: response
+						});
+						scope.query = '';
+					});
+				};
 			}
 		};
 	});

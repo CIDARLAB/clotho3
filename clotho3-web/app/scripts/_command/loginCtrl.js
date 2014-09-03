@@ -144,8 +144,14 @@ angular.module('clotho.commandbar')
 			//make sure person exists
 			Clotho.get($scope.cred.personId)
 			.then(function (retrieved) {
-				//todo
 
+				//try to create
+				Clotho.createUser($scope.cred.username, $scope.cred.password)
+				.then(function (response) {
+					//todo
+				}, function (err) {
+					//todo
+				});
 			}, function (err) {
 				$scope.notification = {
 					class: "alert-danger",
