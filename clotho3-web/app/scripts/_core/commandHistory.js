@@ -6,14 +6,12 @@
  *
  * Used by terminal and activity log
  *
- * //todo - API should feed through this... decorate API or PubSub
+ * //todo - move outside core and decorate API or PubSub? Hard because each function should post different things
  *
- * //todo - CommandBar should use this
- * //todo - handle publishing on PubSub (clotho.trigger)
- * //todo - handle subscribing so can easily post to it (clotho.listen)
+ * //todo - maybe create PubSub listener + publisher
  */
-angular.module('clotho.foundation')
-.service('ClothoCommandHistory', function(Clotho, $filter) {
+angular.module('clotho.core')
+.service('ClothoCommandHistory', function(PubSub, $filter) {
 
 		var entries = [],
 			lastView = Date.now();
@@ -33,8 +31,21 @@ angular.module('clotho.foundation')
 			entries.unread = (findNewerMessages(date)).length;
 		}
 
-		//expects a well-formed message e.g. from Clotho.say()
+		/*
+		expects a well-formed message e.g. from ClientAPI.say(), of form:
+
+		 {
+			 "text" : "Welcome to Clotho!",
+			 "from" : "server",
+			 "class" : "success",
+			 "channel" : "submit"
+			 "timestamp" : Date.now()
+		 }
+		*/
 		function addMessage (data) {
+			data = angular.extend({
+				"timestamp" : Date.now()
+			}, data);
 			entries.unshift(data);
 			setUnreadCount();
 		}
@@ -49,11 +60,10 @@ angular.module('clotho.foundation')
 
 		//listeners
 
-		//todo - change event name
-		Clotho.listen("activityLog", addMessage, 'ClothoCommandHistory');
-
 		return {
 			entries : entries,
+
+			addMessage : addMessage,
 
 			getLastView : function () {
 				return lastView;
@@ -64,7 +74,7 @@ angular.module('clotho.foundation')
 			},
 
 			toggleTerminal : function () {
-				return Clotho.trigger('toggleTerminalActive');
+				return PubSub.trigger('toggleTerminalActive');
 			}
 		}
 
