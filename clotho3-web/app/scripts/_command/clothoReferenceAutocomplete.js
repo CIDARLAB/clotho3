@@ -8,12 +8,35 @@ angular.module('clotho.tokenizer')
  *
  * uses directives clothoAutocompleteListing to create the listing
  *
+ * todo - we are trying to use the same element in different contexts:
+ * 1) command bar - selections should tokenize into tokens, saved outside the input. This flow is easily accomodated - see command bar implementation.
+ *
+ * 2) terminal - autocomplete should only popup on trigger, and selection should add to model. delimiter should not be in text. Ideally, only the input would change - but this isn't possible. This requires we only autocomplete the last word (i.e. break up by spaces) - which introduces ambiguity, but allows for the most natural flow.
+ *
+ * 3) others - several options are provided to allow flexibility, but because there are so many, it will take a knowledgeable coder to re-wrap this.
+ *
+ *
+ * ATTRIBUTES
+ *
  * bindings
  *
- * @attr ngModel {Model=} binding for query. optional (e.g. just use callback)
- * @attr forceVisible {Boolean=} if true, force open. if false, force hidden.
- * @attr autocompletions {Array=} Bind to the list of autocompletions
- * @attr autocompleteHasFocus {Boolean=} Bind to whether the input has focus
+ * @attr ngModel {Model=}
+ * binding for query. optional (e.g. just use callback). Will tie into normal ng-model behavior on the input field.
+ * @attr autocompleteTrigger {Boolean}
+ * Keycode to trigger the autocomplete. Autocomplete will be hidden if this attribute is present, until the keycode is typed
+ * @attr autocompleteTriggerInclude {Boolean}
+ * Whether the trigger in autocompleteTrigger should be included in the text. Set to true to enable.
+ * @attr autocompleteClearOnSelect {Boolean}
+ * When `false`, query will not be reset when there is a selection. defaults to true.
+ * @attr autocompleteAddOnSelect {Boolean=}
+ * when true, will add the ID of the autocompletion to the input (will strip last word). True will override autocompleteClearOnSelect
+ * @attr forceVisible {Boolean=}
+ * Force the visibility of the autocomplete
+ * if true, force open. if false, force hidden.
+ * @attr autocompletions {Array=}
+ * Bind to the list of autocompletions
+ * @attr autocompleteHasFocus {Boolean=}
+ * Bind to whether the input has focus
  *
  * event
  *
@@ -23,6 +46,10 @@ angular.module('clotho.tokenizer')
  * when query changes. passed $query (new query string) and $old (old query string)
  * @attr autocompleteOnKeydown {Function=}
  * passed $event and $keycode
+ * @attr autocompleteOnBackout {Function=}
+ * Called when type backspace and query is empty
+ * @attr autocompleteOnEnter {Function=}
+ * Called when type enter, and not selecting an autocompletion
  *
  * style config
  *
@@ -30,8 +57,9 @@ angular.module('clotho.tokenizer')
  * Position passed to sharablePopupPosition
  * @attr autocompleteWaitTime {Number}
  * Milliseconds before show autocomplete
- * @attr autocompleteTrigger {Number} Keycode for triggering autocomplete. Defaults to reference delimiter in ClothoReferenceDelimiter //todo
- * @attr autocompleteAllowSpaces {Boolean=} Allow spaces in query. This may lead to weird autocompleting behavior. By default, a space will select the current token (or first if none selected). //todo
+ * @attr autocompleteDelimiter {Number}
+ * Keycode for triggering autocomplete selection. This is not the delimiter for trigger the autocomplete - works in a similar way to hitting enter. Pressing this key will automatically select the first autocompletion, triggering autocompleteOnSelect.  If none is provided, tokens will only be broken when manually selecting a dropdown suggestion. Will not end if string begins with a single or double quote.
+ * Note that there may be weird behavior if you allow autocomplete for strings with spaces
  *
  * @example //todo
  <input type="text"
@@ -45,37 +73,39 @@ angular.module('clotho.tokenizer')
  */
 	.directive('clothoReferenceAutocomplete', function ($q, $parse, $timeout, $compile, $filter, $document, Clotho, ClothoReferenceDelimiter) {
 
-		//              backspace tab enter   escape  left  up  right down
-		var HOT_KEYS = [8,        9,  13,     27,     37,   38, 39,   40];
 		const SPACE_KEY = 32,
 					ENTER_KEY = 13,
 					ESCAPE_KEY = 27;
 
-		var tokenDelimiterCode = SPACE_KEY;
-		var tokenDelimiterValue = ' ';
+		//              backspace tab enter   escape  left  up  right down
+		var HOT_KEYS = [8,        9,  13,     27,     37,   38, 39,   40];
 
-		//todo - incorporate reference delimiter
+		HOT_KEYS.push(ClothoReferenceDelimiter.keycode);
 
 		return {
 			restrict: 'A',
+			require: '?ngModel',
 			scope: {
-				query: '=?ngModel',
-				autocompleteTrigger: '@?',
+				query: '=ngModel',
+				autocompleteTrigger: '=?',
+				autocompleteTriggerInclude: '=?',
+				autocompleteClearOnSelect: '=?',
+				autocompleteAddOnSelect: '=?',
 				forceVisible: '=?',
 				autocompletions : '=?',
 				autocompleteHasFocus : '=?',
 				autocompleteOnSelect: '&?',
 				autocompleteOnKeydown : '&?',
 				autocompleteOnQuery : '&?',
+				autocompleteOnBackout : '&?',
+				autocompleteOnEnter : '&?',
+				autocompleteDelimiter : '@?',
 				autocompletePopupPosition: '@?',
-				autocompleteAllowSpaces : '@?',
 				autocompleteWaitTime : '@?'
 			},
 			link: function clothoAutocompleteLink(scope, element, attrs, ngModelCtrl) {
 
-				if (element[0].nodeName !== 'INPUT') {
-					return;
-				}
+				var localHotkeys = angular.copy(HOT_KEYS);
 
 				//add attributes to text area
 				element.attr({
@@ -96,16 +126,9 @@ angular.module('clotho.tokenizer')
 					"has-focus": 'autocompleteHasFocus',
 					query: 'query',
 					"force-visible" : "{{forceVisible}}",
+					"trigger-hide" : 'triggerHide',
 					"passed-placement" : "{{autocompletePopupPosition}}"
 				});
-
-				/* set up scope values */
-				
-				//whether the input has focus
-				scope.autocompleteHasFocus = scope.autocompleteHasFocus || false;
-				//query needs to have value, whether passed in or empty for init
-				scope.query = scope.query || '';
-
 
 				function resetQuery () {
 					scope.query = '';
@@ -117,10 +140,13 @@ angular.module('clotho.tokenizer')
 				}
 
 				function resetActive () {
-					resetQuery();
+					//uncomment to delete the current query on reset
+					//resetQuery();
 					resetMatches();
-					scope.autocompleteHasFocus = false;
-					scope.$digest();
+					//wrap in apply so propagates to $parent, and will $digest down
+					scope.$apply(function () {
+						scope.autocompleteHasFocus = false;
+					});
 				}
 
 				function checkInQuote (query) {
@@ -147,41 +173,85 @@ angular.module('clotho.tokenizer')
 						if ( !results || !results.length ) {
 							resetMatches();
 						} else {
+							scope.activeIdx = -1;
 							scope.autocompletions = $filter('limitTo')(results, 10);
 						}
 					});
 				};
 
-				//select current one, otherwise select first
-				scope.select = function (activeIdx) {
+				function breakdownQuery (query) {
+					var last = '',
+							rest = '';
 
-					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : scope.autocompletions[0];
-
-					if (selected) {
-						scope.autocompleteOnSelect({
-							$item: selected,
-							$query : scope.query
-						});
+					if (!angular.isEmpty(query)) {
+						var words = query.split(' ');
+						last = words.pop();
+						rest = words.length ? words.join(' ') : '';
 					}
 
-					resetQuery();
+					return {
+						$query: query,
+						$last: last,
+						$rest : rest
+					};
+				}
+
+				scope.setQueryString = function (string) {
+					//if string is empty, just get the current contents
+					//example would be paste, after timeout just check contents of element
+
+					var queryString = angular.isEmpty(string) ? scope.query : string;
+
+					console.log(queryString);
+
+					scope.query = queryString;
+					//note - for some reason, just calling this isn't updating scope.query properly..
+					/*if (ngModelCtrl) {
+						ngModelCtrl.$setViewValue(queryString);
+					}*/
+
+					resetMatches();
+				};
+
+				// select current selected one, otherwise null
+				scope.select = function (activeIdx) {
+
+					var selected = activeIdx > -1 ? scope.autocompletions[activeIdx] : null;
+					var breakdown = breakdownQuery(scope.query);
+
+					scope.autocompleteOnSelect(angular.extend({
+						$item: selected
+					}, breakdown));
+
+					if (scope.autocompleteAddOnSelect === true) {
+						scope.setQueryString(breakdown.$rest +
+							(breakdown.$rest.length ? ' ' : '') +
+							(selected.id ? selected.id : selected));
+					} else if (scope.autocompleteClearOnSelect !== false) {
+						resetQuery();
+					}
 
 					//return focus to the input element if a match was selected via a mouse click event
-					//need scope to update whether focused
 					// use timeout to avoid $rootScope:inprog error
 					$timeout(function() {
-						//reset matches in here so dropdown is within element (for click listener)
 						resetMatches();
 						element[0].focus();
 					}, 0, false);
 				};
+
+				/* QUERY CHANGE LISTENER */
 
 				//Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later
 				var timeoutPromise;
 
 				scope.$watch('query', function (newval, oldval) {
 
-					scope.autocompleteOnQuery({$query: newval, $old : oldval});
+					var breakdown = breakdownQuery(scope.query),
+							toAutocomplete = breakdown.$last;
+
+					scope.autocompleteOnQuery(angular.extend({
+						$old : oldval
+					}, breakdown));
 
 					if (!!newval && newval.length) {
 						scope.autocompleteHasFocus = true;
@@ -191,10 +261,10 @@ angular.module('clotho.tokenizer')
 								$timeout.cancel(timeoutPromise);//cancel previous timeout
 							}
 							timeoutPromise = $timeout(function () {
-								getAutocompletions(newval);
+								getAutocompletions(toAutocomplete);
 							}, scope.autocompleteWaitTime);
 						} else {
-							getAutocompletions(newval);
+							getAutocompletions(toAutocomplete);
 						}
 					} else {
 						resetMatches();
@@ -202,7 +272,9 @@ angular.module('clotho.tokenizer')
 				});
 
 				//we need to abstract this out so that we can bind/unbind beyond scope of element
+				//if no query or autcomplete not currently open, blur
 				function escapeHandler () {
+					scope.triggerHide = true;
 					if (!scope.query.length || !scope.autocompletions.length) {
 						element[0].blur();
 						resetActive();
@@ -213,20 +285,49 @@ angular.module('clotho.tokenizer')
 					}
 				}
 
+				/* EVENT LISTENERS */
+
+				scope.autocompleteDelimiter && localHotkeys.push(scope.autocompleteDelimiter);
+
+				scope.$watch('autocompleteTrigger', function (newval) {
+					scope.triggerHide = !!newval;
+				});
+
 				//bind keyboard events from HOT_KEYS + delimiter
 				element.bind('keydown', function (evt) {
 
 					scope.autocompleteOnKeydown({$event : evt, $keycode : evt.which});
 
-					//keep delimiter out of HOT_KEYS check because space is a weird default hotkey
-					//if type space and not in quote, and only 1 result, will choose it (enter will not)
+					//reference delimiter
+					//hack - need to check shift state and use alternate keycode because @ is shift+2
+					if (evt.which === 50 && evt.shiftKey === true) {
+						if (scope.autocompleteTrigger) {
+							scope.triggerHide = false;
+						}
 
-					//todo - update selecting this way
+						//todo - other ways to triggerHide
 
-					if (evt.which === tokenDelimiterCode) {
-						//if there's no query, or it's just a space, set it to empty and let default be prevented
-						if (scope.query == '') {
+						if (scope.autocompleteTriggerInclude === true) {
+							//unless false, return so we don't prevent default
+							return;
+						} else {
+							//hack - not going to make it past check as long as hack above is in place to accomodate @
 							evt.preventDefault();
+						}
+						scope.$digest();
+					}
+
+					//typeahead is open and an "interesting" key was pressed
+					if (localHotkeys.indexOf(evt.which) === -1) {
+						return;
+					}
+
+
+					// token delimiter - select autocompletion
+					else if (evt.which === scope.autocompleteDelimiter) {
+						if (scope.query == '') {
+							//don't allow selection of empty, keep showing placeholder
+							//allow default to be prevented
 						}
 						//if first letter is quote, don't end the token
 						else if ( ! checkInQuote(scope.query) ) {
@@ -234,22 +335,19 @@ angular.module('clotho.tokenizer')
 								//if there is one result, select it otherwise null (token is query)
 								scope.select(scope.autocompletions.length == 1 ? 0 : -1);
 							});
-							//space is prevented and placeholder shown again
-							evt.preventDefault();
+							//space is prevented (by preventDefault below) and placeholder shown again
 						}
 					}
-
-					//typeahead is open and an "interesting" key was pressed
-					if (HOT_KEYS.indexOf(evt.which) === -1) {
-						return;
-					}
-
 					//backspace
-					if (evt.which === 8) {
+					else if (evt.which === 8) {
 						if (scope.query.length) {
 							// return to handle deleting single letter or highlighted text
 							// (don't prevent default)
 							return;
+						} else {
+							scope.$apply(function () {
+								scope.autocompleteOnBackout();
+							});
 						}
 					}
 					//down
@@ -266,54 +364,44 @@ angular.module('clotho.tokenizer')
 							scope.$digest();
 						}
 					}
+					//side arrows don't do anything now, so let's not prevent default
 					//left
 					else if (evt.which === 37) {
-						if (angular.isDefined(scope.tokenCollection) && scope.tokenCollection.isActive()) {
-							scope.tokenCollection.setPrevActive();
-							scope.$digest();
-						} else {
-							return;
-						}
+						return;
 					}
 					//right
 					else if (evt.which === 39) {
-						if (angular.isDefined(scope.tokenCollection) && scope.tokenCollection.isActive()) {
-							if ( scope.tokenCollection.isLastActive() ) {
-								scope.tokenCollection.unsetActive();
-							} else {
-								scope.tokenCollection.setNextActive();
-							}
-							scope.$digest();
-						} else {
-							return;
-						}
+						return;
 					}
 					//enter + tab
 					else if (evt.which === 13 || evt.which === 9) {
-						console.log('hit enter', scope.activeIdx);
-						//if highlighted dropdown select it, otherwise we'll submit
+						//if highlighted dropdown select() it, otherwise we'll run enter callback
 						if (scope.activeIdx >= 0) {
 							scope.$apply(function () {
 								scope.select(scope.activeIdx);
 							});
 						} else {
-							//if there's an open token, close it
+
+							/*
+							//select() the fragment
+							//note - now that we support multiple words in input, not doing this
 							if (scope.query.length) {
 								scope.$apply(function () {
 									scope.select();
 								});
 							}
+							 */
 							//submit
-							scope.$apply(function () {
-								scope.submit();
-							});
+							if (evt.which == 13) {
+								scope.$apply(function () {
+									scope.autocompleteOnEnter()
+								});
+							}
 						}
 						scope.$digest();
 					}
 					//escape
 					else if (evt.which === 27) {
-						console.log('escape pressed');
-						//if no query or autcomplete not currently open, blur
 						escapeHandler();
 					}
 
@@ -341,41 +429,51 @@ angular.module('clotho.tokenizer')
 					}
 				});
 
-				//on pasting text, break up into tokens (unless quoted) and reset query
+				//on pasting text, pass to setQuery method
 				element.on('paste', function (evt) {
 					//copied text only available on clipboard, but inconsistent use and access so just do simple workaround and $timeout then process element
-
-					//don't want to prevent the event if we're getting it next event loop
-					//evt.preventDefault();
-
+					//don't want to preventDefault() if we're getting it next event loop
 					$timeout(function () {
-						scope.setQueryString(null, true);
+						scope.setQueryString();
 					});
 				});
 
 				scope.$on('$locationChangeSuccess', function () {
-					//timeout because triggers $digest()
+					//timeout because triggers $digest() - schedule outside angular event loop
 					setTimeout(resetActive);
 				});
 
 				function clothoAutocompleteBlurHandler (event) {
-					//only trigger if (1) have focus (2) tokens inactive (3) autocomplete inactive
-					if ( scope.autocompleteHasFocus && (angular.isUndefined(scope.tokenCollection) || !scope.tokenCollection.isActive()) && scope.activeIdx < 0 ) {
-						//timeout so can prevent default somewhere else
-						if (angular.isUndefined(event) || !element[0].contains(event.target)) {
+
+					//first, check if (1) have focus (2) autocomplete inactive
+					if ( scope.autocompleteHasFocus && scope.activeIdx < 0 ) {
+						// then check if (1) no event passed OR
+						// (2A) not active element AND (2B) didn't click child
+						// note - popups will not be children of autocomplete, so don't want to hide everything in that event. can use escape to hide stuff.
+						if (angular.isUndefined(event) || ($document[0].activeElement != element[0] && !element[0].contains(event.target)) ) {
+							//timeout so can prevent default somewhere else
 							$timeout(resetActive);
 						}
 					}
 				}
 
+				//we could bind/rebind on focus events...
 				$document.bind('click', clothoAutocompleteBlurHandler);
 				scope.$on('$destroy', function() {
 					$document.unbind('click', clothoAutocompleteBlurHandler);
 				});
 
-				//init()
+				/* INIT */
+
+				//whether the input has focus. need our own check because several child elements should not remove perceived focus, but will unfocus the element when interacted with.
+				scope.autocompleteHasFocus = scope.autocompleteHasFocus === true;
+
+				//query needs to have value, whether passed in or empty for init
+				scope.query = scope.query || '';
+
+				//set up autocompletions array
 				resetMatches();
 				element.after($compile(listingEl)(scope));
 			}
-		}
+		};
 	});

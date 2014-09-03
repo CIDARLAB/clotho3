@@ -95,6 +95,12 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
+                case updatePassword:
+                    Map updatedPassword = (Map) data;
+                    response  = api.updatePassword(updatedPassword.get("username").toString(),updatedPassword.get("password").toString());
+                    
+                    break;
+                
                 case createUser:
                     Map newusermap = (Map) data;
                     response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());

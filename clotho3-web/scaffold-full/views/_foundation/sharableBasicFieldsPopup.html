@@ -11,6 +11,10 @@
         </h3>
         <div class="popover-content" ng-switch="activeView" style="min-width: 450px;">
 
+          <div ng-if="!sharable" class="alert alert-warning" style="text-align: center; margin: 0;">
+            <p>No sharable found with that id</p>
+          </div>
+
           <!-- show schema's fields + inherited fields -->
           <div ng-switch-when="Schema"
                class="form-horizontal">
@@ -66,7 +70,7 @@
       <div class="popover-footer clearfix">
         <a class="label label-default pull-left"
            ng-click="edit(sharable.id)"
-           ng-show="editorPresent">
+           ng-show="editorPresent && sharable.id">
           <span class="glyphicon glyphicon-edit"></span>
           Edit
         </a>

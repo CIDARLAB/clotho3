@@ -4,7 +4,8 @@ angular.module('clotho.tokenizer')
  */
 .directive('autoGrow', function($timeout) {
 	return {
-		link: function(scope, element, attr){
+		require: '?ngModel',
+		link: function(scope, element, attr, ngModelCtrl){
 			var paddingLeft = element.css('paddingLeft'),
 				paddingRight = element.css('paddingRight');
 
@@ -40,7 +41,13 @@ angular.module('clotho.tokenizer')
 				element.css('width', newWidth);
 			};
 
-			element.bind('keyup keydown blur', update);
+			if (ngModelCtrl) {
+				scope.$watch(function () {
+					return ngModelCtrl.$viewValue;
+				}, update)
+			} else {
+				element.bind('keyup keydown blur', update);
+			}
 
 			// Update on the first link
 			// $timeout is needed because the value of element is updated only after the $digest cycle

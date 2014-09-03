@@ -16,6 +16,9 @@ angular.module('clotho.tokenizer')
 		//wont match emails
 		var matchRegexp = new RegExp('(^|[^a-zA-Z0-9-_\\.])'+ ClothoReferenceDelimiter.symbol +'([A-Za-z0-9-_\\.]+)', 'gi');
 
+		//todo update REST url
+		var urlRootREST = 'http://www.clothocad.org/data/';
+
 		//given a function to use for wrapping a match, passes:
 		// match (not include delimiter)
 		// delimiter
@@ -36,9 +39,12 @@ angular.module('clotho.tokenizer')
 			return '<a sharable-popup sharable-popup-id="'+match+'" sharable-popup-trigger="mouseenter">' + match + '</a>';
 		});
 		
+		this.convertMarkdown = angular.bind(null, convertText, function clothoReferenceParseMarkdown (match) {
+			return '[' + match + '](' + urlRootREST + match + ')';
+		});
+
 		this.convertWiki = angular.bind(null, convertText, function clothoReferenceParseWiki (match) {
-			//todo - choose wiki url
-			return '[' + match + '](http://www.clothocad.org/data/' + match + ')';
+			return '[' + urlRootREST + match + ' ' + match + ']';
 		});
 
 	})
@@ -53,11 +59,19 @@ angular.module('clotho.tokenizer')
  * @attr clothoReferenceParser Model string to parse
  * @attr clothoReferenceType Conversion type e.g. `clotho-reference-type="wiki"`. Default is html
  *
+ * @example
+
+ <div ng-init="sample = '@hey you baby@girl whats up @clotho.developer.maxbates with ya?'">
+ <div clotho-reference-parser="sample"></div>
+ </div>
+ *
  */
 	.directive('clothoReferenceParser', function (ClothoReference, $compile, $timeout, $parse) {
 		return function (scope, element, attrs) {
 			scope.$watch(attrs.clothoReferenceParser, function (newval) {
-				if (attrs.clothoReferenceType === 'wiki') {
+				if (attrs.clothoReferenceType === 'markdown') {
+					element.text(ClothoReference.convertMarkdown(newval));
+				} else if (attrs.clothoReferenceType === 'wiki') {
 					element.text(ClothoReference.convertWiki(newval));
 				} else {
 					element.html(ClothoReference.convertHtml(newval));
@@ -71,6 +85,13 @@ angular.module('clotho.tokenizer')
  * @ngdoc filter
  *
  * @description simple filter to parse wiki or html. note that html isn't compiled. can't pass many options either
+ *
+ * @example
+
+<div ng-init="sample = '@hey you baby@girl whats up @clotho.developer.maxbates with ya?'">
+  <p ng-bind="sample | clothoReferenceParse:'markdown'"></p>
+  <div ui-markdown="sample | clothoReferenceParse:'markdown'"></div>
+</div>
  */
 	.filter('clothoReferenceParse', function (ClothoReference) {
 		return function (input, type, fn) {
@@ -89,6 +110,9 @@ angular.module('clotho.tokenizer')
 				}
 				case 'wiki' : {
 					return ClothoReference.convertWiki(input);
+				}
+				case 'markdown' : {
+					return ClothoReference.convertMarkdown(input);
 				}
 			}
 		};
