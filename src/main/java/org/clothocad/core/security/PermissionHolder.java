@@ -19,7 +19,7 @@ public abstract class PermissionHolder {
     @Getter
     protected Map<ObjectId, PermissionsOnObject> permissions;
     
-    private static ObjectId getObjectId(String permission) {
+    public static ObjectId getObjectId(String permission) {
         List<String> parts = CollectionUtils.asList(permission.split(":"));
         return new ObjectId(parts.get(2));
     }

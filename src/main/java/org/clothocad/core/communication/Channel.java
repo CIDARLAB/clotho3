@@ -8,9 +8,6 @@ public enum Channel {
     recent,  //Return N most recently used sharables
     submit, //Run this sloppy or concrete command
     clear, //Replace the scriptengine behind mind with a fresh version
-    login, //Log me into Clotho on this client with this login/password
-    logout, //Log me out of Clotho
-    changePassword, //Change my password to this new value
     learn, //associate this String with this execution statement
     like,
     dislike,
@@ -43,6 +40,13 @@ public enum Channel {
     run, //run this Function
     listen, //Listen for events, and in response do this execution statement
     unlisten, //Remove a listener for an event
+    
+//SECURITY
+    grant,
+    login, //Log me into Clotho on this client with this login/password
+    logout, //Log me out of Clotho
+    changePassword, //Change my password to this new value
+    createAccount,
     
 //OTHER
     reloadModels, //convenience function for reloading test data

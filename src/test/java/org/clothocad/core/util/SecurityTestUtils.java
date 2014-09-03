@@ -6,11 +6,11 @@
 
 package org.clothocad.core.util;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
@@ -28,7 +28,35 @@ import static org.clothocad.core.security.ClothoRealm.*;
  */
 public class SecurityTestUtils {
     
-    public SecurityTestUtils(Persistor p, ClothoRealm realm){
+    public SecurityTestUtils(){
+    }
+    
+    /*
+    Holds credentials for 4 users in <username, password> format. 
+    usernames are 'none', 'read', 'write', and 'owner', and describe the permission levels
+    each user has on both the private and public object in the universe.
+    */
+    public Map<String,String>  credentials;
+    public Map<String, ObjBase> objects;
+    
+    
+    public ObjBase getPublic(){
+        return objects.get("public");
+    }
+    
+    public ObjBase getPrivate(){
+        return objects.get("private");
+    }
+    
+    public Module getPublicModule(){
+        return (Module) objects.get("publicModule");
+    }
+    
+    public Module getPrivateModule(){
+        return (Module) objects.get("privateModule");
+    }
+    
+    private void doCreateTestRealmData(Persistor p, ClothoRealm realm) {
         realm.deleteAll();
         //make objects
         Institution privateInstitution = new Institution("Private Institution", "", "", "");
@@ -77,33 +105,27 @@ public class SecurityTestUtils {
         credentials.put("write", "write");
         credentials.put("run", "run");
         credentials.put("owner", "owner");
+                
+    }
+    
+    public static class CreateTestRealmData implements Callable<SecurityTestUtils> {
+
+        Persistor p;
+        ClothoRealm realm;
+        
+        public CreateTestRealmData(Persistor p, ClothoRealm realm) {
+            this.p = p;
+            this.realm = realm;
+        }
+
+        @Override
+        public SecurityTestUtils call() throws Exception {
+            SecurityTestUtils util = new SecurityTestUtils();
+            util.doCreateTestRealmData(p, realm);
+            return util;
+        }
         
         
-    }
-    
-    /*
-    Holds credentials for 4 users in <username, password> format. 
-    usernames are 'none', 'read', 'write', and 'owner', and describe the permission levels
-    each user has on both the private and public object in the universe.
-    */
-    public Map<String,String>  credentials;
-    public Map<String, ObjBase> objects;
-    
-    
-    public ObjBase getPublic(){
-        return objects.get("public");
-    }
-    
-    public ObjBase getPrivate(){
-        return objects.get("private");
-    }
-    
-    public Module getPublicModule(){
-        return (Module) objects.get("publicModule");
-    }
-    
-    public Module getPrivateModule(){
-        return (Module) objects.get("privateModule");
     }
 
 }

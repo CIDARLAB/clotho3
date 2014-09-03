@@ -4,20 +4,16 @@
  */
 package org.clothocad.core.communication;
 
-import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.python.google.common.collect.Lists;

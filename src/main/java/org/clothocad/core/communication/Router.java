@@ -33,11 +33,13 @@ public class Router {
 
     @Getter
     protected Persistor persistor;
+    protected ClothoRealm realm;
    
     @Inject
-    public Router(Persistor persistor) {
+    public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
         this.persistor = persistor;
+        this.realm = realm;
     }
 
     // send message    
@@ -64,7 +66,7 @@ public class Router {
             //Find a better way to become anonymous user?
             subject.login(ClothoRealm.getAnonymousUserToken());
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()));
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), realm, new MessageOptions(request.getOptions()));
 
         Object data = request.getData();
         

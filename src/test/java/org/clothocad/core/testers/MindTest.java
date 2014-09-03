@@ -6,7 +6,6 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.clothocad.core.communication.MessageOptions;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.execution.ScriptAPI;
@@ -14,6 +13,7 @@ import org.junit.Test;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.communication.TestConnection;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
 
@@ -27,7 +27,7 @@ public class MindTest extends AuthorizedShiroTest{
         Injector injector = TestUtils.getDefaultTestInjector();
         Persistor persistor = injector.getInstance(Persistor.class);
         Router router = injector.getInstance(Router.class);
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, router, "");
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, router, injector.getInstance(ClothoRealm.class), "");
         persistor.deleteAll();
         String script = "var newobjid = clotho.create( {\"name\":\"UCM\",\"state\":\"MA\",\"schema\":\"org.clothocad.model.Institution\",\"country\":\"United States of America\",\"city\":\"Baltizam\"} );\n" +
                         "var result = clotho.get(newobjid);\n" +

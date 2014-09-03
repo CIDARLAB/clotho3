@@ -4,10 +4,10 @@
  */
 package org.clothocad.core.util;
 
-import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 
 /**
  *
@@ -16,7 +16,7 @@ import org.clothocad.core.persistence.Persistor;
 public class DummyAPI extends ServerSideAPI {
 
     public DummyAPI(Persistor persistor) {
-        super(null, persistor, null, null);
+        super(null, persistor, null, null, null, null);
     }
 
     @Override

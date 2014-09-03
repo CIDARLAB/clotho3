@@ -60,6 +60,7 @@ import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
@@ -94,11 +95,11 @@ public class ServerSideAPI {
     private final Mind mind;
     private final MessageOptions options;
 
-    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId) {
-        this(mind, persistor, router, requestId, new MessageOptions());
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, ClothoRealm realm, String requestId) {
+        this(mind, persistor, router, requestId, realm, new MessageOptions());
     }    
     
-    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options) {
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, ClothoRealm realm, MessageOptions options) {
         this.persistor = persistor;
         this.mind = mind;
         this.requestId = requestId;
@@ -1006,6 +1007,10 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
         }
         say("Validation successful.", Severity.SUCCESS);
         return new HashSet<>();
+    }
+    
+    public void grant(ObjectId id, String principal, Set<String> addPermissions, Set<String> removePermissions){
+        
     }
 
     public static enum Severity {

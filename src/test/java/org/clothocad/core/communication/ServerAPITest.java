@@ -5,8 +5,6 @@
 package org.clothocad.core.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,14 +14,10 @@ import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
-import org.clothocad.core.testers.ClothoTestModule;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
@@ -43,10 +37,10 @@ public class ServerAPITest extends AuthorizedShiroTest {
 
     public ServerAPITest() {
         super();
-                persistor = injector.getInstance(Persistor.class);
+        persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
         mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, null);
+        api = new ServerSideAPI(mind, persistor, router, injector.getInstance(ClothoRealm.class), null);
         persistor.connect();
         mind.setConnection(new TestConnection("test"));
     }

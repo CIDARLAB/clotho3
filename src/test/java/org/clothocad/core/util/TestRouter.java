@@ -15,6 +15,7 @@ import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 
 /**
  *
@@ -23,8 +24,8 @@ import org.clothocad.core.persistence.Persistor;
 public class TestRouter extends Router {
 
     @Inject
-    public TestRouter(Persistor persistor) {
-        super(persistor);
+    public TestRouter(Persistor persistor, ClothoRealm realm) {
+        super(persistor, realm);
     }
 
     @Override

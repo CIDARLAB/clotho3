@@ -4,12 +4,14 @@
  */
 package org.clothocad.core.security;
 
+import org.apache.shiro.subject.Subject;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.communication.TestConnection;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.SecurityTestUtils;
+import org.clothocad.core.util.SecurityTestUtils.CreateTestRealmData;
 import org.junit.After;
 import org.junit.Before;
 
@@ -26,8 +28,8 @@ public abstract class AbstractSecurityTest extends AbstractShiroTest {
         super();
         persistor = injector.getInstance(Persistor.class);
         persistor.deleteAll();
-        util = new SecurityTestUtils(persistor, injector.getInstance(ClothoRealm.class));
-    
+        Subject serverSubject = new ServerSubject();
+        util = serverSubject.execute(new CreateTestRealmData(persistor, injector.getInstance(ClothoRealm.class)));
     }
     
     @Before
@@ -52,7 +54,7 @@ public abstract class AbstractSecurityTest extends AbstractShiroTest {
     public void initAPI(String id) {
         Mind mind = new Mind();
         mind.setConnection(new TestConnection(id));
-        api = new ServerSideAPI(mind, persistor, injector.getInstance(Router.class), id);
+        api = new ServerSideAPI(mind, persistor, injector.getInstance(Router.class), injector.getInstance(ClothoRealm.class), id);
     }    
 
     public void login(String account){
