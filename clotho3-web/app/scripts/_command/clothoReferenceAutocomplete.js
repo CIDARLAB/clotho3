@@ -13,10 +13,13 @@ angular.module('clotho.tokenizer')
  *
  * 2) terminal - autocomplete should only popup on trigger, and selection should add to model. delimiter should not be in text. Ideally, only the input would change - but this isn't possible. This requires we only autocomplete the last word (i.e. break up by spaces) - which introduces ambiguity, but allows for the most natural flow.
  *
- * 3) textarea //todo
+ * 3) textarea - keep the symbol, likely to have multiple in the document
  *
  * 4) others - several options are provided to allow flexibility, but because there are so many, it will take a knowledgeable coder to re-wrap this.
  *
+ * note - use the attribute autoGrow to handle dynamic width (e.g. if have text or tokens and displaying as inline-block)
+ *
+ * note - parent should have style `position: relative` so that listing shows up properly
  *
  * ATTRIBUTES
  *
@@ -61,13 +64,15 @@ angular.module('clotho.tokenizer')
  * Keycode for triggering autocomplete selection. This is not the delimiter for trigger the autocomplete - works in a similar way to hitting enter. Pressing this key will automatically select the first autocompletion, triggering autocompleteOnSelect.  If none is provided, tokens will only be broken when manually selecting a dropdown suggestion. Will not end if string begins with a single or double quote.
  * Note that there may be weird behavior if you allow autocomplete for strings with spaces
  *
- * @example //todo
- <input type="text"
- clotho-autocomplete
- ng-model="query"
- placeholder="{{placeholder}}"
- autocomplete-on-query="unsetTokenCollectionActive()"
- autocomplete-on-select="addToken($item, $query)">
+ * @example
+ <textarea clotho-reference-autocomplete
+					 class="form-control"
+					 ng-model="myModel"
+					 ng-trim="false"
+					 placeholder="enter a bunch of text"
+					 autocomplete-trigger="true"
+					 autocomplete-trigger-include="true"
+					 autocomplete-popup-position="topRight"></textarea>
 
  It is the responsibility of other directives to deal with token collection
  */
@@ -117,14 +122,19 @@ angular.module('clotho.tokenizer')
 				var initialQuoteRegexp = /^['"].*/;
 
 				function extractReference (query) {
-					var r = new RegExp('.*?' +
-						ClothoReferenceDelimiter.symbol +
-						'(.+?)(?=[\\s\'"' +
-						(angular.isDefined(scope.autocompleteDelimiter) ? scope.autocompleteDelimiter : '') +
-						']|$)', 'ig');
-					var x = r.exec(query);
+					if (!!scope.autocompleteTrigger) {
 
-					return angular.isEmpty(x) ? '' : x[1];
+						//finds the text after the last clothoReference symbol, up to a space, quote, or delimited passed on scope
+						var r = new RegExp('.*' +
+							ClothoReferenceDelimiter.symbol +
+							'(.+?)(?=[\\s\'"' +
+							(angular.isDefined(scope.autocompleteDelimiter) ? scope.autocompleteDelimiter : '') +
+							']|$)', 'ig').exec(query);
+
+						return angular.isEmpty(r) ? '' : r[1];
+					} else {
+						return query;
+					}
 				}
 
 				//pop-up element used to display matches
