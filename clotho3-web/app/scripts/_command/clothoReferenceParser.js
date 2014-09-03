@@ -19,9 +19,6 @@ angular.module('clotho.tokenizer')
 		//todo update REST url
 		var urlRootREST = 'http://www.clothocad.org/data/';
 
-		//todo update REST url
-		var urlRootREST = 'http://www.clothocad.org/data/';
-
 		//given a function to use for wrapping a match, passes:
 		// match (not include delimiter)
 		// delimiter

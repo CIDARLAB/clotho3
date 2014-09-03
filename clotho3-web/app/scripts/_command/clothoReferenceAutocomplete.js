@@ -339,21 +339,6 @@ angular.module('clotho.tokenizer')
 							//don't allow selection of empty, keep showing placeholder
 							//allow default to be prevented
 						}
-						scope.$digest();
-					}
-
-					//typeahead is open and an "interesting" key was pressed
-					if (localHotkeys.indexOf(evt.which) === -1) {
-						return;
-					}
-
-
-					// token delimiter - select autocompletion
-					else if (evt.which === scope.autocompleteDelimiter) {
-						if (scope.query == '') {
-							//don't allow selection of empty, keep showing placeholder
-							//allow default to be prevented
-						}
 						//if first letter is quote, don't end the token
 						else if ( ! checkInQuote(scope.query) ) {
 							scope.$apply(function () {
