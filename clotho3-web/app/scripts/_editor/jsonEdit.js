@@ -33,8 +33,8 @@ angular.module('clotho.editor')
 				}
 
 				function JSON2String(object) {
-					// better than JSON.stringify(), because it formats + filters $$hashKey etc.
 					// NOTE that angular.toJson will remove all $-prefixed values
+					// alternatively, use JSON.stringify(object, null, 2);
 					return angular.toJson(object, true);
 				}
 
@@ -88,4 +88,62 @@ angular.module('clotho.editor')
 
 			}
 		};
-	});
+	})
+
+/*
+
+When used on a textarea (or input), allows the direct editing of a JSON object (any valid JSON - string, array, boolean, etc.). Invalid JSON will set the value to undefined. It is recommended you do not allow saving etc. while this field is invalid.
+
+Handles validation under the `json` attribute.
+
+example usage:
+
+ <form name="myForm">
+  <textarea json-editor ng-model="myObject" rows="8" name="myFormElement" class="form-control"></textarea>
+  <p ng-show="myForm.myFormElement.$error.json">JSON is invalid!</p>
+ </form>
+
+ */
+
+.directive('jsonEditor', function () {
+	return {
+		restrict: 'A',
+		require: 'ngModel',
+		link: function (scope, element, attrs, ngModelCtrl) {
+
+			function isValidJson(model) {
+				var flag = true;
+				try {
+					angular.fromJson(model);
+				} catch (err) {
+					flag = false;
+				}
+				return flag;
+			}
+
+			function string2JSON(text) {
+				try {
+					return angular.fromJson(text);
+				} catch (err) {
+					//returning undefined results in a parser error as of angular-1.3-rc.0, and will not go through $validators
+					//return undefined
+					return text;
+				}
+			}
+
+			function JSON2String(object) {
+				// NOTE that angular.toJson will remove all $-prefixed values
+				// alternatively, use JSON.stringify(object, null, 2);
+				return angular.toJson(object, true);
+			}
+
+			//$validators is an object, where key is the error
+			ngModelCtrl.$validators.json = isValidJson;
+
+			//array pipelines
+			ngModelCtrl.$parsers.push(string2JSON);
+			ngModelCtrl.$formatters.push(JSON2String);
+		}
+	}
+});
+
