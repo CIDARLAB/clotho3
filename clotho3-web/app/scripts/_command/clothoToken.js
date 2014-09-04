@@ -9,7 +9,7 @@ angular.module('clotho.tokenizer')
  *
  * //todo - better handling of arrays (ambiguity)
  */
-	.directive('clothoToken', function ($parse, Clotho, clothoTokenFactory) {
+	.directive('clothoToken', function ($parse, $document, Clotho, clothoTokenFactory) {
 		return {
 			restrict: 'E',
 			templateUrl: "views/_command/token.html",
@@ -42,10 +42,29 @@ angular.module('clotho.tokenizer')
 					scope.onClick({$event : evt, $token : scope.token});
 				});
 
-				scope.$on('$destroy', function (evt) {
-					scope.tokenActive = false;
-					scope.onRemove({$token : scope.token});
-				});
+        var backspaceEventListener = function (evt) {
+          //backspace
+          if (evt.which === 8) {
+            evt.preventDefault();
+            //todo - remove token from parent collection, not just with listener
+            element.remove();
+            scope.$destroy();
+          }
+        };
+
+        scope.$watch('tokenActive', function (newval) {
+          if (newval) {
+            $document.on('keydown', backspaceEventListener);
+          } else {
+            $document.off('keydown', backspaceEventListener);
+          }
+        });
+
+        scope.$on('$destroy', function (evt) {
+          scope.tokenActive = false;
+          scope.onRemove({$token : scope.token});
+          $document.off('keydown', backspaceEventListener);
+        });
 			}
 		}
 	});

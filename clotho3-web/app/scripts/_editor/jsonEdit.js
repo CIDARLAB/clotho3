@@ -33,7 +33,7 @@ angular.module('clotho.editor')
 				}
 
 				function JSON2String(object) {
-					// NOTE that angular.toJson will remove all $-prefixed values
+					// NOTE that angular.toJson will remove all $$-prefixed values
 					// alternatively, use JSON.stringify(object, null, 2);
 					return angular.toJson(object, true);
 				}
@@ -55,7 +55,7 @@ angular.module('clotho.editor')
 				}
 
 				function isValidJson(model) {
-					var flag = true;
+					var flag = angular.isDefined(model);
 					try {
 						angular.fromJson(model);
 					} catch (err) {
@@ -69,21 +69,17 @@ angular.module('clotho.editor')
 
 				//check for changes going out
 				scope.$watch('jsonEditing', function (newval, oldval) {
-					if (newval != oldval) {
-						if (isValidJson(newval)) {
-							setValid();
-							updateModel(newval);
-						} else {
-							setInvalid();
-						}
-					}
+          if (isValidJson(newval)) {
+            setValid();
+            updateModel(newval);
+          } else {
+            setInvalid();
+          }
 				}, true);
 
 				//check for changes coming in
 				scope.$watch('model', function (newval, oldval) {
-					if (newval != oldval) {
-						setEditing(newval);
-					}
+          setEditing(newval);
 				}, true);
 
 			}
@@ -103,6 +99,8 @@ example usage:
   <p ng-show="myForm.myFormElement.$error.json">JSON is invalid!</p>
  </form>
 
+todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try to serialize)
+
  */
 
 .directive('jsonEditor', function () {
@@ -112,7 +110,8 @@ example usage:
 		link: function (scope, element, attrs, ngModelCtrl) {
 
 			function isValidJson(model) {
-				var flag = true;
+        console.log(model);
+        var flag = angular.isDefined(model);
 				try {
 					angular.fromJson(model);
 				} catch (err) {
@@ -132,7 +131,7 @@ example usage:
 			}
 
 			function JSON2String(object) {
-				// NOTE that angular.toJson will remove all $-prefixed values
+				// NOTE that angular.toJson will remove all $$-prefixed values
 				// alternatively, use JSON.stringify(object, null, 2);
 				return angular.toJson(object, true);
 			}

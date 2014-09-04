@@ -1,6 +1,6 @@
 angular.module('clotho.commandbar')
 	//todo - allow delegation of options in clotho-reference-input
-	.directive('clothoTerminalInput', function (Clotho, ClientAPI, ClothoReferenceDelimiter) {
+	.directive('clothoTerminalInput', function (Clotho, ClientAPI) {
 
 		return {
 			restrict: 'E',

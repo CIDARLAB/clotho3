@@ -40,6 +40,8 @@ angular.module('clotho.tokenizer')
  * Bind to the list of autocompletions
  * @attr autocompleteHasFocus {Boolean=}
  * Bind to whether the input has focus
+ * @attr autocompleteFilter {Filter}
+ * Relayed to angular's filter filter.
  *
  * event
  *
@@ -97,6 +99,7 @@ angular.module('clotho.tokenizer')
 				autocompleteClearOnSelect: '=?',
 				forceVisible: '=?',
 				autocompletions : '=?',
+        autocompleteFilter : '=?',
 				autocompleteHasFocus : '=?',
 				autocompleteOnSelect: '&?',
 				autocompleteOnKeydown : '&?',
@@ -194,6 +197,11 @@ angular.module('clotho.tokenizer')
 							resetMatches();
 						} else {
 							scope.activeIdx = -1;
+
+              if (scope.autocompleteFilter) {
+                results = $filter('filter')(results, scope.autocompleteFilter)
+              }
+
 							scope.autocompletions = $filter('limitTo')(results, 10);
 						}
 					});
