@@ -105,6 +105,8 @@ angular.module('clotho.commandbar')
 
 						var person = Facebook.convertToPersonSharable(user);
 
+						//fixme - by creating here automatically, if they don't create their clotho account, then person exists in clotho, but principle does not, so form will not allow them to create themselves. Can be fixed by adding way to check if user has principle in clotho, not just associated person exists.
+
 						Clotho.create(person)
 							.then(function (id) {
 								$scope.notification = {
@@ -148,8 +150,21 @@ angular.module('clotho.commandbar')
 				//try to create
 				Clotho.createUser($scope.cred.username, $scope.cred.password)
 				.then(function (response) {
-					//todo
+
+						console.log('create user?', response);
+
+						//todo
+
+						if (response) {
+
+						} else {
+
+						}
+
 				}, function (err) {
+
+						console.log(err);
+
 					//todo
 				});
 			}, function (err) {
