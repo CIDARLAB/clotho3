@@ -17,7 +17,9 @@ angular.module('clotho.tokenizer')
 				angular.forEach(startingTokens, function (token) {
 					self.addToken(token);
 				});
-			}
+			} else {
+        //wrong format
+      }
 		}
 
 		//add a token, pass arguments through to clothoTokenFactory

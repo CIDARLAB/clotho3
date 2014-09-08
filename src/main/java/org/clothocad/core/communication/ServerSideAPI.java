@@ -308,6 +308,7 @@ public class ServerSideAPI {
             newperson.setId(new ObjectId(username));
             persistor.save(newperson);
             realm.addAccount(username, password);
+            
             say("New user " + username +" created.", Severity.SUCCESS);
             return true;
         }
@@ -316,11 +317,42 @@ public class ServerSideAPI {
             say("User " + username +" exists.", Severity.FAILURE);
             return false;
         }
-
     }
+    
+    public final boolean updatePassword(String username, String password)
+    {
+        boolean personexists = false;
+        Collection<Person> personlist = persistor.getAll(Person.class);
+            for(Person p : personlist)
+            {
+                if(p.getId().toString().equals(username))
+                {
+                    personexists = true;
+                    break;
+                }
+            }
+       
+        if(personexists)
+        {
+           realm.updatePassword(username, "anotherpass");
+            say("Password for user: " + username +" updated.", Severity.SUCCESS);
+            return true;
+        }
+        else
+        {
+            say("User " + username +" does not exist.", Severity.FAILURE);
+            return false;
+        }
+    }
+    
+    
+    
     public final Object login(String username, String password) {
         ObjectId userId = null;
-        try {
+        
+        if (!SecurityUtils.getSubject().isAuthenticated())
+        {
+        
             //SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
             // Map<String, Object> 
             Collection<Person> personlist = persistor.getAll(Person.class);
@@ -329,8 +361,6 @@ public class ServerSideAPI {
                 if(p.getId().toString().equals(username))
                 {
                     userId = p.getId();
-                    
-                    SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
                     break;
                 }
             }
@@ -339,17 +369,28 @@ public class ServerSideAPI {
                 say("Error. User:"+username+" does not exist in database. Please try creating the user." , Severity.FAILURE);
                 return false;
             }
-            
-            
-            say("Welcome, " + username, Severity.SUCCESS);
-            log.info("User {} logged in", username);
-            return userId;
-            
-
-        } catch (AuthenticationException e) {
-            logAndSayError("Authentication attempt failed for username " + username, e);
+            else 
+            {
+                try 
+                {
+                    SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
+                } 
+                catch (AuthenticationException e) 
+                {
+                    logAndSayError("Authentication attempt failed for username " + username, e);
+                    return false;
+                }
+                say("Welcome, " + username, Severity.SUCCESS);
+                log.info("User {} logged in", username);
+                return userId;
+            }
+        }
+        else
+        {
+            say("Error. Someone has already logged in. Please Log out first." , Severity.FAILURE);
             return false;
         }
+            
     }
 
     public final boolean logout() {

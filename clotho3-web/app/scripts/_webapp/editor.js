@@ -74,12 +74,8 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 		$scope.editModePass = true;
 	};
 
-	$scope.editExisting = function (item, model, label) {
-		Clotho.get(model).then(function (result) {
-			$scope.editable = result;
-			$scope.editModePass = true;
-		}, function () {
-			console.log('for some reason could not get that sharable...')
-		});
+	$scope.editExisting = function (item, query) {
+		$scope.editable = item;
+		$scope.editModePass = true;
 	};
 });

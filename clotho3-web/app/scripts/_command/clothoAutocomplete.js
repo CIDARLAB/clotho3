@@ -207,7 +207,7 @@ angular.module('clotho.tokenizer')
 				}
 
 				//bind keyboard events from HOT_KEYS + delimiter
-				element.bind('keydown', function (evt) {
+				element.on('keydown', function (evt) {
 
 					//keep delimiter out of HOT_KEYS check because space is a weird default hotkey
 					//if type space and not in quote, and only 1 result, will choose it (enter will not)

@@ -5,7 +5,7 @@
  * This is the client Clotho API - commands issued BY the server to be run on the client
  */
 angular.module('clotho.core').service('ClientAPI',
-	function (PubSub, Collector, Debug, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $document) {
+	function (PubSub, Collector, Debug, ClothoCommandHistory, $q, $injector, $window, $templateCache, $http, $rootScope, $location, $document, $compile) {
 
 		var Debugger = new Debug('ClientAPI', '#dd99dd');
 
@@ -60,10 +60,10 @@ angular.module('clotho.core').service('ClientAPI',
 		var display = function clientAPIDisplay(uuid, targetSelector) {
 
 			var showDiv = angular.element('<div clotho-show="' + uuid + '"></div>');
-			var targetEl = document.querySelector(targetSelector);
+			var targetEl = $document[0].querySelector(targetSelector);
 
 			if (!targetEl) {
-				targetEl = document.getElementById('clothoAppWidgets');
+				targetEl = $document[0].getElementById('clothoAppWidgets');
 			}
 
 			targetEl = angular.element(targetEl);
@@ -181,7 +181,7 @@ angular.module('clotho.core').service('ClientAPI',
 			};
 			data.class = classMap[angular.lowercase(data.class)];
 
-			PubSub.trigger('activityLog', data);
+			ClothoCommandHistory.addMessage(data);
 		};
 
 		/**
@@ -194,26 +194,27 @@ angular.module('clotho.core').service('ClientAPI',
 		 *
 		 */
 		var alert = function clientAPIAlert(msg) {
-
-
-			angular.isDefined('$clothoModal') && $clothoModal.create({
+			angular.isDefined($clothoModal) && $clothoModal.create({
 				title : "Clotho Alert",
-				content : "msg"
+				content : "'" + msg + "'"
 			})
 		};
 
 		/**
 		 * @name clientAPI.help
 		 *
-		 * @param {string} uuid .... what parameter should be sent?
+		 * @param {string} msg Message to display
 		 *
 		 * @description
 		 * Get help for a mode or instance or something
 		 */
-		var help = function clientAPIHelp(uuid) {
+		var help = function clientAPIHelp(msg) {
 
-			//todo - create clotho modal and show it
-
+			//todo - more dynamic content, this should be different than alert()
+			angular.isDefined($clothoModal) && $clothoModal.create({
+				title : "Clotho Alert",
+				content : "'" + msg + "'"
+			});
 		};
 
 		/**
@@ -250,7 +251,8 @@ angular.module('clotho.core').service('ClientAPI',
 				say({
 					text : 'Editor not available',
 					from: 'client',
-					class : 'error'
+					class : 'error',
+					channel: 'edit'
 				});
 			}
 		};

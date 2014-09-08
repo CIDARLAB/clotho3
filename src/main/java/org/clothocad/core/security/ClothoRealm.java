@@ -68,4 +68,13 @@ public class ClothoRealm extends AuthorizingRealm {
     public void deleteAll(){
         store.deleteAllCredentials();
     }
+    public void updatePassword(String username, String password)
+    {
+        ByteSource salt = new SecureRandomNumberGenerator().nextBytes();
+        SimpleHash hashedPw = new SimpleHash(Sha256Hash.ALGORITHM_NAME, password, salt);
+        System.out.println("Password "+store.getAccount(username).getCredentials().toString());
+         
+        store.updatePassword(username, hashedPw, salt);
+       
+    }
 }

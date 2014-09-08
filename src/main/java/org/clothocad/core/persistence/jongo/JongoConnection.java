@@ -288,13 +288,39 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         DBObject account = new BasicDBObject("_id", username);
         account.put("hash", hashedPw.getBytes());
         account.put("salt", salt.getBytes());
-
+        
         cred.save(account);
     }
-
+    
+    @Override
+    public void updatePassword(String username, SimpleHash hashedPw, ByteSource salt)
+    {
+        DBObject account = new BasicDBObject("_id", username);
+        account.put("hash", hashedPw.getBytes());
+        account.put("salt", salt.getBytes());
+        
+        cred.save(account);
+        
+        
+        
+        /*DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
+        if (accountData != null) {
+            return false;
+        }
+        DBObject account = new BasicDBObject("_id", username);
+        account.put("hash", hashedPw.getBytes());
+        account.put("salt", salt.getBytes());
+        cred.remove(accountData);
+        cred.save(account);*/
+        
+        
+        
+    }
+    
     @Override
     public void deleteAllCredentials() {
         cred.drop();
+       
     }
     @Override
     public List<Map> getCompletionData(){

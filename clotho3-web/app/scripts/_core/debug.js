@@ -130,7 +130,6 @@ angular.module('clotho.core')
 				}
 			};
 
-			//for strings to be interpolated etc.
 			debugFunctionality.$log = $log;
 			debugFunctionality.console = $window.console || {};
 

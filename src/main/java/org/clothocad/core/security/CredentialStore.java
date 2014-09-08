@@ -16,6 +16,6 @@ public interface CredentialStore {
     SimpleAccount getAccount(String username);
     
     public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt);
-    
+    public void updatePassword(String username, SimpleHash hashedPw, ByteSource salt);
     public void deleteAllCredentials();
 }

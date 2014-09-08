@@ -7,25 +7,25 @@
     <div class="btn btn-primary" ng-click="importFacebook()">Import Facebook Info</div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" ng-class="{'has-error' : loginForm.username.$invalid && loginForm.username.$dirty}">
     <label for="username" class="col-sm-3 control-label">Username</label>
     <div class="col-sm-9">
       <div class="input-group" style="width: 100%">
         <span class="input-group-addon" ng-if="retrieved.icon" style="padding: 0; min-width: 32px;">
           <img ng-src="{{ retrieved.icon }}" style="width: 32px; height: 32px;">
         </span>
-        <input type="text"
+        <input type="email"
                class="form-control"
                id="username"
                name="username"
-               placeholder="Enter username"
+               placeholder="Enter email address"
                ng-model="cred.username"
                required>
         </div>
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" ng-class="{'has-error' : loginForm.password.$invalid && loginForm.password.$dirty}">
     <label for="password" class="col-sm-3 control-label">Password</label>
     <div class="col-sm-9">
       <input type="password"
@@ -67,7 +67,8 @@
                ng-required="createMode"
                sharable-popup
                sharable-popup-model="retrieved"
-               sharable-popup-trigger="mouseenter">
+               sharable-popup-trigger="mouseenter"
+               sharable-popup-position="bottom">
       </div>
     </div>
   </div>
@@ -76,25 +77,25 @@
     <div ng-cloak
          class="col-sm-offset-3 col-sm-9">
       <button class="btn btn-primary"
-              ng-hide="facebookRetrieved"
+              ng-if="!facebookRetrieved && !retrieved"
               ng-click="facebookLogin()">
         Retrieve Facebook
       </button>
       <button class="btn btn-primary"
               ng-click="login()"
-              ng-hide="createMode"
+              ng-if="!createMode"
               ng-disabled="loginForm.$invalid">
         Log In
       </button>
       <button class="btn btn-default"
-              ng-hide="createMode || disallowCreate || retrieved"
+              ng-hide="createMode || disallowCreate  || retrieved"
               ng-click="createMode = true">
         Create Account
       </button>
 
       <button class="btn btn-default"
-              ng-show="createMode"
-              ng-disabled="loginForm.$invalid || loginForm.password != loginForm.confirm"
+              ng-if="createMode"
+              ng-disabled="loginForm.$invalid || cred.password != cred.confirm"
               ng-click="createAccount()">
         Ready to Create
       </button>

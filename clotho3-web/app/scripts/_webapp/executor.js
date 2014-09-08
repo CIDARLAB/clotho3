@@ -33,6 +33,21 @@ angular.module('clotho.webapp')
 		});
 	});
 
+  //check for updates to URL - this will only be triggered when URL is not set by above action
+  $scope.$on('$routeUpdate', function(scope, next, current) {
+    var updateId = next.params.id;
+
+    // only activate if new -- won't happen if dropdown changed this already
+    if (!angular.isEmpty($scope.editable) && $scope.editable.id != updateId) {
+      $scope.functionId = updateId;
+    }
+  });
+
+  //check for updates to function's id, update URL
+  $scope.$watch('function.id', function (newval) {
+    $location.search('id', newval || null).replace();
+  });
+
 	//functionality
 
 	$scope.queryWrapper = function (text, schema) {
@@ -56,4 +71,10 @@ angular.module('clotho.webapp')
 	$scope.onExecute = function (result) {
 
 	};
+
+  $scope.editExisting = function (item, query) {
+    if (ClothoSchemas.isFunction(item)) {
+      $scope.function = item;
+    }
+  };
 });

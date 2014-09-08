@@ -14,7 +14,7 @@ angular.module('clotho.tokenizer')
 	.service('ClothoReference', function (ClothoReferenceDelimiter) {
 
 		//wont match emails
-		var matchRegexp = new RegExp('(^|[^a-zA-Z0-9-_\\.])'+ ClothoReferenceDelimiter.symbol +'([A-Za-z0-9-_\\.]+)', 'gi');
+		var matchRegexp = new RegExp('(^|[^a-zA-Z0-9-_\\.])'+ ClothoReferenceDelimiter.symbol +'([A-Za-z0-9-_\\.@]+)', 'gi');
 
 		//todo update REST url
 		var urlRootREST = 'http://www.clothocad.org/data/';
@@ -75,7 +75,6 @@ angular.module('clotho.tokenizer')
 					element.text(ClothoReference.convertWiki(newval));
 				} else {
 					element.html(ClothoReference.convertHtml(newval));
-					console.log(element.contents());
 					$compile(element.contents())(scope);
 				}
 			});
