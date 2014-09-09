@@ -1,10 +1,11 @@
 <div class="form-group">
   <div class="input-group">
-    <div class="clothoTokenizerTokens">
+    <div class="clothoReferenceTokenizerTokens">
       <clotho-token ng-repeat="token in tokenCollection.tokens track by $index"
                     token="token"
-                    token-active-pass="{{tokenCollection.currentTokenIndex == $index}}"
-                    on-click="tokenCtrl.toggleTokenActive($index, $event)"
+                    token-active-index="tokenCollection.activeTokenIndex"
+                    token-active-pass="{{tokenCollection.activeTokenIndex == $index}}"
+                    on-click="tokenCtrl.toggleTokenActive($index, $event, $token)"
                     on-remove="tokenCtrl.removeToken($index, $token)"></clotho-token>
     </div>
     <input type="text"
@@ -20,8 +21,8 @@
            autocomplete-filter="currentFilter"
            autocomplete-has-focus="hasFocus"
            autocomplete-on-select="tokenCtrl.handleSelect($item, $query)"
-           autocomplete-on-enter="tokenCtrl.disambiguate()"
-           autocomplete-on-backout="tokenCtrl.handleBackout()">
+           autocomplete-on-enter="tokenCtrl.disambiguate($event)"
+           autocomplete-on-backout="tokenCtrl.handleBackout($event)">
     <span class="input-group-btn">
       <button type="button"
               class="btn btn-default"

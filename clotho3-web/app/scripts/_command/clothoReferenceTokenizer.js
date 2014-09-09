@@ -1,5 +1,5 @@
 angular.module('clotho.tokenizer')
-.directive('clothoReferenceTokenizer',  function ($parse, Clotho, ClientAPI, Debug, clothoTokenCollectionFactory, ClothoSchemas) {
+.directive('clothoReferenceTokenizer',  function ($parse, Clotho, ClientAPI, Debug, clothoTokenCollectionFactory, ClothoSchemas, $timeout) {
 
     var Debugger = new Debug('clothoReferenceTokenizer', '#ee9955');
 
@@ -20,25 +20,30 @@ angular.module('clotho.tokenizer')
           $scope.tokenCollection.removeToken(index);
         };
 
-        this.handleBackout = function () {
-          var activeTokenIndex = $scope.tokenCollection.whichActive();
-          if (activeTokenIndex >= 0) {
-
+        this.handleBackout = function (evt) {
+          if ($scope.tokenCollection.isLastActive()) {
+            $scope.tokenCollection.clearLast();
           } else {
-            $scope.tokenCollection.setLastActive()
+            //hack - deal with token event listener
+            //todo - handle escape and unsetting active
+            $timeout(function() {
+              $scope.tokenCollection.setLastActive();
+            });
           }
+          //update tokens
         };
 
-        this.toggleTokenActive = function (index, event) {
-          event.preventDefault();
-          $scope.tokenCollection.toggleActive(index);
+        this.toggleTokenActive = function (index, event, token) {
+          //placeholder
         };
 
         this.handleSelect = function (item, query) {
           this.addToken(item);
         };
 
-        this.disambiguate = function () {
+        this.disambiguate = function (event) {
+          event.preventDefault();
+
           console.log($scope.tokenCollection.tokens);
 
           //todo - construct run if function, or show view if not

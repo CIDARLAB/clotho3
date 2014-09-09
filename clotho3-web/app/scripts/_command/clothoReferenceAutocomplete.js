@@ -296,7 +296,7 @@ angular.module('clotho.tokenizer')
 
 				//we need to abstract this out so that we can bind/unbind beyond scope of element
 				//if no query or autcomplete not currently open, blur
-				function escapeHandler () {
+				function escapeHandler (event) {
 					scope.triggerHide = true;
 					if (!scope.query.length || !scope.autocompletions.length) {
 						element[0].blur();
@@ -320,8 +320,6 @@ angular.module('clotho.tokenizer')
 				element.bind('keydown', function (evt) {
 
 					scope.autocompleteOnKeydown({$event : evt, $keycode : evt.which});
-
-					//todo - change flow - Add in a @ symbol. look at substring after it for autocompletions. replace (or append) when select.
 
 					//reference delimiter
 					//hack - need to check shift state and use alternate keycode because @ is shift+2
@@ -364,7 +362,7 @@ angular.module('clotho.tokenizer')
 							return;
 						} else {
 							scope.$apply(function () {
-								scope.autocompleteOnBackout();
+								scope.autocompleteOnBackout({$event: evt});
 							});
 						}
 					}
@@ -412,7 +410,7 @@ angular.module('clotho.tokenizer')
 							//submit
 							if (evt.which == 13) {
 								scope.$apply(function () {
-									scope.autocompleteOnEnter()
+									scope.autocompleteOnEnter({$event: evt})
 								});
 							}
 						}
@@ -420,7 +418,7 @@ angular.module('clotho.tokenizer')
 					}
 					//escape
 					else if (evt.which === 27) {
-						escapeHandler();
+						escapeHandler(evt);
 					}
 
 					//at bottom so can return out and continue normal action
@@ -429,7 +427,7 @@ angular.module('clotho.tokenizer')
 
 				var escapeCheckHandler = function (evt) {
 					if (evt.which === 27) {
-						escapeHandler();
+						escapeHandler(evt);
 					}
 				};
 

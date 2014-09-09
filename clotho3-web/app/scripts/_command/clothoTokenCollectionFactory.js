@@ -4,14 +4,19 @@ angular.module('clotho.tokenizer')
  *
  * @description
  * Object to handle a collection of ClothoTokens
+ *
+ * todo - active state storage in token, not collection
  */
 	.factory('clothoTokenCollectionFactory', function (clothoTokenFactory) {
 
-		function ClothoTokenCollection (startingTokens) {
+    //want this easily accessible globally
+    //get token at index, otherwise last one
+		var getToken = angular.noop;
 
-			var self = this;
+    function ClothoTokenCollection (startingTokens) {
+
+      var self = this;
 			this.tokens = [];
-			this.currentTokenIndex = -1;
 
 			if (angular.isArray(startingTokens) || angular.isObject(startingTokens)) {
 				angular.forEach(startingTokens, function (token) {
@@ -20,6 +25,14 @@ angular.module('clotho.tokenizer')
 			} else {
         //wrong format
       }
+
+      getToken = function getToken (index) {
+        if (angular.isDefined(index)) {
+          return self.tokens[index];
+        } else {
+          return self.tokens[self.tokens.length - 1];
+        }
+      }
 		}
 
 		//add a token, pass arguments through to clothoTokenFactory
@@ -27,13 +40,17 @@ angular.module('clotho.tokenizer')
 			this.tokens.push(new clothoTokenFactory(sharable));
 		};
 
+    ClothoTokenCollection.prototype.hasLength = function () {
+      return this.tokens.length > 0;
+    }
+
 		ClothoTokenCollection.prototype.inRange = function (index) {
 			return index > -1 && index < this.tokens.length;
 		};
 
 		//get token at given index
 		ClothoTokenCollection.prototype.getToken = function (index) {
-			return this.tokens[index];
+			return getToken(index);
 		};
 
 		//return index of token
@@ -44,6 +61,7 @@ angular.module('clotho.tokenizer')
 		//remove token at given index, return it if removed, otherwise false
 		ClothoTokenCollection.prototype.removeToken = function (index) {
 			if (this.inRange(index)) {
+        //todo - check memory leak (shouldn't have reference but...)
 				return this.tokens.splice(index, 1);
 			} else {
 				return false;
@@ -55,67 +73,61 @@ angular.module('clotho.tokenizer')
 			this.tokens.length = 0;
 		};
 
-		//remove active token if set and return it, otherwise return false
-		ClothoTokenCollection.prototype.removeActiveToken = function () {
-			if (this.isActive()) {
-				var toReturn =  this.removeToken(this.currentTokenIndex);
-				this.unsetActive();
-				return toReturn;
-			} else {
-				return false;
-			}
+		//remove all active tokens. return array of removed tokens
+		ClothoTokenCollection.prototype.removeActiveTokens = function () {
+      var removed = [];
+      for (var i = 0; i < this.tokens.length; i++) {
+        if (getToken(i).active()) {
+          var toReturn = this.removeToken(i);
+          removed.push(toReturn);
+        }
+      }
+      return removed;
 		};
 
 		//set token at given index to be active
 		ClothoTokenCollection.prototype.setActive = function (index) {
 			if (this.inRange(index)) {
-				this.currentTokenIndex = index;
-				return index;
+				getToken(index).active(true);
+        return true;
 			} else {
 				return false;
 			}
 		};
 
-		ClothoTokenCollection.prototype.toggleActive = function (index) {
-			this[this.isActive(index) ? 'unsetActive' : 'setActive'](index);
-		};
-
-		//set token at last position to be active
-		ClothoTokenCollection.prototype.setLastActive = function (index) {
-			this.setActive(this.tokens.length - 1);
-		};
-
-		//set previous token active, based on current active, otherwise last
-		ClothoTokenCollection.prototype.setPrevActive = function (index) {
-			this.currentTokenIndex = (this.currentTokenIndex > 0 ? this.currentTokenIndex : this.tokens.length) - 1;
-		};
-
-		//set next token active, based on current active, otherwise first
-		ClothoTokenCollection.prototype.setNextActive = function (index) {
-			this.currentTokenIndex = (this.currentTokenIndex + 1) % this.tokens.length;
-		};
-
-		//unset active token
-		ClothoTokenCollection.prototype.unsetActive = function (index) {
-			this.currentTokenIndex = -1;
+		//unset active tokens
+		ClothoTokenCollection.prototype.unsetActive = function () {
+			angular.forEach(this.tokens, function (token) {
+        token.active(false);
+      });
 		};
 
 		//check if token is active, at index when passed, otherwise if any is active
 		ClothoTokenCollection.prototype.isActive = function (index) {
 			if (angular.isDefined(index)) {
-				return this.currentTokenIndex == index;
+				return getToken(index).active();
 			} else {
-				return this.currentTokenIndex > -1;
+				for (var i = 0; i < this.tokens.length; i++) {
+          if (getToken(i).active()) {
+            return true;
+          }
+        }
+        return false;
 			}
 		};
 
-		ClothoTokenCollection.prototype.whichActive = function () {
-			return this.currentTokenIndex;
-		};
+    //set token at last position to be active
+    ClothoTokenCollection.prototype.setLastActive = function () {
+      return this.hasLength() && getToken().active(true);
+    };
 
 		ClothoTokenCollection.prototype.isLastActive = function () {
-			return (this.currentTokenIndex === (this.tokens.length - 1))
+			return this.hasLength() && getToken().active();
 		};
+
+    ClothoTokenCollection.prototype.clearLast = function () {
+      return this.removeToken(this.tokens.length - 1);
+    };
 
 		return ClothoTokenCollection;
 	});

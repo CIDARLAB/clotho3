@@ -82,6 +82,13 @@
   max-width: 410px
 }
 
+.clothoReferenceTokenizerTokens {
+  display: table-cell;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 .clothoAutocompleteWrap {
   display: inline-block;
   position: relative;
