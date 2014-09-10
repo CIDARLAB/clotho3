@@ -1,4 +1,4 @@
-    //clotho.show('CT-sample-view', '['static-admin-instance-is-uuid']', '{}'); clotho.show('CT-sample-view', '[]', '{}'); 
+//clotho.show('CT-sample-view', '['static-admin-instance-is-uuid']', '{}'); clotho.show('CT-sample-view', '[]', '{}');
 /*
  Copyright (c) 2010 The Regents of the University of California.
  All rights reserved.

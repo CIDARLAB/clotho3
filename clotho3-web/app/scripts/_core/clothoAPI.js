@@ -186,6 +186,27 @@ angular.module('clotho.core')
 			return fn.emitSubCallback('createUser', cred, createUserCallback);
 		};
 
+    /**
+     * @name Clotho.updatePassword
+     *
+     * @param username
+     * @param password
+     *
+     * @description
+     * Changes the password for a given user
+     *
+     * @returns {Promise} result of creating user
+     */
+    var updatePassword = function clothoAPI_createUser(username, password) {
+      var cred = {username: username, password: password};
+
+      function updatePasswordCallback(loginResult) {
+        //anything?
+      }
+
+      return fn.emitSubCallback('updatePassword', cred, updatePasswordCallback);
+    };
+
 	  /**
 	   * @name Clotho.get
 	   *
@@ -777,6 +798,7 @@ angular.module('clotho.core')
       login : login,
       logout : logout,
       createUser : createUser,
+      updatePassword : updatePassword,
       get : get,
       set : set,
       query : query,
