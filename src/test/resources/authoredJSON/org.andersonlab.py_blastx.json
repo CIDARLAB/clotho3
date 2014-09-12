@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from BlastX import run",
+  "name" : "BlastX",
+  "id" : "org.andersonlab.py_blastx",
+  "description" : "Takes a sequence and runs blastx to return a BlastRecord object",
+  "args" : [ {
+    "type" : "array",
+    "name" : "arg0"
+  }]
+}
