@@ -14,7 +14,7 @@
         <span class="input-group-addon" ng-if="retrieved.icon" style="padding: 0; min-width: 32px;">
           <img ng-src="{{ retrieved.icon }}" style="width: 32px; height: 32px;">
         </span>
-        <input type="email"
+        <input type="text"
                class="form-control"
                id="username"
                name="username"
@@ -64,7 +64,6 @@
                name="personId"
                placeholder="ID of person (or import from facebook)"
                ng-model="cred.personId"
-               ng-required="createMode"
                sharable-popup
                sharable-popup-model="retrieved"
                sharable-popup-trigger="mouseenter"
@@ -88,7 +87,7 @@
         Log In
       </button>
       <button class="btn btn-default"
-              ng-hide="createMode || disallowCreate  || retrieved"
+              ng-hide="createMode || disallowCreate"
               ng-click="createMode = true">
         Create Account
       </button>

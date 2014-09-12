@@ -1,31 +1,23 @@
-<div class="clothoTokenizerWrap">
-  <div class="clothoTokenizerInputWrap" ng-click="focusInput()" ng-class="{'focused' : hasFocus}">
-    <div class="clothoIcon"></div>
-
-    <span ng-bind="soFar"></span>
-
-    <div class="clothoTokenizerAutocompleteWrap clothoAutocompleteWrap">
-      <input type="text"
-             clotho-reference-autocomplete
-             class="clothoAutocomplete"
-             ng-model="query"
-             ng-trim="false"
-             auto-grow
-             placeholder="type query"
-             autocomplete-trigger="true"
-             autocomplete-clear-on-select="false"
-             autocomplete-add-on-select="true"
-             autocomplete-has-focus="hasFocus"
-             autocomplete-on-enter="submit()"
-             autocomplete-popup-position="topLeft">
-    </div>
+<div class="form-group">
+  <div class="input-group clotho-input-group">
+    <input type="text"
+           clotho-reference-autocomplete
+           class="form-control"
+           ng-model="query"
+           ng-trim="false"
+           ng-click="focusInput()"
+           placeholder="{{placholder || 'Type @ for autocomplete'}}"
+           autocomplete-trigger="true"
+           autocomplete-trigger-include="false"
+           autocomplete-has-focus="hasFocus"
+           autocomplete-on-enter="submit()"
+           autocomplete-popup-position="topLeft">
+    <span class="input-group-btn">
+      <button type="button"
+              class="btn btn-default"
+              ng-click="submit()">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    </span>
   </div>
-  <span class="input-group-btn">
-    <button type="button"
-            class="btn btn-default"
-            ng-click="submit()">
-      <span class="glyphicon glyphicon-chevron-right"></span>
-    </button>
-  </span>
 </div>
-

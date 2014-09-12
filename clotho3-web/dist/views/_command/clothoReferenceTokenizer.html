@@ -1,0 +1,34 @@
+<div class="form-group">
+  <div class="input-group">
+    <div class="clothoReferenceTokenizerTokens">
+      <clotho-token ng-repeat="token in tokenCollection.tokens track by $index"
+                    token="token"
+                    token-active-index="tokenCollection.activeTokenIndex"
+                    token-active-pass="{{tokenCollection.activeTokenIndex == $index}}"
+                    on-click="tokenCtrl.toggleTokenActive($index, $event, $token)"
+                    on-remove="tokenCtrl.removeToken($index, $token)"></clotho-token>
+    </div>
+    <input type="text"
+           clotho-reference-autocomplete
+           class="form-control"
+           ng-model="query"
+           ng-trim="false"
+           ng-click="tokenCtrl.focusInput()"
+           placeholder="Type to Query"
+           autocomplete-trigger="false"
+           autocomplete-trigger-include="false"
+           autocomplete-clear-on-select="true"
+           autocomplete-filter="currentFilter"
+           autocomplete-has-focus="hasFocus"
+           autocomplete-on-select="tokenCtrl.handleSelect($item, $query)"
+           autocomplete-on-enter="tokenCtrl.disambiguate($event)"
+           autocomplete-on-backout="tokenCtrl.handleBackout($event)">
+    <span class="input-group-btn">
+      <button type="button"
+              class="btn btn-default"
+              ng-click="submit()">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </button>
+    </span>
+  </div>
+</div>

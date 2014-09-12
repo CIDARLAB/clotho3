@@ -8,7 +8,7 @@ angular.module('clotho.commandbar')
 			$scope.cred.password = '';
 			$scope.cred.confirm = '';
 		}
-		
+
 		function resetCred() {
 			$scope.cred = {username: "", password: "", confirm: "", personId : ""};
 		}
@@ -105,8 +105,6 @@ angular.module('clotho.commandbar')
 
 						var person = Facebook.convertToPersonSharable(user);
 
-						//fixme - by creating here automatically, if they don't create their clotho account, then person exists in clotho, but principle does not, so form will not allow them to create themselves. Can be fixed by adding way to check if user has principle in clotho, not just associated person exists.
-
 						Clotho.create(person)
 							.then(function (id) {
 								$scope.notification = {
@@ -141,38 +139,49 @@ angular.module('clotho.commandbar')
 		};
 
 		$scope.createAccount = function () {
-			//should only get here if form is valid
+      //should only get here if form is valid
 
-			//make sure person exists
-			Clotho.get($scope.cred.personId)
-			.then(function (retrieved) {
+      /*
+      //todo - incorporate associated user into flow + errors
+      //check associated person exists
+      var hasAssociated = !angular.isEmpty($scope.cred.personId);
 
-				//try to create
-				Clotho.createUser($scope.cred.username, $scope.cred.password)
-				.then(function (response) {
+      if (hasAssociated) {
+        Clotho.get($scope.cred.personId)
+        .then(function (retrieved) {
+          //double check that associated person exists
+          hasAssociated = !!retrieved;
+        });
+      }
+      */
 
-						console.log('create user?', response);
+      //try to create
+      Clotho.createUser($scope.cred.username, $scope.cred.password)
+        .then(function (response) {
 
-						//todo
+          console.log('create user?', response);
 
-						if (response) {
+          //todo
 
-						} else {
+          if (response) {
+            $scope.notification = {
+              class: "alert-success",
+              message: "User " + $scope.cred.username + "created!"
+            };
+          } else {
+            $scope.notification = {
+              class: "alert-error",
+              message: "Account creation unsuccessful"
+            };
+          }
 
-						}
-
-				}, function (err) {
-
-						console.log(err);
-
-					//todo
-				});
-			}, function (err) {
-				$scope.notification = {
-					class: "alert-danger",
-					message: "Associated person does not exist..."
-				};
-			});
+        }, function (err) {
+          $scope.notification = {
+            class: "alert-error",
+            message: "Error Creating... check console"
+          };
+          console.error('account creation error', err);
+        });
 		};
 
 	});

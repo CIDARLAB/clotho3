@@ -13,9 +13,11 @@
     <div class="col-sm-10" ng-if="isPrimitiveField(arg.type)">
       <div class="input-group">
 
-        <textarea json-edit="functionArgs[arg.name]"
+        <textarea json-editor
+                  ng-model="functionArgs[arg.name]"
                   rows="1"
                   class="form-control"
+                  name="executor{{$index}}"
                   placeholder="Enter JSON value"></textarea>
 
                   <span class="input-group-addon"
