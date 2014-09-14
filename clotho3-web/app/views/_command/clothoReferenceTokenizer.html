@@ -18,11 +18,12 @@
            autocomplete-trigger="false"
            autocomplete-trigger-include="false"
            autocomplete-clear-on-select="true"
+           autocomplete-clear-on-enter="true"
            autocomplete-filter="currentFilter"
            autocomplete-block-input="blockInput"
            autocomplete-has-focus="hasFocus"
            autocomplete-on-select="tokenCtrl.handleSelect($item, $query)"
-           autocomplete-on-enter="tokenCtrl.disambiguate($event)"
+           autocomplete-on-enter="tokenCtrl.handleEnter($event, $query)"
            autocomplete-on-backout="tokenCtrl.handleBackout($event)">
     <span class="input-group-btn">
       <button type="button"

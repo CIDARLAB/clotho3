@@ -424,6 +424,7 @@ angular.module('clotho.foundation')
 		}
 
 		//this is a synchronous version for things like autocomplete where we're running a lot of these
+    //returns empty string if does not appear to be a sharable
 		function dirtyDetermineType (sharable) {
 			if (isSchema(sharable)) {
 				return 'Schema';
@@ -431,9 +432,11 @@ angular.module('clotho.foundation')
 				return 'Function';
 			} else if (isView(sharable)) {
 				return 'View';
-			} else {
+			} else if (isSharable(sharable)) {
 				return 'Instance';
-			}
+			} else {
+        return '';
+      }
 		}
 
 		//todo - currently this only checks name, but should check for child as well

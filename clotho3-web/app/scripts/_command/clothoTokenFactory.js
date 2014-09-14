@@ -6,7 +6,7 @@ angular.module('clotho.tokenizer')
  * ClothoTokens are essentially wrappers for clotho sharables, or strings.
  * They expect the fields minimally of name, id, schema to be a sharable, or just a string for other keywords
  */
-  .factory('clothoTokenFactory', function (Clotho) {
+  .factory('clothoTokenFactory', function ($q, Clotho) {
 
     //pass UUID to make object, or just pass value as string
     function ClothoToken(sharable) {
@@ -19,6 +19,8 @@ angular.module('clotho.tokenizer')
           self.fullSharable = data;
           return data;
         });
+      } else {
+        self.fullSharablePromise = $q.when(null);
       }
     }
 

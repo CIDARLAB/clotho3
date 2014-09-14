@@ -15,7 +15,11 @@ angular.module('clotho.tokenizer')
           $scope.query = '';
         }
 
-        this.addToken = function (item) {
+        function resetTokens() {
+          $scope.tokenCollection.removeAll();
+        }
+
+        this.addToken = function (item, isPrimitive) {
           Debugger.log('adding token', item);
           $scope.tokenCollection.addToken(item);
         };
@@ -41,19 +45,27 @@ angular.module('clotho.tokenizer')
         };
 
         this.handleSelect = function (item, query) {
+          //select will not get called unless there is a dropdown, check enter callback
           this.addToken(item);
         };
 
-        this.disambiguate = function (event) {
+        this.handleEnter = function (event, query) {
           event.preventDefault();
+          if ($scope.allowPrimitive === true && query.length) {
+            this.addToken(query);
+          } else {
+            this.disambiguate(event)
+          }
+        };
+
+        this.disambiguate = function (event) {
 
           var tokens = $scope.tokenCollection.tokens;
           if (tokens.length) {
             var tokenNames = [],
               firstToken = tokens[0];
             angular.forEach(tokens, function (token) {
-              //todo - handle primitives
-              tokenNames.push(token.model.name);
+              tokenNames.push(token.readable());
             });
 
             ClientAPI.say({
@@ -69,8 +81,7 @@ angular.module('clotho.tokenizer')
             if (ClothoSchemas.isFunction(firstToken.model)) {
 
               var args = angular.map(tokens.slice(1), function (token) {
-                //todo - handle primitives
-                return token.model.id;
+                return token.isSharable() ? token.model.id : token.model;
               });
 
               Clotho.run(firstToken.model.id, args).then(function (response) {
@@ -92,6 +103,7 @@ angular.module('clotho.tokenizer')
             }
 
             resetQuery();
+            resetTokens();
           }
           //no tokens
           else {
@@ -117,6 +129,14 @@ angular.module('clotho.tokenizer')
 
         function setPlaceholder (placeholder) {
           scope.currentPlaceholder = placeholder;
+        }
+
+        function allowPrimitive (val) {
+          scope.allowPrimitive = angular.isDefined(val) ? !!val : true;
+        }
+
+        function disallowPrimitive () {
+          scope.allowPrimitive = false;
         }
 
         function setHideFilter () {
@@ -164,26 +184,29 @@ angular.module('clotho.tokenizer')
 
                     var isPrimitive = ClothoSchemas.isPrimitiveField(curArg.type);
 
-                    //todo - support primitive type value
                     if (isPrimitive) {
                       setHideFilter();
                       setPlaceholder('Enter ' + curArg.type);
+                      allowPrimitive();
                     } else {
                       setFilter(function (item) {
                         return ClothoSchemas.isInstanceOfSchema(item, curArg.type);
                       });
                       setPlaceholder(curArg.type);
+                      disallowPrimitive();
                     }
                   }
                   //arguments are full
                   else {
                     blockInput();
                     setPlaceholder('All arguments defined');
+                    disallowPrimitive();
                   }
                 }
                 //no function args defined... so allow any input
                 else {
                   unblockInput();
+                  allowPrimitive();
                 }
               });
             }
@@ -196,6 +219,7 @@ angular.module('clotho.tokenizer')
           //no tokens are defined... no filter
           else {
             unblockInput();
+            disallowPrimitive();
           }
         });
       }
