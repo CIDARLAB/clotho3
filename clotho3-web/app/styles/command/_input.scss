@@ -1,3 +1,5 @@
+//todo - major refactor (esp move away from id)
+
 #clotho_command_inputWrapper {
   @extend .input-group;
   width: 435px;
@@ -18,4 +20,28 @@
 #clotho_command_submit {
   @extend .btn;
   @extend .btn-default;
+}
+
+#clotho_logButtonContainer {
+  display: inline-block;
+  float: left;
+  margin-left: 10px;
+  position: relative;
+}
+
+#clotho_logButton {
+  @extend .btn;
+  @extend .btn-default;
+}
+
+#clotho_logSnippet {
+  padding: 0px 12px;
+  margin: 0 10px 0 15px;
+  line-height: 2em;
+  max-width: 325px;
+  max-height: 34px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+  display: inline;
 }

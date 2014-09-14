@@ -17,6 +17,7 @@ angular.module('clotho.tokenizer')
       if (this.isSharable()) {
         self.fullSharablePromise = Clotho.get(self.model.id, {mute: true}).then(function (data) {
           self.fullSharable = data;
+          return data;
         });
       }
     }

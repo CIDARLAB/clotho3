@@ -110,7 +110,6 @@ todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try 
 		link: function (scope, element, attrs, ngModelCtrl) {
 
 			function isValidJson(model) {
-        console.log(model);
         var flag = angular.isDefined(model);
 				try {
 					angular.fromJson(model);
@@ -135,6 +134,13 @@ todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try 
 				// alternatively, use JSON.stringify(object, null, 2);
 				return angular.toJson(object, true);
 			}
+
+      /*
+      todo - only want to update view (formatters) if objects differ
+      if (!angular.equals(object, angular.fromJson(ngModelCtrl.$viewValue))) {
+
+      }
+      */
 
 			//$validators is an object, where key is the error
 			ngModelCtrl.$validators.json = isValidJson;

@@ -42,7 +42,7 @@ angular.module('clotho.tokenizer')
 
     ClothoTokenCollection.prototype.hasLength = function () {
       return this.tokens.length > 0;
-    }
+    };
 
 		ClothoTokenCollection.prototype.inRange = function (index) {
 			return index > -1 && index < this.tokens.length;

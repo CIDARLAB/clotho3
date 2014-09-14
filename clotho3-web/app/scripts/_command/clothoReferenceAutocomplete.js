@@ -42,6 +42,9 @@ angular.module('clotho.tokenizer')
  * Bind to whether the input has focus
  * @attr autocompleteFilter {Filter}
  * Relayed to angular's filter filter.
+ * @attr autocompleteBlockInput {Boolean}
+ * Block further input. Use instead of [disabled] attribute, so other bindings ok.
+ * //todo - add styling
  *
  * event
  *
@@ -99,6 +102,7 @@ angular.module('clotho.tokenizer')
 				autocompleteClearOnSelect: '=?',
 				forceVisible: '=?',
 				autocompletions : '=?',
+        autocompleteBlockInput: '=?',
         autocompleteFilter : '=?',
 				autocompleteHasFocus : '=?',
 				autocompleteOnSelect: '&?',
@@ -307,6 +311,11 @@ angular.module('clotho.tokenizer')
 						scope.$digest();
 					}
 				}
+
+        //style handler
+        scope.$watch('autocompleteBlockInput', function (newval) {
+          element.toggleClass('input-disabled', !!newval);
+        });
 
 				/* EVENT LISTENERS */
 

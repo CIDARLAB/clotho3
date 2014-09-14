@@ -5,7 +5,7 @@
                     token="token"
                     token-active-index="tokenCollection.activeTokenIndex"
                     token-active-pass="{{tokenCollection.activeTokenIndex == $index}}"
-                    on-click="tokenCtrl.toggleTokenActive($index, $event, $token)"
+                    on-click="tokenCtrl.onTokenActive($index, $event, $token)"
                     on-remove="tokenCtrl.removeToken($index, $token)"></clotho-token>
     </div>
     <input type="text"
@@ -14,11 +14,12 @@
            ng-model="query"
            ng-trim="false"
            ng-click="tokenCtrl.focusInput()"
-           placeholder="Type to Query"
+           placeholder="{{currentPlaceholder || 'Type to Query'}}"
            autocomplete-trigger="false"
            autocomplete-trigger-include="false"
            autocomplete-clear-on-select="true"
            autocomplete-filter="currentFilter"
+           autocomplete-block-input="blockInput"
            autocomplete-has-focus="hasFocus"
            autocomplete-on-select="tokenCtrl.handleSelect($item, $query)"
            autocomplete-on-enter="tokenCtrl.disambiguate($event)"

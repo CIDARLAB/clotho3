@@ -10,6 +10,11 @@ angular.module('clotho.tokenizer')
         startingTags : '='
       },
       controller: function ($scope, $element, $attrs) {
+
+        function resetQuery () {
+          $scope.query = '';
+        }
+
         this.addToken = function (item) {
           Debugger.log('adding token', item);
           $scope.tokenCollection.addToken(item);
@@ -24,17 +29,15 @@ angular.module('clotho.tokenizer')
           if ($scope.tokenCollection.isLastActive()) {
             $scope.tokenCollection.clearLast();
           } else {
-            //hack - deal with token event listener
-            //todo - handle escape and unsetting active
+            //hack - timeout to allow tokenCollection event handlers
             $timeout(function() {
               $scope.tokenCollection.setLastActive();
             });
           }
-          //update tokens
         };
 
-        this.toggleTokenActive = function (index, event, token) {
-          //placeholder
+        this.onTokenActive = function (index, event, token) {
+
         };
 
         this.handleSelect = function (item, query) {
@@ -44,33 +47,55 @@ angular.module('clotho.tokenizer')
         this.disambiguate = function (event) {
           event.preventDefault();
 
-          console.log($scope.tokenCollection.tokens);
-
-          //todo - construct run if function, or show view if not
-
-          //get first token
-          var isFunction = false;
-
-          ClientAPI.say({
-            from: 'client',
-            channel: 'run',
-            class: 'info',
-            text: 'disambiguating...'
-          });
-
-          if (isFunction) {
-            //todo
-            Clotho.run().then(function (response) {
-              ClientAPI.say({
-                from: 'server',
-                channel: 'submit',
-                class: 'success',
-                text: response
-              });
-              $scope.query = '';
+          var tokens = $scope.tokenCollection.tokens;
+          if (tokens.length) {
+            var tokenNames = [],
+              firstToken = tokens[0];
+            angular.forEach(tokens, function (token) {
+              //todo - handle primitives
+              tokenNames.push(token.model.name);
             });
-          } else {
 
+            ClientAPI.say({
+              from: 'client',
+              channel: 'run',
+              class: 'info',
+              tokens: angular.copy(tokens), //prevent reference updates
+              text: 'disambiguating: ' + tokenNames.join(' ')
+            });
+
+            //parsing... run function, show View, edit sharable / schema
+
+            if (ClothoSchemas.isFunction(firstToken.model)) {
+
+              var args = angular.map(tokens.slice(1), function (token) {
+                //todo - handle primitives
+                return token.model.id;
+              });
+
+              Clotho.run(firstToken.model.id, args).then(function (response) {
+                ClientAPI.say({
+                  from: 'server',
+                  channel: 'submit',
+                  class: 'success',
+                  text: response
+                });
+              });
+            }
+            //check if view
+            else if (ClothoSchemas.isView(tokens[0])) {
+              console.log('need to handle view from command bar');
+            }
+            //not a function
+            else {
+              Clotho.edit(tokens[0].id);
+            }
+
+            resetQuery();
+          }
+          //no tokens
+          else {
+            //do nothing
           }
         };
 
@@ -81,20 +106,97 @@ angular.module('clotho.tokenizer')
       controllerAs: 'tokenCtrl',
       link: function (scope, element, attrs) {
 
+        function clearFilter () {
+          scope.currentFilter = null;
+          scope.currentPlaceholder = null;
+        }
+
+        function setFilter (filter) {
+          scope.currentFilter = filter;
+        }
+
+        function setPlaceholder (placeholder) {
+          scope.currentPlaceholder = placeholder;
+        }
+
+        function setHideFilter () {
+          setFilter(function () {
+            return false;
+          });
+        }
+
+        function blockInput () {
+          setHideFilter();
+          scope.blockInput = true;
+        }
+
+        function unblockInput () {
+          scope.blockInput = false;
+          clearFilter();
+        }
+
         /* Tokens */
 
         scope.tokenCollection = new clothoTokenCollectionFactory(scope.startingTags);
 
-        scope.$watchCollection('tokenCollection.tokens', function () {
-          // todo - check type, should
-          // (1) filter next token if function OR
-          // (2) prevent more tokens if sharable
+        scope.$watchCollection('tokenCollection.tokens', function (newval, oldval) {
 
-          //todo - allow primitives if schema not specified (or wants string)
+          //if we have tokens
+          if (newval && newval.length > 0) {
 
-          scope.currentFilter = function (item) {
-            return ClothoSchemas.isFunction(item);
-          };
+            var firstToken = newval[0], //ClothoToken class
+              numTokens = newval.length;
+
+            //if first token is a function, inspect arguments
+            //set filter for current token based on function args + numTokens
+            if (ClothoSchemas.isFunction(firstToken.model)) {
+
+              firstToken.fullSharablePromise.then(function (fullFunction) {
+
+                //check that args are defined
+                if (fullFunction.args) {
+
+                  //if we have more arguments left
+                  if (fullFunction.args.length > (numTokens - 1)) {
+                    var curArg = fullFunction.args[numTokens - 1];
+
+                    //todo - handle arg.type undefined
+
+                    var isPrimitive = ClothoSchemas.isPrimitiveField(curArg.type);
+
+                    //todo - support primitive type value
+                    if (isPrimitive) {
+                      setHideFilter();
+                      setPlaceholder('Enter ' + curArg.type);
+                    } else {
+                      setFilter(function (item) {
+                        return ClothoSchemas.isInstanceOfSchema(item, curArg.type);
+                      });
+                      setPlaceholder(curArg.type);
+                    }
+                  }
+                  //arguments are full
+                  else {
+                    blockInput();
+                    setPlaceholder('All arguments defined');
+                  }
+                }
+                //no function args defined... so allow any input
+                else {
+                  unblockInput();
+                }
+              });
+            }
+            //first token not a function
+            else {
+              blockInput();
+              setPlaceholder('Does not accept arguments');
+            }
+          }
+          //no tokens are defined... no filter
+          else {
+            unblockInput();
+          }
         });
       }
     };

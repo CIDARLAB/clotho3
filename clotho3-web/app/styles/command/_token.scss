@@ -1,78 +1,28 @@
 .clothoTokenWrap {
   @extend .label;
-  background-color: $color-token-noModel;
   display: inline-block;
   position: relative;
   padding: 4px 8px;
   margin: 1px 3px;
 
-  &.hasModel {
-    background-color: $color-token-default;
-  }
-
-  &.sharable {
-    background-color: $color-token-sharable;
-  }
-
-  &.ambiguous {
-    background-color: $color-token-ambiguous;
-  }
-
-  //last gets priority...
-  &.active {
-    background-color: $color-token-active;
-  }
-}
-
-//todo - refactor / clean up / reuse with log popup
-.clothoTokenPopup {
-  display: block;
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  text-align: left;
-  background-color: white;
-  z-index: 1010;
-  min-width: 300px;
-  max-width: 400px;
-  max-height: 400px;
-  overflow: scroll;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  transform: translateY(100%);
-
-  .clothoTokenPopupHeader {
-    @extend .popover-title;
-    color: #333;
-
-    .btn-group {
-      float: right;
-      margin-top: -6px;
-    }
-  }
-
-  .info {
+  //same size as input
+  &.large {
+    padding: 8px;
     font-size: 1em;
-    margin: 0;
-    border: 0;
-    background: #fff;
+  }
+
+  .active > & {
+    background-color: $brand-primary;
+    box-shadow: 0 0 8px $input-border-focus;
   }
 }
 
-.clothoTokenText, .clothoTokenClose {
+.clothoTokenText,
+.clothoTokenType
+.clothoTokenClose {
   line-height: 14px;
 }
 
-.clothoTokenText {
-
-}
-
-.clothoTokenClose {
-  cursor: pointer;
-  padding-left: 5px;
-  font-weight: bold;
-  color: black;
-  text-shadow: 0 1px 0 white;
-  opacity: 0.2;
+.clothoTokenType {
+  padding: 6px 0;
 }

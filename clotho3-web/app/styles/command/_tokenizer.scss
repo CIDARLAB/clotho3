@@ -22,7 +22,7 @@
   }
 }
 
-//tokenizer
+//tokenizer -- todo - refactor
 
 
 .clothoTokenizerWrap {
@@ -111,4 +111,8 @@
 
 .clothoAutocompleteMatch {
   display: block;
+}
+
+.input-disabled {
+  background-color: $input-bg-disabled;
 }

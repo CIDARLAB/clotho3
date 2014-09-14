@@ -7,11 +7,9 @@ angular.module('clotho.tokenizer')
  *
  * Can either pass token directly, or tokenModel (will overwrite)
  *
- * //todo - better handling of arrays (ambiguity)
- * //todo - probably just want to pass in collection?
- * //todo - beter active handling + $scope propagation
+ * //todo - better active handling + $scope propagation and tying to collection
  */
-	.directive('clothoToken', function ($parse, $document, Clotho, clothoTokenFactory) {
+	.directive('clothoToken', function ($parse, $document, Clotho, clothoTokenFactory, ClothoSchemas) {
 		return {
 			restrict: 'E',
 			templateUrl: "views/_command/token.html",
@@ -27,9 +25,11 @@ angular.module('clotho.tokenizer')
 			},
 			link: function clothoTokenLink(scope, element, attrs, ngModelCtrl) {
 
-				scope.$watch('tokenActivePass', function (newval) {
-					scope.token.active(scope.$eval(newval));
-				});
+        scope.$watch('token.model', function (newval) {
+          var dirtyType = ClothoSchemas.dirtyDetermineType(newval);
+          scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(dirtyType);
+          scope.iconClass = ClothoSchemas.determineSharableIcon(dirtyType);
+        });
 
 				scope.$watch('tokenModel', function (newval) {
 					if (!angular.isEmpty(newval)) {
@@ -37,11 +37,15 @@ angular.module('clotho.tokenizer')
 					}
 				});
 
+        scope.$watch('tokenActivePass', function (newval) {
+          scope.token.active(scope.$eval(newval));
+        });
+
 				element.on('click', function (evt) {
+					scope.onClick({$event : evt, $token : scope.token});
 					scope.$apply(function () {
 						scope.token.active(!scope.token.active());
 					});
-					scope.onClick({$event : evt, $token : scope.token});
 				});
 
         var tokenKeypressListener = function (evt) {
@@ -62,6 +66,7 @@ angular.module('clotho.tokenizer')
         };
 
         scope.$watch('token.active()', function (newval) {
+          element.toggleClass('active', !!newval);
           if (newval) {
             $document.on('keydown', tokenKeypressListener);
           } else {
