@@ -5,7 +5,7 @@ angular.module('clotho.tokenizer')
  * @description
  * Given a name and UUID, renders a token which can display more information upon interaction via sharable-popup
  *
- * Can either pass token directly, or tokenModel (will overwrite)
+ * Can either pass token directly, or tokenModel (will overwrite if not empty), or tokenId (will call Clotho.get() and will overwrite if not empty)
  *
  * //todo - better active handling + $scope propagation and tying to collection
  */
@@ -15,6 +15,7 @@ angular.module('clotho.tokenizer')
 			templateUrl: "views/_command/token.html",
 			scope: {
 				token : '=?',
+        tokenId: '@?',
 				tokenModel : '=?',
 				tokenName : '@?',
 				tokenActivePass : '@?',
@@ -29,7 +30,8 @@ angular.module('clotho.tokenizer')
           var dirtyType = ClothoSchemas.dirtyDetermineType(newval);
           scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(dirtyType);
           scope.iconClass = ClothoSchemas.determineSharableIcon(dirtyType);
-          if (scope.token.isSharable()) {
+
+          if (angular.isDefined(scope.token) && scope.token.isSharable()) {
             scope.labelClass += ' isSharable';
           }
         });
@@ -40,8 +42,21 @@ angular.module('clotho.tokenizer')
 					}
 				});
 
+        scope.$watch('tokenId', function (newval) {
+          if (!angular.isEmpty(newval)) {
+            scope.tokenName = newval;
+            Clotho.get(newval, {mute: true}).then(function (result) {
+              if (!angular.isEmpty(result)) {
+                scope.token = new clothoTokenFactory(result);
+              }
+            });
+          }
+        });
+
         scope.$watch('tokenActivePass', function (newval) {
-          scope.token.active(scope.$eval(newval));
+          if (angular.isDefined(newval)) {
+            scope.token.active(scope.$eval(newval));
+          }
         });
 
 				element.on('click', function (evt) {
