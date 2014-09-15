@@ -310,7 +310,9 @@ angular.module('clotho.tokenizer')
 				//we need to abstract this out so that we can bind/unbind beyond scope of element
 				//if no query or autcomplete not currently open, blur
 				function escapeHandler (event) {
-					scope.triggerHide = true;
+          if (scope.autocompleteTrigger) {
+            scope.triggerHide = true;
+          }
 					if (!scope.query.length || !scope.autocompletions.length) {
 						element[0].blur();
 						resetActive();
@@ -349,11 +351,16 @@ angular.module('clotho.tokenizer')
 						//todo - other ways to triggerHide
 
 						scope.$digest();
+            //do not return, prevent default
 					}
 
 					//typeahead is open and an "interesting" key was pressed
 					if (localHotkeys.indexOf(evt.which) === -1) {
-						return;
+            //if blocking input, don't let 'uninteresting' keys do anything
+						if (scope.autocompleteBlockInput) {
+              evt.preventDefault();
+            }
+            return;
 					}
 
 

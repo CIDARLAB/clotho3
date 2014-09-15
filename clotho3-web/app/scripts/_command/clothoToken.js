@@ -29,6 +29,9 @@ angular.module('clotho.tokenizer')
           var dirtyType = ClothoSchemas.dirtyDetermineType(newval);
           scope.labelClass = 'label-' + ClothoSchemas.typeToColorClass(dirtyType);
           scope.iconClass = ClothoSchemas.determineSharableIcon(dirtyType);
+          if (scope.token.isSharable()) {
+            scope.labelClass += ' isSharable';
+          }
         });
 
 				scope.$watch('tokenModel', function (newval) {

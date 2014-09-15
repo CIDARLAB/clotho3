@@ -1,5 +1,5 @@
 angular.module('clotho.tokenizer')
-.directive('clothoReferenceTokenizer',  function ($parse, Clotho, ClientAPI, Debug, clothoTokenCollectionFactory, ClothoSchemas, $timeout) {
+.directive('clothoReferenceTokenizer',  function ($parse, $timeout, Clotho, ClientAPI, Debug, clothoTokenCollectionFactory, ClothoSchemas, ClothoCommandHistory) {
 
     var Debugger = new Debug('clothoReferenceTokenizer', '#ee9955');
 
