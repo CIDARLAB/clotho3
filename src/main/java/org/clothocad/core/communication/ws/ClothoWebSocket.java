@@ -45,6 +45,7 @@ public class ClothoWebSocket
     public ClothoWebSocket(String id, Router router) {
         super(id);
         this.router = router;
+        
     }
 
     @Override
@@ -54,6 +55,7 @@ public class ClothoWebSocket
     @Override
     public void send(Message msg) {
         try {
+            
             String messageString = JSON.serializeForExternal(msg);
             connection.sendMessage(messageString);
             log.trace("sent: {}", messageString);

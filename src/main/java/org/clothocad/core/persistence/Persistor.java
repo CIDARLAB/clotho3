@@ -183,6 +183,11 @@ public class Persistor{
         return result;
     }
     
+    protected Map<String,Object> getJSONSocket(ObjectId uuid, Set<String> fields){
+        
+        
+        return new HashMap<String,Object>();
+    }
     
     //XXX: should return set of possible schemas, not child objects
     // then should not be used as currently is in save
