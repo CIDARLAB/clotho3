@@ -19,14 +19,6 @@ module.exports = function (grunt) {
 	    full: 'scaffold-full'
     },
     watch: {
-      coffee: {
-        files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
-        tasks: ['coffee:dist']
-      },
-      coffeeTest: {
-        files: ['test/spec/**/*.coffee'],
-        tasks: ['coffee:test']
-      },
 	    js: {
 		    files: ['<%= yeoman.app %>/scripts/**/*.js'],
 		    //tasks: ['newer:jshint:all'],
@@ -355,7 +347,7 @@ module.exports = function (grunt) {
         'coffee',
         'compass:dist',
         'copy:styles',
-        //'imagemin',
+        'imagemin',
         'svgmin',
         'htmlmin'
       ]
