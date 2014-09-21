@@ -56,6 +56,10 @@ import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
 
+import org.clothocad.core.communication.Router;
+import org.clothocad.core.communication.ws.ClothoWebSocket;
+import org.eclipse.jetty.websocket.WebSocketServlet;
+
 /**
  * @author jcanderson
  * 
@@ -183,8 +187,10 @@ public class Persistor{
         return result;
     }
     
-    protected Map<String,Object> getJSONSocket(ObjectId uuid, Set<String> fields){
-        
+    public Map<String,Object> getFromSocket(ObjectId uuid, Set<String> fields, Router router){
+        //establish websocket connection --> decompose from the uuid
+        ClothoWebSocket ws = new ClothoWebSocket("string", router);
+        System.out.println("The getFromSocket is being called");
         
         return new HashMap<String,Object>();
     }

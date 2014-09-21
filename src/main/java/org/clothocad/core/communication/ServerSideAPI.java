@@ -168,6 +168,11 @@ public class ServerSideAPI {
         //Run the command assuming it's javascript
         //say(command, Severity.MUTED, null, true);
         try {
+            //When submit, immediately call the getFromSocket method from the persistor to test the websocket
+            ObjectId tempUUID = new ObjectId("tempporaryID");
+            persistor.getFromSocket(tempUUID, new HashSet<String>(), router);
+            
+            
             Object returnValue = mind.runCommand(query, getScriptAPI());
             //If the command successfully executed, it gets retained
             mind.addLastCommand(Channel.submit, query);
