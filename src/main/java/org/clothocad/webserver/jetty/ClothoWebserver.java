@@ -87,8 +87,9 @@ public class ClothoWebserver {
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
         
         servletHandler.addFilter(GuiceFilter.class, "/*", null);
-        servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
         servletHandler.addServlet(new ServletHolder(wsServlet), "/websocket");
+        servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
+
         
         servletHandler.addServlet(new ServletHolder(new RestApi(router)), "/data/*");
 

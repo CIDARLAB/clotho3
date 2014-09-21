@@ -25,6 +25,7 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.core.persistence;
 
+import java.net.URI;
 import org.clothocad.core.schema.Converters;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ import org.clothocad.core.datums.ObjBase;
 import org.reflections.Reflections;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
 import static org.clothocad.core.ReservedFieldNames.*;
@@ -58,8 +61,9 @@ import org.clothocad.core.util.JSON;
 
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ws.ClothoWebSocket;
-import org.eclipse.jetty.websocket.WebSocketServlet;
-
+import org.eclipse.jetty.websocket.WebSocket.Connection;
+import org.eclipse.jetty.websocket.WebSocketClient;
+import org.eclipse.jetty.websocket.WebSocketClientFactory;
 /**
  * @author jcanderson
  * 
@@ -187,12 +191,27 @@ public class Persistor{
         return result;
     }
     
-    public Map<String,Object> getFromSocket(ObjectId uuid, Set<String> fields, Router router){
+    //would return as the same as getAsJson --> Map<String, Object>
+    public void getFromSocket(ObjectId uuid, Set<String> fields, Router router){
         //establish websocket connection --> decompose from the uuid
-        ClothoWebSocket ws = new ClothoWebSocket("string", router);
-        System.out.println("The getFromSocket is being called");
         
-        return new HashMap<String,Object>();
+        System.out.println("The getFromSocket is being called");
+        try{
+            ClothoWebSocket ws = new ClothoWebSocket("string", router);
+            WebSocketClientFactory factory = new WebSocketClientFactory();
+            factory.start();
+            WebSocketClient wsClient = factory.newWebSocketClient();
+            String destURI = "wss://localhost:8443/websocket";
+            URI uri = new URI(destURI);
+            //wsClient.setProtocol("Upgrade");
+            Future fut = wsClient.open(uri, ws);
+            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
+            connect.sendMessage("The message has been sent from getFromSocket");
+            
+        }catch(Throwable t){
+            t.printStackTrace();
+        }
+        
     }
     
     //XXX: should return set of possible schemas, not child objects
