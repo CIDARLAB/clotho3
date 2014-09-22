@@ -45,9 +45,9 @@ class BlastRecord:
         elif isinstance(blast, Blast):
             spl = blast.query_id.split('|')
             if len(spl) >= 4:
-                self.id = blast.query_id.split('|')[3]
+                self.id = "ncbi_blast_" + blast.query_id.split('|')[3]
             else:
-                self.id = spl[0]
+                self.id = "ncbi_blast_" + spl[0]
             self.query = seq
             self.alignments = []
             for align in blast.alignments:
