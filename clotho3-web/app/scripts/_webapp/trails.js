@@ -6,7 +6,7 @@ angular.module('clotho.webapp').controller('TrailsCtrl', function ($scope, $loca
 	};
 
 	$scope.trails = [];
-	Clotho.query({schema : "org.clothocad.model.Trail"}).then(function(result) {
+	Clotho.query({schema : "org.clothocad.model.Trail"}, {mute: true}).then(function(result) {
 		$scope.trails = result;
 	});
 
