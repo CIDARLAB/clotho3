@@ -25,11 +25,19 @@ $command-input-width: 500px;
     padding: 0px 12px;
     line-height: 2em;
     margin: 0 $command-separation;
-    display: inline-block;
-    max-width: 280px;                       //todo - use table and let this fill
     height: 34px;                           //hack
     overflow: hidden;
     text-overflow: ellipsis;
+    display: none;
+
+    @media (min-width:992px) {
+      display: inline-block;
+      max-width: 220px;
+    }
+
+    @media (min-width: 1200px) {
+      max-width: 420px;
+    }
   }
 }
 
