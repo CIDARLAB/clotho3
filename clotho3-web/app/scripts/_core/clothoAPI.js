@@ -19,7 +19,7 @@
  */
 
 angular.module('clotho.core')
-.service('Clotho', function(Socket, Collector, PubSub, Debug, ClothoAuth, $window, $q, $rootScope, $location, $timeout) {
+.service('Clotho', function(Socket, Communicator, Collector, PubSub, Debug, $window, $q, $rootScope, $location, $timeout) {
 
 	//attach to window, only instantiate once
 	return ($window.$clotho.api) ? $window.$clotho.api : $window.$clotho.api = generateClothoAPI();
@@ -31,13 +31,14 @@ angular.module('clotho.core')
 	   **********/
 	  var Debugger = new Debug('ClothoAPI', '#cc5555');
 
-	  //socket communication
+	  //communication
 	  var fn = {};
 
-		//note that angular.toJson will strip $-prefixed keys, so should be avoided
-	  fn.send = function(pkg) {
-	      return Socket.send(JSON.stringify(pkg));
-	  };
+		//note that angular.toJson will strip $$-prefixed keys, which we similarly use for hiding some data
+
+    //expects a well-formed object, e.g. from fn.pack
+	  fn.send = Communicator.send;
+
 	  fn.pack = function(channel, data, requestId, options) {
 	      return {
 	          "channel" : channel,
@@ -419,45 +420,6 @@ angular.module('clotho.core')
     };
 
     /**
-     * @name Clotho.on
-     * @param channel
-     * @param callback
-     * @returns {array} handle
-     *
-     * @description
-     * Registers a listener directly with the socket, bypassing PubSub
-     */
-    var on = function clothoAPI_on(channel, callback) {
-      return Socket.on(channel, callback);
-    };
-
-    /**
-     * @name Clotho.once
-     * @param channel
-     * @param callback
-     * @returns {array} handle
-     *
-     * @description
-     * Registers a listener ONCE directly with the socket, bypassing PubSub
-     */
-    var once = function clothoAPI_once(channel, callback) {
-      return Socket.once(channel, callback);
-    };
-
-    /**
-     * @name Clotho.off
-     * @param handle Handle returned by Clotho.on() or Clotho.once()
-     *
-     * @description
-     * Removes a listener that had been attached to the Socket
-     */
-    var off = function clothoAPI_off(handle) {
-      Socket.off(handle);
-    };
-
-
-
-    /**
      * @name Clotho.query
      *
      * @param obj Constraints for query.
@@ -477,7 +439,7 @@ angular.module('clotho.core')
 
 		    try {
 			    //store models
-			    //future - when not sending whole model, extend what exists
+			    //todo - when not sending whole model, extend what exists
 			    angular.forEach(data, function (sharable) {
 				    Collector.storeModel(sharable.id, sharable);
 			    });
@@ -825,9 +787,6 @@ angular.module('clotho.core')
       trigger: trigger,
       emit : emit,
       broadcast : broadcast,
-      on : on,
-      once : once,
-      off : off,
       share : share,
 
       //misc

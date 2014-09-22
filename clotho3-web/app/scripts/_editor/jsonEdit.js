@@ -99,8 +99,6 @@ example usage:
   <p ng-show="myForm.myFormElement.$error.json">JSON is invalid!</p>
  </form>
 
-todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try to serialize)
-
  */
 
 .directive('jsonEditor', function () {
