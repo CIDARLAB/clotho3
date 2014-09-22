@@ -512,15 +512,21 @@ public class Persistor{
         out = filterDuplicatesById(out);
         
         //filter results for permission
-        for (Map<String,Object> obj : out){
-            try{
-                checkPriv(new ObjectId(obj.get(ID)), "view");
-            } catch (AuthorizationException e){
-                out.remove(obj);
-            }
-        }
+        out = filterByPermission(out);
         
         return out;
+    }
+        
+    private List<Map<String,Object>> filterByPermission(List<Map<String,Object>> objects){
+        List<Map<String,Object>> filteredObjects = new ArrayList<>();
+        for (Map<String,Object> object : objects){
+            try{
+                checkPriv(new ObjectId(object.get(ID)), "view");
+                filteredObjects.add(object);
+            } catch (AuthorizationException e){
+            }
+        }
+        return filteredObjects;        
     }
     
     private List<Map<String,Object>> filterDuplicatesById(List<Map<String,Object>> objects){
