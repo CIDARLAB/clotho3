@@ -43,6 +43,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.reflections.Reflections;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.Callable;
 import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
@@ -60,6 +61,7 @@ import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.security.ClothoRealm;
 import static org.clothocad.core.security.ClothoRealm.OWN;
+import org.clothocad.core.security.ServerSubject;
 
 import org.clothocad.core.util.JSON;
 
@@ -559,9 +561,22 @@ public class Persistor{
 
     public void deleteAll() {
         connection.deleteAll();
-        initializeBuiltInSchemas();
+        new ServerSubject().execute(new doInitializeBuiltIns(this));
    }
 
+    private static class doInitializeBuiltIns implements Callable<Void> {
+        private Persistor persistor;
+        public doInitializeBuiltIns(Persistor p) {
+            persistor = p;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            persistor.initializeBuiltInSchemas();
+            return null;
+        }
+    }
+    
     public void initializeBuiltInSchemas() {
         //XXX: just built-in models for now
         Reflections models = new Reflections("org.clothocad");
