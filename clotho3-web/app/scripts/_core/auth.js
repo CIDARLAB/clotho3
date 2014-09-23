@@ -14,28 +14,35 @@ angular.module('clotho.core')
 		var Debugger = new Debug('ClothoAuth', '#EE3333');
 
 		var currentUser = null,
+      stateListeners = [],
 			getCurrentUserDeferred = [];
 
-		//listen for login and logout events, update info and resolve requests
-		PubSub.on('auth:login auth:logout', function handleLoginEvent (info) {
-			//null or undefined suggest logout()
+    function triggerStateListeners (state) {
+      angular.forEach(stateListeners, function (callback) {
+        callback.call(null, state, currentUser);
+      });
+    }
+
+		PubSub.on('auth:login', function handleLoginEvent (info) {
 			Debugger.log('login event info:', info);
-			if (angular.isEmpty(info)) {
-				currentUser = null;
-			} else {
-				currentUser = info;
-				//process the deferred queue only on login()
-				while (getCurrentUserDeferred.length > 0) {
-					var def = getCurrentUserDeferred.pop();
-					def.resolve(currentUser);
-				}
-			}
+      currentUser = info;
+      //process the deferred queue only on login()
+      while (getCurrentUserDeferred.length > 0) {
+        var def = getCurrentUserDeferred.pop();
+        def.resolve(currentUser);
+      }
+      triggerStateListeners('login');
 		});
+
+    PubSub.on('auth:logout', function handleLogoutEvent (info) {
+      Debugger.log('logout', info);
+      currentUser = null;
+      triggerStateListeners('logout');
+    });
 
 		PubSub.on('auth:error', function handleLoginError () {
-
+      triggerStateListeners('error');
 		});
-
 
 		return {
       //for data binding
@@ -55,6 +62,10 @@ angular.module('clotho.core')
 					getCurrentUserDeferred.push(deferred);
 					return deferred.promise;
 				}
-			}
+			},
+
+      addStateListener : function (callback) {
+        angular.isFunction(callback) && stateListeners.push(callback)
+      }
 		};
 	});

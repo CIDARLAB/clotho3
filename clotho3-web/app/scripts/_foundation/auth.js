@@ -10,12 +10,10 @@ angular.module('clotho.foundation')
  *    <div clotho-show-auth="error">An error occurred: {{auth.error}}</div>
  *    <div clotho-show-auth="logout,error">This appears for logout or for error condition!</div>
  * </code>
+ *
+ * Note - you can use ng-disabled and a scope variable tied to the userInfo to handle dynamically disabling form elements.. doesn't really make sense to create a directive to handle that directly
  */
-.directive('clothoShowAuth', function (PubSub) {
-	var loginState = 'logout';
-	PubSub.on('auth:login',  function() { loginState = 'login'; });
-	PubSub.on('auth:logout', function() { loginState = 'logout'; });
-	PubSub.on('auth:error',  function() { loginState = 'error'; });
+.directive('clothoShowAuth', function (PubSub, ClothoAuth) {
 
 	function getExpectedState(scope, attr) {
 		var expState = scope.$eval(attr);
@@ -57,16 +55,16 @@ angular.module('clotho.foundation')
 		link: function(scope, el, attr) {
 			var expState = getExpectedState(scope, attr.clothoShowAuth);
 			assertValidStates(expState);
-			function fn() {
-				var show = inList(loginState, expState);
+			function fn(newState) {
+				var show = inList(newState, expState);
 				// sometimes if ngCloak exists on same element, they argue, so make sure that
 				// this one always runs last for reliability
 				setTimeout(function() {
 					el.toggleClass('ng-cloak', !show);
 				}, 0);
 			}
-			fn();
-			PubSub.on('auth:login auth:logout auth:error',  fn);
+			fn('logout');
+      ClothoAuth.addStateListener(fn);
 		}
 	};
 });
