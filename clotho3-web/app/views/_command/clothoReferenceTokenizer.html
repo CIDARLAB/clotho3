@@ -13,7 +13,7 @@
            ng-model="query"
            ng-trim="false"
            ng-click="tokenCtrl.focusInput()"
-           placeholder="{{currentPlaceholder || 'Type to Query'}}"
+           placeholder="{{currentPlaceholder || (hasFocus ? 'Type to Query' : (passedPlaceholder || 'Type to Query') ) }}"
            autocomplete-trigger="false"
            autocomplete-trigger-include="false"
            autocomplete-clear-on-select="true"

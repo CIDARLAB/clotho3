@@ -7,7 +7,8 @@ angular.module('clotho.tokenizer')
       restrict: 'E',
       templateUrl: 'views/_command/clothoReferenceTokenizer.html',
       scope: {
-        startingTags : '='
+        startingTags : '=?',
+        passedPlaceholder: '@?placeholder'
       },
       controller: function ($scope, $element, $attrs) {
 
