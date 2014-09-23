@@ -140,7 +140,7 @@ angular.module('clotho.editor')
 			};
 
 			scope.reset = function () {
-				Clotho.get(scope.sharable.id).then(function (result) {
+				Clotho.get(scope.sharable.id, {mute: true}).then(function (result) {
 					scope.sharable = result;
 					formCtrl.$setPristine();
 				});
@@ -205,7 +205,7 @@ angular.module('clotho.editor')
 			scope.$watch('sharableId', function (newval, oldval) {
 				Debugger.log('new id input', newval, oldval);
 
-				newval && Clotho.get(newval).then(function (result) {
+				newval && Clotho.get(newval, {mute: true}).then(function (result) {
 					scope.sharable = result;
 				});
 			});

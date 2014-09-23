@@ -3,7 +3,7 @@
 angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $route, $location, Clotho, ClothoSchemas) {
 
 	/* route handling */
-	
+
 	//check for updates to editable's id, update URL
 	$scope.$watch('editable.id', function (newval, oldval) {
 		$location.search('id', newval || null).replace();
@@ -75,7 +75,7 @@ angular.module('clotho.webapp').controller('EditorCtrl', function ($scope, $rout
 	};
 
 	$scope.editExisting = function (item, query) {
-		$scope.editable = item;
+		$scope.editableId = item.id;
 		$scope.editModePass = true;
 	};
 });
