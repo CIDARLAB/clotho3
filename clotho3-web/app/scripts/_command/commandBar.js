@@ -1,5 +1,5 @@
 angular.module('clotho.commandbar')
-.service('CommandBar', function(Clotho, ClientAPI, ClothoCommandHistory, Debug, ClothoSchemas, $timeout, $q, $document) {
+.service('CommandBar', function(Clotho, ClientAPI, ClothoCommandHistory, Debug, ClothoSchemas, $timeout, $q) {
 
 	/******* config ******/
 	var options = {
