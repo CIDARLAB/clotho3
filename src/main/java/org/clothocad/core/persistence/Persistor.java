@@ -162,9 +162,11 @@ public class Persistor{
         if (id == null) throw new IllegalArgumentException("Null ObjectId");
         Subject currentSubject = SecurityUtils.getSubject();
         if (has(id)) {
-            if (!currentSubject.isPermitted("data:"+ priviliege + ":" + id.toString())) {
+            try {
+                currentSubject.checkPermission("data:"+ priviliege + ":" + id.toString());            
+            } catch (AuthorizationException e){
                 log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), id);
-                throw new UnauthorizedException("Not authorized.");
+                throw e;
             }
         }
     }
