@@ -8,14 +8,12 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.*;
 
-import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
+import static org.clothocad.core.security.ClothoPermission.WRITE;
 import org.clothocad.model.Institution;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -108,15 +106,14 @@ public class WritePermissionTest extends AbstractSecurityTest {
      *
      * @exception UnauthorizedException
      */
-    @Ignore @Test(expected = UnauthorizedException.class)
-    public void testEditPermission() {
+    @Test(expected = UnauthorizedException.class)
+    public void testGrant() {
         initAPI("0003");
 
-            Subject currentUser = SecurityUtils.getSubject();
-            api.login("write", "write");
-            /*
-             *code here to edit permission 
-             */
-
+        api.login("write", "write");
+        //private
+        realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());
+        //public
+        realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());        
     }
 }

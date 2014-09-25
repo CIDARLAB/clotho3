@@ -5,21 +5,16 @@
 package org.clothocad.core.security;
 
 import com.google.common.collect.Lists;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
-import javax.script.ScriptException;
-import org.apache.shiro.SecurityUtils;
-
-import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.model.Institution;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.clothocad.core.security.ClothoPermission.*;
 
 /**
  * test case of user with 'owner' permission test actions of read, edit, delete
@@ -27,6 +22,8 @@ import static org.junit.Assert.*;
  *
  * @author yu
  * @version 1.0
+ * 
+ * TODO: both ObjBase & JSON paths tested
  */
 public class OwnPermissionTest extends AbstractSecurityTest {
 
@@ -122,16 +119,18 @@ public class OwnPermissionTest extends AbstractSecurityTest {
     /**
      * test edit permission
      */
-    @Ignore
     @Test
-    public void testEditPermission() {
+    public void testGrant() {
         initAPI("0003");
 
-        Subject currentUser = SecurityUtils.getSubject();
         api.login("owner", "owner");
-        /*
-         *code here to edit permission 
-         */
-
+        //private
+        realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());
+        //public
+        realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());        
     }
+    
+    //TODO: check behavior when granting/removing public status
+    //TODO: check behavior when granting redundant permissions
+    //TODO: check for ownerless objects
 }

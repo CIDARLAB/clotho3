@@ -6,6 +6,7 @@ package org.clothocad.core.security;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.clothocad.core.datums.ObjectId;
 
 /**
  *
@@ -24,7 +25,7 @@ public class DummyAccount extends UnauthenticableAccount {
     }
 
     @Override
-    public void addPermission(String permission) {
+    public void addPermission(ClothoAction permission, ObjectId id) {
     }
 
     @Override
@@ -32,7 +33,7 @@ public class DummyAccount extends UnauthenticableAccount {
     }
 
     @Override
-    public void removePermission(String permission) {
+    public void removePermission(ClothoAction permission, ObjectId id) {
     }
 
 }

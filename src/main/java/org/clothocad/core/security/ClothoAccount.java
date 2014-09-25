@@ -56,7 +56,7 @@ public class ClothoAccount implements Account, MergableAuthenticationInfo, Salte
     public ClothoAccount(String username){
         id = username;
         authzInfo = new ClothoAuthorizationInfo();
-        authzInfo.addGroup(ClothoRealm.ALL);      
+        authzInfo.addGroup(ClothoRealm.ALL_GROUP);      
     }    
     
     @Id

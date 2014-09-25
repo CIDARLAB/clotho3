@@ -19,24 +19,26 @@ public abstract class PermissionHolder {
     @Getter
     protected Map<ObjectId, PermissionsOnObject> permissions;
     
+    //String permission == Shiro wildcard permssion string
     public static ObjectId getObjectId(String permission) {
         List<String> parts = CollectionUtils.asList(permission.split(":"));
         return new ObjectId(parts.get(2));
     }
 
+    private static String constructPermissionString(ClothoAction permission, ObjectId id){
+        return "data:" + permission.name() + ":" + id.toString();
+    }
     
-    public void addPermission(String permission){
-        ObjectId id = getObjectId(permission);
+    public void addPermission(ClothoAction permission, ObjectId id){
         if (!permissions.containsKey(id)){
             permissions.put(id, new PermissionsOnObject());
         }
-        permissions.get(id).permissions.add(permission);
+        permissions.get(id).permissions.add(constructPermissionString(permission, id));
     }
     
-    public void removePermission(String permission){
-        ObjectId id = getObjectId(permission);
+    public void removePermission(ClothoAction permission, ObjectId id){
         if (permissions.containsKey(id)){
-            permissions.get(id).permissions.remove(permission);
+            permissions.get(id).permissions.remove(constructPermissionString(permission, id));
         }
     }    
 }

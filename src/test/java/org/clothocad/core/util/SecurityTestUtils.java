@@ -18,7 +18,7 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.security.Visibility;
 import org.clothocad.model.Institution;
-import static org.clothocad.core.security.ClothoRealm.*;
+import static org.clothocad.core.security.ClothoPermission.*;
 
 /**
  *
@@ -87,13 +87,13 @@ public class SecurityTestUtils {
         //make users
         realm.addAccount("none", "none");
         realm.addAccount("read", "read");
-        realm.addPermissions("read", READ, ids);
+        realm.addPermissions("read", READ.actions, ids);
         realm.addAccount("write", "write");
-        realm.addPermissions("write", WRITE, ids);
+        realm.addPermissions("write", WRITE.actions, ids);
         realm.addAccount("run", "run");
-        realm.addPermissions("run", RUN, ids);
+        realm.addPermissions("run", RUN.actions, ids);
         realm.addAccount("owner", "owner");
-        realm.addPermissions("owner", OWN, ids);
+        realm.addPermissions("owner", OWN.actions, ids);
         
         //make public objects public
         realm.setPublic(publicInstitution.getId());

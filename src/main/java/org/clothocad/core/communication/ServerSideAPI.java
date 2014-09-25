@@ -46,6 +46,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
@@ -60,6 +61,8 @@ import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.schema.ReflectionUtils;
+import org.clothocad.core.security.ClothoAction;
+import org.clothocad.core.security.ClothoPermission;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
@@ -88,6 +91,8 @@ import org.clothocad.model.Person;
 public class ServerSideAPI {
 
     private final Router router;
+    private final ClothoRealm realm;
+    
     @Getter
     private final Persistor persistor;
     private final String requestId;
@@ -105,6 +110,7 @@ public class ServerSideAPI {
         this.requestId = requestId;
         this.router = router;
         this.options = options;
+        this.realm = realm;
     }
 
     public final List<Map> autocomplete(String userText){
@@ -1009,10 +1015,47 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
         return new HashSet<>();
     }
     
+    public void grantAll(Collection<ObjectId> ids, String principal, Set<String> addPermissions, Set<String> removePermissions){
+        for (ObjectId id : ids){
+            grant(id, principal, addPermissions, removePermissions);
+        }
+    }  
+    
     public void grant(ObjectId id, String principal, Set<String> addPermissions, Set<String> removePermissions){
-        
+        try {
+            Set<ClothoAction> add = new HashSet<>();
+            Set<ClothoAction> remove = new HashSet<>();
+            for (String permString : addPermissions){
+                try {
+                    ClothoPermission perm = ClothoPermission.valueOf(permString.toUpperCase());
+                    if (perm.equals(ClothoPermission.PUBLIC)){
+                        //add public status
+                        realm.setPublic(id);
+                    }
+                    else add.addAll(perm.actions);
+                } catch (IllegalArgumentException e) {
+                    //wrong permstring name
+                }
+            }
+            realm.addPermissions(principal, add, id);
+            for (String permString : addPermissions){
+                try {
+                    ClothoPermission perm = ClothoPermission.valueOf(permString.toUpperCase());
+                    if (perm.equals(ClothoPermission.PUBLIC)){
+                        //add public status
+                        realm.removePublic(id);
+                    }
+                    else remove.addAll(perm.removedActions);
+                } catch (IllegalArgumentException e) {
+                    //wrong permstring name
+                }
+            }            
+            realm.removePermissions(principal, remove, id);
+        } catch (AuthorizationException e){
+            
+        }
     }
-
+    
     public static enum Severity {
         SUCCESS,
         WARNING,

@@ -21,6 +21,7 @@ import org.junit.Before;
  */
 public abstract class AbstractSecurityTest extends AbstractShiroTest {
     protected Persistor persistor;
+    protected ClothoRealm realm;
     protected ServerSideAPI api;
     protected SecurityTestUtils util;
 
@@ -28,6 +29,8 @@ public abstract class AbstractSecurityTest extends AbstractShiroTest {
         super();
         persistor = injector.getInstance(Persistor.class);
         persistor.deleteAll();
+        realm = injector.getInstance(ClothoRealm.class);
+        realm.deleteAll();
         Subject serverSubject = new ServerSubject();
         util = serverSubject.execute(new CreateTestRealmData(persistor, injector.getInstance(ClothoRealm.class)));
     }

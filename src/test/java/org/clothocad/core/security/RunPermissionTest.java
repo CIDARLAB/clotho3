@@ -15,6 +15,7 @@ import org.apache.shiro.authz.*;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
+import static org.clothocad.core.security.ClothoPermission.WRITE;
 import org.clothocad.model.Institution;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -92,7 +93,7 @@ public class RunPermissionTest extends AbstractSecurityTest {
      *
      * @exception UnauthorizedException
      */
-    @Test(expected = UnauthorizedException.class)
+    @Test(expected = AuthorizationException.class)
     public void testEdit() {
         initAPI("0001");
         ObjBase priv = util.getPrivate();
@@ -127,15 +128,14 @@ public class RunPermissionTest extends AbstractSecurityTest {
      *
      * @exception UnauthorizedException
      */
-    @Ignore @Test(expected = UnauthorizedException.class)
-    public void testEditPermission() {
+    @Test(expected = AuthorizationException.class)
+    public void testGrant() {
         initAPI("0003");
 
-            Subject currentUser = SecurityUtils.getSubject();
-            api.login("run", "run");
-            /*
-             *code here to edit permission 
-             */
-
+        api.login("run", "run");
+        //private
+        realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());
+        //public
+        realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());        
     }
 }

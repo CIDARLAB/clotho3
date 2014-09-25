@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.security;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +20,8 @@ import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
-import static org.clothocad.core.security.PermissionHolder.getObjectId;
 
 /**
  *
@@ -40,13 +37,7 @@ import static org.clothocad.core.security.PermissionHolder.getObjectId;
 @Slf4j
 public class ClothoRealm extends AuthorizingRealm {
 
-    public static final Set<String> READ = ImmutableSet.of("view", "run");
-    public static final Set<String> WRITE = ImmutableSet.of("view", "edit", "run");
-    public static final Set<String> RUN = ImmutableSet.of("run");
-    public static final Set<String> OWN = ImmutableSet.of("view", "run", "edit", "delete", "grant");
-    
-    public static final String ALL = "_all";
-    
+    public static final String ALL_GROUP = "_all";
     public static final String ANONYMOUS_USER = "_anonymous";
     
     private CredentialStore store;
@@ -74,8 +65,8 @@ public class ClothoRealm extends AuthorizingRealm {
     
     protected void setUpRealm(){
         //set up default groups
-        if (store.getGroup(ALL) == null){
-            addGroup(ALL);
+        if (store.getGroup(ALL_GROUP) == null){
+            addGroup(ALL_GROUP);
         }       
         
         //set up anonymous user
@@ -121,67 +112,75 @@ public class ClothoRealm extends AuthorizingRealm {
     }
     
 
-    public void addPermission(String username, String permission) {
-        checkCurrentSubjectGrant(getObjectId(permission));
+    public void addPermission(String username, ClothoAction permission, ObjectId id) {
+        addPermission(username, permission, id, true);
+    }
+    
+    public void addPermission(String username, ClothoAction permission, ObjectId id, boolean checkPriv) {
+        if (checkPriv) checkCurrentSubjectGrant(id);
         ClothoAccount account = store.getAccount(username);
-        //parts list: data, <object id>, <permission>
-        account.getAuthzInfo().addPermission(permission);
+        account.getAuthzInfo().addPermission(permission, id);
         store.saveAccount(account);
     }
 
-    public void addPermissionToGroup(String groupName, String permission) {
-        checkCurrentSubjectGrant(getObjectId(permission));
+    public void addPermissionToGroup(String groupName, ClothoAction permission, ObjectId id) {
+        checkCurrentSubjectGrant(id);
         AuthGroup group = store.getGroup(groupName);
-        group.addPermission(permission);
+        group.addPermission(permission, id);
         store.saveGroup(group);
     }
 
-    public void removePermissionFromGroup(String groupName, String permission) {
-        checkCurrentSubjectGrant(getObjectId(permission));
+    public void removePermissionFromGroup(String groupName, ClothoAction permission, ObjectId id) {
+        checkCurrentSubjectGrant(id);
         AuthGroup group = store.getGroup(groupName);
-        group.removePermission(permission);
+        group.removePermission(permission, id);
         store.saveGroup(group);
     }
 
-    public void removePermission(String username, String permission) {        
-        checkCurrentSubjectGrant(getObjectId(permission));
+    public void removePermission(String username, ClothoAction permission, ObjectId id) {        
+        checkCurrentSubjectGrant(id);
         ClothoAccount account = store.getAccount(username);
-        //parts list: data, <object id>, <permission>
-        account.getAuthzInfo().removePermission(permission);
+        account.getAuthzInfo().removePermission(permission, id);
         store.saveAccount(account);
     }
 
-    public void addPermissions(String username, Set<String> permissions, Set<ObjectId> ids) {
-        for (String permission : permissions) {
+    public void removePermissions(String username, Set<ClothoAction> permissions, ObjectId id){
+        for (ClothoAction permission: permissions) {
+            removePermission(username, permission, id);
+        }
+    }
+    
+    public void addPermissions(String username, Set<ClothoAction> permissions, Set<ObjectId> ids) {
+        for (ClothoAction permission : permissions) {
             for (ObjectId id : ids) {
                 try {
-                    checkCurrentSubjectGrant(id);        
-                    addPermission(username, "data:" + permission + ":" + id.toString());
+                    addPermission(username, permission, id);
                 } catch (AuthorizationException e) {
-                    
+                    //log 
                 }
             }
         }
     }
-
-    public void addPermissions(String username, Set<String> permissions, ObjectId id) {
-        checkCurrentSubjectGrant(id);
-        for (String permission : permissions) {
-            addPermission(username, "data:" + permission + ":" + id.toString());
+    public void addPermissions(String username, Set<ClothoAction> permissions, ObjectId id) {
+        addPermissions(username, permissions, id, true);
+    }
+    
+    
+    public void addPermissions(String username, Set<ClothoAction> permissions, ObjectId id, boolean checkPriv) {
+        for (ClothoAction permission : permissions) {
+            addPermission(username, permission, id, checkPriv);
         }
     }
 
-    public void addPermissionsToGroup(String groupName, Set<String> permissions, ObjectId id){
-        checkCurrentSubjectGrant(id);
-        for (String permission : permissions){
-            addPermissionToGroup(groupName, "data:" + permission +":" +id.toString());
+    public void addPermissionsToGroup(String groupName, Set<ClothoAction> permissions, ObjectId id){
+        for (ClothoAction permission : permissions){
+            addPermissionToGroup(groupName, permission, id);
         }
     }
     
-    public void removePermissionsFromGroup(String groupName, Set<String> permissions, ObjectId id){
-        checkCurrentSubjectGrant(id);
-        for (String permission : permissions){
-            removePermissionFromGroup(groupName, "data:" + permission + ":" + id.toString());
+    public void removePermissionsFromGroup(String groupName, Set<ClothoAction> permissions, ObjectId id){
+        for (ClothoAction permission : permissions){
+            removePermissionFromGroup(groupName, permission, id);
         }
     }
     
@@ -192,12 +191,12 @@ public class ClothoRealm extends AuthorizingRealm {
 
     public void removePublic(ObjectId id) {
         checkCurrentSubjectGrant(id);
-        removePermissionsFromGroup(ALL,READ,id);
+        removePermissionsFromGroup(ALL_GROUP, ClothoPermission.READ.actions ,id);
     }
 
     public void setPublic(ObjectId id) {
         checkCurrentSubjectGrant(id);
-        addPermissionsToGroup(ALL,READ,id);
+        addPermissionsToGroup(ALL_GROUP, ClothoPermission.READ.actions, id);
     }
     
     public String getRealmName() {
@@ -207,4 +206,5 @@ public class ClothoRealm extends AuthorizingRealm {
     private static void checkCurrentSubjectGrant(ObjectId id) throws AuthorizationException {
         SecurityUtils.getSubject().checkPermission("data:grant:"+id.toString());
     }
+    
 }

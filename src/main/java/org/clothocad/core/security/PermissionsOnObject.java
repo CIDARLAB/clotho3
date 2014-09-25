@@ -11,9 +11,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
-
 /**
- *
+ * Please note this class uses Shiro wildcard-formatted string permissions, instead of 
+ * ClothoPermission/ClothoAction like other classes
+ * 
  * @author spaige
  */
 public class PermissionsOnObject {

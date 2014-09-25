@@ -48,7 +48,7 @@ import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.subject.Subject;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
@@ -59,8 +59,10 @@ import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
+import static org.clothocad.core.security.ClothoAction.*;
+import org.clothocad.core.security.ClothoAction;
+import org.clothocad.core.security.ClothoPermission;
 import org.clothocad.core.security.ClothoRealm;
-import static org.clothocad.core.security.ClothoRealm.OWN;
 import org.clothocad.core.security.ServerSubject;
 
 import org.clothocad.core.util.JSON;
@@ -180,30 +182,71 @@ public class Persistor{
         checkPriv(id, "grant");
         return null;
     }
+        
+    
+    //user must be authenticated
+    
+    
+    //if no id, assign id
+    //if id in database, check permission
+      // if fail check, remove from save list
+    
+    
+    //if id not in database, assign ownership to current user
     
     public ObjectId save(ObjBase obj, boolean overwrite) {
-        if (obj.getId() != null) checkPriv(obj.getId(), "edit");
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (!currentSubject.isAuthenticated()) {
+            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+        }
         validate(obj);
-        
-        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
 
+        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
         
+        //assign ids to no-id objects
+        for (ObjBase object : relevantObjects){
+            if (object.getId() == null)
+                object.setId(new ObjectId());
+        }
+
+        // if can't change original object, abort
+        if (has(obj.getId()) && 
+                !currentSubject.isPermitted("data:edit:"+obj.getId().toString())){
+            throw new AuthorizationException("Cannot edit "+ obj.getId());
+        }
+        
+        Set<ObjBase> filteredObjects = new HashSet();
+        
+
+        for (ObjBase object : relevantObjects){
+            //check privileges on preexisting objects
+            if (!has(object.getId()) || 
+                    currentSubject.isPermitted("data:edit"+obj.getId().toString()))
+                    
+                    filteredObjects.add(object);
+            //give current user ownership of new objects
+            if (!has(object.getId()))
+                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
+        }
+
         if (!overwrite){
             Set<ObjBase> modifiedObjects = new HashSet<>();
-            for (ObjBase o : relevantObjects){
-                if (modified(o)) modifiedObjects.add(o);
+            for (ObjBase object : filteredObjects){
+                if (modified(object)) modifiedObjects.add(object);
             }
             if (modifiedObjects.size() > 0) throw new OverwriteConfirmationException(modifiedObjects);
         }
 
         //recurse in persistor
-        connection.saveAll(relevantObjects);
+        connection.saveAll(filteredObjects);
         return obj.getId();
     }
+
+    
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
         if (!SecurityUtils.getSubject().isAuthenticated()) {
-            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+            throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
         }
         if (!data.containsKey(ID)) {
             Object id = new ObjectId();
@@ -214,7 +257,9 @@ public class Persistor{
         }
         ObjectId id = new ObjectId(data.get(ID));
         if (!has(id)) {
-            realm.addPermissions(SecurityUtils.getSubject().getPrincipal().toString(), OWN, id);
+             
+            //needs to bypass grant permission checking
+            realm.addPermissions(SecurityUtils.getSubject().getPrincipal().toString(), ClothoPermission.OWN.actions, id, false);
         }
         connection.save(data);
 
@@ -251,8 +296,7 @@ public class Persistor{
     }
     
     
-    //XXX: should return set of possible schemas, not child objects
-    // then should not be used as currently is in save
+    //return set of child objects
     protected Set<ObjBase> getObjBaseSet(ObjBase obj){
         return getObjBaseSet(obj, new HashSet<ObjBase>());
     }
@@ -516,16 +560,28 @@ public class Persistor{
         out = filterDuplicatesById(out);
         
         //filter results for permission
-        out = filterByPermission(out);
+        out = filterByPermission(out, edit);
         
         return out;
     }
         
-    private List<Map<String,Object>> filterByPermission(List<Map<String,Object>> objects){
+    private List<Map<String,Object>> filterByPermission(Collection<Map<String,Object>> objects, ClothoAction permission){
         List<Map<String,Object>> filteredObjects = new ArrayList<>();
         for (Map<String,Object> object : objects){
             try{
-                checkPriv(new ObjectId(object.get(ID)), "view");
+                checkPriv(new ObjectId(object.get(ID)), permission.name());
+                filteredObjects.add(object);
+            } catch (AuthorizationException e){
+            }
+        }
+        return filteredObjects;        
+    }
+
+    private List<ObjBase> filterObjBasesByPermission(Collection<ObjBase> objects, ClothoAction permission){
+        List<ObjBase> filteredObjects = new ArrayList<>();
+        for (ObjBase object : objects){
+            try{
+                checkPriv(object.getId(), permission.name());
                 filteredObjects.add(object);
             } catch (AuthorizationException e){
             }
