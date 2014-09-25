@@ -12,12 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.util.AuthorizedShiroTest;
-import org.clothocad.core.util.TestUtils;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
@@ -26,29 +20,11 @@ import org.junit.Ignore;
  *
  * @author spaige
  */
-public class ServerAPITest extends AuthorizedShiroTest {
+public class ServerAPITest extends AbstractServerAPITest {
 
-    private static ServerSideAPI api;
-    private static ServerSideAPI unprivilegedUser;
-    private static Persistor persistor;
-    private static List<ObjectId> ids;
-    private static Mind mind;
-    private static Router router;
 
     public ServerAPITest() {
         super();
-        persistor = injector.getInstance(Persistor.class);
-        router = injector.getInstance(Router.class);
-        mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, injector.getInstance(ClothoRealm.class), null);
-        persistor.connect();
-        mind.setConnection(new TestConnection("test"));
-    }
-
-    @Before
-    public void setUp() {
-        persistor.deleteAll();
-        ids = TestUtils.setupTestData(persistor);
     }
 
     @Test
