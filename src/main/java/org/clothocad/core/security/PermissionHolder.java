@@ -25,7 +25,7 @@ public abstract class PermissionHolder {
         return new ObjectId(parts.get(2));
     }
 
-    private static String constructPermissionString(ClothoAction permission, ObjectId id){
+    public static String constructPermissionString(ClothoAction permission, ObjectId id){
         return "data:" + permission.name() + ":" + id.toString();
     }
     

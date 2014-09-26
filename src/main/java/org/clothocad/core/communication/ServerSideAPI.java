@@ -1035,10 +1035,11 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
                     else add.addAll(perm.actions);
                 } catch (IllegalArgumentException e) {
                     //wrong permstring name
+                    logAndSayError("Invalid permission name", e);
                 }
             }
             realm.addPermissions(principal, add, id);
-            for (String permString : addPermissions){
+            for (String permString : removePermissions){
                 try {
                     ClothoPermission perm = ClothoPermission.valueOf(permString.toUpperCase());
                     if (perm.equals(ClothoPermission.PUBLIC)){
@@ -1047,12 +1048,12 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
                     }
                     else remove.addAll(perm.removedActions);
                 } catch (IllegalArgumentException e) {
-                    //wrong permstring name
+                    logAndSayError("Invalid permission name", e);
                 }
             }            
             realm.removePermissions(principal, remove, id);
         } catch (AuthorizationException e){
-            
+            logAndSayError("Cannot grant/remove permission", e);
         }
     }
     
