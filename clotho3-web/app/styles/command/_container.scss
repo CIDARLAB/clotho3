@@ -1,10 +1,44 @@
-#clotho_commandBar {
-  @extend .navbar;
-  @extend .navbar-default;
-  @extend .navbar-fixed-top;
+$command-separation: 0.5em;
+$command-input-width: 500px;
+
+.clothoCommand-wrap {
   padding: 8px 15px;
 
-  .clotho_commandBar-inner {
-    @extend .container;
+  .clothoCommand-inner {
+
+  }
+
+  //put inside so they're higher priority   //hack
+
+  .clothoCommand-tokenizer {
+    width: $command-input-width;
+    display: inline-block;
+  }
+
+  .clothoCommand-terminalTrigger {
+    margin-left: $command-separation;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .clothoCommand-snippet {
+    padding: 0px 12px;
+    line-height: 2em;
+    margin: 0 $command-separation;
+    height: 34px;                           //hack
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: none;
+
+    @media (min-width:992px) {
+      display: inline-block;
+      max-width: 220px;
+    }
+
+    @media (min-width: 1200px) {
+      max-width: 420px;
+    }
   }
 }
+
+

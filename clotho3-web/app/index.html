@@ -7,10 +7,10 @@
     <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
 
-    <!-- not necessary until serving outside root directory / want html5 mode -->
+    <!-- required for angular html5 mode -->
     <base href="/">
 
-    <!-- process:remove:api,dist,trails -->
+    <!-- process:remove:api -->
     <!-- build:css({.tmp,app}) styles/command.css -->
     <link rel="stylesheet" href="css/command.css">
     <!-- endbuild -->
@@ -120,6 +120,8 @@ dependencies: none
 <script src="scripts/_core/clothoLocalStorage.js"></script>
 <script src="scripts/_core/collector.js"></script>
 <script src="scripts/_core/pubsub.js"></script>
+<script src="scripts/_core/communicator.js"></script>
+<script src="scripts/_core/clothoRest.js"></script>
 <script src="scripts/_core/socket.js"></script>
 <script src="scripts/_core/commandHistory.js"></script>
 <!--endbuild-->
@@ -167,14 +169,12 @@ dependencies: clotho.core, jQuery, Lodash
 <script src="scripts/_command/loginCtrl.js"></script>
 <script src="scripts/_command/clothoFunctionExecutor.js"></script>
 <!-- tokenizer -->
-<script src="scripts/_command/clothoAutocomplete.js"></script>
 <script src="scripts/_command/clothoAutocompleteListing.js"></script>
 <script src="scripts/_command/clothoAutocompleteMatch.js"></script>
 <script src="scripts/_command/clothoToken.js"></script>
 <script src="scripts/_command/clothoTokenCollectionFactory.js"></script>
 <script src="scripts/_command/clothoTokenFactory.js"></script>
 <script src="scripts/_command/clothoTokenizer.js"></script>
-
 <script src="scripts/_command/clothoReferenceListener.js"></script>
 <script src="scripts/_command/clothoReferenceParser.js"></script>
 <script src="scripts/_command/clothoTerminalInput.js"></script>

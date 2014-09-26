@@ -14,6 +14,7 @@ angular.module('clotho.clothoDirectives')
  * sharablePopupTrigger (none | click | mouseenter | focus)
  * sharablePopupOpen
  *
+ * todo - need to persist type rather than run() the check every time popup opens
  *
  */
 	.directive('sharablePopup', function ($clothoPopup) {
@@ -74,7 +75,7 @@ angular.module('clotho.clothoDirectives')
 					if (!!val) {
 						setSharable(val);
 						//no need to reposition if we pass in the model, since the initial $digest will fill it
-						
+
 						if (val.id) {
 							Clotho.get(val.id, {mute : true}).then(function (retrievedSharable) {
 								scope.fullSharable = retrievedSharable;
@@ -106,6 +107,7 @@ angular.module('clotho.clothoDirectives')
 				scope.edit = Clotho.edit;
 
 				scope.$on('$destroy', function () {
+          //todo - persist state (type) in localstorage or something
 				});
 			}
 		};

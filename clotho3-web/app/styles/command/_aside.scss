@@ -3,7 +3,7 @@
  */
 
 $asideZ : 1050;
-$asideWidth : 380px;
+$asideWidth : 500px;
 $asideAnimation : all 0.5s ease-out;
 
 /*
@@ -70,15 +70,15 @@ body[aside-status='active'] {
   display: block;
   top: 0;
   height: 100vh;
-  right: 0;
-  left: auto;
+  left: 0;
+  right: auto;
   overflow-y: scroll;
   overflow-x: hidden;
   width: $asideWidth;
   background: white;
-  box-shadow: -10px 0px 10px 1px #dddddd;
+  box-shadow: 10px 0px 10px 1px #dddddd;
   transition: $asideAnimation;
-  transform: translateX($asideWidth + 20px);
+  transform: translateX(-($asideWidth + 20px));
   backface-visibility: hidden; //promote to new layer
 
 

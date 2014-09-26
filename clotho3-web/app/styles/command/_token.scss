@@ -1,78 +1,47 @@
-.clothoTokenWrap {
-  @extend .label;
-  background-color: $color-token-noModel;
+//todo - bring in label variants, namespace by type instead of success/warning etc.
+
+clotho-token {
+  //largely taken from bootstrap
   display: inline-block;
-  position: relative;
-  padding: 4px 8px;
-  margin: 1px 3px;
 
-  &.hasModel {
-    background-color: $color-token-default;
+  &:empty {
+    display: none;
   }
 
-  &.sharable {
-    background-color: $color-token-sharable;
+  .isSharable {
+    cursor: pointer;
   }
 
-  &.ambiguous {
-    background-color: $color-token-ambiguous;
-  }
-
-  //last gets priority...
-  &.active {
-    background-color: $color-token-active;
-  }
-}
-
-//todo - refactor / clean up / reuse with log popup
-.clothoTokenPopup {
-  display: block;
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  text-align: left;
-  background-color: white;
-  z-index: 1010;
-  min-width: 300px;
-  max-width: 400px;
-  max-height: 400px;
-  overflow: scroll;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  transform: translateY(100%);
-
-  .clothoTokenPopupHeader {
-    @extend .popover-title;
-    color: #333;
-
-    .btn-group {
-      float: right;
-      margin-top: -6px;
-    }
-  }
-
-  .info {
+  &.large .clothoToken-inner {
+    padding: 8px;
     font-size: 1em;
-    margin: 0;
-    border: 0;
-    background: #fff;
+  }
+
+  &.active .clothoToken-inner {
+    background-color: $brand-primary;
+    box-shadow: 0 0 8px $input-border-focus;
+  }
+
+  //similar to .label bootstrap class
+  .clothoToken-inner {
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    position: relative;
   }
 }
 
-.clothoTokenText, .clothoTokenClose {
-  line-height: 14px;
+.clothoToken-text,
+.clothoToken-type
+.clothoToken-close {
+  line-height: 1em;
 }
 
-.clothoTokenText {
-
-}
-
-.clothoTokenClose {
-  cursor: pointer;
-  padding-left: 5px;
-  font-weight: bold;
-  color: black;
-  text-shadow: 0 1px 0 white;
-  opacity: 0.2;
+.clothoToken-type {
+  padding: 6px 0;
 }

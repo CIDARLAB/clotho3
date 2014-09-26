@@ -6,14 +6,35 @@
 
   <hr>
 
-  <div class="panel panel-default" ng-init="sample = '@hey you baby@girl whats up @clotho.developer.maxbates with ya?'">
+  <div class="panel panel-default">
     <div class="panel-heading">Reference parsing + listening</div>
 
+    <div class="panel-body"
+         style="position: relative;"
+         ng-init="myModel = 'hey @clotho.testuser.maxbates how are you? and you @maxbates@gmail.com ?'">
+      <textarea clotho-reference-autocomplete
+                class="form-control"
+                ng-model="myModel"
+                ng-trim="false"
+                placeholder="enter a bunch of text"
+                autocomplete-trigger="true"
+                autocomplete-trigger-include="true"
+                autocomplete-popup-position="topRight"></textarea>
+    </div>
+
+    <div class="panel-body" style="position: relative;">
+      <div clotho-reference-parser="myModel"></div>
+    </div>
+
+    <hr>
+
     <div class="panel-body">
-      <div class="col-sm-6">
-        <clotho-terminal-input></clotho-terminal-input>
-      </div>
+      <ng-form name="teamEditing" class="panel-body" ng-controller="TeamCtrl">
+        <textarea json-edit="ClothoTeam[0]" class="form-control" rows="5" name="jsonEdit"></textarea>
+        <form-field name="jsonEditor">
+          <textarea json-editor class="form-control" ng-model="ClothoTeam[0]" rows="5"></textarea>
+        </form-field>
+      </ng-form>
     </div>
   </div>
-
 </div>

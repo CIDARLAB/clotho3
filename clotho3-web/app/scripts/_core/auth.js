@@ -6,49 +6,66 @@ angular.module('clotho.core')
  * @description
  * Singleton to handle user authentication and credentials
  *
+ * todo - this is not secure, because anyone could change the credentials. Shouldn't be abe to do anything on the server, but still...
+ *
  */
-	.service('ClothoAuth', function(Clotho, PubSub, $q) {
+	.service('ClothoAuth', function(PubSub, Debug, $q) {
 
-		//todo - store credentials once server returns them - GH#394
+		var Debugger = new Debug('ClothoAuth', '#EE3333');
 
 		var currentUser = null,
-			waitForAuth = $q.defer(),
+      stateListeners = [],
 			getCurrentUserDeferred = [];
 
-		//listen for login and logout events, update info and resolve requests
-		PubSub.on('auth:login auth:logout', handleLoginEvent);
-		function handleLoginEvent (info) {
-			//take the info... if it's null or undefined then logout
-			//todo - check for error
-			currentUser = angular.isDefined(info) ? angular.copy(info) : null;
+    function triggerStateListeners (state) {
+      angular.forEach(stateListeners, function (callback) {
+        callback.call(null, state, currentUser);
+      });
+    }
 
-			//process the deferred queue
-			while (getCurrentUserDeferred.length > 0) {
-				var def = getCurrentUserDeferred.pop();
-				def.resolve(currentUser);
-			}
-		}
+		PubSub.on('auth:login', function handleLoginEvent (info) {
+			Debugger.log('login event info:', info);
+      currentUser = info;
+      //process the deferred queue only on login()
+      while (getCurrentUserDeferred.length > 0) {
+        var def = getCurrentUserDeferred.pop();
+        def.resolve(currentUser);
+      }
+      triggerStateListeners('login');
+		});
+
+    PubSub.on('auth:logout', function handleLogoutEvent (info) {
+      Debugger.log('logout', info);
+      currentUser = null;
+      triggerStateListeners('logout');
+    });
+
+		PubSub.on('auth:error', function handleLoginError () {
+      triggerStateListeners('error');
+		});
 
 		return {
-
-			login: Clotho.login,
-			logout: Clotho.logout,
+      //for data binding
+      //NOT SECURE AT ALL
+      currentUser : currentUser,
 
 			isLoggedIn: function() {
-				return angular.isDefined(currentUser);
+				return !angular.isEmpty(currentUser);
 			},
 
 			// Gets a promise for the current user info.
 			getCurrentUser: function() {
-				var deferred = $q.defer();
-
 				if (angular.isDefined(currentUser)) {
-					deferred.resolve(currentUser);
+					$q.when(currentUser);
 				} else {
+					var deferred = $q.defer();
 					getCurrentUserDeferred.push(deferred);
+					return deferred.promise;
 				}
+			},
 
-				return deferred.promise;
-			}
+      addStateListener : function (callback) {
+        angular.isFunction(callback) && stateListeners.push(callback)
+      }
 		};
 	});

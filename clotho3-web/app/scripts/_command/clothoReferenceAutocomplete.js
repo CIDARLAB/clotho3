@@ -33,6 +33,8 @@ angular.module('clotho.tokenizer')
  * Whether the trigger in autocompleteTrigger should be included in the text. Set to true to enable.
  * @attr autocompleteClearOnSelect {Boolean}
  * When `true`, query will be reset when there is a selection, and behavior should be captured in selection callback. defaults to false. `true` is the behavior of the command bar.
+ * @attr autocompleteClearOnEnter {Boolean}
+ * When `true`, query will be reset on enter(), and behavior should be captured in autocompleteOnEnter callback. defaults to false. `true` is the behavior of the command bar.
  * @attr forceVisible {Boolean=}
  * Force the visibility of the autocomplete
  * if true, force open. if false, force hidden.
@@ -42,11 +44,14 @@ angular.module('clotho.tokenizer')
  * Bind to whether the input has focus
  * @attr autocompleteFilter {Filter}
  * Relayed to angular's filter filter.
+ * @attr autocompleteBlockInput {Boolean}
+ * Block further input. Use instead of [disabled] attribute, so other bindings ok.
+ * //todo - add styling
  *
  * event
  *
  * @attr autocompleteOnSelect {Function=}
- * passed $item, $query (current query string)
+ * passed $item, $query (current query string). Only called when selecting an autocompletion. Use autocompleteOnEnter to handle queries not tied to an autocompletion
  * @attr autocompleteOnQuery {Function=}
  * when query changes. passed $query (new query string) and $old (old query string)
  * @attr autocompleteOnKeydown {Function=}
@@ -54,7 +59,9 @@ angular.module('clotho.tokenizer')
  * @attr autocompleteOnBackout {Function=}
  * Called when type backspace and query is empty
  * @attr autocompleteOnEnter {Function=}
- * Called when type enter, and not selecting an autocompletion
+ * passed $event, $query
+ * Called when type enter, and not selecting an autocompletion.
+ * Use this callback to handle query strings which are not tied to a dropdown, and to handle submissions. See clothoReferenceTokenizer for example.
  *
  * style config
  *
@@ -66,6 +73,10 @@ angular.module('clotho.tokenizer')
  * Keycode for triggering autocomplete selection. This is not the delimiter for trigger the autocomplete - works in a similar way to hitting enter. Pressing this key will automatically select the first autocompletion, triggering autocompleteOnSelect.  If none is provided, tokens will only be broken when manually selecting a dropdown suggestion. Will not end if string begins with a single or double quote.
  * Note that there may be weird behavior if you allow autocomplete for strings with spaces
  *
+ * It is the responsibility of other directives to deal with token collection
+ *
+ * @example See clothoReferenceTokenizer
+ * @example see clothoTerminalInput
  * @example
  <textarea clotho-reference-autocomplete
 					 class="form-control"
@@ -76,7 +87,7 @@ angular.module('clotho.tokenizer')
 					 autocomplete-trigger-include="true"
 					 autocomplete-popup-position="topRight"></textarea>
 
- It is the responsibility of other directives to deal with token collection
+
  */
 	.directive('clothoReferenceAutocomplete', function ($q, $parse, $timeout, $compile, $filter, $document, Clotho, ClothoReferenceDelimiter) {
 
@@ -97,8 +108,10 @@ angular.module('clotho.tokenizer')
 				autocompleteTrigger: '=?',
 				autocompleteTriggerInclude: '=?',
 				autocompleteClearOnSelect: '=?',
+        autocompleteClearOnEnter: '=?',
 				forceVisible: '=?',
 				autocompletions : '=?',
+        autocompleteBlockInput: '=?',
         autocompleteFilter : '=?',
 				autocompleteHasFocus : '=?',
 				autocompleteOnSelect: '&?',
@@ -236,8 +249,8 @@ angular.module('clotho.tokenizer')
 					var breakdown = breakdownQuery(scope.query);
 
 					scope.autocompleteOnSelect(angular.extend({
-						$item: selected
-					}, breakdown));
+            $item: selected
+          }, breakdown));
 
 					/*if (scope.autocompleteAddOnSelect === true) {
 						scope.setQueryString(breakdown.$rest +
@@ -296,8 +309,10 @@ angular.module('clotho.tokenizer')
 
 				//we need to abstract this out so that we can bind/unbind beyond scope of element
 				//if no query or autcomplete not currently open, blur
-				function escapeHandler () {
-					scope.triggerHide = true;
+				function escapeHandler (event) {
+          if (scope.autocompleteTrigger) {
+            scope.triggerHide = true;
+          }
 					if (!scope.query.length || !scope.autocompletions.length) {
 						element[0].blur();
 						resetActive();
@@ -307,6 +322,11 @@ angular.module('clotho.tokenizer')
 						scope.$digest();
 					}
 				}
+
+        //style handler
+        scope.$watch('autocompleteBlockInput', function (newval) {
+          element.toggleClass('input-disabled', !!newval);
+        });
 
 				/* EVENT LISTENERS */
 
@@ -321,8 +341,6 @@ angular.module('clotho.tokenizer')
 
 					scope.autocompleteOnKeydown({$event : evt, $keycode : evt.which});
 
-					//todo - change flow - Add in a @ symbol. look at substring after it for autocompletions. replace (or append) when select.
-
 					//reference delimiter
 					//hack - need to check shift state and use alternate keycode because @ is shift+2
 					if (evt.which === 50 && evt.shiftKey === true) {
@@ -333,11 +351,16 @@ angular.module('clotho.tokenizer')
 						//todo - other ways to triggerHide
 
 						scope.$digest();
+            //do not return, prevent default
 					}
 
 					//typeahead is open and an "interesting" key was pressed
 					if (localHotkeys.indexOf(evt.which) === -1) {
-						return;
+            //if blocking input, don't let 'uninteresting' keys do anything
+						if (scope.autocompleteBlockInput) {
+              evt.preventDefault();
+            }
+            return;
 					}
 
 
@@ -364,7 +387,7 @@ angular.module('clotho.tokenizer')
 							return;
 						} else {
 							scope.$apply(function () {
-								scope.autocompleteOnBackout();
+								scope.autocompleteOnBackout({$event: evt});
 							});
 						}
 					}
@@ -395,10 +418,11 @@ angular.module('clotho.tokenizer')
 					else if (evt.which === 13 || evt.which === 9) {
 						//if highlighted dropdown select() it, otherwise we'll run enter callback
 						if (scope.activeIdx >= 0) {
-							scope.$apply(function () {
-								scope.select(scope.activeIdx);
-							});
-						} else {
+              scope.$apply(function () {
+                scope.select(scope.activeIdx);
+              });
+            }
+            else {
 
 							/*
 							//select() the fragment
@@ -409,10 +433,15 @@ angular.module('clotho.tokenizer')
 								});
 							}
 							 */
-							//submit
+							//enter
 							if (evt.which == 13) {
 								scope.$apply(function () {
-									scope.autocompleteOnEnter()
+                  scope.autocompleteOnEnter(angular.extend({
+                    $event: evt
+                  }, breakdownQuery(scope.query)));
+                  if (scope.autocompleteClearOnEnter === true) {
+                    resetQuery();
+                  }
 								});
 							}
 						}
@@ -420,7 +449,7 @@ angular.module('clotho.tokenizer')
 					}
 					//escape
 					else if (evt.which === 27) {
-						escapeHandler();
+						escapeHandler(evt);
 					}
 
 					//at bottom so can return out and continue normal action
@@ -429,7 +458,7 @@ angular.module('clotho.tokenizer')
 
 				var escapeCheckHandler = function (evt) {
 					if (evt.which === 27) {
-						escapeHandler();
+						escapeHandler(evt);
 					}
 				};
 

@@ -36,9 +36,12 @@ angular.module('clotho.tokenizer')
 		this.convert = convertText;
 
 		this.convertHtml = angular.bind(null, convertText, function clothoReferenceParseHtml(match) {
-			return '<a sharable-popup sharable-popup-id="'+match+'" sharable-popup-trigger="mouseenter">' + match + '</a>';
+      //return '<a sharable-popup sharable-popup-id="'+match+'" sharable-popup-trigger="mouseenter">' + match + '</a>';
+
+      //todo - more efficient if we are compiling so many tokens (because currently need to rebuild on every keystroke
+			return '<clotho-token token-id="'+match+'" popup-trigger="mouseenter"></clotho-token>';
 		});
-		
+
 		this.convertMarkdown = angular.bind(null, convertText, function clothoReferenceParseMarkdown (match) {
 			return '[' + match + '](' + urlRootREST + match + ')';
 		});

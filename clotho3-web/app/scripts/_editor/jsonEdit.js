@@ -99,8 +99,6 @@ example usage:
   <p ng-show="myForm.myFormElement.$error.json">JSON is invalid!</p>
  </form>
 
-todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try to serialize)
-
  */
 
 .directive('jsonEditor', function () {
@@ -110,7 +108,6 @@ todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try 
 		link: function (scope, element, attrs, ngModelCtrl) {
 
 			function isValidJson(model) {
-        console.log(model);
         var flag = angular.isDefined(model);
 				try {
 					angular.fromJson(model);
@@ -120,15 +117,19 @@ todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try 
 				return flag;
 			}
 
-			function string2JSON(text) {
-				try {
-					return angular.fromJson(text);
-				} catch (err) {
-					//returning undefined results in a parser error as of angular-1.3-rc.0, and will not go through $validators
-					//return undefined
-					return text;
-				}
-			}
+      //need to do validation here, because validator is passed the model, which will not work for strings -- i.e. passing "" here will work, but when parsed to validator quotes will be stripped
+      function string2JSON(text) {
+        try {
+          var j = angular.fromJson(text);
+          ngModelCtrl.$setValidity('json', true);
+          return j;
+        } catch (err) {
+          //returning undefined results in a parser error as of angular-1.3-rc.0, and will not go through $validators
+          //return undefined
+          ngModelCtrl.$setValidity('json', false);
+          return text;
+        }
+      }
 
 			function JSON2String(object) {
 				// NOTE that angular.toJson will remove all $$-prefixed values
@@ -136,8 +137,15 @@ todo - NEED TO ADD SUPPORT FOR PRIMITIVES (doesn't work for strings because try 
 				return angular.toJson(object, true);
 			}
 
+      /*
+      todo - only want to update view (formatters) if objects differ
+      if (!angular.equals(object, angular.fromJson(ngModelCtrl.$viewValue))) {
+
+      }
+      */
+
 			//$validators is an object, where key is the error
-			ngModelCtrl.$validators.json = isValidJson;
+			//ngModelCtrl.$validators.json = isValidJson;
 
 			//array pipelines
 			ngModelCtrl.$parsers.push(string2JSON);

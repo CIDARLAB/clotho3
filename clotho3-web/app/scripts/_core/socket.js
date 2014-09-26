@@ -21,7 +21,15 @@ angular.module('clotho.core').service('Socket',
 
 	    var Debugger = new Debug('Socket', '#5555bb');
 
-	    //todo + handle error callbacks
+      function createSayError (msg) {
+        return {
+          class : "error",
+          from : "client",
+          text : msg
+        }
+      }
+
+	    //basic check -- most checks should be in communicator
 	    function checkMessageValid (msgString) {
 		    return msgString.length < 16348;
 	    }
@@ -31,7 +39,8 @@ angular.module('clotho.core').service('Socket',
 	    //          true - sent successfully
 	    //          false - failed to send
 	    function socket_send (data) {
-		    if (!socketReady) {
+		    //todo - move to socket.readyState
+        if (socket.readyState !== 1) {
 			    Debugger.log('(not ready) queueing request: ', data);
 			    socketQueue.push(data);
 			    return;
@@ -45,7 +54,7 @@ angular.module('clotho.core').service('Socket',
 			    return true;
 		    } else {
 			    Debugger.warn('Message did not pass validation!');
-			    ClientAPI.say({class : "error", text : "Message could not be sent to server", from : "client"});
+			    ClientAPI.say(createSayError("Message could not be sent to server"));
 			    return false;
 		    }
 	    }
@@ -59,163 +68,87 @@ angular.module('clotho.core').service('Socket',
 		    socketQueue = [];
 	    }
 
-	   //usually assume the socket doesn't exist (it would have to be declared manually), but it may if need to connect to a specific port and not what is created here
+      function createSocketConnection () {
+        var pathname = window.location.pathname;
 
-	    if ($window.$clotho.socket) {
-		    socket = $window.$clotho.socket;
-	    } else {
-		    var pathname = window.location.pathname;
-
-		    var pathDirectory = pathname.substring(0, pathname.lastIndexOf('/'));
-		    //check for .html -- if url has hash (e.g. /#!/) then need to strip file name
-		    if (/\.html/.test(pathDirectory)) {
-			    pathDirectory = pathDirectory.substring(0, pathDirectory.lastIndexOf('/'));
-		    }
-
-		    //use protocol wss: for https, default to ws:
-		    var socketProtocol = window.location.protocol == 'https:' ? 'wss:' : 'ws:';
-
-		    socket = $window.$clotho.socket = new WebSocket(socketProtocol + "//" + window.location.host + pathDirectory + "/websocket");
-	    }
-
-	    if (socket.readyState == 1) {
-		    Debugger.log('already exists, sending items in socket Queue...');
-		    socketReady = true;
-		    sendSocketQueue();
-	    } else {
-		    socket.onopen = function() {
-			    Debugger.log('opened, sending queued items...');
-			    socketReady = true;
-			    sendSocketQueue();
+        var pathDirectory = pathname.substring(0, pathname.lastIndexOf('/'));
+        //check for .html -- if url has hash (e.g. /#!/) then need to strip file name
+        if (/\.html/.test(pathDirectory)) {
+          pathDirectory = pathDirectory.substring(0, pathDirectory.lastIndexOf('/'));
         }
 
-	    }
+        //use protocol wss: for https, default to ws:
+        var socketProtocol = window.location.protocol == 'https:' ? 'wss:' : 'ws:';
 
-	    socket.onerror = function(err) {
-		    Debugger.error('socket error', err);
-	    };
+        socket = $window.$clotho.socket = new WebSocket(socketProtocol + "//" + window.location.host + pathDirectory + "/websocket");
 
-      socket.onclose = function(evt) {
-	      socketReady = false;
-	      Debugger.error('socket closed', evt);
-        ClientAPI.say({class : "error", text : "Socket Connection Closed (Please Reload)" + (evt.reason ? ' - ' + evt.reason : ''), from : "client"});
-	      //todo - re-establish connection on loss
+        socket.onopen = function() {
+          Debugger.log('opened, sending queued items...');
+          sendSocketQueue();
+        };
+
+        socket.onerror = function(err) {
+          Debugger.error('socket error', err);
+        };
+
+        socket.onclose = function(evt) {
+          Debugger.error('socket closed', evt);
+          ClientAPI.say(createSayError("Socket Connection Closed (Please Reload)" + (evt.reason ? ' - ' + evt.reason : '') ));
+
+          //todo - actually re-connect with server + ensure events re-attach
+          //createSocketConnection();
+        };
+      }
+
+      //usually assume the socket doesn't exist (it would have to be declared manually), but it may if need to connect to a specific port and not what is created here
+      //todo - better check for existence
+      if ($window.$clotho.socket) {
+        socket = $window.$clotho.socket;
+      } else {
+        createSocketConnection();
+      }
+
+      /************
+       Socket Listener
+      ************/
+
+      //todo - delegate to service which also handles SSE (once we support them)
+      socket.onmessage = function (obj) {
+
+        obj = JSON.parse(obj.data);
+
+        Debugger.log('received', obj);
+
+        var channel = obj.channel;
+        var requestId = obj.requestId;
+        var dataUndefined = angular.isUndefined(obj.data);
+        var data = obj.data;
+
+        // it's the ClientAPI method's responsibility to handle data appropriately.
+        if (angular.isFunction(ClientAPI[channel])) {
+            //Debugger.log("mapping to ClientAPI - " + channel);
+            ClientAPI[channel](data);
+        }
+        //Pubsub if its not in the ClientAPI
+        else {
+          //if data field is undefined, send to PubSub.reject to reject the promise.
+          var command = dataUndefined ? 'reject' : 'trigger';
+          if (requestId) {
+            PubSub[command](channel+':'+requestId, data);
+          } else {
+            PubSub[command](channel, data);
+          }
+        }
       };
 
-	    /*
-        //external use - use in other apps, or for custom events
-	     //todo - enable as separate service, outside core
-        var customChannels = {};
+      return {
+          state : function () {
+            return socket.readyState;
+          },
 
-        //external use
-        var on = function (eventName, callback) {
-            if(!customChannels[eventName]) {
-                customChannels[eventName] = [];
-            }
-            customChannels[eventName].push(callback);
-            return [eventName, callback];
-        };
-
-        var once = function (eventName, callback) {
-            var once_fn = function(args) {
-                off([eventName, this]);
-                callback(args);
-            };
-            on(eventName, once_fn);
-        };
-
-        var off = function (handle) {
-            var t = handle[0];
-            customChannels[t] && angular.forEach(customChannels[t], function(idx){
-                if(this == handle[1]){
-                    console.log("SOCKET\tremoving listener for " + customChannels[t]);
-                    customChannels[t].splice(idx, 1);
-                }
-            });
-        };
-
-        //for use internally, in socket.on()
-        //future - should this be exposed? Or only reachable by sending message from server?
-        var trigger = function (channel, args) {
-            customChannels[channel] && angular.forEach(customChannels[channel], function(fn) {
-                fn(args);
-            });
-        };
-        */
-
-        /************
-         Socket Listener
-        ************/
-
-        socket.onmessage = function (obj) {
-
-            obj = JSON.parse(obj.data);
-
-            Debugger.log('received', obj);
-
-            var channel = obj.channel;
-            var requestId = obj.requestId;
-	          var dataUndefined = angular.isUndefined(obj.data);
-            var data = obj.data;
-
-            // it's the ClientAPI method's responsibility to handle data appropriately.
-            if (angular.isFunction(ClientAPI[channel])) {
-                //Debugger.log("mapping to ClientAPI - " + channel);
-                ClientAPI[channel](data);
-            }
-            /*
-            //for custom listeners attached
-            else if (typeof customChannels[channel+':'+requestId] == 'function') {
-                Debugger.log("mapping to custom listeners - " + channel);
-                trigger(channel, data);
-            }
-            */
-            // don't know what to do, so publish to PubSub
-            else {
-	            //if data field is undefined, send to PubSub.reject to reject the promise.
-	            var command = dataUndefined ? 'reject' : 'trigger';
-	            if (requestId) {
-		            PubSub[command](channel+':'+requestId, data);
-	            } else {
-		            PubSub[command](channel, data);
-	            }
-            }
-        };
-
-        return {
-
-	          /*
-            //For adding custom channels - for use in other apps etc.
-            //todo - enable as separate service, outside core
-            on : on,
-            once : once,
-            off : off,
-            */
-
-		        state : function () {
-			        return socket.readyState;
-		        },
-            //send a JSON on an arbitrary channel [ repackaged using send() ]
-            //note - callback is run on send, not really a callback - use PubSub
-	          // returns boolean of whether message was sent (not if invalid)
-            emit: function (channel, data, callback) {
-                var packaged = {
-                    "channel" : channel,
-                    "data" : data
-                };
-
-                var wasSent = socket_send(packaged);
-
-                if (wasSent && typeof callback == 'function') {
-	                callback(packaged);
-                }
-
-	              return wasSent;
-            },
-
-            //send properly packaged and formatted string
-	          //returns boolean whether message was sent or not
-            send: socket_send
-        }
+          //send properly packaged and formatted string
+          //returns boolean whether message was sent or not
+          send: socket_send
+      };
     }
 });

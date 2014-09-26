@@ -1,5 +1,12 @@
-//this is not part of tokenizer
+clotho-reference-tokenizer {
+  .form-group {
+    margin: 0;
+  }
+}
 
+//tokenizer - input group
+
+//note - doesn't work if anything appears before the input element itself
 .clotho-input-group {
 
   input {
@@ -22,81 +29,35 @@
   }
 }
 
-//tokenizer
+//tokenizer - tokens
 
-
-.clothoTokenizerWrap {
-  display: table;
-  width: 100%;
-}
-
-.clothoTokenizerInputWrap {
+.clothoReferenceToken {
+  //copied from bootstrap, but don't want other baggage of input-group-addon
   display: table-cell;
-  position: relative;
-  width: 100%;
-  max-width: 395px;
-  padding: 4px 8px 4px 24px;
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.428571429;
-  color: #555555;
-  vertical-align: middle;
-  background-color: white;
-  background-image: none;
-  border: 1px solid #cccccc;
-  border-radius: 4px 0 0 4px;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle; // Match the inputs
+  padding: 0;
 
-  .clothoIcon {
-    display: block;
-    position: absolute;
-    left: 9px;
-    top: 10px;
-    width: 14px;
-    height: 14px;
-    background: url('../../images/iconSlice.png') no-repeat -3px 0px;
+  .clothoToken-inner {
+    padding: 6px;
+    font-size: inherit;
+    font-weight: normal;
+    border-radius: 0;
+    border-style: solid none;
+    border-width: 1px;
+    border-color: $input-group-addon-border-color;
   }
 
-  &.focused {
-    border-color: #66afe9;
-    outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  .clothoToken-type {
+    padding: 6px 3px;
   }
 }
 
-.submit-button-wrap {
-  width: 40px;
-  display: table-cell;
-}
 
-.clothoTokenizerSubmit {
-  @extend .btn;
-  @extend .btn-default;
-  //hack
-  height: 34px;
-}
+//tokenizer - autocomplete
 
-.clothoTokenizerTokens {
-  display: inline;
-  max-width: 410px
-}
-
-.clothoAutocompleteWrap {
-  display: inline-block;
-  position: relative;
-  padding: 1px 0;
-  overflow: visible;
-}
-
-.clothoAutocomplete {
-  appearance: none;
-  outline: none;
-  border: 0;
-  width: 100%;
-  background-color: transparent;
-}
-
+//todo - add more custom styling
 .clothoAutocompleteListing {
   @extend .dropdown-menu;
   width: 300px;
@@ -104,4 +65,8 @@
 
 .clothoAutocompleteMatch {
   display: block;
+}
+
+.input-disabled {
+  background-color: $input-bg-disabled;
 }

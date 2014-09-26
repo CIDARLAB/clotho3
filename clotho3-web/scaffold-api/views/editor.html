@@ -38,15 +38,15 @@
           <h5>Edit Existing Object</h5>
         </div>
         <div class="panel-body">
-          <input id="chooseInstance"
-                 type="text"
+
+          <input type="text"
+                 clotho-reference-autocomplete
                  class="form-control"
                  ng-model="selectedInstance"
-                 typeahead="c.id as c.name for c in queryWrapper($viewValue)"
-                 typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
-                 popover="Type to search for and edit an existing object"
-                 popover-trigger="focus"
-                 popover-append-to-body="true">
+                 ng-trim="false"
+                 placeholder="type query"
+                 autocomplete-on-select="editExisting($item, $query); selectedInstance = ''"
+                 autocomplete-popup-position="topLeft">
         </div>
       </div>
     </div>

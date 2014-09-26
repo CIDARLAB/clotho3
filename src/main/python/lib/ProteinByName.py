@@ -1,6 +1,10 @@
 from Bio import Entrez, SeqIO
 from ClothoPy.ProteinRetrieval import CallAccn
 
+"""
+Expects @terms in the form of [organism, gene_name, retmax].
+retmax should be None if the user wants all.
+"""
 def _ProteinByName(terms):
     Entrez.email = 'nobody@example.com'
     call = CallAccn('protein', 'gb', 'nobody@example.com')
@@ -9,16 +13,31 @@ def _ProteinByName(terms):
     lastlen = 0
     start = 0
 
-    while True:
-        handle = Entrez.esearch(db="protein", term=term_string, retstart=start, retmax=50)
-        record = Entrez.read(handle)
-        handle.close()
-        ids = ids + record['IdList']
-        if lastlen == len(ids):
-            break
-        else:
-            lastlen = len(ids)
-        start = start + 50
+    if terms[2] is None:
+        while True:
+            handle = Entrez.esearch(db="protein", term=term_string, retstart=start, retmax=50)
+            record = Entrez.read(handle)
+            handle.close()
+            ids = ids + record['IdList']
+            if lastlen == len(ids):
+                break
+            else:
+                lastlen = len(ids)
+            start = start + 50
+    else:
+        retmax = 50
+        while True:
+            if retmax > terms[2]:
+                retmax = terms[2]
+            handle = Entrez.esearch(db="protein", term=term_string, retstart=start, retmax=retmax)
+            record = Entrez.read(handle)
+            handle.close()
+            ids = ids + record['IdList']
+            if start + retmax == terms[2]:
+                break
+            start = start + 50
+            if start + retmax > terms[2]:
+                retmax = terms[2] - (start)
 
     call.retrieve_gb(ids)
     

@@ -9,44 +9,40 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
       restrict: 'EA',
       require: '?ngModel',
       priority: 1,
-      compile: function compile(tElement) {
+      compile: function compile() {
         // Require CodeMirror
         if (angular.isUndefined(window.CodeMirror)) {
           throw new Error('ui-codemirror need CodeMirror to work... (o rly?)');
         }
-        // Create a codemirror instance with
-        // - the function that will to place the editor into the document.
-        // - the initial content of the editor.
-        //   see http://codemirror.net/doc/manual.html#api_constructor
-        var value = tElement.text();
-        var codeMirror = new window.CodeMirror(function (cm_el) {
-            angular.forEach(tElement.prop('attributes'), function (a) {
-              if (a.name === 'ui-codemirror') {
-                cm_el.setAttribute('ui-codemirror-opts', a.textContent);
-              } else {
-                cm_el.setAttribute(a.name, a.textContent);
-              }
-            });
-            // FIX replaceWith throw not parent Error !
-            if (tElement.parent().length <= 0) {
-              tElement.wrap('<div>');
-            }
-            tElement.replaceWith(cm_el);
-          }, { value: value });
         return function postLink(scope, iElement, iAttrs, ngModel) {
-          var options, opts;
+          var options, opts, codeMirror, initialTextValue;
+          initialTextValue = iElement.text();
           options = uiCodemirrorConfig.codemirror || {};
-          opts = angular.extend({}, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
-          function updateOptions(newValues) {
-            for (var key in newValues) {
-              if (newValues.hasOwnProperty(key)) {
-                codeMirror.setOption(key, newValues[key]);
-              }
-            }
+          opts = angular.extend({ value: initialTextValue }, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
+          if (iElement[0].tagName === 'TEXTAREA') {
+            // Might bug but still ...
+            codeMirror = window.CodeMirror.fromTextArea(iElement[0], opts);
+          } else {
+            iElement.html('');
+            codeMirror = new window.CodeMirror(function (cm_el) {
+              iElement.append(cm_el);
+            }, opts);
           }
-          updateOptions(opts);
-          if (angular.isDefined(scope.$eval(iAttrs.uiCodemirror))) {
-            scope.$watch(iAttrs.uiCodemirror, updateOptions, true);
+          if (iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts) {
+            var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
+            scope.$watch(iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts, function updateOptions(newValues, oldValue) {
+              if (!angular.isObject(newValues)) {
+                return;
+              }
+              codemirrorDefaultsKeys.forEach(function (key) {
+                if (newValues.hasOwnProperty(key)) {
+                  if (oldValue && newValues[key] === oldValue[key]) {
+                    return;
+                  }
+                  codeMirror.setOption(key, newValues[key]);
+                }
+              });
+            }, true);
           }
           if (ngModel) {
             // CodeMirror expects a string, so make sure it gets one.
@@ -87,6 +83,15 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
               }
             });
           }
+          // Allow access to the CodeMirror instance through a broadcasted event
+          // eg: $broadcast('CodeMirror', function(cm){...});
+          scope.$on('CodeMirror', function (event, callback) {
+            if (angular.isFunction(callback)) {
+              callback(codeMirror);
+            } else {
+              throw new Error('the CodeMirror event requires a callback function');
+            }
+          });
           // onLoad callback
           if (angular.isFunction(opts.onLoad)) {
             opts.onLoad(codeMirror);

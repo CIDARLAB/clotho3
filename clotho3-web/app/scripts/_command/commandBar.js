@@ -23,7 +23,7 @@ angular.module('clotho.commandbar')
 	//todo - should capture from commandBar directive as possible, e.g. via controller
 	//note - call as needed, ensure exists in DOM
 	var getCommandBarInput = function () {
-		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-autocomplete]'));
+		return angular.element($document[0].querySelector('[clotho-command-bar] [clotho-reference-autocomplete]'));
 	};
 
 	var commandBarInputModel = 'query';
