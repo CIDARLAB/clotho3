@@ -290,25 +290,19 @@ public class ServerSideAPI {
     }
     public final boolean createuser(String username, String password)
     {
-        boolean personexists = false;
-        Collection<Person> personlist = persistor.getAll(Person.class);
-            for(Person p : personlist)
-            {
-                if(p.getId().toString().equals(username))
-                {
-                    personexists = true;
-                    break;
-                }
-            }
-       
-        if(!personexists)
+        
+        Map<String,Object> query = new HashMap<String,Object>();
+        query.put("primaryEmail",username);
+        List<Map<String,Object>> results = query(query);
+        if(results.isEmpty())
         {
-            Person newperson = new Person (username);
-            newperson.setEmailAddress(username);
-            newperson.setId(new ObjectId(username));
-            persistor.save(newperson);
+            Person newPerson = new Person(username);
+            newPerson.setPrimaryAccount(true);
+            newPerson.setPrimaryEmail(username);
+            newPerson.setEmailAddress(username);
+            newPerson.setId(new ObjectId(username));
+            persistor.save(newPerson);
             realm.addAccount(username, password);
-            
             say("New user " + username +" created.", Severity.SUCCESS);
             return true;
         }
@@ -318,6 +312,71 @@ public class ServerSideAPI {
             return false;
         }
     }
+    
+    
+    public final boolean linkPerson(String primaryEmail,String username, String password)
+    {
+        Map<String,Object> query = new HashMap<String,Object>();
+        query.put("primaryEmail",username);
+        List<Map<String,Object>> results = query(query);
+        if(results.isEmpty())
+        {
+            
+            say("User with primary Email " + primaryEmail +" does not exist. Please create the primary User account first.", Severity.FAILURE);
+            return false;
+        }
+        else
+        {
+            boolean personExists = false;
+            
+            for(Map<String,Object> result:results)
+            {
+                if(result.get("id").equals(username))
+                {
+                    personExists = true;
+                }
+            }
+            //say("User " + username +" exists.", Severity.FAILURE);
+            if(personExists)
+            {
+                say("Person with Email " + username +" exists. Please update the Person object.", Severity.FAILURE);
+            return false;
+            }
+            else
+            {
+                Person newPerson = new Person(username);
+                newPerson.setPrimaryAccount(false);
+                newPerson.setPrimaryEmail(primaryEmail);
+                newPerson.setEmailAddress(username);
+                newPerson.setId(new ObjectId(username));
+                persistor.save(newPerson);
+                realm.addAccount(username, password);
+                say("New Person " + username + " created.", Severity.SUCCESS);
+                return true;
+            }
+            
+        }
+    }
+    
+    public final List<Map<String, Object>> getAllPerson(String primaryEmail) 
+    {
+        
+        Map<String,Object> query = new HashMap<String,Object>();
+        query.put("primaryEmail",primaryEmail);
+        List<Map<String,Object>> results = query(query);
+        if(results.isEmpty())
+        {
+            
+            say("User with primary Email " + primaryEmail +" does not exist. Please create the primary User account first.", Severity.FAILURE);
+            return null;
+        }
+        else
+        {
+            say(results.size() + " persons found", Severity.SUCCESS);
+            return results;
+        }
+    }
+    
     
     public final boolean updatePassword(String username, String password)
     {
@@ -352,7 +411,7 @@ public class ServerSideAPI {
         
         if (!SecurityUtils.getSubject().isAuthenticated())
         {
-        
+            
             //SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
             // Map<String, Object> 
             Collection<Person> personlist = persistor.getAll(Person.class);
