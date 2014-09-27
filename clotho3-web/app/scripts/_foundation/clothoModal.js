@@ -67,6 +67,12 @@ angular.module('clotho.clothoDirectives')
 						});
 					}
 				};
+
+        $scope.clickCheckBackdrop = function (event) {
+          if (event.target == $element[0]) {
+            $scope.$close();
+          }
+        }
 			},
 			link: function (scope, element, attrs, nullCtrl, transclude) {
 
