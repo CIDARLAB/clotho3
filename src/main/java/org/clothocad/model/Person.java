@@ -43,6 +43,18 @@ public class Person extends SharableObjBase {
     @Setter
     private String givenName, surName, nickName, emailAddress, snailMailAddress;
     
+    @Getter
+    @Setter
+    private String primaryEmail;
+    
+    
+    @Getter
+    @Setter
+    private boolean isPrimaryAccount;
+    
+    
+    
+    
 
     /**Constructor from raw data
      *
