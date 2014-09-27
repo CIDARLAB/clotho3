@@ -288,10 +288,11 @@ public class ServerSideAPI {
             Interpreter.get().learnNative(userInput, JSON.mappify(command));
         }
     }
-    public final boolean createuser(String username, String password)
+    public final Object createuser(String username, String password)
     {
         
         Map<String,Object> query = new HashMap<String,Object>();
+        Map<String,Object> result = new HashMap<String,Object>();
         query.put("primaryEmail",username);
         List<Map<String,Object>> results = query(query);
         if(results.isEmpty())
@@ -304,7 +305,10 @@ public class ServerSideAPI {
             persistor.save(newPerson);
             realm.addAccount(username, password);
             say("New user " + username +" created.", Severity.SUCCESS);
-            return true;
+            result.put("id", username);
+            result.put("accessToken", "dummy");
+            result.put("app_id", "dummy");
+            return result;
         }
         else
         {
@@ -408,7 +412,7 @@ public class ServerSideAPI {
     
     public final Object login(String username, String password) {
         ObjectId userId = null;
-        
+        Map<String,Object> result = new HashMap<String,Object>();
         if (!SecurityUtils.getSubject().isAuthenticated())
         {
             
@@ -441,7 +445,11 @@ public class ServerSideAPI {
                 }
                 say("Welcome, " + username, Severity.SUCCESS);
                 log.info("User {} logged in", username);
-                return userId;
+                result.put("id", userId);
+                result.put("accessToken", "dummy");
+                result.put("app_id", "dummy");
+                
+                return result;
             }
         }
         else
