@@ -178,7 +178,8 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	//testing
 	.when('/widgets', {
 	  templateUrl: 'views/widgets.html',
-	  controller: 'WidgetsCtrl'
+	  controller: 'WidgetsCtrl',
+    reloadOnSearch : false
 	})
 
 .when('/test/schemaview', {
