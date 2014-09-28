@@ -196,6 +196,10 @@ angular.module('clotho.core').service('PubSub',
 				ref = ref || null;
 				one = one == true;
 
+        if (!angular.isFunction(callback)) {
+          return angular.noop;
+        }
+
 				if (one) {
 					callback = angular.once(callback);
 				}
