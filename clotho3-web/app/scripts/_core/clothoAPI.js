@@ -704,6 +704,25 @@ angular.module('clotho.core')
     };
 
     /**
+     * @name Clotho.convert
+     *
+     * @description
+     * Converts object to a passed schema
+     *
+     * @param obj {Object} Sharable
+     * @param schema {string} Schema ID
+     * @param options {object} API options
+     * @returns {object} converted sharable
+     */
+    var convert = function clothoAPI_convert (obj, schema, options) {
+      var packaged = {
+        object: obj,
+        schema: schema
+      };
+      return fn.emitSubOnce('convert', packaged, options);
+    };
+
+    /**
      * @name Clotho.recent
      *
      * @param {Object=} params Restrictions to your query
@@ -756,11 +775,13 @@ angular.module('clotho.core')
     };
 
     return {
-      //api
+      //auth
       login : login,
       logout : logout,
       createUser : createUser,
       updatePassword : updatePassword,
+
+      //basic api
       get : get,
       set : set,
       query : query,
@@ -776,6 +797,7 @@ angular.module('clotho.core')
       run : run,
       recent: recent,
       notify : notify,
+      convert : convert,
 
 	    //searchbar
 	    submit: submit,
