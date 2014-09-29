@@ -1,4 +1,4 @@
-package org.registry.model;
+package org.clothocad.model;
 
 import java.util.ArrayList;
 import java.util.List;
