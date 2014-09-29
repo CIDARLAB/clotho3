@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -161,10 +162,20 @@ public class JSON {
         return null;
     }
 
+    public static <T> T convert(Object value, Class<T> type){
+        return mapper.convertValue(value, type);
+    }
+    
+    public static <T> T convert(Object value, JavaType type){
+        return mapper.convertValue(value, type);
+    }
+    
+    public static <T> T convert(Object value, TypeReference<?> type){
+        return mapper.convertValue(value, type);
+    }
     public static class ClothoJacksonModule extends SimpleModule {
 
         public ClothoJacksonModule() {
-            //TODO: why is this deprecated?
             super("ClothoModule", new Version(0, 0, 1, null, "org.clothocad", "clotho"));
 
         }

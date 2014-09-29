@@ -1,5 +1,6 @@
 package org.clothocad.core.communication;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -9,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
 import static org.clothocad.core.communication.Channel.submit;
+import org.clothocad.core.datums.ObjectId;
 
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
@@ -163,6 +166,27 @@ public class Router {
                     break;
                 case validate:
                     response = api.validate(JSON.mappify(data));
+                    break;
+                case grant:
+                    Map dataMap = JSON.mappify(data);
+                    api.grant(
+                            JSON.convert(dataMap.get("id"), ObjectId.class),
+                            JSON.convert(dataMap.get("user"), String.class),
+                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
+                            );
+                    response = Void.TYPE;
+                    break;
+                    
+                case grantAll:
+                    dataMap = JSON.mappify(data);
+                    api.grantAll(                            
+                            (Set<ObjectId>) JSON.convert(dataMap.get("id"), new TypeReference<Set<ObjectId>>(){}),
+                            JSON.convert(dataMap.get("user"), String.class),
+                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
+                            );
+                    response = Void.TYPE;
                     break;
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());

@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import static org.clothocad.core.security.ClothoAction.*;
 import org.clothocad.core.security.ClothoPermission;
+import org.clothocad.core.security.ClothoRealm;
 import static org.clothocad.core.security.PermissionHolder.constructPermissionString;
 import org.clothocad.model.Institution;
 
@@ -111,7 +112,11 @@ public class GrantTest extends AbstractServerAPITest {
         return persistor.save(new Institution("Test Institution", "", "", ""));
     }
 
-    private void assertHasOnlyPermissions(ObjectId id, String principal, ClothoAction... clothoActions) {
+    private void assertHasOnlyPermissions(ObjectId id, String principal, ClothoAction... clothoActions){
+        assertHasOnlyPermissions(id, principal, realm, clothoActions);
+    }
+    
+    public static void assertHasOnlyPermissions(ObjectId id, String principal, ClothoRealm realm, ClothoAction... clothoActions) {
         Set<ClothoAction> shouldHavePermissions = Sets.newHashSet(clothoActions);
         Set<ClothoAction> shouldLackPermissions = Sets.complementOf(shouldHavePermissions, ClothoAction.class);
         Set<ClothoAction> hasPermissions = new HashSet<>();

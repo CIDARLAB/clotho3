@@ -43,6 +43,7 @@ public enum Channel {
     
 //SECURITY
     grant,
+    grantAll,
     login, //Log me into Clotho on this client with this login/password
     logout, //Log me out of Clotho
     changePassword, //Change my password to this new value

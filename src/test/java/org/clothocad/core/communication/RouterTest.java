@@ -8,11 +8,6 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.util.AuthorizedShiroTest;
-import org.clothocad.core.util.JSON;
-import org.clothocad.core.util.TestUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,34 +15,12 @@ import static org.junit.Assert.*;
  *
  * @author spaige
  */
-public class RouterTest extends AuthorizedShiroTest{
-
-    private static Router router;
-    private static List<ObjectId> ids;
+public class RouterTest extends AbstractRouterTest{
 
     public RouterTest() {
-            router = injector.getInstance(Router.class);
-
+        super();
     }
-
-    @BeforeClass
-    public static void setUpClass() {
-
-    }
-
-
-    @Before
-    public void setUp() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
+    
     @Test
     public void getAll() throws IOException {
         TestConnection connection = new TestConnection("getTest");
@@ -61,11 +34,6 @@ public class RouterTest extends AuthorizedShiroTest{
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
         assertEquals("Test Part 1", ((Map) ((List)returnMessage.getData()).get(0)).get("name").toString());
-    }
-
-    private void assertMatch(Message m1, Message m2) {
-        assertEquals(m1.getChannel(), m2.getChannel());
-        assertEquals(m1.getRequestId(), m2.getRequestId());
     }
 
     @Test
@@ -282,11 +250,5 @@ public class RouterTest extends AuthorizedShiroTest{
                 + "clotho.save(reverse);\n"
                 + "\n"
                 + "reverse(\"AAACCC\");";
-    }
-
-    private void sendMessage(Message message, ClientConnection connection) throws IOException {
-        String stringMessage = JSON.serializeForExternal(message);
-        message = JSON.mapper.readValue(stringMessage, Message.class);
-        router.receiveMessage(connection, message);
     }
 }
