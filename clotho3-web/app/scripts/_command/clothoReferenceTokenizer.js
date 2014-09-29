@@ -108,7 +108,7 @@ angular.module('clotho.tokenizer')
           }
           //no tokens
           else {
-            //do nothing
+            $scope.currentPlaceholder = 'Must select from dropdown';
           }
         };
 

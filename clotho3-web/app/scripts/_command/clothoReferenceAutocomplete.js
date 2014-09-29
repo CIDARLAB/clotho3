@@ -341,7 +341,7 @@ angular.module('clotho.tokenizer')
 
 					scope.autocompleteOnKeydown({$event : evt, $keycode : evt.which});
 
-					//reference delimiter
+					//reference delimiter (@)
 					//hack - need to check shift state and use alternate keycode because @ is shift+2
 					if (evt.which === 50 && evt.shiftKey === true) {
 						if (scope.autocompleteTrigger) {
