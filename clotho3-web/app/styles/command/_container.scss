@@ -29,6 +29,7 @@ $command-input-width: 500px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: none;
+    vertical-align: top;                    //necessarys in safari
 
     @media (min-width:992px) {
       display: inline-block;

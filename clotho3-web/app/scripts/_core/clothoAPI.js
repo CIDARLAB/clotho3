@@ -53,8 +53,7 @@ angular.module('clotho.core')
 
 	  //helper functions
 
-		//pending ES6
-
+    //generator
 		var numberAPICalls = new (function () {
 			var commandNum = 0;
 			this.next = function () {
@@ -114,23 +113,23 @@ angular.module('clotho.core')
 			return deferred.promise;
 		}
 
-	  /**********
-	       API
-	   **********/
+    /**************************
+                Auth
+     **************************/
 
 	  /**
 	   * @name Clotho.login
 	   *
-	   * @param username
-	   * @param password
+	   * @param username {string} email address of user
+	   * @param credentials {string|Object} If password, string. If token + key (e.g. OAuth), Object
 	   *
 	   * @description
-	   * Authenticate with Clotho. $broadcasts a message on 'clotho:login' on login with user info
+	   * Authenticate with Clotho. broadcasts a message on 'clotho:login' on login with user info
 	   *
 	   * @returns {Promise} result of login
 	   */
-	  var login = function clothoAPI_login(username, password) {
-	    var cred = {username: username, password: password};
+	  var login = function clothoAPI_login(username, credentials) {
+	    var cred = {username: username, credentials: credentials};
 
 	    function loginCallback(loginResult) {
 				if (loginResult) {
@@ -207,6 +206,10 @@ angular.module('clotho.core')
 
       return fn.emitSubCallback('updatePassword', cred, updatePasswordCallback);
     };
+
+    /**************************
+               CRUD
+    **************************/
 
 	  /**
 	   * @name Clotho.get
@@ -297,8 +300,6 @@ angular.module('clotho.core')
     };
 
     /**
-     * todo - update doc
-     *
      * @name Clotho.set
      *
      * @param {object} sharable  JSON representation of Sharable containing new data - may be partial (just a few fields), but must contain an ID or UUID
@@ -317,142 +318,6 @@ angular.module('clotho.core')
 
       return fn.emitSubCallback('set', sharable, callback);
     };
-
-
-    /**
-     * @name Clotho.clone
-     *
-     * @param {string} uuid
-     *
-     * @description
-     * copy a sharable, which won't be updated later
-     *
-     * @return
-     * returns a full JSON representation of a sharable
-     */
-
-    var clone = function clientAPIClone(uuid) {
-			//todo?
-    };
-
-		/**
-		 * @name Clotho.watch
-		 *
-		 * @param {string} uuid UUID of Sharable to watch for changes
-		 * @param {object|function} action if Object, object to be updated (using angular.extend) using passed model for given UUID. if Function, function to run on change, passed the new value, with this equal to the reference passed
-		 * @param {string} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
-		 *
-		 * @description
-		 * Watches for published changes for a given uuid, updating the object using angular.extend
-		 */
-		var watch = function clothoAPI_watch(uuid, action, reference) {
-			reference = typeof reference != 'undefined' ? reference : null;
-			return PubSub.on('update:'+uuid, function(model) {
-
-				//note - while we wipe localStorage on page load, need to do a get() because the event was triggered but we don't have the data
-
-				Debugger.log('watch triggered for ' + uuid);
-				get(uuid, {mute : true}).then(function (model) {
-					if (angular.isFunction(action)) {
-						action.apply(reference, [model]);
-					}
-					else {
-						angular.extend(action, model);
-					}
-				});
-			}, reference);
-		};
-
-
-    /**
-     * @name Clotho.listen
-     *
-     * @param {string} channel PubSub Channel to listen to
-     * @param {function} callback Function to be executed on change
-     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
-     *
-     * @description
-     * Watches for published events on a given channel, and runs a callback on the event
-     */
-    var listen = function clothoAPI_listen(channel, callback, reference) {
-      reference = typeof reference != 'undefined' ? reference : null;
-
-      PubSub.on(channel, function clothoAPI_listen_callback(data) {
-          callback(data);
-      }, reference);
-    };
-
-    /**
-     * @name Clotho.trigger
-     * @param channel {string}
-     * @param data {*=}
-     * @description
-     * Publish an event directly to PubSub, bypassing the socket and server.
-     */
-    var trigger = function clothoAPI_trigger(channel, data) {
-      PubSub.trigger(channel, data);
-    };
-
-    /**
-     * @name Clotho.emit
-     *
-     * @param {string} channel
-     * @param {object} args Sends {} if null
-     *
-     * @description
-     * Emit an object on a custom channel message to the server
-     */
-    var emit = function clothoAPI_emit(channel, args) {
-      fn.emit(channel, args || {});
-    };
-
-    /**
-     * @name Clotho.broadcast
-     *
-     * @param {string} channel
-     * @param {object} args
-     *
-     * @description
-     * Broadcast an object on a given channel on the client
-     */
-    var broadcast = function clothoAPI_broadcast(channel, args) {
-      fn.emit('broadcast', fn.pack(channel, args));
-    };
-
-    /**
-     * @name Clotho.query
-     *
-     * @param obj Constraints for query.
-     * @param options Options, e.g. fields to return
-     *
-     * @example To get all schemas, Clotho.query({"schema" : "Schema"})
-     *
-     * @option
-     * "maxResults": <integer>
-     *
-     * @description
-     * Returns all objects that match the fields provided in the spec.
-     */
-    var query = function (obj, options) {
-	    var callback = function queryCallback(data) {
-		    console.groupCollapsed('Query Results for: ' + JSON.stringify(obj));
-
-		    try {
-			    //store models
-			    //todo - when not sending whole model, extend what exists
-			    angular.forEach(data, function (sharable) {
-				    Collector.storeModel(sharable.id, sharable);
-			    });
-		    } catch (e) {
-			    //probably exceeded quota...
-			    Debugger.warn('error saving all models', e);
-		    }
-
-		    console.groupEnd();
-	    };
-	    return fn.emitSubCallback('query', obj, callback, options);
-    };
-
 
     /**
      * @name Clotho.create
@@ -498,6 +363,11 @@ angular.module('clotho.core')
       return fn.emitSubCallback('destroy', uuid, callback);
     };
 
+    /**************************
+              Editing
+     **************************/
+
+
     /**
      * @name Clotho.edit
      *
@@ -509,6 +379,23 @@ angular.module('clotho.core')
      */
     var edit = function clothoAPI_edit(uuid) {
       $location.path("/editor").search('id', uuid);
+    };
+
+    /**
+     * @name Clotho.validate
+     *
+     * @param obj
+     *
+     * @description
+     * Passes an object or array of objects to the server to be validated, according to the rules of the object(s)'s respective schema(s)
+     *
+     * @returns {array} array of results of validation. Empty object means object passed validation. Populated object encountered problems. Fields are listed which were problematic, with error messages.
+     */
+    var validate = function (obj) {
+      if (angular.isEmpty(obj)) {
+        return createRejectedPromise();
+      }
+      return fn.emitSubOnce('validate', obj);
     };
 
     /**
@@ -529,23 +416,166 @@ angular.module('clotho.core')
       return fn.emitSubOnce('revert', packaged);
     };
 
-
     /**
-     * @name Clotho.validate
-     *
-     * @param obj
+     * @name Clotho.convert
      *
      * @description
-     * Passes an object or array of objects to the server to be validated, according to the rules of the object(s)'s respective schema(s)
+     * Converts object to a passed schema
      *
-     * @returns {array} array of results of validation. Empty object means object passed validation. Populated object encountered problems. Fields are listed which were problematic, with error messages.
+     * @param obj {Object} Sharable
+     * @param schema {string} Schema ID
+     * @param options {object} API options
+     * @returns {object} converted sharable
      */
-    var validate = function (obj) {
-	    if (angular.isEmpty(obj)) {
-		    return createRejectedPromise();
-	    }
-      return fn.emitSubOnce('validate', obj);
+    var convert = function clothoAPI_convert (obj, schema, options) {
+      var packaged = {
+        object: obj,
+        schema: schema
+      };
+      return fn.emitSubOnce('convert', packaged, options);
     };
+
+    /**************************
+            Querying
+     **************************/
+
+
+    /**
+     * @name Clotho.query
+     *
+     * @param obj Constraints for query.
+     * @param options Options, e.g. fields to return
+     *
+     * @example To get all schemas, Clotho.query({"schema" : "Schema"})
+     *
+     * @option
+     * "maxResults": <integer>
+     *
+     * @description
+     * Returns all objects that match the fields provided in the spec.
+     */
+    var query = function (obj, options) {
+      var callback = function queryCallback(data) {
+        console.groupCollapsed('Query Results for: ' + JSON.stringify(obj));
+
+        try {
+          //store models
+          //todo - when not sending whole model, extend what exists
+          angular.forEach(data, function (sharable) {
+            Collector.storeModel(sharable.id, sharable);
+          });
+        } catch (e) {
+          //probably exceeded quota...
+          Debugger.warn('error saving all models', e);
+        }
+
+        console.groupEnd();
+      };
+      return fn.emitSubCallback('query', obj, callback, options);
+    };
+
+    /**
+     * @name Clotho.autocomplete
+     *
+     * @param {string} query String to autocomplete
+     * @param {Object} options API options
+     *
+     * @description
+     * Get autocompletions for a given string. Muted by default
+     */
+    var autocomplete = function(query, options) {
+      var packaged = {
+        "query" : query
+      };
+      options = angular.extend({mute : true}, options);
+
+      return fn.emitSubOnce('autocomplete', packaged, options);
+    };
+
+    /**
+     * @name Clotho.recent
+     *
+     * @param {Object=} params Restrictions to your query
+     *
+     * //todo - examples
+     *
+     * @description
+     * Request your most recently / commonly used sharables
+     *
+     * @returns {Promise} Data once returned from server
+     */
+    var recent = function(params) {
+      return fn.emitSubOnce('recent', params);
+    };
+
+    /**
+     * @name Clotho.learn
+     *
+     * @param {string} query
+     * @param {string} assoc
+     *
+     * @description
+     * Learn to associate a string (query) with another string / command (assoc)
+     */
+    var learn = function clothoAPI_learn(query, assoc) {
+      var packaged = {
+        "query" : query,
+        "association" : assoc
+      };
+      Debugger.warn('learn is not fully implemented');
+      return fn.emitSubOnce('learn', packaged);
+    };
+
+    /**************************
+            Scripts
+     **************************/
+
+    /**
+     * @name Clotho.run
+     *
+     * @param {string} func Object UUID or name (as name or module.name) indicating the function to be run (follows get semantics for ambiguous selectors)
+     * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
+     * @param {object} options API options
+     *
+     * @description
+     * Runs a function on the server on supplied arguments.
+     * Clotho will send an error message on the 'say' channel if there is an error during function execution, there is no function matching the specifier, or there are ambiguously specified arguments.
+     */
+    var run = function clothoAPI_run(func, args, options) {
+      var packaged = {
+        "id": func,
+        "args": args
+      };
+      options = angular.isObject(options) ? options : {};
+
+      return fn.emitSubOnce('run', packaged, options);
+    };
+
+    /**
+     * @name Clotho.submit
+     *
+     * @param query {Object|String} query
+     * string to be disambiguated or
+     * object in form {query : <query, tokens : <array of ClothoTokens>}
+     *
+     * @description
+     * Submit a command to the server for parsing / disambiguation.
+     *
+     *
+     */
+    var submit = function(query) {
+      if (angular.isString(query)) {
+        query = {
+          query : query,
+          tokens : []
+        };
+      }
+      return fn.emitSubOnce('submit', query);
+    };
+
+    /**************************
+              UI
+     **************************/
 
     /**
      * @name Clotho.show
@@ -564,19 +594,6 @@ angular.module('clotho.core')
 	    };
       fn.emit('show', packaged);
     };
-
-
-    /**
-     * @name Clotho.share
-     *
-     * @description Opens a modal to share the current page
-     */
-    var share = function() {
-      //todo - need to set up share (outside API)
-      console.log('need to set up share');
-      //$modal.share($location.absUrl());
-    };
-
 
     /**
      * @name Clotho.log
@@ -642,101 +659,102 @@ angular.module('clotho.core')
       fn.emit('alert', packaged);
     };
 
-	/**
-	 * @name Clotho.autocomplete
-	 *
-	 * @param {string} query String to autocomplete
-	 * @param {Object} options API options
-	 *
-	 * @description
-	 * Get autocompletions for a given string. Muted by default
-	 */
-    var autocomplete = function(query, options) {
-	    var packaged = {
-        "query" : query
-      };
-			options = angular.extend({mute : true}, options);
+    /**************************
+             Toolkit
+     **************************/
 
-      return fn.emitSubOnce('autocomplete', packaged, options);
-    };
+    /**
+     * @name Clotho.watch
+     *
+     * @param {string} uuid UUID of Sharable to watch for changes
+     * @param {object|function} action if Object, object to be updated (using angular.extend) using passed model for given UUID. if Function, function to run on change, passed the new value, with this equal to the reference passed
+     * @param {string} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
+     *
+     * @description
+     * Watches for published changes for a given uuid, updating the object using angular.extend
+     */
+    var watch = function clothoAPI_watch(uuid, action, reference) {
+      reference = typeof reference != 'undefined' ? reference : null;
+      return PubSub.on('update:'+uuid, function(model) {
 
-	/**
-	 * @name Clotho.submit
-	 *
-	 * @param query {Object|String} query
-	 * string to be disambiguated or
-	 * object in form {query : <query, tokens : <array of ClothoTokens>}
-	 *
-	 * @description
-	 * Submit a command to the server for parsing / disambiguation.
-	 *
-	 *
-	 */
-    var submit = function(query) {
-	    if (angular.isString(query)) {
-		    query = {
-			    query : query,
-			    tokens : []
-		    };
-	    }
-      return fn.emitSubOnce('submit', query);
+        //note - while we wipe localStorage on page load, need to do a get() because the event was triggered but we don't have the data
+
+        Debugger.log('watch triggered for ' + uuid);
+        get(uuid, {mute : true}).then(function (model) {
+          if (angular.isFunction(action)) {
+            action.apply(reference, [model]);
+          }
+          else {
+            angular.extend(action, model);
+          }
+        });
+      }, reference);
     };
 
     /**
-     * @name Clotho.run
+     * @name Clotho.listen
      *
-     * @param {string} func Object UUID or name (as name or module.name) indicating the function to be run (follows get semantics for ambiguous selectors)
-     * @param {object} args A JSON object with key-value pairs providing the argument values to the function.
-     * @param {object} options API options
+     * @param {string} channel PubSub Channel to listen to
+     * @param {function} callback Function to be executed on change
+     * @param {string=|object=} reference Reference (e.g. $scope) for element to unlink listener on destroy. Passing in a $scope object (e.g. from a controller or directive) will automatically handle deregistering listeners on its destruction.
      *
      * @description
-     * Runs a function on the server on supplied arguments.
-     * Clotho will send an error message on the 'say' channel if there is an error during function execution, there is no function matching the specifier, or there are ambiguously specified arguments.
+     * Watches for published events on a given channel, and runs a callback on the event
      */
-    var run = function clothoAPI_run(func, args, options) {
-	    var packaged = {
-		    "id": func,
-		    "args": args
-	    };
-	    options = angular.isObject(options) ? options : {};
+    var listen = function clothoAPI_listen(channel, callback, reference) {
+      reference = typeof reference != 'undefined' ? reference : null;
 
-	    return fn.emitSubOnce('run', packaged, options);
+      PubSub.on(channel, function clothoAPI_listen_callback(data) {
+        callback(data);
+      }, reference);
     };
 
     /**
-     * @name Clotho.recent
-     *
-     * @param {Object=} params Restrictions to your query
-     *
-     * //todo - examples
-     *
+     * @name Clotho.trigger
+     * @param channel {string}
+     * @param data {*=}
      * @description
-     * Request your most recently / commonly used sharables
-     *
-     * @returns {Promise} Data once returned from server
+     * Publish an event directly to PubSub, bypassing the socket and server.
      */
-    var recent = function(params) {
-      return fn.emitSubOnce('recent', params);
+    var trigger = function clothoAPI_trigger(channel, data) {
+      PubSub.trigger(channel, data);
     };
 
-
-    // ---- TO BE IMPLEMENTED LATER ----
-
     /**
-     * @name Clotho.learn
+     * @name Clotho.emit
      *
-     * @param {string} query
-     * @param {string} assoc
+     * @param {string} channel
+     * @param {object} args Sends {} if null
      *
      * @description
-     * Learn to associate a string (query) with another string / command (assoc)
+     * Emit an object on a custom channel message to the server
      */
-    var learn = function clothoAPI_learn(query, assoc) {
-      var packaged = {
-        "query" : query,
-        "association" : assoc
-      };
-      return fn.emitSubOnce('learn', packaged);
+    var emit = function clothoAPI_emit(channel, args) {
+      fn.emit(channel, args || {});
+    };
+
+    /**
+     * @name Clotho.broadcast
+     *
+     * @param {string} channel
+     * @param {object} args
+     *
+     * @description
+     * Broadcast an object on a given channel on the client
+     */
+    var broadcast = function clothoAPI_broadcast(channel, args) {
+      fn.emit('broadcast', fn.pack(channel, args));
+    };
+
+    /**
+     * @name Clotho.share
+     *
+     * @description Opens a modal to share the current page
+     */
+    var share = function() {
+      //todo - need to set up share (outside API)
+      console.log('need to set up share');
+      //$modal.share($location.absUrl());
     };
 
     /**
@@ -756,30 +774,40 @@ angular.module('clotho.core')
     };
 
     return {
-      //api
+      //auth
       login : login,
       logout : logout,
       createUser : createUser,
       updatePassword : updatePassword,
+
+      //CRUD
       get : get,
       set : set,
-      query : query,
       create : create,
+      destroy : destroy,
+
+      //editing
       edit : edit,
       validate : validate,
       revert : revert,
-      destroy : destroy,
+      convert : convert,
+
+      //querying
+      query : query,
+	    autocomplete : autocomplete,
+      recent: recent,
+      learn: learn,
+
+      //scripts
+      run : run,
+	    submit: submit,
+
+      //UI
       show : show,
       say : say,
-      log : log,
       alert : alert,
-      run : run,
-      recent: recent,
       notify : notify,
-
-	    //searchbar
-	    submit: submit,
-	    autocomplete : autocomplete,
+      log : log,
 
       //toolkit
       watch : watch,

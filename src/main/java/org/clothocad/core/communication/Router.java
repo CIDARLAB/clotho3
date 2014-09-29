@@ -106,6 +106,17 @@ public class Router {
                     response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
                     break;
                 
+                    
+                case linkPerson:
+                    Map linkMap = (Map) data;
+                    response  = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(),linkMap.get("password").toString());
+                    break;
+                
+                case getAssociatedPerson:
+                    
+                    response  = api.getAllPerson(data.toString());
+                    break;
+                    
                 
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    

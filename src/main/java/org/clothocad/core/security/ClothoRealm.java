@@ -63,6 +63,7 @@ public class ClothoRealm extends AuthorizingRealm {
         SimpleHash hashedPw = new SimpleHash(Sha256Hash.ALGORITHM_NAME, password, salt);
         
         store.saveAccount(username, hashedPw, salt);
+        
     }
 
     public void deleteAll(){
