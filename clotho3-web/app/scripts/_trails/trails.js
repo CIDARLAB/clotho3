@@ -1,6 +1,9 @@
 angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location) {
 
-	var compile = function TrailCompile(trail) {
+  // download dependencies object - css, mixin, script - return function to for onload
+  var downloadDependencies = $clotho.extensions.downloadDependencies;
+
+  var compile = function TrailCompile(trail) {
 
 		//If pass by reference (depending on Clotho.get() ) need to copy to don't edit in dependencies
 		//trail = angular.copy(trail);
@@ -147,9 +150,6 @@ angular.module('clotho.trails').service('Trails', function(Clotho, $q, $location
 
 		$location.search('position', indices);
 	};
-
-	// download dependencies object - css, mixin, script - return function to for onload
-	var downloadDependencies = $clotho.extensions.downloadDependencies;
 
 	//icons for both page types and material types
 	var trailIconMap = {

@@ -132,10 +132,10 @@ $clotho.extensions = angular.module('clotho.extensions', [])
     callback(url);
   }
 
-  function loadHtml (url, forceName, callback) {
-    $http.get(url)
+  function loadHtml (url, params, callback) {
+    $http.get(url, params)
       .success(function(data) {
-        $templateCache.put(forceName || url, data);
+        $templateCache.put(params.forceName || url, data);
         callback(url);
       })
       .error(function(data) {callback(null)});
@@ -146,6 +146,7 @@ $clotho.extensions = angular.module('clotho.extensions', [])
      * @param url
      * @param params {object} Supported params
      *
+     * forceType (*) {string} Force treatment by passing 'html', 'js', 'css'
      * noCache (*) {Boolean} -- do not cache resource
      * cacheName (*) {string} -- name to cache under (for de-duping resources)
      * mixin (scripts) {Boolean}
@@ -177,7 +178,7 @@ $clotho.extensions = angular.module('clotho.extensions', [])
       $rootScope.$evalAsync(deferred.resolve(url)); //future - remove $evalAsync
     }
 
-    switch (detFileType(url)) {
+    switch (params.forceType || detFileType(url)) {
       case 'js' : {
         if (!!params.mixin) {
           mixinJs(url, handleLoadCallback);
@@ -191,7 +192,7 @@ $clotho.extensions = angular.module('clotho.extensions', [])
         break;
       }
       case 'html' : {
-        loadHtml(url, params.templateName, handleLoadCallback);
+        loadHtml(url, params, handleLoadCallback);
         break;
       }
       default : {
@@ -236,12 +237,12 @@ $clotho.extensions = angular.module('clotho.extensions', [])
         facade.css(dependencies.css),
         facade.mixin(dependencies.mixin),
         facade.script(dependencies.script)
-      ]).then(function () {
-        return function () {
+      ]).then(function (downloads) {
+        return (function () {
           $timeout(function () {
             facade.script(dependencies.onload);
           });
-        };
+        });
       });
 		} else {
       return loadFiles(dependencies);
@@ -264,10 +265,11 @@ $clotho.extensions = angular.module('clotho.extensions', [])
 	 * @description Downloads and executes a script or scripts, using cache-busting. Timestamp is appended to the script, to ensure it will run each time.
 	 *
 	 * @param {string|Array} urls URLs of scripts to be executed
+   * @param {object} params
 	 * @returns {Promise} Promise which is resolved when all scripts have been executed
 	 */
-	facade.script = function (urls) {
-    return loadFiles(urls, {mixin : false})
+	facade.script = function (urls, params) {
+    return loadFiles(urls, angular.extend(params, {mixin : false}));
   };
 
 	/**

@@ -13,7 +13,7 @@ angular.module('clotho.youtube')
 		$window.onYouTubeIframeAPIReady = function () {
 			api_ready.resolve(YT);
 		};
-		$clotho.extensions.script('//www.youtube.com/iframe_api');
+		$clotho.extensions.mixin('//www.youtube.com/iframe_api', {forceType: 'js'});
 
 	/**
 	 * @description Given a URL (youtube.com, youtu.be, watch, embed, etc.), extracts the youtube VideoID. Passing in a VideoId will work.
@@ -155,7 +155,7 @@ angular.module('clotho.youtube')
 			};
 
 			//parse out videos
-			_.each(items, function (item) {
+			angular.forEach(items, function (item) {
 
 				var newPage = {
 					title : item.snippet.title,
