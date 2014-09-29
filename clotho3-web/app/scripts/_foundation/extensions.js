@@ -10,16 +10,19 @@
  * @description
  * Module for lazy-registering angular components to a web-app.
  *
+ * Note - this does not support loading in modules like ocLazyLoad. This is for registering individual components into this wrapper module. If you need to load in new modules, you should bootstrap a new app.
+ *
  * note - this module should not contain any components (controller, directives, etc.) to be loaded at initial bootstrap. $inject calls are re-routed through provider to add them manually
  *
  * note - you can always add a new module when you bootstrap a new widget. That widget can inherit the functionality of the clotho webapp by including the appropriate package (at time of writing, clotho.fullPackage). Then you can have config and run blocks, ignore routing, run autonomously, configure providers, etc.
  *
  */
-angular.module('clotho.extensions', [])
+$clotho.extensions = angular.module('clotho.extensions', [])
 .config(function($controllerProvider, $compileProvider, $filterProvider, $provide, $injector, $animateProvider) {
 
-	window.$clotho.extensions = $clotho.extensions = {};
-
+  // adapted from Ifeanyi Isitor: http://ify.io/lazy-loading-in-angularjs/
+  // preserve the original references.
+  //save in case we want to decorate or something
 	$clotho.extensions.providers = {
 		$controllerProvider: $controllerProvider,
 		$compileProvider: $compileProvider,
@@ -29,36 +32,31 @@ angular.module('clotho.extensions', [])
     $animateProvider: $animateProvider
 	};
 
-	// adapted from Ifeanyi Isitor: http://ify.io/lazy-loading-in-angularjs/
-	// preserve the original references. angular.module('clotho.extensions').controller() is the same as $clotho.extensions._controller(). You can use these references and process the queue manually. Recommended you use the provider-based interface below though, and download components which take the form $clotho.extensions.controller() [without the underscore] which will be added automatically
-	$clotho.extensions._controller = $clotho.extensions.controller;
-	$clotho.extensions._service = $clotho.extensions.service;
-	$clotho.extensions._factory = $clotho.extensions.factory;
-	$clotho.extensions._value = $clotho.extensions.value;
-	$clotho.extensions._directive = $clotho.extensions.directive;
-	$clotho.extensions._animation = $clotho.extensions.animation;
-
 	// Convert controllers, services, factories, directives, filters, animations to provider-based alternatives, so that when they are loaded later, they are automatically registered
 	$clotho.extensions.controller = $controllerProvider.register;
 	$clotho.extensions.service = $provide.service;
 	$clotho.extensions.factory = $provide.factory;
 	$clotho.extensions.value = $provide.value;
 	$clotho.extensions.directive = $compileProvider.directive;
-	$clotho.extensions.filter = $filterProvider.filter;
-	$clotho.extensions.animation = $filterProvider.animation;
+	$clotho.extensions.filter = $filterProvider.register;
+	$clotho.extensions.animation = $animateProvider.register;
 
 })
-.run(function($rootScope, $q, $timeout, $templateCache, $http, $cacheFactory, $rootElement) {
+.run(function(ClothoExtensions) {
+  if (!angular.isFunction(window.$clotho.extensions.downloadDependencies)) {
+    angular.extend(window.$clotho.extensions, ClothoExtensions);
+  }
+})
+.service('ClothoExtensions', function($rootScope, $q, $timeout, $templateCache, $http, $cacheFactory, $rootElement) {
 
-	var registeredQueueLength = 0,
+	var facade = {},
+      registeredQueueLength = 0,
       timeoutTime = 5000,
       fileCache = $cacheFactory('fileUrls');
 
-  //todo - add service
-
-  //todo - mainModule._configBlocks for angular 1.3 (see ocLazyLoad)
-
+  /****** manual queue processing ******/
 	//these functions are for mixing in components that are not added via the provider interface above
+
   function getQueue () {
 		return angular.module('clotho.extensions')._invokeQueue;
 	}
@@ -67,11 +65,8 @@ angular.module('clotho.extensions', [])
     registeredQueueLength = getQueue().length;
   }
 
-  //init
-  updateQueueLength();
-
 	//Only needs to be called when not using the provider interface above, i.e. components that have been prefaced, e.g. angular.module('clotho.extensions').controller() instead of $clotho.extensions.controller()
-  //todo - verify that processing queue after adding components using provider-based mechanism doesn't cause problems with queue length mismatch
+  //todo -- handle loading components via provider interface provided... need to not-reload those ones. Only an issue if someone manually processes
 	var processQueue = function() {
 		var queue = getQueue();
 
@@ -88,6 +83,11 @@ angular.module('clotho.extensions', [])
 
     updateQueueLength();
 	};
+
+  //init
+  updateQueueLength();
+
+  /***** file loading helpers *****/
 
   function cacheBust(url) {
     var dc = new Date().getTime();
@@ -230,16 +230,16 @@ angular.module('clotho.extensions', [])
 	 *
 	 * where <dep> is either a file path, or array of paths, this function downloads all dependencies, and returns a promise containing a $timeout() which will run the onload() on the next $digest()
 	 */
-	$clotho.extensions.downloadDependencies = function downloadDependencies(dependencies) {
+	facade.downloadDependencies = function downloadDependencies(dependencies) {
 		if (angular.isObject(dependencies) && Object.keys(dependencies).length > 0) {
       return $q.all([
-        $clotho.extensions.css(dependencies.css),
-        $clotho.extensions.mixin(dependencies.mixin),
-        $clotho.extensions.script(dependencies.script)
+        facade.css(dependencies.css),
+        facade.mixin(dependencies.mixin),
+        facade.script(dependencies.script)
       ]).then(function () {
         return function () {
           $timeout(function () {
-            $clotho.extensions.script(dependencies.onload);
+            facade.script(dependencies.onload);
           });
         };
       });
@@ -249,29 +249,29 @@ angular.module('clotho.extensions', [])
 	};
 
 	/**
-	 * @name $clotho.extensions.mixin
+	 * @name mixin
 	 *
 	 * @description Will download URLs only once
 	 *
 	 * @param urls URLs of dependencies. Only downloaded if hasn't been already
 	 * @returns {Promise} Promise to be fulfilled on successful addition, value is urls passed
 	 */
-	$clotho.extensions.mixin = loadFiles;
+	facade.mixin = loadFiles;
 
 	/**
-	 * @name $clotho.extensions.script
+	 * @name script
 	 *
 	 * @description Downloads and executes a script or scripts, using cache-busting. Timestamp is appended to the script, to ensure it will run each time.
 	 *
 	 * @param {string|Array} urls URLs of scripts to be executed
 	 * @returns {Promise} Promise which is resolved when all scripts have been executed
 	 */
-	$clotho.extensions.script = function (urls) {
+	facade.script = function (urls) {
     return loadFiles(urls, {mixin : false})
   };
 
 	/**
-	 * @name $clotho.extensions.css
+	 * @name css
 	 *
 	 * @description Downloads and appends a CSS file to the page head, so that it will be applied properly
    *
@@ -284,35 +284,44 @@ angular.module('clotho.extensions', [])
 	 *
 	 * @returns {Promise} Promise to be fulfilled once CSS files are downloaded and appended
 	 */
-	$clotho.extensions.css = loadFiles;
+	facade.css = loadFiles;
 
 	/**
-	 * @name $clotho.extensions.cache
+	 * @name cache
 	 *
 	 * @description Downloads caches an angular template for later use. Forces addition to the cache, under ID of the passed URL. So, to use later, e.g. use <div ng-include="url_you_passed"></div>. Note that the template is cached in the primary app, so to access it in a separately bootstrapped app, you'll need to list the appropriate angular module as a dependency
+   *
+   * You likely want to pass in .html files which have angular script templates, e.g.:
+   *
+   <script type="text/ng-template" id="/tpl.html">
+   Content of the template.
+   </script>
 	 *
 	 * @param {URL} url URL of angular template file
-   * @param {String} forceName
-   * @param {Function} callback
+   * @param {String} params {string|object} If string, templateName. If object, params to pass to native $http service. Can pass 'templateName' in object for template name forcing.
 	 *
 	 * @returns {Promise} Promise to be fulfilled once CSS files are downloaded and appended
 	 */
-	$clotho.extensions.cache = function (url, templateName) {
-    return loadFiles(url, {templateName : templateName});
+	facade.cache = function (url, params) {
+    params = angular.isString(params) ?
+      {templateName : params} :
+      angular.extend({}, params);
+
+    return loadFiles(url, params);
   };
 
   /**
    * @name determineUrlExtension
-   * @description Given an arbitrary URL, determine file name extension
+   * @description Given an arbitrary URL, determine file name extension. Handles ? in URL.
    * @param url {String}
-   * @returns {String}
+   * @returns {String} file extension, e.g. 'html', 'js', 'css'
    */
-	$clotho.extensions.determineUrlExtension = detFileType;
+	facade.determineUrlExtension = detFileType;
 
   // (re)compile an element, with optional locals for the scope
   // note - create a new isolate scope (child of this module's $rootElement's $rootScope), deleting scope and children scopes if present
   // note - can't really scrub DOM of compiled code, so should use bootstrap for something that needs to be compiled fresh -- do not double-compile
-  $clotho.extensions.recompile = function(element, args) {
+  facade.recompile = function(element, args) {
     if (angular.isUndefined(element)) {return;}
     args = args || {};
 
@@ -328,7 +337,9 @@ angular.module('clotho.extensions', [])
 
   // If you just want to add a property to the $rootScope, given an object to extend() it
   // not really recommended as will slow the $digest cycle
-  $clotho.extensions.extendRootscope = function(args) {
-    angular.extend($rootScope, args);
+  facade.extendRootscope = function(obj) {
+    $rootScope.$evalAsync(angular.extend($rootScope, obj));
   };
+
+  return facade;
 });
