@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "args",
+    "name" : "tests",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -40,22 +40,22 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "args",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "author",
     "type" : "org.clothocad.model.Person",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "tests",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

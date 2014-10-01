@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "state",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "country",
     "type" : "string",
     "subtype" : null,
@@ -39,9 +29,19 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
+  }, {
+    "name" : "state",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
   "innerClasses" : null,
   "c" : "org.clothocad.model.Institution",
   "binaryName" : "org.clothocad.model.Institution"

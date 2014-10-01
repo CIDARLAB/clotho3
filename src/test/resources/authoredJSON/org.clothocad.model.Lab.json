@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "department",
+    "name" : "website",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "website",
+    "name" : "department",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -61,7 +61,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
   "innerClasses" : null,
   "c" : "org.clothocad.model.Lab",
   "binaryName" : "org.clothocad.model.Lab"

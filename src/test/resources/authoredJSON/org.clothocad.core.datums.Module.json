@@ -30,16 +30,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "dependencies",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "cachedCode",
     "type" : "string",
     "subtype" : null,
@@ -57,6 +47,16 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "dependencies",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
     "constraints" : null,
     "description" : null
   }, {

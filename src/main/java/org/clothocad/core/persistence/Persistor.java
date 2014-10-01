@@ -192,28 +192,36 @@ public class Persistor{
     }
     
     //would return as the same as getAsJson --> Map<String, Object>
-    public void getFromSocket(ObjectId uuid, Set<String> fields, Router router){
+    public void getFromSocket(String uuid, String rawUri, Router router){
         //establish websocket connection --> decompose from the uuid
         
         System.out.println("The getFromSocket is being called");
         try{
+
             ClothoWebSocket ws = new ClothoWebSocket("string", router);
             WebSocketClientFactory factory = new WebSocketClientFactory();
             factory.start();
             WebSocketClient wsClient = factory.newWebSocketClient();
-            String destURI = "wss://localhost:8443/websocket";
+            
+            String destURI = buildUri(rawUri);
             URI uri = new URI(destURI);
-            //wsClient.setProtocol("Upgrade");
-            Future fut = wsClient.open(uri, ws);
+            
+            Future fut = wsClient.open(uri, ws);            
             Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
-            connect.sendMessage("The message has been sent from getFromSocket");
+            
+            String getCommand = "{\"channel\":\"get\", \"data\":\""+ uuid + "\"}";
+            System.out.println("Command sent to the websocket: " + getCommand);
+            connect.sendMessage(getCommand);
             
         }catch(Throwable t){
             t.printStackTrace();
         }
         
     }
-    
+    private String buildUri(String rawUri){
+        
+        return "hi";
+    }
     //XXX: should return set of possible schemas, not child objects
     // then should not be used as currently is in save
     protected Set<ObjBase> getObjBaseSet(ObjBase obj){

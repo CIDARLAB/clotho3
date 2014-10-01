@@ -10,22 +10,12 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "swissProtId",
-    "type" : "string",
+    "name" : "sequence",
+    "type" : "org.clothocad.model.NucSeq",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "genbankId",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -40,7 +30,27 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "PDBId",
+    "name" : "isCDS",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "riskGroup",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "genbankId",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -60,18 +70,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "riskGroup",
-    "type" : "number",
+    "name" : "swissProtId",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -80,8 +80,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isCDS",
-    "type" : "boolean",
+    "name" : "PDBId",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

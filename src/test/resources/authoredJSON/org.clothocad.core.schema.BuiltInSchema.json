@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "c",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "log",
     "type" : "object",
     "subtype" : null,
@@ -40,6 +30,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "c",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "superClass",
     "type" : "org.clothocad.core.schema.BuiltInSchema",
     "subtype" : null,
@@ -51,7 +51,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.schema.JavaSchema",
   "innerClasses" : null,
   "c" : "org.clothocad.core.schema.BuiltInSchema",
   "binaryName" : "org.clothocad.core.schema.BuiltInSchema"

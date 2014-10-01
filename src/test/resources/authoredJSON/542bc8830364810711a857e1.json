@@ -1,0 +1,10 @@
+{
+  "schema" : "org.clothocad.model.Collection",
+  "id" : "542bc8830364810711a857e1",
+  "name" : "Results",
+  "dateCreated" : null,
+  "visibility" : null,
+  "description" : "Transient Collection",
+  "author" : null,
+  "items" : { }
+}

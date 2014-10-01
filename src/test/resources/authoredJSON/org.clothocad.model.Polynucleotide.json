@@ -10,18 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "accession",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "submissionDate",
+    "type" : "date",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,16 +30,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "highlights",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "isLinear",
     "type" : "boolean",
     "subtype" : null,
@@ -60,8 +40,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "submissionDate",
-    "type" : "date",
+    "name" : "description",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "accession",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -72,6 +62,16 @@
   }, {
     "name" : "sequence",
     "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "highlights",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,

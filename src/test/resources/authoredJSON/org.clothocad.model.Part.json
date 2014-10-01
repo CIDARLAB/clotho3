@@ -20,6 +20,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "type",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "riskGroup",
     "type" : "number",
     "subtype" : null,
@@ -30,7 +40,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "format",
+    "name" : "log",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -50,17 +60,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "type",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "log",
+    "name" : "format",
     "type" : "object",
     "subtype" : null,
     "example" : null,

@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "dateEnded",
-    "type" : "date",
+    "name" : "abortErr",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "abortErr",
-    "type" : "object",
+    "name" : "parentDooId",
+    "type" : "id",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "dateEnded",
+    "type" : "date",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -42,16 +52,6 @@
   }, {
     "name" : "savePolicy",
     "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "parentDooId",
-    "type" : "id",
     "subtype" : null,
     "example" : null,
     "access" : null,

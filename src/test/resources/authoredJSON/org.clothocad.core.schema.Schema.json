@@ -20,6 +20,26 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "BASE_PACKAGE_BINARY",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "source",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "log",
     "type" : "object",
     "subtype" : null,
@@ -40,36 +60,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "fields",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "BASE_PACKAGE_BINARY",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "cl",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "dependencies",
     "type" : "object",
     "subtype" : null,
@@ -80,8 +70,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "source",
-    "type" : "string",
+    "name" : "fields",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "cl",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

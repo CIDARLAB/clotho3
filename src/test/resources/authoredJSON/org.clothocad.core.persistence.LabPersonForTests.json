@@ -10,17 +10,17 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "myCollection",
-    "type" : "org.clothocad.model.Collection",
+    "name" : "nickName",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : true,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "emailAddress",
+    "name" : "givenName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -50,7 +50,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "nickName",
+    "name" : "myCollection",
+    "type" : "org.clothocad.model.Collection",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "surName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -70,17 +80,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "givenName",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "surName",
+    "name" : "emailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,

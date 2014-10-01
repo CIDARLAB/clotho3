@@ -169,8 +169,8 @@ public class ServerSideAPI {
         //say(command, Severity.MUTED, null, true);
         try {
             //When submit, immediately call the getFromSocket method from the persistor to test the websocket
-            ObjectId tempUUID = new ObjectId("tempporaryID");
-            persistor.getFromSocket(tempUUID, new HashSet<String>(), router);
+//            ObjectId tempUUID = new ObjectId("tempporaryID");
+//            persistor.getFromSocket(tempUUID, new HashSet<String>(), router);
             
             
             Object returnValue = mind.runCommand(query, getScriptAPI());
@@ -517,6 +517,11 @@ public class ServerSideAPI {
 
     public Map<String, Object> get(ObjectId id) {
         try {
+            //place to put the check if the request is made to a specific websocket and call persistor.getFromSocket
+            String[] tempID = id.getValue().split("\\");
+            if(tempID.length ==2){
+                persistor.getFromSocket(tempID[0], tempID[1], router);
+            }
             Map<String, Object> out = persistor.getAsJSON(id, options.getPropertiesFilter());
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
