@@ -198,20 +198,20 @@ public class Persistor{
         System.out.println("The getFromSocket is being called");
         try{
 
-            ClothoWebSocket ws = new ClothoWebSocket("string", router);
-            WebSocketClientFactory factory = new WebSocketClientFactory();
-            factory.start();
-            WebSocketClient wsClient = factory.newWebSocketClient();
-            
+//            ClothoWebSocket ws = new ClothoWebSocket("string", router);
+//            WebSocketClientFactory factory = new WebSocketClientFactory();
+//            factory.start();
+//            WebSocketClient wsClient = factory.newWebSocketClient();
+//            
             String destURI = buildUri(rawUri);
+            System.out.println(destURI);
             URI uri = new URI(destURI);
-            
-            Future fut = wsClient.open(uri, ws);            
-            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
+//            Future fut = wsClient.open(uri, ws);            
+//            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
             
             String getCommand = "{\"channel\":\"get\", \"data\":\""+ uuid + "\"}";
             System.out.println("Command sent to the websocket: " + getCommand);
-            connect.sendMessage(getCommand);
+//            connect.sendMessage(getCommand);
             
         }catch(Throwable t){
             t.printStackTrace();
@@ -219,8 +219,16 @@ public class Persistor{
         
     }
     private String buildUri(String rawUri){
-        
-        return "hi";
+        String output = "wss://";
+        Boolean changePrefix = rawUri.contains("http://") || rawUri.contains("https://");
+        if(changePrefix){
+            int position = rawUri.indexOf("//")+2;
+            output = output.concat(rawUri.substring(position));
+        }else{
+            output = output.concat(rawUri);
+        }
+        output += "/websocket";
+        return output;
     }
     //XXX: should return set of possible schemas, not child objects
     // then should not be used as currently is in save

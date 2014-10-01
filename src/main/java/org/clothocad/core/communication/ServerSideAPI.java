@@ -518,7 +518,7 @@ public class ServerSideAPI {
     public Map<String, Object> get(ObjectId id) {
         try {
             //place to put the check if the request is made to a specific websocket and call persistor.getFromSocket
-            String[] tempID = id.getValue().split("\\");
+            String[] tempID = id.getValue().split("\\\\");
             if(tempID.length ==2){
                 persistor.getFromSocket(tempID[0], tempID[1], router);
             }
