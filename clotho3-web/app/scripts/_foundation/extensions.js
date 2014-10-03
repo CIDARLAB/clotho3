@@ -33,13 +33,35 @@ $clotho.extensions = angular.module('clotho.extensions', [])
 	};
 
 	// Convert controllers, services, factories, directives, filters, animations to provider-based alternatives, so that when they are loaded later, they are automatically registered
-	$clotho.extensions.controller = $controllerProvider.register;
-	$clotho.extensions.service = $provide.service;
-	$clotho.extensions.factory = $provide.factory;
-	$clotho.extensions.value = $provide.value;
-	$clotho.extensions.directive = $compileProvider.directive;
-	$clotho.extensions.filter = $filterProvider.register;
-	$clotho.extensions.animation = $animateProvider.register;
+  //note - need to wrap so that you can chain registrations
+	$clotho.extensions.controller = function () {
+    $controllerProvider.register.apply(this, arguments);
+    return (this);
+  };
+	$clotho.extensions.service = function () {
+    $provide.service.apply(this, arguments);
+    return (this);
+  };
+	$clotho.extensions.factory = function () {
+    $provide.factory.apply(this, arguments);
+    return (this);
+  };
+	$clotho.extensions.value = function () {
+    $provide.value.apply(this, arguments);
+    return (this);
+  };
+	$clotho.extensions.directive = function () {
+    $compileProvider.directive.apply(this, arguments);
+    return (this);
+  };
+  $clotho.extensions.filter = function () {
+    $filterProvider.register.apply(this, arguments);
+    return (this);
+  };
+	$clotho.extensions.animation = function () {
+    $animateProvider.register.apply(this, arguments);
+    return (this);
+  };
 
 })
 .run(function(ClothoExtensions) {
@@ -269,7 +291,7 @@ $clotho.extensions = angular.module('clotho.extensions', [])
 	 * @returns {Promise} Promise which is resolved when all scripts have been executed
 	 */
 	facade.script = function (urls, params) {
-    return loadFiles(urls, angular.extend(params, {mixin : false}));
+    return loadFiles(urls, angular.extend({}, params, {mixin : false}));
   };
 
 	/**
