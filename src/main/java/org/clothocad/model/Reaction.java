@@ -15,6 +15,6 @@ public class Reaction extends SharableObjBase {
 	private List<Enzyme> enzymes = new ArrayList<Enzyme>();
 	private List<Polypeptide> products = new ArrayList<Polypeptide>();
 
-	private String id, version, name, description;
+	private String version, name, description;
 
 }
