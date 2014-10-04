@@ -285,7 +285,8 @@ module.exports = function (grunt) {
 	          'lib/**/*',
 	          'models/**/*',
 	          'partials/**/*',
-	          'views/**/*'
+	          'views/**/*',
+	          'widgets/**/*'
           ]
         }, {
           expand: true,

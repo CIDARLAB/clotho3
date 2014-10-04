@@ -1,0 +1,18 @@
+{
+  "schema" : "org.clothocad.model.Person",
+  "id" : "542f48bdef86636ece3846fe",
+  "name" : "testuser",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "myCollection" : "542f48bdef86636ece3846ff",
+  "givenName" : null,
+  "surName" : null,
+  "nickName" : null,
+  "emailAddress" : null,
+  "snailMailAddress" : null,
+  "primaryEmail" : null,
+  "isPrimaryAccount" : false
+}

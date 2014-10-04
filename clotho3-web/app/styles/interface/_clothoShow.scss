@@ -1,0 +1,8 @@
+clotho-show, [clotho-show] {
+  @extend .well;
+  display: block;
+
+  .loading {
+    min-height: 80px;
+  }
+}

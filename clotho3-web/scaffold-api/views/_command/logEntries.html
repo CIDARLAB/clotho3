@@ -1,4 +1,4 @@
-<div ng-repeat="entry in entries | orderBy:options.timeFilter:true" class="clearfix">
+<div ng-repeat="entry in entries | orderBy:timestamp:true" class="clearfix">
   <div class="logEntry {{'text-' + entry.class | lowercase}}"
        ng-class="{'pull-right' : entry.from == 'client'}">
     <div tooltip="{{entry.timestamp | date:'mediumTime'}}"
