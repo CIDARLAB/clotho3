@@ -1,7 +1,9 @@
 {
   "name": "clotho",
   "version": "0.0.2",
-  "dependencies": {},
+  "dependencies": {
+    "babyparse": "^0.2.1"
+  },
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-autoprefixer": "~1.0.1",

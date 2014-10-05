@@ -77,7 +77,6 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		return deferred.promise;
 	};
 
-  //DEPRECATED
 	var typeOutSearch = function(string, submit) {
 
 		//create single element for this function
