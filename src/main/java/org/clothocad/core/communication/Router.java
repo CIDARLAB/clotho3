@@ -87,7 +87,15 @@ public class Router {
                 case login:
                     Map map = (Map) data;
                     boolean wasAuthenticated = subject.isAuthenticated();
-                    response = api.login(map.get("username").toString(), map.get("password").toString());
+                    
+                    if(map.containsKey("password"))
+                    {
+                        response = api.login(map.get("username").toString(), map.get("password").toString());
+                    }
+                    else
+                    {
+                        response = api.loginOAuth(map.get("username").toString(), map.get("credentials"));
+                    }
                     if (!wasAuthenticated){
                         //remove the 'anonymous' mind
                         //currently this means you lose environment state if you login
@@ -103,7 +111,16 @@ public class Router {
                 
                 case createUser:
                     Map newusermap = (Map) data;
-                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                    
+                    if(newusermap.containsKey("password"))
+                    {
+                        response  = api.createUser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                    }
+                    else
+                    {
+                        //3rd Party OAuth?
+                    }
+                    
                     break;
                 
                     
@@ -112,11 +129,12 @@ public class Router {
                     response  = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(),linkMap.get("password").toString());
                     break;
                 
+                /*
                 case getAssociatedPerson:
                     
                     response  = api.getAllPerson(data.toString());
                     break;
-                    
+                */    
                 
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    

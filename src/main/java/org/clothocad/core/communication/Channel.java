@@ -11,7 +11,7 @@ public enum Channel {
     clear, //Replace the scriptengine behind mind with a fresh version
     createUser, //Create a new user account for me.
     linkPerson, //Link an existing? or new Person to an existing Person Object
-    getAssociatedPerson, //Get a list of all Person Objects associated with that primaryEmail.
+    //getAssociatedPerson, //Get a list of all Person Objects associated with that primaryEmail.
     updatePassword, //Update the userPassword
     login, //Log me into Clotho on this client with this login/password
     logout, //Log me out of Clotho

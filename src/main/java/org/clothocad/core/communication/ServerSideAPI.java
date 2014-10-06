@@ -288,7 +288,7 @@ public class ServerSideAPI {
             Interpreter.get().learnNative(userInput, JSON.mappify(command));
         }
     }
-    public final Object createuser(String username, String password)
+    public final Object createUser(String username, String password)
     {
         
         Map<String,Object> query = new HashMap<String,Object>();
@@ -297,18 +297,29 @@ public class ServerSideAPI {
         List<Map<String,Object>> results = query(query);
         if(results.isEmpty())
         {
-            Person newPerson = new Person(username);
-            newPerson.setPrimaryAccount(true);
-            newPerson.setPrimaryEmail(username);
-            newPerson.setEmailAddress(username);
-            newPerson.setId(new ObjectId(username));
-            persistor.save(newPerson);
-            realm.addAccount(username, password);
-            say("New user " + username +" created.", Severity.SUCCESS);
-            result.put("id", username);
-            result.put("accessToken", "dummy");
-            result.put("app_id", "dummy");
-            return result;
+            Map<String,Object> queryPerson = new HashMap<String,Object>();
+            queryPerson.put("id",username);
+            List<Map<String,Object>> resultPerson = query(queryPerson);
+            
+            if(resultPerson.isEmpty())
+            {
+                Person newPerson = new Person(username);
+                newPerson.setPrimaryEmail(username);
+                newPerson.setEmailAddress(username);
+                newPerson.setId(new ObjectId(username));
+                persistor.save(newPerson);
+                realm.addAccount(username, password);
+                say("New user " + username + " created.", Severity.SUCCESS);
+                result.put("id", username);
+                result.put("accessToken", "dummy");
+                result.put("app_id", "dummy");
+                return result;
+            }
+            else
+            {
+                say("User " + username +" exists.", Severity.FAILURE);
+                return false;
+            }
         }
         else
         {
@@ -349,7 +360,7 @@ public class ServerSideAPI {
             else
             {
                 Person newPerson = new Person(username);
-                newPerson.setPrimaryAccount(false);
+                //newPerson.setPrimaryAccount(false);
                 newPerson.setPrimaryEmail(primaryEmail);
                 newPerson.setEmailAddress(username);
                 newPerson.setId(new ObjectId(username));
@@ -362,7 +373,7 @@ public class ServerSideAPI {
         }
     }
     
-    public final List<Map<String, Object>> getAllPerson(String primaryEmail) 
+    /*public final List<Map<String, Object>> getAllPerson(String primaryEmail) 
     {
         
         Map<String,Object> query = new HashMap<String,Object>();
@@ -379,7 +390,7 @@ public class ServerSideAPI {
             say(results.size() + " persons found", Severity.SUCCESS);
             return results;
         }
-    }
+    }*/
     
     
     public final boolean updatePassword(String username, String password)
@@ -418,21 +429,13 @@ public class ServerSideAPI {
             
             //SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
             // Map<String, Object> 
-            Collection<Person> personlist = persistor.getAll(Person.class);
-            for(Person p : personlist)
-            {
-                if(p.getId().toString().equals(username))
-                {
-                    userId = p.getId();
-                    break;
-                }
-            }
-            if(userId == null)
+            Map<String,Object> results = get(new ObjectId(username));
+            if(results.isEmpty())
             {
                 say("Error. User:"+username+" does not exist in database. Please try creating the user." , Severity.FAILURE);
                 return false;
             }
-            else 
+            else
             {
                 try 
                 {
@@ -459,7 +462,16 @@ public class ServerSideAPI {
         }
             
     }
-
+    
+    
+    public final Object loginOAuth(String username, Object Map)
+    {
+        ObjectId userId = null;
+        return userId;
+    }
+    
+    
+    
     public final boolean logout() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             String username = SecurityUtils.getSubject().getPrincipal().toString();

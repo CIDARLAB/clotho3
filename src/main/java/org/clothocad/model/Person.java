@@ -48,9 +48,9 @@ public class Person extends SharableObjBase {
     private String primaryEmail;
     
     
-    @Getter
-    @Setter
-    private boolean isPrimaryAccount;
+    //@Getter
+    //@Setter
+    //private boolean isPrimaryAccount;
     
     
     

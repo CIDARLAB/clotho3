@@ -6,23 +6,18 @@
 
 package org.clothocad.core.execution;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import org.apache.shiro.SecurityUtils;
 import static org.clothocad.core.ReservedFieldNames.ID;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.communication.TestConnection;
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.Function;
@@ -39,39 +34,31 @@ import org.clothocad.model.NucSeq;
 import org.clothocad.model.SimpleSequence;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  *
  * @author prashantvaidyanathan
  */
 public class ConverterTest {
-    private static ServerSideAPI api;
-    private static ServerSideAPI unprivilegedUser;
-    private static Persistor persistor;
-    private static List<ObjectId> ids;
-    private static Mind mind;
     private static Router router;
-
+    private static Injector injector;
+    private static List<ObjectId> ids;
+    private static Persistor persistor;
+    
     public ConverterTest() {
     }
 
     @BeforeClass
     public static void setUpClass() {
-       Injector injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
+        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
         persistor = injector.getInstance(Persistor.class);
         router = injector.getInstance(Router.class);
-        mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, null,injector.getInstance(ClothoRealm.class));
-        persistor.connect();
-        mind.setConnection(new TestConnection("test"));
+        org.apache.shiro.mgt.SecurityManager securityManager = injector.getInstance(org.apache.shiro.mgt.SecurityManager.class);
+        SecurityUtils.setSecurityManager(securityManager);
+        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
+        TestUtils.setupTestUsers(realm);
     }
 
     @AfterClass
@@ -80,12 +67,17 @@ public class ConverterTest {
 
     @Before
     public void setUp() {
-        persistor.deleteAll();
-        ids = TestUtils.setupTestData(persistor);
+        //persistor.deleteAll();
+        //ids = TestUtils.setupTestData(persistor);
+        injector.getInstance(Persistor.class).deleteAll();
+        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
     }
 
     @After
     public void tearDown() {
+        injector.getInstance(Persistor.class).deleteAll();
+        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
+        
     }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
@@ -94,9 +86,6 @@ public class ConverterTest {
     // public void hello() {}
 
     
-    
-    
-
     private void sendMessage(Message message, ClientConnection connection) throws IOException {
         String stringMessage = JSON.serializeForExternal(message);
         message = JSON.mapper.readValue(stringMessage, Message.class);
@@ -107,10 +96,12 @@ public class ConverterTest {
     {
         SimpleSequence s = new SimpleSequence("Simple Seq","atgc");
         NucSeq ns = new NucSeq("ATTGGCCTTAAAA");
-        System.out.println("SimpleSeq Class : "+s.getClass().getCanonicalName());
+        //System.out.println("SimpleSeq Class : "+s.getClass().getCanonicalName());
         Argument arguments[];
         Argument arg1 = new Argument("",s.getClass());
         //Argument arg2 = new Argument();
+        
+        
         
         ConverterFunction convfunc1 = new ConverterFunction();
         ConverterFunction convfunc2 = new ConverterFunction();
@@ -140,30 +131,30 @@ public class ConverterTest {
         convFunc.setLanguage(Language.JAVASCRIPT);
         convFunc.setName("testConv");
         
-        System.out.println("Hello!");
+        
         TestConnection connection = new TestConnection("ConverterTest");
         
-        /*
+        
         Map<String,Object> simpleseqData = new HashMap<>();
         simpleseqData.put("name", "SimplestSequence");
         simpleseqData.put("schema","org.clothocad.model.SimpleSequence");
         simpleseqData.put("sequence","ATTGGCCTTAAACCC");
-        
+        persistor.save(ns);
         Map<String,Object> convertparams = new HashMap<>();
-        convertparams.put("name","convertAct");
-        convertparams.put("convert", simpleseqData);
-        convertparams.put("convertTo", "org.clothocad.model.SimpleSequence");
+        //convertparams.put("name","convertAct");
+        convertparams.put("convert", ns);
+        convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence")));
         
-        */
         
-        /*final Message message = new Message(
+        
+        final Message message = new Message(
             Channel.createAll,
             new Map[] {simpleseqData},
             "1",
             null
-        );*/
-        //sendMessage(message, connection);
-        //sendMessage(new Message(Channel.convert, convertparams, "2"), connection);
+        );
+        sendMessage(message, connection);
+        sendMessage(new Message(Channel.convert, convertparams, "2"), connection);
         
        
         
@@ -189,24 +180,8 @@ public class ConverterTest {
         
         
         
-        Map<String, Object> query = new HashMap<>();
-        query.put("schema", "org.clothocad.core.execution.ConverterFunction");
-        
-        List<Map<String, Object>> results = api.query(query);
-        Set<String> names = new HashSet();
-        
-        Collection<ConverterFunction> convlist = persistor.getAll(ConverterFunction.class);
-        for(ConverterFunction xconvfunc : convlist)
-        {
-            if(xconvfunc.convertTo.equals(persistor.get(Schema.class, new ObjectId("org.clothocad.model.NucSeq"))))
-            {
-                if(xconvfunc.convertFrom.equals(persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence"))))
-                {
-                    System.out.println("We found the converter function you were looking for");
-                    System.out.println("Name of this function" + xconvfunc.getName());
-                }
-            }
-        }
+       
+       
         /*
         for (Map<String, Object> result : results) {
             Object convF = result.get("convertFrom");
@@ -263,4 +238,6 @@ public class ConverterTest {
         x.setUp();
         x.converttest();
     }
+    
+    
 }

@@ -129,8 +129,8 @@ public class TestUtils {
         newperson2.put("title", "Front End Developer");
         newperson2.put("id", "clotho.testuser.maxbates");
         
-        persistor.save(newperson);
-        persistor.save(newperson2);
+        //persistor.save(newperson);
+        //persistor.save(newperson2);
         
     }
     
@@ -169,7 +169,7 @@ public class TestUtils {
         newperson2.put("id", "clotho.testuser.maxbates");
 
         persistor.save(newperson);
-        persistor.save(newperson2);
+        //persistor.save(newperson2);
 
         
         Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);
