@@ -9,7 +9,7 @@ angular.module('clotho.core')
  *
  * Handles Authentication for each.
  *
- * todo - handle authentication
+ * todo - handle authentication (or at least pass down to REST)
  *
  * todo - handle communication FROM server once support SSE (currently logic in socket service) -- avoid circular deps
  *
@@ -29,13 +29,13 @@ angular.module('clotho.core')
   //determine whether message (string) should go over SOCKET or REST
   //todo update once REST is working
   var canUseSocket = function communicatorCanUseSocket (msgString) {
-    //check if socket is ready
-    //todo - smarter check for readyState, because queueing ok
-    if (Socket.state() === 1) {
-      return true;
-    }
     if (!(validSocketMessage(msgString))) {
       return false;
+    }
+    //check if socket is ready
+    //todo - smarter check for readyState, because queueing ok (shuold check for error)
+    if (Socket.state() === 1) {
+      return true;
     }
     //default
     return true;
@@ -56,11 +56,11 @@ angular.module('clotho.core')
       return ClothoREST.send(msgObject);
     }
 
-    var msgString = angular.isObject(msgObject) ? strToJson(msgObject) : msgObject;
+    var msgString = angular.isObject(msgObject) ? jsonToStr(msgObject) : msgObject;
     if (canUseSocket(msgString)) {
       return Socket.send(msgString);
     } else {
-      Debugger.warn('Message must be sent over rest', msgObject);
+      Debugger.warn('Message must be sent over REST', msgObject);
       return ClothoREST.send(msgObject);
     }
   };

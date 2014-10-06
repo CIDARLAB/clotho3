@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clotho.webapp')
-  .controller('WidgetsCtrl', function ($scope, $compile) {
+  .controller('WidgetsCtrl', function ($scope, ClientAPI) {
 
 		$scope.myObj = {
 			myProp : 'aacccggttt'
@@ -13,24 +13,18 @@ angular.module('clotho.webapp')
 			console.log('widget controller callback! passed element:', element);
 		};
 
+    //todo - use Clotho.show() once working
+
 		$scope.bootstrapNewApp = function () {
-			console.log('bootstrap start');
-			var newEl = angular.element('<clotho-show id="123456789" callback="bootstrapCallback"></clotho-show>');
-			angular.element(document).find('insert-widgets-here').append(newEl);
-			$compile(newEl)($scope);
-			console.log('done compiling');
+      ClientAPI.display('123456789', 'insert-widgets-here');
 		};
 
 		$scope.bootstrapNewAppExternal = function () {
-			var newEl = angular.element('<clotho-show id="123456789"></clotho-show>');
-			angular.element(document).find('#clothoAppWidgets').append(newEl);
-			$compile(newEl)($scope);
+      ClientAPI.display('123456789');
 		};
 
 		$scope.bootstrapSimple = function () {
-			var newEl = angular.element('<clotho-show id="813579135"></clotho-show>');
-			angular.element(document).find('insert-widgets-here').append(newEl);
-			$compile(newEl)($scope);
+      ClientAPI.display('813579135', 'insert-widgets-here');
 		};
 
 		$scope.someValue = 'from parent controller not passed down';

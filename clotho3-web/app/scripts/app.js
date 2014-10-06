@@ -33,10 +33,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/', {
 		templateUrl: 'views/home.html',
 		controller: 'HomeCtrl',
-		title : 'Home',
-		hotkeys : [
-			['h', 'Show Intro Modal', 'showHelp = !showHelp']
-		]
+		title : 'Home'
 	})
 	.when('/login', {
 		templateUrl: 'views/login.html',
@@ -174,11 +171,17 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'FacebookImportCtrl',
 		title: 'Facebook Import'
 	})
+  .when('/import/csv', {
+    templateUrl: 'views/import/csv.html',
+    controller: 'ImportCSVCtrl',
+    title: 'CSV Import'
+  })
 
 	//testing
 	.when('/widgets', {
 	  templateUrl: 'views/widgets.html',
-	  controller: 'WidgetsCtrl'
+	  controller: 'WidgetsCtrl',
+    reloadOnSearch : false
 	})
 
 .when('/test/schemaview', {

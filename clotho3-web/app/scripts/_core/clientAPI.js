@@ -51,53 +51,25 @@ angular.module('clotho.core').service('ClientAPI',
 		/**
 		 * @name clientAPI.display
 		 *
-		 * @param {object} uuid UUID of view to show
-		 * @param targetSelector CSS Selector of target to append to, otherwise widget area at bottom
+		 * @param {String} viewId UUID of view to show
+		 * @param {String} targetSelector CSS Selector of target to append to, otherwise widget area at bottom
 
 		 note CAVEATS:
 		 - currently, controllers etc. must be tied to Application.Extensions.___
 		 */
-		var display = function clientAPIDisplay(uuid, targetSelector) {
+		var display = function clientAPIDisplay(viewId, targetSelector) {
+      if (!viewId) {
+        return;
+      }
 
-			var showDiv = angular.element('<div clotho-show="' + uuid + '"></div>');
+			var showDiv = angular.element('<clotho-show id="' + viewId + '"></clotho-show>');
 			var targetEl = $document[0].querySelector(targetSelector);
 
 			if (!targetEl) {
 				targetEl = $document[0].getElementById('clothoAppWidgets');
 			}
 
-			targetEl = angular.element(targetEl);
-
-			targetEl.append($compile(showDiv)($rootScope));
-
-			/*
-			 console.log(data);
-
-			 var template = data.template,
-			 controller = data.controller || "",
-			 args = data.args || {},
-			 dependencies = data.dependencies || [],
-			 styles = data.styles || {},
-
-			 //NOTE - jquery reliance (not in use)
-			 target = data.target && $($clotho.appRoot).has(data.target) ? data.target : $($clotho.appRoot).find('[ng-view]');
-
-			 $rootScope.$safeApply($http.get(template, {cache: $templateCache})
-			 .success(function(precompiled) {
-
-			 $clotho.extensions.mixin([dependencies, controller], angular.element(precompiled).appendTo(target), args)
-			 .then(function(div) {
-			 //testing
-			 //console.log($position.position(div));
-			 //console.log($position.position(target));
-			 div.css(styles);
-			 });
-			 })
-			 .error(function (result) {
-			 console.log("error getting template");
-			 })
-			 );
-			 */
+      angular.element(targetEl).append($compile(showDiv)($rootScope));
 		};
 
 		/**
@@ -111,9 +83,9 @@ angular.module('clotho.core').service('ClientAPI',
 		 *
 		 */
 		var hide = function clientAPIHide(uuid, callback) {
-			var el = angular.element(document.querySelector('[clotho-show="' + uuid + '"]'));
+			var el = angular.element(document.querySelector('#' + uuid));
 
-			callback.apply(null, el.remove());
+      (angular.isFunction(callback) ? callback : angular.noop).apply(null, el.remove());
 		};
 
 		/**

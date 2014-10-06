@@ -1,11 +1,10 @@
-//todo - rewrite for autonomy
 angular.module('clotho.interface').service('$focus', function($document, $timeout, $q, $parse, Clotho, CommandBar) {
 
 	//note - this is a function
 	var searchBarInput = CommandBar.getCommandBarInput;
 
 	var maxZ = function(selector) {
-		return Math.max(0, Math.max.apply(null, _.map($document[0].querySelectorAll(selector || "*"),
+		return Math.max(0, Math.max.apply(null, angular.map($document[0].querySelectorAll(selector || "*"),
 			function (v) {
 				return parseFloat(angular.element(v).css("z-index")) || null;
 			})
@@ -32,10 +31,8 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		return $q.when(oldZ);
 	};
 
-	//fixme - need to sync up with tokenizer... use CommandBar.setInput for now
-	//for some reason can't $parse.assign string with space (though works outside command)
+  //note - if pass model, assumes it is on element's $scope
 	var typeOut = function(element, string, model) {
-		console.log(element, string, model);
 		var inputsVal = {input: true, textarea : true, select: true},
 			timeOut,
 			scope,
@@ -53,8 +50,6 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 			timeOut = $timeout(function() {
 				charInd++;
 				curString = string.substring(0, charInd);
-
-				console.log(curString);
 
 				if (scope) {
 					scope.$apply($parse(model).assign(scope, curString));
@@ -85,37 +80,21 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 	var typeOutSearch = function(string, submit) {
 
 		//create single element for this function
-		//todo - cleanup this reference (element.remove() but not original element)
 		var commandInput = searchBarInput();
 
 		string = angular.isArray(string) ? string : [string];
 
-		return $q.when(commandInput.focus())
-			.then(function() {
-				return highlightElement(CommandBar.getTokenizerElement())
-			})
-			.then(function(unhighlight) {
-				return typeOut(commandInput, string[0], CommandBar.commandBarInputModel)
-				.then(function() {
-					return unhighlight;
-				});
-			})
-			.then(function(unhighlight) {
-				return $timeout(function() {unhighlight()}, 600).then(function() {
-					if (submit) {
-						//CommandBar.display.log = true;
-						//return CommandBar.submit(string);
-						return $q.when(commandInput.parents('form').submit());
-					} else {
-						return $q.when(commandInput.focus());
-					}
-				})
-			});
+    commandInput.focus();
+
+    return typeOut(commandInput, string, CommandBar.commandBarInputModel)
+      .then(function () {
+        //clean up reference
+        commandInput.remove();
+      });
 	};
 
-
 	var backdrop = angular.element("<div>").addClass('modal-backdrop fade');
-	//nasty hack
+	//gross
 	backdrop.bind('click', function (e) {
 		e.preventDefault();
 		removeBackdrop();
@@ -136,8 +115,6 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 			});
 	};
 
-
-
 	//return function to un-highlight
 	var highlightElement = function(el) {
 		var oldZ = el.css('z-index');
@@ -154,8 +131,7 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 	//future- move to angular animation
 	var pulseElement = function(el) {
 		var deferred = $q.defer();
-		el
-			.animate( { backgroundColor: "ffff99" }, 300 )
+		el.animate( { backgroundColor: "ffff99" }, 300 )
 			.animate( { backgroundColor: "transparent" }, 300, function() {
 				deferred.resolve();
 			});
@@ -171,6 +147,7 @@ angular.module('clotho.interface').service('$focus', function($document, $timeou
 		typeOutSearch : typeOutSearch,
 		addBackdrop : addBackdrop,
 		removeBackdrop : removeBackdrop,
-		highlightElement : highlightElement
+		highlightElement : highlightElement,
+    pulseElement : pulseElement
 	}
 });

@@ -261,7 +261,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>',
-          src: ['partials/**/*.html', 'views/**/*.html', 'extensions/**/*.html'],
+          src: ['views/**/*.html', 'partials/**/*.html', 'extensions/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -285,7 +285,8 @@ module.exports = function (grunt) {
 	          'lib/**/*',
 	          'models/**/*',
 	          'partials/**/*',
-	          'views/**/*'
+	          'views/**/*',
+	          'widgets/**/*'
           ]
         }, {
           expand: true,
@@ -371,14 +372,13 @@ module.exports = function (grunt) {
         html: ['<%= yeoman.dist %>/*.html']
       }
     },
-    ngmin: {
+    ngAnnotate: {
+      options: {},
       dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/concat/scripts',
-          src: '*.js',
-          dest: '.tmp/concat/scripts'
-        }]
+        expand: true,
+        cwd: '.tmp/concat/scripts',
+        src: '*.js',
+        dest: '.tmp/concat/scripts'
       }
     },
     uglify: {
@@ -639,7 +639,7 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'concat',
-    'ngmin',
+    'ngAnnotate',
     'copy:dist',
     //'cdnify',
     'cssmin',

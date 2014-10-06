@@ -27,6 +27,8 @@ angular.module('clotho.utils', ['clotho.core'])
 				});
 		};
 
+    var getViewInfo = clientGetView;
+
 		/*
 		 Download view dependencies recursively.
 
@@ -37,9 +39,8 @@ angular.module('clotho.utils', ['clotho.core'])
 		var downloadViewDependencies = function (view) {
 			//create array of promises of nested dependencies from importedView
 			var nestedDeps = [];
-			_.forEach(view.importedViews, function (id, alias) {
-				//return Clotho.get(id).then(function(retrievedView) {    //when server
-				nestedDeps.push(clientGetView(id)               //testing
+			angular.forEach(view.importedViews, function (id, alias) {
+				nestedDeps.push(getViewInfo(id)
 					.then(function (retrievedView) {
 						return downloadViewDependencies(retrievedView);
 					})
@@ -51,10 +52,9 @@ angular.module('clotho.utils', ['clotho.core'])
 				//after imported dependencies downloaded, mixin current view's dependencies
 				.then(function() {
 					var relativeDeps = [];
-					_.forEach(view.dependencies, function (dep) {
+					angular.forEach(view.dependencies, function (dep) {
 						relativeDeps.push(generateWidgetUrl(view.id, dep));
 					});
-
 					return $clotho.extensions.mixin(relativeDeps);
 				})
 				.then(function() {
@@ -62,16 +62,10 @@ angular.module('clotho.utils', ['clotho.core'])
 				});
 		};
 
-		/***********
-		 SCHEMAS
-		 ************/
-
-		//todo - clean up
-
-
 		return {
 			validUUID : validUUID,
 
+      getViewInfo : getViewInfo,
 			downloadViewDependencies : downloadViewDependencies,
 			generateWidgetUrl : generateWidgetUrl
 		}

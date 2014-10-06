@@ -1,0 +1,9 @@
+{
+  "id": "tool.ligation",
+
+  "files": [
+    "index.html"
+  ],
+
+  "dependencies": ["ligation.js"]
+}
