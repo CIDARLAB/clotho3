@@ -1,0 +1,8 @@
+  <div ng-repeat="choice in quiz.question.options track by $index">
+    <button class="btn btn-default"
+            ng-class="{'btn-info': (choice == $meta.input)}"
+            ng-click="$meta.input = choice">
+      {{$index}}
+    </button>
+    <span qq-value="choice"></span>
+  </div>

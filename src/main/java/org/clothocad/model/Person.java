@@ -43,6 +43,18 @@ public class Person extends SharableObjBase {
     @Setter
     private String givenName, surName, nickName, emailAddress, snailMailAddress;
     
+    @Getter
+    @Setter
+    private String primaryEmail;
+    
+    
+    @Getter
+    @Setter
+    private boolean isPrimaryAccount;
+    
+    
+    
+    
 
     /**Constructor from raw data
      *
@@ -51,9 +63,9 @@ public class Person extends SharableObjBase {
      */
     //unique name criterion
     //valid or nonexistent email
-    public Person( String displayname, String rawPassword ) {
+    public Person( String displayname) {
         //XXX:  Do people have authors?
-        super(displayname, null);
+        super(displayname,null);
         //changePassword( rawPassword );
         myCollection = new Collection();
         //biography = new WikiText("");
@@ -87,40 +99,46 @@ public class Person extends SharableObjBase {
      * Method for clearing the password so that a new one can be entered
      * An administrator must be logged in to use this
      */
+    /*
     public final boolean clearPassword() {
         throw new UnsupportedOperationException("Not implemented yet.");
-    }
+    }*/
 
     /**
      * Plugin-accessible method for changing the Person's password
      * @param raw
      */
+    /*
     public final void changePassword( String raw ) {
         throw new UnsupportedOperationException("Not implemented yet.");
-    }
+    }*/
 
     /**
      * Check the Person's password
      * @return true if the user successfully provided the correct password
      */
+    /*
     public final boolean checkPassword() {
         throw new UnsupportedOperationException("Not implemented yet.");
-    }
+    }*/
 
     /**
      * Login this Person.  This involves validating that the password has been confirmed.
      */
+    /*
     public final void login() {
         throw new UnsupportedOperationException("Not implemented yet.");
-    }
+    }*/
 
     /**
      * Plugin-accessible call to determine if the Person is logged in
      * @return true if this Person is logged in
      */
+    
+    /*
     public final boolean isLoggedIn() {
         throw new UnsupportedOperationException();
-    }
+    }*/
 
     /**
      * Change the User's first name
@@ -192,6 +210,7 @@ public class Person extends SharableObjBase {
         throw new UnsupportedOperationException();
     }
 
+    //Removing this since Person should not have password
     /**
      * It checks a password to see if it matches the user's password and returns
      * true if they match, otherwise returns false.
@@ -200,9 +219,9 @@ public class Person extends SharableObjBase {
      * @param raw the raw password supplied by user
      * @return true if it's a match
      */
-    public final boolean checkPassword( String raw ) {
+    /*public final boolean checkPassword( String raw ) {
      throw new UnsupportedOperationException();
-    }
+    }*/
 
 
 

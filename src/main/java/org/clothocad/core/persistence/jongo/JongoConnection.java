@@ -280,17 +280,17 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     @Override
     public ClothoAccount getAccount(String username) {
         return cred.findOne("{_id:#}", username).as(ClothoAccount.class);
-    }
+        }
 
     @Override
     public void saveAccount(ClothoAccount account) {
         cred.save(account);
     }
-    
+
     public AuthGroup getGroup(String groupName){
         return roles.findOne("{_id:#}", groupName).as(AuthGroup.class);
     }
-    
+
     public void saveGroup (AuthGroup group){
         roles.save(group);
     }
@@ -394,7 +394,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         
         return builder.toString();
     }
-
+    
     @Override
     public Collection<Permission> resolvePermissionsInRole(String role) {
         Collection<Permission> permissions = new HashSet<>();

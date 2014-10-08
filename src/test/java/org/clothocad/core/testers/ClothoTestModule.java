@@ -19,8 +19,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 import org.clothocad.core.ClothoModule;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.persistence.ClothoConnection;
-import org.clothocad.core.util.TestEnvConnection;
 import org.clothocad.core.util.TestRouter;
 import org.eclipse.jetty.server.ssl.SslConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;

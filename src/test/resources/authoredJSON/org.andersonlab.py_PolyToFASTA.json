@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from PolyToFASTA import run",
+  "name" : "PolyToFASTA",
+  "id" : "org.andersonlab.py_polytoFASTA",
+  "description" : "Converts a polynucleotide into a FASTA string",
+  "args" : [ {
+    "type" : "object",
+    "name" : "arg0"
+  }]
+}

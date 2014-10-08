@@ -20,8 +20,11 @@ import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
+import org.apache.shiro.util.ByteSource;
+import org.clothocad.core.persistence.Persistor;
 
 /**
  *
@@ -36,7 +39,7 @@ import static org.clothocad.core.security.ServerSubject.SERVER_USER;
  */
 @Slf4j
 public class ClothoRealm extends AuthorizingRealm {
-
+    
     public static final String ALL_GROUP = "_all";
     public static final String ANONYMOUS_USER = "_anonymous";
     
@@ -49,11 +52,11 @@ public class ClothoRealm extends AuthorizingRealm {
     @Inject
     public ClothoRealm(CredentialStore store, RolePermissionResolver roleResolver) {
         super();
-
+        
         //XXX: up number of iterations
         HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(Sha256Hash.ALGORITHM_NAME);
         matcher.setStoredCredentialsHexEncoded(false);
-
+        
         this.store = store;
         setAuthenticationTokenClass(UsernamePasswordToken.class);
         setCredentialsMatcher(matcher);
@@ -67,8 +70,8 @@ public class ClothoRealm extends AuthorizingRealm {
         //set up default groups
         if (store.getGroup(ALL_GROUP) == null){
             addGroup(ALL_GROUP);
-        }       
-        
+    }
+
         //set up anonymous user
         if (store.getAccount(ANONYMOUS_USER) == null){
             addAccount(ANONYMOUS_USER, ANONYMOUS_USER);
@@ -90,20 +93,20 @@ public class ClothoRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken at) throws AuthenticationException {
         log.debug("getting authc info for {}", at);
-
+        
         ClothoAccount account = store.getAccount(((UsernamePasswordToken) at).getUsername());
         if (!account.isAuthenticatable()) throw new AccountException("Cannot authenticate as " + at.getPrincipal().toString());
         return account;
     }
-
+    
     public void addAccount(String username, String password) {
         if (store.getAccount(username) != null){
             throw new javax.persistence.EntityExistsException();
         }
         store.saveAccount(new ClothoAccount(username, password));
     }
-
-    
+        
+        
     public void addGroup(String groupName){
         if (store.getAccount(groupName) != null){
             throw new javax.persistence.EntityExistsException();
@@ -207,4 +210,9 @@ public class ClothoRealm extends AuthorizingRealm {
         SecurityUtils.getSubject().checkPermission("data:grant:"+id.toString());
     }
     
+    public void updatePassword(String username, String password) { 
+        ClothoAccount account = store.getAccount(username);
+        account.setPassword(password);
+        store.saveAccount(account);
+    }
 }

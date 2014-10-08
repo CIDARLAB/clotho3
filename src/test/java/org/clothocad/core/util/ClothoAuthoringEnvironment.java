@@ -53,6 +53,7 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
 
                 TestUtils.importTestJSON(
                     storageFolder, persistor.getConnection(), true);
+                TestUtils.setupAuthoringTestData(persistor);
                 TestUtils.setupTestUsers(realm);
             }
 

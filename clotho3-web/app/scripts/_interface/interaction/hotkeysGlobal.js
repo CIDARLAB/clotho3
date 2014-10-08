@@ -5,7 +5,7 @@ angular.module('clotho.interface')
 				'<div class="modal-dialog">' +
 					'<div class="modal-content">' +
 						'<div class="modal-header">' +
-							'<button type="button" class="close" ng-click="closeCheatSheet()">&times;</button>' +
+							'<button type="button" class="close" ng-click="toggleCheatSheet()">&times;</button>' +
 							'<h4 class="modal-title">{{ title }}</h4>' +
 						'</div>' +
 						'<div class="modal-body">' +
@@ -22,15 +22,16 @@ angular.module('clotho.interface')
 				'</div><!-- /.modal-dialog -->' +
 			'</div><!-- /.modal -->';
 	})
-.run(function (hotkeys, $location, $injector, $route, CommandBar) {
+.run(function (hotkeys, $location, $route, Clotho, CommandBar) {
+
 	hotkeys.add('f', 'Focus Command Bar', function (event) {
 		event.preventDefault();
 		CommandBar.focusInput();
 	});
-	hotkeys.add('a', 'Show Activity Log', function (event) {
-		event.preventDefault();
-		CommandBar.display.toggleActivityLog();
+	hotkeys.add('t', "Toggle Clotho Terminal", function () {
+		Clotho.trigger('toggleTerminalActive');
 	});
+
 	hotkeys.add('g h', 'Go to Homepage', function () {
 		$location.path('/')
 	});

@@ -1,0 +1,46 @@
+<div>
+  <h5 ng-bind-html="interpolatedQuestion"></h5>
+
+  <div class="row">
+    <div class="col-sm-8 form-group"
+         ng-class="{'has-success' : quiz.response.result, 'has-error' : quiz.response.result == false}">
+      <div class="input-group">
+        <span class="input-group-addon"
+              ng-if="quiz.hint"
+              popover="{{ quiz.hint }}"
+              popover-trigger="mouseenter"><i
+            class="glyphicon glyphicon-info-sign"></i></span>
+
+        <input type="number" class="form-control" ng-model="quiz.answer">
+
+        <span class="input-group-btn">
+          <button class="btn"
+                  ng-click="submitQuestion(quiz)"
+                  ng-disabled="answerUndefined(quiz) || quiz.submitted"
+                  ng-class="{'btn-success' : quiz.response.result, 'btn-danger' : quiz.response.result == false}">Grade Quiz
+          </button>
+          <button class="btn btn-danger"
+                  ng-click="retryQuiz()"
+                  ng-if="quiz.submitted && !quiz.response.result">Retry
+          </button>
+          <!--todo - actually check for advance-->
+          <button ng-if="quiz.submitted && !!quiz.response.result && !!advance"
+                  class="btn btn-success"
+                  ng-click="advance()">Next Page!
+          </button>
+        </span>
+
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <span class="alert alert-success help-inline quizResult"
+            ng-if="quiz.response.result">
+        <i class="glyphicon glyphicon-ok"></i> Correct!
+      </span>
+      <span class="alert alert-danger help-inline quizResult"
+            ng-if="quiz.response && !quiz.response.result">
+        <i class="glyphicon glyphicon-remove"></i> Nope...
+      </span>
+    </div>
+  </div>
+</div>

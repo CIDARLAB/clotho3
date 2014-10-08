@@ -25,7 +25,7 @@ public class CreatorCheckTest extends AbstractSecurityTest {
     public CreatorCheckTest() {
         super();
     }
-    
+
     /**
      * test read action
      *
@@ -51,6 +51,6 @@ public class CreatorCheckTest extends AbstractSecurityTest {
         api.logout();
         api.login("owner", "owner");
         persistor.get(Institution.class, id);
-    }
+        }
 
-}
+    }

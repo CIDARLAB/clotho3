@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from convertpoly import run",
+  "name" : "ConvertPoly",
+  "id" : "org.andersonlab.py_covertpoly",
+  "description" : "Converts a Polynucleotide into Genbank string",
+  "args" : [ {
+    "type" : "object",
+    "name" : "arg0"
+  }]
+}

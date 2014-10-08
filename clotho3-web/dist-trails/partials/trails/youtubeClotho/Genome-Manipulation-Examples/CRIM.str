@@ -1,0 +1,110 @@
+LOCUS                     CRIM        3173 bp ds-DNA   circular     19-FEB-2009
+DEFINITION  .
+ACCESSION   
+VERSION     
+SOURCE      .
+  ORGANISM  .
+COMMENT     
+COMMENT     ApEinfo:methylated:1
+FEATURES             Location/Qualifiers
+     misc_feature    complement(8..41)
+                     /label=FRT
+                     /ApEinfo_fwdcolor=#800080
+                     /ApEinfo_revcolor=#800080
+     misc_feature    complement(1359..1392)
+                     /label=FRT(1)
+                     /ApEinfo_label=FRT
+                     /ApEinfo_fwdcolor=#800080
+                     /ApEinfo_revcolor=#800080
+     misc_feature    complement(944..1323)
+                     /label=R6K
+                     /ApEinfo_fwdcolor=#8080ff
+                     /ApEinfo_revcolor=#8080ff
+     misc_feature    153..812
+                     /label=CmR
+                     /ApEinfo_fwdcolor=cyan
+                     /ApEinfo_revcolor=cyan
+     misc_feature    1821..1874
+                     /label=P_tet of R0040
+                     /ApEinfo_fwdcolor=#dfd0df
+                     /ApEinfo_revcolor=#dfd0df
+     misc_feature    1399..1814
+                     /label=Phi80-att
+                     /ApEinfo_fwdcolor=#5889a7
+                     /ApEinfo_revcolor=#5889a7
+     misc_feature    1562..1567
+                     /label=SpeI
+                     /ApEinfo_fwdcolor=#00ffff
+                     /ApEinfo_revcolor=#00ffff
+     misc_feature    23..28
+                     /label=XbaI
+                     /ApEinfo_fwdcolor=#00ffff
+                     /ApEinfo_revcolor=#00ffff
+     misc_feature    1374..1379
+                     /label=XbaI(1)
+                     /ApEinfo_label=XbaI
+                     /ApEinfo_fwdcolor=#00ffff
+                     /ApEinfo_revcolor=#00ffff
+     misc_feature    1901..3172
+                     /label=gene
+                     /ApEinfo_fwdcolor=#ff00ff
+                     /ApEinfo_revcolor=#ff00ff
+     misc_feature    1669..1685
+                     /label=homology for recombination
+                     /ApEinfo_fwdcolor=cyan
+                     /ApEinfo_revcolor=green
+ORIGIN
+        1 GATCTgcgaa gttcctatac tttctagaga ataggaactt cgGATCTttg atcgggcacg
+       61 taagaggttc caactttcac cataatgaaa taagatcact accgggcgta ttttttgagt
+      121 tatcgagatt ttcaggagct aaggaagcta aaatggagaa aaaaatcact ggatatacca
+      181 ccgttgatat atcccaatgg catcgtaaag aacattttga ggcatttcag tcagttgctc
+      241 aatgtaccta taaccagacc gttcagctgg atattacggc ctttttaaag accgtaaaga
+      301 aaaataagca caagttttat ccggccttta ttcacattct tgcccgcctg atgaatgctc
+      361 atccggaatt tcgtatggca atgaaagacg gtgagctggt gatatgggat agtgttcacc
+      421 cttgttacac cgttttccat gagcaaactg aaacgttttc atcgctctgg agtgaatacc
+      481 acgacgattt ccggcagttt ctacacatat attcgcaaga tgtggcgtgt tacggtgaaa
+      541 acctggccta tttccctaaa gggtttattg agaatatgtt tttcgtctca gccaatccct
+      601 gggtgagttt caccagtttt gatttaaacg tggccaatat ggacaacttc ttcgcccccg
+      661 ttttcaccat gggcaaatat tatacgcaag gcgacaaggt gctgatgccg ctggcgattc
+      721 aggttcatca tgccgtttgt gatggcttcc atgtcggcag aatgcttaat gaattacaac
+      781 agtactgcga tgagtggcag ggcggggcgt aatttgatat cgagctcgct tggactcctg
+      841 ttgatagatc cagtaatgac ctcagaactc catctggatt tgttcagaac gctcggttgc
+      901 cgccgggcgt tttttattgg tgagaatcca agcctcGGAT CTaGCAGTTC AACCTGTTGA
+      961 TAGtacgtac taagctctca tgtttcacgt actaagctct catgtttaac gtactaagct
+     1021 ctcatgttta acgaactaaa ccctcatggc taacgtacta agctctcatg gctaacgtac
+     1081 taagctctca tgtttcacgt actaagctct catgtttgaa caataaaatt aatataaatc
+     1141 agcaacttaa atagcctcta aggttttaag ttttataaga aaaaaaagaa tatataaggc
+     1201 ttttaaagct tttaaggttt aacggttgtg gacaacaagc cagggatgta acgcactgag
+     1261 aagcccttag agcctctcaa agcaattttg agtgacacag gaacacttaa cggctgacat
+     1321 gggaattagc catgggcccg tgcgaatcac GGATCTgcga agttcctata ctttctagag
+     1381 aataggaact tcgGATCTca tgggcccgtg cgaatcagaa ataatctcga tatcatctct
+     1441 tttcttgccg agcgccttcc tgagctttgt gtcggtgatc attgaatggg tacacatttt
+     1501 tgtttttggg tacacaaaag tgtacacaaa gttgcccact caaagctaca cgcaatgtaa
+     1561 cactagttcg cagagtgtta tggtttacat ccttgaaagc ctgctggata agggtttagc
+     1621 gtaacagaac gtttttacgc ggaattgttc gtaatatgcc aaatgacaat ttaagaaagt
+     1681 gttctaattt attagaaatt tgcacttaaa tcaaaaagtt acggacaatt caaccaccaa
+     1741 tcaataaatt aaagggcaca ttaaagtaca caatatttgt gcccttctct gtttctttcc
+     1801 cgttatcagc tagcGGATCT tccctatcag tgatagagat tgacatccct atcagtgata
+     1861 gagatactga gcacGGATCT GGCTAACATA GGGTGGATCT atgcgattct tctctgtctt
+     1921 tgacattgtt aaaaataaag cgaatcagtt agggtatacg gaaactgaaa tgtatgctgt
+     1981 attgaaaaat tacaatgtga ataagaagga tttactcgcc tataaagaaa atggagttat
+     2041 tccaacagat aaagtgttga atggaatact tagttatctt ggaatgacta aagtagaatt
+     2101 agaattaaaa ttaggcagga taccggctgg gttagaggat gtgttcttaa ataacacaaa
+     2161 agaaattgcc aagatcctcg aaaataaaaa tagtgttaaa ctaaacgaat ttaattctat
+     2221 tcaagaaatc aaaccttatt tttatactga tcttggaaaa ttatacaatg gggattgttt
+     2281 agaactgttt aaacaagttc ctgatgaaaa cgtggacact atttttgctg atccaccatt
+     2341 taaccttgat aaagagtatg atgagggtgt aacagataaa aattccttta gcggatattt
+     2401 ggattggtat tataaatgga tagacgagtg tatcagagtt ttaaaaccag gcggttcttt
+     2461 attcatttat aatattccaa aatggaacac ttacctttct gagtacttaa ataggaaatt
+     2521 gaattttaga aactggataa ctgtagatat gaaatttgga cttccaattc agaatagatt
+     2581 atatccagca aattacagcc ttttatacta tgtaaaaggt gataaaccta agacatttaa
+     2641 tgttcaaagg atacctctac aaacttgccc tcattgtggt agagaaataa aagactatgg
+     2701 cggttacaag aataaaatga acccaaaggg tgtaactctt tctgatgttt ggtcagatat
+     2761 ttaccctgtt agacatagta gttcaaaaaa tagaaagttc aatgaattat cagttaaatt
+     2821 acttgatcgt ataataacta tgagtacaaa tgaaggtgac gttgttttag acccgtttgg
+     2881 aggaagcggt acaacatttg ctgtaagtga aatgttaggt cgtaaatgga ttggttttga
+     2941 gttggggaat tgtgaaatta tcaaagagag acttaaaaat aaagacaaag ataaaaagct
+     3001 gttaggtaaa gtttatgaag aaaaaaacaa gctgttccct aatagggtta aagaattacg
+     3061 taaaaaaaat ggtttatgga ttgatgatga ttttagacaa gaccatgagg gaaattctaa
+     3121 aggtgataaa aaaaacgaaa acaatgacca aatttcatta agtctggaat gaG
+//

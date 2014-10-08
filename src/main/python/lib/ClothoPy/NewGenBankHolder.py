@@ -22,7 +22,7 @@ class NewGenBank:
 		self.description = self.GB.description #important
 		#self.id = self.GB.id #important
 
-		self.sequence = self.GB.sequence.tostring() #important
+		self.sequence = str(self.GB.sequence) #important
 		#self.alphabet = self.GB.sequence.alphabet
 		#self.type = 'DNA' #important
 		#if isinstance(self.alphabet, RNAAlphabet):
@@ -45,7 +45,10 @@ class NewGenBank:
 		self.date = None
 		if 'date' in self.GB.annotations.keys(): #important
 			self.date = self.GB.annotations['date']
-		self.id = None
+		if self.GB.id is None or self.GB.id == "":
+			self.id == self.GB.name
+		else:
+			self.id = self.GB.id
 		if 'gi' in self.GB.annotations.keys():
 			self.id = self.GB.annotations['gi']
 		self.accn = None

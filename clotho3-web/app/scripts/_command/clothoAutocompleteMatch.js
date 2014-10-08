@@ -10,7 +10,8 @@ angular.module('clotho.tokenizer')
 				index:'=',
 				match:'=',
 				//active : '@',
-				query:'='
+				query:'=',
+				passedPlacement : '@'
 			},
 			templateUrl : 'views/_command/autocompleteMatch.html',
 			link : function (scope, element, attrs) {
@@ -21,7 +22,7 @@ angular.module('clotho.tokenizer')
 				});
 
 				scope.$watch('match', function (match) {
-					scope.iconClass = ClothoSchemas.determineSharableIcon(ClothoSchemas.determineSharableType(match));
+					scope.iconClass = ClothoSchemas.determineSharableIcon(ClothoSchemas.dirtyDetermineType(match));
 				});
 			}
 		};

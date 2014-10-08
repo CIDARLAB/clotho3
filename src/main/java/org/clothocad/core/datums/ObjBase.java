@@ -5,22 +5,20 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.persistence.jackson.JSONViews;
 import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
+import org.clothocad.core.persistence.jackson.JSONViews;
 import org.clothocad.core.persistence.jackson.WideningDefaultTypeResolverBuilder;
 import org.clothocad.core.security.Visibility;
 
@@ -89,6 +87,16 @@ public abstract class ObjBase {
                 else if (value.getClass().isArray()){
                     List list = Arrays.asList((Object[])value);
                     children.addAll(list);
+                }
+                //add else if for map. 
+                
+                else if(value instanceof Map)
+                {
+                    Map<ObjBase, Object> mapval = (Map)(value);
+                   for(Map.Entry<ObjBase, Object> entry : mapval.entrySet())
+                   {
+                       children.add(entry.getKey());
+                   }
                 }
                 else {
                     children.add((ObjBase) value);

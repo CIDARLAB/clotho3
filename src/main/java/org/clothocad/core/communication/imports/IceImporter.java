@@ -144,7 +144,7 @@ public class IceImporter {
 
     private static Person parseAuthor(HashMap entity) {
         try {
-            return new Person(((HashMap) entity.get("creator")).get("personName").toString(),null);
+            return new Person(((HashMap) entity.get("creator")).get("personName").toString());
         } catch (NullPointerException e) {
             return null;
         }

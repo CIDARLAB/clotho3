@@ -1,56 +1,108 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
-  "binaryName" : "org.clothocad.model.Feature",
-  "c" : "org.clothocad.model.Feature",
+  "id" : "org.clothocad.model.Feature",
   "name" : "Feature",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.String",
-    "name" : "PDBId",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.model.NucSeq",
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
-    "reference" : true
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "genbankId",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "java.awt.Color",
-    "name" : "forwardColor",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Short",
-    "name" : "riskGroup",
-    "type" : "number",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Boolean",
-    "name" : "isCDS",
-    "type" : "boolean",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
     "name" : "swissProtId",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.Person",
+    "name" : "genbankId",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "forwardColor",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "PDBId",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "author",
     "type" : "org.clothocad.model.Person",
-    "reference" : true
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.awt.Color",
+    "name" : "sequence",
+    "type" : "org.clothocad.model.NucSeq",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "riskGroup",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isCDS",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "reverseColor",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.model.Feature"
+  "methods" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Feature",
+  "binaryName" : "org.clothocad.model.Feature"
 }

@@ -1,0 +1,50 @@
+<div ng-controller="clothoIntro_LigationCtrl">
+
+    <p>Clotho uses the same standard cut marks as New England Biolabs (NEB) to denote breaks in the DNA double helix. Because we represent both strands of DNA with a single string of nucleotides, we need a few marks to distinguish between each strand and type of cut.</p>
+
+    <table class="table table-bordered table-striped code-table">
+        <thead>
+        <tr><th>Cut Mark</th><th>Type</th><th>Description</th></tr>
+        </thead>
+        <tbody ng-repeat="mark in Digest.cutMarks">
+        <tr>
+            <td style="text-align: center"><b>{{ mark.mark }}</b></td>
+            <td>{{ mark.type }}</td>
+            <td>
+                <p>{{ mark.description }}</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <form name="ligation" class=" well form-horizontal">
+
+        <div class="form-group">
+            <label class="control-label" for="chooseLigation">Example Set:</label>
+            <div class="btn-group" style="display: block;" id="chooseLigation">
+                <button ng-repeat="set in ligate_demoSets" class="btn btn-default" ng-click="setLigate($index)" ng-disabled="fragments == ligate_demoSets[$index]">Set {{ $index + 1}}</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="frag1">Fragments</label>
+            <input type="text" id="frag1" placeholder="Fragment 1" ng-model="fragments[0]" />
+            <input type="text" id="frag2" placeholder="Fragment 2" ng-model="fragments[1]" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="ligationAlign">Ligation Product</label>
+            <pre id="ligationAlign" placeholder="Ligation Alignment" ng-model="fragments" ligate-align></pre>
+        </div>
+<!--
+        <div class="form-group">
+            <label class="control-label" for="ligationProd">Ligation Product</label>
+            <pre id="ligationProd" placeholder="Ligated Sequence" ng-model="ligated" contenteditable="false"></pre>
+        </div>-->
+    </form>
+
+    <button class="btn btn-info btn-lg" ng-click="showMeHow()"><i
+            class="glyphicon-white glyphicon glyphicon-eye-open"></i> Show me how</button>
+
+</div>

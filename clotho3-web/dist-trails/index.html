@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Clotho</title>
+    <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
+    <meta name="viewport" content="width=1024, initial-scale=1">
+
+    <!-- required for angular html5 mode -->
+    <base href="/">
+
+    <link rel="stylesheet" href="styles/b93ddd4d.command.css">
+
+    <link rel="stylesheet" href="styles/e958a386.main.css">
+
+    <script src="bower_components/jquery/jquery.js"></script>
+
+    <!-- note that angular is required for any clotho functionality -->
+    <script src="bower_components/angular/angular.js"></script>
+    <!-- note that lodash is required by several components -->
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+
+</head>
+<body ng-app="clothoRoot">
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/json3/lib/json3.min.js"></script>
+<![endif]-->
+
+<div class="container">
+    <div clotho-command-bar></div>
+</div>
+
+<!-- hotkey triggered terminal window -->
+<terminal-aside></terminal-aside>
+
+<!-- note - ignore main content for stripped down versions -->
+<div id="clothoAppNgView" ng-view ng-cloak></div>
+
+<!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
+<div id="clothoAppWidgets"></div>
+
+
+<!--------
+SCRIPTS
+--------->
+
+<script src="scripts/536493bc.clotho-angular-modules.js"></script>
+
+<!--note - correct app based on the distribution, comments removed by build-->
+
+<script src="scripts/74870f88.clotho-app-trails.js"></script>
+
+
+<script src="scripts/9e15feb2.clotho-core-module.js"></script>
+
+<!--note - remove all scripts below this for api-only build-->
+
+<script src="scripts/f952b697.clotho-foundation-module.js"></script>
+
+
+<script src="scripts/265c390c.clotho-command-module.js"></script>
+
+<!--note - remove all scripts below this for command-only build-->
+
+<script src="scripts/4030a445.angularui-modules.js"></script>
+
+
+<script src="scripts/49e569e6.clotho-interface-module.js"></script>
+
+
+<script src="scripts/9e589b61.clotho-trails-module.js"></script>
+
+<script src="scripts/f6021dc5.clotho-construction-module.js"></script>
+
+
+<script src="scripts/b8de8298.clotho-webapp-module.js"></script>
+
+
+<!--note - module should be moved to server. directives need to be retained. -->
+<script src="scripts/0f337630.clotho-dna-module.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-19472149-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</body>
+</html>

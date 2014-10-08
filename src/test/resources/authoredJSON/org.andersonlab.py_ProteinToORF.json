@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from proteinToORF import run",
+  "name" : "ProteinToORF",
+  "id" : "org.andersonlab.py_ProteinToORF",
+  "description" : "Takes a Polypeptide and returns the ORF as a Polypeptide",
+  "args" : [ {
+    "type" : "object",
+    "name" : "arg0"
+  }]
+}

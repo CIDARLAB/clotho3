@@ -1,0 +1,14 @@
+<div>
+    <div ng-if="!hideopts.dictionary" construction-dictionary-view construction-editable="editable" ng-model="file.dictionary" construction-uptostep="hideopts.uptostep" construction-processto="hideopts.processto"></div>
+
+    <div ng-if="!hideopts.steps" class="row" jq-sortable="{handle : '.fields', disabled : !editable }" ng-model="file.steps">
+        <div ng-repeat="step in file.steps | limitTo:hideopts.uptostep" class="row">
+            <div construction-step-old="step.fields" ng-model="step" construction-dictionary="file.dictionary" construction-index="$index" construction-editable="editable" construction-remove="file.steps.splice($index, 1)" construction-processto="hideopts.processto" construction-dictionary-object="file.dictionaryObject"></div>
+        </div>
+    </div>
+
+    <div class="input-group" ng-if="!hideopts.addStep && editable">
+        <input type="text" ng-model="newStep.reaction" typeahead="r.reaction as r.readable for r in reactionsArray" placeholder="New Reaction"/>
+        <button class="btn" ng-click="addStep()" ng-disabled="!stepValid()">Add Step</button>
+    </div>
+</div>

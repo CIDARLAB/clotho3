@@ -35,7 +35,7 @@ public class ReadPermissionTest extends AbstractSecurityTest {
     public ReadPermissionTest() {
         super();
     }
-    
+
     /**
      * test read action
      *
@@ -48,16 +48,16 @@ public class ReadPermissionTest extends AbstractSecurityTest {
         api.login("read", "read");
         assertEquals(priv.getId(), persistor.get(Institution.class, priv.getId()).getId());
     }
-    
+
     @Test
     public void testFind() {
         initAPI("readFind");
-        api.login("read", "read");
+            api.login("read", "read");
         Map<String, Object> query = new HashMap<>();
         query.put("schema", Institution.class.getName());
         assertEquals(2, Lists.newArrayList(persistor.find(query)).size());
-    }
-    
+        }
+
     @Test
     public void testRun() throws Exception {
         initAPI("readRun");
@@ -68,7 +68,7 @@ public class ReadPermissionTest extends AbstractSecurityTest {
         command.put("function", "function");
         assertEquals("function ran!", api.run(command));
     }
-    
+
     /**
      * test edit action
      *
@@ -103,7 +103,7 @@ public class ReadPermissionTest extends AbstractSecurityTest {
             ObjectId id = util.getPrivate().getId();
             api.login("read", "read");
             persistor.delete(id);
-    }
+        }
     /**
      * test edit permission
      *
@@ -119,6 +119,6 @@ public class ReadPermissionTest extends AbstractSecurityTest {
         //public
         realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());        
     }
-    
-    
-}
+
+
+    }

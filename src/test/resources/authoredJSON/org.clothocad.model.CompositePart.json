@@ -1,20 +1,38 @@
 {
-  "id" : "org.clothocad.model.CompositePart",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.model.Part",
-  "binaryName" : "org.clothocad.model.CompositePart",
-  "c" : "org.clothocad.model.CompositePart",
+  "id" : "org.clothocad.model.CompositePart",
   "name" : "CompositePart",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.util.List",
     "name" : "composition",
     "type" : "array",
-    "reference" : true
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.model.Part$PartType",
     "name" : "partType",
     "type" : "object",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.CompositePart",
+  "binaryName" : "org.clothocad.model.CompositePart"
 }

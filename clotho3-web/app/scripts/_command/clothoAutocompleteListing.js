@@ -1,6 +1,8 @@
 angular.module('clotho.tokenizer')
 	/*
 	 * internal directive which displays the actual list of autocompletions
+	 *
+	 * replies on each object in list having a UNQIUE 'id' field
 	 */
 	.directive('clothoAutocompleteListing', function () {
 		return {
@@ -10,14 +12,21 @@ angular.module('clotho.tokenizer')
 				query:'=',
 				active:'=',
 				hasFocus: '=',
-				select:'&'
+				triggerHide: '=',
+				select:'&',
+				passedPlacement : '@?',
+				forceVisible : '@?'
 			},
 			replace:true,
 			templateUrl:'views/_command/autocompleteListing.html',
 			link:function (scope, element, attrs) {
 
-				scope.isOpen = function () {
-					return scope.hasFocus && scope.matches.length > 0;
+				scope.isVisible = function () {
+					if (scope.forceVisible === true || scope.forceVisible === false) {
+						return scope.forceVisible;
+					} else {
+						return scope.hasFocus && !scope.triggerHide && scope.autocompletions.length;
+					}
 				};
 
 				scope.isActive = function (matchIdx) {

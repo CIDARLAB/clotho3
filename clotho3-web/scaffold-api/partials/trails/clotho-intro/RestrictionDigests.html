@@ -1,0 +1,23 @@
+<div ng-controller="clothoIntro_RestrictionDigestsCtrl">
+
+    <div class="row">
+        <div class="alert alert-info col-xs-12">
+        <h5>Select an enzyme to see where (if at all) it will cut the sequence:</h5>
+            <form name="digestPlayground" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label" for="enzSelect">Enzyme Name</label>
+                        <select id="enzSelect" ng-options="enz as enz.name for (name, enz) in Digest.enzymes" ng-model="demo.digestEnz" popover="Try BamHI for an enzyme that cuts twice, or BsmbI for an enzyme that makes non-local cuts" popover-placement="right" popover-trigger="focus"></select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="digSites">{{ demo.digestEnz.name }} Sites</label>
+                        <pre id="digSites" ng-model="demo.digestSeq" digest-highlight="demo.digestEnz"></pre>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <p>As always, you can run commands from the Command Bar:</p>
+    <button class="btn btn-info btn-lg" ng-click="showMeHow()"><i class="glyphicon-white glyphicon glyphicon-eye-open"></i> Show Me How</button>
+
+</div>

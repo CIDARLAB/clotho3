@@ -44,7 +44,7 @@ pre.transparent {
 //sharable Popup
 
 .popover.topRight, .popover.topLeft {
-  .arrow {
+  & > .arrow {
     top: 55px;
   }
 }

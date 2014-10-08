@@ -380,10 +380,10 @@ from Bio.SeqIO import UniprotIO
 _FormatToIterator = {"fasta": FastaIO.FastaIterator,
                      "gb": ClothoInsdcIO.GenBankIterator,
                      "genbank": ClothoInsdcIO.GenBankIterator,
-                     "genbank-cds": InsdcIO.GenBankCdsFeatureIterator,
-                     "embl": InsdcIO.EmblIterator,
-                     "embl-cds": InsdcIO.EmblCdsFeatureIterator,
-                     "imgt": InsdcIO.ImgtIterator,
+                     "genbank-cds": ClothoInsdcIO.GenBankCdsFeatureIterator,
+                     "embl": ClothoInsdcIO.EmblIterator,
+                     "embl-cds": ClothoInsdcIO.EmblCdsFeatureIterator,
+                     "imgt": ClothoInsdcIO.ImgtIterator,
                      "ig": IgIO.IgIterator,
                      "swiss": SwissIO.SwissIterator,
                      "pdb-atom": PdbIO.PdbAtomIterator,
@@ -407,10 +407,10 @@ _FormatToIterator = {"fasta": FastaIO.FastaIterator,
                      }
 
 _FormatToWriter = {"fasta": FastaIO.FastaWriter,
-                   "gb": InsdcIO.GenBankWriter,
-                   "genbank": InsdcIO.GenBankWriter,
-                   "embl": InsdcIO.EmblWriter,
-                   "imgt": InsdcIO.ImgtWriter,
+                   "gb": ClothoInsdcIO.GenBankWriter,
+                   "genbank": ClothoInsdcIO.GenBankWriter,
+                   "embl": ClothoInsdcIO.EmblWriter,
+                   "imgt": ClothoInsdcIO.ImgtWriter,
                    "tab": TabIO.TabWriter,
                    "fastq": QualityIO.FastqPhredWriter,
                    "fastq-sanger": QualityIO.FastqPhredWriter,
@@ -438,7 +438,7 @@ def write(sequences, handle, format):
 
     Returns the number of records written (as an integer).
     """
-    import AlignIO
+    import ClothoAlignIO
 
     #Try and give helpful error messages:
     if not isinstance(format, basestring):

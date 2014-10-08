@@ -10,6 +10,26 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "shortDescription",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "riskGroup",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "format",
     "type" : "object",
     "subtype" : null,
@@ -30,26 +50,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "log",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "riskGroup",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "type",
     "type" : "object",
     "subtype" : null,
@@ -60,8 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "shortDescription",
-    "type" : "string",
+    "name" : "log",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

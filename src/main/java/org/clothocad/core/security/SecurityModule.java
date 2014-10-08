@@ -7,7 +7,6 @@ package org.clothocad.core.security;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
@@ -29,6 +28,7 @@ public class SecurityModule extends ShiroWebModule {
     @Override
     protected void configureShiroWeb() {
             bindRealm().to(ClothoRealm.class);
+            //bindRealm().to(OAuthRealm.class);
             ShiroWebModule.bindGuiceFilter(binder());
     }
 

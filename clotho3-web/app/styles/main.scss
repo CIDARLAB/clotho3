@@ -1,13 +1,41 @@
 $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
 
-@import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
+//todo - set up so don't need to import this
+@import "command";
+
+// REMAINING BOOTSTRAP
+//do not double import what command bar uses
+
+// Core variables and mixins
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/variables";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/mixins";
+
+//dependencies
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/print";
+
+//core
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/code";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/grid";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/tables";
+
+//components
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/breadcrumbs";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/pagination";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/pager";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/jumbotron";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/thumbnails";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/progress-bars";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/media";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/list-group";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/panels";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/responsive-embed";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/wells";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/carousel";
+
+// CUSTOM CSS
 
 @import 'base';
 
-//import directly so don't duplicate bootstrap imports
-@import 'commandbar';
-
-//@import 'constructionfileOld';
 @import 'construction';
 @import 'interface';
 @import 'editor';

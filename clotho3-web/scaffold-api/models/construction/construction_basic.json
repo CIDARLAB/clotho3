@@ -1,0 +1,58 @@
+{
+	"name": "Demo Construction File",
+	"id": "clotho.construction.demoConstructionFile",
+	"schema": "org.clothocad.model.ConstructionFile",
+	"description": "The Construction File automates the process of building custom DNAs. 'steps' are sequential functions that will be run. The 'dictionary' is a hash of variables that will be used throughout the reaction. Each function will return it's normal return, which will be assigned to the 'output' field and added to the 'dictionary' for the next 'step'. 'Output' should be a single string, which will match the return signature of the function run. The final result will be added as 'final' in addition to whatever key is provided.",
+	"dictionary": {
+		"primer1": {
+			"name": "primer1",
+			"sequence": "gatcgatcgat"
+		},
+		"primer2": {
+			"name": "primer2",
+			"sequence": "TATCGATCGTA"
+		},
+		"template": {
+			"name": "template",
+			"sequence": "ccccccccccccccccccccCGTCTCccccccagctacgatcgataaaaaaaaatttttttttttgatcgatcgatagctaggGAATTCgggggggggggggggggggggggggggggg"
+		},
+		"backbone": {
+			"name": "backbone",
+			"sequence": "^cccc_atcgatcgatcgactagctacgacgatcgatcgatcgatcgatcgatcgatcgatcagcatcgactagctacgactgc^aatt_"
+		}
+	},
+	"steps": [
+		{
+			"reaction": "pcr",
+			"input": ["template", "primer1", "primer2"],
+			"output": "pcr_product"
+		},
+		{
+			"reaction": "digest",
+			"input": ["pcr_product", ["EcoRI"]],
+			"output": "fragments"
+		},
+		{
+			"reaction": "gelpurify",
+			"input": ["fragments", 70],
+			"output": "targetFrag"
+		},
+		{
+			"reaction": "digest",
+			"input": ["targetFrag", ["BsmBI"]],
+			"output": "fragments2"
+		},
+		{
+			"reaction": "gelpurify",
+			"input": ["fragments2", 70],
+			"output": "targetFrag2"
+		},
+		{
+			"reaction": "ligate",
+			"input": [
+				["targetFrag2", "backbone"]
+			],
+			"output": "final"
+		}
+	]
+}

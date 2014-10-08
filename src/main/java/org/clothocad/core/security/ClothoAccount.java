@@ -69,4 +69,7 @@ public class ClothoAccount implements Account, MergableAuthenticationInfo, Salte
     @Getter
     private ClothoAuthorizationInfo authzInfo;
 
+    public void setPassword(String newpass){
+        
+    }
 }

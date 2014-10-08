@@ -1,0 +1,29 @@
+<div style="overflow: scroll">
+    <!--<pre class="pre-scrollable" ng-bind="dictionary | json"></pre>-->
+    <table class="table table-bordered table-condensed constructionDictionary">
+        <thead>
+        <tr>
+            <th>Variable</th>
+            <th ng-if="!!editable">Compute</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in dictionary | orderByProp:'stepNum' | filter:uptofilter"
+            ng-class="{'computed' : item.computed}">
+            <td>
+                <code contenteditable="{{ !!editable && !item.computed}}" ng-model="item.key" tooltip="{{ !!editable && item.computed ? 'Edit computed keys in the workflow' : '' }}"></code>
+            </td>
+            <td ng-if="!!editable" style="text-align : center;"><button class="btn btn-xs" btn-checkbox ng-model="item.Clotho" ng-true-value="true" ng-false-value="false" tooltip="Should this value be processed by Clotho?" tooltip-append-to-body="true" ng-disabled="!!item.computed"><i ng-class="{'glyphicon glyphicon-ok' : !!item.Clotho, 'glyphicon glyphicon-fake' : !item.Clotho}" ></i></button></td>
+            <!--<td>{{item}}</td>-->
+            <td ng-if="item.Clotho && editable" contenteditable="{{ !!editable }}" ng-model="item.preprocess" style="overflow: hidden; text-overflow: ellipsis;"></td>
+            <td ng-if="!item.Clotho || !editable" contenteditable="{{ !!editable && !item.computed }}" tooltip="{{ !!editable && item.computed ? 'You cannot edit a dynamically generated value' : '' }}" tooltip-placement="mouse" ng-model="item.value" style="overflow: hidden; text-overflow: ellipsis;"></td>
+        </tr>
+        <tr ng-if="!!editable">
+            <td colspan="3">
+                <button class="btn" ng-click="addTerm()">Add new Key</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -36,7 +36,7 @@ public class UnauthPublicTest extends AnonymousSecurityTest {
     public UnauthPublicTest() {
         super();
     }
-    
+
     /**
      * test read action
      *
@@ -47,7 +47,7 @@ public class UnauthPublicTest extends AnonymousSecurityTest {
 
         ObjBase pub = util.getPublic();
         assertEquals(pub.getId(), persistor.get(Institution.class, pub.getId()).getId());
-
+        
     }
 
     @Test
@@ -56,8 +56,8 @@ public class UnauthPublicTest extends AnonymousSecurityTest {
         Map<String, Object> query = new HashMap<>();
         query.put("schema", Institution.class.getName());
         assertEquals(1, Lists.newArrayList(persistor.find(query)).size());
-    }
-    
+        }
+
     @Test
     public void testRun() throws Exception {
         initAPI("anonRun");
@@ -67,7 +67,7 @@ public class UnauthPublicTest extends AnonymousSecurityTest {
         command.put("function", "function");
         assertEquals("function ran!", api.run(command));    
     }
-    
+
     /**
      * test edit action
      *

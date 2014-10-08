@@ -8,14 +8,6 @@ angular.module('clotho.clothoDirectives')
 
 	var generateWidgetUrl = ClothoUtils.generateWidgetUrl;
 
-	//client polyfill for Clotho.get() to retrieve a view for testing
-	var clientGetView = function(viewId) {
-		return $http.get(generateWidgetUrl(viewId) + '/model.json')
-		.then(function(data){
-			return data.data
-		});
-	};
-
 	return {
 		terminal: true,
 		restrict: 'E',
@@ -33,25 +25,22 @@ angular.module('clotho.clothoDirectives')
 			scope.$watch('id', function (newval, oldval) {
 				if (!!newval) {
 
-					console.log(newval);
-
 					//todo - basic check to make sure proper form
 
 					//config element
 					element.addClass('clothoWidget');
 
 					//retrieve view
-					$q.when(clientGetView(scope.id))              //testing
-						//Clotho.get(scope.id)                      //when server handles
+					$q.when(ClothoUtils.getViewInfo(scope.id))
 						.then(function(view){
 							return ClothoUtils.downloadViewDependencies(view);
 						})
 						.then(function (view) {
 
 							//configure dictionary
-							view.dictionary = angular.extend({}, view.dictionary, view.importedViews);
-							view.dictionary.id = view.id;
+							view.dictionary = angular.extend({}, view.dictionary, view.importedViews, {id : view.id});
 
+              //todo - move this into angular specific section along with controller
 							if (view.bootstrap) {
 								//creating custom module so we can set some stuff up without taking the module creation out of the user's control
 								var customModuleName = view.id + '-additions';
@@ -142,6 +131,7 @@ angular.module('clotho.clothoDirectives')
 								var htmlString;
 
 								//if pass index.html, include template
+                //todo - remove lodash dep
 								if (_.indexOf(view.files, 'index.html') >= 0) {
 
 									htmlString = '<div ';

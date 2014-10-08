@@ -25,7 +25,7 @@ public class ScriptEngineTest {
     
     public ScriptAPI genAPI(){
         Injector injector = TestUtils.getDefaultTestInjector();
-        return new ScriptAPI(new ServerSideAPI(null, injector.getInstance(Persistor.class), null, injector.getInstance(ClothoRealm.class), null));
+        return new ScriptAPI(new ServerSideAPI(null, injector.getInstance(Persistor.class), null,injector.getInstance(ClothoRealm.class),  null));
     }
     
     @Before

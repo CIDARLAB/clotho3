@@ -1,33 +1,37 @@
-$icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+$icon-font-path: "../bower_components/../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+
+//todo - minimize what is required here
 
 //SELECTED BOOTSTRAP
 
 // Core variables and mixins
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/variables";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/mixins";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/variables";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/mixins";
 // Reset
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/normalize";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/normalize";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/glyphicons";
 // Core CSS
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/scaffolding";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/type";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/forms";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/buttons";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/scaffolding";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/type";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/forms";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/buttons";
 // Components
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/component-animations";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/glyphicons";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/dropdowns";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/button-groups";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/input-groups";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/navs";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/navbar";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/badges";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/alerts";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/labels";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/popovers";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/close";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/component-animations";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/dropdowns";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/button-groups";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/input-groups";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/navs";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/navbar";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/badges";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/alerts";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/labels";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/tooltip";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/popovers";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/close";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/modals";
 // Utility classes
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/utilities";
-@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/responsive-utilities";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/utilities";
+@import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap/responsive-utilities";
 
 // cherry-picked bootstrap components
 
@@ -38,4 +42,5 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 // CUSTOM CSS
 
 @import 'base';
+
 @import 'commandbar';

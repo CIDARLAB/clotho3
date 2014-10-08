@@ -21,7 +21,7 @@ public class MindTest extends AuthorizedShiroTest{
     Mind mind = new Mind();
     
     @Test
-    public void testScript() throws ScriptException {
+public void testScript() throws ScriptException {
         TestConnection connection = new TestConnection("testScriptGet");
         mind.setConnection(connection);
         Injector injector = TestUtils.getDefaultTestInjector();

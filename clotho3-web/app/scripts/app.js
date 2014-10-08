@@ -33,10 +33,16 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	.when('/', {
 		templateUrl: 'views/home.html',
 		controller: 'HomeCtrl',
-		title : 'Home',
-		hotkeys : [
-			['h', 'Show Intro Modal', 'showHelp = !showHelp']
-		]
+		title : 'Home'
+	})
+	.when('/login', {
+		templateUrl: 'views/login.html',
+		controller: 'loginCtrl' //from command module
+	})
+	.when('/settings', {
+		templateUrl: 'views/settings.html',
+	  controller: 'SettingsCtrl',
+		title : 'Settings'
 	})
 	.when('/about', {
 	  templateUrl: 'views/about.html',
@@ -98,6 +104,12 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 			}]
 		}
 	})
+	.when('/executor', {
+		templateUrl: 'views/executor.html',
+		controller: 'ExecutorCtrl',
+		title : 'Function Executor',
+		reloadOnSearch: false
+	})
 	.when('/trails', {
 	  templateUrl: 'views/trails.html',
 	  controller: 'TrailsCtrl',
@@ -135,21 +147,36 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'TrailSplashCtrl',
 		title : 'Trail Splash'
 	})
-	.when('/terminal', {
-		templateUrl:'views/_command/terminal.html',
-		title : 'Terminal',
-		resolve : {
-			deps : function() {
-				return $clotho.extensions.mixin('scripts/_command/terminal.js')
-			}
-		}
+	.when('/import', {
+		templateUrl:'views/import/intro.html',
+		controller : 'ImportCtrl',
+		title : 'Import Wizard'
 	})
-
+	.when('/import/youtubePlaylist', {
+		templateUrl: 'views/import/youtubePlaylist.html',
+		controller: 'YoutubePlaylistImportCtrl'
+	})
+	.when('/import/ape', {
+		templateUrl: 'views/import/ape.html',
+		controller: 'ApeImportCtrl',
+		title: 'GenBank Import'
+	})
+	.when('/import/ncbi', {
+		templateUrl: 'views/import/ncbi.html',
+		controller: 'NCBIImportCtrl',
+		title: 'NCBI Import'
+	})
+	.when('/import/facebook', {
+		templateUrl: 'views/import/facebook.html',
+		controller: 'FacebookImportCtrl',
+		title: 'Facebook Import'
+	})
 
 	//testing
 	.when('/widgets', {
 	  templateUrl: 'views/widgets.html',
-	  controller: 'WidgetsCtrl'
+	  controller: 'WidgetsCtrl',
+    reloadOnSearch : false
 	})
 
 .when('/test/schemaview', {
@@ -158,10 +185,6 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	hotkeys : [
 		['m', 'Show Programmatic Modal', 'createModal()']
 	]
-})
-.when('/test/playlistimport', {
-  templateUrl: 'views/test/playlistimport.html',
-  controller: 'TestPlaylistimportCtrl'
 })
 .when('/test/quiz', {
   templateUrl: 'views/test/quiz.html',
@@ -180,7 +203,9 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 	resolve : {
 		trail : ['$q', '$http', '$route', 'Trails', function ($q, $http, $route, Trails) {
 			var deferred = $q.defer();
-				$http.get('models/org.clothocad.trails.constructionFiles.json').then(function(data) {
+				//Clotho.get('org.clothocad.trails.constructionFiles')
+				$http.get('models/org.clothocad.trails.constructionFiles.json')
+				.then(function(data) {
 					Trails.compile(data.data).then(function (compiled) {
 						deferred.resolve(compiled);
 					});
@@ -193,6 +218,9 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
   templateUrl: 'views/test/focus.html',
   controller: 'TestFocusCtrl'
 })
+	.when('/test/playground', {
+		templateUrl: 'views/test/playground.html'
+	})
 	.otherwise({
 		redirectTo:'/'
 	});

@@ -1,0 +1,34 @@
+<div ng-controller="clothoIntro_WritingCtrl">
+    <blockquote><p>Edit your construction file in real time.</p>
+    </blockquote>
+
+    <p>Clotho will process your construction file in real time. You can:</p>
+    <ul>
+        <li>Edit the dictionary</li>
+        <li>Add and remove reactions</li>
+        <li>Drag to reorder the series of reactions</li>
+        <li>Change which variables go into each reaction</li>
+        <li>Rename variables</li>
+    </ul>
+
+    <h4>Choose a Reaction</h4>
+
+    <div class="btn-group">
+        <button class="btn btn-lg" ng-disabled="reactionIndex == 3" ng-click="reactionIndex = 3">Empty File</button>
+        <button class="btn btn-lg" ng-disabled="reactionIndex == 0" ng-click="reactionIndex = 0">Simple Cloning</button>
+        <button class="btn btn-lg" ng-disabled="reactionIndex == 1" ng-click="reactionIndex = 1">Cloning GFP</button>
+        <button class="btn btn-lg" ng-disabled="reactionIndex == 2" ng-click="reactionIndex = 2">Golden Gate Cloning</button>
+    </div>
+
+    <hr>
+
+    <form construction-full ng-model="constructionFile" construction-editable="true"></form>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+</div>

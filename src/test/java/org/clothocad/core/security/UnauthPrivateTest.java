@@ -36,7 +36,7 @@ public class UnauthPrivateTest extends AnonymousSecurityTest {
     public UnauthPrivateTest() {
         super();
     }
-    
+
     /**
      * test read action
      *
@@ -55,8 +55,8 @@ public class UnauthPrivateTest extends AnonymousSecurityTest {
         Map<String, Object> query = new HashMap<>();
         query.put("schema", Institution.class.getName());
         assertEquals(1, Lists.newArrayList(persistor.find(query)).size());
-    }
-    
+        }
+
     @Test(expected = EntityNotFoundException.class)
     public void testRun() throws Exception {
         initAPI("anonRun");
@@ -66,7 +66,7 @@ public class UnauthPrivateTest extends AnonymousSecurityTest {
         command.put("function", "function");
         api.run(command);
     }
-    
+
     /**
      * test edit action
      *

@@ -1,0 +1,12 @@
+<div ng-controller="clothoIntro_SimulationCtrl">
+    <blockquote><p>Now, let's simulate running the Construction File.</p></blockquote>
+
+    <p>The construction file defines its variables in a dictionary, which it expands after each reaction. Fields generated dynamically by the construction file appear in blue, and sorted by the order in which they are generated. Run it by hitting the button below!</p>
+
+    <button class="btn btn-primary btn-lg" ng-click="hideOpts.processto = constructionFile.steps.length" ng-init="hideOpts.processto = 0"><i class="glyphicon glyphicon-white glyphicon-play"></i> Process</button>
+
+    <hr>
+
+    <form construction-full ng-model="constructionFile" construction-editable="false" construction-hideopts="hideOpts"></form>
+
+</div>

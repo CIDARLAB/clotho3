@@ -34,7 +34,7 @@ public class NewUserPermissionTest extends AbstractSecurityTest {
     public NewUserPermissionTest() {
         super();
     }
-    
+
     /**
      * test read action
      *
@@ -47,7 +47,7 @@ public class NewUserPermissionTest extends AbstractSecurityTest {
         api.login("none", "none");
         assertEquals(pub.getId(), persistor.get(Institution.class, pub.getId()).getId());
     }
-    
+
     @Test(expected = EntityNotFoundException.class)
     public void testReadPrivate() {
         initAPI("0000");
@@ -67,7 +67,7 @@ public class NewUserPermissionTest extends AbstractSecurityTest {
         command.put("function", "function");
         assertEquals("function ran!", api.run(command));
     }
-    
+
     @Test(expected = EntityNotFoundException.class)
     public void testRunPrivate() throws ScriptException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         initAPI("runRun");
@@ -77,9 +77,9 @@ public class NewUserPermissionTest extends AbstractSecurityTest {
         command.put("id", util.getPrivateModule().getId());
         command.put("function", "function");
         assertEquals("function ran!", api.run(command));
-    }
-    
-    
+        }
+
+
     /**
      * test edit action
      *

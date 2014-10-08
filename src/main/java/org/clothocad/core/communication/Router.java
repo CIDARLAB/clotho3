@@ -17,14 +17,15 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
 import static org.clothocad.core.communication.Channel.submit;
+
 import org.clothocad.core.datums.ObjectId;
 
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
@@ -36,6 +37,8 @@ public class Router {
 
     @Getter
     protected Persistor persistor;
+    
+    @Getter
     protected ClothoRealm realm;
    
     @Inject
@@ -69,7 +72,7 @@ public class Router {
             //Find a better way to become anonymous user?
             subject.login(ClothoRealm.getAnonymousUserToken());
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), realm, new MessageOptions(request.getOptions()));
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId(), new MessageOptions(request.getOptions()));
 
         Object data = request.getData();
         
@@ -96,6 +99,29 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
+                case updatePassword:
+                    Map updatedPassword = (Map) data;
+                    response  = api.updatePassword(updatedPassword.get("username").toString(),updatedPassword.get("password").toString());
+                    
+                    break;
+                
+                case createUser:
+                    Map newusermap = (Map) data;
+                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                    break;
+                
+                    
+                case linkPerson:
+                    Map linkMap = (Map) data;
+                    response  = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(),linkMap.get("password").toString());
+                    break;
+                
+                case getAssociatedPerson:
+                    
+                    response  = api.getAllPerson(data.toString());
+                    break;
+                    
+                
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();
@@ -119,7 +145,9 @@ public class Router {
                 case alert:
                     api.alert(data.toString());
                     break;
-
+                case convert:
+                    response = api.convert(data);
+                    break;
                 case get:
                     response = api.get(data);
                     break;

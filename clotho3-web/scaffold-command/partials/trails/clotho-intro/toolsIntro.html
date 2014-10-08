@@ -1,0 +1,35 @@
+<div ng-controller="clothoIntro_toolsIntroCtrl">
+
+  <!--only difference between inline quiz and in template is that the dictionary is directly on the quiz object (trail module does this normally)-->
+  <div trail-quiz ng-model="quiz" advance="next()"></div>
+
+  <div class="well" id="demoTool">
+    <div class="form-group clearfix">
+      <div class="col-xs-6 pull-left">
+        <label class="control-label" for="seq">Enter your sequence</label>
+        <input type="text"
+               id="seq"
+               placeholder="DNA Sequence"
+               ng-model="sequence"
+               ng-init="sequence = 'actacgta'">
+      </div>
+      <div class="col-xs-6 pull-right">
+        <label class="control-label" for="clothorun">Reverse Complement</label>
+        <input type="text"
+               id="clothorun"
+               placeholder="Reverse Complement"
+               ng-model="sequence"
+               clotho-run="revcomp"
+               disabled>
+      </div>
+    </div>
+  </div>
+
+  <div clotho-tool="revcomp"></div>
+
+  <button class="btn btn-lg btn-info" id="showMeHow" ng-click="showMeHow()"><i
+      class="glyphicon glyphicon-white glyphicon-eye-open"></i> Show Me How
+  </button>
+
+
+</div>

@@ -47,16 +47,16 @@ public class OwnPermissionTest extends AbstractSecurityTest {
         assertEquals(priv.getId(), persistor.get(Institution.class, priv.getId()).getId());
     }
 
-    
+
     @Test
     public void testFind() {
         initAPI("ownerFind");
-        api.login("owner", "owner");
+            api.login("owner", "owner");
         Map<String, Object> query = new HashMap<>();
         query.put("schema", Institution.class.getName());
         assertEquals(2, Lists.newArrayList(persistor.find(query)).size());
-    }
-    
+        }
+
     @Test
     public void testRun() throws Exception {
         initAPI("ownerRun");
@@ -67,7 +67,7 @@ public class OwnPermissionTest extends AbstractSecurityTest {
         command.put("function", "function");
         assertEquals("function ran!", api.run(command));
     }
-    
+
     //TODO: test run script
     /**
      * test edit action
@@ -123,13 +123,13 @@ public class OwnPermissionTest extends AbstractSecurityTest {
     public void testGrant() {
         initAPI("0003");
 
-        api.login("owner", "owner");
+            api.login("owner", "owner");
         //private
         realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());
         //public
         realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());        
-    }
-    
+        }
+
     //TODO: check behavior when granting/removing public status
     //TODO: check behavior when granting redundant permissions
     //TODO: check for ownerless objects

@@ -1,0 +1,16 @@
+<!-- second way - mixin controller too, avoid ng-init -->
+<div ng-controller="revcompCtrl">
+    <h2>Mixin Controller</h2>
+
+    <p>Controller defines sequence (not ng-init) and binds DNA service to scope, so input is restricted as defined in HTML (to non-degenerate DNA letters). Programmatically this is done by listing dependencies, which are loaded using Application.Mixin()</p>
+    <div class="form-group">
+        <div class="col-xs-6">
+            <label class="control-label" for="seq">Sequence</label>
+                <input type="text" id="seq" placeholder="Sequence" ng-model="sequence" restrict-input="DNA.regexps.strip.dna" />
+        </div>
+        <div class="col-xs-6">
+            <label class="control-label" for="revcomp">Revcomp</label>
+                <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp disabled>
+        </div>
+    </div>
+</div>

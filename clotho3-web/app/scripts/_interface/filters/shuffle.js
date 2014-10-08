@@ -1,22 +1,31 @@
 /**
  * @name shuffle
  *
- * @example {{myArray | shuffle}}
+ * @description
+ * Fischer Yates shuffle, shuffles an existing array, maintaining the reference
  *
- * @param [key] {string} if the key === false then no filtering will be performed
+ * @example {{myArray | shuffle:shuffleSwitch}}
  *
- * @return {array}
+ * @param filterOn {Boolean} if filterOn === false then no filtering will be performed
+ *
+ * @return {Array} The same array, shuffled
  *
  */
 angular.module('clotho.interface').filter('shuffle',  function() {
-	return function (items, filterOn) {
-		if (filterOn === false) { return items; }
+	return function(array, filterOn) {
+		if (filterOn === false || !angular.isArray(items)) {
+			return items;
+		} else {
+			var m = array.length, t, i;
 
-		if ((filterOn || angular.isUndefined(filterOn)) && angular.isArray(items)) {
-			var o = items.slice(0, items.length); // copy
-			for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-			items = o;
+			while (m) {
+				i = Math.floor(Math.random() * m--); //pick an element
+				t = array[m]; //swap it with the current one
+				array[m] = array[i];
+				array[i] = t;
+			}
+
+			return array;
 		}
-		return items;
-	}
+	};
 });

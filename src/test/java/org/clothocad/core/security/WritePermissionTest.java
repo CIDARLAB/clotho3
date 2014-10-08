@@ -32,7 +32,7 @@ public class WritePermissionTest extends AbstractSecurityTest {
     public WritePermissionTest() {
         super();
     }
-    
+
     /**
      * test read action
      *
@@ -42,7 +42,7 @@ public class WritePermissionTest extends AbstractSecurityTest {
         initAPI("0000");
 
         ObjBase priv = util.getPrivate();
-        api.login("write", "write");
+            api.login("write", "write");
         assertEquals(priv.getId(), persistor.get(Institution.class, priv.getId()).getId());
     }
     
@@ -53,8 +53,8 @@ public class WritePermissionTest extends AbstractSecurityTest {
         Map<String, Object> query = new HashMap<>();
         query.put("schema", Institution.class.getName());
         assertEquals(2, Lists.newArrayList(persistor.find(query)).size());
-    }
-    
+        }
+
     @Test
     public void testRun() throws Exception {
         initAPI("writeRun");
@@ -65,7 +65,7 @@ public class WritePermissionTest extends AbstractSecurityTest {
         command.put("function", "function");
         assertEquals("function ran!", api.run(command));
     }
-    
+
     /**
      * test edit action
      *
@@ -110,7 +110,7 @@ public class WritePermissionTest extends AbstractSecurityTest {
     public void testGrant() {
         initAPI("0003");
 
-        api.login("write", "write");
+            api.login("write", "write");
         //private
         realm.addPermissions(ClothoRealm.ANONYMOUS_USER, WRITE.actions, util.getPrivate().getId());
         //public

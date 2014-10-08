@@ -75,37 +75,47 @@ angular.module('clotho.editor')
 
 			function createEditorElement (sharable) {
 
+				console.log(sharable);
+
 				if (angular.isUndefined(sharable) || !angular.isObject(sharable) || angular.isEmpty(sharable)) {
 					Debugger.warn('editor must be created from object, was given: ', sharable);
 					createEmptyEditor();
 					return;
 				}
 
-				var type = ClothoSchemas.determineSharableType(sharable),
-					templateUrl;
-
-				console.warn('sharable type is', type);
-
-				// if it's an instance, check for a more specific template
-				if (type == 'Instance') {
-					//todo - handle instance-specific templates
-					templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
-				} else {
-					templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
-				}
-
-				//gets partial for type of sharable and compiles editor HTML
-				$http.get(templateUrl, {cache: $templateCache})
-				.success(function (data) {
-					scope.showJsonEditor = false;
-					scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
-
-					var el = $compile(data)(scope);
-					element.html(el);
+				ClothoSchemas.determineSharableType(sharable).then(function (type) {
+					return type;
+				}, function (err) {
+					//hack - need to update server version to handle scaffolds (i.e. not in DB)
+					//if return null, do dirty check ourselves
+					return ClothoSchemas.dirtyDetermineType(sharable)
 				})
-				.error(function (data) {
-					Debugger.error('Could not retrieve template: ' + templateUrl);
-					element.html('<p class="text-center">Please select an Object</p>');
+				.then(function (type) {
+					var templateUrl;
+
+					console.warn('sharable type is', type);
+
+					// if it's an instance, check for a more specific template
+					if (type == 'Instance') {
+						//todo - handle instance-specific templates
+						templateUrl = ClothoSchemas.sharableTypes['Instance'].editor_template_url
+					} else {
+						templateUrl = ClothoSchemas.sharableTypes[type].editor_template_url
+					}
+
+					//gets partial for type of sharable and compiles editor HTML
+					$http.get(templateUrl, {cache: $templateCache})
+						.success(function (data) {
+							scope.showJsonEditor = false;
+							scope.panelClass = ClothoSchemas.sharableTypes[type].class || 'default';
+
+							var el = $compile(data)(scope);
+							element.html(el);
+						})
+						.error(function (data) {
+							Debugger.error('Could not retrieve template: ' + templateUrl);
+							element.html('<p class="text-center">Please select an Object</p>');
+						});
 				});
 			}
 
@@ -130,7 +140,7 @@ angular.module('clotho.editor')
 			};
 
 			scope.reset = function () {
-				Clotho.get(scope.sharable.id).then(function (result) {
+				Clotho.get(scope.sharable.id, {mute: true}).then(function (result) {
 					scope.sharable = result;
 					formCtrl.$setPristine();
 				});
@@ -189,11 +199,13 @@ angular.module('clotho.editor')
 				}, scope);
 			}
 
+			//note - to just listen to changes from parent coming in, you could use attrs.$observe instead of a scope watch
+
 			//watch the input id if attr is present
 			scope.$watch('sharableId', function (newval, oldval) {
 				Debugger.log('new id input', newval, oldval);
 
-				newval && Clotho.get(newval).then(function (result) {
+				newval && Clotho.get(newval, {mute: true}).then(function (result) {
 					scope.sharable = result;
 				});
 			});
@@ -208,7 +220,7 @@ angular.module('clotho.editor')
 			scope.$watch('sharable.id', function (newval, oldval) {
 				Debugger.log('sharable id has changed', newval, oldval);
 				setNewWatch(newval);
-				if (angular.isDefined(scope.sharable) && angular.isUndefined(scope.sharable.schema)) {
+				if (!angular.isEmpty(scope.sharable) && angular.isUndefined(scope.sharable.schema)) {
 					createEditorElement(scope.sharable);
 				}
 			});
