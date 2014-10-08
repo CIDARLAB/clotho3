@@ -197,18 +197,20 @@ public class Persistor{
         
         System.out.println("The getFromSocket is being called");
         try{
-
-//            ClothoWebSocket ws = new ClothoWebSocket("string", router);
-//            WebSocketClientFactory factory = new WebSocketClientFactory();
-//            factory.start();
-//            WebSocketClient wsClient = factory.newWebSocketClient();
+              
+            ClothoWebSocket ws = ClothoWebSocket.getInstance();
+            System.out.println("Is ClothoWebsocket open? " + ws.isOpen());
+            System.out.println("The Id of the ClothoWebsocket: " + ws.getId());
+            WebSocketClientFactory factory = new WebSocketClientFactory();
+            factory.start();
+            WebSocketClient wsClient = factory.newWebSocketClient();
 //            
             String destURI = buildUri(rawUri);
-            System.out.println(destURI);
+//            System.out.println(destURI);
             URI uri = new URI(destURI);
-//            Future fut = wsClient.open(uri, ws);            
-//            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
-            
+            Future fut = wsClient.open(uri, ws);            
+            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
+//            
             String getCommand = "{\"channel\":\"get\", \"data\":\""+ uuid + "\"}";
             System.out.println("Command sent to the websocket: " + getCommand);
 //            connect.sendMessage(getCommand);

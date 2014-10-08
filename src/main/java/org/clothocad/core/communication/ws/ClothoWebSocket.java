@@ -41,13 +41,23 @@ public class ClothoWebSocket
             return null;
         }
     }
-
-    public ClothoWebSocket(String id, Router router) {
+    private static ClothoWebSocket clothoWebSocket; //by Jin
+    
+    private ClothoWebSocket(String id, Router router) { //changed to private
         super(id);
         this.router = router;
         
     }
-
+    public static ClothoWebSocket getInstance(){
+        return clothoWebSocket;
+    }
+    //method to get the instance of clothowebsocket
+    public static ClothoWebSocket getInstance(String id, Router router){
+        if(clothoWebSocket == null){
+            clothoWebSocket = new ClothoWebSocket(id, router);
+        }
+        return clothoWebSocket;
+    }
     @Override
     public void onClose(int closeCode, String message) {
     }

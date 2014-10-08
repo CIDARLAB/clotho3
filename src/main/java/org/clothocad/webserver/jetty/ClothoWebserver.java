@@ -70,7 +70,8 @@ public class ClothoWebserver {
 
             @Override
             public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
-                return new ClothoWebSocket(request.getSession().getId(), router); 
+//                return new ClothoWebSocket(request.getSession().getId(), router); 
+                  return ClothoWebSocket.getInstance(request.getSession().getId(), router);
             }
             
         };
