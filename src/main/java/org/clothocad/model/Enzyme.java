@@ -14,6 +14,6 @@ public class Enzyme extends SharableObjBase {
 
 	private List<Polypeptide> polypeptides = new ArrayList<Polypeptide>();
 
-	private String version, name, description;
+	private String version;
 
 }
