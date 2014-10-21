@@ -55,9 +55,6 @@ angular.module('clotho.utils', ['clotho.core'])
 					angular.forEach(view.dependencies, function (dep) {
 						relativeDeps.push(generateWidgetUrl(view.id, dep));
 					});
-
-          console.log(relativeDeps);
-
 					return $clotho.extensions.mixin(relativeDeps);
 				})
 				.then(function() {
