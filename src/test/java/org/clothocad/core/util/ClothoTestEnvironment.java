@@ -45,6 +45,7 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 serverSubject.execute(new InitializePersistor(persistor));
                 serverSubject.execute(new TestUtils.SetupTestData(persistor));
                 serverSubject.execute(new TestUtils.SetupTestRealm(realm));
+                serverSubject.execute(new SecurityTestUtils.CreateTestRealmData(persistor, realm));
             }
         });
     }
