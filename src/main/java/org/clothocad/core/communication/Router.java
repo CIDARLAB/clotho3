@@ -64,7 +64,9 @@ public class Router {
         //bind context to request
         Subject subject = SecurityUtils.getSubject();
         Mind mind;
+        boolean wasAuthenticated = false;
         if (subject.isAuthenticated()){
+            wasAuthenticated = true;
             mind = getAuthenticatedMind(subject.getPrincipal().toString());
             mind.setConnection(connection);
         } else {
@@ -90,8 +92,12 @@ public class Router {
                     break;
                 case login:
                     Map map = (Map) data;
-                    boolean wasAuthenticated = subject.isAuthenticated();
-                    response = api.login(map.get("username").toString(), map.get("password").toString());
+                    if (!wasAuthenticated){
+                        //log out of anonymous user
+                        subject.logout();
+                    }
+                    response = api.login(map.get("username").toString(), map.get("credentials").toString());
+                    //we only reach this point if login was successful
                     if (!wasAuthenticated){
                         //remove the 'anonymous' mind
                         //currently this means you lose environment state if you login
@@ -240,7 +246,7 @@ public class Router {
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
         } finally {
-            if (SecurityUtils.getSubject().getPrincipal() == ClothoRealm.ANONYMOUS_USER){
+            if (ClothoRealm.ANONYMOUS_USER.equals(SecurityUtils.getSubject().getPrincipal())){
                 SecurityUtils.getSubject().logout();
             }
         }
