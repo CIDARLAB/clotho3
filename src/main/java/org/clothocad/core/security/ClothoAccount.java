@@ -42,15 +42,15 @@ public class ClothoAccount implements Account, MergableAuthenticationInfo, Salte
         return true;
     }
     
-    
-    
     public ClothoAccount(String username, String password){
         this(username);
-            
-        ByteSource salt = new SecureRandomNumberGenerator().nextBytes();
-        SimpleHash hashedPw = new SimpleHash(Sha256Hash.ALGORITHM_NAME, password, salt);
-        authcInfo = new SimpleAuthenticationInfo(new SimplePrincipalCollection(username,"clotho"), hashedPw, salt);
+        authcInfo = new SimpleAuthenticationInfo();            
 
+        SimplePrincipalCollection principals = new SimplePrincipalCollection();
+        principals.add(username, "clotho");
+        authcInfo.setPrincipals(principals);
+        
+        setPassword(password);
     }
     
     public ClothoAccount(String username){
@@ -68,8 +68,13 @@ public class ClothoAccount implements Account, MergableAuthenticationInfo, Salte
     @Delegate
     @Getter
     private ClothoAuthorizationInfo authzInfo;
-
-    public void setPassword(String newpass){
+    
+    public final void setPassword(String password){
+        ByteSource salt = new SecureRandomNumberGenerator().nextBytes();
+        SimpleHash hashedPw = new SimpleHash(Sha256Hash.ALGORITHM_NAME, password, salt);
         
+        authcInfo.setCredentials(hashedPw);
+        authcInfo.setCredentialsSalt(salt);
     }
+    
 }
