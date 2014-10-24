@@ -35,20 +35,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
@@ -56,7 +56,6 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.datums.User;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.execution.ConverterFunction;
 import org.clothocad.core.execution.Mind;
@@ -294,63 +293,49 @@ public class ServerSideAPI {
         }
     }
 
-    public final Object createuser(String username, String password) {
+    
+    /*needs to be replaced by general-purpose createAccount method, see account
+      creation discussion in email thread on dev list 
+      
+      currently assumes that new person should be created with no data - generic 
+      method should optionally accept new person data*/
+    public final Map<String, Object> createUser(String username, String password) {
 
-        Map<String, Object> query = new HashMap<String, Object>();
-        Map<String, Object> result = new HashMap<String, Object>();
-        query.put("primaryEmail", username);
-        List<Map<String, Object>> results = query(query);
-        if (results.isEmpty()) {
+        Subject subject = SecurityUtils.getSubject();
+        if (!ClothoRealm.ANONYMOUS_USER.equals(subject.getPrincipal())){
+            say("You are already logged in as "+subject.getPrincipal()+"!", Severity.FAILURE);
+            return null;
+        }
+        try {
+            realm.addAccount(username, password);
+            say("New user " + username + " created.", Severity.SUCCESS);
+
+            subject.logout();
+            subject.login(new UsernamePasswordToken(username, password));
+            
             Person newPerson = new Person(username);
             newPerson.setPrimaryAccount(true);
             newPerson.setPrimaryEmail(username);
             newPerson.setEmailAddress(username);
-            newPerson.setId(new ObjectId(username));
-            persistor.save(newPerson);
-            realm.addAccount(username, password);
-            say("New user " + username + " created.", Severity.SUCCESS);
-            result.put("id", username);
+            newPerson.setId(new ObjectId());
+            ObjectId personId = persistor.save(newPerson);
+
+            realm.addPrincipal(username, personId, "persons");
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("id", personId);
             result.put("accessToken", "dummy");
             result.put("app_id", "dummy");
             return result;
-        } else {
+        } catch (EntityExistsException e) {
             say("User " + username + " exists.", Severity.FAILURE);
-            return false;
-        }
-    }
-
-    public final boolean linkPerson(String primaryEmail, String username, String password) {
-        Map<String, Object> query = new HashMap<String, Object>();
-        query.put("primaryEmail", username);
-        List<Map<String, Object>> results = query(query);
-        if (results.isEmpty()) {
-
-            say("User with primary Email " + primaryEmail + " does not exist. Please create the primary User account first.", Severity.FAILURE);
-            return false;
-        } else {
-            boolean personExists = false;
-
-            for (Map<String, Object> result : results) {
-                if (result.get("id").equals(username)) {
-                    personExists = true;
-                }
-            }
-            //say("User " + username +" exists.", Severity.FAILURE);
-            if (personExists) {
-                say("Person with Email " + username + " exists. Please update the Person object.", Severity.FAILURE);
-                return false;
-            } else {
-                Person newPerson = new Person(username);
-                newPerson.setPrimaryAccount(false);
-                newPerson.setPrimaryEmail(primaryEmail);
-                newPerson.setEmailAddress(username);
-                newPerson.setId(new ObjectId(username));
-                persistor.save(newPerson);
-                realm.addAccount(username, password);
-                say("New Person " + username + " created.", Severity.SUCCESS);
-                return true;
-            }
-
+            return null;
+        } catch (Exception e){
+            logAndSayError("There was a problem creating the new account.", e);
+            return null;
+        } finally {
+            subject.logout();
+            subject.login(ClothoRealm.getAnonymousUserToken());           
         }
     }
 
@@ -369,56 +354,33 @@ public class ServerSideAPI {
         }
     }
 
-    public final boolean updatePassword(String username, String password) {
-        //XXX: needs permission check
-        boolean personexists = false;
-        Collection<Person> personlist = persistor.getAll(Person.class);
-        for (Person p : personlist) {
-            if (p.getId().toString().equals(username)) {
-                personexists = true;
-                break;
-            }
-        }
-
-        if (personexists) {
-            realm.updatePassword(username, "anotherpass");
-            say("Password for user: " + username + " updated.", Severity.SUCCESS);
-            return true;
-        } else {
-            say("User " + username + " does not exist.", Severity.FAILURE);
-            return false;
-        }
-    }
-
-    public final Object login(String username, String password) {
+    public final Map<String,Object> login(String username, String password) {
         ObjectId userId = null;
-
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
-            //XXX: should use a query
-            Collection<Person> personlist = persistor.getAll(Person.class);
-            for (Person p : personlist) {
-                if (p.getId().toString().equals(username)) {
-                    userId = p.getId();
-                    break;
-                }
-            }
+        Subject subject = SecurityUtils.getSubject();
+        
+        if (!subject.isAuthenticated()) {
             try {
-                SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
+                subject.login(new UsernamePasswordToken(username, password));
             } catch (AuthenticationException e) {
                 logAndSayError("Authentication attempt failed for username " + username, e);
-                return false;
+                return null;
             }
+
             say("Welcome, " + username, Severity.SUCCESS);
             Map<String, Object> result = new HashMap<>();
-            result.put("id", userId);
+            Object personId;
+            Collection personPrincipals = subject.getPrincipals().fromRealm("persons");
+            if (personPrincipals.isEmpty()) personId = null;
+            else personId = personPrincipals.iterator().next();
+            result.put("id", personId);
             result.put("accessToken", "dummy");
             result.put("app_id", "dummy");
             log.info("User {} logged in", username);
 
             return result;
         } else {
-            say("Error. Someone has already logged in. Please Log out first.", Severity.FAILURE);
-            return false;
+            say("Please logout first.", Severity.FAILURE);
+            return null;
         }
 
     }

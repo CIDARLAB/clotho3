@@ -12,6 +12,7 @@ import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationException;
@@ -20,11 +21,8 @@ import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
-import org.apache.shiro.util.ByteSource;
-import org.clothocad.core.persistence.Persistor;
 
 /**
  *
@@ -32,6 +30,7 @@ import org.clothocad.core.persistence.Persistor;
  * data object permissions
  * 
  * TODO: locking
+ * TODO: credential store throws entitynotfound exception
  *
         //TODO: Networking: realm name is clotho instance name
         //                  add new user to local instance group 
@@ -210,9 +209,21 @@ public class ClothoRealm extends AuthorizingRealm {
         SecurityUtils.getSubject().checkPermission("data:grant:"+id.toString());
     }
     
+    private static void checkCurrentSubjectIs(String username) throws AuthorizationException {
+        if (!SecurityUtils.getSubject().getPrincipal().equals(username))
+            throw new AuthorizationException("Current subject is not "+ username);
+    }
+    
     public void updatePassword(String username, String password) { 
         ClothoAccount account = store.getAccount(username);
         account.setPassword(password);
+        store.saveAccount(account);
+    }
+    
+    public void addPrincipal(String username, Object principal, String realm){
+        checkCurrentSubjectIs(username);
+        ClothoAccount account = store.getAccount(username);
+        account.merge(new SimpleAuthenticationInfo(principal, null, realm));
         store.saveAccount(account);
     }
 }

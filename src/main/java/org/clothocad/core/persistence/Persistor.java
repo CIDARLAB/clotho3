@@ -146,7 +146,7 @@ public class Persistor{
             if (forRun) checkPriv(id, "run"); 
             else checkPriv(id, "view");
         } catch (AuthorizationException e){
-            throw new EntityNotFoundException(id.toString());
+            throw new EntityNotFoundException("Did not find object: "+ id.toString());
         }
         T obj = connection.get(type, id);
         if (obj == null) throw new EntityNotFoundException(id.toString());

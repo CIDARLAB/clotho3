@@ -26,8 +26,12 @@ public class ServerSubject implements Subject {
 
     public static String SERVER_USER = "_server";
     
+    private boolean isRunAs;
+    private Object runningAs;
+    
     @Override
     public Object getPrincipal() {
+        if (isRunAs) return runningAs;
         return SERVER_USER;
     }
 
@@ -185,12 +189,13 @@ public class ServerSubject implements Subject {
 
     @Override
     public void runAs(PrincipalCollection principals) throws NullPointerException, IllegalStateException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        isRunAs = true;
+        runningAs = principals.getPrimaryPrincipal();
     }
 
     @Override
     public boolean isRunAs() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return isRunAs;
     }
 
     @Override
@@ -200,7 +205,9 @@ public class ServerSubject implements Subject {
 
     @Override
     public PrincipalCollection releaseRunAs() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        isRunAs = false;
+        runningAs = null;
+        return null;
     }
     
 }

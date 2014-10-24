@@ -94,6 +94,7 @@ public class Router {
                     Map map = (Map) data;
                     if (!wasAuthenticated){
                         //log out of anonymous user
+                        //XXX: all this is madness
                         subject.logout();
                     }
                     response = api.login(map.get("username").toString(), map.get("credentials").toString());
@@ -107,20 +108,15 @@ public class Router {
                     break;
                 case updatePassword:
                     Map updatedPassword = (Map) data;
-                    response  = api.updatePassword(updatedPassword.get("username").toString(),updatedPassword.get("password").toString());
+                    response  = api.changePassword(updatedPassword.get("password").toString());
                     
                     break;
                 
                 case createUser:
                     Map newusermap = (Map) data;
-                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                    response  = api.createUser(newusermap.get("username").toString(),newusermap.get("password").toString());
                     break;
-                
-                    
-                case linkPerson:
-                    Map linkMap = (Map) data;
-                    response  = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(),linkMap.get("password").toString());
-                    break;
+
                 
                 case getAssociatedPerson:
                     
