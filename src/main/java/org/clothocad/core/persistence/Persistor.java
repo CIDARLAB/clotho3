@@ -659,7 +659,8 @@ public class Persistor{
         //XXX: inefficient
         BuiltInSchema builtIn = new BuiltInSchema(c, superSchema);
         if (!has(new ObjectId(c.getCanonicalName()))){
-            save(builtIn);           
+            save(builtIn);
+            realm.setPublic(builtIn.getId());
         }
         for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){
             if (subClass.getSuperclass() == c){
