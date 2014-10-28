@@ -192,12 +192,10 @@ public class TestUtils {
         persistor.save(dummyPackager);
         
         ObjectId eugeneID = persistor.save(eugenePart);
-
+        
         return Arrays.asList(part1.getId(), part2.getId(), part3.getId(), eugeneID);
     }
     public static void setupTestUsers(ClothoRealm realm) {
-        Persistor persistor = getDefaultTestInjector().getInstance(Persistor.class);
-        importTestJSON(persistor);
         realm.addAccount("testuser", "password");
         realm.addAccount("maxbates","password2");
         
