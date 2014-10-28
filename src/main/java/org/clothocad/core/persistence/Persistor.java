@@ -167,7 +167,7 @@ public class Persistor{
             try {
                 currentSubject.checkPermission("data:"+ priviliege + ":" + id.toString());            
             } catch (AuthorizationException e){
-                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), id);
+                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
                 throw e;
             }
         }
