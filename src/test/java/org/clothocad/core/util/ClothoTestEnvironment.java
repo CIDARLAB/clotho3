@@ -41,9 +41,10 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ClothoRealm realm = injector.getInstance(ClothoRealm.class);
                 realm.deleteAll();
+                // we do not need persistor.deleteAll() - see TestEnvConnection
                 ServerSubject serverSubject = new ServerSubject();
                 serverSubject.execute(new InitializePersistor(persistor));
-                serverSubject.execute(new TestUtils.SetupTestData(persistor));
+                serverSubject.execute(new TestUtils.SetupTestData(persistor, realm));
                 serverSubject.execute(new TestUtils.SetupTestRealm(realm));
                 serverSubject.execute(new SecurityTestUtils.CreateTestRealmData(persistor, realm));
             }

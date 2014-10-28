@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.TestUtils;
@@ -30,7 +31,7 @@ public class AbstractRouterTest extends AuthorizedShiroTest {
     @Before
     public void setUp() {
         injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
+        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class), injector.getInstance(ClothoRealm.class));
     }
     
     protected void assertMatch(Message m1, Message m2) {

@@ -57,7 +57,6 @@ public class SecurityTestUtils {
     }
 
     private void doCreateTestRealmData(Persistor p, ClothoRealm realm) {
-        realm.deleteAll();
         //make objects
         Institution privateInstitution = new Institution("Private Institution", "", "", "");
         privateInstitution.setVisibility(Visibility.PRIVATE);

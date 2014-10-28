@@ -51,8 +51,8 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
                 );
                 persistor.initializeBuiltInSchemas();
 
-                TestUtils.importTestJSON(
-                    storageFolder, persistor.getConnection(), true);
+                TestUtils.importJSONFromDirectory(
+                    storageFolder, persistor.getConnection(), null, true, false);
                 TestUtils.setupAuthoringTestData(persistor);
                 TestUtils.setupTestUsers(realm);
             }

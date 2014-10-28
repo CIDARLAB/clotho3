@@ -40,6 +40,6 @@ public class AbstractServerAPITest extends AuthorizedShiroTest {
     @Before
     public void setUp() {
         persistor.deleteAll();
-        ids = TestUtils.setupTestData(persistor);
+        ids = TestUtils.setupTestData(persistor, realm);
     }
 }

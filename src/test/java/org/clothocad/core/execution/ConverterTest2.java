@@ -6,86 +6,34 @@
 
 package org.clothocad.core.execution;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.apache.shiro.SecurityUtils;
 import static org.clothocad.core.ReservedFieldNames.ID;
+import org.clothocad.core.communication.AbstractServerAPITest;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.communication.Message;
-import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.TestConnection;
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.schema.Schema;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.core.util.JSON;
-import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.NucSeq;
 import org.clothocad.model.SimpleSequence;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
  * @author prashantvaidyanathan
  */
-public class ConverterTest2 {
-    private static Router router;
-    private static Injector injector;
-    private static List<ObjectId> ids;
-    private static Persistor persistor;
+public class ConverterTest2 extends AbstractServerAPITest {
     
     public ConverterTest2() {
+        super();
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        persistor = injector.getInstance(Persistor.class);
-        router = injector.getInstance(Router.class);
-        org.apache.shiro.mgt.SecurityManager securityManager = injector.getInstance(org.apache.shiro.mgt.SecurityManager.class);
-        SecurityUtils.setSecurityManager(securityManager);
-        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-        TestUtils.setupTestUsers(realm);
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-        //persistor.deleteAll();
-        //ids = TestUtils.setupTestData(persistor);
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-    }
-
-    @After
-    public void tearDown() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-        
-    }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
-    
     private void sendMessage(Message message, ClientConnection connection) throws IOException {
         String stringMessage = JSON.serializeForExternal(message);
         message = JSON.mapper.readValue(stringMessage, Message.class);
@@ -229,15 +177,4 @@ public class ConverterTest2 {
         */
         //System.out.println(x.convertTo.toString());
     }
-    
-    public static void main(String args[]) throws IOException
-    {
-        ConverterTest2 x = new ConverterTest2();
-        
-        setUpClass();
-        x.setUp();
-        x.converttest();
-    }
-    
-    
 }

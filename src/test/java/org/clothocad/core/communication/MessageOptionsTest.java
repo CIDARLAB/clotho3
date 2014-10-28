@@ -8,12 +8,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.util.AuthorizedShiroTest;
-import org.clothocad.core.util.JSON;
-import org.clothocad.core.util.TestUtils;
-import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.python.google.common.collect.Lists;
@@ -22,25 +16,9 @@ import org.python.google.common.collect.Lists;
  *
  * @author spaige
  */
-public class MessageOptionsTest extends AuthorizedShiroTest{
-    private static Router router;
-    private static List<ObjectId> ids;
-
+public class MessageOptionsTest extends AbstractRouterTest{
     public MessageOptionsTest() {
         super();
-        router = injector.getInstance(Router.class);
-    }
-
-    @Before
-    public void setUp() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-    }
-
-    private void sendMessage(Message message, ClientConnection connection) throws IOException {
-        String stringMessage = JSON.serializeForExternal(message);
-        message = JSON.mapper.readValue(stringMessage, Message.class);
-        router.receiveMessage(connection, message);
     }
     
     @Test

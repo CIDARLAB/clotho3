@@ -49,7 +49,7 @@ public class TestRouter extends Router {
                 persistor.delete(id);
             }
             
-            TestUtils.setupTestData(persistor);
+            TestUtils.setupTestData(persistor, realm);
             connection.send(new Message(
                 request.getChannel(),
                 "",
