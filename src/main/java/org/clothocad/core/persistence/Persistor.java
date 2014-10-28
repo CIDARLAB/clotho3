@@ -560,7 +560,7 @@ public class Persistor{
         out = filterDuplicatesById(out);
         
         //filter results for permission
-        out = filterByPermission(out, edit);
+        out = filterByPermission(out, view);
         
         return out;
     }
