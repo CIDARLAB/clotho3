@@ -201,19 +201,19 @@ public class Persistor{
             ClothoWebSocket ws = ClothoWebSocket.getInstance();
             System.out.println("Is ClothoWebsocket open? " + ws.isOpen());
             System.out.println("The Id of the ClothoWebsocket: " + ws.getId());
-            WebSocketClientFactory factory = new WebSocketClientFactory();
-            factory.start();
-            WebSocketClient wsClient = factory.newWebSocketClient();
+//            WebSocketClientFactory factory = new WebSocketClientFactory();
+//            factory.start();
+//            WebSocketClient wsClient = factory.newWebSocketClient();
 //            
             String destURI = buildUri(rawUri);
 //            System.out.println(destURI);
-            URI uri = new URI(destURI);
-            Future fut = wsClient.open(uri, ws);            
-            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
-//            
+//            URI uri = new URI(destURI);
+//            Future fut = wsClient.open(uri, ws);            
+//            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
+            Connection connect = ws.createConnection(destURI);
             String getCommand = "{\"channel\":\"get\", \"data\":\""+ uuid + "\"}";
             System.out.println("Command sent to the websocket: " + getCommand);
-//            connect.sendMessage(getCommand);
+            connect.sendMessage(getCommand);
             
         }catch(Throwable t){
             t.printStackTrace();

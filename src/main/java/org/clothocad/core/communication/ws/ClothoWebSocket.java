@@ -3,9 +3,12 @@ package org.clothocad.core.communication.ws;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -15,6 +18,8 @@ import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.util.JSON;
 import org.eclipse.jetty.websocket.WebSocket;
+import org.eclipse.jetty.websocket.WebSocketClient;
+import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 @Slf4j
 public class ClothoWebSocket
@@ -114,5 +119,19 @@ public class ClothoWebSocket
         } catch (IOException ex) {
             log.error("cannot send deregister message:{}", ex.getMessage());
         }
+    }
+    
+    public Connection createConnection(String destUri){
+        try{
+            WebSocketClientFactory factory = new WebSocketClientFactory();
+            factory.start();
+            WebSocketClient wsClient = factory.newWebSocketClient();
+            URI uri = new URI(destUri);
+            Future fut = wsClient.open(uri, clothoWebSocket); 
+            return (Connection) fut.get(10, TimeUnit.SECONDS);
+        }catch(Throwable t){
+            t.printStackTrace();
+        }
+        return null;
     }
 }
