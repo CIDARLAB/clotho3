@@ -60,6 +60,7 @@ public class ClothoAccount implements Account, MergableAuthenticationInfo, Salte
     }    
     
     @Id
+    @Getter
     private String id;
     
     @Delegate

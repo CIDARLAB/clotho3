@@ -4,6 +4,8 @@
  */
 package org.clothocad.core.security;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
 
@@ -225,5 +228,28 @@ public class ClothoRealm extends AuthorizingRealm {
         ClothoAccount account = store.getAccount(username);
         account.merge(new SimpleAuthenticationInfo(principal, null, realm));
         store.saveAccount(account);
+    }
+    
+    public Map<String, Set<ClothoAction>> getUserPermissions(ObjectId id){
+        checkCurrentSubjectGrant(id);
+        return store.getUserPermissions(id);
+    }
+    
+    public Map<String, Set<ClothoAction>> getGroupPermissions(ObjectId id){
+        checkCurrentSubjectGrant(id);
+        return store.getGroupPermissions(id);
+    }
+    
+    public Set<ClothoAction> getCurrentSubjectPermissions(ObjectId id){
+        Subject currentSubject = SecurityUtils.getSubject();
+        currentSubject.checkPermission("data:view:"+id.toString());
+        
+        Set<ClothoAction> permittedActions = new HashSet<>();
+        for (ClothoAction action : ClothoAction.values()){
+            if (currentSubject.isPermitted("data:"+action.name()+":"+id.toString()))
+                permittedActions.add(action);
+        }
+        
+        return permittedActions;
     }
 }

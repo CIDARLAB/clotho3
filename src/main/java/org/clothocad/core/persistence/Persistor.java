@@ -288,10 +288,14 @@ public class Persistor{
             else checkPriv(id, "view");
         } catch (AuthorizationException e){
             throw new EntityNotFoundException(id.toString());
-        }        
-        
+        }
+
         Map<String,Object> result = connection.getAsBSON(id, fields);
         if (result == null) throw new EntityNotFoundException(id.toString());
+
+        if (!forRun)
+            addPermissionInfo(result);
+
         return result;
     }
     
@@ -529,7 +533,6 @@ public class Persistor{
     }
     
     public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, Set<String> fields, int hitmax) {
-        //TODO: limit results
         spec = addSubSchemas(spec);
         List<Map<String,Object>> out = connection.getAsBSON(spec, hitmax, fields);
 
@@ -562,9 +565,28 @@ public class Persistor{
         //filter results for permission
         out = filterByPermission(out, view);
         
+        for (Map<String,Object> object : out) {
+            addPermissionInfo(object);
+        }
+
         return out;
     }
         
+    private void addPermissionInfo(Map<String,Object> object){
+            ObjectId id = new ObjectId(object.get(ID));
+            if (has(id)){
+                Map<String,Object> permissions = new HashMap<>();
+
+                permissions.put("mine", realm.getCurrentSubjectPermissions(id));
+                if (SecurityUtils.getSubject().isPermitted("data:grant:"+id.toString())){
+                    permissions.put("user", realm.getUserPermissions(id));
+                    permissions.put("group", realm.getGroupPermissions(id));
+                }
+                
+                object.put("$$permissions", permissions);
+            }
+    }
+
     private List<Map<String,Object>> filterByPermission(Collection<Map<String,Object>> objects, ClothoAction permission){
         List<Map<String,Object>> filteredObjects = new ArrayList<>();
         for (Map<String,Object> object : objects){

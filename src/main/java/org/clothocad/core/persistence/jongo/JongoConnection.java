@@ -44,6 +44,7 @@ import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.AuthGroup;
 import org.clothocad.core.security.ClothoAccount;
+import org.clothocad.core.security.ClothoAction;
 import org.clothocad.core.security.CredentialStore;
 import org.clothocad.core.security.PermissionsOnObject;
 import org.clothocad.core.util.JSON;
@@ -408,6 +409,30 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
             }
         }
         return permissions;
+    }
+    
+    @Override
+    public Map<String, Set<ClothoAction>> getUserPermissions(ObjectId id){
+        Map<String, Set<ClothoAction>> permissionsByUser = new HashMap<>();
+        
+        for (ClothoAccount account : cred.find("{'authzInfo.permissions.#':{$exists:true}}", id)
+            .projection("{'authzInfo.permissions.#':1, '@class':1}", id).as(ClothoAccount.class)){
+            permissionsByUser.put(account.getId(), account.getActions(id));
+        }
+        
+        return permissionsByUser;
+    }
+
+    @Override
+    public Map<String, Set<ClothoAction>> getGroupPermissions(ObjectId id){
+        Map<String, Set<ClothoAction>> permissionsByGroup = new HashMap<>();
+        
+        for (AuthGroup group : roles.find("{'permissions.#':{$exists:true}}", id)
+            .projection("{'permissions.#':1, '$class':1}", id).as(AuthGroup.class)){
+            permissionsByGroup.put(group.getName(), group.getActions(id));
+        }
+        
+        return permissionsByGroup;        
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{

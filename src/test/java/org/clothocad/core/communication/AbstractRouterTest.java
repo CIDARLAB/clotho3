@@ -34,7 +34,7 @@ public class AbstractRouterTest extends AuthorizedShiroTest {
         ids = TestUtils.setupTestData(injector.getInstance(Persistor.class), injector.getInstance(ClothoRealm.class));
     }
     
-    protected void assertMatch(Message m1, Message m2) {
+    static void assertMatch(Message m1, Message m2) {
         assertEquals(m1.getChannel(), m2.getChannel());
         assertEquals(m1.getRequestId(), m2.getRequestId());
     }
