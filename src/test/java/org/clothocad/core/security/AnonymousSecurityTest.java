@@ -4,10 +4,8 @@
  */
 package org.clothocad.core.security;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import static org.clothocad.core.security.AbstractShiroTest.getSecurityManager;
 
 /**
  *

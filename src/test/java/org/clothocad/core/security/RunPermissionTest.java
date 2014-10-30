@@ -9,15 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.*;
 
-import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ClothoPermission.WRITE;
 import org.clothocad.model.Institution;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
