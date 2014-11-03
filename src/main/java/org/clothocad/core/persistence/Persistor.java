@@ -216,7 +216,6 @@ public class Persistor{
         }
         
         Set<ObjBase> filteredObjects = new HashSet();
-        
 
         for (ObjBase object : relevantObjects){
             //check privileges on preexisting objects
@@ -239,6 +238,9 @@ public class Persistor{
 
         //recurse in persistor
         connection.saveAll(filteredObjects);
+        for (ObjBase object : filteredObjects){
+            globalTrie.put(object);
+        }
         return obj.getId();
     }
 

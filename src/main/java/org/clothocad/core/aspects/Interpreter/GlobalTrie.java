@@ -20,20 +20,16 @@
 
 package org.clothocad.core.aspects.Interpreter;
 
-import groovy.lang.Tuple;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
-import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.StringKeyAnalyzer;
-import org.clothocad.core.util.FileUtils;
-import org.clothocad.core.util.JSON;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 
 public class GlobalTrie {
     /* AutoComplete Contructor */
@@ -42,8 +38,6 @@ public class GlobalTrie {
         
         trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
         //Load up the words from the word bank into the Trie
-
-
     }
     
     /*
@@ -101,5 +95,19 @@ public class GlobalTrie {
         }
     }
 
+    
+    public void put(ObjBase data){
+        Map map = new HashMap();
+        map.put("name", data.getName());
+        map.put("id", data.getId().toString());
+        map.put("schema", data.getClass().getCanonicalName());
+        if (Sharable.class.isInstance(data)){
+            Sharable sharable = (Sharable) data;
+            map.put("description", sharable.getDescription());
+        }
+        
+        trie.put(data.getName().toLowerCase(), map);
+    }
+    
     private Trie<String, Object> trie;
 }
