@@ -62,10 +62,10 @@ public class GlobalTrie {
      * 
      * Extracting options from the Trie
      */
-    public List<Map> getCompletions(String subString) {
+    public List<Map<String,Object>> getCompletions(String subString) {
         SortedMap<String, Object> subTrie = trie.prefixMap(subString.toLowerCase());
         //System.out.println("Size of subtrie: " + subTrie.size());
-        List<Map> options = new ArrayList<>();
+        List<Map<String,Object>> options = new ArrayList<>();
         for (Map.Entry<String, Object> entry : subTrie.entrySet()) {
             HashMap tempMap = (HashMap) entry.getValue();
             options.add(tempMap);

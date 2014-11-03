@@ -116,14 +116,12 @@ public class ServerSideAPI {
         this.realm = realm;
     }
 
-    public final List<Map> autocomplete(String userText) {
+    public final Iterable<Map<String,Object>> autocomplete(String userText) {
         //This is needed because the subString is in the format {query=[subString]}
         userText = userText.substring(7, userText.length() - 1);
 
         //Add the word suggestions from the global Trie
-        List<Map> globalComps = persistor.getCompletions(userText);
-
-        return globalComps;
+        return persistor.getCompletions(userText);
     }
     //JCA:  works pushing a dummy message to the client, probably should be wrapped into get(...)
 

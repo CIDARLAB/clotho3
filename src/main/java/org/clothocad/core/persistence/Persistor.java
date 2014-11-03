@@ -589,7 +589,7 @@ public class Persistor{
             }
     }
 
-    private List<Map<String,Object>> filterByPermission(Collection<Map<String,Object>> objects, ClothoAction permission){
+    private List<Map<String,Object>> filterByPermission(Iterable<Map<String,Object>> objects, ClothoAction permission){
         List<Map<String,Object>> filteredObjects = new ArrayList<>();
         for (Map<String,Object> object : objects){
             try{
@@ -757,8 +757,8 @@ public class Persistor{
     }
     
  
-    public List<Map> getCompletions(String word){
-        return globalTrie.getCompletions(word);
+    public Iterable<Map<String,Object>> getCompletions(String word){
+        return filterByPermission(globalTrie.getCompletions(word), view);
     }
 
     public Object get(ObjectId objectId) {
