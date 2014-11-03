@@ -171,6 +171,11 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
 		controller: 'FacebookImportCtrl',
 		title: 'Facebook Import'
 	})
+  .when('/import/csv', {
+    templateUrl: 'views/import/csv.html',
+    controller: 'ImportCSVCtrl',
+    title: 'CSV Import'
+  })
 
 	//testing
 	.when('/widgets', {

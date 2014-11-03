@@ -1,0 +1,9 @@
+{
+  "id": "tool.revcomp",
+
+  "files": [
+    "index.html"
+  ],
+
+  "dependencies": []
+}

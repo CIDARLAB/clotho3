@@ -1,0 +1,15 @@
+{
+	"id": "987654321",
+
+	"importedViews" : {
+		"simple" : "813579135"
+	},
+
+	"files" : [
+		"importable.html"
+	],
+
+	"dependencies" : [
+		"trackingExecutable.js"
+	]
+}
