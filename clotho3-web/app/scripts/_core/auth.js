@@ -15,12 +15,17 @@ angular.module('clotho.core')
 		var Debugger = new Debug('ClothoAuth', '#EE3333');
 
 		var userId = null,                      //string
+      authToken = null,
       credentials = null,                   //object
       stateListeners = [],
 			getCurrentUserDeferred = [];
 
-    function cloneCurrentUser () {
+    function getUserId () {
       return userId;
+    }
+
+    function getToken () {
+      return authToken;
     }
 
     function cloneCredentials() {
@@ -29,7 +34,7 @@ angular.module('clotho.core')
 
     function triggerStateListeners (state) {
       angular.forEach(stateListeners, function (callback) {
-        callback.call(null, state, cloneCurrentUser());
+        callback.call(null, state, getUserId());
       });
     }
 
@@ -43,7 +48,7 @@ angular.module('clotho.core')
       //process the deferred queue only on login()
       while (getCurrentUserDeferred.length > 0) {
         var def = getCurrentUserDeferred.pop();
-        def.resolve(cloneCurrentUser());
+        def.resolve(getUserId());
       }
 
       triggerStateListeners('login');
@@ -65,7 +70,8 @@ angular.module('clotho.core')
 				return !angular.isEmpty(userId);
 			},
 
-			getCurrentUser: cloneCurrentUser,
+			getUserId: getUserId,
+      getToken: getToken,
 
       getCredentials: cloneCredentials,
 
@@ -81,7 +87,7 @@ angular.module('clotho.core')
        */
       onLogin: function () {
         if (angular.isDefined(userId)) {
-          $q.when(cloneCurrentUser());
+          $q.when(getUserId());
         } else {
           var deferred = $q.defer();
           getCurrentUserDeferred.push(deferred);
@@ -92,16 +98,20 @@ angular.module('clotho.core')
       /**
        * @name addStateListener
        * @description
-       * Register a callback when state changes. To listen to a particular state, use PubSub and listen for events 'auth:login', 'auth:logout', 'auth:error'.
+       * Register a callback when state changes. To listen to a particular state, pass one of these events: 'auth:login', 'auth:logout', 'auth:error'.
        *
-       * @param callback {Function}
+       * @param state {Function} event to listen to. pass "all" or an empty value to listen to all
+       * @param callback {Function} callback to execute
        * passed state {string},
        *
        * @returns {Function} deregistration function
        */
-      addStateListener : function (callback) {
+      addStateListener : function (state, callback) {
+        if (angular.isEmpty(state) || state === 'all' ) {
+          state = 'auth:login auth:logout auth:error';
+        }
         //PubSub handles check for callback is function
-        return PubSub.on('auth:login auth:logout auth:error', callback);
+        return PubSub.on(state, callback);
       }
 		};
 	});
