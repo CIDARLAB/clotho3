@@ -7,6 +7,7 @@ angular.module('clotho.core')
  * Singleton to handle user authentication and credentials
  *
  * todo - secure credentials and user info
+ * todo - expose on $rootScope - see firebaseSimpleLogin
  *
  */
 	.service('ClothoAuth', function(PubSub, Debug, $q) {
@@ -95,6 +96,8 @@ angular.module('clotho.core')
        *
        * @param callback {Function}
        * passed state {string},
+       *
+       * @returns {Function} deregistration function
        */
       addStateListener : function (callback) {
         //PubSub handles check for callback is function

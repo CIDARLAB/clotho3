@@ -169,18 +169,18 @@ angular.module('clotho.core')
 		 * @name Clotho.createUser
 		 *
 		 * @param username
-		 * @param password
+		 * @param credentials
 		 *
 		 * @description
 		 * Create a new user account with Clotho. username must be the ID of an associated Person sharable (probably email address)
 		 *
 		 * @returns {Promise} result of creating user
 		 */
-		var createUser = function clothoAPI_createUser(username, password) {
-			var cred = {username: username, password: password};
+		var createUser = function clothoAPI_createUser(username, credentials) {
+			var cred = {username: username, credentials: credentials};
 
 			function createUserCallback(loginResult) {
-				//todo - login as that user
+				//todo - handle user ID here, but do not login as that user
 			}
 
 			return fn.emitSubCallback('createUser', cred, createUserCallback);

@@ -15,36 +15,36 @@ angular.module('clotho.foundation')
  */
 .directive('clothoShowAuth', function (PubSub, ClothoAuth) {
 
-	function getExpectedState(scope, attr) {
+  var validstates = ['login', 'logout', 'error'];
+
+  //todo - may not want to eval if just passing string, not scope variables. add $observe
+	function getExpectedStates(scope, attr) {
 		var expState = scope.$eval(attr);
-		if( typeof(expState) !== 'string' && !angular.isArray(expState) ) {
+		if( !angular.isString(expState) && angular.isArray(expState) ) {
 			expState = attr;
 		}
-		if( typeof(expState) === 'string' ) {
+		if( angular.isString(expState) ) {
 			expState = expState.split(',');
 		}
 		return expState;
 	}
 
 	function inList(needle, list) {
-		var res = false;
-		angular.forEach(list, function(x) {
-			if( x === needle ) {
-				res = true;
-				return true;
-			}
-			return false;
-		});
-		return res;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] === needle) {
+        return true;
+      }
+    }
+    return false;
 	}
 
 	function assertValidStates(states) {
 		if( !states.length ) {
-			throw new Error('clotho-show-auth directive must be login, logout, or error (you may use a comma-separated list)');
+			throw new Error('clotho-show-auth directive must be (you may use a comma-separated list): ' + validstates.join(', '));
 		}
 		angular.forEach(states, function(s) {
-			if( !inList(s, ['login', 'logout', 'error']) ) {
-				throw new Error('Invalid state "'+s+'" for clotho-show-auth directive, must be one of login, logout, or error');
+			if( !inList(s, validstates) ) {
+				throw new Error('Invalid state(s) "'+s+'" for clotho-show-auth directive, must be one of: ' + validstates.join(', '));
 			}
 		});
 		return true;
@@ -53,17 +53,18 @@ angular.module('clotho.foundation')
 	return {
 		restrict: 'A',
 		link: function(scope, el, attr) {
-			var expState = getExpectedState(scope, attr.clothoShowAuth);
-			assertValidStates(expState);
+			var expStates = getExpectedStates(scope, attr.clothoShowAuth);
+			assertValidStates(expStates);
 			function fn(newState) {
-				var show = inList(newState, expState);
+				var show = inList(newState, expStates);
 				// sometimes if ngCloak exists on same element, they argue, so make sure that
 				// this one always runs last for reliability
 				setTimeout(function() {
 					el.toggleClass('ng-cloak', !show);
 				}, 0);
 			}
-			fn('logout');
+      //start in logout state
+			//fn('logout');
       ClothoAuth.addStateListener(fn);
 		}
 	};

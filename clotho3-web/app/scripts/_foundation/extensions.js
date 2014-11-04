@@ -349,6 +349,7 @@ $clotho.extensions = angular.module('clotho.extensions', [])
     if (angular.isUndefined(element)) {return;}
     args = args || {};
 
+    element = angular.element(element);
     if (element.scope()) {element.scope().$destroy();}
 
     $rootElement.injector().invoke(['$compile', '$rootScope', function($compile, $rootScope) {
