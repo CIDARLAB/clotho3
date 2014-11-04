@@ -12,6 +12,6 @@ import org.clothocad.core.datums.SharableObjBase;
 @NoArgsConstructor
 public class Polypeptide extends SharableObjBase {
 
-	private String version, name, description, source, sequence;
+	private String version, source, sequence;
 
 }

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author mosnicholas
+ * @author billcao
  */
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -42,7 +43,9 @@ public class RestApi extends HttpServlet {
     protected void doGet(HttpServletRequest request, 
         HttpServletResponse response) throws ServletException, IOException {
 
+        // Allows GET calls from domains other than this Clotho's domain
         response.addHeader("Access-Control-Allow-Origin", "*");
+
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
@@ -60,7 +63,8 @@ public class RestApi extends HttpServlet {
         String id = pathID[1];
 
         if (id.equals("query")) {
-            Map<String, String> p = getRequestBody(request.getReader());
+            String queryString = request.getQueryString();
+            Map<String, String> p = splitQuery(queryString);
             m = new Message(Channel.query, p, null, null);
         } else {
             m = new Message(Channel.get, id, null, null);
@@ -79,7 +83,7 @@ public class RestApi extends HttpServlet {
         String result = this.rc.getResult().toString();
 
         logout(unamePass);
-        
+
         response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
@@ -279,6 +283,16 @@ public class RestApi extends HttpServlet {
         }
 
         return map;
+    }
+
+    private Map<String, String> splitQuery(String queryInfo) {
+        Map<String, String> queryPairs = new HashMap<String, String>();
+        String[] pairs = queryInfo.split("&");
+        for (String pair : pairs) {
+            int i = pair.indexOf("=");
+            queryPairs.put(pair.substring(0, i), pair.substring(i + 1));
+        }
+        return queryPairs;
     }
 
     private String[] getBasicAuth(String authHeader) {

@@ -15,6 +15,6 @@ public class SinglePathway extends SharableObjBase {
 	private List<Polypeptide> intermediates = new ArrayList<Polypeptide>();
 	private List<Reaction> reactions = new ArrayList<Reaction>();
 
-	private String version, name, description, target;
+	private String version, target;
 
 }
