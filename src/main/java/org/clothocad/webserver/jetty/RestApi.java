@@ -45,7 +45,6 @@ public class RestApi extends HttpServlet {
 
         // Allows GET calls from domains other than this Clotho's domain
         response.addHeader("Access-Control-Allow-Origin", "*");
-
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
@@ -96,6 +95,7 @@ public class RestApi extends HttpServlet {
     protected void doDelete(HttpServletRequest request, 
         HttpServletResponse response) throws ServletException, IOException {
 
+        response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
@@ -142,6 +142,7 @@ public class RestApi extends HttpServlet {
     protected void doPost(HttpServletRequest request, 
         HttpServletResponse response) throws ServletException, IOException {
 
+        response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         Map<String, String> p = getRequestBody(request.getReader());
@@ -187,6 +188,7 @@ public class RestApi extends HttpServlet {
     protected void doPut(HttpServletRequest request, 
         HttpServletResponse response) throws ServletException, IOException {
 
+        response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
