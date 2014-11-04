@@ -61,7 +61,6 @@ public class ClothoSchemaTest extends AuthorizedShiroTest {
         super();
         p = injector.getInstance(Persistor.class);
         cl = injector.getInstance(DBClassLoader.class);
-                p.connect();
         p.deleteAll();
         featureSchema = createFeatureSchema();
     }

@@ -78,10 +78,10 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
         classLoader = dbClassLoader;
+        connect();
     }
 
-    @Override
-    public void connect() throws UnknownHostException {
+    private void connect() throws UnknownHostException {
         //TODO: cover reconnect case?
 
         //Mimic Jongo customization         

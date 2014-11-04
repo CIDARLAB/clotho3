@@ -33,7 +33,6 @@ public class AbstractServerAPITest extends AuthorizedShiroTest {
         realm  = injector.getInstance(ClothoRealm.class);
         mind = new Mind();
         api = new ServerSideAPI(mind, persistor, router, realm, null);
-        persistor.connect();
         mind.setConnection(new TestConnection("test"));
     }
     

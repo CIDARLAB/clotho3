@@ -22,11 +22,6 @@ public class TestEnvConnection extends JongoConnection {
     @Inject
     public TestEnvConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbName, DBClassLoader dbClassLoader) throws UnknownHostException {
         super(port, host, dbName, dbClassLoader);
-        try {
-            this.connect();
-        } catch (UnknownHostException ex) {
-            throw new RuntimeException(ex);
-        }
         this.deleteAll();
     }
     

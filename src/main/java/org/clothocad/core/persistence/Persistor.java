@@ -113,7 +113,6 @@ public class Persistor{
     public Persistor(final ClothoConnection connection, ClothoRealm realm, boolean initializeBuiltins){
         this.connection = connection;
         this.realm = realm;
-        connect();
         
        // if (initializeBuiltins) initializeBuiltInSchemas();
         
@@ -630,15 +629,6 @@ public class Persistor{
     private List<Map<String,Object>> filterDataByQuery(List<Map<String,Object>> convertedData,Map<String, Object> spec){
         //TODO
         return convertedData;
-    }
-    
-    public void connect() {
-        try {
-            connection.connect();
-        } catch (UnknownHostException ex) {
-            log.error("Could not connect to database", ex);
-        }
-        
     }
 
     public void deleteAll() {
