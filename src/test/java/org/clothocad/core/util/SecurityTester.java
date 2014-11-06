@@ -5,7 +5,6 @@
 package org.clothocad.core.util;
 
 import org.clothocad.core.datums.Module;
-import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.Language;
 
 /**
