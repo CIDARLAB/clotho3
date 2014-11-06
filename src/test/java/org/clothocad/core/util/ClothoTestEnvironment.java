@@ -10,6 +10,7 @@ import org.clothocad.core.AbstractClothoStarter;
 import org.clothocad.core.persistence.InitializePersistor;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
+import org.clothocad.core.security.SecurityModule;
 import org.clothocad.core.security.ServerSubject;
 import org.clothocad.core.testers.ClothoTestModule;
 
@@ -27,6 +28,7 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 override.setProperty("dbname", "testClotho");
                 return Guice.createInjector( 
                     new ClothoTestModule(override),
+                    new SecurityModule(),
                     //Test Module flushes database for clean environment
                     new JongoTestModule()
                 );

@@ -36,6 +36,7 @@ import org.clothocad.model.Part.PartFunction;
 import org.clothocad.model.Person;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.security.SecurityModule;
 
 /**
  *
@@ -131,7 +132,7 @@ public class TestUtils {
     }
 
     public static Injector getDefaultTestInjector() {
-        return Guice.createInjector(new ClothoTestModule(), new JongoTestModule());
+        return Guice.createInjector(new ClothoTestModule(), new SecurityModule(), new JongoTestModule());
     }
     
     public static void setupAuthoringTestData(Persistor persistor)

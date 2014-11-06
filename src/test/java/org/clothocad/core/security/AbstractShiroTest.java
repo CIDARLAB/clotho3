@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.security;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
@@ -13,8 +12,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.LifecycleUtils;
 import org.apache.shiro.util.ThreadState;
-import org.clothocad.core.testers.ClothoTestModule;
-import org.clothocad.core.util.JongoTestModule;
+import org.clothocad.core.util.TestUtils;
 import org.junit.AfterClass;
  
 /**
@@ -26,7 +24,7 @@ public abstract class AbstractShiroTest {
     protected Injector injector;
     
     public AbstractShiroTest() {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoTestModule());
+        injector = TestUtils.getDefaultTestInjector();
         setSecurityManager(injector.getInstance(SecurityManager.class));
     }
     

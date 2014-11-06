@@ -12,10 +12,8 @@ import javax.inject.Singleton;
 import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.IdUtils;
 import org.clothocad.core.schema.Schema;
-import org.clothocad.core.security.SecurityModule;
 import org.eclipse.jetty.server.ssl.SslConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 /**
@@ -37,11 +35,6 @@ public class ClothoModule extends AbstractModule {
         requestStaticInjection(IdUtils.class);
 
         bind(DBClassLoader.class).in(Singleton.class);
-        
-        //XXX: put this somewhere more reasonable
-        ServletContextHandler sch = new ServletContextHandler();
-        bind(ServletContextHandler.class).annotatedWith(Names.named("containerServletContext")).toInstance(sch);
-        binder().install(new SecurityModule(sch));
     }
     
     @Provides 
@@ -52,5 +45,4 @@ public class ClothoModule extends AbstractModule {
         SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);                
         return sslConnector;
     }
-    
 }
