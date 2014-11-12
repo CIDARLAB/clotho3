@@ -29,7 +29,11 @@ public class ClothoWebSocket
     private WebSocket.Connection connection;
     private Subject subject;
     private final Router router;
-
+    private WebSocket.Connection serverConnection;
+    private static HashMap<String, Object> serverResponse;
+    private static boolean gotMessage = false;
+    
+    
     private class CallRouter implements Callable {
 
         private final Message message;
@@ -70,9 +74,9 @@ public class ClothoWebSocket
     @Override
     public void send(Message msg) {
         try {
-            
             String messageString = JSON.serializeForExternal(msg);
             connection.sendMessage(messageString);
+            serverConnection.sendMessage(messageString);
             log.trace("sent: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
@@ -84,7 +88,18 @@ public class ClothoWebSocket
         log.trace("Websocket #{} recieved message {}", this.getId(), messageString);
         try {
             Message message = JSON.mapper.readValue(messageString, Message.class);
-            subject.execute(new CallRouter(this, message));
+            System.out.println(message.toString());
+            if(message.getOptions() == null){
+                //server response should go to the clothowebsocket
+                System.out.println("Server received a response, not a message from the client");
+                //should send back to the clothoconnection, not the clientConnection
+                serverResponse = (HashMap<String, Object>)message.getData();
+                gotMessage = true;
+                
+            }else{  
+                System.out.println("Server received a query");
+                subject.execute(new CallRouter(this, message));
+            }
         } catch (JsonParseException ex) {
             log.error("Websocket #{} recived malformed message: {}", this.getId(), messageString);
         } catch (JsonMappingException ex) {
@@ -121,6 +136,17 @@ public class ClothoWebSocket
         }
     }
     
+    public static HashMap<String, Object> getServerResponse(){
+        if(gotMessage){
+            return serverResponse;
+        }else{
+            return null;
+        }
+    }
+    public static boolean getGotMessage(){
+        return gotMessage;
+    }
+    
     public Connection createConnection(String destUri){
         try{
             WebSocketClientFactory factory = new WebSocketClientFactory();
@@ -128,7 +154,8 @@ public class ClothoWebSocket
             WebSocketClient wsClient = factory.newWebSocketClient();
             URI uri = new URI(destUri);
             Future fut = wsClient.open(uri, clothoWebSocket); 
-            return (Connection) fut.get(10, TimeUnit.SECONDS);
+            serverConnection = (Connection) fut.get(10, TimeUnit.SECONDS);
+            return serverConnection;
         }catch(Throwable t){
             t.printStackTrace();
         }

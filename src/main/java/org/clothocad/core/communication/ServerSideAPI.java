@@ -52,6 +52,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
+import org.clothocad.core.communication.ws.ClothoWebSocket;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
@@ -530,11 +531,14 @@ public class ServerSideAPI {
                 System.out.println("From the getFromSocket: the object  "+ requestObject);
                 persistor.getFromSocket(requestObject, url, router);
                 //need a way to retrieve the hashmap
-                out = new HashMap<String, Object>();
+                while(!ClothoWebSocket.getGotMessage()){
+                    System.out.println("waiting for response");
+                }
+                out = ClothoWebSocket.getServerResponse();
             }else{
                 System.out.println("not a socket request");
                 out = persistor.getAsJSON(id, options.getPropertiesFilter());
-                System.out.println(out.toString());
+                System.out.println("size of out: " + out.size());
             }
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
