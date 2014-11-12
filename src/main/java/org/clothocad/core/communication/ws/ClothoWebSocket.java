@@ -76,7 +76,9 @@ public class ClothoWebSocket
         try {
             String messageString = JSON.serializeForExternal(msg);
             connection.sendMessage(messageString);
-            serverConnection.sendMessage(messageString);
+            if(serverConnection != null){
+                serverConnection.sendMessage(messageString);
+            }
             log.trace("sent: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
@@ -89,7 +91,9 @@ public class ClothoWebSocket
         try {
             Message message = JSON.mapper.readValue(messageString, Message.class);
             System.out.println(message.toString());
-            if(message.getOptions() == null){
+            System.out.println("The messageString: " + messageString);
+            
+            if(message.getOptions() == null && messageString.contains("options")){
                 //server response should go to the clothowebsocket
                 System.out.println("Server received a response, not a message from the client");
                 //should send back to the clothoconnection, not the clientConnection

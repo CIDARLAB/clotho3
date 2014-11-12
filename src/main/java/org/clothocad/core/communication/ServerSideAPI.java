@@ -535,6 +535,7 @@ public class ServerSideAPI {
                     System.out.println("waiting for response");
                 }
                 out = ClothoWebSocket.getServerResponse();
+                System.out.println("Final output: "  + out.toString());
             }else{
                 System.out.println("not a socket request");
                 out = persistor.getAsJSON(id, options.getPropertiesFilter());
