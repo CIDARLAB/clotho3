@@ -78,7 +78,7 @@ public class SubprocessExec {
         final EventHandler eventHandler) {
         
         String slang = (String) sourceJSON.get("language");
-        final Language lang = Language.valueOf(slang);
+        final Language lang = Language.valueOf(slang.toUpperCase());
 
         try (final CloseableProcess proc =
              ProcessProvider.newProcess(lang);
