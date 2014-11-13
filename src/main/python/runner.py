@@ -1,6 +1,8 @@
 import importlib
 import json
+from bunch import *
 import sys
+
 
 class ClothoError(Exception):
     pass
@@ -69,7 +71,8 @@ def read_value():
         if c == "\0":
             break
         buf.append(c)
-    return json.loads(bytes(buf).decode("UTF-8"))
+    return json.loads(bytes(buf).decode("UTF-8"), 
+            object_hook=bunchify)
 
 def main():
     # redirect prints to standard error
