@@ -69,6 +69,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Inject
     public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
+        log.info("Using mongo database '{}@{}:{}'", dbname, host, port);
+        
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
         cred = db.getCollection("cred");
