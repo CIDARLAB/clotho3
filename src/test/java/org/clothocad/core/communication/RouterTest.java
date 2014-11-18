@@ -112,6 +112,18 @@ public class RouterTest {
         assertEquals(id.toString(), ids.get(0).toString());
     }
 
+    
+    @Test
+    public void createExisting() throws IOException {
+        Map<String,Object> preexistingObject = new HashMap<>();
+        preexistingObject.put("id", "org.clothocad.model.Person");
+        TestConnection connection = new TestConnection("preexistingCreate");
+        final Message message = new Message(Channel.create, preexistingObject, "1", null);
+        
+        sendMessage(message,connection);
+        assertEquals(connection.deregisters.get(0), Channel.create);
+    }
+    
     @Test
     public void query() throws IOException {
         Map<String, Object> query = new HashMap<>();
