@@ -682,7 +682,9 @@ public class ServerSideAPI {
     }
 
     public final String create(Object o) {
-        return create(JSON.mappify(o)).toString();
+        ObjectId id = create(JSON.mappify(o));
+        if (id == null) return null;
+        return id.toString();
     }
 
     //TODO: some global solution for jsonifying ObjectIds
