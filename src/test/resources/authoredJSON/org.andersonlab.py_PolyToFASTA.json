@@ -6,7 +6,7 @@
   "id" : "org.andersonlab.py_polytoFASTA",
   "description" : "Converts a polynucleotide into a FASTA string",
   "args" : [ {
-    "type" : "object",
+    "type" : "org.clothocad.model.Polynucleotide",
     "name" : "arg0"
   }]
 }

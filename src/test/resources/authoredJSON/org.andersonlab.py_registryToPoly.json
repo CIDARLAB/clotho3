@@ -6,7 +6,7 @@
   "id" : "org.andersonlab.py_registryToPoly",
   "description" : "Converts a registry Part to a Polynucleotide",
   "args" : [ {
-    "type" : "object",
+    "type" : "org.registry.model.Part",
     "name" : "arg0"
   }]
 }
