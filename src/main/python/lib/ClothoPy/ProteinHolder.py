@@ -3,11 +3,6 @@
 # For any inqueries, please email li.mina888@berkeley.edu.
 # (C) 2014
 #
-# For more information the Genbank file format, see:
-# http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3245039/
-# https://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html
-# ftp://ftp.ncbi.nih.gov/genbank/gbrel.txt
-#
 # This is a more easily queriable object type to hold SeqRecord objects
 # from Entrez. Specifically, querying from the Protein database.
 

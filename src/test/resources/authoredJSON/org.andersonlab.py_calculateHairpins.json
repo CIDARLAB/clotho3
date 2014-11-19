@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from find_local_hairpins import run",
+  "name" : "CalculateHairpins",
+  "id" : "org.andersonlab.py_calculateHairpins",
+  "description" : "Takes in [5' UTR, CDS 37, limit] as input.",
+  "args" : [ {
+    "type" : "array",
+    "name" : "arg0"
+  }]
+}

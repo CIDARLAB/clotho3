@@ -4,9 +4,9 @@
   "code" : "from proteinToORF import run",
   "name" : "ProteinToORF",
   "id" : "org.andersonlab.py_ProteinToORF",
-  "description" : "Takes a Polypeptide and returns the ORF as a Polypeptide",
+  "description" : "Takes a Polypeptide and returns the ORF as a Polynucleotide",
   "args" : [ {
-    "type" : "object",
+    "type" : "org.clothocad.model.Polypeptide",
     "name" : "arg0"
   }]
 }
