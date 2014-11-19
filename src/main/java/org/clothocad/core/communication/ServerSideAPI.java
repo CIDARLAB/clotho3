@@ -24,19 +24,18 @@
 package org.clothocad.core.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.google.inject.Injector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,13 +49,13 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.ReservedFieldNames;
+import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.datums.User;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.execution.ConverterFunction;
 import org.clothocad.core.execution.Mind;
@@ -69,6 +68,7 @@ import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 import org.clothocad.core.util.XMLParser;
 import org.clothocad.model.Person;
+import org.python.objectweb.asm.Type;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -99,6 +99,8 @@ public class ServerSideAPI {
     private final MessageOptions options;
     private final ClothoRealm realm;
 
+    private static final Set<Language> executeExternal = EnumSet.of(Language.PYTHON);
+    
     public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId,ClothoRealm realm) {
         this(mind, persistor, router, requestId, new MessageOptions(), realm);
     }    
@@ -886,7 +888,7 @@ public class ServerSideAPI {
     }
 
     private Object
-    run2(final Function function, final List<Object> args) {
+    runAsSubprocess(final Function function, final List<Object> args) {
         final Map<String, Object> funcJSON =
             persistor.getAsJSON(function.getId());
         Object out = SubprocessExec.run(
@@ -917,33 +919,60 @@ public class ServerSideAPI {
 
     //TODO: needs serious cleaning up
     public final Object run(Object o)
-    throws ScriptException,
-           IllegalAccessException,
-           IllegalArgumentException,
-           InvocationTargetException {
+            throws ScriptException,
+            IllegalAccessException,
+            IllegalArgumentException,
+            InvocationTargetException {
+        
         final Map<String, Object> data = JSON.mappify(o);
         final List<Object> args;
 
+        if (data.get(ID) == null) {
+            say("No runnable specified (id missing)", Severity.FAILURE);
+            return Type.VOID;
+        }
+        
+        //ensure args is list
         try {
             args = (List) data.get("args");
         } catch (ClassCastException e) {
-            say("Arguments must be a list or array", Severity.WARNING);
-            return null;
+            say("Arguments must be a list or array", Severity.FAILURE);
+            return Type.VOID;
         }
+        
+        Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get(ID)));
 
-        if (data.containsKey(ReservedFieldNames.ID)) {
-            //XXX:(ugh ugh) end-run if *Function
-            Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get("id")));
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
+        if (functionData.containsKey("schema") && (functionData.get("schema").toString().endsWith("Function")
+                || functionData.get("schema").toString().endsWith("Module"))) {
+
+            Module module = persistor.get(Module.class, new ObjectId(data.get(ID)));
+            if (executeExternal.contains(module.getLanguage())) {
+                //execute using process launcher
+                try{
+                    return runAsSubprocess((Function) module,args);
+                } catch (ClassCastException e){
+                    logAndSayError("Can only execute Functions in subprocess: ", e);
+                    return Void.TYPE;
+                }
+                
+            } else {
+                //execute using script engine
                 try {
-                    Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
-System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
-
-                    if(function.getLanguage().equals(Language.PYTHON)) {
-                        return run2(function, args);
+                    if (data.get("function")!=null){
+                        // was a function to execute indicated? If so, execute as module w/ the function named as target
+                        return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
+                
+                    } else { // if not, execute as Function
+                        try{
+                            Function function = (Function) module;
+                            return mind.invoke(function, args, getScriptAPI());
+                        }
+                        catch (ClassCastException e){
+                            logAndSayError(data.get(ID).toString() + " is not itself a Function, but no method name provided in 'function' field", e);
+                            return Void.TYPE;
+                        }
                     }
 
-                    return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
                     return Void.TYPE;
@@ -952,82 +981,49 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
                     return Void.TYPE;
                 }
             }
-            //XXX: this whole function is still a mess
-            if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
-                try {
-                    Module module = persistor.get(Module.class, new ObjectId(data.get("id")));
+        }
 
-                    return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
-                } catch (ScriptException e) {
-                    logAndSayError("Script Exception thrown: " + e.getMessage(), e);
-                    return Void.TYPE;
-                } catch (NoSuchMethodException ex) {
-                    logAndSayError("No such method found", ex);
-                    return Void.TYPE;
-                }
+        //"Old" run, for non-Module objects
+        
+        //resolve any ids to their objects
+        for (int i = 0; i < args.size(); i++) {
+            try {
+                ObjectId id = new ObjectId(args.get(i).toString());
+                args.set(i, persistor.get(ObjBase.class, id));
+            } catch (EntityNotFoundException e) {
             }
+        }
+        
+        //reflectively (ugh) run function of instance
+        ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get(ID).toString()));
 
-            //resolve any references
-            for (int i = 0; i < args.size(); i++) {
-                try {
-                    ObjectId id = new ObjectId(args.get(i).toString());
-                    args.set(i, persistor.get(ObjBase.class, id));
-                } catch (EntityNotFoundException e) {
-                }
-            }
-            //reflectively (ugh) run function of instance
-            ObjBase instance = persistor.get(ObjBase.class, new ObjectId(data.get("id").toString()));
-
-            Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
-            Object result = method.invoke(instance, args.toArray());
-            if (method.getReturnType().equals(Void.TYPE)) {
-                return Void.TYPE;
-            }
-            List<Object> results = new ArrayList<>();
-            if (result instanceof Iterable) {
-                for (Object r : ((Iterable) result)) {
-                    if (r instanceof ObjBase) {
-                        results.add(persistor.save((ObjBase) r));
-                    } else {
-                        results.add(r);
-                    }
-                }
-            } else {
-                if (result instanceof ObjBase) {
-                    results.add(persistor.save((ObjBase) result));
+        Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
+        Object result = method.invoke(instance, args.toArray());
+        if (method.getReturnType().equals(Void.TYPE)) {
+            return Void.TYPE;
+        }
+        List<Object> results = new ArrayList<>();
+        if (result instanceof Iterable) {
+            for (Object r : ((Iterable) result)) {
+                if (r instanceof ObjBase) {
+                    results.add(persistor.save((ObjBase) r));
                 } else {
-                    results.add(result);
+                    results.add(r);
                 }
             }
-            Message message = new Message(Channel.run, results, requestId, null);
-            send(message);
-            return Void.TYPE;
+        } else {
+            if (result instanceof ObjBase) {
+                results.add(persistor.save((ObjBase) result));
+            } else {
+                results.add(result);
+            }
         }
-
-        Function function = persistor.get(Function.class, new ObjectId(data.get("function")));
-        List arguments;
-        try {
-            arguments = data.containsKey("arguments")
-                    ? JSON.deserializeList(data.get("arguments").toString())
-                    : null;
-        } catch (JsonParseException ex) {
-            logAndSayError("malformed arguments", ex);
-            return Void.TYPE;
-        }
-        Object result = run(function, arguments);
-        if (!result.equals(Void.TYPE)) {
-            Message message = new Message(Channel.run, result, requestId, null);
-            send(message);
-        }
-
-        return Void.TYPE;
-
+        return results;
     }
     
     public final Object run(Function function, List<Object> args) throws ScriptException {
-        System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
         if(function.getLanguage().equals(Language.PYTHON)) {
-            return run2(function, args);
+            return runAsSubprocess(function, args);
         }
 
         return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
