@@ -11,3 +11,4 @@ data/
 
 .idea
 .DS_Store
+phantomjsdriver.log

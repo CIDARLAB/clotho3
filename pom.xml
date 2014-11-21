@@ -52,6 +52,21 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <version>0.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>1.9.2</version>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.github.searls</groupId>
                 <artifactId>jasmine-maven-plugin</artifactId>
                 <version>2.0-alpha-01</version>
@@ -61,6 +76,21 @@
                         <goals>
                             <goal>test</goal>
                         </goals>
+                        <configuration>
+                            <jsTestSrcDir>${project.basedir}/src/test/js/jasmine</jsTestSrcDir>
+                            <jsSrcDir>${project.basedir}/src/test/js/lib</jsSrcDir>
+                            <preloadSources>
+                                <source>webjar/q.js</source>
+                                <source>clotho3api.js</source>
+                            </preloadSources>
+                            <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+                            <webDriverCapabilities>
+                                <capability>
+                                    <name>phantomjs.binary.path</name>
+                                    <value>${phantomjs.binary}</value>
+                                </capability>
+                            </webDriverCapabilities>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -381,6 +411,12 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>q</artifactId>
+            <version>2.0.0</version>
         </dependency>
     </dependencies>
 	
