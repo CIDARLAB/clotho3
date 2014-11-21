@@ -2,11 +2,6 @@
 # Written by Mina Li, working under Professor Christopher Anderson.
 # For any inqueries, please email li.mina888@berkeley.edu.
 # (C) 2014
-#
-# For more information the Genbank file format, see:
-# http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3245039/
-# https://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html
-# ftp://ftp.ncbi.nih.gov/genbank/gbrel.txt
 
 import json
 from actQuery import actQuery
@@ -60,6 +55,8 @@ def actParser(j):
 			for i in range(len(interm_temp)):
 				for j in range(len(react_temp)):
 					reacts.append( [ interm_temp[i]['index'], react_temp[j]['index'], r ] )
+		for i in interms:
+			i.pop("index", None)
 		single_pathway['intermediates'] = interms
 		single_pathway['reactions'] = reacts
 		single_pathway['schema'] = "org.clothocad.model.SinglePathway"
@@ -119,7 +116,7 @@ def makeIntermediates(interms, intermediates, count):
 					count += 1
 			else:
 				if not inIntermediates2(interms, chem) and not inIntermediates(interm_temp, chem):
-					interm['name'] = chem
+					interm['name'] = chem 								# name :
 					interm_temp.append(interm)
 					count += 1
 		# usually intermediates['chemicals'] should be an array of chemicals
@@ -134,7 +131,7 @@ def makeIntermediates(interms, intermediates, count):
 						count += 1
 				else:
 					if not inIntermediates2(interms, chem) and not inIntermediates(interm_temp, chem):
-						interm['name'] = chem
+						interm['name'] = chem 								# name :
 						interm_temp.append(interm)
 						count += 1
 	return (interm_temp, count)
