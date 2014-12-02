@@ -118,12 +118,7 @@ public class JSON {
     }
 
     public static Map<String, Object> mappify(Object o) {
-        try {
-            //XXX: ugh
-            return deserializeObjectToMap(serialize(o));
-        } catch (IOException ex) {
-            throw new RuntimeException("Could not mappify "+o.toString()+": "+ex.getMessage());
-        }
+        return mapper.convertValue(o, stringToObject);
     }
 
     public static Map<String, Object> deserializeObjectToMap(String json) throws JsonParseException{
