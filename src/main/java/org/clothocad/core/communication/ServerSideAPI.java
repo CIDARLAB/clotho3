@@ -52,6 +52,7 @@ import org.clothocad.core.ReservedFieldNames;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
+import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
@@ -916,6 +917,32 @@ public class ServerSideAPI {
         );
         return out;
     }
+    
+    public List<Object> resolveIds(Argument[] functionArguments, List<Object> suppliedArguments){
+        //Function spec might be incomplete - might have not declared argument types at all;
+        if (functionArguments == null) return suppliedArguments;
+        
+        suppliedArguments = new ArrayList(suppliedArguments); //because some list implementations don't support set
+        for (int i = 0; i < functionArguments.length && i < suppliedArguments.size(); i++){
+            //XXX: can't actually declare polymorphic types yet - simple case only
+            Class declaredType = functionArguments[i].getType();
+            Object argument = suppliedArguments.get(i);
+            if (declaredType != null && ObjBase.class.isAssignableFrom(declaredType) && argument != null){
+                ObjectId idArgument;
+                
+                if (String.class.isInstance(argument)) idArgument = new ObjectId(argument);
+                else if (ObjectId.class.isInstance(argument)) idArgument = (ObjectId) argument;
+                else {
+                    continue;
+                }
+                if (persistor.has(idArgument)){
+                    suppliedArguments.set(i, persistor.getAsJSON(new ObjectId(argument)));
+                } 
+            }
+        }
+        
+        return suppliedArguments;
+    }
 
     //TODO: needs serious cleaning up
     public final Object run(Object o)
@@ -946,10 +973,12 @@ public class ServerSideAPI {
                 || functionData.get("schema").toString().endsWith("Module"))) {
 
             Module module = persistor.get(Module.class, new ObjectId(data.get(ID)));
+            
             if (executeExternal.contains(module.getLanguage())) {
                 //execute using process launcher
                 try{
-                    return runAsSubprocess((Function) module,args);
+                    Function function = (Function) module;
+                    return runAsSubprocess(function, resolveIds(function.getArgs(), args));
                 } catch (ClassCastException e){
                     logAndSayError("Can only execute Functions in subprocess: ", e);
                     return Void.TYPE;
@@ -960,12 +989,14 @@ public class ServerSideAPI {
                 try {
                     if (data.get("function")!=null){
                         // was a function to execute indicated? If so, execute as module w/ the function named as target
-                        return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
+                        String functionName = data.get("function").toString();
+                        Function function = module.getFunction(functionName);
+                        return mind.invokeMethod(module, functionName, resolveIds(function.getArgs(), args), getScriptAPI());
                 
                     } else { // if not, execute as Function
                         try{
                             Function function = (Function) module;
-                            return mind.invoke(function, args, getScriptAPI());
+                            return mind.invoke(function, resolveIds(function.getArgs(), args), getScriptAPI());
                         }
                         catch (ClassCastException e){
                             logAndSayError(data.get(ID).toString() + " is not itself a Function, but no method name provided in 'function' field", e);
