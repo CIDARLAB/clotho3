@@ -5,8 +5,6 @@
 package org.clothocad.core.communication;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,59 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.testers.ClothoTestModule;
-import org.clothocad.core.util.TestUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
  * @author spaige
  */
-public class ServerAPITest {
+public class ServerAPITest extends AbstractServerAPITest {
 
-    private static ServerSideAPI api;
-    private static ServerSideAPI unprivilegedUser;
-    private static Persistor persistor;
-    private static List<ObjectId> ids;
-    private static Mind mind;
-    private static Router router;
 
     public ServerAPITest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-        Injector injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        persistor = injector.getInstance(Persistor.class);
-        router = injector.getInstance(Router.class);
-        mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, null, injector.getInstance(ClothoRealm.class));
-        persistor.connect();
-        mind.setConnection(new TestConnection("test"));
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-        persistor.deleteAll();
-        ids = TestUtils.setupTestData(persistor);
-    }
-
-    @After
-    public void tearDown() {
+        super();
     }
 
     @Test

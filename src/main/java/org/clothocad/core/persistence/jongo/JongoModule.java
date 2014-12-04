@@ -5,7 +5,9 @@
 package org.clothocad.core.persistence.jongo;
 
 import com.google.inject.AbstractModule;
+import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.security.CredentialStore;
 
 /**
@@ -18,6 +20,7 @@ public class JongoModule extends AbstractModule {
     protected void configure() {
         bind(ClothoConnection.class).to(JongoConnection.class);
         bind(CredentialStore.class).to(JongoConnection.class);
+        bind(RolePermissionResolver.class).to(JongoConnection.class);
     }
     
 }

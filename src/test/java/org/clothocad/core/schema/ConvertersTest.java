@@ -7,12 +7,9 @@ package org.clothocad.core.schema;
 import com.google.inject.Injector;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.BasicPartConverter;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,37 +17,17 @@ import static org.junit.Assert.*;
  *
  * @author spaige
  */
-public class ConvertersTest {
+public class ConvertersTest extends AuthorizedShiroTest {
 
     public static Persistor persistor;
     {
         Injector injector = TestUtils.getDefaultTestInjector();
         persistor = injector.getInstance(Persistor.class);
+        persistor.initializeBuiltInSchemas();
     } 
 
     public ConvertersTest() {
     }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
 
     private Converters prepareConverters() {
         Converters converters = new Converters();

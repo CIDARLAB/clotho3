@@ -1,0 +1,2 @@
+clotho.functions.schema.getParents
+clotho.functions.schema.determineSharableType

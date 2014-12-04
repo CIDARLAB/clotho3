@@ -5,55 +5,20 @@
 package org.clothocad.core.communication;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.util.ArrayList;
 import java.util.List;
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.testers.ClothoTestModule;
-import org.clothocad.core.util.TestUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
  * @author spaige
  */
-public class RunTest {
-    
-    private static ServerSideAPI api;
-    private static Persistor persistor;
-    private static List<ObjectId> ids;
-    private static Mind mind;
-    private static Router router;
+public class RunTest extends AbstractServerAPITest  {
 
-    public RunTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-        Injector injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        persistor = injector.getInstance(Persistor.class);
-        router = injector.getInstance(Router.class);
-        mind = new Mind();
-        api = new ServerSideAPI(mind, persistor, router, null, injector.getInstance(ClothoRealm.class));
-        persistor.connect();
-        mind.setConnection(new TestConnection("test"));
-    }
-    
-    @Before
-    public void setUp() {
-        persistor.deleteAll();
-        ids = TestUtils.setupTestData(persistor);
-    }
 
     @Test 
     public void resolveIdToObject(){

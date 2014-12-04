@@ -1,26 +1,13 @@
 package org.clothocad.core.communication;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.mgt.SecurityManager;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.testers.ClothoTestModule;
-import org.clothocad.core.util.JSON;
-import org.clothocad.core.util.TestUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
@@ -29,47 +16,12 @@ import org.junit.Ignore;
  *
  * @author spaige
  */
-public class RouterTest {
-
-    private static Router router;
-    private static Injector injector;
-    private static List<ObjectId> ids;
+public class RouterTest extends AbstractRouterTest{
 
     public RouterTest() {
+        super();
     }
-
-    @BeforeClass
-    public static void setUpClass() {
-        injector = Guice.createInjector(new ClothoTestModule(), new JongoModule());
-        router = injector.getInstance(Router.class);
-        SecurityManager securityManager = injector.getInstance(SecurityManager.class);
-        SecurityUtils.setSecurityManager(securityManager);
-        ClothoRealm realm = injector.getInstance(ClothoRealm.class);
-        TestUtils.setupTestUsers(realm);
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-    }
-
-    @After
-    public void tearDown() {
-        injector.getInstance(Persistor.class).deleteAll();
-        ids = TestUtils.setupTestData(injector.getInstance(Persistor.class));
-        
-    }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
+    
     @Test
     public void getAll() throws IOException {
         TestConnection connection = new TestConnection("getTest");
@@ -83,11 +35,6 @@ public class RouterTest {
         Message returnMessage = connection.messages.get(1);
         assertMatch(message, returnMessage);
         assertEquals("Test Part 1", ((Map) ((List)returnMessage.getData()).get(0)).get("name").toString());
-    }
-
-    private void assertMatch(Message m1, Message m2) {
-        assertEquals(m1.getChannel(), m2.getChannel());
-        assertEquals(m1.getRequestId(), m2.getRequestId());
     }
 
     @Test
@@ -326,11 +273,5 @@ public class RouterTest {
                 + "clotho.save(reverse);\n"
                 + "\n"
                 + "reverse(\"AAACCC\");";
-    }
-
-    private void sendMessage(Message message, ClientConnection connection) throws IOException {
-        String stringMessage = JSON.serializeForExternal(message);
-        message = JSON.mapper.readValue(stringMessage, Message.class);
-        router.receiveMessage(connection, message);
     }
 }

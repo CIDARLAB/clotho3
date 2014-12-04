@@ -41,7 +41,7 @@ class InterpreterAC {
 
     public static void test1() {
         GlobalTrie completer1 = completer1();
-        List<Map> results = completer1.getCompletions("wa");
+        List<Map<String,Object>> results = completer1.getCompletions("wa");
 //        check(results.get(0), "walk my cat");
 //        check(results.get(1), "walk my dog");
 //        check(results.get(2), "walk my friend");

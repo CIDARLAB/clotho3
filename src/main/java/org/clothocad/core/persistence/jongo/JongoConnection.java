@@ -18,12 +18,12 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import static com.mongodb.MongoException.DuplicateKey;
-import groovy.lang.Tuple;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +31,9 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.SimpleAccount;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.permission.RolePermissionResolver;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.bson.BSONObject;
 import org.bson.LazyBSONList;
 import static org.clothocad.core.ReservedFieldNames.*;
@@ -42,8 +42,13 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.DBClassLoader;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.AuthGroup;
+import org.clothocad.core.security.ClothoAccount;
+import org.clothocad.core.security.ClothoAction;
 import org.clothocad.core.security.CredentialStore;
+import org.clothocad.core.security.PermissionsOnObject;
 import org.clothocad.core.util.JSON;
+import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
 
@@ -52,7 +57,7 @@ import org.python.google.common.collect.Lists;
  * @author spaige
  */
 @Slf4j
-public class JongoConnection implements ClothoConnection, CredentialStore {
+public class JongoConnection implements ClothoConnection, CredentialStore, RolePermissionResolver {
 
     protected RefJongo jongo;
     protected DB db;
@@ -60,7 +65,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     protected ObjectMapper mapper;
     //TODO: split into separate collections per top-level schema
     protected RefMongoCollection data;
-    protected DBCollection cred;
+    protected MongoCollection cred;
+    protected MongoCollection roles;
     protected DBCollection rawDataCollection;
     
     protected DBClassLoader classLoader;
@@ -73,12 +79,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
-        cred = db.getCollection("cred");
         classLoader = dbClassLoader;
+        connect();
     }
 
-    @Override
-    public void connect() throws UnknownHostException {
+    private void connect() throws UnknownHostException {
         //TODO: cover reconnect case?
 
         //Mimic Jongo customization         
@@ -99,6 +104,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
         jongo = new RefJongo(db, new ClothoMapper());
         data = jongo.getCollection("data");
+        cred = jongo.getCollection("cred");
+        roles = jongo.getCollection("roles");
     }
 
     //Do we really need this?
@@ -274,56 +281,29 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     }
 
     @Override
-    public SimpleAccount getAccount(String username) {
-        DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
-        if (accountData == null) {
-            return null;
+    public ClothoAccount getAccount(String username) {
+        return cred.findOne("{_id:#}", username).as(ClothoAccount.class);
         }
 
-        SimpleAccount account = new SimpleAccount(username, accountData.get("hash"), ByteSource.Util.bytes(accountData.get("salt")), "clotho");
-        return account;
+    @Override
+    public void saveAccount(ClothoAccount account) {
+        cred.save(account);
     }
 
-    @Override
-    public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt) {
-        //create account needs to fail if username exists
-        DBObject account = new BasicDBObject("_id", username);
-        account.put("hash", hashedPw.getBytes());
-        account.put("salt", salt.getBytes());
-        
-        cred.save(account);
+    public AuthGroup getGroup(String groupName){
+        return roles.findOne("{_id:#}", groupName).as(AuthGroup.class);
     }
-    
-    @Override
-    public void updatePassword(String username, SimpleHash hashedPw, ByteSource salt)
-    {
-        DBObject account = new BasicDBObject("_id", username);
-        account.put("hash", hashedPw.getBytes());
-        account.put("salt", salt.getBytes());
-        
-        cred.save(account);
-        
-        
-        
-        /*DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
-        if (accountData != null) {
-            return false;
-        }
-        DBObject account = new BasicDBObject("_id", username);
-        account.put("hash", hashedPw.getBytes());
-        account.put("salt", salt.getBytes());
-        cred.remove(accountData);
-        cred.save(account);*/
-        
-        
-        
+
+    public void saveGroup (AuthGroup group){
+        roles.save(group);
     }
-    
+
     @Override
     public void deleteAllCredentials() {
         cred.drop();
-       
+        roles.drop();
     }
+    
     @Override
     public List<Map> getCompletionData(){
         DBCursor cursor = rawDataCollection.find();
@@ -416,6 +396,45 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         builder.append("}");
         
         return builder.toString();
+    }
+    
+    @Override
+    public Collection<Permission> resolvePermissionsInRole(String role) {
+        Collection<Permission> permissions = new HashSet<>();
+        AuthGroup group = roles.findOne("{_id:#}", role).as(AuthGroup.class);
+        
+        if (group == null) return permissions;
+        
+        for (PermissionsOnObject p : group.getPermissions().values()){
+            for (String permString : p.getPermissions()){
+                permissions.add(new WildcardPermission(permString));
+            }
+        }
+        return permissions;
+    }
+    
+    @Override
+    public Map<String, Set<ClothoAction>> getUserPermissions(ObjectId id){
+        Map<String, Set<ClothoAction>> permissionsByUser = new HashMap<>();
+        
+        for (ClothoAccount account : cred.find("{'authzInfo.permissions.#':{$exists:true}}", id)
+            .projection("{'authzInfo.permissions.#':1, '@class':1}", id).as(ClothoAccount.class)){
+            permissionsByUser.put(account.getId(), account.getActions(id));
+        }
+        
+        return permissionsByUser;
+    }
+
+    @Override
+    public Map<String, Set<ClothoAction>> getGroupPermissions(ObjectId id){
+        Map<String, Set<ClothoAction>> permissionsByGroup = new HashMap<>();
+        
+        for (AuthGroup group : roles.find("{'permissions.#':{$exists:true}}", id)
+            .projection("{'permissions.#':1, '$class':1}", id).as(AuthGroup.class)){
+            permissionsByGroup.put(group.getName(), group.getActions(id));
+        }
+        
+        return permissionsByGroup;        
     }
     
     protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{

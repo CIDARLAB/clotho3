@@ -1,5 +1,6 @@
 package org.clothocad.core.communication;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -9,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -19,6 +21,9 @@ import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
 import static org.clothocad.core.communication.Channel.submit;
+
+import org.clothocad.core.datums.ObjectId;
+
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
@@ -41,7 +46,6 @@ public class Router {
         minds = new HashMap<>();
         this.persistor = persistor;
         this.realm = realm;
-        
     }
 
     // send message    
@@ -60,13 +64,17 @@ public class Router {
         //bind context to request
         Subject subject = SecurityUtils.getSubject();
         Mind mind;
+        boolean wasAuthenticated = false;
         if (subject.isAuthenticated()){
+            wasAuthenticated = true;
             mind = getAuthenticatedMind(subject.getPrincipal().toString());
             mind.setConnection(connection);
         } else {
             mind = getMind(connection);
+            //Find a better way to become anonymous user?
+            subject.login(ClothoRealm.getAnonymousUserToken());
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()),realm);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId(), new MessageOptions(request.getOptions()));
 
         Object data = request.getData();
         
@@ -84,16 +92,13 @@ public class Router {
                     break;
                 case login:
                     Map map = (Map) data;
-                    boolean wasAuthenticated = subject.isAuthenticated();
-                    
-                    if(map.containsKey("password"))
-                    {
-                        response = api.login(map.get("username").toString(), map.get("password").toString());
+                    if (!wasAuthenticated){
+                        //log out of anonymous user
+                        //XXX: all this is madness
+                        subject.logout();
                     }
-                    else
-                    {
-                        response = api.loginOAuth(map.get("username").toString(), map.get("credentials"));
-                    }
+                    response = api.login(map.get("username").toString(), map.get("credentials").toString());
+                    //we only reach this point if login was successful
                     if (!wasAuthenticated){
                         //remove the 'anonymous' mind
                         //currently this means you lose environment state if you login
@@ -103,7 +108,7 @@ public class Router {
                     break;
                 case updatePassword:
                     Map updatedPassword = (Map) data;
-                    response  = api.updatePassword(updatedPassword.get("username").toString(),updatedPassword.get("password").toString());
+                    response  = api.changePassword(updatedPassword.get("password").toString());
                     
                     break;
                 
@@ -122,18 +127,13 @@ public class Router {
                     break;
                 
                     
-                case linkPerson:
-                    Map linkMap = (Map) data;
-                    response  = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(),linkMap.get("password").toString());
-                    break;
-                
                 /*
                 case getAssociatedPerson:
                     
                     response  = api.getAllPerson(data.toString());
                     break;
                 */    
-                
+                    
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();
@@ -209,6 +209,27 @@ public class Router {
                 case validate:
                     response = api.validate(JSON.mappify(data));
                     break;
+                case grant:
+                    Map dataMap = JSON.mappify(data);
+                    api.grant(
+                            JSON.convert(dataMap.get("id"), ObjectId.class),
+                            JSON.convert(dataMap.get("user"), String.class),
+                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
+                            );
+                    response = Void.TYPE;
+                    break;
+                    
+                case grantAll:
+                    dataMap = JSON.mappify(data);
+                    api.grantAll(                            
+                            (Set<ObjectId>) JSON.convert(dataMap.get("id"), new TypeReference<Set<ObjectId>>(){}),
+                            JSON.convert(dataMap.get("user"), String.class),
+                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
+                            );
+                    response = Void.TYPE;
+                    break;
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());
                     response = Void.TYPE;
@@ -232,6 +253,10 @@ public class Router {
             //TODO: message client with failure
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
+        } finally {
+            if (ClothoRealm.ANONYMOUS_USER.equals(SecurityUtils.getSubject().getPrincipal())){
+                SecurityUtils.getSubject().logout();
+            }
         }
     }
 

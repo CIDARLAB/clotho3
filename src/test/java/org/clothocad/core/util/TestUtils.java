@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,12 +19,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.Callable;
 import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.model.FreeForm;
@@ -36,6 +36,7 @@ import org.clothocad.model.Part.PartFunction;
 import org.clothocad.model.Person;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.security.SecurityModule;
 
 /**
  *
@@ -45,34 +46,44 @@ import org.clothocad.core.persistence.ClothoConnection;
 public class TestUtils {
 
     public static void importTestJSON(Persistor persistor) {
-        importTestJSON(Paths.get("src","test","resources","testData"), persistor.getConnection(), true);
+        importJSONFromDirectory(Paths.get("src","test","resources","testData"), persistor.getConnection(), null, true, false);
     }
 
-    public static void importTestJSON(Path path, ClothoConnection connection, boolean overwrite) {
-        ObjectReader reader = new ObjectMapper().reader(Map.class);
-        
-        List<Map> objects = new ArrayList<>();
+    public static void importJSONFromDirectory(Path path, ClothoConnection connection, ClothoRealm realm, boolean overwrite, boolean allPublic) {        
+        List<Map<String,Object>> objects;
         try {
-            for (Path child : Files.newDirectoryStream(path)) {
-                if (!child.toString().endsWith(".json")) {
-                    continue;
-                }
-                try {
-                    MappingIterator<Map> it = reader.readValues(child.toFile());
-                    while (it.hasNext()) {
-                        objects.add(it.next());
-                    }
-                    
-                } catch (JsonProcessingException ex) {
-                    log.warn("Could not process {} as JSON", child.toAbsolutePath());
-                } catch (IOException ex) {
-                    log.warn("Could not open {}", child.toAbsolutePath());
-                }
-            }
+            objects = readJSON(Files.newDirectoryStream(path));
         } catch (IOException ex) {
-            log.warn("Could not open {}", path.toAbsolutePath());
+            log.error("Could not open {}", path.toAbsolutePath());
             throw new RuntimeException(ex);
         }
+        saveJSONObjects(objects, connection, realm, overwrite, allPublic);
+    }
+    
+    public static List<Map<String,Object>> readJSON(Iterable<Path> paths){
+        ObjectReader reader = new ObjectMapper().reader(Map.class);
+        List<Map<String,Object>> output = new ArrayList<>();
+        for (Path child : paths) {
+            if (!child.toString().endsWith(".json")) {
+                continue;
+            }
+            try {
+                MappingIterator<Map> it = reader.readValues(child.toFile());
+                while (it.hasNext()) {
+                    output.add(it.next());
+                }
+
+            } catch (JsonProcessingException ex) {
+                log.warn("Could not process {} as JSON", child.toAbsolutePath());
+            } catch (IOException ex) {
+                log.warn("Could not open {}", child.toAbsolutePath());
+            }
+        }
+        return output;
+    }
+    
+    public static void saveJSONObjects(Iterable<Map<String, Object>> objects,
+            ClothoConnection connection, ClothoRealm realm, boolean overwrite, boolean allPublic) {
         for (Map obj : objects) {
             if (!overwrite) {
                 try {
@@ -85,8 +96,31 @@ public class TestUtils {
                 }
             }
             connection.save(obj);
+            if (allPublic) {
+                realm.setPublic(new ObjectId(obj.get(ID)));
+            }
         }
     }
+    
+    public static void importListedJSON(Path targetDirectory, Path idsListFile,
+            ClothoConnection connection, ClothoRealm realm){
+        
+        List<String> ids;
+        
+        List<Path> paths = new ArrayList<>();
+        try {
+            Scanner scanIds = new Scanner(idsListFile);
+            while (scanIds.hasNextLine()){
+                paths.add(targetDirectory.resolve(scanIds.nextLine()+".json"));
+            }
+        } catch (IOException ex) {
+            log.error("Could not open {}", idsListFile.toAbsolutePath());
+        }
+        
+        List<Map<String,Object>> objects = readJSON(paths);
+        saveJSONObjects(objects, connection, realm, true, true);
+    }
+    
     //not sure if this should be static 
     private Injector injector;
  
@@ -98,7 +132,7 @@ public class TestUtils {
     }
 
     public static Injector getDefaultTestInjector() {
-        return Guice.createInjector(new ClothoTestModule(), new JongoModule());
+        return Guice.createInjector(new ClothoTestModule(), new SecurityModule(), new JongoTestModule());
     }
     
     public static void setupAuthoringTestData(Persistor persistor)
@@ -133,9 +167,10 @@ public class TestUtils {
         //persistor.save(newperson2);
         
     }
-    
-    public static List<ObjectId> setupTestData(Persistor persistor) {
+
+    public static List<ObjectId> setupTestData(Persistor persistor, ClothoRealm realm) {
         importTestJSON(persistor);
+        importListedJSON(Paths.get("src", "test", "resources", "authoredJSON"), Paths.get("src", "test", "resources", "requiredAuthoredResources.txt"), persistor.getConnection(), realm);
 
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
@@ -193,7 +228,7 @@ public class TestUtils {
         persistor.save(dummyPackager);
         
         ObjectId eugeneID = persistor.save(eugenePart);
-
+        
         return Arrays.asList(part1.getId(), part2.getId(), part3.getId(), eugeneID);
     }
     public static void setupTestUsers(ClothoRealm realm) {
@@ -209,6 +244,36 @@ public class TestUtils {
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+    
+    public static class SetupTestData implements Callable {
+        public SetupTestData(Persistor persistor, ClothoRealm realm){
+            this.persistor = persistor;
+            this.realm = realm;
+        }
+        
+        private Persistor persistor;
+        private ClothoRealm realm;
+        
+        @Override
+        public Object call() throws Exception {
+            setupTestData(persistor, realm);
+            return persistor;
+        }
+        
+    }
+    
+    public static class SetupTestRealm implements Callable {
+        public SetupTestRealm(ClothoRealm realm){
+            this.realm = realm;
+        }
+        private ClothoRealm realm;
+
+        @Override
+        public Object call() throws Exception {
+            setupTestUsers(realm);
+            return realm;
         }
     }
 }

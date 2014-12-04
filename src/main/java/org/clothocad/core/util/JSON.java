@@ -5,12 +5,17 @@
 package org.clothocad.core.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,12 +39,20 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Path.Node;
 import javax.validation.metadata.ConstraintDescriptor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.SimpleByteSource;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.PatriciaTrie;
 import org.clothocad.core.aspects.Interpreter.RadixTrie.Trie;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jackson.JSONViews;
+import org.clothocad.core.persistence.jackson.SimpleHashDeserializer;
+import org.clothocad.core.util.JSON.UseTypeInfoForCredentials;
 
 /**
  *
@@ -144,10 +157,20 @@ public class JSON {
         return null;
     }
 
+    public static <T> T convert(Object value, Class<T> type){
+        return mapper.convertValue(value, type);
+    }
+    
+    public static <T> T convert(Object value, JavaType type){
+        return mapper.convertValue(value, type);
+    }
+    
+    public static <T> T convert(Object value, TypeReference<?> type){
+        return mapper.convertValue(value, type);
+    }
     public static class ClothoJacksonModule extends SimpleModule {
 
         public ClothoJacksonModule() {
-            //TODO: why is this deprecated?
             super("ClothoModule", new Version(0, 0, 1, null, "org.clothocad", "clotho"));
 
         }
@@ -162,11 +185,20 @@ public class JSON {
             //Default types for interfaces unknown to Jackson
             context.setMixInAnnotations(Bindings.class, UseSimpleBindings.class);
             context.setMixInAnnotations(Trie.class, UsePatriciaTrie.class);
+            context.setMixInAnnotations(PrincipalCollection.class, UseSimplePrincipalCollection.class);
+            
+            //serializers and typeinfo for shiro classes
+            context.setMixInAnnotations(SimpleAuthenticationInfo.class, UseTypeInfoForCredentials.class);
+            context.setMixInAnnotations(SimpleHash.class, SimpleHashMixin.class);
+            context.setMixInAnnotations(ByteSource.class, UseSimpleByteSource.class);
+            context.setMixInAnnotations(SimpleByteSource.class, SimpleByteSourceMixin.class);
             
             //and it's safer to use public interfaces on some classes
             context.setMixInAnnotations(ConstraintViolation.class, UseDefaultAutoDetect.class);
             context.setMixInAnnotations(ConstraintDescriptor.class, UseDefaultAutoDetect.class);
             context.setMixInAnnotations(Node.class, UseDefaultAutoDetect.class);
+            
+            
         }
     }
 
@@ -174,27 +206,45 @@ public class JSON {
             getterVisibility = com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
             isGetterVisibility = com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
             setterVisibility = JsonAutoDetect.Visibility.NONE)
-    static abstract class DisableGetters {
-    }
+    static abstract class DisableGetters {}
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
-    static abstract class DisableTypeInfo {
-    }
+    static abstract class DisableTypeInfo {}
     
     @JsonDeserialize(as = SimpleBindings.class)
-    static abstract class UseSimpleBindings{
-        
-    }
+    static abstract class UseSimpleBindings{}
     
     @JsonDeserialize(as = PatriciaTrie.class)
-    static abstract class UsePatriciaTrie {
-        
-    }
+    static abstract class UsePatriciaTrie {}
+    
+    @JsonDeserialize(as = SimplePrincipalCollection.class)
+    static abstract class UseSimplePrincipalCollection {}
+    
+    @JsonDeserialize(as = SimpleByteSource.class)
+    static abstract class UseSimpleByteSource {}
 
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.DEFAULT, 
             getterVisibility = JsonAutoDetect.Visibility.DEFAULT,
             isGetterVisibility = JsonAutoDetect.Visibility.DEFAULT)
     static abstract class UseDefaultAutoDetect {};
+
+
+    @JsonDeserialize(using = SimpleHashDeserializer.class)
+    static abstract class SimpleHashMixin {}
+    
+    static abstract class SimpleByteSourceMixin {
+        
+        @JsonCreator
+        public SimpleByteSourceMixin(@JsonProperty("bytes") byte[] bytes) {}
+    }
+    
+    static abstract class UseTypeInfoForCredentials{
+        
+        @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="$class")
+        protected PrincipalCollection principals;
+        @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="$class")
+        protected Object credentials;
+    }
     
     //XXX: move to test utils
     public static void importTestJSON(String path, Persistor persistor, boolean overwrite) {

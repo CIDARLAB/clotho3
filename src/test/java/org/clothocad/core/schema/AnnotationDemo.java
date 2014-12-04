@@ -29,7 +29,6 @@ public class AnnotationDemo {
     
     public static void main(String[] args) throws Exception{
         ASMifier.main(new String[]{"org.clothocad.core.testers.schemas.AnnotationDemo"});
-                ClothoSchemaTest.setUpClass();
         Schema feature = ClothoSchemaTest.createFeatureSchema();
         ClassReader cr = new ClassReader(feature.getClassData());
 

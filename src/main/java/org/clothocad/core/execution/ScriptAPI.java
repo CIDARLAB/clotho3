@@ -21,7 +21,6 @@ import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.security.ClothoRealm;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 
@@ -36,12 +35,12 @@ public class ScriptAPI {
     ServerSideAPI api;
     Mind mind;
     Persistor persistor;
-    ClothoRealm realm;
     
-    public ScriptAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options, ClothoRealm realm){
-        api = new ServerSideAPI(mind, persistor, router, requestId, options, realm);
-        this.mind = mind;
-        this.persistor = persistor;
+    
+    public ScriptAPI(ServerSideAPI api){
+        this.api = api;
+        this.mind = api.getMind();
+        this.persistor = api.getPersistor();
     }
 
     public ObjectId create(Map<String, Object> obj) {

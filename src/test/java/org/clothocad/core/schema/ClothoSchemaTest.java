@@ -23,9 +23,7 @@
  */
 package org.clothocad.core.schema;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.inject.Injector;
 import com.mongodb.BasicDBObject;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -43,33 +41,31 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.DBClassLoader;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 
-public class ClothoSchemaTest {
+public class ClothoSchemaTest extends AuthorizedShiroTest {
     //TODO: 
     // validation
     // reference to other class
-
+  
     static {
         //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
     }
-
-    @BeforeClass
-    public static void setUpClass() throws UnknownHostException {
-
-        Injector injector = TestUtils.getDefaultTestInjector();
+  
+    public ClothoSchemaTest() {
+        super();
         p = injector.getInstance(Persistor.class);
         cl = injector.getInstance(DBClassLoader.class);
-
-        p.connect();
         p.deleteAll();
         featureSchema = createFeatureSchema();
-
     }
+
+    
     static Persistor p;
     static DBClassLoader cl;
     static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
