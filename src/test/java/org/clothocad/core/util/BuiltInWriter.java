@@ -4,7 +4,6 @@
  */
 package org.clothocad.core.util;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,10 +16,7 @@ import java.util.List;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.schema.BuiltInSchema;
-import org.clothocad.core.schema.Schema;
-import org.clothocad.core.testers.ClothoTestModule;
 import org.reflections.Reflections;
 
 /**
@@ -33,9 +29,7 @@ public class BuiltInWriter {
     
     public static void main(String[] args) throws IOException {
         
-        Injector injector = Guice.createInjector(
-                new ClothoTestModule(),
-                new JongoModule());
+        Injector injector = TestUtils.getDefaultTestInjector();
         persistor = injector.getInstance(Persistor.class);
         
         schemas = new ArrayList<>();

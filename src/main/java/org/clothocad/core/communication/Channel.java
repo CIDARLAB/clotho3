@@ -3,7 +3,6 @@ package org.clothocad.core.communication;
 public enum Channel {
 
 //HUMAN INTERACTION
-//HUMAN INTERACTION
     autocomplete, //Return potential commands that start with this substring
     autocompleteDetail, //Return the metadata for a Sharable
     recent,  //Return N most recently used sharables
@@ -11,11 +10,7 @@ public enum Channel {
     clear, //Replace the scriptengine behind mind with a fresh version
     createUser, //Create a new user account for me.
     linkPerson, //Link an existing? or new Person to an existing Person Object
-    //getAssociatedPerson, //Get a list of all Person Objects associated with that primaryEmail.
-    updatePassword, //Update the userPassword
-    login, //Log me into Clotho on this client with this login/password
-    logout, //Log me out of Clotho
-    changePassword, //Change my password to this new value
+    getAssociatedPerson, //Get a list of all Person Objects associated with that primaryEmail.
     learn, //associate this String with this execution statement
     like,
     dislike,
@@ -50,6 +45,15 @@ public enum Channel {
     run, //run this Function
     listen, //Listen for events, and in response do this execution statement
     unlisten, //Remove a listener for an event
+    
+//SECURITY
+    grant,
+    grantAll,
+    login, //Log me into Clotho on this client with this login/password
+    logout, //Log me out of Clotho
+    changePassword, //Change my password to this new value
+    createAccount,
+    updatePassword, //Update the userPassword
     
 //OTHER
     reloadModels, //convenience function for reloading test data

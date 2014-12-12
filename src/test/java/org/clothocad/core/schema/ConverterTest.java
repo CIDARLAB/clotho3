@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.Map;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
-import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.BasicPart;
 import org.clothocad.model.BasicPartConverter;
 import org.clothocad.model.Part.PartFunction;
@@ -21,12 +21,16 @@ import static org.junit.Assert.*;
  *
  * @author spaige
  */
-public class ConverterTest {
+public class ConverterTest extends AuthorizedShiroTest {
 
     public ConverterTest() {
+        super();
+        p = injector.getInstance(Persistor.class);
+        p.initializeBuiltInSchemas();
+        basicPartSchema = p.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
     }
-    public static final Persistor p = new TestUtils().getA(Persistor.class);
-    public static Schema basicPartSchema = p.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
+    public Persistor p;
+    public Schema basicPartSchema ;
 
     @Test
     public void testCanConvert() {
