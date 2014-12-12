@@ -18,7 +18,6 @@ public class BasicPart extends Part {
     @Valid
     @Getter
     private NucSeq sequence;
-    private static final PartType partType = PartType.BASIC;
 
     public BasicPart(String name, String shortdescription, String seq, Format form, Person author) {
         super(name, shortdescription, form, author);
@@ -53,10 +52,5 @@ public class BasicPart extends Part {
 
         //Change the risk group
         //riskGroup = sequence.performBiosafetyCheck();
-    }
-
-    @Override
-    public PartType getPartType() {
-        return partType;
     }
 }

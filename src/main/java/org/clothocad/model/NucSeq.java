@@ -15,15 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 
 @NoArgsConstructor
 public class NucSeq 
-		extends ObjBase 
+		extends Sequence 
 		implements Serializable {
 
     /**
@@ -42,14 +39,8 @@ public class NucSeq
     private boolean isDegenerate, isLinear, isRNA;
     private boolean isLocked;
     
-    @Getter
-    private Set<Annotation> annotations;
-    
-    @NotNull
-    private String sequence;
-    
     public NucSeq( String inputSeq, boolean strandedness, boolean circularity ) {
-        super("nucseq");
+        super("nucseq", inputSeq);
 
         isSingleStranded = strandedness;
         isCircular = circularity;
@@ -873,14 +864,6 @@ public class NucSeq
         isLocked = isit;
     }
 
-    /**
-     * Add a user-defined non-Feature Annotation
-     * @param annotation
-     */
-    void addAnnotation(Annotation annotation){
-        annotations.add(annotation);
-    }
-
     public ArrayList<Integer> find( NucSeq seq ) {
         ArrayList<Integer> out = new ArrayList<Integer>();
         String testSeq = seq.sequence;
@@ -1152,7 +1135,7 @@ public class NucSeq
         if(afeature==null) {
             return;
         }
-        String seq = afeature.getSequence().getSeq();
+        String seq = afeature.getSequence().getSequence();
         featureTable.put(afeature, seq.replaceAll("N", "."));
     }
 

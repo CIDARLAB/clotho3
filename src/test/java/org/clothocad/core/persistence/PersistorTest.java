@@ -126,7 +126,7 @@ public class PersistorTest {
 
         assertEquals(p.getId(), ep.getId());
         assertEquals("test part", ep.getName());
-        assertEquals("This part is a test", ep.getShortDescription());
+        assertEquals("This part is a test", ep.getDescription());
 
         ep.setAdditionalParameters("test params");
 

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.clothocad.model.BasicPart;
 import org.clothocad.model.Format;
-import org.clothocad.model.Part;
 import org.clothocad.model.Person;
 
 /**

@@ -21,12 +21,12 @@ public class FreeForm implements Format {
     }
 
 	@Override
-    public boolean checkComposite(List<Part> composition, Object additionalRequirements) {
+    public boolean checkComposite(List<Part> composition) {
         return true;
     }
 
 	@Override
-    public NucSeq generateCompositeSequence(List<Part> composition, Object additionalRequirements) {
+    public NucSeq generateCompositeSequence(List<Part> composition) {
         //XXX: dummy implementation
         StringBuilder builder = new StringBuilder();
         for (Part part : composition){

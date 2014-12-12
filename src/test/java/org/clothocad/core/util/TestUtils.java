@@ -176,7 +176,7 @@ public class TestUtils {
         part1.setType(PartFunction.CDS);
 
         Part part2 = Part.generateBasic("Test Part 2", "the second test part", "TTTTTTTTTTTTTTTTTT", new FreeForm(), person);
-        Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new Object(), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
+        Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
 
         Map<String, Object> eugenePart = new HashMap();
         eugenePart.put("Name", "B0015");

@@ -23,10 +23,15 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.model;
 
 import org.clothocad.core.persistence.annotations.Reference;
+
 import java.awt.Color;
+
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.SharableObjBase;
 
@@ -46,13 +51,53 @@ import org.clothocad.core.datums.SharableObjBase;
 
 @NoArgsConstructor
 public class Feature extends SharableObjBase {
+	
+	@Setter
+    @Getter
+    @Reference
+    private Sequence sequence;
+    @Setter
+    private Color forwardColor, reverseColor;
+    @Setter
+    @Getter
+    private String genbankId, swissProtId, PDBId;
+    @Setter
+    @Getter
+    @Reference
+    private Person author;
+    @Getter
+    private short riskGroup;
+    // Field currently isn't used and should be replaced with role
+    @Getter
+    @Deprecated
+    private boolean isCDS;
+    @NotNull
+    @Setter
+    @Getter
+    private FeatureRole role;
+    //private String featureData; was in datum
+  //private String sourceOrganism; was in datum
+    
+    /**
+     * Constructor of a new Feature
+     * @param name
+     * @param seq
+     * @param author
+     */
+    public Feature(String name, Sequence seq, Person author, FeatureRole role) {
+        super(name, author);
+        sequence = seq;
+        this.role = role;
+        isCDS = (role == FeatureRole.CDS);
+    }
+	
     /**
      * Relayed constructor of a new Feature
      * @param name
      * @param seq
      * @param author
      */
-    private Feature(String name, NucSeq seq, Person author, boolean iscds) {
+    private Feature(String name, Sequence seq, Person author, boolean iscds) {
         super(name, author);
         sequence = seq;
         isCDS = iscds;
@@ -390,15 +435,15 @@ public class Feature extends SharableObjBase {
      * locked in NucSeq.  You must use this method to alter the sequence instead.
      * @param newseq the new sequence of the Feature
      */
-    public void setSequenceSequence(final String newseq) {
-        if (newseq == null || newseq.equals("")) {
-            //fireData(new RefreshEvent(this, RefreshEvent.Condition.SEQUENCE_CHANGED));
-            return;
-        }
-        sequence.APIchangeSeq(newseq);
-
-        //todo: Change the risk group
-    }
+//    public void setSequenceSequence(final String newseq) {
+//        if (newseq == null || newseq.equals("")) {
+//            //fireData(new RefreshEvent(this, RefreshEvent.Condition.SEQUENCE_CHANGED));
+//            return;
+//        }
+//        sequence.APIchangeSeq(newseq);
+//
+//        //todo: Change the risk group
+//    }
 
     /**
      * Change the risk group of the Feature.  You can only raise the risk group.
@@ -422,34 +467,10 @@ public class Feature extends SharableObjBase {
     public ObjectId getAuthorUUID() {
         return author.getId();
     }
-
-
-
-    /*-----------------
-    variables
-    -----------------*/
-    @Setter
-    @Getter
-    @Reference
-    private NucSeq sequence;
     
-    @Setter
-    private Color forwardColor, reverseColor;
-    @Setter
-    @Getter
-    private String genbankId, swissProtId, PDBId;
-    //private String sourceOrganism; was in datum
-    
-    @Setter
-    @Getter
-    @Reference
-    private Person author;
-    @Getter
-    private short riskGroup;
-    //private String featureData; was in datum
-
-       
-    @Getter
-    private boolean isCDS;
+    // Feel free to add more of these
+    public static enum FeatureRole {
+    	PROMOTER, CDS, RBS, TERMINATOR;
+    }
 
 }

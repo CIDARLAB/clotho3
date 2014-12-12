@@ -58,7 +58,7 @@ public interface Format {
      * @param additionalRequirements
      * @return
      */
-    public boolean checkComposite(List<Part> composition, Object additionalRequirements);
+    public boolean checkComposite(List<Part> composition);
 
 
     /**
@@ -77,7 +77,7 @@ public interface Format {
      * @param additionalRequirements
      * @return
      */
-    public NucSeq generateCompositeSequence(List<Part> composition, Object additionalRequirements);
+    public NucSeq generateCompositeSequence(List<Part> composition);
     
     /**
      * Generates the sequence of a plasmid, call this from the plasmid which calls it from the format
