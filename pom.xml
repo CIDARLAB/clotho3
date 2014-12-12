@@ -23,24 +23,110 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>net.kennychua</groupId>
-                <artifactId>phantomjs-qunit-runner</artifactId>
-                <version>1.0.15</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18</version>
                 <configuration>
-                    <jsSourceDirectory>../src/javascript/location/..</jsSourceDirectory>
-                    <jsTestDirectory>../test/javascript/location/..</jsTestDirectory>
-                    <ignoreFailures>false</ignoreFailures>
-                    <phantomJsExec>../path/to/phantomjsexecutable/..</phantomJsExec>
-                    <!-- Optional -->
-                    <includeLibsInDir>
-                        <directory>${js.libs.include.dir}</directory>
-                        <includes>
-                            <include>**/*.js</include>
-                        </includes>
-                    </includeLibsInDir>
+                    <!-- skips surefire tests without skipping failsafe tests.
+                    Property value seems to magically default to false -->
+                    <skipTests>${skip.unittests}</skipTests>
                 </configuration>
             </plugin>
-            <!-- TODO: generate war for clotho server, use jetty plugin for start/stop integration -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>define-classpath</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <exportAntProperties>true</exportAntProperties>
+                            <target>
+                                <property name="maven.classpath" refid="maven.runtime.classpath"/>
+                                <property name="maven.test.classpath" refid="maven.test.classpath"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <version>0.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>1.9.2</version>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <version>2.0-alpha-01</version>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <jsTestSrcDir>${project.basedir}/src/test/js/jasmine</jsTestSrcDir>
+                            <jsSrcDir>${project.basedir}/src/test/js/lib</jsSrcDir>
+                            <preloadSources>
+                                <source>webjar/q.js</source>
+                                <source>clotho3api.js</source>
+                            </preloadSources>
+                            <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+                            <webDriverCapabilities>
+                                <capability>
+                                    <name>phantomjs.binary.path</name>
+                                    <value>${phantomjs.binary}</value>
+                                </capability>
+                            </webDriverCapabilities>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>process-exec-maven-plugin</artifactId>
+                <version>0.7</version>
+                <executions>
+                    <execution>
+                        <id>clotho-server-process</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <name>Clotho Server</name>
+                            <arguments>
+                                <argument>java</argument>
+                                <argument>-cp</argument>
+                                <argument>${maven.test.classpath}</argument>
+                                <argument>org.clothocad.core.util.ClothoTestEnvironment</argument>
+                            </arguments>
+                            <waitAfterLaunch>45</waitAfterLaunch>
+                            <workingDir>..</workingDir>
+                            <!--<processLogFile></processLogFile>-->
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-all</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop-all</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     
@@ -325,6 +411,12 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>q</artifactId>
+            <version>2.0.0</version>
         </dependency>
     </dependencies>
 	

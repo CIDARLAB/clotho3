@@ -1,7 +1,6 @@
 package org.clothocad.core.communication;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Injector;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
@@ -164,6 +162,7 @@ public class Router {
                     break;
                 case get:
                     response = api.get(data);
+                    if (response == null) response = Void.TYPE;
                     break;
                 case set:
                     response = api.set(JSON.mappify(data));
@@ -171,6 +170,7 @@ public class Router {
                     break;
                 case create:
                     response = api.create(data);
+                    if (response == null) response = Void.TYPE;
                     break;
                 case destroy:
                     response = api.destroy(data);

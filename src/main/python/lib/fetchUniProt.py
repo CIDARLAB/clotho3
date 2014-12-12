@@ -1,3 +1,8 @@
+# Attribution Information:
+# Written by Mina Li, working under Professor Christopher Anderson.
+# For any inqueries, please email li.mina888@berkeley.edu.
+# (C) 2014
+
 import urllib
 import xml.etree.ElementTree as ET
 
