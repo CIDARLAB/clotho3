@@ -43,7 +43,7 @@ function($scope, Clotho, $filter, ClothoSchemas) {
 		{
 			name : "Has Description",
 			filter : function (sharable) {
-				return angular.isDefined(sharable.description) && sharable.description.length;
+				return angular.isDefined(sharable.description) && sharable.description;
 			},
 			"class" : "glyphicon glyphicon-comment"
 		}
