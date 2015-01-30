@@ -2,16 +2,16 @@
 
     <clotho-modal title="Clotho Help" open="showHelp" content="modalContent"></clotho-modal>
 
-    <div class="jumbotron clearfix shadowBox" style="padding-top: 30px; padding-bottom: 0px;">
+    <div class="jumbotron clearfix " style="padding-top: 30px; padding-bottom: 0px;">
 
-        <img src="images/clothologo.png" class="float-left col-xs-4" style="width: 257px; height: 336px" />
+        <!--<img src="images/clothologo.png" class="float-left col-xs-4" style="width: 257px; height: 336px" />-->
+        <img src="images/clothocad.jpg"  class="shadowBox" />
 
-        <div class="col-xs-6" style="padding-left: 15px;">
-            <h2>Learning Clotho</h2>
+        <div class="col-xs-12" style="padding-top: 15px;">
+            <!-- <h2>Learning Clotho</h2>  -->
 
-            <p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p>
+            <p>Clotho is for engineering synthetic biological systems and managing the data which is used to create them. It also provides a mechanism to begin the process of creating standardized data, algorithms, and methodologies for synthetic biology.</p>
 
-            <button class="btn btn-lg btn-primary" ng-click="enterClotho()">Get Started</button>
 
             <!--
                 <p>Join our mailing list to learn keep up to date!</p>
@@ -25,16 +25,32 @@
 
     </div>
 
-    <div class="row">
-        <!--<div class="col-xs-4" style="cursor: pointer;" ng-click="enterClotho()">
-            <img src="../images/clothologo.png" class="shadowBox img-rounded pull-left" />
-        </div>-->
-        <div class="col-xs-6" style="cursor: pointer;" ng-click="enterEugene()">
-            <img src="images/logo-Eugene.png" class="shadowBox hover img-rounded pull-left" />
 
+
+  <div class="row">
+      <!--<div class="col-xs-4" style="cursor: pointer;" ng-click="enterClotho()">
+          <img src="../images/clothologo.png" class="shadowBox img-rounded pull-left" />
+      </div>-->
+        <div class="col-xs-6 shadowBox " >
+            <img src="images/clothologo.png" class="float-left hover img-rounded pull-left" style="width: 230px;height: 300px;" />
+            <div class="col-xs-6" style="padding-left: 15px;">
+              <h2>Learning Clotho</h2>
+
+              <p>This tutorial will guide you through the basics of genetic design and Clotho usage.</p>
+              <button class="btn btn-lg btn-primary" ng-click="enterClotho()">Learn Clotho</button>
+
+            </div>
         </div>
-        <div class="col-xs-6 img-rounded" style="cursor: pointer;" ng-click="enterRaven()">
-            <img src="images/logo-Raven.png" class="shadowBox hover img-rounded pull-left" />
+        <div class="col-xs-6 shadowBox" >
+          <div class="col-xs-6" >
+            <button class="btn btn-lg btn-primary" style="background-image: url(images/clothocadfiles/button_download.png); height: 90px; width: 276px;"  ng-click="downloadClotho()"></button>
+            <button class="btn btn-lg btn-primary" style="background-image: url(images/clothocadfiles/button_browse.png); height: 90px; width: 276px; "  ng-click="downloadClotho()"></button>
+
+          </div>
+
+
+          <!-- <img src="images/logo-Raven.png" class="hover img-rounded pull-left" /> -->
         </div>
     </div>
 </div>
+<!-- style="cursor: pointer;" -->

@@ -2,8 +2,15 @@ angular.module('clotho.webapp').controller('HomeCtrl', function ($scope, Clotho,
 	$scope.modalContent = '<p>Welcome to Clotho!</p>' +
 		'<p>Clotho is a platform for automating your genetic engineering projects. Learn how to use Clotho by starting the trail below!</p>';
 
+
+  $scope.downloadClotho = function(){
+    window.open("https://github.com/CIDARLAB/clotho3", '_blank');
+  };
+
 	$scope.enterClotho = function() {
-		Clotho.startTrail('org.clothocad.trails.LearningClotho');
+
+    window.open("http://synbiotrails.org/#!/trail?id=org.clothocad.trails.LearningClotho", '_blank');
+    //Clotho.startTrail('org.clothocad.trails.LearningClotho');
 	};
 
 	$scope.enterEugene = function() {

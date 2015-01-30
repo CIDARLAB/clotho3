@@ -1,0 +1,22 @@
+{
+  "fields" : [ {
+    "name" : "doug",
+    "type" : "",
+    "description" : "",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC"
+  }, {
+    "name" : "sequence",
+    "type" : "",
+    "description" : "",
+    "example" : "",
+    "constraints" : null,
+    "access" : "PUBLIC"
+  } ],
+  "language" : "JSONSCHEMA",
+  "name" : "TestSequence",
+  "schema" : "org.clothocad.core.schema.ClothoSchema",
+  "superClass" : "org.clothocad.model.Part",
+  "id" : "org.clothcad.test.NewSchema"
+}
