@@ -1,0 +1,14 @@
+{
+  "args" : [ {
+    "type" : "string",
+    "name" : "str"
+  } ],
+  "code" : "function(str) { return str.split('').join('') };",
+  "description" : "Prints Hello World",
+  "language" : "JAVASCRIPT",
+  "name" : "HelloWorld",
+  "outputType" : "string",
+  "precondition" : "\"\"",
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "54befc6044aeb507d5f08f37"
+}
