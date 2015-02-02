@@ -6,6 +6,9 @@ angular.module('clotho.webapp').controller('HomeCtrl', function ($scope, Clotho,
   $scope.downloadClotho = function(){
     window.open("https://github.com/CIDARLAB/clotho3", '_blank');
   };
+  $scope.browseApps = function(){
+    window.open("https://github.com/CIDARLAB/clotho3apps", '_blank');
+  };
 
 	$scope.enterClotho = function() {
 
