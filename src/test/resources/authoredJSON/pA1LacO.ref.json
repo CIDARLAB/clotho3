@@ -1,0 +1,11 @@
+{
+  "schema" : "org.clothocad.model.Feature",
+  "reverseColor" : "java.awt.Color[r=117,g=198,b=169]",
+  "sequence" : {
+    "schema" : "org.clothocad.model.Sequence",
+    "sequence" : "AAATTTATCAAAAAGAGTGTTGACTTGTGAGCGGATAACAATGATACTTAGATTCAATTGTGAGCGGATAACAATTTCACACAA"
+  },
+  "name" : "pA1LacO.ref",
+  "forwardColor" : "java.awt.Color[r=117,g=198,b=169]",
+  "id" : "pA1LacO.ref"
+}
