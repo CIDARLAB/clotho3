@@ -25,7 +25,7 @@ public class Message {
     @JsonProperty("options")
     public Map<MessageOption, Object> getOptions() { return options; }
 
-    public Message(Channel channel, Object data, String requestId){
+    public Message(Channel channel, Object data, String requestId) {
         this(channel, data, requestId, null);
     }
     

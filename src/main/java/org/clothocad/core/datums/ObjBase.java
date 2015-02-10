@@ -1,26 +1,29 @@
 package org.clothocad.core.datums;
 
+import org.clothocad.core.persistence.annotations.Reference;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
+import org.clothocad.core.persistence.jackson.JSONViews;
+import org.clothocad.core.persistence.jackson.WideningDefaultTypeResolverBuilder;
+import org.clothocad.core.security.Visibility;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.persistence.annotations.Reference;
-import org.clothocad.core.persistence.annotations.ReferenceCollection;
-import org.clothocad.core.persistence.jackson.JSONViews;
-import org.clothocad.core.persistence.jackson.WideningDefaultTypeResolverBuilder;
-import org.clothocad.core.security.Visibility;
 
 /**
  *

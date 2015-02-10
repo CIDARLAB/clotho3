@@ -1,20 +1,23 @@
 package org.clothocad.webserver.jetty;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.io.BufferedReader;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.clothocad.core.communication.*;
+import org.clothocad.core.communication.Channel;
+import org.clothocad.core.communication.Message;
+import org.clothocad.core.communication.RestConnection;
+import org.clothocad.core.communication.Router;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.shiro.authz.UnauthorizedException;
 
-import javax.servlet.ServletException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 /**
  *

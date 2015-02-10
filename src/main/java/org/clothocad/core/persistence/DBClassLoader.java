@@ -32,11 +32,11 @@ public class DBClassLoader extends ClassLoader {
     final static Logger logger = LoggerFactory.getLogger(DBClassLoader.class);
     
     @Inject
-    public DBClassLoader(Provider<Persistor> provider){
+    public DBClassLoader(Provider<Persistor> provider) {
         this.provider = provider;
     }
     
-    public DBClassLoader(Persistor p){
+    public DBClassLoader(Persistor p) {
         super();
         persistor = p; 
     }
@@ -44,9 +44,10 @@ public class DBClassLoader extends ClassLoader {
     Persistor persistor;
     Provider<Persistor> provider;
     
-    private Persistor getPersistor(){
-        if (persistor != null) return persistor;
-        else{
+    private Persistor getPersistor() {
+        if (persistor != null) {
+            return persistor;
+        } else {
             persistor = provider.get();
             return persistor;
         }
@@ -72,10 +73,10 @@ public class DBClassLoader extends ClassLoader {
     }*/
     
     @Override
-    public Class<?> findClass(String id) throws ClassNotFoundException{
+    public Class<?> findClass(String id) throws ClassNotFoundException {
         ObjectId dbId = new ObjectId(id);
         Schema s = getPersistor().get(Schema.class, dbId);
-        if (s == null){
+        if (s == null) {
             logger.error("Could not find schema with id {} in database.", id);
             throw new ClassNotFoundException();
         }

@@ -91,7 +91,7 @@ public class ClothoWebSocket
     public void onOpen(Connection connection) {
         log.debug("New connection opened. Connection id is {}.", this.getId());
         this.connection = connection;
-        // Close WebSocket after 1 week ofidle time
+        // Close WebSocket after 1 week of idle time
         connection.setMaxIdleTime(7 * 24 * 3600000);
 
         subject = SecurityUtils.getSubject();

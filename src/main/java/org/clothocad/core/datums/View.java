@@ -1,13 +1,12 @@
 package org.clothocad.core.datums;
 
-import java.util.List;
-import java.util.Map;
-import javax.validation.constraints.AssertTrue;
-
 import org.clothocad.core.datums.util.ClothoField;
-
 import org.clothocad.model.Person;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.constraints.AssertTrue;
 
 /**
  * A View is the factory for HTML widgets
