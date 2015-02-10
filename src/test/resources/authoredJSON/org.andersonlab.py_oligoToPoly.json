@@ -1,12 +1,12 @@
 {
   "schema" : "org.clothocad.core.datums.Function",
   "language" : "PYTHON",
-  "code" : "from OligoToPoly import run",
+  "code" : "from oligo_to_poly import run",
   "name" : "OligoToPoly",
   "id" : "org.andersonlab.py_oligoToPoly",
   "description" : "Converts an Oligo into a Polynucleotide",
   "args" : [ {
-    "type" : "object",
+    "type" : "org.clothocad.model.Oligo",
     "name" : "arg0"
   }]
 }

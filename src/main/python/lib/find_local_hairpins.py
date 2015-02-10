@@ -70,7 +70,8 @@ Calculates the number of hydrogen bonds using the mapping at the top.
 def basepair_total(bps):
     total = 0
     for bp in bps:
-        total += hydrogen_bonds[bp] # lookup bonds number in hydrogen_bonds
+        if bp in hydrogen_bonds.keys():
+            total += hydrogen_bonds[bp] # lookup bonds number in hydrogen_bonds
     return total
 
 """
@@ -114,7 +115,7 @@ def hairpin(utr_5, cds_37, loop_size, limit):
         hairpin_str = name(loop_size, utr_len - i, total)
         if total > limit:
             fin_list.append(hairpin_str)
-    print fin_list
+    #print fin_list
     return fin_list
 
 """
@@ -152,7 +153,7 @@ def overall_scoring(utr_5, cds_37, limit, val_bool):
         pins = hairpin(utr_5, cds_37, loop_size, limit)
         val = hairpin_scoring(utr_5, cds_37, pins)
         #comment out if you don't want to see individual results
-        print "LOOP SIZE: " + str(loop_size) + "\t" + "SCORE: " + str(val)
+        #print "LOOP SIZE: " + str(loop_size) + "\t" + "SCORE: " + str(val)
         total += val
     return total
 
@@ -162,5 +163,5 @@ Scoring entryway.
 def _scorer(arr):
     return overall_scoring(arr[0], arr[1], arr[2], False)
 
-def run(*arrs):
-    return map(_scorer, arrs)
+def run(arr):
+    return _scorer(arr) #map(_scorer, arrs)

@@ -1,0 +1,9 @@
+{
+"id" : "org.clothocad.model.RBS.UTR22",
+"name" : "UTR22",
+"schema" : "org.clothocad.model.RBS",
+"utr5" : "aattgtgagcggataacaatttcacacaggaaacagaccatggaattcAGGAGCGACTACatg",
+"nativeHost" : "E. coli",
+"weblink" : "http://download.springer.com/static/pdf/964/art%253A10.1007%252Fs00253-006-0623-z.pdf?auth66=1421352316_f86d3037d691bd0f640eecc12cfe8b34&ext=.pdf",
+"isIntergenic" : false
+}

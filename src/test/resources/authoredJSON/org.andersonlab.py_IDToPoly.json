@@ -1,7 +1,7 @@
 {
   "schema" : "org.clothocad.core.datums.Function",
   "language" : "PYTHON",
-  "code" : "from IDToPoly import run",
+  "code" : "from id_to_poly import run",
   "name" : "IDToPoly",
   "id" : "org.andersonlab.py_IDToPoly",
   "description" : "Converts a registry ID to a Polynucleotide",

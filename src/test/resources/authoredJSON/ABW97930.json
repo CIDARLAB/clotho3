@@ -1,0 +1,78 @@
+{
+    "isLinear": true, 
+    "description": "hat [Hemiselmis andersenii].", 
+    "name": "ABW97930", 
+    "sequence": "MIKKKKKMRKIIYFDFKNFSKFCKKKFYKYFFNLSIENSLLIGLKILKNIQIDKKIHFKILKNDGISKNLKSLWVLKHLFENQLPNIPKSYITRLIFDKNHESIVLMYFKKKKFQIIGGCSFRLFKRQQILELVFFAVKTKYQTKGYGSFLIELLKDYARFLGLKNIVTCADNNATNFFFKQGFSPTISLPEFFWSGFIRDYEDVIFMEFTVSSKFNYVNLNYYLFSIIILGFFSFFDFSESFFDIFSIFIKKKTTVFENQNLVFSLKKKVSRIKKSLKFQKKIIFYFDKIKLKDFALPFLEPSKGTYYFDKQYFSKVFNAIDIRTMEEKFRFGYYNNFFSFWKDLKKILKNCKLYNGVNNLISENCSSMEFLIEKLKKKKNKVNIKKMK", 
+    "date": "14-DEC-2007", 
+    "highlight": [
+        {
+            "forColor": "#ADE060", 
+            "end": 390, 
+            "description": null, 
+            "revColor": "#AAB112", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#11724A", 
+            "end": 390, 
+            "description": null, 
+            "revColor": "#AC984C", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#C6EA4E", 
+            "end": 168, 
+            "description": null, 
+            "revColor": "#4CC3D6", 
+            "notes": "N-Acyltransferase superfamily: Various enzymes that characteristically catalyze the transfer of an acyl group to a substrate; cd04301", 
+            "start": 114, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#602832", 
+            "end": 149, 
+            "description": null, 
+            "revColor": "#850AED", 
+            "notes": "Coenzyme A binding pocket [chemical binding]", 
+            "start": 135, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#4D8BA9", 
+            "end": 375, 
+            "description": null, 
+            "revColor": "#553EAB", 
+            "notes": "Bromodomain. Bromodomains are found in many chromatin-associated proteins and in nuclear histone acetyltransferases. They interact specifically with acetylated lysine; cd04369", 
+            "start": 279, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#F10580", 
+            "end": 363, 
+            "description": null, 
+            "revColor": "#8C214D", 
+            "notes": "acetyllysine binding site", 
+            "start": 303, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#3D7534", 
+            "end": 390, 
+            "description": null, 
+            "revColor": "#F14666", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }
+    ], 
+    "isSingleStranded": false, 
+    "accession": [
+        "ABW97930"
+    ], 
+    "id": "ABW97930.1", 
+    "schema": "org.clothocad.model.Polypeptide"
+}
