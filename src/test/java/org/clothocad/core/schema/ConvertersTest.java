@@ -38,22 +38,22 @@ public class ConvertersTest extends AuthorizedShiroTest {
     @Test
     public void testGetConverterSchemas() {
         Converters converters = prepareConverters();
-        Schema basicPartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
-        Schema compositePartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.CompositePart"));
-        Iterable<Schema> convertibleSchemas = converters.getConverterSchemas(basicPartSchema);
+        Schema partSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.Part"));
+//        Schema compositePartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.CompositePart"));
+        Iterable<Schema> convertibleSchemas = converters.getConverterSchemas(partSchema);
         assertEquals(new InferredSchema("eugene.dom.components.Part"), convertibleSchemas.iterator().next());
         
-        convertibleSchemas = converters.getConverterSchemas(compositePartSchema);
-        assertFalse(convertibleSchemas.iterator().hasNext());
+//        convertibleSchemas = converters.getConverterSchemas(compositePartSchema);
+//        assertFalse(convertibleSchemas.iterator().hasNext());
     }
 
     @Test
     public void testGetConverter() {
         Converters converters = prepareConverters();
-        Schema basicPartSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
+        Schema partSchema = persistor.get(Schema.class, new ObjectId("org.clothocad.model.Part"));
         Schema eugeneSchema = new InferredSchema("eugene.dom.components.Part");
-        Converter converter = converters.getConverter(eugeneSchema, basicPartSchema);
+        Converter converter = converters.getConverter(eugeneSchema, partSchema);
         assertTrue(converter.canConvert(eugeneSchema));
-        assertEquals(basicPartSchema, converter.convertsTo());
+        assertEquals(partSchema, converter.convertsTo());
     }
 }

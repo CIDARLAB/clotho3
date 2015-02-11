@@ -22,82 +22,54 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
 import org.clothocad.core.datums.SharableObjBase;
+import org.clothocad.model.Feature.FeatureRole;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author jcanderson
+ * @author Nicholas Roehner
  */
 @NoArgsConstructor
-@Slf4j
-public abstract class Part extends SharableObjBase {
+public class Part extends SharableObjBase {
 	
 	@Getter
 	@NotNull
 	private Format format;
-
+	
 	@Getter
 	@Setter
-	@Deprecated
-	// Type (actually role) should be derived from Features annotating the Part's Sequence.
-	// Part should only store data on composition of sequences.
-	private PartFunction type;
-
+	private List<Assembly> assemblies = new LinkedList<Assembly>();
+	
+	@NotNull
 	@Getter
 	@Setter
-	@Deprecated
-	// Risk should be derived from the Part's Sequence.
-	// Sequences and their Annotations are connection between
-	// genetic structure and function.
-	private short riskGroup;
+	private Sequence sequence;
+	
+	@Getter
+    @Setter
+    private boolean isForwardOrientation;
+	
+	@Getter
+	@Setter
+	private Part parentPart;
     
-    protected Part(String name, String description, Format format, Person author){
+    public Part(String name, String description, Sequence sequence, Person author){
         super(name, author, description); 
-        this.format = format;
+        this.sequence = sequence;
     }
     
-    /**
-     * Call this method to construct a new basic Part. It will check that the Part obeys its Format. 
-     * If not, then the method returns null.
-     *
-     * @param name nickname of Part, for example "R0040"
-     * @param description description of Part, for example "TetR-repressible promoter"
-     * @param sequence sequence of the Part, for example "cgaaggcaggacacacatg"
-     * @param format Format of the Part
-     * @param author author of the Part, for example Person with name "Bob"
-     */
-    public static Part generateBasic(String name, String description, String sequence, Format format, Person author) {
-        return new BasicPart(name, description, sequence, format, author);
-    }
-
-    /**
-     * Create composite Part from Part list
-     *
-     * @param composition list of Parts to compose
-     * @param name nickname of Part, for example "C0040"
-     * @param description description of Part, for example "coding sequence for TetR repressor with LVA tail"
-     * @param sequence sequence of the Part, for example "cgaaggcaggacacacatg"
-     * @param format Format of the Part
-     * @param author author of the Part, for example Person with name "Bob"
-     */
-    public static Part generateComposite(List<Part> composition, Format format, Person author, String name, String description) {
-        return new CompositePart(composition, format, author, name, description);
-    }
-   
-    @AssertTrue
-    public abstract boolean checkFormat();
-    
-    public String getFormatName(){
-        return format.getClass().getSimpleName();
+    public Part(String name, Sequence sequence, Person author){
+        super(name, author); 
+        this.sequence = sequence;
     }
 
     /**
@@ -109,26 +81,17 @@ public abstract class Part extends SharableObjBase {
         	this.format = format;
         }
     }
-
-    public abstract NucSeq getSequence();
-
-    public static Part retrieveByName(String name) {
-        //query connection for one part whose name contains the provided string    
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @AssertTrue
-    private boolean checkDBConstraints(){
-        //name must be unique
-        //format(by name) + sequence(by content)combination should be unique
-        return true;
+    
+    public List<FeatureRole> getRoles() {
+    	List<Annotation> annotations = sequence.getAnnotations();
+    	List<FeatureRole> roles = new LinkedList<FeatureRole>();
+    	for (Annotation annotation : annotations) {
+    		Feature feature = annotation.getFeature();
+    		if (feature != null) {
+    			roles.add(feature.getRole());
+    		}
+    	}
+    	return roles;
     }
     
-    @Deprecated
-    // Type should be derived from Features annotating the Part's Sequence.
- 	// Part should only store data on composition of sequences.
-    public static enum PartFunction {
-        //XXX: composite is not a function
-        CDS, RBS, PROMOTER, TERMINATOR, COMPOSITE;
-    }
 }

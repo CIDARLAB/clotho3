@@ -50,7 +50,8 @@ public class SimpleSequenceConverter extends Converter<SimpleSequence>
     public static SimpleSequence convertNucSeqToSimpleSeq(Map<String,Object> nSeq)
     {
         
-        SimpleSequence simpleseq = new SimpleSequence(nSeq.get("name").toString(),nSeq.get("sequence").toString()); //Invoke the NucSeq Constructor that creates an object with the Sequence as the input argument. 
+        SimpleSequence simpleseq = new SimpleSequence(nSeq.get("sequence").toString(),
+        		(Person) nSeq.get("author")); //Invoke the NucSeq Constructor that creates an object with the Sequence as the input argument. 
         if(nSeq.containsKey("_id"))
         {
             simpleseq.setId(new ObjectId(nSeq.get("_id").toString()));

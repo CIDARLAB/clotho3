@@ -82,7 +82,7 @@ public class NucSeqConverter extends Converter<NucSeq>
         
         System.out.println("This is the result of the function :"+res);
         
-        NucSeq nseq = new NucSeq(res); 
+        NucSeq nseq = new NucSeq(res, (Person) simpleSeq.get("author")); 
         if(simpleSeq.containsKey("_id"))
         {
             nseq.setId(new ObjectId(simpleSeq.get("_id").toString()));

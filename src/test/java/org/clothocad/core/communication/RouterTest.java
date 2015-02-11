@@ -87,7 +87,7 @@ public class RouterTest extends AbstractRouterTest{
         
         connection = new TestConnection("queryTest2");
         query = new HashMap<>();
-        query.put("schema", "org.clothocad.model.BasicPart");
+        query.put("schema", "org.clothocad.model.Part");
         message = new Message(Channel.query, query, "4", null);
         sendMessage(message, connection);
         returnMessage = connection.messages.get(1);

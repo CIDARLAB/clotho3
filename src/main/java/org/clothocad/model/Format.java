@@ -30,6 +30,7 @@ import java.util.List;
  * Interface for a ClothoFormat
  * @author J.Christopher Anderson
  * @author Douglas Densmore
+ * @author Nicholas Roehner
  */ 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "schema", include = JsonTypeInfo.As.PROPERTY)
 public interface Format {
@@ -46,51 +47,29 @@ public interface Format {
     public boolean checkPart(Part p);
 
     /**
-     * Test whether a vector is a valid member of the ClothoFormat specs
-     * @param v Vector to test
-     * @return true if adheres to the format; false otherwise
-     */
-    /*public boolean checkVector(Vector v);
-
-    /**
      * Check to see if an arraylist of parts permits making a composite part
      * @param composition
-     * @param additionalRequirements
      * @return
      */
     public boolean checkComposite(List<Part> composition);
 
-
-    /**
-     * Check to see if a plasmid can be made out of the vector and part
-     * @param p
-     * @param v
-     * @param additionalRequirements
-     * @return
-     */
-    //public boolean checkPlasmid(Part p, Vector v, Object additionalRequirements);
-
-
      /**
-     * Generates the sequence of a plasmid, call this from the plasmid which calls it from the format
+     * Generates composite part in accordance with this format
+     * @param name
      * @param composition
-     * @param additionalRequirements
+     * @param author
      * @return
      */
-    public NucSeq generateCompositeSequence(List<Part> composition);
+    public Part generateCompositePart(String name, List<Part> composition, Person author);
     
     /**
-     * Generates the sequence of a plasmid, call this from the plasmid which calls it from the format
-     * @param p
+     * Generates composite part in accordance with this format
+     * @param name
+     * @param description
+     * @param composition
+     * @param author
      * @return
      */
-    /*public NucSeq generatePlasmidSequence(Plasmid p);
-
-
-    /**
-     * Generate the part with flanking sequence appropriate for sequencing analysis
-     * @param p
-     * @return
-     */
-    //public NucSeq generateSequencingRegion(Plasmid p);
+    public Part generateCompositePart(String name, String description, List<Part> composition, Person author);
+  
 }

@@ -6,12 +6,18 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
-public class Module extends SharableObjBase {
+/**
+*
+* @author Nicholas Roehner
+*/
+@NoArgsConstructor
+public abstract class Module extends SharableObjBase {
 	
 	@NotNull
 	@Getter
@@ -21,38 +27,20 @@ public class Module extends SharableObjBase {
 	@Getter
 	@Setter
 	@ReferenceCollection
-	protected Set<Influence> influences;
+	protected Set<Influence> influences = new HashSet<Influence>();
+	
+	@Getter
+	@Setter
+	protected Module parentModule;
 	
 	protected Module(String name, ModuleRole role, Person author) {
 		super(name, author);
 		this.role = role;
-		influences = new HashSet<Influence>();
-	}
-	
-	protected Module(String name, ModuleRole role, Set<Influence> influences, Person author) {
-		super(name, author);
-		this.role = role;
-		this.influences = influences;
 	}
 	
 	protected Module(String name, String description, ModuleRole role, Person author) {
 		super(name, author, description);
 		this.role = role;
-		influences = new HashSet<Influence>();
-	}
-	
-	protected Module(String name, String description, ModuleRole role, Set<Influence> influences, Person author) {
-		super(name, author, description);
-		this.role = role;
-		this.influences = influences;
-	}
-	
-	public void addInfluence(Influence influence) {
-		influences.add(influence);
-	}
-	
-	public void removeInfluence(Influence influence) {
-		influences.remove(influence);
 	}
 	
 	// Feel free to add more of these

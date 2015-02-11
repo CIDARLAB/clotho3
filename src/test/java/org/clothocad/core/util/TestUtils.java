@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,20 +22,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
+
 import javax.persistence.EntityNotFoundException;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
+import org.clothocad.model.Annotation;
+import org.clothocad.model.Feature;
+import org.clothocad.model.Feature.FeatureRole;
+import org.clothocad.model.Format;
 import org.clothocad.model.FreeForm;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
-import org.clothocad.model.Part.PartFunction;
 import org.clothocad.model.Person;
+import org.clothocad.model.Sequence;
+import org.clothocad.model.SimpleSequence;
+
 import static org.clothocad.core.ReservedFieldNames.*;
+
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.security.SecurityModule;
 
@@ -205,14 +216,28 @@ public class TestUtils {
 
         persistor.save(newperson);
         //persistor.save(newperson2);
-
+        Sequence partSeq1 = new SimpleSequence("AAAAAAAAAAAAAAAAAAA", person);
+        Part part1 = new Part("Test Part 1", "the first test part", partSeq1, person);
+        part1.setFormat(new FreeForm());
+        Annotation seqAnnotation1 = new Annotation("Test Feature 1", partSeq1, 0, partSeq1.getSequence().length() - 1, 
+        		true, person);
+        Feature feature1 = new Feature("Test Feature 1", FeatureRole.CDS, person);
+        feature1.setSequence(partSeq1);
+        seqAnnotation1.setFeature(feature1);
         
-        Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);
-        part1.setType(PartFunction.CDS);
-
-        Part part2 = Part.generateBasic("Test Part 2", "the second test part", "TTTTTTTTTTTTTTTTTT", new FreeForm(), person);
-        Part part3 = Part.generateComposite(Arrays.asList(part1, part2), new FreeForm(), person, "Test Part 3", "parts 1 and 2 jammed together");
-
+        Sequence partSeq2 = new SimpleSequence("TTTTTTTTTTTTTTTTTT", person);
+        Part part2 = new Part("Test Part 2", "the second test part", partSeq2, person);
+        part2.setFormat(new FreeForm());
+        Annotation seqAnnotation2 = new Annotation("Test Feature 2", partSeq2, 0, partSeq2.getSequence().length() - 1, 
+        		true, person);
+        Feature feature2 = new Feature("Test Feature 2", FeatureRole.CDS, person);
+        feature2.setSequence(partSeq2);
+        seqAnnotation2.setFeature(feature2);
+        
+        Format compositeFormat = new FreeForm();
+        Part part3 = compositeFormat.generateCompositePart("Test Part 3", "parts 1 and 2 jammed together", 
+        		Arrays.asList(part1, part2), person);
+        
         Map<String, Object> eugenePart = new HashMap();
         eugenePart.put("Name", "B0015");
         eugenePart.put("schema", "eugene.dom.components.Part");

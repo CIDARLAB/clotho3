@@ -3,69 +3,54 @@ package org.clothocad.model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+
 import javax.validation.constraints.NotNull;
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.ObjectId;
 
-@Data()
+import org.clothocad.core.datums.SharableObjBase;
+
 @NoArgsConstructor
-public class Polynucleotide extends ObjBase implements Serializable {
+public class Polynucleotide extends SharableObjBase implements Serializable {
 
-	//@Getter
-	//private ObjectId id;
-	//@Getter
-	private String description, accession;
-	//@Getter
+	@Getter
+	@Setter
+	private String accession;
+	
+	@NotNull
+	@Getter
+	@Setter
 	private boolean isLinear, isSingleStranded;
-	//@Getter
+	
+	@Getter
+	@Setter
 	private Date submissionDate;
 
-	//@Getter
+	@Getter
+	@Setter
 	private List<Highlight> highlights;
 
-	@NotNull
+	@Getter
+	@Setter
 	private String sequence;
+	
+	@Getter
+	@Setter
+	private Polynucleotide parentPolynucleotide;
+	
+	public Polynucleotide(String name, boolean isLinear, boolean isSingleStranded, Person author) {
+		super(name, author);
+		this.isLinear = isLinear;
+		this.isSingleStranded = isSingleStranded;
+	}
+	
+	public Polynucleotide(String name, String description, boolean isLinear, boolean isSingleStranded, 
+			Person author) {
+		super(name, author, description);
+		this.isLinear = isLinear;
+		this.isSingleStranded = isSingleStranded;
+	}
 
-	/**
-	*public Polynucleotide ( String id, String name, String inputSeq,
-	*	String description, String accession, String submissionDate,
-	*	boolean strandedness, boolean linearity ) {
-	*
-    *    super(name);
-	*
-    *    super.setId(new ObjectId(id));
-    *    this.sequence = inputSeq;
-    *    this.description = description;
-    *    this.accession = accession;
-	*
-    *    //consider doing this with a switch statement too
-    *    HashMap<String, Integer> month = new HashMap<String, Integer>();
-	*	 month.put("JAN", 1);
-	*	 month.put("FEB", 2);
-	*	 month.put("MAR", 3);
-	*	 month.put("APR", 4);
-	*	 month.put("MAY", 5);
-	*	 month.put("JUN", 6);
-	*	 month.put("JUL", 7);
-	*	 month.put("AUG", 8);
-	*	 month.put("SEP", 9);
-	*	 month.put("OCT", 10);
-	*	 month.put("NOV", 11);
-	*	 month.put("DEC", 12);
-	*
-    *    GregorianCalendar date = new GregorianCalendar();
-    *    String[] dArr = submissionDate.split("-");
-    *    date.set(Integer.parseInt(dArr[2]), month.get(dArr[1]),
-    *    	Integer.parseInt(dArr[0]));
-    *    this.submissionDate = Date( date.getTime() );
-	*
-    *    this.isSingleStranded = strandedness;
-    *    this.isLinear = linearity;
-    *    
-    *}
-	**/
 }

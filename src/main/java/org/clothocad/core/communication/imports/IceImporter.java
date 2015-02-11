@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.xml.XmlMapper;
 import com.google.common.base.Joiner;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,12 +19,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.net.ssl.HttpsURLConnection;
+
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.model.BasicPart;
+import org.clothocad.model.Part;
 import org.clothocad.model.FreeForm;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
+import org.clothocad.model.SimpleSequence;
 
 /**
  *
@@ -56,8 +60,8 @@ public class IceImporter {
         return out.toString();
     }
 
-    public static List<BasicPart> importData(List<Integer> entries) {
-        List<BasicPart> out = new ArrayList<>();
+    public static List<Part> importData(List<Integer> entries) {
+        List<Part> out = new ArrayList<>();
         try {
             //login
             URL ice = new URL("https://public-registry.jbei.org/gwt_ice/ice");
@@ -99,12 +103,12 @@ public class IceImporter {
     }
 
     public static void directImport(Persistor p, List<Integer> entries, int attempt) {
-        for (BasicPart entry : importData(entries)) {
+        for (Part entry : importData(entries)) {
             p.save(entry);
         }
     }
 
-    private static BasicPart parseToPart(HashMap entity) {
+    private static Part parseToPart(HashMap entity) {
         //String name, String shortdescription, String seq, Format form, Person author
         String name;
         String seq;
@@ -121,8 +125,9 @@ public class IceImporter {
 
         shortdescription = parseDescription(entity);
         
-        BasicPart part = new BasicPart(name, shortdescription, seq, new FreeForm(), author);
-        
+        Part part = new Part(name, shortdescription, new SimpleSequence(seq, author), author);
+        part.setFormat(new FreeForm());
+      
         return part;
     }
 
@@ -158,7 +163,7 @@ public class IceImporter {
         }
     }
 
-    private static BasicPart parseJBEIEntity(HashMap entity) {
+    private static Part parseJBEIEntity(HashMap entity) {
         switch (entity.get("recordType").toString()) {
             case "part":
                 return parseToPart(entity);

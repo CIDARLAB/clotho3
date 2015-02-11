@@ -5,10 +5,9 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
 
-public class Parameter extends ObjBase {
+public class Parameter {
 
 	@NotNull
 	@Getter
@@ -27,8 +26,8 @@ public class Parameter extends ObjBase {
 	@Reference
 	private Units units;
 	
-	public Parameter(String name, double value, Variable variable, Units units) {
-		super(name);
+	public Parameter(BioDesign design, double value, Variable variable, Units units) {
+		design.getParameters().add(this);
 		this.value = value;
 		this.variable = variable;
 		this.units = units;
