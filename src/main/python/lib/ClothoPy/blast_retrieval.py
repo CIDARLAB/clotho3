@@ -1,6 +1,6 @@
 from TBlastN import TBlastN
 from blast_holder import Blast_Record
-from genbank_holder import Genbank
+from new_genbank_holder import New_Genbank
 from Bio import Entrez, SeqIO
 
 class call_blast:
@@ -23,7 +23,7 @@ class call_blast:
             ncbi = uni.alignments[0].accession # get ncbi number
             result_handle = Entrez.efetch(db=self.database, rettype=self.return_type, id=ncbi, seq_start=seq_start, seq_stop=seq_end)
             for seq_record in SeqIO.parse(result_handle, self.return_type):
-                self.records.append(Genbank(seq_record))
+                self.records.append(New_Genbank(seq_record))
             record = None
             if len(self.records) != 0:
                 record = self.records[0]

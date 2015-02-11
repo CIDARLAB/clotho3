@@ -4,7 +4,6 @@
 # (C) 2014
 
 import json
-from act_query import act_query
 from fetch_uniprot import fetch_uniprot
 
 chem_dict = {}

@@ -77,14 +77,18 @@ Main function.
 def act_to_operon(query):
 	#print "query"
 	j = act_query(query)
+	#print j
 	#print "parser"
 	paths = act_parser(j)
+	#print paths
 	#print "select"
 	selected = select_pathway(paths)
-	#print "orf"
-	orf_list = pathway_to_orf(selected)[:3]
-	#print orf_list
-	#print "rbs"
+	#print selected
+	#print "orf list"
+	orf_list = pathway_to_orf(selected)
+	# for orf in orf_list:
+	# 	print orf.GB.record
+	#print "rbs list"
 	rbs_list = grab_rbs()
 	#print rbs_list
 	#print "operon"

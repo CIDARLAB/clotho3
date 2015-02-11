@@ -49,6 +49,9 @@ def process_polypeptide(enzyme):
 				ncbi = uniprot_to_ncbi(poly.uniprot)[poly.uniprot] # get ncbi number
 				retriever.retrieve_gb([ncbi]) # get from ncbi
 				record = retriever.records[0] # now we have the ncbi record
+
+				record.GB.writeRecord(record.id + ".gb")
+
 				orf = _protein_to_orf(record)
 				orfs.append(orf)
 				retriever.clearRecords()
@@ -58,6 +61,9 @@ def process_polypeptide(enzyme):
 					ncbi = uni.alignments[0].accession # get ncbi number
 					retriever.retrieve_gb([ncbi]) # get from ncbi
 					record = retriever.records[0] # now we have the ncbi record
+
+					record.GB.writeRecord(record.id + ".gb")
+					
 					orfs.append(record)
 				except Exception:
 					print "No corresponding orf for %s" % poly.uniprot

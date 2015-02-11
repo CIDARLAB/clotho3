@@ -1,5 +1,5 @@
 from Bio import Entrez, SeqIO
-from ClothoPy.genbank_holder import Genbank
+from ClothoPy.new_genbank_holder import New_Genbank
 from ClothoPy.protein_retrieval import call_accn
 
 """
@@ -38,7 +38,7 @@ def _protein_to_orf(prot):
     try:
         result_handle = Entrez.efetch(db='nucleotide', rettype='gb', id=key, seq_start=seqStart, seq_stop=seqEnd)
         for seq_record in SeqIO.parse(result_handle, 'gb'):
-            records.append(Genbank(seq_record))
+            records.append(New_Genbank(seq_record))
         result_handle.close()
     except:
         return None

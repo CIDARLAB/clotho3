@@ -8,6 +8,7 @@ from ClothoPy.genbank_holder import Genbank
 from StringIO import StringIO
 import ClothoPy.ClothoSeqIO
 from Bio import Alphabet
+from Bio.Seq import Seq, MutableSeq
 from Bio.SeqRecord import SeqRecord
 
 def poly_to_gen(poly):
@@ -47,11 +48,7 @@ def poly_to_gen(poly):
     
     gen.sequence = poly["sequence"]
     
-    typ = ""
-    if isinstance(gen.sequence.alphabet, Alphabet.DNAAlphabet):
-        typ = "DNA"
-    elif isinstance(gen.sequence.alphabet, Alphabet.RNAAlphabet):
-        typ = "RNA"
+    typ = "DNA"
 
     h_single = poly["isSingleStranded"]
     h_linear = poly["isLinear"]
@@ -64,7 +61,7 @@ def poly_to_gen(poly):
             if feat.qualifiers[key] == '' or feat.qualifiers[key] == None or feat.qualifiers[key] == []:
                 del feat.qualifiers[key]
 
-    gen.record = SeqRecord(gen.sequence, gen.id, gen.name, \
+    gen.record = SeqRecord(Seq(gen.sequence, Alphabet.IUPAC.IUPACAmbiguousDNA()), gen.id, gen.name, \
         gen.description, None, \
         gen.features, gen.annotations)
 
@@ -119,7 +116,7 @@ def design_operon(orf_list, rbs_list, limit):
         min_rbs_seq = min_rbs['sequence'].lower()
         if min_rbs_seq.endswith("atg") and orf_seq.startswith("atg"):
             min_rbs_seq = min_rbs_seq[:len(min_rbs_seq) - 3]
-        addition = min_rbs_seq + orf_seq
+        addition = min_rbs_seq + orf.sequence.lower()
         operon += addition
         #print min_rbs
         operon_name += min_rbs['name'] + "." + orf.name + "."
@@ -147,12 +144,21 @@ def design_operon(orf_list, rbs_list, limit):
         # isLinear = True
         # no accession number or submissionDate
         # description?
+    # print { \
+    #     'id': ".", \
+    #     'sequence': operon, \
+    #     'schema': 'org.clothocad.model.Polynucleotide', \
+    #     'highlights': highlights, \
+    #     'isLinear': True, \
+    #     'isSingleStranded': False, \
+    #     'name': operon_name[:len(operon_name)-1] }
+    operon_name = operon_name[:len(operon_name)-1]
 
     return poly_to_gen ({ \
         'id': ".", \
-        'sequence': operon, \
+        'sequence': str(operon), \
         'schema': 'org.clothocad.model.Polynucleotide', \
         'highlights': highlights, \
         'isLinear': True, \
         'isSingleStranded': False, \
-        'name': operon_name[:len(operon_name)-1] })
+        'name': operon_name })
