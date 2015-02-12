@@ -236,6 +236,18 @@
          */
         logout: function() {
             return socket.emit("logout", "");
+        },
+
+        /**
+         * Clotho.grant
+         * Grant permissions to a user on an object
+         * @param {Object}
+         */
+        grant: function(user, id, add, remove){
+            if (id.length == undefined || (typeof id) == "string")
+                return socket.emit("grant", {"user":user, "id":id, "add":add, "remove":remove});
+            else
+                return socket.emit("grantAll", {"user":user, "id":id, "add":add, "remove":remove});
         }
     };
 }(Clotho = window.Clotho || {}));
