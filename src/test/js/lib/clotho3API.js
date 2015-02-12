@@ -60,11 +60,18 @@
         }
     };
 
+    //a generator would be nice
+    var lastRequestId = -1;
+    function nextId(){
+        lastRequestId++;
+        return lastRequestId; 
+    }
+
     // Helper function: Sends message to server 
     socket.emit = function(channel, data, options) {
         // Create 'deferred' object ... Q is a global variable
         var deferred = Q.defer();
-        var requestID = new Date().getTime();
+        var requestID = nextId();
         // var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
         var message = new Message(channel, data, requestID, options);
         var callback = function(dataFromServer) {
