@@ -55,15 +55,18 @@
         this.channel = channel;
         this.data = data;
         this.requestId = requestID;
+        if (typeof options != undefined){
+            this.options = options;
+        }
     };
 
     // Helper function: Sends message to server 
-    socket.emit = function(channel, data) {
+    socket.emit = function(channel, data, options) {
         // Create 'deferred' object ... Q is a global variable
         var deferred = Q.defer();
         var requestID = new Date().getTime();
         // var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
-        var message = new Message(channel, data, requestID);
+        var message = new Message(channel, data, requestID, options);
         var callback = function(dataFromServer) {
             deferred.resolve(dataFromServer);
         };
@@ -73,7 +76,17 @@
         return deferred.promise;
     };
 
-
+    /**
+     * Returns [spec, options]
+     */
+    var parseQueryArgs = function(schema, name, options) {
+        if (typeof(schema) !== 'string') {
+            return {obj:schema, options:name};
+        }
+        else {
+            return {obj:{schema:name}, options:options};
+        }
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                          Clotho Object                                                //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,18 +98,18 @@
          * @param {Object} A list of one or more JSON objects describing an instance(s) of Clotho schema.
          * @return {Object} A list of created objects' IDs. Ex: Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"},{"name":"Another Part", "sequence":"AAACCC"}])
          */
-        create: function(object) {
+        create: function(object, options) {
             /** Three cases below (in order):
              *  Input param is a JSON object. Ex: Clotho.create({"name":"My New Part", "sequence":"GGGGGG"})
              *  Input param is an object containing a single JSON. Ex: Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"}])
              *  Input param is an object containing multiple JSONs. Ex: 
              */
             if (object.length == undefined) {
-                return socket.emit("create", object);
+                return socket.emit("create", object, options);
             } else if (object.length == 1) {
-                return socket.emit("create", object[0]);
+                return socket.emit("create", object[0], options);
             } else {
-                return socket.emit("createAll", object);
+                return socket.emit("createAll", object, options);
             }
         },
 
@@ -105,13 +118,12 @@
          * Destroys object(s) as defined by the input.
          * @param {Object selector} A string or list of strings describing a particular Clotho object.
          */
-        destroy: function(name) {
+        destroy: function(name, options) {
             if (typeof name == "string") {
-                socket.emit("destroy", name);
-            } else if (name.length >= 1) {
-                socket.emit("destroyAll", name);
+                return socket.emit("destroy", name, options);
+            } else {
+                return socket.emit("destroyAll", name, options);
             }
-            //no return
         },
 
         /**
@@ -120,13 +132,11 @@
          * @param id: ID of the object to be updated, key: field
          * @return {Object} An ID or list of IDs of objects updated.
          */
-        set: function(object) {
+        set: function(object, options) {
             if (object.length == undefined) {
-                return socket.emit("set", object);
-            } else if (object.length == 1) {
-                return socket.emit("set", object[0]);
+                return socket.emit("set", object, options);
             } else {
-                return socket.emit("setAll", object);
+                return socket.emit("setAll", object, options);
             }
         },
 
@@ -137,15 +147,12 @@
          * @return {Object} Object description for every input object requested.
          */
 
-        get: function(name) {
+        get: function(name, options) {
             if (typeof name == "string") {
-                return socket.emit("get", name);
-            } else if (name.length >= 1) {
-                return socket.emit("getAll", name);
-            } else {
-                //Nothing to work with
-            }
-            
+                return socket.emit("get", name, options);
+            } else { 
+                return socket.emit("getAll", name, options);
+            } 
         },
 
         /**
@@ -153,11 +160,12 @@
          * Seeks all Clotho object instances that match the object specification.
          * @param {Object} Clotho object specification.
          * @return {Object} All objects that match the spec.
+         * 2 arg patterns: (String schema, String name, options) searches for {<schema>:<name}
+         * (Object spec, options) searches for spec
          */
-        query: function(schema, name) {
-            var obj = {};
-            obj[schema] = name;
-            return socket.emit("query", obj);
+        query: function(schema, name, options) {
+            var args = parseQueryArgs(schema,name,options);
+            return socket.emit("query", args.obj, args.options);
         },
 
         /**
@@ -166,10 +174,9 @@
          * @param {Object} Clotho object specification.
          * @return {Object} The first Clotho object that matches the spec.
          */
-        queryOne: function(schema, name) {
-            obj = {};
-            obj[schema] = name;
-            return socket.emit("queryOne", obj);
+        queryOne: function(schema, name, options) {
+            var args = parseQueryArgs(schema,name,options);
+            return socket.emit("queryOne", args.obj, args.options);
         },
 
         /**
@@ -180,11 +187,13 @@
          *  'Object.func' {String} indicates the function to run,
          *  'Object.input' {Object} indicates input arguments for function. 
          */
-        run: function(object) {
+        run: function(object, options) {
+            if (object.args == undefined)
+                object.args = [];
             if (object.module == undefined) {
-                return socket.emit("run", {"id":object.function, "args":object.args});
+                return socket.emit("run", {"id":object.function, "args":object.args}, options);
             } else {
-                return socket.emit("run", {"id":object.module, "function":object.function, "args":object.args});
+                return socket.emit("run", {"id":object.module, "function":object.function, "args":object.args}, options);
             }
         },
 
@@ -193,8 +202,8 @@
          * Executes script.
          * @param {Object}
          */
-        submit: function(script) {
-            return socket.emit("submit", script);
+        submit: function(script, options) {
+            return socket.emit("submit", script, options);
         },
 
         /**
