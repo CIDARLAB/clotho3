@@ -214,6 +214,13 @@
         },
 
         /**
+         * Clotho.validate
+         * Validates object against associated schemas
+         */
+        validate: function (object, options) {
+            return socket.emit("validate", object, options);
+        }, 
+        /**
          * Clotho.login
          * Login to Clotho
          * @param {Object} 
