@@ -23,6 +23,7 @@ public class ObjectId {
     }
     
     public ObjectId(Object value){
+        if (value == null) throw new IllegalArgumentException();
         this.value = value.toString();
     }
     
