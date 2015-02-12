@@ -51,6 +51,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>com.github.klieber</groupId>
                 <artifactId>phantomjs-maven-plugin</artifactId>
@@ -66,10 +67,19 @@
                     <version>1.9.2</version>
                 </configuration>
             </plugin>
+            -->
             <plugin>
                 <groupId>com.github.searls</groupId>
                 <artifactId>jasmine-maven-plugin</artifactId>
                 <version>2.0-alpha-01</version>
+                <configuration>
+                    <jsTestSrcDir>${project.basedir}/src/test/js/jasmine</jsTestSrcDir>
+                    <jsSrcDir>${project.basedir}/src/test/js/lib</jsSrcDir>
+                    <preloadSources>
+                        <source>webjars/q.js</source>
+                        <source>clotho3api.js</source>
+                    </preloadSources>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
@@ -77,17 +87,19 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <jsTestSrcDir>${project.basedir}/src/test/js/jasmine</jsTestSrcDir>
-                            <jsSrcDir>${project.basedir}/src/test/js/lib</jsSrcDir>
-                            <preloadSources>
-                                <source>webjar/q.js</source>
-                                <source>clotho3api.js</source>
-                            </preloadSources>
                             <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
                             <webDriverCapabilities>
                                 <capability>
                                     <name>phantomjs.binary.path</name>
                                     <value>${phantomjs.binary}</value>
+                                </capability>
+                                <capability>
+                                    <name>phantomjs.cli.args</name>
+                                    <list>
+                                        <value>--ignore-ssl-errors=true</value>
+                                        <value>--ssl-protocol=any</value>
+                                        <value>--web-security=false</value>
+                                    </list>
                                 </capability>
                             </webDriverCapabilities>
                         </configuration>
@@ -115,7 +127,7 @@
                             </arguments>
                             <waitAfterLaunch>45</waitAfterLaunch>
                             <workingDir>..</workingDir>
-                            <!--<processLogFile></processLogFile>-->
+                            <!--<processLogFile>clothoIntegrationServer.log</processLogFile>-->
                         </configuration>
                     </execution>
                     <execution>
