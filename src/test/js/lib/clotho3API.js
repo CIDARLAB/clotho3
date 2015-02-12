@@ -11,14 +11,19 @@
     //                                              WebSocket                                                //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    socket = new WebSocket("wss://localhost:8443/websocket");
+    var socket = new WebSocket("wss://localhost:8443/websocket");
+    socket.messageCache = [];
 
     socket.onopen = function() {
-        //TODO: Remember JS is single-threaded so the WebSocket will not reach readystate=1 until 
+        console.log("websocket opened!");
+        ///Remember JS is single-threaded so the WebSocket will not reach readystate=1 until 
         ///the entire library finishes loading. In the off chance the user writes a script that calls
         ///a Clotho function immediately upon completion of dependencies loading, the socket will not 
         ///have had enough time to enter readystate. Handle this by storing those calls (if any are made)
         ///and executing them in this socket.onopen() method.
+        for (var i=0; i < socket.messageCache.length; i++){
+            socket.send(socket.messageCache[i]);
+        }
     };
 
     socket.onmessage = function(evt) {
@@ -36,7 +41,17 @@
         }
     };
 
-    var Message = function(channel, data, requestID) {
+    socket.sendwhenready = function(message) {
+        if (socket.readyState == 1) {
+            socket.send(message);
+        }
+        else {
+            console.log("caching " + message);
+            socket.messageCache.push(message);
+        }
+    }
+
+    var Message = function(channel, data, requestID, options) {
         this.channel = channel;
         this.data = data;
         this.requestId = requestID;
@@ -54,7 +69,7 @@
         };
         // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
         callbackHash[channel + requestID] = callback;
-        socket.send(JSON.stringify(message));
+        socket.sendwhenready(JSON.stringify(message));
         return deferred.promise;
     };
 
