@@ -26,6 +26,16 @@ public class PythonExecutionTest {
     }
     
     @Test
+    public void canSetNewAttrs(){
+        final Map<String,Object> argument = new HashMap<>();
+        final List<Object> args = new ArrayList<>();
+        args.add(argument);
+        assertEquals(pythonSubprocessExec("def run(obj):\n"
+                + "    obj.newAttr = 5\n"
+                + "    return obj.newAttr\n", args), 5);
+    }
+    
+    @Test
     public void testPythonExecution(){
         assertEquals(pythonSubprocessExec("def run(): return 'passed!'", new ArrayList<>()), "passed!");
     }
