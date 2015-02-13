@@ -196,7 +196,8 @@ public class Persistor{
     
     public ObjectId save(ObjBase obj, boolean overwrite) {
         Subject currentSubject = SecurityUtils.getSubject();
-        if (!currentSubject.isAuthenticated()) {
+        if (!currentSubject.isAuthenticated() ||
+            currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
             throw new AuthorizationException("Anonymous users cannot create or edit objects.");
         }
         validate(obj);
@@ -263,7 +264,8 @@ public class Persistor{
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
+        if (!SecurityUtils.getSubject().isAuthenticated() ||
+            SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
             throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
         }
         if (!data.containsKey(ID)) {
