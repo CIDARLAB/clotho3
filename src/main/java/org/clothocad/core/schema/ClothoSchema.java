@@ -37,6 +37,17 @@ public class ClothoSchema extends Schema {
         this.superClass = superClass;
     }
 
+    @JsonCreator
+    public ClothoSchema(@JsonProperty("name") String name, @JsonProperty("description") String description, 
+        @JsonProperty("author") Person author, @JsonProperty("superClass") Schema superClass, 
+        @JsonProperty("fields") Set<ClothoField> fields, @JsonProperty("methods") Set<Function> methods,
+        @JsonProperty("dependencies") Map<String,ObjectId> dependencies, @JsonProperty("classData") byte[] classData){
+        this(name, description, author, superClass, fields);
+        this.methods = methods == null? new HashSet<Function>() : methods;
+        this.dependencies = dependencies;
+        this.classData = classData;
+    }
+    
     @Override
     @JsonProperty("language")
     public Language getLanguage() {
