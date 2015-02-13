@@ -33,7 +33,7 @@ public class ClothoSchema extends Schema {
 
     public ClothoSchema(String name, String description, Person author, Schema superClass, Set<ClothoField> fields) {
         super(name, description, author);
-        this.fields = fields;
+        this.fields = fields == null? new HashSet<ClothoField>() : fields;
         this.superClass = superClass;
     }
 
