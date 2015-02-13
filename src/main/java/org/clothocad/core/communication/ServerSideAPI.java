@@ -1184,9 +1184,9 @@ public class ServerSideAPI {
     }
 
     Object queryOne(Map<String, Object> query) {
-        List result = query(query);
+        List result = persistor.findAsJSON(query, options.getPropertiesFilter(), 1);
         if (result.isEmpty()) {
-            throw new EntityNotFoundException();
+            return Void.TYPE;
         }
         return result.get(0);
     }
