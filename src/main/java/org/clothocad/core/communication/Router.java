@@ -173,6 +173,7 @@ public class Router {
                     if (response == null) response = Void.TYPE;
                     break;
                 case destroy:
+                    //XXX: destroy should return status indicator
                     response = api.destroy(data);
                     if (response == null) response = Void.TYPE;
                     break;
@@ -250,9 +251,14 @@ public class Router {
                 ));
             
         } catch (Exception e) {
-            //TODO: message client with failure
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
+            //deregister failed call
+                        //TODO: message client with failure
+                connection.deregister(
+                    request.getChannel(),
+                    request.getRequestId()
+                );
         } finally {
             if (ClothoRealm.ANONYMOUS_USER.equals(SecurityUtils.getSubject().getPrincipal())){
                 SecurityUtils.getSubject().logout();
