@@ -1,0 +1,9 @@
+{
+"id" : "org.clothocad.model.RBS.interRBS1",
+"name" : "interRBS1",
+"schema" : "org.clothocad.model.RBS",
+"utr5" : "taaGAGCTCAAGGAAAGAAAAatg",
+"nativeHost" : "E. coli",
+"weblink" : "http://onlinelibrary.wiley.com/doi/10.1002/bab.1216/full",
+"isIntergenic" : true
+}

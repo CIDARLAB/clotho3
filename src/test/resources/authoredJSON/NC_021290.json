@@ -1,0 +1,40 @@
+{
+    "isLinear": true, 
+    "description": "Aeromonas hydrophila ML09-119, complete genome.", 
+    "name": "NC_021290", 
+    "sequence": "ATGCTGAAAGTTAACGAGTATTTTGATGGAAATGTAAAATCCATCGGTTTCGAGCAAAAAGGCGACAAAGCAACCGTGGGTGTGATGGAAGCCGGTCACTACCAGTTCAATACCGCCGCCCCCGAGCGGATGACCGTGGTCAAGGGTGCGCTCACCATCCAGCTGGCCGATGAAGATGAATGGCACACCTATGAGCAGGGTCAATCCTTCGACGTGGCCGGCCACTCCTCCTTCAAGCTGGAAGTGAAAACCCCTACTGCCTATCTGTGCGAGTTTCTCGATTAA", 
+    "date": "15-JUL-2013", 
+    "highlight": [
+        {
+            "forColor": "#E19903", 
+            "end": 285, 
+            "description": null, 
+            "revColor": "#C6CE76", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#E19903", 
+            "end": 285, 
+            "description": null, 
+            "revColor": "#C6CE76", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#E19903", 
+            "end": 285, 
+            "description": null, 
+            "revColor": "#C6CE76", 
+            "notes": "COG3123 Uncharacterized protein conserved in bacteria", 
+            "start": 0, 
+            "inference": null
+        }
+    ], 
+    "isSingleStranded": false, 
+    "accession": "NC_021290", 
+    "id": "507519518", 
+    "schema": "org.clothocad.model.Polynucleotide"
+}

@@ -1,0 +1,9 @@
+{
+"id" : "org.clothocad.model.RBS.UTR19",
+"name" : "UTR19",
+"schema" : "org.clothocad.model.RBS",
+"utr5" : "acccgtttttttgggctagcaccgcctatctcgtgtgagataggcggagatacgaactttaagaaggagatatacacatg",
+"nativeHost" : "E. coli",
+"weblink" : "http://www.addgene.org/browse/sequence/12238/",
+"isIntergenic" : false
+}

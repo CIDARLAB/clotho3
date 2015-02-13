@@ -1,0 +1,31 @@
+{
+    "isLinear": true, 
+    "description": "Uncultured candidate division JS1 bacterium clone fosmid vNS2B_6A11 genomic sequence.", 
+    "name": "GU180080", 
+    "sequence": "TTTTTTCTCTCTTCCTGAATATTATCTAAGATACTATGAGAAGTTTGTAGAGGATGTTTTCTTCTGGTTTCACTGAACCTTCGCACAATAATCTCGTCCTTTGCTTCCAGAAACAATATTTCTGGTTGTATATTCATCATTTCTAATTCGCTCAAAGTGTGATCTAAATCCCGTAGAAATATTTCTCCTCGAATATCAACAACAAAGGCTGCTTTGGATAATT", 
+    "date": "08-SEP-2011", 
+    "highlight": [
+        {
+            "forColor": "#81F27F", 
+            "end": 223, 
+            "description": null, 
+            "revColor": "#9ED85F", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#81F27F", 
+            "end": 223, 
+            "description": null, 
+            "revColor": "#9ED85F", 
+            "notes": "similar to predicted P-loop-containing kinase; ORF_30", 
+            "start": 0, 
+            "inference": null
+        }
+    ], 
+    "isSingleStranded": false, 
+    "accession": "GU180080", 
+    "id": "306490827", 
+    "schema": "org.clothocad.model.Polynucleotide"
+}
