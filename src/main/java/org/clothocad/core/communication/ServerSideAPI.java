@@ -514,7 +514,11 @@ public class ServerSideAPI {
     public final List<Map<String, Object>> getAll(List objects) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         for (Object obj : objects) {
-            returnData.add(get(obj));
+            try{
+                returnData.add(get(obj));
+            } catch (Exception e){
+                returnData.add(null);
+            }
         }
         return returnData;
     }
