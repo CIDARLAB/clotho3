@@ -604,7 +604,12 @@ public class ServerSideAPI {
         List<String> returnData = new ArrayList<>();
         //list of selectors?
         for (Object obj : objects) {
-            returnData.add(create(JSON.mappify(obj)).toString());
+            try{
+                ObjectId id = create(JSON.mappify(obj));
+                returnData.add(id == null? null : id.toString());               
+            } catch (Exception e){
+                returnData.add(null);
+            }
         }
         return returnData;
     }
