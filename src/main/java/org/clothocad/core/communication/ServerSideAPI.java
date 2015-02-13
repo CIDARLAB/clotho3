@@ -855,7 +855,7 @@ public class ServerSideAPI {
             return Type.VOID;
         }
 
-        //ensure args is list
+        //ensure args is list & exists
         try {
             args = (List) data.get("args");
         } catch (ClassCastException e) {
@@ -914,7 +914,7 @@ public class ServerSideAPI {
         //"Old" run, for non-Module objects
 
         //resolve any ids to their objects
-        for (int i = 0; i < args.size(); i++) {
+        if (args != null) for (int i = 0; i < args.size(); i++) {
             try {
                 ObjectId id = new ObjectId(args.get(i).toString());
                 //must have read privs on args
