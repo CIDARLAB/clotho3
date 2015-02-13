@@ -727,20 +727,19 @@ public class Persistor{
             for (Class c : r.getSubTypesOf(type)) {
                 out.add(c.getName());
             }
-            
-            //get any authored schemas
-            Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
-            for (Class<? extends Schema> c : authoredSchemas){
-                for (Schema schema : this.getAll(c)){
-                    if (schema.childOf(originalSchema)){
-                        out.add(schema.getBinaryName());
-                    }
+        } catch (ClassNotFoundException | RuntimeException ex) {
+            log.error("getRelatedSchemas: Cannot create java class from schema", ex);
+        }
+        //get any authored schemas
+        Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
+        for (Class<? extends Schema> c : authoredSchemas){
+            for (Schema schema : this.getAll(c)){
+                if (schema.childOf(originalSchema)){
+                    out.add(schema.getBinaryName());
                 }
             }
-            
-
-        } catch (ClassNotFoundException | RuntimeException ex) {
         }
+
         out.add(originalSchemaName);
         return out;
     }
