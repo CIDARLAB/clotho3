@@ -678,6 +678,7 @@ public class ServerSideAPI {
                 persistor.delete(resolvedId);
             } catch (UnauthorizedException e) {
                 say(e.getMessage(), Severity.FAILURE);
+                return null;
             }
             say(String.format("Destroyed object #%s", resolvedId.toString()), Severity.SUCCESS);
             return resolvedId;
