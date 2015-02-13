@@ -764,9 +764,7 @@ public class Persistor{
     }
     
     public Schema resolveSchemaFromClassName(String className){
-        Map<String,Object> query = new HashMap();
-        query.put("binaryName",className);
-        return connection.getOne(Schema.class, query);
+        return connection.get(Schema.class, new ObjectId(className));
     }
     
  
