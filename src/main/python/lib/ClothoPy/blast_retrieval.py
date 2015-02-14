@@ -31,4 +31,4 @@ class call_blast:
             return record # now we have the ncbi record
 
         except Exception:
-            print "No corresponding orf for %s" % poly.uniprot
+            print "No corresponding orf for %s" % self.sequence
