@@ -296,15 +296,15 @@ public class Persistor{
         connection.delete(id);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId id){
+    public Map<String, Object> getAsJSON(ObjectId id) throws EntityNotFoundException {
         return getAsJSON(id, null, false);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields){
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields) throws EntityNotFoundException {
         return getAsJSON(id, fields, false);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun){
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun) throws EntityNotFoundException{
         try {
             if (forRun) checkPriv(id, "run");
             else checkPriv(id, "view");
@@ -771,7 +771,7 @@ public class Persistor{
         return filterByPermission(globalTrie.getCompletions(word), view);
     }
 
-    public Object get(ObjectId objectId) {
+    public Object get(ObjectId objectId) throws EntityNotFoundException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

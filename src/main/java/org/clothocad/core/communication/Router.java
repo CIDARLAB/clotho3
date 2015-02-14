@@ -67,7 +67,7 @@ public class Router {
         boolean wasAuthenticated = false;
         if (subject.isAuthenticated()){
             wasAuthenticated = true;
-            mind = getAuthenticatedMind(subject.getPrincipal().toString());
+            mind = getAuthenticatedMind(subject.getPrincipal().toString(), connection, request);
             mind.setConnection(connection);
         } else {
             mind = getMind(connection);
@@ -330,32 +330,37 @@ public class Router {
     private Map<String, Mind> minds;
     private Map<String, Mind> authenticatedMinds = new HashMap<>();
 
-    private Mind getAuthenticatedMind(String username)  {
+    private Mind getAuthenticatedMind(String username, ClientConnection connection, Message request) {
         //XXX: this whole method is janky
-        if (authenticatedMinds.containsKey(username)){
+        if (authenticatedMinds.containsKey(username)) {
             return authenticatedMinds.get(username);
         }
-        
-        
-        Map<String,Object> query = new HashMap();
+
+
+        Map<String, Object> query = new HashMap();
         query.put("username", username);
         query.put("schema", Mind.class.getCanonicalName());
-        try{
+        try {
             Iterable<ObjBase> minds = persistor.find(query);
 
-        Mind mind;
-        
-        if (!minds.iterator().hasNext()){
-            mind = new Mind();
+            Mind mind;
+
+            if (!minds.iterator().hasNext()) {
+                mind = new Mind();
+                authenticatedMinds.put(username, mind);
+            } else {
+                mind = (Mind) minds.iterator().next();
+            }
+
+            return mind;
+        } catch (Exception ex) {
+            Mind mind = new Mind();
             authenticatedMinds.put(username, mind);
-        } else {
-            mind = (Mind) minds.iterator().next();
-        }
-        
-        return mind;
-                }catch (Exception ex){
-            ex.printStackTrace();
-            throw ex;
+            
+            //tell user mind retrieval failed
+            ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId());
+            api.say("Mind retrieval encountered an exception: " + ex.getMessage(), ServerSideAPI.Severity.WARNING);
+            return mind;
         }
     }
     
