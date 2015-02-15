@@ -144,6 +144,7 @@ def design_operon(orf_list, rbs_list, limit):
         # isLinear = True
         # no accession number or submissionDate
         # description?
+    operon_name = operon_name[:len(operon_name)-1]
     # print { \
     #     'id': ".", \
     #     'sequence': operon, \
@@ -151,8 +152,8 @@ def design_operon(orf_list, rbs_list, limit):
     #     'highlights': highlights, \
     #     'isLinear': True, \
     #     'isSingleStranded': False, \
-    #     'name': operon_name[:len(operon_name)-1] }
-    operon_name = operon_name[:len(operon_name)-1]
+    #     'name': operon_name }
+    
 
     return poly_to_gen ({ \
         'id': ".", \

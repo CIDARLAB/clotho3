@@ -119,7 +119,8 @@ class Genbank:
             p = re.compile("\d+-\w+-\d+")
             m = p.match(date)
             if m is None:
-                print "Please enter a string in the format of: DAY-MONTH-YEAR."
+                pass
+                # print "Please enter a string in the format of: DAY-MONTH-YEAR."
             else:
                 self.annotations['date'] = date
         else:
