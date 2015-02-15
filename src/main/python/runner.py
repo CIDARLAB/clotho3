@@ -42,10 +42,22 @@ class Context(object):
         self.args = init_obj["args"]
         self._swapper = swapper
 
+    @staticmethod
+    def get_serializable(obj):
+        if hasattr(obj, "__dict__"):
+            return obj.__dict__
+        elif "_json" in dir(obj):
+            return obj._json()
+        else:
+            raise TypeError(repr(o) + " is not JSON serializable") 
+
     def send_value(self, value):
         '''Send one message to host'''
         with self._swapper:
-            sys.stdout.write(json.dumps(value).encode("UTF-8"))
+            sys.stdout.write(
+                    json.dumps(value, check_circular=True, 
+                        default=Context.get_serializable)
+                    .encode("UTF-8"))
             sys.stdout.write(b'\0')
             sys.stdout.flush()
 
@@ -61,6 +73,7 @@ class StdoutSwapper(object):
         # need to restore stdout regardless of whether an exception occured
         sys.stdout = self._orig
 
+    
 def read_value():
     '''Read one message from host through standard input and return it'''
     buf = bytearray()
