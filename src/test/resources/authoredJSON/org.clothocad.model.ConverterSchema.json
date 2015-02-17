@@ -31,7 +31,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
   "innerClasses" : null,
   "c" : "org.clothocad.model.ConverterSchema",
   "binaryName" : "org.clothocad.model.ConverterSchema"

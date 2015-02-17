@@ -40,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "savePolicy",
-    "type" : "boolean",
+    "name" : "parentDooId",
+    "type" : "id",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "parentDooId",
-    "type" : "id",
+    "name" : "savePolicy",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

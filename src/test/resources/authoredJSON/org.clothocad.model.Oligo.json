@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "sequence",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "author",
     "type" : "org.clothocad.model.Person",
     "subtype" : null,
@@ -30,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
+    "name" : "sequence",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -42,6 +32,16 @@
   }, {
     "name" : "log",
     "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "description",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "person",
-    "type" : "org.clothocad.model.Person",
+    "name" : "connection",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,27 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "username",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "userDictionary",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "engine",
+    "name" : "logger",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -70,7 +50,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "logger",
+    "name" : "engine",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -80,8 +60,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "connection",
-    "type" : "object",
+    "name" : "lastCommands",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "username",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -100,8 +90,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "lastCommands",
-    "type" : "array",
+    "name" : "person",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "userDictionary",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

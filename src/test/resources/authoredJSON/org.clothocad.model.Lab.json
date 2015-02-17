@@ -10,26 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "department",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "website",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "address",
     "type" : "string",
     "subtype" : null,
@@ -50,12 +30,32 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "department",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "institution",
     "type" : "org.clothocad.model.Institution",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "website",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

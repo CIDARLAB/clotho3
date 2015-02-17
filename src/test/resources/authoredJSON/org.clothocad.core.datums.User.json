@@ -10,7 +10,17 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "authKey",
+    "name" : "isLoggedIn",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "passwordHash",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -20,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isLoggedIn",
-    "type" : "boolean",
+    "name" : "authKey",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -42,16 +52,6 @@
   }, {
     "name" : "personUUIDs",
     "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "passwordHash",
-    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

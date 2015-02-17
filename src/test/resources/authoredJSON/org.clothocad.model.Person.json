@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "myCollection",
+    "type" : "org.clothocad.model.Collection",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "emailAddress",
     "type" : "string",
     "subtype" : null,
@@ -30,7 +40,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "nickName",
+    "name" : "isPrimaryAccount",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "snailMailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -40,12 +60,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "myCollection",
-    "type" : "org.clothocad.model.Collection",
+    "name" : "primaryEmail",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : true,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -60,7 +80,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "snailMailAddress",
+    "name" : "nickName",
     "type" : "string",
     "subtype" : null,
     "example" : null,

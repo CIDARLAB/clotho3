@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "name",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "source",
     "type" : "string",
     "subtype" : null,
@@ -31,6 +21,16 @@
     "description" : null
   }, {
     "name" : "description",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "name",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -61,7 +61,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Polypeptide",
   "binaryName" : "org.clothocad.model.Polypeptide"

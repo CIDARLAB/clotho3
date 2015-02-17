@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "description",
+    "name" : "name",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "name",
-    "type" : "string",
+    "name" : "polypeptides",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "polypeptides",
-    "type" : "array",
+    "name" : "description",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

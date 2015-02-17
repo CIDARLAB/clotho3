@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "description",
-    "type" : "string",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "description",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

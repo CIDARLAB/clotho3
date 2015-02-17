@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "partType",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "sequence",
     "type" : "org.clothocad.model.NucSeq",
     "subtype" : null,
@@ -29,9 +19,19 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
+  }, {
+    "name" : "partType",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.model.Part",
   "innerClasses" : null,
   "c" : "org.clothocad.model.BasicPart",
   "binaryName" : "org.clothocad.model.BasicPart"
