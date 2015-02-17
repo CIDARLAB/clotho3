@@ -1,40 +1,17 @@
- /*
-Copyright (c) 2010 The Regents of the University of California.
-All rights reserved.
-Permission is hereby granted, without written agreement and without
-license or royalty fees, to use, copy, modify, and distribute this
-software and its documentation for any purpose, provided that the above
-copyright notice and the following two paragraphs appear in all copies
-of this software.
-
-IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
-FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
-ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
-THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-
-THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
-PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
-CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
-ENHANCEMENTS, OR MODIFICATIONS..
- */
-
 package org.clothocad.core.persistence;
 
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
 
-
-import groovy.lang.Tuple;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.ObjectId;
-
 
 /**
  *
@@ -83,7 +60,7 @@ public interface ClothoConnection {
      */
     void save(ObjBase obj);
     void save(Map obj);
-    
+
     /**
      * Saves the given collection of objects to the database.
      * @param objs
@@ -92,13 +69,12 @@ public interface ClothoConnection {
     void saveAll(Iterable<ObjBase> objs);
     int saveBSON(Collection<Map> objs);
 
-    
     /**
      * Delete the object from the database.
      * @param obj
      * @return
      */
-    void delete( ObjBase obj );
+    void delete(ObjBase obj);
     void delete(ObjectId id);
 
     /**
@@ -106,15 +82,14 @@ public interface ClothoConnection {
      * @param objs
      * @return number of objects deleted
      */
-    int delete( Collection<ObjBase> objs );
-    
+    int delete(Collection<ObjBase> objs);
 
     /**
      * Returns the time the given ObjBase object was modified in the database.
      * @param obj
      * @return
      */
-    Date getTimeModified( ObjBase obj );
+    Date getTimeModified(ObjBase obj);
 
     /**
      * Gets the object with the given uuid as the specified class,
@@ -127,7 +102,6 @@ public interface ClothoConnection {
     <T extends ObjBase> T get(Class<T> type, ObjectId uuid);
     Map<String,Object> getAsBSON(ObjectId uuid);
     Map<String,Object> getAsBSON(ObjectId uuid, Set<String> fields);
-    
 
     /**
      * Search the database using a query using MongoDB semantics.
@@ -143,10 +117,10 @@ public interface ClothoConnection {
      */
     List<ObjBase> get(Map query);
     List<ObjBase> get(Map query, int hitmax);
-    
+
     <T extends ObjBase> List<T> get(Class<T> type, Map query);
     <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax);
-    
+
     List<Map<String,Object>> getAsBSON(Map query);
     List<Map<String,Object>> getAsBSON(Map query, int hitmax, Set<String> fields);
 
@@ -154,14 +128,17 @@ public interface ClothoConnection {
 
     Map<String,Object> getOneAsBSON(Map query);
     Map<String,Object> getOneAsBSON(Map query, Set<String> fields);
-    
+
     <T extends ObjBase> List<T> getAll(Class<T> type);
-    
-    //Deletes everything
+
+    // Deletes everything
     void deleteAll();
 
     public boolean exists(ObjectId id);
-    
+
     public List<Map> getCompletionData();
- 
+
+    // ResourceApi methods
+    void saveResource(String resourcePath, File file) throws IOException;
+    InputStream getResource(String resourcePath) throws IOException;
 }

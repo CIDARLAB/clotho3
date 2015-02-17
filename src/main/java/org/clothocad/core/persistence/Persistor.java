@@ -1,64 +1,46 @@
-/*
-Copyright (c) 2010 The Regents of the University of California.
-All rights reserved.
-Permission is hereby granted, without written agreement and without
-license or royalty fees, to use, copy, modify, and distribute this
-software and its documentation for any purpose, provided that the above
-copyright notice and the following two paragraphs appear in all copies
-of this software.
-
-IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
-FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
-ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
-THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-
-THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
-PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
-CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
-ENHANCEMENTS, OR MODIFICATIONS.
- */
-
-//TODO: move the translation from clothoisms to mongodb into mongodbconnection
-
 package org.clothocad.core.persistence;
 
-import org.clothocad.core.schema.Converters;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import lombok.extern.slf4j.Slf4j;
-import org.clothocad.core.datums.ObjBase;
-import org.reflections.Reflections;
-import java.util.ArrayList;
-import java.util.Collection;
-import javax.persistence.EntityNotFoundException;
-import lombok.Getter;
 import static org.clothocad.core.ReservedFieldNames.*;
+
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
+import org.clothocad.core.schema.Converters;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+
+import org.reflections.Reflections;
+
+import java.io.InputStream;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 /**
- * @author jcanderson
- * 
  * Manages writing/reading objects to/from the DB, and will eventually also coordinate that with caching
  * Right now is a very simple pass-through class.
  * 
@@ -72,15 +54,16 @@ import org.clothocad.core.util.JSON;
  * having multiple threads have access to the same object sounds like a recipe for disaster -
  * Persistor should hand out copies
  * 
- *   
+ * @author jcanderson
  */
 
+//TODO: move the translation from clothoisms to mongodb into mongodbconnection
 //TODO: thread safety
 //TODO: check out date created/modified/accessed bugs
 //TODO: move backend-agnostic logic into persistor
 @Singleton
 @Slf4j
-public class Persistor{
+public class Persistor {
     public static final int SEARCH_MAX = 5000;
     
     @Getter
@@ -93,11 +76,11 @@ public class Persistor{
     private GlobalTrie globalTrie;
     
     @Inject
-    public Persistor(final ClothoConnection connection){
+    public Persistor(final ClothoConnection connection) {
         this(connection, true);
     }
     
-    public Persistor(final ClothoConnection connection, boolean initializeBuiltins){
+    public Persistor(final ClothoConnection connection, boolean initializeBuiltins) {
         this.connection = connection;
         connect();
         
@@ -107,32 +90,43 @@ public class Persistor{
         globalTrie = new GlobalTrie(connection.getCompletionData());
     }
     
-    protected void validate(ObjBase obj){
+    protected void validate(ObjBase obj) {
         Set<ConstraintViolation<?>> violations = new HashSet<>();
         
-        for (ObjBase o : getObjBaseSet(obj)){
+        for (ObjBase o : getObjBaseSet(obj)) {
             Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the constraints on currently instantiated classes
-            for (ConstraintViolation violation : cvs){
+            for (ConstraintViolation violation : cvs) {
                 log.info("Constraint violation: {}", violation.getMessage());
                 violations.add(violation);
             }
         }
         
-        if (violations.size() > 0){
+        if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
     }
-    
-    
-    public <T extends ObjBase> T get(Class<T> type, ObjectId id){
+
+    public <T extends ObjBase> T get(Class<T> type, ObjectId id) {
         T obj = connection.get(type, id);
-        if (obj == null) throw new EntityNotFoundException(id.toString());
+        if (obj == null) {
+            throw new EntityNotFoundException(id.toString());
+        }
+//        try {
+//            System.out.println(JSON.serialize(obj));
+//        } catch (IOException ex) {
+//            Logger.getLogger(Persistor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         validate(obj);
         return obj;
     }
     
     //throws ConstraintViolationException, OverwriteConfirmationException
     
+    public InputStream getResource(String resourcePath) throws IOException {
+        InputStream fileStream = connection.getResource(resourcePath);
+        return fileStream;
+    }
+
     public ObjectId save(ObjBase obj) {
         return save(obj, false);
     }
@@ -141,10 +135,9 @@ public class Persistor{
         validate(obj);
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
 
-        
-        if (!overwrite){
+        if (!overwrite) {
             Set<ObjBase> modifiedObjects = new HashSet<>();
-            for (ObjBase o : relevantObjects){
+            for (ObjBase o : relevantObjects) {
                 if (modified(o)) modifiedObjects.add(o);
             }
             if (modifiedObjects.size() > 0) throw new OverwriteConfirmationException(modifiedObjects);
@@ -155,8 +148,8 @@ public class Persistor{
         return obj.getId();
     }
     
-    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
-       if (!data.containsKey(ID)){
+    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
+       if (!data.containsKey(ID)) {
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
             data.put(ID, id.toString());
@@ -169,15 +162,15 @@ public class Persistor{
         return new ObjectId(data.get(ID).toString());
     }
     
-    public void delete(ObjectId id){
+    public void delete(ObjectId id) {
         connection.delete(id);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId uuid){
+    public Map<String, Object> getAsJSON(ObjectId uuid) {
         return getAsJSON(uuid, null);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId uuid, Set<String> fields){
+    public Map<String, Object> getAsJSON(ObjectId uuid, Set<String> fields) {
         Map<String,Object> result = connection.getAsBSON(uuid, fields);
         if (result == null) throw new EntityNotFoundException(uuid.toString());
         return result;
@@ -186,18 +179,18 @@ public class Persistor{
     
     //XXX: should return set of possible schemas, not child objects
     // then should not be used as currently is in save
-    protected Set<ObjBase> getObjBaseSet(ObjBase obj){
+    protected Set<ObjBase> getObjBaseSet(ObjBase obj) {
         return getObjBaseSet(obj, new HashSet<ObjBase>());
     }
         
-    private Set<ObjBase> getObjBaseSet(ObjBase obj, Set<ObjBase> exclude){
+    private Set<ObjBase> getObjBaseSet(ObjBase obj, Set<ObjBase> exclude) {
         boolean newId = obj.getId() == null;
-        if(newId) obj.setId(new ObjectId());
+        if (newId) obj.setId(new ObjectId());
         exclude.add(obj);        
         
         //recurse on object's children
-        for (ObjBase child: obj.getChildren()) {
-            if (!exclude.contains(child) && child != null){
+        for (ObjBase child : obj.getChildren()) {
+            if (!exclude.contains(child) && child != null) {
                 getObjBaseSet(child, exclude);
             }
         }
@@ -205,14 +198,14 @@ public class Persistor{
         return exclude;
     }
     
-    public boolean has(ObjectId id){
+    public boolean has(ObjectId id) {
         return connection.exists(id);
     }
     
     
     public void validateBSON(Map<String, Object> obj) throws ConstraintViolationException {
         //get schema
-        if (!obj.containsKey(SCHEMA) || obj.get(SCHEMA) == null){
+        if (!obj.containsKey(SCHEMA) || obj.get(SCHEMA) == null) {
             throw new IllegalArgumentException("Object does not declare a schema.");
         }
         //validate for all enforcing schemas
@@ -227,12 +220,12 @@ public class Persistor{
     }
     
     
-    private boolean changed(ObjBase obj){
+    private boolean changed(ObjBase obj) {
         //TODO
         return true;
     }
     
-    private boolean modified(ObjBase obj){
+    private boolean modified(ObjBase obj) {
         //TODO
         return false;
     }
@@ -318,39 +311,37 @@ public class Persistor{
         return find(query, SEARCH_MAX);
     }
     
-    public Iterable<ObjBase> find(Map<String, Object> query, int hitmax){
-
+    public Iterable<ObjBase> find(Map<String, Object> query, int hitmax) {
         query = addSubSchemas(query);
         List<ObjBase> result = connection.get(query, hitmax);
         //TODO: also add converted instances
         return result;
     }
 
-    private List<Map<String,Object>> getConvertedData(Schema originalSchema, Set<String> fields){
+    private List<Map<String,Object>> getConvertedData(Schema originalSchema, Set<String> fields) {
         List<Map<String, Object>> results = new ArrayList<>();
 
-        for (Schema schema : converters.getConverterSchemas(originalSchema)){
+        for (Schema schema : converters.getConverterSchemas(originalSchema)) {
             Map<String, Object> query = new HashMap<>();
             query.put(SCHEMA, schema.getName());
             List<Map<String,Object>> convertibles = connection.getAsBSON(query);
             Converter converter = converters.getConverter(schema, originalSchema);
-            for (Map<String,Object> bson : convertibles){
+            for (Map<String,Object> bson : convertibles) {
                 Map<String,Object> convertedData = convertAsBSON(bson, schema, converter);
-                
                 results.add(convertedData);
             }
         }
         
-        for (Map<String,Object> result : results){
+        for (Map<String,Object> result : results) {
             filterFields(result, fields);
         }
         
         return results;
     }
     
-    public static void filterFields(Map<String,Object> value, Set<String> fields){
-        for (String field : value.keySet()){
-            if (!fields.contains(field)){
+    public static void filterFields(Map<String,Object> value, Set<String> fields) {
+        for (String field : value.keySet()) {
+            if (!fields.contains(field)) {
                 value.remove(field);
             }
         }
@@ -363,8 +354,8 @@ public class Persistor{
             Object originalSchema = query.get(SCHEMA);
             Map<String, Object> schemaQuery = new HashMap();
             List<String> schemaNames = new ArrayList<>();
-            if (originalSchema instanceof Map && ((Map) originalSchema).containsKey("$in")){
-                for (Object entry : (List) ((Map) originalSchema).get("$in")){
+            if (originalSchema instanceof Map && ((Map) originalSchema).containsKey("$in")) {
+                for (Object entry : (List) ((Map) originalSchema).get("$in")) {
                     schemaNames.add(entry.toString());
                 }
             } else {
@@ -403,7 +394,7 @@ public class Persistor{
 //requires write privilege to change (different from instance schema set in that regard)
 //defaults to the first class an instance was saved as (?)
     
-    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec){
+    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec) {
         return findAsBSON(spec, null, 1000);
     }
     
@@ -412,15 +403,14 @@ public class Persistor{
         spec = addSubSchemas(spec);
         List<Map<String,Object>> out = connection.getAsBSON(spec, hitmax, fields);
 
-        
-        if (spec.containsKey(SCHEMA) && spec.get(SCHEMA)!= null){
+        if (spec.containsKey(SCHEMA) && spec.get(SCHEMA) != null) {
             //copy spec so we don't mutate original search object
             spec = new HashMap(spec);
             Set<String> schemaIds = new HashSet<>();
             Object className = spec.get(SCHEMA).toString();
             //XXX: mongo-specific syntax
-            if (className instanceof Map && ((Map) className).containsKey("$in")){
-                for (String name : (List<String>) ((Map) className).get("$in")){
+            if (className instanceof Map && ((Map) className).containsKey("$in")) {
+                for (String name : (List<String>) ((Map) className).get("$in")) {
                     schemaIds.add(name);
                 }
             } else schemaIds.add(className.toString());
@@ -439,13 +429,14 @@ public class Persistor{
         return filterDuplicatesById(out);
     }
     
-    private List<Map<String,Object>> filterDuplicatesById(List<Map<String,Object>> objects){
+    private List<Map<String,Object>> filterDuplicatesById(List<Map<String,Object>> objects) {
         List<Map<String,Object>> filteredObjects = new ArrayList<>();
         Set<String> ids = new HashSet<>();
-        for (Map<String,Object> object : objects){
+        for (Map<String,Object> object : objects) {
             //these objects are coming out of the DB, so we know they have an id
-            if (ids.contains(object.get(ID).toString())) continue;
-            else {
+            if (ids.contains(object.get(ID).toString())) {
+                continue;
+            } else {
                 ids.add(object.get(ID).toString());
                 filteredObjects.add(object);
             }
@@ -453,8 +444,8 @@ public class Persistor{
         return filteredObjects;
     }
    
-    private List<Map<String,Object>> filterDataByQuery(List<Map<String,Object>> convertedData,Map<String, Object> spec){
-        //TODO
+    private List<Map<String,Object>> filterDataByQuery(List<Map<String,Object>> convertedData, Map<String, Object> spec) {
+        // IN PROGRESS BY BILL CAO
         return convertedData;
     }
     
@@ -464,7 +455,6 @@ public class Persistor{
         } catch (UnknownHostException ex) {
             log.error("Could not connect to database", ex);
         }
-        
     }
 
     public void deleteAll() {
@@ -477,10 +467,10 @@ public class Persistor{
         List<String> packages = new ArrayList<String>();
         packages.add("org.clothocad");
         packages.add("org.registry");
-        for(String pack : packages) {
+        for (String pack : packages) {
             Reflections models = new Reflections(pack);
 
-            for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
+            for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)) {
                 //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
                 //not sure if this is a problem
 
@@ -490,16 +480,16 @@ public class Persistor{
     }
     
     //XXX: remove this method from 'core' persistor behavior
-    private void makeBuiltIns(Class<? extends ObjBase> c, BuiltInSchema superSchema, Reflections ref){
+    private void makeBuiltIns(Class<? extends ObjBase> c, BuiltInSchema superSchema, Reflections ref) {
         //JSONfilter only transiently holds data, don't make a schema for it
         if (c == JSONFilter.class) return;
         //XXX: inefficient
         BuiltInSchema builtIn = new BuiltInSchema(c, superSchema);
-        if (!has(new ObjectId(c.getCanonicalName()))){
+        if (!has(new ObjectId(c.getCanonicalName()))) {
             save(builtIn);           
         }
-        for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){
-            if (subClass.getSuperclass() == c){
+        for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)) {
+            if (subClass.getSuperclass() == c) {
                 makeBuiltIns(subClass, builtIn, ref);                
             }
         }
@@ -529,47 +519,45 @@ public class Persistor{
             
             //get any authored schemas
             Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
-            for (Class<? extends Schema> c : authoredSchemas){
-                for (Schema schema : this.getAll(c)){
-                    if (schema.childOf(originalSchema)){
+            for (Class<? extends Schema> c : authoredSchemas) {
+                for (Schema schema : this.getAll(c)) {
+                    if (schema.childOf(originalSchema)) {
                         out.add(schema.getBinaryName());
                     }
                 }
             }
-            
-
         } catch (ClassNotFoundException | RuntimeException ex) {
+
         }
         out.add(originalSchemaName);
         return out;
     }
 
     
-    public Map<String,Object> convertAsBSON(Map<String,Object> data, Schema type, Converter converter){
+    public Map<String,Object> convertAsBSON(Map<String,Object> data, Schema type, Converter converter) {
         ObjBase converted = (ObjBase) converter.convert(data, type);
         Map<String,Object> convertedData = JSON.mappify(converted);
         return unifyObjectDescriptions(data, convertedData);
     }
+
     public static Map<String,Object> unifyObjectDescriptions(Map<String,Object> sourceJSON, Map<String,Object> newJSON) {
         Set<String> exclude = new HashSet();
         exclude.add("schema");
-        for (String field : sourceJSON.keySet()){
-            if (exclude.contains(field)) continue;
-            if (newJSON.containsKey(field)) continue;
+        for (String field : sourceJSON.keySet()) {
+            if (exclude.contains(field) || newJSON.containsKey(field)) continue;
             
             newJSON.put(field, sourceJSON.get(field));
         }
         return newJSON;
     }
     
-    public Schema resolveSchemaFromClassName(String className){
+    public Schema resolveSchemaFromClassName(String className) {
         Map<String,Object> query = new HashMap();
-        query.put("binaryName",className);
+        query.put("binaryName", className);
         return connection.getOne(Schema.class, query);
     }
     
- 
-    public List<Map> getCompletions(String word){
+    public List<Map> getCompletions(String word) {
         return globalTrie.getCompletions(word);
     }
 

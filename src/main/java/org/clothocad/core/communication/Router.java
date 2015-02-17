@@ -1,7 +1,27 @@
 package org.clothocad.core.communication;
 
+import static org.clothocad.core.communication.Channel.autocompleteDetail;
+import static org.clothocad.core.communication.Channel.create;
+import static org.clothocad.core.communication.Channel.destroy;
+import static org.clothocad.core.communication.Channel.log;
+import static org.clothocad.core.communication.Channel.submit;
+
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
+import org.clothocad.core.execution.Mind;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
+import org.clothocad.core.util.JSON;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -10,23 +30,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
-import static org.clothocad.core.communication.Channel.create;
-import static org.clothocad.core.communication.Channel.destroy;
-import static org.clothocad.core.communication.Channel.log;
-import static org.clothocad.core.communication.Channel.submit;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.util.JSON;
 
 @Slf4j
 @Singleton
@@ -34,16 +40,15 @@ public class Router {
 
     @Getter
     protected Persistor persistor;
-    
+
     @Getter
     protected ClothoRealm realm;
-    
+
     @Inject
     public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
         this.persistor = persistor;
         this.realm = realm;
-        
     }
 
     // send message    
@@ -58,23 +63,29 @@ public class Router {
 
     // receive message
     public void receiveMessage(ClientConnection connection, Message request) {
-
         //bind context to request
         Subject subject = SecurityUtils.getSubject();
         Mind mind;
-        if (subject.isAuthenticated()){
+        if (subject.isAuthenticated()) {
             mind = getAuthenticatedMind(subject.getPrincipal().toString());
             mind.setConnection(connection);
         } else {
             mind = getMind(connection);
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()),realm);
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()), realm);
 
         Object data = request.getData();
-        
+
         Object response = null;
         try {
-            switch (request.getChannel()) {                
+            switch (request.getChannel()) {
+                case resource:
+                    response = persistor.getResource(data.toString());
+                    break;
+                // IN PROGRESS BY BILL CAO
+                case show:
+                    response = api.show(data);
+                    break;
                 case autocomplete:
                     response = api.autocomplete(data.toString());
                     break;
@@ -88,7 +99,7 @@ public class Router {
                     Map map = (Map) data;
                     boolean wasAuthenticated = subject.isAuthenticated();
                     response = api.login(map.get("username").toString(), map.get("password").toString());
-                    if (!wasAuthenticated){
+                    if (!wasAuthenticated) {
                         //remove the 'anonymous' mind
                         //currently this means you lose environment state if you login
                         //we could do something more sophisticated like merge the anonymous environment and the persisted mind, but that could get complicated
@@ -97,27 +108,19 @@ public class Router {
                     break;
                 case updatePassword:
                     Map updatedPassword = (Map) data;
-                    response  = api.updatePassword(updatedPassword.get("username").toString(),updatedPassword.get("password").toString());
-                    
+                    response = api.updatePassword(updatedPassword.get("username").toString(), updatedPassword.get("password").toString());
                     break;
-                
                 case createUser:
-                    Map newusermap = (Map) data;
-                    response  = api.createuser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                    Map newUserMap = (Map) data;
+                    response = api.createuser(newUserMap.get("username").toString(), newUserMap.get("password").toString());
                     break;
-                
-                    
                 case linkPerson:
                     Map linkMap = (Map) data;
-                    response  = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(),linkMap.get("password").toString());
+                    response = api.linkPerson(linkMap.get("primaryEmail").toString(), linkMap.get("username").toString(), linkMap.get("password").toString());
                     break;
-                
                 case getAssociatedPerson:
-                    
-                    response  = api.getAllPerson(data.toString());
+                    response = api.getAllPerson(data.toString());
                     break;
-                    
-                
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();
@@ -178,7 +181,6 @@ public class Router {
                 case queryOne:
                     response = api.queryOne(JSON.mappify(data));
                     break;
-
                 case run:
                     response = api.run(data);
                     break;
@@ -196,20 +198,21 @@ public class Router {
                     response = Void.TYPE;
                     break;
             }
-            
-            if (response == Void.TYPE)
+
+            if (response == Void.TYPE) {
                 connection.deregister(
                     request.getChannel(),
                     request.getRequestId()
                 );
-            else
+            } else {
                 connection.send(new Message(
                     request.getChannel(),
                     response,
                     request.getRequestId(),
                     null
                 ));
-            
+            }
+
         } catch (Exception e) {
             //TODO: message client with failure
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
@@ -262,7 +265,7 @@ public class Router {
         String id = connection.getId();
         if (minds.containsKey(id)) {
             Mind mind = minds.get(id);
-            if (mind.getConnection() != connection){
+            if (mind.getConnection() != connection) {
                 //XXX: this is probably disasterous in some edge cases
                 //because jetty preserves the sesson id across websocket close/open, need to check to see if the connection object in the mind is stale
                 mind.setConnection(connection);
@@ -273,52 +276,46 @@ public class Router {
         Mind mind = new Mind();
 
         mind.setConnection(connection);
-        
+
         minds.put(id, mind);
         return mind;
     }
-    
+
     private Map<String, Mind> minds;
     private Map<String, Mind> authenticatedMinds = new HashMap<>();
 
-    private Mind getAuthenticatedMind(String username)  {
+    private Mind getAuthenticatedMind(String username) {
         //XXX: this whole method is janky
-        if (authenticatedMinds.containsKey(username)){
+        if (authenticatedMinds.containsKey(username)) {
             return authenticatedMinds.get(username);
         }
-        
-        
         Map<String,Object> query = new HashMap();
         query.put("username", username);
         query.put("schema", Mind.class.getCanonicalName());
-        try{
+        try {
             Iterable<ObjBase> minds = persistor.find(query);
-
-        Mind mind;
-        
-        if (!minds.iterator().hasNext()){
-            mind = new Mind();
-            authenticatedMinds.put(username, mind);
-        } else {
-            mind = (Mind) minds.iterator().next();
-        }
-        
-        return mind;
-                }catch (Exception ex){
+            Mind mind;
+            if (!minds.iterator().hasNext()) {
+                mind = new Mind();
+                authenticatedMinds.put(username, mind);
+            } else {
+                mind = (Mind) minds.iterator().next();
+            }
+            return mind;
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw ex;
         }
     }
-    
-    
+
     //TODO: make everything in the API use iterators instead of lists
-    private static List asList(Object o){
+    private static List asList(Object o) {
         //iterator case
-        if (Iterator.class.isInstance(o)){
+        if (Iterator.class.isInstance(o)) {
             return Lists.newArrayList((Iterator) o);
-        } else if (Iterable.class.isInstance(o)){
+        } else if (Iterable.class.isInstance(o)) {
             return Lists.newArrayList((Iterable) o);
-        } else if (o instanceof Object[]){
+        } else if (o instanceof Object[]) {
             return Arrays.asList((Object []) o);
         }
         throw new UnsupportedOperationException("Couldn't convert argument to a List");

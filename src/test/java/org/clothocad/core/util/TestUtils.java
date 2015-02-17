@@ -1,27 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.persistence.EntityNotFoundException;
-import lombok.extern.slf4j.Slf4j;
+import static org.clothocad.core.ReservedFieldNames.*;
+
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
@@ -34,23 +14,44 @@ import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Part.PartFunction;
 import org.clothocad.model.Person;
-import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.persistence.ClothoConnection;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityNotFoundException;
 
 /**
  *
  * @author spaige
+ * @author billcao
  */
 @Slf4j
 public class TestUtils {
 
     public static void importTestJSON(Persistor persistor) {
-        importTestJSON(Paths.get("src","test","resources","testData"), persistor.getConnection(), true);
+        importTestJSON(Paths.get("src", "test", "resources", "testData"), persistor.getConnection(), true);
     }
 
     public static void importTestJSON(Path path, ClothoConnection connection, boolean overwrite) {
         ObjectReader reader = new ObjectMapper().reader(Map.class);
-        
         List<Map> objects = new ArrayList<>();
         try {
             for (Path child : Files.newDirectoryStream(path)) {
@@ -62,7 +63,7 @@ public class TestUtils {
                     while (it.hasNext()) {
                         objects.add(it.next());
                     }
-                    
+
                 } catch (JsonProcessingException ex) {
                     log.warn("Could not process {} as JSON", child.toAbsolutePath());
                 } catch (IOException ex) {
@@ -87,10 +88,32 @@ public class TestUtils {
             connection.save(obj);
         }
     }
+    // TODO: Use boolean overwrite and less hacky way of getting resourcePath
+    public static void importResources(Path path, ClothoConnection connection, boolean overwrite) {
+        try {
+            for (Path child : Files.newDirectoryStream(path)) {
+                if (Files.isDirectory(child)) {
+                    importResources(child, connection, overwrite);
+                } else {
+                    if (child.toString().endsWith(".DS_Store")) {
+                        continue;
+                    }
+                    // + 17 necessary as key is everything past "authoredResources" in path
+                    String resourcePath = child.toString().substring(child.toString().indexOf("authoredResources/") + 17);
+                    // TODO: Add ClothoConnection method to check if resource exists already
+                    connection.saveResource(resourcePath, child.toFile());
+                }
+            }
+        } catch (IOException ex) {
+            log.warn("Could not open {}", path.toAbsolutePath());
+            throw new RuntimeException(ex);
+        }
+    }
+
     //not sure if this should be static 
     private Injector injector;
- 
-   public <T> T getA(Class<T> type) {
+
+    public <T> T getA(Class<T> type) {
         if (injector == null) {
             injector = getDefaultTestInjector();
         }
@@ -100,7 +123,7 @@ public class TestUtils {
     public static Injector getDefaultTestInjector() {
         return Guice.createInjector(new ClothoTestModule(), new JongoModule());
     }
-    
+
     public static void setupAuthoringTestData(Persistor persistor)
     {
         importTestJSON(persistor);
@@ -128,12 +151,12 @@ public class TestUtils {
         newperson2.put("surName", "Bates");
         newperson2.put("title", "Front End Developer");
         newperson2.put("id", "clotho.testuser.maxbates");
-        
+
         persistor.save(newperson);
         persistor.save(newperson2);
-        
+
     }
-    
+
     public static List<ObjectId> setupTestData(Persistor persistor) {
         importTestJSON(persistor);
 
@@ -141,8 +164,8 @@ public class TestUtils {
         Lab lab = new Lab(i, null, "Test Lab", "College of Testing", "8 West Testerfield");
         Person person = new Person("Test Person");
         lab.setPI(person);
-        
-        
+
+
         Person newperson = new Person("testuser");
         Map<String, Object> newperson2 = new HashMap();
         newperson2.put("displayname", "maxbates");
@@ -171,7 +194,7 @@ public class TestUtils {
         persistor.save(newperson);
         persistor.save(newperson2);
 
-        
+
         Part part1 = Part.generateBasic("Test Part 1", "the first test part", "AAAAAAAAAAAAAAAAAAA", new FreeForm(), person);
         part1.setType(PartFunction.CDS);
 
@@ -188,22 +211,22 @@ public class TestUtils {
         persistor.save(part1);
         persistor.save(part2);
         persistor.save(part3);
-        
+
         Function dummyPackager = DummyPackager.createDummyPackager();
         persistor.save(dummyPackager);
-        
+
         ObjectId eugeneID = persistor.save(eugenePart);
 
         return Arrays.asList(part1.getId(), part2.getId(), part3.getId(), eugeneID);
     }
+
     public static void setupTestUsers(ClothoRealm realm) {
         Persistor persistor = getDefaultTestInjector().getInstance(Persistor.class);
         importTestJSON(persistor);
         realm.addAccount("testuser", "password");
         realm.addAccount("maxbates","password2");
-        
     }
-    
+
     public static Map<String, Object> serializeForExternalAsMap(Object o){
         String serialized = JSON.serializeForExternal(o);
         try {

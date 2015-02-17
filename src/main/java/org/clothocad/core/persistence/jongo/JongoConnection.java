@@ -1,24 +1,48 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.persistence.jongo;
 
-import org.clothocad.core.persistence.jackson.JSONFilter;
+import static org.clothocad.core.ReservedFieldNames.*;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
+import static com.mongodb.MongoException.DuplicateKey;
+
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.persistence.DBClassLoader;
+import org.clothocad.core.persistence.jackson.JSONFilter;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.CredentialStore;
+import org.clothocad.core.util.JSON;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.MongoClient;
-import static com.mongodb.MongoException.DuplicateKey;
-import groovy.lang.Tuple;
+import com.mongodb.WriteConcernException;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
+
+import org.bson.BSONObject;
+import org.bson.LazyBSONList;
+
+import org.jongo.ResultHandler;
+
+import org.python.google.common.collect.Lists;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,28 +52,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.File;
+import java.io.InputStream;
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.inject.Named;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.SimpleAccount;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
-import org.bson.BSONObject;
-import org.bson.LazyBSONList;
-import static org.clothocad.core.ReservedFieldNames.*;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.persistence.ClothoConnection;
-import org.clothocad.core.persistence.DBClassLoader;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.security.CredentialStore;
-import org.clothocad.core.util.JSON;
-import org.jongo.ResultHandler;
-import org.python.google.common.collect.Lists;
 
 /**
  *
  * @author spaige
+ * @author billcao
  */
 @Slf4j
 public class JongoConnection implements ClothoConnection, CredentialStore {
@@ -62,17 +75,43 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     protected RefMongoCollection data;
     protected DBCollection cred;
     protected DBCollection rawDataCollection;
-    
     protected DBClassLoader classLoader;
+    protected GridFS gridfs;
     private static final TypeReference<Map<String, Object>> STRINGMAP = new TypeReference<Map<String, Object>>() {
     };
 
     @Inject
     public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
         db = new MongoClient(host, port).getDB(dbname);
+        gridfs = new GridFS(db, "fs");
         rawDataCollection = db.getCollection("data");
         cred = db.getCollection("cred");
         classLoader = dbClassLoader;
+    }
+
+    // This will default override any resource with the same ID/resourcePath in database
+    // Thus implement duplicate checking/check overwrite boolean before calling saveResource
+    @Override
+    public void saveResource(String resourcePath, File file) throws IOException {
+        GridFSInputFile gfsFile = gridfs.createFile(file);
+        gfsFile.setId(resourcePath);
+        try {
+            gfsFile.save();
+        } catch (DuplicateKey e) {
+            DBObject idQuery = new BasicDBObject("_id", resourcePath);
+            gridfs.remove(idQuery);
+            gfsFile = gridfs.createFile(file);
+            gfsFile.setId(resourcePath);
+            gfsFile.save();
+        }
+    }
+
+    @Override
+    public InputStream getResource(String resourcePath) throws IOException {
+        DBObject idQuery = new BasicDBObject("_id", resourcePath);
+        GridFSDBFile file = gridfs.findOne(idQuery);
+        InputStream fileStream = file.getInputStream();
+        return fileStream;
     }
 
     @Override
@@ -118,10 +157,10 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     @Override
     public void save(ObjBase obj) {
-        try{
+        try {
             data.save(obj);
         }
-        catch (DuplicateKey e){
+        catch (DuplicateKey e) {
             data.update("{_id:#}", obj.getId().toString()).with(obj);
         }
     }
@@ -129,7 +168,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     @Override
     public void save(Map obj) {
         obj = mongifyIdField(obj);
-        if (obj.get("_id") == null){
+        if (obj.get("_id") == null) {
             //must create new id
             rawDataCollection.insert(new BasicDBObject(obj));
             return;
@@ -138,7 +177,13 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         obj.remove("_id");
         Map<String,Object> setExpression = new HashMap<>();
         setExpression.put("$set", obj);
-        rawDataCollection.update(idQuery, new BasicDBObject(setExpression),true, false);  //upsert true, multi false        
+        try {
+            rawDataCollection.update(idQuery, new BasicDBObject(setExpression), true, false);  //upsert true, multi false
+        } catch (WriteConcernException ex) {
+            // Handles invalid JSON
+            // TODO: Check if this is redundant
+            log.error("Failed to save object", obj.toString());
+        }
     }
 
     @Override
@@ -209,7 +254,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         return get(query, Persistor.SEARCH_MAX);
     }
 
-    
+
     @Override
     public List<ObjBase> get(Map query, int hitmax) {
         bindClassLoader();
@@ -220,8 +265,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
         return get(type, query, Persistor.SEARCH_MAX);
     }
-    
-    
+
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax) {
         bindClassLoader();
@@ -232,8 +276,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     public List<Map<String, Object>> getAsBSON(Map query) {    
         return getAsBSON(query, Persistor.SEARCH_MAX, null);
     }
-    
-    
+
     @Override
     public List<Map<String, Object>> getAsBSON(Map query, int hitmax, Set<String> filter) {
         return Lists.newArrayList(data.find(serialize(mongifyIdField(query)))
@@ -288,21 +331,20 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         DBObject account = new BasicDBObject("_id", username);
         account.put("hash", hashedPw.getBytes());
         account.put("salt", salt.getBytes());
-        
+
         cred.save(account);
     }
     
     @Override
-    public void updatePassword(String username, SimpleHash hashedPw, ByteSource salt)
-    {
+    public void updatePassword(String username, SimpleHash hashedPw, ByteSource salt) {
         DBObject account = new BasicDBObject("_id", username);
         account.put("hash", hashedPw.getBytes());
         account.put("salt", salt.getBytes());
-        
+
         cred.save(account);
-        
-        
-        
+
+
+
         /*DBObject accountData = cred.findOne(new BasicDBObject("_id", username));
         if (accountData != null) {
             return false;
@@ -312,36 +354,32 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         account.put("salt", salt.getBytes());
         cred.remove(accountData);
         cred.save(account);*/
-        
-        
-        
     }
-    
+
     @Override
     public void deleteAllCredentials() {
         cred.drop();
-       
     }
     @Override
-    public List<Map> getCompletionData(){
+    public List<Map> getCompletionData() {
         DBCursor cursor = rawDataCollection.find();
         Iterator<DBObject> iter = cursor.iterator();
         List<Map> out = new ArrayList<Map>();
         int i = 0;
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             try {
                 DBObject temp = iter.next();
                 Map map = new HashMap();
                 map.put("name", temp.get("name"));
                 map.put("schema", temp.get("schema"));
                 map.put("id", temp.get("_id").toString());
-                if(temp.containsKey("description")) {
+                if (temp.containsKey("description")) {
                     map.put("description", temp.get("description"));
-                } else if(temp.containsKey("shortDescription")) {
+                } else if (temp.containsKey("shortDescription")) {
                     map.put("description", temp.get("shortDescription"));
                 }
                 out.add(map);
-            } catch(Exception err) {
+            } catch (Exception err) {
                 err.printStackTrace();
             }
             i++;
@@ -357,7 +395,6 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
     }
     
     private Map<String, Object> mappify(JSONFilter obj) {
-
         return mapper.convertValue(obj, STRINGMAP);
     }
 
@@ -371,12 +408,12 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
 
     //renames "id" key to "_id", and replaces ObjectId with String
     protected static Map<String,Object> mongifyIdField(Map<String, Object> obj) {
-        if (obj.containsKey(ID)){
+        if (obj.containsKey(ID)) {
             Map<String,Object> copy = new HashMap<>();
             copy.putAll(obj);
             obj = copy;
             Object id = obj.get(ID);
-            if (id instanceof ObjectId){
+            if (id instanceof ObjectId) {
                 id = ((ObjectId) id).toString();
             }
             obj.remove(ID);
@@ -384,12 +421,12 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         }
         return obj;
     }
-    
+
     //renames "_id" to "id" 
     //doesn't recurse on sub-objects, since no embedded object will have an objectid
     //mutates instead of returning new object
-    protected static Map<String,Object> demongifyIdField(Map<String,Object> obj){
-        if (obj.containsKey("_id")){
+    protected static Map<String,Object> demongifyIdField(Map<String,Object> obj) {
+        if (obj.containsKey("_id")) {
             Object id = obj.get("_id");
             obj.remove("_id");
             obj.put(ID, id);
@@ -403,42 +440,42 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         //classloader is singleton that delegates to root classloader, so no classloader hairiness should happen
         Thread.currentThread().setContextClassLoader(classLoader);
     }
-    
-    private String generateProjection(Set<String> fields){
+
+    private String generateProjection(Set<String> fields) {
         if (fields == null) return "{}";
         StringBuilder builder = new StringBuilder();
         builder.append("{");
-        for (String field: fields){
+        for (String field : fields) {
             builder.append(String.format("%s:1, ", field));
         }
         builder.append("}");
-        
+
         return builder.toString();
     }
-    
-    protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
+
+    protected static class DemongifyHandler implements ResultHandler<Map<String,Object>> {
         //this will have problems if there are circular dstructures, though that should be impossible
         @Override
         public Map<String,Object> map(DBObject result) {
             Map<String,Object> resultMap = toMap(result);
             //recurse on any sub objects
-            for (String key : resultMap.keySet()){
+            for (String key : resultMap.keySet()) {
                  Object value = resultMap.get(key);
-                 if (value instanceof DBObject){
+                 if (value instanceof DBObject) {
                      resultMap.put(key,toMapOrList((DBObject)value));
                  }
             }
             return demongifyIdField(resultMap);
         }
-        
+
         //some dbobjects don't support toMap
-        private Map<String,Object> toMap(BSONObject dbObject){
+        private Map<String,Object> toMap(BSONObject dbObject) {
             BasicDBObject basicResult = new BasicDBObject();
             basicResult.putAll(dbObject);
             Map<String,Object> resultMap = basicResult.toMap();
             return resultMap;
         }
-        
+
         private Object toMapOrList(DBObject value) {
             if (value instanceof LazyBSONList) {
                 //convert members
@@ -458,9 +495,9 @@ public class JongoConnection implements ClothoConnection, CredentialStore {
         }
 
         private static DemongifyHandler instance;
-        
-          public static DemongifyHandler get(){
-            if (instance == null){
+
+          public static DemongifyHandler get() {
+            if (instance == null) {
                 instance = new DemongifyHandler();
             }
             return instance;
