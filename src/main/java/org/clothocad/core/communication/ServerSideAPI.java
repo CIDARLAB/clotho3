@@ -1,30 +1,37 @@
-//clotho.show('CT-sample-view', '['static-admin-instance-is-uuid']', '{}'); clotho.show('CT-sample-view', '[]', '{}');
-/*
- Copyright (c) 2010 The Regents of the University of California.
- All rights reserved.
- Permission is hereby granted, without written agreement and without
- license or royalty fees, to use, copy, modify, and distribute this
- software and its documentation for any purpose, provided that the above
- copyright notice and the following two paragraphs appear in all copies
- of this software.
-
- IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
- FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
- ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
- SUCH DAMAGE.
-
- THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
- PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
- ENHANCEMENTS, OR MODIFICATIONS.
- */
 package org.clothocad.core.communication;
 
+import org.clothocad.core.aspects.Interpreter.Interpreter;
+import org.clothocad.core.communication.mind.Widget;
+import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.Module;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.datums.User;
+import org.clothocad.core.datums.util.Language;
+import org.clothocad.core.execution.ConverterFunction;
+import org.clothocad.core.execution.Mind;
+import org.clothocad.core.execution.ScriptAPI;
+import org.clothocad.core.execution.subprocess.SubprocessExec;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.ReservedFieldNames;
+import org.clothocad.core.schema.ReflectionUtils;
+import org.clothocad.core.schema.Schema;
+import org.clothocad.core.security.ClothoRealm;
+import org.clothocad.core.util.JSON;
+import org.clothocad.core.util.XMLParser;
+import org.clothocad.model.Person;
+
 import com.fasterxml.jackson.core.JsonParseException;
+
 import com.google.inject.Injector;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.SecurityUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -40,35 +47,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.EntityNotFoundException;
 import javax.script.ScriptException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.UnauthorizedException;
-import org.clothocad.core.ReservedFieldNames;
-import org.clothocad.core.aspects.Interpreter.Interpreter;
-import org.clothocad.core.communication.mind.Widget;
-import org.clothocad.core.datums.Function;
-import org.clothocad.core.datums.Module;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.datums.User;
-import org.clothocad.core.datums.util.Language;
-import org.clothocad.core.execution.ConverterFunction;
-import org.clothocad.core.execution.Mind;
-import org.clothocad.core.execution.ScriptAPI;
-import org.clothocad.core.execution.subprocess.SubprocessExec;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.schema.ReflectionUtils;
-import org.clothocad.core.schema.Schema;
-import org.clothocad.core.security.ClothoRealm;
-import org.clothocad.core.util.JSON;
-import org.clothocad.core.util.XMLParser;
-import org.clothocad.model.Person;
 
 /**
  * The ServerSideAPI relays the server methods that can be invoked by a client
@@ -83,7 +66,7 @@ import org.clothocad.model.Person;
  * Object>s and Lists to facilitate conversions. Each different context (Mind,
  * REST, websocket, java client, etc.) is expecting slightly different object
  * representations and synchronization models, so there is necessarily
- * interpretor logic in Router/ Communicator that handles this.
+ * interpreter logic in Router/Communicator that handles this.
  *
  * API methods should return their result, instead of sending the result as a side effect
  *
@@ -99,7 +82,7 @@ public class ServerSideAPI {
     private final MessageOptions options;
     private final ClothoRealm realm;
 
-    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId,ClothoRealm realm) {
+    public ServerSideAPI(Mind mind, Persistor persistor, Router router, String requestId, ClothoRealm realm) {
         this(mind, persistor, router, requestId, new MessageOptions(), realm);
     }    
     
@@ -112,9 +95,9 @@ public class ServerSideAPI {
         this.realm = realm;
     }
 
-    public final List<Map> autocomplete(String userText){
+    public final List<Map> autocomplete(String userText) {
         //This is needed because the subString is in the format {query=[subString]}
-        userText = userText.substring(7, userText.length()-1);
+        userText = userText.substring(7, userText.length() - 1);
         
         //Add the word suggestions from the global Trie
         List<Map> globalComps = persistor.getCompletions(userText);
@@ -130,10 +113,9 @@ public class ServerSideAPI {
             ex.printStackTrace();
             return null;
         }
-
     }
 
-        
+
     //clotho.run("aa7f191e810c19729de86101", ["53581f9e9e7d7a2fda8c36a7"]);   revcomp pBca1256
     //clotho.run("aa7f191e810c19729de86101", ["atcg"]);  revcomp atcg
     public final Object submit(Object data) {
@@ -288,15 +270,12 @@ public class ServerSideAPI {
             Interpreter.get().learnNative(userInput, JSON.mappify(command));
         }
     }
-    public final Object createuser(String username, String password)
-    {
-        
+    public final Object createuser(String username, String password) {
         Map<String,Object> query = new HashMap<String,Object>();
         Map<String,Object> result = new HashMap<String,Object>();
         query.put("primaryEmail",username);
         List<Map<String,Object>> results = query(query);
-        if(results.isEmpty())
-        {
+        if (results.isEmpty()) {
             Person newPerson = new Person(username);
             newPerson.setPrimaryAccount(true);
             newPerson.setPrimaryEmail(username);
@@ -304,50 +283,38 @@ public class ServerSideAPI {
             newPerson.setId(new ObjectId(username));
             persistor.save(newPerson);
             realm.addAccount(username, password);
-            say("New user " + username +" created.", Severity.SUCCESS);
+            say("New user " + username + " created.", Severity.SUCCESS);
             result.put("id", username);
             result.put("accessToken", "dummy");
             result.put("app_id", "dummy");
             return result;
-        }
-        else
-        {
-            say("User " + username +" exists.", Severity.FAILURE);
+        } else {
+            say("User " + username + " exists.", Severity.FAILURE);
             return false;
         }
     }
     
     
-    public final boolean linkPerson(String primaryEmail,String username, String password)
-    {
+    public final boolean linkPerson(String primaryEmail, String username, String password) {
         Map<String,Object> query = new HashMap<String,Object>();
-        query.put("primaryEmail",username);
+        query.put("primaryEmail", username);
         List<Map<String,Object>> results = query(query);
-        if(results.isEmpty())
-        {
-            
-            say("User with primary Email " + primaryEmail +" does not exist. Please create the primary User account first.", Severity.FAILURE);
+        if (results.isEmpty()) {
+            say("User with primary Email " + primaryEmail + " does not exist. Please create the primary User account first.", Severity.FAILURE);
             return false;
-        }
-        else
-        {
+        } else {
             boolean personExists = false;
             
-            for(Map<String,Object> result:results)
-            {
-                if(result.get("id").equals(username))
-                {
+            for (Map<String,Object> result : results) {
+                if (result.get("id").equals(username)) {
                     personExists = true;
                 }
             }
             //say("User " + username +" exists.", Severity.FAILURE);
-            if(personExists)
-            {
-                say("Person with Email " + username +" exists. Please update the Person object.", Severity.FAILURE);
+            if (personExists) {
+                say("Person with Email " + username + " exists. Please update the Person object.", Severity.FAILURE);
             return false;
-            }
-            else
-            {
+            } else {
                 Person newPerson = new Person(username);
                 newPerson.setPrimaryAccount(false);
                 newPerson.setPrimaryEmail(primaryEmail);
@@ -362,84 +329,61 @@ public class ServerSideAPI {
         }
     }
     
-    public final List<Map<String, Object>> getAllPerson(String primaryEmail) 
-    {
-        
+    public final List<Map<String, Object>> getAllPerson(String primaryEmail) {
         Map<String,Object> query = new HashMap<String,Object>();
-        query.put("primaryEmail",primaryEmail);
+        query.put("primaryEmail", primaryEmail);
         List<Map<String,Object>> results = query(query);
-        if(results.isEmpty())
-        {
-            
-            say("User with primary Email " + primaryEmail +" does not exist. Please create the primary User account first.", Severity.FAILURE);
+        if (results.isEmpty()) {
+            say("User with primary Email " + primaryEmail + " does not exist. Please create the primary User account first.", Severity.FAILURE);
             return null;
-        }
-        else
-        {
+        } else {
             say(results.size() + " persons found", Severity.SUCCESS);
             return results;
         }
     }
     
     
-    public final boolean updatePassword(String username, String password)
-    {
-        boolean personexists = false;
+    public final boolean updatePassword(String username, String password) {
+        boolean personExists = false;
         Collection<Person> personlist = persistor.getAll(Person.class);
-            for(Person p : personlist)
-            {
-                if(p.getId().toString().equals(username))
-                {
-                    personexists = true;
+            for (Person p : personlist) {
+                if (p.getId().toString().equals(username)) {
+                    personExists = true;
                     break;
                 }
             }
        
-        if(personexists)
-        {
-           realm.updatePassword(username, "anotherpass");
-            say("Password for user: " + username +" updated.", Severity.SUCCESS);
+        if (personExists) {
+            realm.updatePassword(username, "anotherpass");
+            say("Password for user: " + username + " updated.", Severity.SUCCESS);
             return true;
-        }
-        else
-        {
-            say("User " + username +" does not exist.", Severity.FAILURE);
+        } else {
+            say("User " + username + " does not exist.", Severity.FAILURE);
             return false;
         }
     }
     
     
-    
     public final Object login(String username, String password) {
         ObjectId userId = null;
         Map<String,Object> result = new HashMap<String,Object>();
-        if (!SecurityUtils.getSubject().isAuthenticated())
-        {
-            
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
             //SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
             // Map<String, Object> 
             Collection<Person> personlist = persistor.getAll(Person.class);
-            for(Person p : personlist)
-            {
-                if(p.getId().toString().equals(username))
-                {
+            for (Person p : personlist) {
+                if (p.getId().toString().equals(username)) {
                     userId = p.getId();
                     break;
                 }
             }
-            if(userId == null)
-            {
-                say("Error. User:"+username+" does not exist in database. Please try creating the user." , Severity.FAILURE);
+            if (userId == null) {
+                say("Error. User: " + username + " does not exist in database. Please try creating the user." , Severity.FAILURE);
                 return false;
-            }
-            else 
-            {
-                try 
-                {
+            } else {
+                try {
                     SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
-                } 
-                catch (AuthenticationException e) 
-                {
+                } catch (AuthenticationException e) {
                     logAndSayError("Authentication attempt failed for username " + username, e);
                     return false;
                 }
@@ -451,13 +395,10 @@ public class ServerSideAPI {
                 
                 return result;
             }
-        }
-        else
-        {
+        } else {
             say("Error. Someone has already logged in. Please Log out first." , Severity.FAILURE);
             return false;
         }
-            
     }
 
     public final boolean logout() {
@@ -465,9 +406,9 @@ public class ServerSideAPI {
             String username = SecurityUtils.getSubject().getPrincipal().toString();
             mind.setUsername(username);
             //XXX: need some kind of error recovery if mind save fails
-            try{
+            try {
                 persistor.save(mind);
-            } catch (Exception e){
+            } catch (Exception e) {
                 say("There was a problem saving your mind. You will still be logged out, but some settings may not be saved.", Severity.WARNING);
             }
             SecurityUtils.getSubject().logout();
@@ -497,12 +438,10 @@ public class ServerSideAPI {
      */
     public final void say(String message, Severity severity) {
         say(message, severity, null, false);
-
     }
 
     public final void say(String message, Severity severity, String recipients) {
         say(message, severity, recipients, false);
-
     }
 
     protected void say(String message, Severity severity, String recipients, boolean isUser) {
@@ -531,20 +470,14 @@ public class ServerSideAPI {
     //JCA:  Java side looks fine, but client code crashes browser
     //clotho.alert("this is an alert!");
     public final void alert(String message) {
-        router.sendMessage(
-            mind.getConnection(),
-            new Message(Channel.alert, message, null, null)
-        );
+        router.sendMessage(mind.getConnection(), new Message(Channel.alert, message, null, null));
     }
 
     //JCA:  This runs, and the message goes to the console.log spot.
     //clotho.log("I did some minipreps today");
     public final void log(String message) {
         log.debug("log has: {}", message);
-        router.sendMessage(
-            mind.getConnection(),
-            new Message(Channel.log, message, null, null)
-        );
+        router.sendMessage(mind.getConnection(), new Message(Channel.log, message, null, null));
     }
 
     //Make note of this message in my notebook
@@ -582,7 +515,6 @@ public class ServerSideAPI {
             Map<String, Object> out = persistor.getAsJSON(id, options.getPropertiesFilter());
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
-
         } catch (UnauthorizedException e) {
             say(String.format("The current user does not have read access for object #%s", id.toString()), Severity.FAILURE);
             return null;
@@ -599,8 +531,7 @@ public class ServerSideAPI {
         }
         return returnData;
     }
-    
-            
+
     private ObjectId resolveId(String id) {
         ObjectId uuid;
         try {
@@ -625,8 +556,8 @@ public class ServerSideAPI {
     }
 
     public final ObjectId set(Map<String, Object> values) {
+        System.out.println("SET MAP OBJECT CALLED");
         try {
-
             if (values.get("id") == null) {
                 say("set: No uuid provided", Severity.WARNING);
                 return create(values);
@@ -670,6 +601,7 @@ public class ServerSideAPI {
     }
 
     public final String create(Object o) {
+        System.out.println("CREATE OBJECT CALLED");
         return create(JSON.mappify(o)).toString();
     }
 
@@ -684,7 +616,7 @@ public class ServerSideAPI {
     }
 
     public ObjectId create(Map<String, Object> obj) {
-
+        System.out.println("CREATE MAP OBJECT CALLED");
         try {
             //Confirm that there is no pre-existing object with this uuid
             String idKey = null;
@@ -693,7 +625,6 @@ public class ServerSideAPI {
             }
 
             if (idKey != null) {
-
                 ObjectId uuid = resolveId(obj.get(idKey).toString());
                 if (uuid == null) {
                     return null;
@@ -777,69 +708,49 @@ public class ServerSideAPI {
         }
     }
     
-    
-    public final Object convert(Object o)
-    {
+    public final Object convert(Object o) {
         final Map<String, Object> data = JSON.mappify(o);
         Object result = null;
         Object convertThis = null;
         Schema targetSchema = null;
         Schema currentSchema = null;
-        for(Map.Entry<String,Object> entry: data.entrySet())
-        {
-                if(entry.getKey().equals("convertTo"))
-                {
-                    targetSchema = persistor.get(Schema.class, new ObjectId(((HashMap)(entry.getValue())).get("id")));
-                }
-                else if(entry.getKey().equals("convert"))
-                {
-                    convertThis = entry.getValue();
-                }
-        }
-        if(convertThis == null || targetSchema==null)
-        {
-            if(convertThis == null)
-            {
-                say("Object to convert to was null", Severity.FAILURE);
-            }
-            if(targetSchema == null)
-            {
-                say("Convert To Schema was null", Severity.FAILURE);
+
+        for (Map.Entry<String,Object> entry : data.entrySet()) {
+            if (entry.getKey().equals("convertTo")) {
+                targetSchema = persistor.get(Schema.class, new ObjectId(((HashMap)(entry.getValue())).get("id")));
+            } else if (entry.getKey().equals("convert")) {
+                convertThis = entry.getValue();
             }
         }
-        {
-            result = convert(convertThis,targetSchema);
+        if (convertThis == null) {
+            say("Object to convert to was null", Severity.FAILURE);
         }
+        if (targetSchema == null) {
+            say("Convert To Schema was null", Severity.FAILURE);
+        }
+        result = convert(convertThis,targetSchema);
         return result;
     }
     
-    public final Object convert(Object obj, Schema schema)
-    {
+    public final Object convert(Object obj, Schema schema) {
         Object result = null;
-        String idVal = (String)((HashMap)obj).get("id");
+        String idVal = (String) ((HashMap)obj).get("id");
         Map<String,Object> objMap = persistor.getAsJSON(new ObjectId(idVal));
         Schema currentSchema = persistor.get(Schema.class, new ObjectId(objMap.get("schema")));
-        
-        
         boolean foundFunc = false;
         ConverterFunction resultCFunc = null;
         Collection<ConverterFunction> convlist = persistor.getAll(ConverterFunction.class);
-        for(ConverterFunction xconvfunc : convlist)
-        {
-            if(xconvfunc.convertTo.equals(schema))
-            {
-                if(xconvfunc.convertFrom.equals(currentSchema))
-                {
+
+        for (ConverterFunction xconvfunc : convlist) {
+            if (xconvfunc.convertTo.equals(schema)) {
+                if (xconvfunc.convertFrom.equals(currentSchema)) {
                     foundFunc = true;
                     resultCFunc = xconvfunc;
                     String convfuncName = xconvfunc.getName();
-                    if(convfuncName != null)
-                    {
-                        say("Converter Funcion : " +xconvfunc.getName()+ "found and will now be executed.",Severity.SUCCESS);
-                    }
-                    else
-                    {
-                        say("Converter Function Found, but no name found",Severity.WARNING);
+                    if (convfuncName != null) {
+                        say("Converter Funcion : " + xconvfunc.getName() + " found and will now be executed.",Severity.SUCCESS);
+                    } else {
+                        say("Converter Function found, but no name found",Severity.WARNING);
                     }
                     break;
                 }
@@ -847,34 +758,24 @@ public class ServerSideAPI {
         }
         List<Object> args = new ArrayList<Object>();
         args.add(obj);
-        if(foundFunc)
-        {
-            if(resultCFunc.getFunction() == null)
-            {
-                say("Converter has a null function.",Severity.FAILURE);
-            }
-            else 
-            {
+        if (foundFunc) {
+            if (resultCFunc.getFunction() == null) {
+                say("Converter has a null function.", Severity.FAILURE);
+            } else {
                 try {
                     result = run(resultCFunc.getFunction(), args);
                 } catch (ScriptException ex) {
                     Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        } else {
+            say("No suitable Converter Found.", Severity.FAILURE);
         }
-        else
-        {
-            say("No suitable Converter Found.",Severity.FAILURE);
-        }
-             
-        
         return result; 
     }
 
-    private Object
-    run2(final Function function, final List<Object> args) {
-        final Map<String, Object> funcJSON =
-            persistor.getAsJSON(function.getId());
+    private Object run2(final Function function, final List<Object> args) {
+        final Map<String, Object> funcJSON = persistor.getAsJSON(function.getId());
         Object out = SubprocessExec.run(
             this,
             funcJSON,
@@ -893,8 +794,9 @@ public class ServerSideAPI {
                 private void
                 say_helper(final byte[] err,
                            final Severity sev) {
-                    if (err.length != 0)
+                    if (err.length != 0) {
                         say(new String(err, StandardCharsets.UTF_8), sev);
+                    }
                 }
             }
         );
@@ -923,12 +825,9 @@ public class ServerSideAPI {
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Function")) {
                 try {
                     Function function = persistor.get(Function.class, new ObjectId(data.get("id")));
-System.out.println("Calling first run on:\n" + function.toString() + "\nand args:\n" + args.toString());
-
-                    if(function.getLanguage().equals(Language.PYTHON)) {
+                    if (function.getLanguage().equals(Language.PYTHON)) {
                         return run2(function, args);
                     }
-
                     return mind.invoke(function, args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
@@ -942,7 +841,6 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             if (functionData.containsKey("schema") && functionData.get("schema").toString().endsWith("Module")) {
                 try {
                     Module module = persistor.get(Module.class, new ObjectId(data.get("id")));
-
                     return mind.invokeMethod(module, data.get("function").toString(), args, getScriptAPI());
                 } catch (ScriptException e) {
                     logAndSayError("Script Exception thrown: " + e.getMessage(), e);
@@ -971,7 +869,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             }
             List<Object> results = new ArrayList<>();
             if (result instanceof Iterable) {
-                for (Object r : ((Iterable) result)) {
+                for (Object r : (Iterable) result) {
                     if (r instanceof ObjBase) {
                         results.add(persistor.save((ObjBase) r));
                     } else {
@@ -1005,67 +903,24 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
             Message message = new Message(Channel.run, result, requestId, null);
             send(message);
         }
-
         return Void.TYPE;
-
     }
     
     public final Object run(Function function, List<Object> args) throws ScriptException {
-        System.out.println("Calling second run on:\n" + function.toString() + "\nand args:\n" + args.toString());
-        if(function.getLanguage().equals(Language.PYTHON)) {
+        if (function.getLanguage().equals(Language.PYTHON)) {
             return run2(function, args);
         }
-
         return mind.evalFunction(function.getCode(), function.getName(), args, getScriptAPI());
     }
 
     /**
-     * Relay method for receiving a show command
-     *
-     * @param viewRef
-     * @param sharables
-     * @param sloppy_args
+     * Show method
+     * Accepts specification for desired view to be rendered and shown to user
      */
-    public final void show(String viewIod, String sharables, String position, String recipients) {
-        System.out.println("Show is called " + position);
-        /**
-         * *
-         * try {
-         *
-         * //IF THE PROCESS WAS TIED TO A COMMAND-INITIATED PROCESS THERE WOULD
-         * BE A PARENT DOO THAT NEEDS TO BE FOUND. Doo parentDoo =
-         * Hopper.get().extract(null); ShowDoo doo = new ShowDoo(parentDoo);
-         *
-         * //Gather up referenced objects View view = (View)
-         * resolveToObjBase(viewId); List<Sharable> shareList =
-         * resolveToSharables(sharables);
-         *
-         * //Create the widget and put it on its page Page targetPage =
-         * mind.getConfig().getPage(socket_id); Widget widget = new
-         * Widget(targetPage, view); targetPage.addWidget(widget);
-         *
-         * //Just for record keeping doo.viewId = view.getId(); doo.widgetId =
-         * widget.getId(); doo.collectSharables(shareList);
-         *
-         * //Create all the commands for the client doo.commandMessageArray =
-         * new ArrayList(); doo.commandMessageArray.put(makeCollect(shareList));
-         * doo.commandMessageArray.put(makeShowWidget(widget, position));
-         * doo.commandMessageArray.put(makeUpdate(widget, shareList,
-         * socket_id)); doo.commandMessageArray.put(makeCallback(doo.getId(),
-         * socket_id));
-         *
-         * //Put the doo into the hopper to await a callback
-         * Hopper.get().add(doo);
-         *
-         * //Send the commands Communicator.get().sendClientMessage(socket_id,
-         * SendChannels.commandList, doo.commandMessageArray.toString());
-         *
-         * //Save everything whose state was changed //JCA: THIS NEEDS A
-         * CALLBACK/FAILURE RESPONSE THAT REVERTS THIS (EVENTUALLY)
-         * Persistor.get().persistObjBase(mind); } catch (Exception e) {
-         * Logger.log(Logger.Level.WARN, "", e); e.printStackTrace(); //REVERT
-         * THE MIND //SEND CLIENT MESSAGE TELLING THAT IT FAILED } *
-         */
+    public final String show(Object o) {
+        // IN PROGRESS BY BILL CAO
+        String successMsg = "View URL here";
+        return successMsg;
     }
 
     /**
@@ -1121,6 +976,7 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
 //            java.util.logging.Logger.getLogger(ServerSideAPI.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
+
     /**
      * Return the Person object associated with the Mind into which this SS API
      * has been injected
@@ -1251,10 +1107,9 @@ System.out.println("Calling first run on:\n" + function.toString() + "\nand args
     Set<ConstraintViolation<?>> validate(Map<String,Object> data) {
         try {
             persistor.validateBSON(data);
-        } catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
             say(String.format("Could not validate: %s", iae.getMessage()), Severity.WARNING);
-            
-        } catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             say(String.format("Validation unsuccessful: %s", e.getMessage()), Severity.FAILURE);
             return e.getConstraintViolations();
         }

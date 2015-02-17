@@ -13,22 +13,22 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public class ObjectId {
-    
+
     @JsonCreator
-    public ObjectId(String value){
+    public ObjectId(String value) {
         this.value = value;
     }
-    
-    public ObjectId(Object value){
+
+    public ObjectId(Object value) {
         this.value = value.toString();
     }
-    
-    public ObjectId(){
+
+    public ObjectId() {
         this.value = new org.bson.types.ObjectId().toString();
     }
-    
+
     @JsonValue
-    public String getValue(){
+    public String getValue() {
         return value;
     }
 
@@ -36,6 +36,6 @@ public class ObjectId {
     public String toString() {
         return value;
     }
-    
+
     private final String value;
 }

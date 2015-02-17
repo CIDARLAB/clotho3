@@ -1,19 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clothocad.core.util;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
@@ -22,6 +8,18 @@ import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.reflections.Reflections;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

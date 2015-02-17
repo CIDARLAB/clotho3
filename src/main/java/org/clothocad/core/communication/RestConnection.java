@@ -1,10 +1,10 @@
 package org.clothocad.core.communication;
 
+import org.clothocad.core.util.JSON;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
-
-import org.clothocad.core.util.JSON;
 
 /**
  *
@@ -18,7 +18,7 @@ public class RestConnection extends ClientConnection {
     public RestConnection(String id) {
         super(id);
     }
-    
+
     @Override
     public void send(Message msg) {
         try {
@@ -26,10 +26,9 @@ public class RestConnection extends ClientConnection {
             this.done = true;
         } catch (IOException e) {
             jsonResult = e.toString();
-            // jsonResult = "Error";
         }
     }
-    
+
     public boolean isDone() {
         return this.done;
     }
