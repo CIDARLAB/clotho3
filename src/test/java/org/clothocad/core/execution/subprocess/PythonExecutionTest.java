@@ -6,6 +6,7 @@ package org.clothocad.core.execution.subprocess;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +40,18 @@ public class PythonExecutionTest {
     public void testPythonExecution(){
         assertEquals(pythonSubprocessExec("def run(): return 'passed!'", new ArrayList<>()), "passed!");
     }
-
+   
+    @Test
+    public void testReturnList(){
+        List result = (List) pythonSubprocessExec(
+                "def run(): return [1,2,3]", new ArrayList<>());
+        assertEquals(result, Arrays.asList(1,2,3));
+    }
     
     @Test
     public void testReturnClass(){
-        Map<String, Object> result = (Map) pythonSubprocessExec("class TestClass(object):\n"
+        Map<String, Object> result = (Map) pythonSubprocessExec(
+                  "class TestClass(object):\n"
                 + "    def __init__(self):\n"
                 + "        self.test = 'passed!'\n"
                 + "\n"

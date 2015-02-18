@@ -49,7 +49,11 @@ class Context(object):
         elif hasattr(obj, "__dict__"):
             return obj.__dict__
         else:
-            raise TypeError(repr(obj) + " is not JSON serializable")
+            try:
+                return list(iter(obj))
+            except TypeError:
+                pass
+        raise TypeError(repr(obj) + " is not JSON serializable")
 
     def send_value(self, value):
         '''Send one message to host'''
