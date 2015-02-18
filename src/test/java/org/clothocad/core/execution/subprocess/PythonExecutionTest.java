@@ -39,6 +39,18 @@ public class PythonExecutionTest {
     public void testPythonExecution(){
         assertEquals(pythonSubprocessExec("def run(): return 'passed!'", new ArrayList<>()), "passed!");
     }
+
+    
+    @Test
+    public void testReturnClass(){
+        Map<String, Object> result = (Map) pythonSubprocessExec("class TestClass(object):\n"
+                + "    def __init__(self):\n"
+                + "        self.test = 'passed!'\n"
+                + "\n"
+                + "def run(): return TestClass()", new ArrayList<>());
+        
+        assertEquals(result.get("test"), "passed!");
+    }
     
     private Object pythonSubprocessExec(String code, List<Object> args){
         final Map<String, Object> sourceJSON = new HashMap<>();

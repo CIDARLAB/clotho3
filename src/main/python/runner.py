@@ -44,10 +44,10 @@ class Context(object):
 
     @staticmethod
     def get_serializable(obj):
-        if hasattr(obj, "__dict__"):
-            return obj.__dict__
-        elif "_json" in dir(obj):
+        if "_json" in dir(obj):
             return obj._json()
+        elif hasattr(obj, "__dict__"):
+            return obj.__dict__
         else:
             raise TypeError(repr(o) + " is not JSON serializable") 
 
