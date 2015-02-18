@@ -10,13 +10,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.clothocad.core.communication.AbstractServerAPITest;
 import org.junit.Test;
 import static org.junit.Assert.*;
 /**
  *
  * @author spaige
  */
-public class PythonExecutionTest {
+public class PythonExecutionTest extends AbstractServerAPITest {
     @Test
     public void canAccessAttrs(){
         final Map<String, Object> argument = new HashMap<>();
@@ -59,13 +60,22 @@ public class PythonExecutionTest {
         
         assertEquals(result.get("test"), "passed!");
     }
+
+    @Test
+    public void testGetAPI(){
+        Map<String,Object> result = (Map) pythonSubprocessExec(
+                "def run(): return clotho.get('org.clothocad.core.datums.Module')",
+                new ArrayList<>());
+        
+        assertEquals(result.get("name"), "Module");
+    }
     
     private Object pythonSubprocessExec(String code, List<Object> args){
         final Map<String, Object> sourceJSON = new HashMap<>();
         sourceJSON.put("code", code);
         sourceJSON.put("name", "tester");
         sourceJSON.put("language", "python");
-        return SubprocessExec.run(null, sourceJSON, args, new SubprocessExec.EventHandler() {
+        return SubprocessExec.run(api, sourceJSON, args, new SubprocessExec.EventHandler() {
 
             @Override
             public void onFail(byte[] standardError) {
