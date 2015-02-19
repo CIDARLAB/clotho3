@@ -99,7 +99,7 @@
               <select ng-model="sharable.outputType"
                       class="form-control"
                       ng-required
-                      ng-options="c.id as c.name group by c.category for c in paramTypes">
+                      ng-options="c.id as c.name group by c.category for c in paramTypes | orderBy:'name'">
               </select>
             </div>
           </div>
@@ -134,7 +134,7 @@
         <div class="btn-group pull-right" style="margin-top: -4px;">
           <button class="btn btn-default btn-sm"
                   ng-click="runAllTests()"
-                  ng-disabled="form.$invalid || sharable.tests.length < 1">
+                  ng-disabled="form.$invalid || !sharable.tests.length">
             <span class="glyphicon glyphicon-play"></span> Run All
           </button>
           <button class="btn btn-default btn-sm"
