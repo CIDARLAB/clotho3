@@ -5,21 +5,21 @@
  */
 
 angular.module('clotho.core').service('Socket',
-	function($window, $q, $log, PubSub, ClientAPI, Debug) {
+  function($window, $q, $log, PubSub, ClientAPI, Debug) {
 
-	//note - ensuring page-wide singleton
-	return ($window.$clotho.$socket) ?
-			$window.$clotho.$socket :
-			$window.$clotho.$socket = generateSocketObject();
+  //note - ensuring page-wide singleton
+  return ($window.$clotho.$socket) ?
+      $window.$clotho.$socket :
+      $window.$clotho.$socket = generateSocketObject();
 
 
     function generateSocketObject() {
 
-	    var socket,
-		    socketReady,
-		    socketQueue = [];
+      var socket,
+        socketReady,
+        socketQueue = [];
 
-	    var Debugger = new Debug('Socket', '#5555bb');
+      var Debugger = new Debug('Socket', '#5555bb');
 
       function createSayError (msg) {
         return {
@@ -29,44 +29,44 @@ angular.module('clotho.core').service('Socket',
         }
       }
 
-	    //basic check -- most checks should be in communicator
-	    function checkMessageValid (msgString) {
-		    return msgString.length < 16348;
-	    }
+      //basic check -- most checks should be in communicator
+      function checkMessageValid (msgString) {
+        return msgString.length < 16348;
+      }
 
-	    //expecting a string or object
-	    // returns: undefined - put in queue
-	    //          true - sent successfully
-	    //          false - failed to send
-	    function socket_send (data) {
-		    //todo - move to socket.readyState
+      //expecting a string or object
+      // returns: undefined - put in queue
+      //          true - sent successfully
+      //          false - failed to send
+      function socket_send (data) {
+        //todo - move to socket.readyState
         if (socket.readyState !== 1) {
-			    Debugger.log('(not ready) queueing request: ', data);
-			    socketQueue.push(data);
-			    return;
-		    }
+          Debugger.log('(not ready) queueing request: ', data);
+          socketQueue.push(data);
+          return;
+        }
 
-		    data = angular.isObject(data) ? JSON.stringify(data) : data;
+        data = angular.isObject(data) ? JSON.stringify(data) : data;
 
-		    if (checkMessageValid(data)) {
-			    Debugger.log('sending data: ', angular.isObject(data) ? data : JSON.parse(data));
-			    socket.send(data);
-			    return true;
-		    } else {
-			    Debugger.warn('Message did not pass validation!');
-			    ClientAPI.say(createSayError("Message could not be sent to server"));
-			    return false;
-		    }
-	    }
+        if (checkMessageValid(data)) {
+          Debugger.log('sending data: ', angular.isObject(data) ? data : JSON.parse(data));
+          socket.send(data);
+          return true;
+        } else {
+          Debugger.warn('Message did not pass validation!');
+          ClientAPI.say(createSayError("Message could not be sent to server"));
+          return false;
+        }
+      }
 
-	    function sendSocketQueue () {
-		    Debugger.group('Sending Socket Queue');
-		    angular.forEach(socketQueue, function(data, index) {
-			    socket_send(data);
-		    });
-		    Debugger.groupEnd();
-		    socketQueue = [];
-	    }
+      function sendSocketQueue () {
+        Debugger.group('Sending Socket Queue');
+        angular.forEach(socketQueue, function(data, index) {
+          socket_send(data);
+        });
+        Debugger.groupEnd();
+        socketQueue = [];
+      }
 
       function createSocketConnection () {
         var pathname = window.location.pathname;
