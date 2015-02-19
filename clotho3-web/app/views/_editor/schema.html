@@ -17,7 +17,7 @@
       </form-field>
 
         <form-field name="SuperClass" horizontal="formHorizontal">
-            <select id="superClass" ng-model="sharable.superClass" ng-options="schema.id as schema.name for schema in schemas">
+            <select id="superClass" ng-model="sharable.superClass" ng-options="schema.id as schema.name for schema in schemas | orderBy:'name'">
                 <option value="">-</option>
             </select>
         </form-field>
