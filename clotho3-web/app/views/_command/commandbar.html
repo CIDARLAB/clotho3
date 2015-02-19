@@ -5,7 +5,7 @@
   <div class="navbar-left">
     <clotho-reference-tokenizer
       class="clothoCommand-tokenizer"
-      placeholder="Type 'f' to focus"></clotho-reference-tokenizer>
+      placeholder="Access data and run functions"></clotho-reference-tokenizer>
 
     <!-- terminal trigger -->
     <button class="btn btn-default clothoCommand-terminalTrigger"
@@ -28,9 +28,11 @@
 
   <!--help buttons-->
   <div class="btn-group nav navbar-right">
+    <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
+    <button class="btn btn-default" ng-click="goBrowser()"><i class="glyphicon glyphicon-folder-open"></i></button>
+    <button class="btn btn-default" ng-click="goEditor()"><i class="glyphicon glyphicon-edit"></i></button>
     <button class="btn btn-default" ng-if="$root.interfaceConfig.loginVisible !== false" ng-click="toggleLogin()" alt="Clotho Login"><i class="glyphicon glyphicon-user"></i>
     </button>
-    <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
     <a class="btn btn-default dropdown-toggle"
        ng-click="showHelpDropdown = !showHelpDropdown"
        style="padding-left: 12px; padding-right: 12px;"
@@ -41,6 +43,7 @@
     </a>
     <ul class="dropdown-menu" ng-style="{'display' : showHelpDropdown ? 'block' : 'none'}">
       <li><a ng-click="showMeHow()" tabindex="-1"><i class="glyphicon glyphicon-eye-open"></i> Clotho Introduction</a></li>
+      <li><a ng-click="goTrailBrowser()" tabindex="-1"><i class="glyphicon glyphicon-list"></i> Trail Browser</a></li>
       <li><a ng-click="aboutClotho()" tabindex="-1"><i class="clotho-icon"></i> About Clotho</a></li>
       <li><a ng-click="teamClotho()" tabindex="-1"><i class="glyphicon glyphicon-user"></i> The Clotho Team</a></li>
     </ul>
