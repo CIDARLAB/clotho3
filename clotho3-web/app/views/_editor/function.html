@@ -13,7 +13,7 @@
       </form-field>
 
       <form-field name="Schema" horizontal="formHorizontal">
-        <select id="sharableSchema" ng-model="sharable.schema" ng-options="s.id as s.name for s in clothoSchemas | orderBy:'name'"></select>
+        <select id="sharableSchema" ng-model="sharable.schema" ng-options="s.id as (s.name + ' (' + s.id + ')') for s in clothoSchemas | orderBy:'name'"></select>
       </form-field>
 
       <form-field name="ID" horizontal="formHorizontal">
