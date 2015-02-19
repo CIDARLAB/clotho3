@@ -556,7 +556,6 @@ public class ServerSideAPI {
     }
 
     public final ObjectId set(Map<String, Object> values) {
-        System.out.println("SET MAP OBJECT CALLED");
         try {
             if (values.get("id") == null) {
                 say("set: No uuid provided", Severity.WARNING);
@@ -601,7 +600,6 @@ public class ServerSideAPI {
     }
 
     public final String create(Object o) {
-        System.out.println("CREATE OBJECT CALLED");
         return create(JSON.mappify(o)).toString();
     }
 
@@ -616,7 +614,6 @@ public class ServerSideAPI {
     }
 
     public ObjectId create(Map<String, Object> obj) {
-        System.out.println("CREATE MAP OBJECT CALLED");
         try {
             //Confirm that there is no pre-existing object with this uuid
             String idKey = null;
