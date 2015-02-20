@@ -176,7 +176,7 @@
         },
 
         /**
-         * Clotho.queryAll
+         * Clotho.queryOne
          * Seeks Clotho object instances that match the object specification.
          * @param {Object} Clotho object specification.
          * @return {Object} The first Clotho object that matches the spec.
@@ -220,6 +220,7 @@
         validate: function (object, options) {
             return socket.emit("validate", object, options);
         }, 
+
         /**
          * Clotho.login
          * Login to Clotho
