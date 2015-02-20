@@ -355,6 +355,7 @@ public class Router {
             return mind;
         } catch (Exception ex) {
             Mind mind = new Mind();
+            mind.setConnection(connection);
             authenticatedMinds.put(username, mind);
             
             //tell user mind retrieval failed
