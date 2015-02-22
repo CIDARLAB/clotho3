@@ -200,6 +200,7 @@ public class PersistorTest extends AuthorizedShiroTest{
     
     //TODO: verify results are in appropriate style (id instead of _id), (schema instead of ClassName), etc
     
+    //TODO: Bad data in db should not stop queries, etc, from working (non-existent id reference, non-existent schema reference, etc)
     
     public static List<JsonToken> getAllBsonTokens(BsonParser parser) throws IOException{
         List<JsonToken> out = new ArrayList<>();
