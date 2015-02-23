@@ -25,7 +25,10 @@ def changer(registry):
             date = dateSplit[2] + '-' + MONTHS[dateSplit[1]] + '-' + dateSplit[0]
             fin['submissionDate'] = date
         if key == 'sequences':
-            fin['sequence'] = "".join(change[key][0]['seq_data'].split())
+            try:
+                fin['sequence'] = "".join(change[key][0]['seq_data'].split())
+            except Exception:
+                pass
         if key == 'id':
             fin['id'] = change[key]
         if key == 'features':

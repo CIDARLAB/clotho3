@@ -3,9 +3,7 @@ from ClothoPy.new_genbank_holder import New_Genbank
 from ClothoPy.new_gb_to_json import New_GB_Converter
 
 def _convert_genbank_to_nucseq(genbank_obj):
-    con = New_GB_Converter(New_Genbank(genbank_obj.record))
-    con.convert()
-    return con.d
+    return genbank_obj._json()
 
 def run(accession_id):
     retriever = call_accn('nucleotide', 'gb', 'nobody@example.com')

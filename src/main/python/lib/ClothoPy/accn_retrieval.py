@@ -33,7 +33,7 @@ class call_accn:
             try:
                 result_handle = Entrez.efetch(db=self.database, rettype=self.return_type, id=acc)
                 for seq_record in SeqIO.parse(result_handle, self.return_type):
-                    self.records.append(Genbank(seq_record))
+                    self.records.append(New_Genbank(seq_record))
                 result_handle.close()
                 success.append(acc)
             except:

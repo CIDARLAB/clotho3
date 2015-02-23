@@ -9,7 +9,7 @@ def _convertID(accession_id):
 	retriever = call_accn('nucleotide', 'gb', 'nobody@example.com')
 	retriever.retrieve_gb([accession_id])
 	out_handle = StringIO()
-	SeqIO.write(retriever.records[0].record, out_handle, "gb")
+	SeqIO.write(retriever.records[0].GB.record, out_handle, "gb")
 	gb_data = out_handle.getvalue()
 	return gb_data
 
