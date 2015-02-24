@@ -17,6 +17,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.WriteConcernException;
 import static com.mongodb.MongoException.DuplicateKey;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -147,7 +148,11 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         obj.remove("_id");
         Map<String,Object> setExpression = new HashMap<>();
         setExpression.put("$set", obj);
-        rawDataCollection.update(idQuery, new BasicDBObject(setExpression),true, false);  //upsert true, multi false        
+        try {
+            rawDataCollection.update(idQuery, new BasicDBObject(setExpression),true, false);  //upsert true, multi false        
+        } catch (WriteConcernException ex) {
+            log.error("Invalid JSON/failed to save object", obj.toString());
+        }
     }
 
     @Override
