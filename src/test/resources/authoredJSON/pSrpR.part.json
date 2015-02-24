@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "pSrpR",
+  "dnasequence" : "TCTATGATTGGTCCAGATTCGTTACCAATTGACAGCTAGCTCAGTCCTAGGTATATACATACATGCTTGTTTGTTTGTAAAC",
+  "id" : "pSrpR.part",
+  "type" : "Promoter"
+}

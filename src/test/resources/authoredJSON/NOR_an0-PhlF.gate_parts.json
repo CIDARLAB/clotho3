@@ -1,0 +1,11 @@
+{
+  "schema" : "org.cellocad.gate_parts",
+  "rbs" : "an0_phlf",
+  "cds" : "PhlF",
+  "name" : "NOR_an0-PhlF",
+  "terminator" : "ECK120033737",
+  "promoter" : "pPhlF",
+  "id" : "NOR_an0-PhlF.gate_parts",
+  "gate" : "NOR_an0-PhlF",
+  "ribozyme" : "RiboJ53"
+}

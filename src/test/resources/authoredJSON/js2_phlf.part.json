@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "js2_phlf",
+  "dnasequence" : "CTTTACGAGGGCGATCCT",
+  "id" : "js2_phlf.part",
+  "type" : "RBS"
+}

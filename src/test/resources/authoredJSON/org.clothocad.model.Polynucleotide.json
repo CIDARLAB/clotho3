@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "isLinear",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isSingleStranded",
-    "type" : "boolean",
+    "name" : "submissionDate",
+    "type" : "date",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isLinear",
-    "type" : "boolean",
+    "name" : "description",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -60,8 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "submissionDate",
-    "type" : "date",
+    "name" : "isSingleStranded",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

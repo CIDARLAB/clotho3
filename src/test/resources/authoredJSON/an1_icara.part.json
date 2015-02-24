@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "an1_icara",
+  "dnasequence" : "ATTGCTATGGACTATGTTTCAAAGTGAGAATACTAG",
+  "id" : "an1_icara.part",
+  "type" : "RBS"
+}

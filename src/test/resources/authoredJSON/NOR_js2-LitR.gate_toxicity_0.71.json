@@ -1,0 +1,8 @@
+{
+  "schema" : "org.cellocad.gate_toxicity",
+  "%od600" : "0.85",
+  "inreu" : "0.71",
+  "name" : "NOR_js2-LitR.gate_toxicity_0.71",
+  "gate" : "NOR_js2-LitR",
+  "id" : "NOR_js2-LitR.gate_toxicity_0.71"
+}

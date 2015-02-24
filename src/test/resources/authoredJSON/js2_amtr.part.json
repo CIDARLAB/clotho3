@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "js2_amtr",
+  "dnasequence" : "AATGTTCCCTAATAATCAGCAAAGAGGTTACTAG",
+  "id" : "js2_amtr.part",
+  "type" : "RBS"
+}

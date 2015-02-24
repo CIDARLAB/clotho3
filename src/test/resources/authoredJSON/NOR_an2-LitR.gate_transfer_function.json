@@ -1,0 +1,13 @@
+{
+  "schema" : "org.cellocad.gate_transfer_function",
+  "pmax" : "10.20081",
+  "pmin" : "0.263379",
+  "equation" : "outputREU=pmin+(pmax-pmin)/(1.0+(inputREU/K)^n)",
+  "name" : "NOR_an2-LitR.gate_transfer_function",
+  "low_margin" : "0.144544",
+  "id" : "NOR_an2-LitR.gate_transfer_function",
+  "gate" : "NOR_an2-LitR",
+  "k" : "0.138481",
+  "high_margin" : "1.44544",
+  "n" : "1.542546"
+}

@@ -1,0 +1,11 @@
+{
+  "schema" : "org.cellocad.gate_parts",
+  "rbs" : "js2_hlyiir",
+  "cds" : "HlyIIRjs",
+  "name" : "NOR_js2-HlyIIR",
+  "terminator" : "ECK120033736",
+  "promoter" : "pHlyIIR",
+  "id" : "NOR_js2-HlyIIR.gate_parts",
+  "gate" : "NOR_js2-HlyIIR",
+  "ribozyme" : "RiboJ51"
+}

@@ -1,0 +1,6 @@
+{
+  "name" : "TestPart",
+  "id" : "Ananke.TestPart2",
+  "schema" : "org.clothocad.test.part",
+  "sequence" : "CATCG"
+}

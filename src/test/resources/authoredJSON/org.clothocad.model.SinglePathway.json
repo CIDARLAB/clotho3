@@ -10,26 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "target",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "intermediates",
     "type" : "array",
     "subtype" : null,
@@ -50,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "name",
+    "name" : "version",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -60,7 +40,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "version",
+    "name" : "target",
     "type" : "string",
     "subtype" : null,
     "example" : null,

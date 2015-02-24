@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "pIcaRA",
+  "dnasequence" : "GTCAACTCATAAGATtctgattcgttaccaattgacaaTTCACCTACCTTTCGTTAGgTTAGGTTGT",
+  "id" : "pIcaRA.part",
+  "type" : "Promoter"
+}

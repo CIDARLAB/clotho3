@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "an3_srpr",
+  "dnasequence" : "GAGTCTATGGACTATGTTTTCACAAAGGAAGTACCAGG",
+  "id" : "an3_srpr.part",
+  "type" : "RBS"
+}

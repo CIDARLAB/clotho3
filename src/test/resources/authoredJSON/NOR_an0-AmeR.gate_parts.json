@@ -1,0 +1,11 @@
+{
+  "schema" : "org.cellocad.gate_parts",
+  "rbs" : "an0_amer",
+  "cds" : "AmeR",
+  "name" : "NOR_an0-AmeR",
+  "terminator" : "L3S3P31",
+  "promoter" : "pAmeR",
+  "id" : "NOR_an0-AmeR.gate_parts",
+  "gate" : "NOR_an0-AmeR",
+  "ribozyme" : "RiboJ54"
+}

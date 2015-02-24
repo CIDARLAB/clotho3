@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "ElvJ",
+  "dnasequence" : "CTGAagCCCCATAGGGTGGTGTGTACCACCCCTGATGAGTCCAAAAGGACGAAATGGGGcctctacaaataattttgtttaa",
+  "id" : "ElvJ.part",
+  "type" : "Ribozyme"
+}

@@ -1,0 +1,8 @@
+{
+  "schema" : "org.cellocad.gate_toxicity",
+  "%od600" : "1.06",
+  "inreu" : "0.04",
+  "name" : "NOR_an1-IcaRA.gate_toxicity_0.04",
+  "gate" : "NOR_an1-IcaRA",
+  "id" : "NOR_an1-IcaRA.gate_toxicity_0.04"
+}

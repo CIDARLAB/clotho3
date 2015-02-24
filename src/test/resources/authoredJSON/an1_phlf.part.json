@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "an1_phlf",
+  "dnasequence" : "GGAGCTATGGACTATGTTTGAAAGGCTGAAATACTAG",
+  "id" : "an1_phlf.part",
+  "type" : "RBS"
+}

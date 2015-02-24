@@ -1,0 +1,11 @@
+{
+  "schema" : "org.cellocad.gate_parts",
+  "rbs" : "js2_litr",
+  "cds" : "LitR",
+  "name" : "NOR_js2-LitR",
+  "terminator" : "L3S2P24",
+  "promoter" : "pLitRjs",
+  "id" : "NOR_js2-LitR.gate_parts",
+  "gate" : "NOR_js2-LitR",
+  "ribozyme" : "PlmJ"
+}

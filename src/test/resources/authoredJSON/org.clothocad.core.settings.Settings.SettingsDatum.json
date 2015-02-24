@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "id",
-    "type" : "string",
+    "name" : "recordAllDoos",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "recordAllDoos",
-    "type" : "boolean",
+    "name" : "id",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

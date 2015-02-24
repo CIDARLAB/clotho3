@@ -1,0 +1,7 @@
+{
+  "name" : "testPart8",
+  "id" : "testPart8.test",
+  "schema" : "org.clothocad.test.part",
+  "seq" : "ATGC",
+  "Desc" : "Random Part"
+}

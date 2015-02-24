@@ -10,8 +10,18 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "methods",
-    "type" : "array",
+    "name" : "BASE_PACKAGE_BINARY",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "source",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,18 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "BASE_PACKAGE_BINARY",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "cl",
-    "type" : "object",
+    "name" : "methods",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -80,8 +80,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "source",
-    "type" : "string",
+    "name" : "cl",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

@@ -1,0 +1,13 @@
+{
+  "schema" : "org.cellocad.gate_transfer_function",
+  "pmax" : "15.97890295",
+  "pmin" : "0.316172702",
+  "equation" : "outputREU=pmin+(pmax-pmin)/(1.0+(inputREU/K)^n)",
+  "name" : "NOR_js2-BetI.gate_transfer_function",
+  "low_margin" : "1.77828",
+  "id" : "NOR_js2-BetI.gate_transfer_function",
+  "gate" : "NOR_js2-BetI",
+  "k" : "1.746205434",
+  "high_margin" : "8.70964",
+  "n" : "2.421897328"
+}

@@ -1,0 +1,6 @@
+{
+  "name" : "PartA",
+  "id" : "ananke.PartA",
+  "schema" : "org.clothocad.test.part",
+  "sequence" : "ATGC"
+}

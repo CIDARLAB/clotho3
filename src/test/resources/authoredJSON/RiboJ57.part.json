@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "RiboJ57",
+  "dnasequence" : "CTGAAGAAGTCAATTAATGTGCTTTTAATTCTGATGAGTCGGTGACGACGAAACTTCCTCTACAAATAATTTTGTTTAA",
+  "id" : "RiboJ57.part",
+  "type" : "Ribozyme"
+}

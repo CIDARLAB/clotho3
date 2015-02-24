@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "L3S3P11",
+  "dnasequence" : "CCAATTATTGAACACCCTTCGGGGTGTTTTTTTGTTTCTGGTCTCCC",
+  "id" : "L3S3P11.part",
+  "type" : "Terminator"
+}

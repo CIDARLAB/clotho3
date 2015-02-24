@@ -1,0 +1,11 @@
+{
+  "schema" : "org.cellocad.gate_parts",
+  "rbs" : "an1_srpr",
+  "cds" : "SrpR",
+  "name" : "NOR_an1-SrpR",
+  "terminator" : "ECK120029600",
+  "promoter" : "pSrpR",
+  "id" : "NOR_an1-SrpR.gate_parts",
+  "gate" : "NOR_an1-SrpR",
+  "ribozyme" : "RiboJ10"
+}

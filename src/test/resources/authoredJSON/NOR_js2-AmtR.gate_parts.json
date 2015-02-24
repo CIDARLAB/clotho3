@@ -1,0 +1,11 @@
+{
+  "schema" : "org.cellocad.gate_parts",
+  "rbs" : "js2_amtr",
+  "cds" : "AmtR",
+  "name" : "NOR_js2-AmtR",
+  "terminator" : "L3S2P55",
+  "promoter" : "pAmtRjs",
+  "id" : "NOR_js2-AmtR.gate_parts",
+  "gate" : "NOR_js2-AmtR",
+  "ribozyme" : "BydvJ"
+}

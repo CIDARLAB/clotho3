@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "SarJ",
+  "dnasequence" : "CTGAAGACTGTCGCCGGATGTGTATCCGACCTGACGATGGCCCAAAAGGGCCGAAACAGTCCTCTACAAATAATTTTGTTTAA",
+  "id" : "SarJ.part",
+  "type" : "Ribozyme"
+}

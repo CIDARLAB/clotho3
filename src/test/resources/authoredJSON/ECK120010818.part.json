@@ -1,0 +1,7 @@
+{
+  "schema" : "org.cellocad.part",
+  "name" : "ECK120010818",
+  "dnasequence" : "GTCAGTTTCACCTGTTTTACGTAAAAACCCGCTTCGGCGGGTTTTTACTTTTGG",
+  "id" : "ECK120010818.part",
+  "type" : "Terminator"
+}
