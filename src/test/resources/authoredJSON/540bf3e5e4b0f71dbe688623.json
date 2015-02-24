@@ -1,9 +1,0 @@
-{
-  "name" : "P3",
-  "type" : "Promoter",
-  "seq" : "taatacaactcactagagagaga",
-  "REU" : "0.025",
-  "REU_SD" : "0.009",
-  "schema" : "org.clothocad.model.BroadMITPart",
-  "id" : "540bf3e5e4b0f71dbe688623"
-}
