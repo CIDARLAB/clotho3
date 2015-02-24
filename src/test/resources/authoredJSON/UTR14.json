@@ -1,9 +1,0 @@
-{
-"id" : "org.clothocad.model.RBS.UTR14",
-"name" : "UTR14",
-"schema" : "org.clothocad.model.RBS",
-"utr5" : "GGCTAGCCTCGAGAATTCACGCGTGGTACCTCTAGAGTCGACCCGGGCGGCCGCAAAGTTCCCTTTAGTGAGGGTTAATG",
-"nativeHost" : "E. coli",
-"weblink" : "http://www.addgene.org/browse/sequence_vdb/1723/",
-"isIntergenic" : false
-}

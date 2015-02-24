@@ -1,8 +1,0 @@
-{
-  "code" : "def run():\n\ttry: clotho.run('org.andersonlab.py_die_run', [])\n\texcept ClothoError as e: return 'caught ClothoError: {}'.format(e.args[0])\n    raise RuntimeException('this is very bad; please fix me')",
-  "description" : "kelvin test of a Clotho.run call that throws an exception",
-  "language" : "PYTHON",
-  "name" : "py_error_recover",
-  "schema" : "org.clothocad.core.datums.Function",
-  "id" : "org.andersonlab.py_error_recover"
-}
