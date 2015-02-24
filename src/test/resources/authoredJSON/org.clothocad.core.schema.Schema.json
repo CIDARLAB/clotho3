@@ -1,0 +1,98 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org.clothocad.core.schema.Schema",
+  "name" : "Schema",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "cl",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "source",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "dependencies",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "BASE_PACKAGE_BINARY",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "superClass",
+    "type" : "org.clothocad.core.schema.Schema",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "methods",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "fields",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "log",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.Schema",
+  "binaryName" : "org.clothocad.core.schema.Schema"
+}
