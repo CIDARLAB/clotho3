@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "dateEnded",
-    "type" : "date",
+    "name" : "savePolicy",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "savePolicy",
-    "type" : "boolean",
+    "name" : "dateEnded",
+    "type" : "date",
     "subtype" : null,
     "example" : null,
     "access" : null,
