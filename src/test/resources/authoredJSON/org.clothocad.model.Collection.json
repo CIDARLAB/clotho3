@@ -20,16 +20,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "items",
     "type" : "object",
     "subtype" : null,
@@ -37,6 +27,16 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   } ],

@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "userId",
-    "type" : "string",
+    "name" : "isLoggedIn",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "users",
-    "type" : "array",
+    "name" : "userId",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isLoggedIn",
-    "type" : "boolean",
+    "name" : "users",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,

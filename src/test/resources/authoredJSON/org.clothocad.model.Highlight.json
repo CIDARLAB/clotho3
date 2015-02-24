@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "revColor",
-    "type" : "string",
+    "name" : "notes",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,18 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "end",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "notes",
-    "type" : "array",
+    "name" : "revColor",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -92,6 +82,16 @@
   }, {
     "name" : "forColor",
     "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "end",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,

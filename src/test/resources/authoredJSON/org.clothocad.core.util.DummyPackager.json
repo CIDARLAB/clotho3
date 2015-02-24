@@ -11,7 +11,7 @@
   "source" : null,
   "fields" : [ ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.Function",
   "innerClasses" : null,
   "c" : "org.clothocad.core.util.DummyPackager",
   "binaryName" : "org.clothocad.core.util.DummyPackager"

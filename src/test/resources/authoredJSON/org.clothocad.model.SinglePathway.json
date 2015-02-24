@@ -20,7 +20,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
+    "name" : "reactions",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "version",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -32,36 +42,6 @@
   }, {
     "name" : "intermediates",
     "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "reactions",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "name",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "version",
-    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

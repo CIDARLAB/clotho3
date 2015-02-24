@@ -10,12 +10,12 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "end",
-    "type" : "number",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -30,8 +30,28 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "symbol",
-    "type" : "string",
+    "name" : "forwardColor",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "start",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "end",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,18 +70,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "feature",
-    "type" : "org.clothocad.model.Feature",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "start",
-    "type" : "number",
+    "name" : "symbol",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -80,18 +90,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "forwardColor",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "feature",
+    "type" : "org.clothocad.model.Feature",
     "subtype" : null,
     "example" : null,
     "access" : null,

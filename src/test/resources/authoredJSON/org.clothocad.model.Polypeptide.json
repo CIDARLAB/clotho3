@@ -10,27 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "name",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "source",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
+    "name" : "sequence",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -50,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
+    "name" : "source",
     "type" : "string",
     "subtype" : null,
     "example" : null,

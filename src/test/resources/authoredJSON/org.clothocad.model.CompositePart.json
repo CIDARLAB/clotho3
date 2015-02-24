@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "composition",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "partType",
     "type" : "object",
     "subtype" : null,
@@ -27,6 +17,16 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "composition",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
     "constraints" : null,
     "description" : null
   } ],
