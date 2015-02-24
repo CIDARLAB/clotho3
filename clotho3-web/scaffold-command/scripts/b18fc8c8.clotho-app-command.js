@@ -1,1 +1,0 @@
-"use strict";angular.module("clothoRoot",["clotho.core","clotho.commandbar"]).run(["Clotho",function(){}]);
