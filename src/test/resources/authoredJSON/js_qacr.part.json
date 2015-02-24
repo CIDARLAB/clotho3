@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "js_qacr",
-  "dnasequence" : "GCCATGCCATTGGCTTTTGATAGAGGACAACTACTAG",
-  "id" : "js_qacr.part",
-  "type" : "RBS"
-}

@@ -1,4 +1,0 @@
-{
-  "code" : "def run(): return \"modified!\"",
-  "id" : "org.andersonlab.py_selfsetter"
-}

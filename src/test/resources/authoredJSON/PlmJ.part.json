@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "PlmJ",
-  "dnasequence" : "CTGAAGTCATAAGTCTGGGCTAAGCCCACTGATGAGTCGCTGAAATGCGACGAAACTTATGACCTCTACAAATAATTTTGTTTAA",
-  "id" : "PlmJ.part",
-  "type" : "Ribozyme"
-}

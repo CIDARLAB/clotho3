@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "pBetIjs",
-  "dnasequence" : "AGCGCGGGTGAGAGGgattcgttaccaatagacaATTgATTGGACGTTCAATATAAtgctagc",
-  "id" : "pBetIjs.part",
-  "type" : "Promoter"
-}

@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "an0_amer",
-  "dnasequence" : "CTATGGACTATGTTTTCACATACGAGGGGGATTAG",
-  "id" : "an0_amer.part",
-  "type" : "RBS"
-}

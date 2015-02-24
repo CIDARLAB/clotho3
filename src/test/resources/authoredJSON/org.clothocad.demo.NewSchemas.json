@@ -1,7 +1,0 @@
-{
-  "language" : "JSONSCHEMA",
-  "name" : "TestSequence",
-  "schema" : "org.clothocad.core.schema.ClothoSchema",
-  "superClass" : "526aec6144ae288aa0ce3ae1",
-  "id" : "org.clothocad.demo.NewSchemas"
-}

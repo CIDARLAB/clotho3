@@ -1,7 +1,0 @@
-{
-  "name" : "useLodash",
-  "id" : "org.clothocad.test.useLodash",
-  "language" : "JAVASCRIPT",
-  "schema" : "org.clothocad.core.datums.Function",
-  "code" : "function() {return _.map([1,2,3],function(i){return i+1;});};"
-}

@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "pAmtR",
-  "dnasequence" : "CTTGTCCAACCAAATGATTCGTTACCAATTGACAGTTTCTATCGATCTATAGATAATGCTAGC",
-  "id" : "pAmtR.part",
-  "type" : "Promoter"
-}

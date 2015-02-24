@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "an2_litr",
-  "dnasequence" : "GTCCTATGGACTTTTTCATACAGGAGAACCCTCG",
-  "id" : "an2_litr.part",
-  "type" : "RBS"
-}

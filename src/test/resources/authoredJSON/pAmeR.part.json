@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "pAmeR",
-  "dnasequence" : "TCGTCACTAGAGGGCGATAGTGACAAACTTGACAACTCATCACTTCCTAGGTATAATGCTAGC",
-  "id" : "pAmeR.part",
-  "type" : "Promoter"
-}

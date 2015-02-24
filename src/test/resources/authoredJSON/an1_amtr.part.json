@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "an1_amtr",
-  "dnasequence" : "AATGTTCCCTAATAATCAGCAAAGAGGTTACTAG",
-  "id" : "an1_amtr.part",
-  "type" : "RBS"
-}

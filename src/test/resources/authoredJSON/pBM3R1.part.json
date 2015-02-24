@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "pBM3R1",
-  "dnasequence" : "AATCCGCGTGATAGGTCTGATTCGTTACCAATTGACGGAATGAACGTTCATTCCGATAATGCTAGC",
-  "id" : "pBM3R1.part",
-  "type" : "Promoter"
-}

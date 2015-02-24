@@ -1,7 +1,0 @@
-{
-  "schema" : "org.cellocad.part",
-  "name" : "pHlyIIR",
-  "dnasequence" : "ACCAGGAATCTGAACgattcgttaccaattgccATATTTAAAATTCTTGTTTAAAatgctagc",
-  "id" : "pHlyIIR.part",
-  "type" : "Promoter"
-}
