@@ -66,10 +66,9 @@ class Blast_Record:
             temp = a.as_dict()
             dictList.append(temp)
         return dictList
-    def to_JSON(self):
+    def _json(self):
         align = self.align_as_dict_list()
-        self.d = {'schema': 'org.clothocad.model.BlastRecord', \
+        return {'schema': 'org.clothocad.model.BlastRecord', \
             'id': self.id, \
             'query': self.query, \
             'alignments': align}
-        return self.d

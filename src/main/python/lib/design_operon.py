@@ -132,9 +132,9 @@ def design_operon(orf_list, rbs_list, limit):
         if first:
             first = False
             addition = min_rbs_seq[:len(min_rbs_seq)-3] + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
-            print "rbs:\t" + min_rbs_seq[:len(min_rbs_seq)-3] + 'tag'
-            print "orf:\t" + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
-            print addition
+            # print "rbs:\t" + min_rbs_seq[:len(min_rbs_seq)-3] + 'tag'
+            # print "orf:\t" + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
+            # print addition
             # addition = concatenate(min_rbs_seq[:len(min_rbs_seq)-3] + 'tag', 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa')
             rbs_start = location
             rbs_end = location + len(min_rbs_seq)
@@ -142,9 +142,9 @@ def design_operon(orf_list, rbs_list, limit):
             orf_end = rbs_end - 3 + len(orf.sequence)
         else:
             addition = 'taa' + min_rbs_seq[3:len(min_rbs_seq)-3] + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
-            print "rbs:\t" + 'taa' + min_rbs_seq[3:len(min_rbs_seq)-3] + 'tag'
-            print "orf:\t" + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
-            print addition
+            # print "rbs:\t" + 'taa' + min_rbs_seq[3:len(min_rbs_seq)-3] + 'tag'
+            # print "orf:\t" + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
+            # print addition
             rbs_start = location - 3
             rbs_end = location - 3 + len(min_rbs_seq)
             orf_start = rbs_end - 3
@@ -169,10 +169,10 @@ def design_operon(orf_list, rbs_list, limit):
 
         operon_name += min_rbs['name'] + "." + orf.name + "."
 
-        print "rbs:\t" + str(rbs_start) + "\t" + str(rbs_end)
-        print "orf:\t" + str(orf_start) + "\t" + str(orf_end)
+        # print "rbs:\t" + str(rbs_start) + "\t" + str(rbs_end)
+        # print "orf:\t" + str(orf_start) + "\t" + str(orf_end)
         location = len(operon)
-        print "location:\t" + str(location)
+        # print "location:\t" + str(location)
 
         import random
         r = lambda: random.randint(0,255)

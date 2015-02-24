@@ -19,7 +19,7 @@ class call_blast:
         #print uni.alignments
         seq_start = uni.alignments[0].query_start
         seq_end = uni.alignments[0].query_end
-        if uni.alignments[0].identities / float(uni.alignments[0].positives) > 0.9:
+        if uni.alignments[0].identity / float(uni.alignments[0].positives) > 0.9:
             # print "start:\t" + str(seq_start)
             # print "end:\t" + str(seq_end)
             try:

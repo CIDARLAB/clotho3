@@ -8,6 +8,7 @@ from design_operon import design_operon
 from grab_rbs import grab_rbs
 from ClothoPy.blast_retrieval import call_blast
 from ClothoPy.new_genbank_holder import New_Genbank
+from fetch_uniprot import fetch_uniprot
 import json
 
 """
@@ -21,24 +22,41 @@ def process_polypeptide2(poly_list):
 
 
 		retriever.retrieve_gb([poly]) # get from ncbi
-		record = retriever.records[0] # now we have the ncbi record
-		
+		# print len(retriever.records)
 		# try UniProt
-		if record == []:
+		next_check = False
+		if len(retriever.records) == 0:
+			# print "try uni"
 			uni = uniprot_to_ncbi(poly)
-			ncbi = uni[poly]
-			retriever.retrieve_gb([ncbi])
+			if poly in uni.keys():
+				ncbi = uni[poly]
+				retriever.retrieve_gb([ncbi])
+				record = retriever.records[0]
+				orf = _protein_to_orf(record)
+				orfs.append(orf)
+			else:
+				# print "check me"
+				next_check = True
+		else:
+			# print "check me"
+			next_check = True
+
 		# NCBI ids
-		elif record != []:
+		if next_check and len(retriever.records) > 0:
+			# print "try ncbi"
+			record = retriever.records[0]
 			orf = _protein_to_orf(record)
 			orfs.append(orf)
-		else:
-			blaster = call_blast(poly['sequence'], 'me@example.com')
+		elif next_check:
+			# print "try blast"
+			seq = fetch_uniprot(poly)['sequence']
+			blaster = call_blast(seq, 'me@example.com')
 			record = blaster.retrieve_gb()
 			if record is not None:
 				orfs.append(record)
 			else:
-				raise Exception("No corresponding orf for %s" % self.sequence)
+				raise Exception("No corresponding orf for %s" % poly)
+
 		retriever.clearRecords()
 	return orfs
 
