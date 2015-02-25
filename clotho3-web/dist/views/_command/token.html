@@ -1,0 +1,15 @@
+<div class="clothoToken-inner"
+     ng-class="labelClass"
+     sharable-popup
+     sharable-popup-placement="{{popupPlacement}}"
+     sharable-popup-id="{{token.id()}}"
+     sharable-popup-open="{{token.active() && token.isSharable()}}"
+     sharable-popup-trigger="{{popupTrigger || 'none'}}">
+    <span class="clothoToken-type"
+          ng-if="token.isSharable()">
+      <span ng-class="iconClass"></span>
+    </span>
+    <span class="clothoToken-text">
+      {{ tokenName || token.readable() }}
+    </span>
+</div>

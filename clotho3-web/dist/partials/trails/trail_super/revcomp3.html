@@ -1,0 +1,27 @@
+<!-- third way - mixin a new directive -->
+<div ng-controller="revcompCtrl">
+    <h2>Mixin Several Components</h2>
+
+    <p>If you went to "Mixin Ctrl" before this one, Controller should already be present and not downloaded again - dependencies should only be downloaded once. A new directive is loaded (Uppercase Revcomp), and a new filter (uppercase G).</p>
+    <div class="form-group">
+        <div class="col-xs-6">
+            <label class="control-label" for="seq">Sequence</label>
+                <input type="text" id="seq" placeholder="Sequence" ng-model="sequence" restrict-input="DNA.regexps.strip.dna" />
+        </div>
+        <div class="col-xs-6">
+            <label class="control-label" for="revcomp">Revcomp</label>
+                <input type="text" id="revcomp" placeholder="Revcomp" ng-model="sequence" dna-revcomp disabled>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-6">
+            <label class="control-label" for="upperrevcomp">Uppercase Revcomp</label>
+                <input type="text" id="upperrevcomp" placeholder="Uppercase Revcomp" ng-model="sequence" dna-uppercase-revcomp disabled>
+        </div>
+        <div class="col-xs-6">
+            <label class="control-label" for="upperg">Uppercase G</label>
+                <input type="text" id="upperg" value="{{ sequence | dnaUppercaseG }}" disabled />
+        </div>
+    </div>
+</div>

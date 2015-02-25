@@ -1,0 +1,38 @@
+<div class="alert alert-warning">
+  Must be on synbiotrails.org or clothocad.org for API token to be valid
+</div>
+
+<div class="row">
+  <button class="btn btn-default" ng-click="createAll()">Create All</button>
+
+  <div class="col-sm-8">
+    <div class="input-group">
+      <input type="text"
+             class="form-control"
+             ng-model="playlistId"
+             placeholder="Playlist ID">
+      <span class="input-group-btn">
+        <button class="btn btn-default" ng-click="create()">Create {{playlistTrail.name}}</button>
+      </span>
+    </div>
+    <div class="alert alert-danger" ng-show="showerror">Youtube playlist could not be loaded</div>
+  </div>
+  <div class="col-sm-4">
+    <input type="text"
+           class="form-control"
+           ng-model="search"
+           ng-model-options="{debounce: 300}"
+           placeholder="Search Youtube Videos">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <pre ng-bind="playlistTrail | json"></pre>
+    <pre class="scrollable" ng-bind="playlistItems | json"></pre>
+    <pre class="scrollable" ng-bind="playlistInfo | json"></pre>
+  </div>
+  <div class="col-sm-4">
+    <pre ng-bind="searchResult | json"></pre>
+  </div>
+</div>
