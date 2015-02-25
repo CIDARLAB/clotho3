@@ -8,6 +8,7 @@ data/
 /nbactions.xml
 .orig
 *.pyc
+*.log
 
 .idea
 .DS_Store
