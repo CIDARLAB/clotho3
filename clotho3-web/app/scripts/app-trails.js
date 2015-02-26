@@ -26,7 +26,7 @@ angular.module('clothoRoot', ['clotho.fullPackage'])
          */
 
         $locationProvider
-            .html5Mode(false);
+            .html5Mode(false)
             .hashPrefix('!');
 
         $routeProvider
