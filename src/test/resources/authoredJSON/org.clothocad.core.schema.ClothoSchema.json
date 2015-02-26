@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "logger",
+    "name" : "log",
     "type" : "object",
     "subtype" : null,
     "example" : null,

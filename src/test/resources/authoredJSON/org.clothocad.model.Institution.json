@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "country",
+    "name" : "city",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "city",
+    "name" : "country",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -41,7 +41,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
   "innerClasses" : null,
   "c" : "org.clothocad.model.Institution",
   "binaryName" : "org.clothocad.model.Institution"

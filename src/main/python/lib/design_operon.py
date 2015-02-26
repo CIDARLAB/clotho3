@@ -39,7 +39,7 @@ def poly_to_gen(poly):
         h_for = high["forColor"]
         h_rev = high["revColor"]
         h_desc = high["description"]
-        h_ref = high["refSeq"]
+        #h_ref = high["refSeq"]
 
         gen.addFeatures(h_start, h_end, h_strand, "misc_feature", "", h_id, \
             {'ApEinfo_fwdcolor':h_for, 'ApEinfo_revColor':h_rev, \
@@ -69,7 +69,24 @@ def poly_to_gen(poly):
     ClothoPy.ClothoSeqIO.write(gen.record, out_handle, "gb")
     gb_data = out_handle.getvalue()
 
+    # clotho.say(gb_data)
+
     return gb_data #con.d
+
+def concatenate(str1, str2):
+    # maxn = 0
+    # for n in range(1, 1 + min(len(str1), len(str2))):
+    #     suffix = str1[-n:]
+    #     prefix = str2[:n]
+    #     if prefix == suffix:
+    #         maxn = n
+    # if maxn >= 3:
+    length = len(str1)
+    front = str1[:length-3]
+    back = str2[3:]
+    overlap = str2[:3]
+    concat = front + overlap + back
+    return concat
 
 def design_operon(orf_list, rbs_list, limit):
     operon = ""
@@ -87,7 +104,7 @@ def design_operon(orf_list, rbs_list, limit):
         #print orf + " :: after" + str(len(orf))
         min_score = float("infinity")
         min_rbs = ""
-
+        is_intergenic_count = 0
         for r in rbs_list:
             #print first
             is_intergenic_count = 0
@@ -109,34 +126,85 @@ def design_operon(orf_list, rbs_list, limit):
                         min_score = temp_score
                         min_rbs = r
                     is_intergenic_count += 1
+        
+        min_rbs_seq = min_rbs['sequence'].lower()
+        orf.sequence = orf.sequence.lower()
         if first:
             first = False
+            addition = min_rbs_seq[:len(min_rbs_seq)-3] + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
+            # print "rbs:\t" + min_rbs_seq[:len(min_rbs_seq)-3] + 'tag'
+            # print "orf:\t" + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
+            # print addition
+            # addition = concatenate(min_rbs_seq[:len(min_rbs_seq)-3] + 'tag', 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa')
+            rbs_start = location
+            rbs_end = location + len(min_rbs_seq)
+            orf_start = rbs_end - 3
+            orf_end = rbs_end - 3 + len(orf.sequence)
+        else:
+            addition = 'taa' + min_rbs_seq[3:len(min_rbs_seq)-3] + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
+            # print "rbs:\t" + 'taa' + min_rbs_seq[3:len(min_rbs_seq)-3] + 'tag'
+            # print "orf:\t" + 'tag' + orf.sequence[3:len(orf.sequence)-3] + 'taa'
+            # print addition
+            rbs_start = location - 3
+            rbs_end = location - 3 + len(min_rbs_seq)
+            orf_start = rbs_end - 3
+            orf_end = rbs_end - 3 + len(orf.sequence)
         if is_intergenic_count > 1:
             rbs_list.remove(min_rbs) #remove entry from list of RBSs
-        min_rbs_seq = min_rbs['sequence'].lower()
-        if min_rbs_seq.endswith("atg") and orf_seq.startswith("atg"):
-            min_rbs_seq = min_rbs_seq[:len(min_rbs_seq) - 3]
-        addition = min_rbs_seq + orf.sequence.lower()
-        operon += addition
-        #print min_rbs
+        
+
+        # rbs_extra = 0
+        # orf_extra = 0
+        # if min_rbs_seq.endswith("atg") and orf_seq.startswith("atg"):
+        #     # min_rbs_seq = min_rbs_seq[:len(min_rbs_seq) - 3]
+        #     orf.sequence = orf.sequence.lower()[3:]
+        #     orf_extra = -3
+        # else:
+        #     rbs_extra = 3
+        # addition, str1, str2, overlap1 = concatenate(min_rbs_seq, orf.sequence)
+        # print "concat: " + addition + "\nfront: " + str1 + "\nback: " + str2 + "\noverlap: " + overlap1
+        # operon, str3, str4, overlap2 = concatenate(operon, addition)
+
+        operon = concatenate(operon, addition)
+
         operon_name += min_rbs['name'] + "." + orf.name + "."
+
+        # print "rbs:\t" + str(rbs_start) + "\t" + str(rbs_end)
+        # print "orf:\t" + str(orf_start) + "\t" + str(orf_end)
+        location = len(operon)
+        # print "location:\t" + str(location)
 
         import random
         r = lambda: random.randint(0,255)
+        # add RBS
         color1 = '#%02X%02X%02X' % (r(),r(),r())
         color2 = '#%02X%02X%02X' % (r(),r(),r())
-
-        highlights.append( {'start': location, \
-            'end': location + len(addition) - 1, \
-            'refSeq': min_rbs['id'], \
+        
+        highlights.append( {'start': rbs_start, \
+            'end': rbs_end, \
+            #'refSeq': min_rbs['id'], \
             #'sequence': addition, \
             'schema': 'org.clothocad.model.Highlight', \
             'plusStrand': True, \
             'description': min_rbs['name'], \
             'forColor': color1, \
             'revColor': color2} )
+        # add ORF
+        color1 = '#%02X%02X%02X' % (r(),r(),r())
+        color2 = '#%02X%02X%02X' % (r(),r(),r())
 
-        location += len(addition)
+        highlights.append( {'start': orf_start, \
+            'end': orf_end, \
+            #'refSeq': min_rbs['id'], \
+            #'sequence': addition, \
+            'schema': 'org.clothocad.model.Highlight', \
+            'plusStrand': True, \
+            'description': orf.name, \
+            'forColor': color1, \
+            'revColor': color2} )
+
+        # location += len(addition)
+        # print operon
 
         # name should be a concatenation of rbs1.cds1.rbs2.cds2.etc
         # (orf_list is going to be a list of polynucleotides and not just a straight list)

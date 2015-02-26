@@ -1,9 +1,10 @@
 package org.clothocad.core;
 
-import java.nio.file.Paths;
-import java.util.Properties;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+
+import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  *
@@ -28,7 +29,7 @@ public enum ConfigOption {
                     .toString(),
                "path"),
     clientdirectory("path to client files directory",
-                    Paths.get("clotho3-web", "dist").toString(),
+                    Paths.get("clotho3-web", "app").toString(),
                     "path");
     
     final String description;

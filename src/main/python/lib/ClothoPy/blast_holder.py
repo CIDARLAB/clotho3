@@ -14,6 +14,7 @@ class Alignment:
         self.accession = None
         self.evalue = None
         self.identity = None
+        self.positives = None
         self.bits = None
         self.score = None
         self.match_start = None
@@ -24,6 +25,7 @@ class Alignment:
         return {'accession': self.accession, \
             'evalue': self.evalue, \
             'identity': self.identity, \
+            'positives': self.positives, \
             'bits': self.bits, \
             'score': self.score, \
             'match_start': self.match_start, \
@@ -50,6 +52,7 @@ class Blast_Record:
                 temp.accession = align.accession
                 temp.evalue = align.hsps[0].expect
                 temp.identity = align.hsps[0].identities
+                temp.positives = align.hsps[0].positives
                 temp.bits = align.hsps[0].bits
                 temp.score = align.hsps[0].score
                 temp.match_start = align.hsps[0].sbjct_start
@@ -63,10 +66,9 @@ class Blast_Record:
             temp = a.as_dict()
             dictList.append(temp)
         return dictList
-    def to_JSON(self):
+    def _json(self):
         align = self.align_as_dict_list()
-        self.d = {'schema': 'org.clothocad.model.BlastRecord', \
+        return {'schema': 'org.clothocad.model.BlastRecord', \
             'id': self.id, \
             'query': self.query, \
             'alignments': align}
-        return self.d
