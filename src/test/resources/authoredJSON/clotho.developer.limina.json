@@ -12,5 +12,6 @@
   "schema" : "org.clothocad.model.LabPerson",
   "surName" : "Li",
   "title" : "Student Research Assistant (Developer)",
-  "id" : "clotho.developer.LiMina"
+  "id" : "clotho.developer.LiMina",
+  "order": 5
 }
