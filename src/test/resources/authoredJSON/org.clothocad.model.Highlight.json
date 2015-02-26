@@ -10,26 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "refSeq",
-    "type" : "org.clothocad.core.datums.SharableObjBase",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "plusStrand",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "notes",
     "type" : "array",
     "subtype" : null,
@@ -50,6 +30,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "revColor",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "description",
     "type" : "string",
     "subtype" : null,
@@ -60,8 +50,28 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "revColor",
-    "type" : "string",
+    "name" : "refSeq",
+    "type" : "org.clothocad.core.datums.SharableObjBase",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "start",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "plusStrand",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -81,16 +91,6 @@
     "description" : null
   }, {
     "name" : "end",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "start",
     "type" : "number",
     "subtype" : null,
     "example" : null,

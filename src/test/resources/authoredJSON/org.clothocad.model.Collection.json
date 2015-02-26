@@ -10,12 +10,12 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "description",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : true,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -30,12 +30,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

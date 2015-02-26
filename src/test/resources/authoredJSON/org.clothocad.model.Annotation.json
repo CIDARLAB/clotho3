@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "forwardColor",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "feature",
     "type" : "org.clothocad.model.Feature",
     "subtype" : null,
@@ -36,6 +26,26 @@
     "example" : null,
     "access" : null,
     "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "end",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -60,18 +70,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "isForwardStrand",
-    "type" : "boolean",
+    "name" : "forwardColor",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -90,8 +90,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "end",
-    "type" : "number",
+    "name" : "isForwardStrand",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

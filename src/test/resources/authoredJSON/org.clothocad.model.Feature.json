@@ -10,26 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "swissProtId",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "riskGroup",
     "type" : "number",
     "subtype" : null,
@@ -40,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isCDS",
-    "type" : "boolean",
+    "name" : "genbankId",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "PDBId",
+    "name" : "swissProtId",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -70,12 +50,22 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "sequence",
+    "type" : "org.clothocad.model.NucSeq",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isCDS",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -90,7 +80,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "genbankId",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "PDBId",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -101,7 +101,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
   "innerClasses" : null,
   "c" : "org.clothocad.model.Feature",
   "binaryName" : "org.clothocad.model.Feature"

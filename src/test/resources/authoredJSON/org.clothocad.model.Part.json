@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "riskGroup",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "author",
     "type" : "org.clothocad.model.Person",
     "subtype" : null,
@@ -20,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "riskGroup",
-    "type" : "number",
+    "name" : "log",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -41,16 +51,6 @@
     "description" : null
   }, {
     "name" : "type",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "log",
     "type" : "object",
     "subtype" : null,
     "example" : null,

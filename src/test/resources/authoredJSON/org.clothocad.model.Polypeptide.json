@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "source",
+    "name" : "version",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "version",
+    "name" : "source",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -41,7 +41,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
   "innerClasses" : null,
   "c" : "org.clothocad.model.Polypeptide",
   "binaryName" : "org.clothocad.model.Polypeptide"

@@ -21,7 +21,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.model.ConverterSchema",
   "innerClasses" : null,
   "c" : "org.clothocad.core.execution.ConverterFunction",
   "binaryName" : "org.clothocad.core.execution.ConverterFunction"

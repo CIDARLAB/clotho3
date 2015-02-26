@@ -5,9 +5,7 @@ angular.module('clotho.editor')
 
 	$scope.langTypes = [
 		{name:'JavaScript', value:'JAVASCRIPT'},
-		{name:'Java', value:'JAVA'},
-		{name:'Python', value:'PYTHON'},
-		{name:'Groovy', value:'GROOVY'}
+		{name:'Python', value:'PYTHON'}
 	];
 
 	$scope.outputTypes = [

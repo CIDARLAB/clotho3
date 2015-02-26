@@ -20,6 +20,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "description",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "dependencies",
     "type" : "array",
     "subtype" : null,
@@ -27,16 +37,6 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : true,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "log",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   }, {
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "log",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

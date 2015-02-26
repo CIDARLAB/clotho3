@@ -11,7 +11,7 @@
   "source" : null,
   "fields" : [ ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.datums.Badge",
   "binaryName" : "org.clothocad.core.datums.Badge"

@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "country",
+    "name" : "state",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "state",
+    "name" : "country",
     "type" : "string",
     "subtype" : null,
     "example" : null,
