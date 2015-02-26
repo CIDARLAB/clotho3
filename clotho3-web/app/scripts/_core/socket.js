@@ -31,7 +31,7 @@ angular.module('clotho.core').service('Socket',
 
       //basic check -- most checks should be in communicator
       function checkMessageValid (msgString) {
-        return msgString.length < 16348;
+        return msgString.length < 16384;
       }
 
       //expecting a string or object
@@ -114,7 +114,6 @@ angular.module('clotho.core').service('Socket',
 
       //todo - delegate to service which also handles SSE (once we support them)
       socket.onmessage = function (obj) {
-
         obj = JSON.parse(obj.data);
 
         Debugger.log('received', obj);

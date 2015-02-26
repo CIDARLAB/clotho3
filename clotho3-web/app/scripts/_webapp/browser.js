@@ -31,14 +31,14 @@ angular.module('clotho.webapp').controller('BrowserCtrl', function($scope, Cloth
     /* filters */
 
     $scope.filters = [
-        {
-            name : "Made by me",
-            filter : function (sharable) {
-                //todo - update pending users
-                return angular.isDefined(sharable.author) && sharable.author == true;
-            },
-            "class" : "glyphicon glyphicon-user"
-        },
+        // {
+        //     name : "Made by me",
+        //     filter : function (sharable) {
+        //         //todo - update pending users
+        //         return angular.isDefined(sharable.author) && sharable.author == true;
+        //     },
+        //     "class" : "glyphicon glyphicon-user"
+        // },
         {
             name : "Has Description",
             filter : function (sharable) {
@@ -93,10 +93,10 @@ angular.module('clotho.webapp').controller('BrowserCtrl', function($scope, Cloth
 
     //todo - store on server and pull
     $scope.queries = [
-        {
-            name: "Random",
-            query : {}
-        },
+        // {
+        //     name: "",
+        //     query : {}
+        // },
         {
             name : "Schemas",
             query : {
@@ -104,9 +104,9 @@ angular.module('clotho.webapp').controller('BrowserCtrl', function($scope, Cloth
             }
         },
         {
-            name: "NucSeqs",
+            name: "Parts",
             query : {
-                "schema" : "org.clothocad.model.NucSeq"
+                "schema" : "org.clothocad.model.Part"
             }
         },
         {
@@ -116,9 +116,9 @@ angular.module('clotho.webapp').controller('BrowserCtrl', function($scope, Cloth
             }
         },
         {
-            name : "Contains pBAC",
+            name : "People",
             query : {
-                name : {"$regex"  : 'pBAC'}
+                "schema" : "org.clothocad.model.LabPerson"
             }
         }
     ];

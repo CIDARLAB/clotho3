@@ -128,7 +128,6 @@ angular.module('clotho.core').service('PubSub',
 			 @param args {*}  Array of arguments to apply to callback. If you want to pass a single arg, you don't need to wrap it in an array.
 			 */
 			var trigger = function pubsub_trigger (topic, args) {
-
 				//ensure arguments are array
 				//undefined is not a JSON value, so means nothing was sent over the socket
 				if (angular.isUndefined(args)) {

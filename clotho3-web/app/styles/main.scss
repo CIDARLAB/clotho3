@@ -41,3 +41,14 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import 'editor';
 @import 'trails';
 @import 'webapp';
+
+#sponsors {
+    text-align: justify;
+}
+
+.stretch {
+    width: 100%;
+    display: inline-block;
+    font-size: 0;
+    line-height: 0
+}
