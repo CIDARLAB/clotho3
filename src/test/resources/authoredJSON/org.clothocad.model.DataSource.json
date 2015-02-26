@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "canImport",
+    "name" : "canExport",
     "type" : "boolean",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "canExport",
+    "name" : "canImport",
     "type" : "boolean",
     "subtype" : null,
     "example" : null,

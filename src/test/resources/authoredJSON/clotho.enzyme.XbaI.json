@@ -1,0 +1,12 @@
+{
+  "name" : "XbaI",
+  "match" : "actagt",
+  "cut" : "a^ctag_t",
+  "methylation" : true,
+  "overhang" : 4,
+  "type" : "II",
+  "subtype" : "P",
+  "rebase" : "http://rebase.neb.com/rebase/enz/SpeI.html",
+  "id" : "clotho.enzyme.XbaI",
+  "schema" : "org.clothocad.model.RestrictionEnzyme"
+}

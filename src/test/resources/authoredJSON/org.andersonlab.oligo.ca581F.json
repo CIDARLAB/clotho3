@@ -1,0 +1,8 @@
+{
+  "description" : "Tet Promoter PCR",
+  "language" : "JSONSCHEMA",
+  "name" : "ca581f",
+  "schema" : "org.clothocad.model.Oligo",
+  "sequence" : "GGAGACGTCTCTgatcGCGGCCGCTCCCTATCAGTGATAGAG",
+  "id" : "org.andersonlab.oligo.ca581F"
+}

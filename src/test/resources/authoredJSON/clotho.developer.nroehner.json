@@ -1,0 +1,16 @@
+{
+  "current" : true,
+  "currentLocation" : "Boston, MA",
+  "description" : "Nicholas Roehner is a postdoctoral fellow at Boston University. He graduated from the University of Utah with a Ph.D. in Bioengineering and joined the Clotho team in September 2014. His research interests include the development of algorithms and techniques for the automated design of biological systems, the development of standards to represent these systems, and the reconciliation of biodesign automation tools with laboratory practice.",
+  "emailAddress" : "nroehner@bu.edu",
+  "givenName" : "Nicholas",
+  "icon" : "images/people/nroehner.jpg",
+  "lab" : "CIDAR",
+  "name" : "Nicholas Roehner",
+  "nickName" : "Nic",
+  "role" : "Data Modeler",
+  "schema" : "org.clothocad.model.LabPerson",
+  "surName" : "Roehner",
+  "title" : "Developer",
+  "id" : "clotho.developer.nroehner"
+}

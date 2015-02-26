@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "revColor",
-    "type" : "string",
+    "name" : "plusStrand",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,28 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "end",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "inference",
     "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "plusStrand",
-    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -80,8 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "start",
-    "type" : "number",
+    "name" : "revColor",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -92,6 +72,26 @@
   }, {
     "name" : "forColor",
     "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "end",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "start",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,

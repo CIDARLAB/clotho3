@@ -1,13 +1,14 @@
 {
   "currentLocation" : "Boston University",
-  "description" : "Doug was the original creator of Clotho when he was a UC Chancellor’s post doctoral fellow at UC Berkeley. He also served as the research advisor for the 2008, 2009, and 2011 Clotho iGEM teams. He is now the Richard and Minda Reidy Family Career Development Assistant Professor at Boston University in the Department of Electrical and Computer Engineering. He is the leader of the Cross-disciplinary Integration of Design Automation Research (CIDAR) group and a member of the Center of Synthetic Biology (CoSBi). His interests span both traditional electronic design automation as well as the emerging field of bio-design automation.",
+  "description" : "Douglas Densmore is a Kern Faculty Fellow, a Hariri Institute for Computing and Computational Science and Engineering Junior Faculty Fellow, and Assistant Professor in the Department of Electrical and Computer Engineering at Boston University. His research focuses on the development of tools for the specification, design, and assembly of synthetic biological systems, drawing upon his experience with embedded system level design and electronic design automation (EDA).  He is the director of the Cross-disciplinary Integration of Design Automation Research (CIDAR) group at Boston University and a core faculty member of the Boston University Center of Synthetic Biology (CoSBI).",
   "givenName" : "Douglas",
   "icon" : "/images/people/DougDensmore.png",
-  "isManagement" : "true",
+  "isManagement" : true,
   "name" : "Douglas Densmore",
   "nickName" : "Doug",
   "schema" : "org.clothocad.model.LabPerson",
   "surName" : "Densmore",
   "title" : "Project Leader",
-  "id" : "clotho.developer.dougdensmore"
+  "id" : "clotho.developer.dougdensmore",
+  "order": 2
 }

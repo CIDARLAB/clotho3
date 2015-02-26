@@ -1,0 +1,19 @@
+{
+  "args" : [ {
+    "type" : "string",
+    "name" : "str"
+  } ],
+  "code" : "function(str) { return str.split('').reverse().join('') };",
+  "language" : "JAVASCRIPT",
+  "name" : "reverse",
+  "schema" : "org.clothocad.core.datums.Function",
+  "tests" : [ {
+    "args" : [ "blah" ],
+    "output" : {
+      "value" : "halb",
+      "type" : "VALUE"
+    }
+  } ],
+  "id" : "org.clothocad.test.reverse",
+  "description" : "Reverse a string"
+}

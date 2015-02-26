@@ -1,0 +1,8 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "code" : "def run():\n  return 16384*'i'",
+  "id" : "printchar",
+  "name" : "printchar",
+  "language" : "PYTHON",
+  "outputType" : "string"
+}

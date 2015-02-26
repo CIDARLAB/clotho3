@@ -8,5 +8,6 @@
   "schema" : "org.clothocad.model.LabPerson",
   "surName" : "Paige",
   "title" : "Lead Developer",
-  "id" : "clotho.developer.spaige"
+  "id" : "clotho.developer.spaige",
+  "order": 3
 }

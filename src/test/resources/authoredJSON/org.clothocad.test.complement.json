@@ -1,0 +1,11 @@
+{
+  "name" : "complement",
+  "schema" : "org.clothocad.core.datums.Function",
+  "id" : "org.clothocad.test.complement",
+  "language" : "JAVASCRIPT",
+  "code" : "function (seq) {\n  var map = { a : 't', c : 'g', g : 'c', t: 'a' }\n  return seq.replace(/[acgt]/ig, function (n) { return map[n.toLowerCase()] })\n}",
+  "args" : [ {
+    "type" : "string",
+    "name" : "seq"
+  } ]
+}

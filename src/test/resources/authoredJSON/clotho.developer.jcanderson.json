@@ -18,5 +18,6 @@
   "startDate" : "2007-07-01",
   "surName" : "Anderson",
   "title" : "Project Leader",
-  "id" : "clotho.developer.jcanderson"
+  "id" : "clotho.developer.jcanderson",
+  "order": 1
 }

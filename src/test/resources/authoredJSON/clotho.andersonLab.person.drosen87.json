@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Daniel",
+  "nickName" : "Dan",
+  "surName" : "Rosen",
+  "name" : "drosen87",
+  "emailAddress" : "drosen87@gmail.com",
+  "icon" : "",
+  "imgUrl" : "",
+  "startDate" : "2008-06-01",
+  "endDate" : "2010-06-01",
+  "currentLocation" : "",
+  "current" : false,
+  "dateCreated" : "2008-06-01",
+  "isManagement" : false,
+  "role" : "Undergraduate Researcher",
+  "biography" : "",
+  "title" : "",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.drosen87"
+}

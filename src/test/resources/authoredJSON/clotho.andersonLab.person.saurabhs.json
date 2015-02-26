@@ -1,0 +1,22 @@
+{
+  "schema" : "org.clothocad.model.LabPerson",
+  "lab" : "Anderson",
+  "givenName" : "Saurabh",
+  "nickName" : "Saurabh",
+  "surName" : "Srivastava",
+  "name" : "saurabhs",
+  "emailAddress" : "saurabhs@berkeley.edu",
+  "icon" : "saurabh_srivastava.png",
+  "imgUrl" : "",
+  "startDate" : "2010-08-01",
+  "endDate" : "",
+  "currentLocation" : "",
+  "current" : true,
+  "dateCreated" : "2010-08-01",
+  "isManagement" : false,
+  "role" : "Postdoc",
+  "biography" : "",
+  "title" : "Act Ontology and Synthesizer",
+  "description" : "",
+  "id" : "clotho.andersonLab.person.saurabhs"
+}

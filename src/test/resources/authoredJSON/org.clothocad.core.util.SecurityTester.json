@@ -11,7 +11,7 @@
   "source" : null,
   "fields" : [ ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.Module",
   "innerClasses" : null,
   "c" : "org.clothocad.core.util.SecurityTester",
   "binaryName" : "org.clothocad.core.util.SecurityTester"

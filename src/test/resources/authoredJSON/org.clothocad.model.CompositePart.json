@@ -31,7 +31,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.Part",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.CompositePart",
   "binaryName" : "org.clothocad.model.CompositePart"

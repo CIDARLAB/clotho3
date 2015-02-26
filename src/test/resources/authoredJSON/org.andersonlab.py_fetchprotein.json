@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from fetch_protein import run",
+  "name" : "fetchProtein",
+  "id" : "org.andersonlab.py_fetchprotein",
+  "description" : "Retrieves a Polypeptide by accession number",
+  "args" : [ {
+    "type" : "string",
+    "name" : "arg0"
+  }]
+}

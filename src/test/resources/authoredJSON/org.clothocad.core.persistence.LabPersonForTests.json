@@ -30,16 +30,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "myCollection",
-    "type" : "org.clothocad.model.Collection",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "lab",
     "type" : "org.clothocad.model.Lab",
     "subtype" : null,
@@ -50,22 +40,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "snailMailAddress",
-    "type" : "string",
+    "name" : "myCollection",
+    "type" : "org.clothocad.model.Collection",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "emailAddress",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -81,6 +61,26 @@
     "description" : null
   }, {
     "name" : "surName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "snailMailAddress",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "emailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,

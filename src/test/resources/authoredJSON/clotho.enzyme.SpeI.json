@@ -1,0 +1,11 @@
+{
+  "schema" : "org.clothocad.model.RestrictionEnzyme",
+  "language" : "JSONSCHEMA",
+  "name" : "SpeI",
+  "id" : "clotho.enzyme.SpeI",
+  "description" : "SpeI restriction enzyme",
+  "match" : "actagt",
+  "cut" : "a^ctag_t",
+  "overhang" : 4,
+  "rebase" : "https://www.neb.com/products/r0133-spei"
+}

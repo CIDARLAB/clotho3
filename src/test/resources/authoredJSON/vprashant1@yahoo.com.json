@@ -1,0 +1,11 @@
+{
+  "schema" : "org.clothocad.model.Person",
+  "id" : "vprashant1@yahoo.com",
+  "name" : "Prashant Vaidyanathan",
+  "emailAddress" : "vprashant1@yahoo.com",
+  "dateCreated" : "2014-09-05",
+  "icon" : "//graph.facebook.com/10154593743120644/picture?width=500&height=500",
+  "social" : {
+    "facebook" : "https://www.facebook.com/app_scoped_user_id/10154593743120644/"
+  }
+}

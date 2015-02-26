@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "city",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "country",
     "type" : "string",
     "subtype" : null,
@@ -21,16 +31,6 @@
     "description" : null
   }, {
     "name" : "state",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "city",
     "type" : "string",
     "subtype" : null,
     "example" : null,

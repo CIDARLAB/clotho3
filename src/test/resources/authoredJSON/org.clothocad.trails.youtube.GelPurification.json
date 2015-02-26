@@ -1,0 +1,62 @@
+{
+  "name" : "Gel Purification",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.youtube.GelPurification",
+  "about" : {
+    "help" : "Gel Purification was retrieved from Youtube from the channel J. Christopher Anderson, and was created on 5/15/2014.",
+    "contents" : [ {
+      "type" : "text",
+      "params" : "After digestion, we need to gel purify our fragments.  For this, we'll run an agarose gel, cut the bands out of the gel, then purify the DNA using a purification kit."
+    } ]
+  },
+  "created" : 1400192913000,
+  "youtubePlaylistId" : "PL2aPXzks-TgMgibxKB80naduiRZnqcZPR",
+  "icon" : "https://i1.ytimg.com/vi/eW6Vr4GLih0/sddefault.jpg",
+  "contents" : [ {
+    "chapter" : "Youtube Playlist",
+    "pages" : [ {
+      "title" : "cloning cycle   runing a gel of our digestion",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "eW6Vr4GLih0"
+        }
+      } ]
+    }, {
+      "title" : "Cutting bands out of gel",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "text",
+        "params" : "Learn how to cut DNA bands out of agarose gels."
+      }, {
+        "type" : "video",
+        "params" : {
+          "id" : "K_tFVieCJcA"
+        }
+      } ]
+    }, {
+      "title" : "cloning cycle   agarose gel DNA purification with zymo columns pt1",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "g-X5aaR7KsM"
+        }
+      } ]
+    }, {
+      "title" : "cloning cycle   agarose gel DNA purification with zymo columns pt2",
+      "schema" : "org.clothocad.model.Trail",
+      "icon" : "video",
+      "contents" : [ {
+        "type" : "video",
+        "params" : {
+          "id" : "bGtsAXhrijc"
+        }
+      } ]
+    } ]
+  } ]
+}

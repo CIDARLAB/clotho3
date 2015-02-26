@@ -10,8 +10,28 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "format",
-    "type" : "object",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "riskGroup",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "shortDescription",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,32 +60,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "riskGroup",
-    "type" : "number",
+    "name" : "format",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "shortDescription",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

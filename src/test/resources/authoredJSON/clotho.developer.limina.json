@@ -1,7 +1,7 @@
 {
   "current" : true,
   "currentLocation" : "Berkeley, CA",
-  "description" : "Mina Li is an undergraduate student at University of California, Berkeley studying Computer Science. She joined the team in January 2014.",
+  "description" : "Mina Li is an undergraduate at UC Berkeley, graduating in May 2015 with a B.A. in Computer Science. She joined the Clotho team in January 2014, and her primary work has been in the development of Python functions that enable the user to query from a variety of databases, and to manipulate and convert between various representations of data within Clotho.",
   "emailAddress" : "li.mina888@berkeley.edu",
   "givenName" : "Mina",
   "icon" : "images/people/MinaLi.jpg",

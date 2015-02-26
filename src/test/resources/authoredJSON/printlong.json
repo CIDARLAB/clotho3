@@ -1,0 +1,8 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "name" : "printlong",
+  "id" : "printlong",
+  "language" : "PYTHON",
+  "outputType" : "string",
+  "code" : "def run():\n  return 20000*'z'"
+}
