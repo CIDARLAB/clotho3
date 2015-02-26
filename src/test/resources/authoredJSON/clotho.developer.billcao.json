@@ -18,4 +18,6 @@
   "startDate" : "2014-01-17",
   "surName" : "Cao",
   "title" : "Full Stack Developer",
-  "id" : "clotho.developer.billcao"}
+  "id" : "clotho.developer.billcao",
+  "order": 4
+}
