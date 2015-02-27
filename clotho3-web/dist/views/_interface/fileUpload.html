@@ -1,1 +1,90 @@
-<div ng-form class="form" style="margin: 10px 0"><div class="alert clearfix" ng-class="dropSupported ? 'alert-info' : 'alert-warning'" ng-file-drop="onFileSelect($files);" ng-file-drop-available="dropSupported=true"><div class="btn-group pull-right"><div class="btn btn-lg btn-default" style="position: relative">Select Files <input id="fileInput" ng-file-select="onFileSelect($files)" type="file" multiple style="opacity: 0 !important; position: absolute; top: 0; left: 0; height: 100%; width: 10px; min-width: 100%"></div><button class="btn btn-lg btn-primary" ng-if="selectedFiles.length > 0" ng-click="processAll()">Process All</button></div><p style="font-size: 18px; line-height: 45px"><span ng-show="dropSupported">Drop Files Here</span> <span ng-show="!dropSupported">File Dropping not supported</span></p><div ng-show="autoUploadVisible"><hr><div class="checkbox" style="margin-bottom: 0"><label><input type="checkbox" ng-model="uploadRightAway"> Upload right away (file name will be used directly)</label></div></div></div></div><div ng-if="selectedFiles.length > 0" style="margin-bottom: 20px"><div class="sel-file" ng-repeat="f in selectedFiles"><div class="input-group"><div class="input-group-btn"><a class="btn btn-primary" ng-click="start($index)" ng-if="!started[$index]">Start</a> <a class="btn btn-primary disabled" ng-if="started[$index]">Started</a> <a class="btn btn-default" ng-click="previewFile($index)">Preview</a> <img ng-src="{{inputFiles[$index]}}" ng-if="dataUrls[$index]" ng-click="previewFile($index)" style="max-width: 33px; max-height: 33px"></div><input type="text" class="form-control" ng-model="f.name" placeholder="File Name"> <span class="input-group-addon">{{f.size}} bytes</span></div></div></div><div class="response" ng-if="uploadResult.length > 0">Server Response:<ul><li ng-repeat="result in uploadResult"><ul><li ng-repeat="item in result"><div ng-show="item.name">file name: {{item.name}}</div><div ng-show="item.fieldName">name: {{item.fieldName}}</div><div ng-show="item.size">size on the serve: {{item.size}}</div><div ng-show="item.value">value: {{item.value}}</div></li></ul></li></ul></div><clotho-modal title="File Preview" open modal-size="lg"><img ng-if="modalFileIsImage" ng-src="{{modalFile}}"> <!-- todo - codemirror? --><pre class="transparent" ng-if="!modalFileIsImage" ng-bind="modalFile"></pre></clotho-modal>
+<div ng-form class="form" style="margin: 10px 0;">
+  <div class="alert clearfix"
+       ng-class="dropSupported ? 'alert-info' : 'alert-warning'"
+       ng-file-drop="onFileSelect($files);"
+       ng-file-drop-available="dropSupported=true">
+
+    <div class="btn-group pull-right">
+      <div class="btn btn-lg btn-default"
+           style="position: relative;">
+        Select Files
+        <input id="fileInput"
+               ng-file-select="onFileSelect($files)"
+               type="file"
+               multiple
+               style="opacity: 0 !important; position: absolute; top: 0; left: 0; height: 100%; width: 10px; min-width: 100%;">
+      </div>
+      <button class="btn btn-lg btn-primary"
+              ng-if="selectedFiles.length > 0"
+              ng-click="processAll()">
+        Process All
+      </button>
+    </div>
+
+    <p style="font-size: 18px; line-height: 45px;">
+      <span ng-show="dropSupported">Drop Files Here</span>
+      <span ng-show="!dropSupported">File Dropping not supported</span>
+    </p>
+
+    <div ng-show="autoUploadVisible">
+    <hr>
+    <div class="checkbox" style="margin-bottom: 0;">
+      <label>
+        <input type="checkbox" ng-model="uploadRightAway">
+        Upload right away (file name will be used directly)
+      </label>
+    </div>
+    </div>
+
+  </div>
+</div>
+
+<div ng-if="selectedFiles.length > 0" style="margin-bottom: 20px;">
+    <div class="sel-file" ng-repeat="f in selectedFiles">
+      <div class="input-group">
+        <div class="input-group-btn">
+          <a class="btn btn-primary"
+             ng-click="start($index)"
+             ng-if="!started[$index]">
+            Start
+          </a>
+          <a class="btn btn-primary disabled"
+             ng-if="started[$index]">
+            Started
+          </a>
+          <a class="btn btn-default"
+             ng-click="previewFile($index)">
+            Preview
+          </a>
+          <img ng-src="{{inputFiles[$index]}}"
+               ng-if="dataUrls[$index]"
+               ng-click="previewFile($index)"
+               style="max-width: 33px; max-height: 33px;">
+        </div>
+        <input type="text" class="form-control" ng-model="f.name" placeholder="File Name">
+        <span class="input-group-addon">{{f.size}} bytes</span>
+      </div>
+    </div>
+</div>
+
+<div class="response" ng-if="uploadResult.length > 0">
+    Server Response:
+    <ul>
+        <li ng-repeat="result in uploadResult">
+            <ul>
+                <li ng-repeat="item in result">
+                    <div ng-show="item.name">file name: {{item.name}}</div>
+                    <div ng-show="item.fieldName">name: {{item.fieldName}}</div>
+                    <div ng-show="item.size">size on the serve: {{item.size}}</div>
+                    <div ng-show="item.value">value: {{item.value}}</div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<clotho-modal title="File Preview" open="showPreview" modal-size="lg">
+  <img ng-if="modalFileIsImage" ng-src="{{modalFile}}">
+  <!-- todo - codemirror? -->
+  <pre class="transparent" ng-if="!modalFileIsImage" ng-bind="modalFile"></pre>
+</clotho-modal>

@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-rc.0
+ * @license AngularJS v1.3.0-build.3102+sha.a9371a1
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -62,8 +62,6 @@ angular.mock.$Browser = function() {
 
     return listener;
   };
-
-  self.$$checkUrlChange = angular.noop;
 
   self.cookieHash = {};
   self.lastCookieHash = {};
@@ -776,21 +774,13 @@ angular.mock.animate = angular.module('ngAnimateMock', ['ng'])
       };
     });
 
-    $provide.decorator('$animate', ['$delegate', '$$asyncCallback', '$timeout', '$browser',
-                            function($delegate,   $$asyncCallback,   $timeout,   $browser) {
+    $provide.decorator('$animate', ['$delegate', '$$asyncCallback',
+      function($delegate, $$asyncCallback) {
       var animate = {
         queue : [],
-        cancel : $delegate.cancel,
         enabled : $delegate.enabled,
-        triggerCallbackEvents : function() {
-          $$asyncCallback.flush();
-        },
-        triggerCallbackPromise : function() {
-          $timeout.flush(0);
-        },
         triggerCallbacks : function() {
-          this.triggerCallbackEvents();
-          this.triggerCallbackPromise();
+          $$asyncCallback.flush();
         },
         triggerReflow : function() {
           angular.forEach(reflowQueue, function(fn) {
@@ -1497,11 +1487,11 @@ function createHttpBackendMock($rootScope, $delegate, $browser) {
    *   all pending requests will be flushed. If there are no pending requests when the flush method
    *   is called an exception is thrown (as this typically a sign of programming error).
    */
-  $httpBackend.flush = function(count, digest) {
-    if (digest !== false) $rootScope.$digest();
+  $httpBackend.flush = function(count) {
+    $rootScope.$digest();
     if (!responses.length) throw new Error('No pending request to flush !');
 
-    if (angular.isDefined(count) && count !== null) {
+    if (angular.isDefined(count)) {
       while (count--) {
         if (!responses.length) throw new Error('No more pending request to flush !');
         responses.shift()();
@@ -1511,7 +1501,7 @@ function createHttpBackendMock($rootScope, $delegate, $browser) {
         responses.shift()();
       }
     }
-    $httpBackend.verifyNoOutstandingExpectation(digest);
+    $httpBackend.verifyNoOutstandingExpectation();
   };
 
 
@@ -1529,8 +1519,8 @@ function createHttpBackendMock($rootScope, $delegate, $browser) {
    *   afterEach($httpBackend.verifyNoOutstandingExpectation);
    * ```
    */
-  $httpBackend.verifyNoOutstandingExpectation = function(digest) {
-    if (digest !== false) $rootScope.$digest();
+  $httpBackend.verifyNoOutstandingExpectation = function() {
+    $rootScope.$digest();
     if (expectations.length) {
       throw new Error('Unsatisfied requests: ' + expectations.join(', '));
     }

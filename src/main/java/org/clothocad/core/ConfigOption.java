@@ -29,7 +29,7 @@ public enum ConfigOption {
                     .toString(),
                "path"),
     clientdirectory("path to client files directory",
-                    Paths.get("clotho3-web", "app").toString(),
+                    Paths.get("clotho3-web", "dist").toString(),
                     "path");
     
     final String description;
