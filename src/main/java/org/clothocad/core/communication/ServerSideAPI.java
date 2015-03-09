@@ -514,7 +514,11 @@ public class ServerSideAPI {
     public final List<Map<String, Object>> getAll(List objects) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         for (Object obj : objects) {
-            returnData.add(get(obj));
+            try{
+                returnData.add(get(obj));
+            } catch (Exception e){
+                returnData.add(null);
+            }
         }
         return returnData;
     }
@@ -600,7 +604,12 @@ public class ServerSideAPI {
         List<String> returnData = new ArrayList<>();
         //list of selectors?
         for (Object obj : objects) {
-            returnData.add(create(JSON.mappify(obj)).toString());
+            try{
+                ObjectId id = create(JSON.mappify(obj));
+                returnData.add(id == null? null : id.toString());               
+            } catch (Exception e){
+                returnData.add(null);
+            }
         }
         return returnData;
     }
@@ -669,6 +678,7 @@ public class ServerSideAPI {
                 persistor.delete(resolvedId);
             } catch (UnauthorizedException e) {
                 say(e.getMessage(), Severity.FAILURE);
+                return null;
             }
             say(String.format("Destroyed object #%s", resolvedId.toString()), Severity.SUCCESS);
             return resolvedId;
@@ -845,7 +855,7 @@ public class ServerSideAPI {
             return Type.VOID;
         }
 
-        //ensure args is list
+        //ensure args is list & exists
         try {
             args = (List) data.get("args");
         } catch (ClassCastException e) {
@@ -904,7 +914,7 @@ public class ServerSideAPI {
         //"Old" run, for non-Module objects
 
         //resolve any ids to their objects
-        for (int i = 0; i < args.size(); i++) {
+        if (args != null) for (int i = 0; i < args.size(); i++) {
             try {
                 ObjectId id = new ObjectId(args.get(i).toString());
                 //must have read privs on args
@@ -1174,9 +1184,9 @@ public class ServerSideAPI {
     }
 
     Object queryOne(Map<String, Object> query) {
-        List result = query(query);
+        List result = persistor.findAsJSON(query, options.getPropertiesFilter(), 1);
         if (result.isEmpty()) {
-            throw new EntityNotFoundException();
+            return Void.TYPE;
         }
         return result.get(0);
     }

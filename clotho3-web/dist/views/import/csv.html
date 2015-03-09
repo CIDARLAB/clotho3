@@ -1,1 +1,72 @@
-todo - get from papaparse demos
+<div ng-controller="ImportCSVCtrl as ctrl">
+
+  <div class="panel panel-info">
+    <div class="panel-heading">CSV File</div>
+    <div class="panel-body">
+
+      <div class="row">
+
+        <div class="col-sm-9">
+          <textarea ng-model="csvText"
+                    rows="5"
+                    class="form-control"></textarea>
+
+          <div function-code-drop
+               update-on-read="csvText"
+               show-drop="true"></div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="checkbox">
+            <label> <input type="checkbox" ng-model="options.header"> Has Header Row </label>
+          </div>
+
+          <div class="checkbox">
+            <label> <input type="checkbox" ng-model="options.dynamicTyping"> Dynamic Typing (convert numbers and booleans) </label>
+          </div>
+
+          <button class="btn btn-lg btn-primary" ng-click="process()" ng-disabled="!csvText">Process CSV</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="alert alert-warning" ng-show="parsed.error">{{parsed.error | json}}</div>
+
+  <div class="panel panel-info" ng-show="parsedData">
+    <div class="panel-heading">Data Massage + Import</div>
+    <table class="table">
+      <thead><tr>  <th>Old Key</th>   <th>New Key</th>   <th>Example Value</th>  </tr></thead>
+      <tbody>
+        <tr ng-repeat="(mapkey, mapval) in fieldMap" ng-class="{'info' : mapkey != mapval}">
+          <td style="vertical-align: middle; min-width: 150px;">{{mapkey}}</td>
+          <td>
+            <div class="input-group">
+              <input class="form-control" ng-model="fieldMap[mapkey]">
+              <span class="input-group-btn">
+                <button class="btn btn-warning" type="button" ng-click="removeField(mapkey)">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </button>
+              </span>
+            </div>
+          </td>
+          <td style="vertical-align: middle;">{{'' + fieldDemo[mapkey] | limitTo:40}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="panel-footer">
+      <button class="btn btn-primary" ng-click="reparse()" ng-disabled="!fieldMap">Process Header Changes</button>
+      <button class="btn btn-primary pull-right" ng-click="importParsed()" ng-disabled="!parsedData">Import Data</button>
+    </div>
+  </div>
+
+  <div class="alert alert-success" ng-show="createdIds.length">
+    <h4>Created Objects with the following IDs:</h4>
+    <ul class="list-unstyled">
+      <li ng-repeat="item in createdIds">{{item}}</li>
+    </ul>
+  </div>
+
+  <pre ng-bind="parsedData | json"></pre>
+</div>

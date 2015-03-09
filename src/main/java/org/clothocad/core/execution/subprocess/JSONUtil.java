@@ -20,15 +20,19 @@ class JSONUtil {
             String msg = new String(bytes, UTF_8);
             LinkedHashMap out = (LinkedHashMap) mapper.readValue(msg, Object.class);
             //If the out is a wrapped JSON string, then unwrap it
+            //XXX: automagic unwrapping causes unexpected inconsistent behavior - reexamine
             try {
                 //Extract out any JSON
                 Object ret = out.get("return");
                 List obs = (List) ret;
-                String jsonstr = (String) obs.get(0);
-                Object json = JSON.deserializeObjectToMap(jsonstr);
+                 if (obs.size() == 1){
+                    String jsonstr = (String) obs.get(0);
+                    Object json = JSON.deserializeObjectToMap(jsonstr);
 
-                //Repackage the wrapping with a Map
-                out.put("return", json);
+                    //Repackage the wrapping with a Map if deserialization was successful
+                    if (json != null) 
+                        out.put("return", json);
+                }
             } catch(Exception err) {
                 //I think it is a normal scenario for this to fail, so no error msg
             }

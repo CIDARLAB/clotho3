@@ -196,7 +196,8 @@ public class Persistor{
     
     public ObjectId save(ObjBase obj, boolean overwrite) {
         Subject currentSubject = SecurityUtils.getSubject();
-        if (!currentSubject.isAuthenticated()) {
+        if (!currentSubject.isAuthenticated() ||
+            currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
             throw new AuthorizationException("Anonymous users cannot create or edit objects.");
         }
         validate(obj);
@@ -263,7 +264,8 @@ public class Persistor{
     }
     
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
-        if (!SecurityUtils.getSubject().isAuthenticated()) {
+        if (!SecurityUtils.getSubject().isAuthenticated() ||
+            SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
             throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
         }
         if (!data.containsKey(ID)) {
@@ -294,15 +296,15 @@ public class Persistor{
         connection.delete(id);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId id){
+    public Map<String, Object> getAsJSON(ObjectId id) throws EntityNotFoundException {
         return getAsJSON(id, null, false);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields){
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields) throws EntityNotFoundException {
         return getAsJSON(id, fields, false);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun){
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun) throws EntityNotFoundException{
         try {
             if (forRun) checkPriv(id, "run");
             else checkPriv(id, "view");
@@ -725,20 +727,19 @@ public class Persistor{
             for (Class c : r.getSubTypesOf(type)) {
                 out.add(c.getName());
             }
-            
-            //get any authored schemas
-            Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
-            for (Class<? extends Schema> c : authoredSchemas){
-                for (Schema schema : this.getAll(c)){
-                    if (schema.childOf(originalSchema)){
-                        out.add(schema.getBinaryName());
-                    }
+        } catch (ClassNotFoundException | RuntimeException ex) {
+            log.error("getRelatedSchemas: Cannot create java class from schema", ex);
+        }
+        //get any authored schemas
+        Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
+        for (Class<? extends Schema> c : authoredSchemas){
+            for (Schema schema : this.getAll(c)){
+                if (schema.childOf(originalSchema)){
+                    out.add(schema.getBinaryName());
                 }
             }
-            
-
-        } catch (ClassNotFoundException | RuntimeException ex) {
         }
+
         out.add(originalSchemaName);
         return out;
     }
@@ -762,9 +763,7 @@ public class Persistor{
     }
     
     public Schema resolveSchemaFromClassName(String className){
-        Map<String,Object> query = new HashMap();
-        query.put("binaryName",className);
-        return connection.getOne(Schema.class, query);
+        return connection.get(Schema.class, new ObjectId(className));
     }
     
  
@@ -772,7 +771,7 @@ public class Persistor{
         return filterByPermission(globalTrie.getCompletions(word), view);
     }
 
-    public Object get(ObjectId objectId) {
+    public Object get(ObjectId objectId) throws EntityNotFoundException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -1,22 +1,15 @@
 # File to Genbank
 
-from ClothoPy.GenBankHolder import GenBank
+from ClothoPy.genbank_holder import Genbank
+from StringIO import StringIO
+import ClothoPy.ClothoSeqIO
 
-def _convertFile(file_name):
-	genbank = GenBank(file_name)
-	#con = GBConverter(genbank)
-	#con.convert()
-	
-	#genbank.writeRecord('temp.gb')
-	#gen = open('temp.gb', 'rU').read()
-	#os.remove('temp.gb')
-
+def _convert_file(file_name):
+	genbank = Genbank(file_name)
 	out_handle = StringIO()
-	SeqIO.write(genbank.record, out_handle, "gb")
+	ClothoPy.ClothoSeqIO.write(genbank.record, out_handle, "gb")
 	gb_data = out_handle.getvalue()
 	return gb_data 
 
-	# this returns the literal text inside of the record
-
-def run(*accession_ids):
-    return map(_convertFile, accession_ids)
+def run(accession_id):
+    return _convert_file(accession_id) #map(_convertFile, accession_ids)

@@ -1,0 +1,12 @@
+{
+  "schema" : "org.clothocad.core.datums.Function",
+  "language" : "PYTHON",
+  "code" : "from ids_to_operon import run",
+  "name" : "IDsToOperon",
+  "id" : "org.andersonlab.py_IDsToOperon",
+  "description" : "Converts a list of IDs (uniprot and ncbi) to an operon",
+  "args" : [ {
+    "type" : "array",
+    "name" : "arg0"
+  }]
+}

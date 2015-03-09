@@ -1,26 +1,18 @@
 # Genbank to Polynucleotide (New Genbank)
 
-from ClothoPy.GenBankHolder import GenBank
-from ClothoPy.NewGenBankHolder import NewGenBank
-from ClothoPy.NewGBToJSON import NewGBConverter
+from ClothoPy.genbank_holder import Genbank
+from ClothoPy.new_genbank_holder import New_Genbank
+from ClothoPy.new_gb_to_json import New_GB_Converter
 from Bio.SeqRecord import SeqRecord
-from StringIO import StringIO
 import ClothoPy.ClothoSeqIO
 
 def _convertGB(gb):
-    #open('temp.gb', 'w').write(gb)
-    #genbank = GenBank('temp.gb')
-    #os.remove('temp.gb')
-
+    from StringIO import StringIO
     gb_handle = StringIO(gb)
     record = ClothoPy.ClothoSeqIO.read(gb_handle, 'gb')
-    
-    #gb.record = SeqRecord(gb.sequence, id=gb.id, name=gb.name, \
-    #   description=gb.description, dbxrefs=gb.dbxrefs, features=gb.features, \
-    #   annotations=gb.annotations, letter_annotations=gb.letter_annotations)
-    con = NewGBConverter(NewGenBank(record))
+    con = New_GB_Converter(New_Genbank(record))
     con.convert()
     return con.d
 
-def run(*accession_ids):
-    return map(_convertGB, accession_ids)
+def run(accession_id):
+    return _convertGB(accession_id) #map(_convertGB, accession_ids)

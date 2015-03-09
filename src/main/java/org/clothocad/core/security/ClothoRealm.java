@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
@@ -23,6 +24,7 @@ import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
@@ -40,6 +42,7 @@ import static org.clothocad.core.security.ServerSubject.SERVER_USER;
  * @author spaige
  */
 @Slf4j
+@Singleton
 public class ClothoRealm extends AuthorizingRealm {
     
     public static final String ALL_GROUP = "_all";
@@ -72,7 +75,7 @@ public class ClothoRealm extends AuthorizingRealm {
         //set up default groups
         if (store.getGroup(ALL_GROUP) == null){
             addGroup(ALL_GROUP);
-    }
+        }
 
         //set up anonymous user
         if (store.getAccount(ANONYMOUS_USER) == null){
@@ -84,6 +87,11 @@ public class ClothoRealm extends AuthorizingRealm {
         }
     }
 
+    @Override
+    protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
+        return principals.fromRealm(getRealmName()).iterator().next();
+    }
+    
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pc) {
         log.debug("getting authz info for {}", pc);
@@ -126,6 +134,7 @@ public class ClothoRealm extends AuthorizingRealm {
         ClothoAccount account = store.getAccount(username);
         account.getAuthzInfo().addPermission(permission, id);
         store.saveAccount(account);
+        if (isAuthorizationCachingEnabled()) clearCachedAuthorizationInfo(new SimplePrincipalCollection(username, getRealmName()));
     }
 
     public void addPermissionToGroup(String groupName, ClothoAction permission, ObjectId id) {
@@ -133,6 +142,7 @@ public class ClothoRealm extends AuthorizingRealm {
         AuthGroup group = store.getGroup(groupName);
         group.addPermission(permission, id);
         store.saveGroup(group);
+        if (getAuthorizationCache() != null) clearCachedAuthorizationInfo(new SimplePrincipalCollection(groupName, getRealmName()));
     }
 
     public void removePermissionFromGroup(String groupName, ClothoAction permission, ObjectId id) {
@@ -140,6 +150,7 @@ public class ClothoRealm extends AuthorizingRealm {
         AuthGroup group = store.getGroup(groupName);
         group.removePermission(permission, id);
         store.saveGroup(group);
+        if (getAuthorizationCache() != null) clearCachedAuthorizationInfo(new SimplePrincipalCollection(groupName, getRealmName()));
     }
 
     public void removePermission(String username, ClothoAction permission, ObjectId id) {        
@@ -147,6 +158,7 @@ public class ClothoRealm extends AuthorizingRealm {
         ClothoAccount account = store.getAccount(username);
         account.getAuthzInfo().removePermission(permission, id);
         store.saveAccount(account);
+        if (getAuthorizationCache() != null) clearCachedAuthorizationInfo(new SimplePrincipalCollection(username, getRealmName()));
     }
 
     public void removePermissions(String username, Set<ClothoAction> permissions, ObjectId id){

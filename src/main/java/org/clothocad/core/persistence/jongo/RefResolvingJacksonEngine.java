@@ -25,6 +25,7 @@ public class RefResolvingJacksonEngine extends JacksonEngine implements Extended
         this.mapping = mapping;
     }
 
+    //unmarshalls document to an instance of clazz, using a cache of injectable values
     @Override
     public <T> T unmarshall(BsonDocument document, Class clazz, InjectableValues cache) {
         try {
@@ -35,6 +36,7 @@ public class RefResolvingJacksonEngine extends JacksonEngine implements Extended
         }
     }
 
+    //updates toUpdate using the data in document and a cache of injectable values
     @Override
     public <T> T unmarshall(BsonDocument document, T toUpdate, InjectableValues cache) {
         try{

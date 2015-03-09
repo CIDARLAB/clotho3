@@ -4,9 +4,14 @@
  */
 package org.clothocad.core.schema;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.clothocad.core.datums.Function;
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.util.ClothoField;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.annotations.Reference;
@@ -18,26 +23,31 @@ import org.objectweb.asm.MethodVisitor;
 import static org.objectweb.asm.Opcodes.*;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.util.CheckClassAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author spaige
  */
+@Slf4j
 public class ClothoSchema extends Schema {
-
-    static final Logger logger = LoggerFactory.getLogger(ClothoSchema.class);
-
-    public ClothoSchema() {
-    }
 
     public ClothoSchema(String name, String description, Person author, Schema superClass, Set<ClothoField> fields) {
         super(name, description, author);
-        this.fields = fields;
+        this.fields = fields == null? new HashSet<ClothoField>() : fields;
         this.superClass = superClass;
     }
 
+    @JsonCreator
+    public ClothoSchema(@JsonProperty("name") String name, @JsonProperty("description") String description, 
+        @JsonProperty("author") Person author, @JsonProperty("superClass") Schema superClass, 
+        @JsonProperty("fields") Set<ClothoField> fields, @JsonProperty("methods") Set<Function> methods,
+        @JsonProperty("dependencies") Map<String,ObjectId> dependencies, @JsonProperty("classData") byte[] classData){
+        this(name, description, author, superClass, fields);
+        this.methods = methods == null? new HashSet<Function>() : methods;
+        this.dependencies = dependencies;
+        this.classData = classData;
+    }
+    
     @Override
     @JsonProperty("language")
     public Language getLanguage() {
@@ -58,7 +68,7 @@ public class ClothoSchema extends Schema {
     }
 
     protected byte[] generateClassData() {
-        logger.trace("generating class bytecode for schema {} ({})", this.getName(), this.getId());
+        log.trace("generating class bytecode for schema {}", this.getId());
 
         ClassWriter cwriter = new ClassWriter(0);
         //TraceClassVisitor tcv = new TraceClassVisitor(cwriter, new PrintWriter(System.out));
@@ -72,7 +82,7 @@ public class ClothoSchema extends Schema {
         cw.visitField(ACC_PUBLIC + ACC_FINAL + ACC_STATIC, "SCHEMA_NAME", Type.getType(String.class).getDescriptor(), null, this.getName()).visitEnd();
 
         //no-args constructor
-        logger.trace("Creating no-args constructor.");
+        log.trace("Creating no-args constructor.");
         MethodVisitor constructorVisitor = cw.visitMethod(ACC_PUBLIC, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[]{}), null, null);
         constructorVisitor.visitCode();
         constructorVisitor.visitVarInsn(ALOAD, 0);
@@ -83,11 +93,11 @@ public class ClothoSchema extends Schema {
 
         //fields
         for (ClothoField field : fields) {
-            logger.trace("{}.visitField({},{},{},{},{})", cw, accessToOpcode(field.getAccess()), field.getName(), Type.getType(field.getType()).getDescriptor(), null, null);
+            log.trace("{}.visitField({},{},{},{},{})", cw, accessToOpcode(field.getAccess()), field.getName(), Type.getType(field.getType()).getDescriptor(), null, null);
             FieldVisitor fv = cw.visitField(accessToOpcode(field.getAccess()), field.getName(), Type.getType(field.getType()).getDescriptor(), null, null);
             //TODO: annotating embed vs reference
             if (field.isReference()) {
-                logger.trace("{}.visitAnnotation({},{}).visitEnd()", Type.getType(Reference.class).getInternalName(), true);
+                log.trace("{}.visitAnnotation({},{}).visitEnd()", Type.getType(Reference.class).getInternalName(), true);
                 fv.visitAnnotation(Type.getType(Reference.class).getInternalName(), true).visitEnd();
             }
 
@@ -95,18 +105,18 @@ public class ClothoSchema extends Schema {
                 for (Constraint constraint : field.getConstraints()) {
                     String descriptor = Type.getDescriptor(constraint.constraintType);
                     Map<String, Object> values = constraint.values;
-                    logger.trace("{}.visitAnnotation({},{})", fv, descriptor, true);
+                    log.trace("{}.visitAnnotation({},{})", fv, descriptor, true);
                     AnnotationVisitor av = fv.visitAnnotation(descriptor, true);
                     //XXX: invalid annotation values cause hibernate validator to crash
                     for (String valueName : values.keySet()) {
                         handleAnnotationValue(av, valueName, values.get(valueName));
                     }
-                    logger.trace("{}.visitEnd", av);
+                    log.trace("{}.visitEnd", av);
                     av.visitEnd();
                 }
             }
 
-            logger.trace("{}.visitEnd", fv);
+            log.trace("{}.visitEnd", fv);
             fv.visitEnd();
             //getters and setters
             if (field.getAccess() != Access.PRIVATE) {
@@ -160,20 +170,20 @@ public class ClothoSchema extends Schema {
         for (Object value : a) {
             handleAnnotationValue(arrayVisitor, null, value);
         }
-        logger.trace("{}.visitEnd()", arrayVisitor);
+        log.trace("{}.visitEnd()", arrayVisitor);
         arrayVisitor.visitEnd();
     }
 
     private void handleAnnotationValue(AnnotationVisitor visitor, String name, Object value) {
         if (value.getClass().isArray()) {
-            logger.trace("{}.visitArray({})", visitor, name);
+            log.trace("{}.visitArray({})", visitor, name);
             handleAnnotationArray(visitor.visitArray(name), (Object[]) value);
         } else if (value instanceof Enum) {
-            logger.trace("{}.visitEnum({},{},{})", visitor, Type.getDescriptor(value.getClass()), value.toString());
+            log.trace("{}.visitEnum({},{},{})", visitor, Type.getDescriptor(value.getClass()), value.toString());
             visitor.visitEnum(name, Type.getDescriptor(value.getClass()), value.toString());
         } //XXX: not handling the annotation case right now; no use case at the moment
         else {
-            logger.trace("{}.visit({},{})", visitor, name, value);
+            log.trace("{}.visit({},{})", visitor, name, value);
             visitor.visit(name, value);
         }
     }

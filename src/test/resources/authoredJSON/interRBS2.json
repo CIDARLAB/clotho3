@@ -1,0 +1,9 @@
+{
+"id" : "org.clothocad.model.RBS.interRBS2",
+"name" : "interRBS2",
+"schema" : "org.clothocad.model.RBS",
+"utr5" : "tagATAACGAGGGCAAAAAatg",
+"nativeHost" : "E. coli",
+"weblink" : "http://www.sciencedirect.com/science/article/pii/0378111994906432",
+"isIntergenic" : true
+}

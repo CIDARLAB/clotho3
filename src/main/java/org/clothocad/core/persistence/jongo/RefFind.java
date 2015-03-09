@@ -11,6 +11,7 @@ import com.mongodb.ReadPreference;
 import com.thoughtworks.proxy.toys.hotswap.Swappable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.datums.ObjBase;
 import org.jongo.bson.Bson;
 import org.jongo.query.Query;
@@ -21,6 +22,7 @@ import org.jongo.query.QueryFactory;
  *
  * @author spaige
  */
+@Slf4j
 public class RefFind {
 
     private final DBCollection collection;
@@ -75,6 +77,10 @@ public class RefFind {
                 ObjBase current = cache.getNextUndone();
                 Query currentQuery = queryFactory.createQuery("{_id:#}", current.getId().toString());
                 DBObject result = collection.findOne(currentQuery.toDBObject(), null, readPreference);
+                if (result == null) {
+                    log.warn("couldn't find referenced object '{}'", current.getId());
+                    continue;
+                }
                 if (current instanceof Swappable){
                     //need to resolve proxy to actual value
                     ObjBase actual = unmarshaller.unmarshall(Bson.createDocument(result), ObjBase.class , cache);

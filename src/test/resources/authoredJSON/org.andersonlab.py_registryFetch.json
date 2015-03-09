@@ -1,7 +1,7 @@
 {
   "schema" : "org.clothocad.core.datums.Function",
   "language" : "PYTHON",
-  "code" : "from registryCollector import run",
+  "code" : "from registry_collector import run",
   "name" : "fetchRegistry",
   "id" : "org.andersonlab.py_fetchRegistry",
   "description" : "Fetches a sequence from iGem",

@@ -134,6 +134,7 @@ public class JSON {
         return mapper.convertValue(o, stringToObject);
     }
 
+    //XXX: seriously rethink silent failure to null in deserialize* methods
     public static Map<String, Object> deserializeObjectToMap(String json) throws JsonParseException{
         try {
             Map<String, Object> object = mapper.readValue(json, stringToObject);

@@ -1,2 +1,18 @@
-<div class="aside" role="dialog"><div class="aside-dialog"><div class="aside-content"><div class="aside-header"><button type="button" class="close" ng-click="$toggle()">&times;</button><h4 class="aside-title">{{title || 'Clotho Terminal'}}</h4></div><clotho-terminal-input></clotho-terminal-input><div class="aside-body" ng-controller="TerminalCtrl"><div log-entries="logEntries"></div></div><!--<div class="aside-footer">
-      </div>--></div></div></div>
+<div class="aside" role="dialog">
+  <div class="aside-dialog">
+    <div class="aside-content">
+      <div class="aside-header">
+        <button type="button" class="close" ng-click="$toggle()">&times;</button>
+        <h4 class="aside-title">{{title || 'Clotho Terminal'}}</h4>
+      </div>
+
+      <clotho-terminal-input></clotho-terminal-input>
+
+      <div class="aside-body" ng-controller="TerminalCtrl">
+        <div log-entries="logEntries"></div>
+      </div>
+      <!--<div class="aside-footer">
+      </div>-->
+    </div>
+  </div>
+</div>

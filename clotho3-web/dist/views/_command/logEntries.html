@@ -1,1 +1,16 @@
-<div ng-repeat="entry in entries | orderBy:timestamp:true" class="clearfix"><div class="logEntry {{'text-' + entry.class | lowercase}}" ng-class="{'pull-right' : entry.from == 'client'}"><div tooltip="{{entry.timestamp | date:'mediumTime'}}" tooltip-append-to-body="true" tooltip-trigger="mouseenter" tooltip-placement="{{entry.from == 'client' ? 'left' : 'right'}}"><span ng-if="entry.tokens" ng-repeat="token in entry.tokens"><clotho-token token="token" popup-placement="topRight" popup-trigger="mouseenter"></clotho-token></span> <span ng-if="!entry.tokens">{{entry.text}}</span></div></div></div>
+<div ng-repeat="entry in entries | orderBy:timestamp:true" class="clearfix">
+  <div class="logEntry {{'text-' + entry.class | lowercase}}"
+       ng-class="{'pull-right' : entry.from == 'client'}">
+    <div tooltip="{{entry.timestamp | date:'mediumTime'}}"
+         tooltip-append-to-body="true"
+         tooltip-trigger="mouseenter"
+         tooltip-placement="{{entry.from == 'client' ? 'left' : 'right'}}">
+      <span ng-if="entry.tokens" ng-repeat="token in entry.tokens">
+        <clotho-token token="token"
+                      popup-placement="topRight"
+                      popup-trigger="mouseenter"></clotho-token>
+      </span>
+      <span ng-if="!entry.tokens">{{entry.text}}</span>
+    </div>
+  </div>
+</div>

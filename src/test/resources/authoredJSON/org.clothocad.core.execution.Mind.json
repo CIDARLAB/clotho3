@@ -10,37 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "person",
-    "type" : "org.clothocad.model.Person",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "lastSharables",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "username",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "userDictionary",
+    "name" : "logger",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -60,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "MAX_SIZE_LAST_SHARABLES",
-    "type" : "number",
+    "name" : "commandHistory",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,8 +40,38 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "logger",
-    "type" : "object",
+    "name" : "lastSharables",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "lastCommands",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "person",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "MAX_SIZE_LAST_SHARABLES",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -90,7 +90,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "commandHistory",
+    "name" : "userDictionary",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -100,8 +100,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "lastCommands",
-    "type" : "array",
+    "name" : "username",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

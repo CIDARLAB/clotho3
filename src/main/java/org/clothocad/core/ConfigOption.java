@@ -1,9 +1,10 @@
 package org.clothocad.core;
 
-import java.nio.file.Paths;
-import java.util.Properties;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+
+import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  *

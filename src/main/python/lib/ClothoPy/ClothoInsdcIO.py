@@ -290,7 +290,7 @@ class _InsdcWriter(SequentialSequenceWriter):
         #self.handle.write('%s/%s="%s"\n' % (self.QUALIFIER_INDENT_STR, key, value))
         if quote is None:
             #Try to mimic unwritten rules about when quotes can be left out:
-            if _is_int_or_long(value) or key in self.FTQUAL_NO_QUOTE:
+            if _is_int_or_long(value) or key == 'ApEinfo_revColor' or key == 'ApEinfo_fwdcolor' or key in self.FTQUAL_NO_QUOTE:
                 quote = False
             else:
                 quote = True

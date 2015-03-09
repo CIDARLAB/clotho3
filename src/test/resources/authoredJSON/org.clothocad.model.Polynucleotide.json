@@ -10,18 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "accession",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "highlights",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "highlights",
-    "type" : "array",
+    "name" : "isLinear",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,8 +40,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isLinear",
-    "type" : "boolean",
+    "name" : "accession",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "sequence",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,7 +70,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
+    "name" : "description",
     "type" : "string",
     "subtype" : null,
     "example" : null,

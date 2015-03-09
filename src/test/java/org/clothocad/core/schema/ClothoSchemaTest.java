@@ -25,7 +25,6 @@ package org.clothocad.core.schema;
 
 import com.google.common.collect.Sets;
 import com.mongodb.BasicDBObject;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,16 +45,11 @@ import org.clothocad.core.util.TestUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 
 public class ClothoSchemaTest extends AuthorizedShiroTest {
     //TODO: 
     // validation
     // reference to other class
-  
-    static {
-        //MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
-    }
   
     public ClothoSchemaTest() {
         super();
