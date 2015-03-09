@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class SimpleSequence extends Sequence {
 	
 	public SimpleSequence(String sequence, Person author){
-        super("Simple_Seq", sequence, author);
+        super("Simple Seq", sequence, author);
     }
     
     public SimpleSequence(String name, String sequence, Person author){

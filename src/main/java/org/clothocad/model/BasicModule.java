@@ -8,14 +8,12 @@ import javax.validation.constraints.Size;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
 *
 * @author Nicholas Roehner
 */
-@NoArgsConstructor
 public class BasicModule extends Module {
 	
 	@NotNull
@@ -23,7 +21,7 @@ public class BasicModule extends Module {
 	@Getter
 	@Setter
 	@ReferenceCollection
-	private List<Feature> features;
+	protected List<Feature> features;
 	
 	public BasicModule(String name, ModuleRole role, List<Feature> features, Person author) {
 		super(name, role, author);

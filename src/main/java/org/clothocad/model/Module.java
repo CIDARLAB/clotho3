@@ -1,22 +1,20 @@
 package org.clothocad.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.clothocad.core.datums.SharableObjBase;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 /**
 *
 * @author Nicholas Roehner
 */
-@NoArgsConstructor
 public abstract class Module extends SharableObjBase {
 	
 	@NotNull
@@ -27,18 +25,19 @@ public abstract class Module extends SharableObjBase {
 	@Getter
 	@Setter
 	@ReferenceCollection
-	protected Set<Influence> influences = new HashSet<Influence>();
+	protected Set<Influence> influences;
 	
 	@Getter
 	@Setter
+	@Reference
 	protected Module parentModule;
 	
-	protected Module(String name, ModuleRole role, Person author) {
+	public Module(String name, ModuleRole role, Person author) {
 		super(name, author);
 		this.role = role;
 	}
 	
-	protected Module(String name, String description, ModuleRole role, Person author) {
+	public Module(String name, String description, ModuleRole role, Person author) {
 		super(name, author, description);
 		this.role = role;
 	}

@@ -24,11 +24,12 @@ package org.clothocad.model;
 
 import java.awt.Color;
 
+import javax.validation.constraints.NotNull;
+
 import org.clothocad.core.datums.SharableObjBase;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
 
 import org.clothocad.core.persistence.annotations.Reference;
 
@@ -39,31 +40,33 @@ import org.clothocad.core.persistence.annotations.Reference;
 
 /**
  * 
-* @author Nicholas Roehner
-*/
+ * @author J. Christopher Anderson
+ * @author Nicholas Roehner
+ */
 
-@NoArgsConstructor
 public class Annotation extends SharableObjBase {
 
 	@Getter
 	@Setter
-    private String symbol;
+	protected String symbol;
     
+	@NotNull
 	@Getter
     @Setter
-    private boolean isForwardStrand;
+    protected boolean isForwardStrand;
     
     @Getter
     @Setter
     @Reference
-    private Feature feature;
+    protected Feature feature;
     
+    @NotNull
     @Getter
     @Setter
-    private int start, end;
+    protected int start, end;
     
     @Setter
-    private Color forwardColor, reverseColor;
+    protected Color forwardColor, reverseColor;
 	
     /**
      * @param name
@@ -73,13 +76,11 @@ public class Annotation extends SharableObjBase {
      * @param author
      * @param isForwardStrand
      */
-    public Annotation(String name, Sequence seq, int start, int end, boolean isForwardStrand, 
-    		Person author) {
+   protected Annotation(String name, int start, int end, boolean isForwardStrand, Person author) {
         super(name, author);
         this.start = start;
         this.end = end;
         this.isForwardStrand = isForwardStrand;
-        seq.getAnnotations().add(this);
     }
     
     /**
@@ -91,26 +92,25 @@ public class Annotation extends SharableObjBase {
      * @param author
      * @param isForwardStrand
      */
-    public Annotation(String name, String description, Sequence seq, int start, int end, 
+   protected Annotation(String name, String description, int start, int end, 
     		boolean isForwardStrand, Person author) {
         super(name, author, description);
         this.start = start;
         this.end = end;
         this.isForwardStrand = isForwardStrand;
-        seq.getAnnotations().add(this);
     }
 
     /**
      * Reverse the orientation of the annotation (reverse complement
      * it and flip flop the start and end sites).  Called from NucSeq
      * when it's reverse complemented
-     * @param nucseqLength
+     * @param seqLength
      */
-    public void invert(int nucseqLength){
+    public void invert(int seqLength){
         isForwardStrand = !isForwardStrand;
         int s = start;
-        start = nucseqLength - end;
-        end = nucseqLength - s;
+        start = seqLength - end;
+        end = seqLength - s;
     }
 
     /**
@@ -121,8 +121,9 @@ public class Annotation extends SharableObjBase {
     public Color getColor() {
         if (isForwardStrand) {
             return getForwardColor();
+        } else {
+        	return getReverseColor();
         }
-        return getReverseColor();
     }
 
     /**
@@ -147,7 +148,7 @@ public class Annotation extends SharableObjBase {
      */
     public Color getForwardColor() {
         if (forwardColor == null) {
-            return new Color(125, 225, 235);
+        	forwardColor = new Color(125, 225, 235);
         }
         return forwardColor;
     }
@@ -159,7 +160,7 @@ public class Annotation extends SharableObjBase {
      */
     public Color getReverseColor() {
         if (reverseColor == null) {
-            return new Color(125, 225, 235);
+        	reverseColor = new Color(125, 225, 235);
         }
         return reverseColor;
     }

@@ -21,6 +21,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.model.Feature.FeatureRole;
+import org.clothocad.model.Format;
 import org.clothocad.model.Part;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
@@ -55,10 +56,11 @@ public class PersistorTest extends AuthorizedShiroTest{
         //class w/ composition
         Part part1 = new Part("test part", "This part is a test", 
         		new SimpleSequence("ATCG", testPerson), testPerson);
-        part1.setFormat(new FreeForm());
+        Format freeFormat = new FreeForm(testPerson);
+        part1.setFormat(freeFormat);
         Part part2 = new Part("different test part", "This part is another test", 
         		new SimpleSequence("TCAG", testPerson), testPerson);
-        part2.setFormat(new FreeForm());
+        part2.setFormat(freeFormat);
         persistor.save(part1);
 
         ObjectId id1 = part1.getId();
@@ -102,10 +104,9 @@ public class PersistorTest extends AuthorizedShiroTest{
 
     @Test
     public void testCompositeSuperAndSubClass() {
-    	LabPersonForTests testPerson = new LabPersonForTests("Test Person", null, null);
         Part p = new Part("test part", "This part is a test", 
-        		new SimpleSequence("ATCG", testPerson), testPerson);
-        p.setFormat(new FreeForm());
+        		new SimpleSequence("ATCG", null), null);
+        p.setFormat(new FreeForm(null));
         persistor.save(p);
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         persistor.save(i);
@@ -137,12 +138,12 @@ public class PersistorTest extends AuthorizedShiroTest{
     @Test
     public void testGetAllBasicParts() {
         int N = 100;
-        LabPersonForTests testPerson = new LabPersonForTests("Test Person", null, null);
         // first, we create N parts
         for (int i = 1; i <= N; i++) {
         	Part testPart = new Part("part-" + i, "This is test part " + i, 
-        			new SimpleSequence(randomSequence(i), testPerson), testPerson);
-        	testPart.setFormat(new FreeForm());
+        			new SimpleSequence(randomSequence(i), null), null);
+        	Format freeFormat = new FreeForm(null);
+        	testPart.setFormat(freeFormat);
             persistor.save(testPart);
         }
 
@@ -177,10 +178,9 @@ public class PersistorTest extends AuthorizedShiroTest{
 
     @Test
     public void testCreateGFPInstance() {
-    	LabPersonForTests testPerson = new LabPersonForTests("Test Person", null, null);
-        Feature gfp = new Feature("GFPuv", FeatureRole.CDS, testPerson);
+        Feature gfp = new Feature("GFPuv", FeatureRole.CDS, null);
         gfp.setSequence(new SimpleSequence("ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA",
-        		testPerson));
+        		null));
         saveAndGet(gfp);
     }
 

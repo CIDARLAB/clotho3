@@ -7,21 +7,26 @@ import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
 
 /**
- * 
- * @author Nicholas Roehner
- */ 
-public class Medium extends SharableObjBase {
+*
+* @author Nicholas Roehner
+*/
+public class Container extends SharableObjBase {
 	
 	@Getter
 	@Setter
 	@Reference
-	protected Strain parentMedium;
+	protected Sample sample;
 	
-	public Medium(String name, Person author) {
+	@Getter
+	@Setter
+	@Reference
+	protected Plate plate;
+	
+	public Container(String name, Person author) {
 		super(name, author);
 	}
 	
-	public Medium(String name, String description, Person author) {
+	public Container(String name, String description, Person author) {
 		super(name, author, description);
 	}
 

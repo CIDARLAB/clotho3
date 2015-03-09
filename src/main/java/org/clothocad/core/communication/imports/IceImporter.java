@@ -23,6 +23,7 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.model.Format;
 import org.clothocad.model.Part;
 import org.clothocad.model.FreeForm;
 import org.clothocad.model.Part;
@@ -126,7 +127,8 @@ public class IceImporter {
         shortdescription = parseDescription(entity);
         
         Part part = new Part(name, shortdescription, new SimpleSequence(seq, author), author);
-        part.setFormat(new FreeForm());
+        Format freeFormat = new FreeForm(author);
+        part.setFormat(freeFormat);
       
         return part;
     }

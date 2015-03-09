@@ -7,29 +7,39 @@ import lombok.Setter;
 
 import org.clothocad.core.persistence.annotations.Reference;
 
+/**
+*
+* @author Nicholas Roehner
+*/
 public class Parameter {
 
 	@NotNull
 	@Getter
 	@Setter
-	private double value;
+	protected double value;
 	
 	@NotNull
 	@Getter
 	@Setter
 	@Reference
-	private Variable variable;
+	protected Variable variable;
 	
 	@NotNull
 	@Getter
 	@Setter
 	@Reference
-	private Units units;
+	protected Units units;
 	
-	public Parameter(BioDesign design, double value, Variable variable, Units units) {
-		design.getParameters().add(this);
+	@Getter
+	@Setter
+	@Reference
+	protected Derivation derivation;
+	
+	protected Parameter(double value, Variable variable, Units units) {
 		this.value = value;
 		this.variable = variable;
 		this.units = units;
 	}
+	
+
 }

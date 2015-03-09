@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.clothocad.core.datums.SharableObjBase;
@@ -15,47 +14,45 @@ import org.clothocad.core.persistence.annotations.ReferenceCollection;
 *
 * @author Nicholas Roehner
 */
-@NoArgsConstructor
 public class BioDesign extends SharableObjBase {
 	
 	@Getter
 	@Setter
 	@Reference
-	private Module module;
+	protected Module module;
 	
 	@Getter
-	@Setter
-	private Set<Parameter> parameters = new HashSet<Parameter>();
-	
-	@Getter
-	@Setter
-	@ReferenceCollection
-	private Set<Part> parts = new HashSet<Part>();
+	protected Set<Parameter> parameters;
 	
 	@Getter
 	@Setter
 	@ReferenceCollection
-	private Set<Polynucleotide> polynucleotides = new HashSet<Polynucleotide>();
+	protected Set<Part> parts;
 	
 	@Getter
 	@Setter
 	@ReferenceCollection
-	private Set<Strain> strains = new HashSet<Strain>();
+	protected Set<Polynucleotide> polynucleotides;
 	
 	@Getter
 	@Setter
 	@ReferenceCollection
-	private Set<Medium> media = new HashSet<Medium>();
+	protected Set<Strain> strains;
 	
 	@Getter
 	@Setter
 	@ReferenceCollection
-	private Set<BioDesign> subDesigns = new HashSet<BioDesign>();
+	protected Set<Medium> media;
+	
+	@Getter
+	@Setter
+	@ReferenceCollection
+	protected Set<BioDesign> subDesigns;
 	
 	@Getter
 	@Setter
 	@Reference
-	private BioDesign parentDesign;
+	protected BioDesign parentDesign;
 	
 	public BioDesign(String name, String description, Person author) {
 		super(name, author, description);
@@ -63,6 +60,15 @@ public class BioDesign extends SharableObjBase {
 	
 	public BioDesign(String name, Person author) {
 		super(name, author);
+	}
+	
+	public Parameter createParameter(double value, Variable variable, Units units) {
+		if (parameters == null) {
+			parameters = new HashSet<Parameter>();
+		}
+		Parameter parameter = new Parameter(value, variable, units);
+		parameters.add(parameter);
+		return parameter;
 	}
 		
 }

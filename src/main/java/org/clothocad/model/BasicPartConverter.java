@@ -48,8 +48,8 @@ public class BasicPartConverter extends Converter<Part> {
     				Feature.FeatureRole.valueOf(eugenePart.get("PartType").toString().toUpperCase()),
     				author);
     		feature.setSequence(partSeq);
-    		Annotation seqAnnotation = new Annotation(eugenePart.get("Name").toString(),
-    				partSeq, 0, partSeq.getSequence().length() - 1, true, author);
+    		Annotation seqAnnotation = partSeq.createAnnotation(eugenePart.get("Name").toString(),
+    				0, partSeq.getSequence().length() - 1, true, author);
     		seqAnnotation.setFeature(feature);
     	} catch (IllegalArgumentException e) {
     	}

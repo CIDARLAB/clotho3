@@ -3,35 +3,38 @@ package org.clothocad.model;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
 
-@NoArgsConstructor
+/**
+*
+* @author Nicholas Roehner
+*/
 public class Influence extends SharableObjBase {
 	
 	@NotNull
 	@Getter
 	@Setter
 	@Reference
-	private Feature influencingFeature;
+	protected Feature influencingFeature;
 	
 	@NotNull
 	@Getter
 	@Setter
 	@Reference
-	private Feature influencedFeature;
+	protected Feature influencedFeature;
 	
 	@NotNull
 	@Getter
 	@Setter
-	private InfluenceType type;
+	protected InfluenceType type;
 	
 	@Getter
 	@Setter
-	private Influence parentInfluence;
+	@Reference
+	protected Influence parentInfluence;
 
 	public Influence(String name, Feature influencingFeature, Feature influencedFeature, 
 			InfluenceType type, Person author) {

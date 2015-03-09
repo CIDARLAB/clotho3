@@ -218,8 +218,9 @@ public class TestUtils {
         //persistor.save(newperson2);
         Sequence partSeq1 = new SimpleSequence("AAAAAAAAAAAAAAAAAAA", person);
         Part part1 = new Part("Test Part 1", "the first test part", partSeq1, person);
-        part1.setFormat(new FreeForm());
-        Annotation seqAnnotation1 = new Annotation("Test Feature 1", partSeq1, 0, partSeq1.getSequence().length() - 1, 
+        Format freeFormat = new FreeForm(person);
+        part1.setFormat(freeFormat);
+        Annotation seqAnnotation1 = partSeq1.createAnnotation("Test Feature 1", 0, partSeq1.getSequence().length() - 1, 
         		true, person);
         Feature feature1 = new Feature("Test Feature 1", FeatureRole.CDS, person);
         feature1.setSequence(partSeq1);
@@ -227,15 +228,14 @@ public class TestUtils {
         
         Sequence partSeq2 = new SimpleSequence("TTTTTTTTTTTTTTTTTT", person);
         Part part2 = new Part("Test Part 2", "the second test part", partSeq2, person);
-        part2.setFormat(new FreeForm());
-        Annotation seqAnnotation2 = new Annotation("Test Feature 2", partSeq2, 0, partSeq2.getSequence().length() - 1, 
+        part2.setFormat(freeFormat);
+        Annotation seqAnnotation2 = partSeq2.createAnnotation("Test Feature 2", 0, partSeq2.getSequence().length() - 1, 
         		true, person);
         Feature feature2 = new Feature("Test Feature 2", FeatureRole.CDS, person);
         feature2.setSequence(partSeq2);
         seqAnnotation2.setFeature(feature2);
         
-        Format compositeFormat = new FreeForm();
-        Part part3 = compositeFormat.generateCompositePart("Test Part 3", "parts 1 and 2 jammed together", 
+        Part part3 = freeFormat.generateCompositePart("Test Part 3", "parts 1 and 2 jammed together", 
         		Arrays.asList(part1, part2), person);
         
         Map<String, Object> eugenePart = new HashMap();

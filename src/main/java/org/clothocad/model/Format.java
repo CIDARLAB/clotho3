@@ -35,10 +35,6 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "schema", include = JsonTypeInfo.As.PROPERTY)
 public interface Format {
 
-
-    ///////////////////////////////////////////////////////////////////
-    ////                         public methods                    ////
-
     /**
      * Test whether a part is a valid member of the ClothoFormat specs
      * @param p Part to test
@@ -51,7 +47,7 @@ public interface Format {
      * @param composition
      * @return
      */
-    public boolean checkComposite(List<Part> composition);
+    public boolean checkComposite(List<Part> subParts);
 
      /**
      * Generates composite part in accordance with this format
@@ -60,7 +56,7 @@ public interface Format {
      * @param author
      * @return
      */
-    public Part generateCompositePart(String name, List<Part> composition, Person author);
+    public Part generateCompositePart(String name, List<Part> subParts, Person author);
     
     /**
      * Generates composite part in accordance with this format
@@ -70,6 +66,6 @@ public interface Format {
      * @param author
      * @return
      */
-    public Part generateCompositePart(String name, String description, List<Part> composition, Person author);
+    public Part generateCompositePart(String name, String description, List<Part> subParts, Person author);
   
 }

@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.model.Feature.FeatureRole;
 
-@NoArgsConstructor
 public class NucSeq 
 		extends Sequence 
 		implements Serializable {
@@ -168,7 +167,7 @@ public class NucSeq
      */
     @SuppressWarnings (value="unchecked")
     public HashMap<Integer, Integer> findORFs(boolean forward, boolean multipleStartCodons) {
-        String seq = sequence;
+        String seq = sequence; 
         int len = seqLength();
         HashMap orfs = new HashMap();
         if (isCircular()) {
@@ -814,7 +813,7 @@ public class NucSeq
                     } catch(Exception e) {
                     }
                 }
-                Annotation annot = new Annotation(f.getName(), this, start, end, true, user);
+                Annotation annot = createAnnotation(f.getName(), start, end, true, user);
                 System.out.println( "I found a forward annotation at " + start );
                 //setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.ANNOTATION_TO_NUCSEQ);
             }
@@ -853,7 +852,7 @@ public class NucSeq
                     } catch(Exception e) {
                     }
                 }
-                Annotation annot = new Annotation(f.getName(), this, start, end, true, user);
+                Annotation annot = createAnnotation(f.getName(), start, end, true, user);
                 System.out.println( "I found a reverse annotation at " + start );
                 //setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.ANNOTATION_TO_NUCSEQ);
             }

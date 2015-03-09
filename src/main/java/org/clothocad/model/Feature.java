@@ -37,33 +37,30 @@ import org.clothocad.core.datums.SharableObjBase;
  * @author J. Christopher Anderson
  * @author Nicholas Roehner
  */
-
 @NoArgsConstructor
 public class Feature extends SharableObjBase {
 	
 	@Setter
     @Getter
     @Reference
-    private Sequence sequence;
-	
-//    @Setter
-//    private Color forwardColor, reverseColor;
+    protected Sequence sequence;
     
     @Setter
     @Getter
-    private String genbankId, swissProtId, PDBId;
+    protected String genbankId, swissProtId, PDBId;
     
     @Getter
-    private short riskGroup;
+    protected short riskGroup;
    
     @NotNull
     @Setter
     @Getter
-    private FeatureRole role;
+    protected FeatureRole role;
     
     @Getter
 	@Setter
-	private Feature parentFeature;
+	@Reference
+	protected Feature parentFeature;
     
     /**
      * Constructor of a new Feature

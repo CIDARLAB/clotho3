@@ -8,37 +8,40 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
 
 import org.clothocad.core.datums.SharableObjBase;
+import org.clothocad.core.persistence.annotations.Reference;
 
-@NoArgsConstructor
 public class Polynucleotide extends SharableObjBase implements Serializable {
 
 	@Getter
 	@Setter
-	private String accession;
+	protected String accession;
 	
 	@NotNull
 	@Getter
 	@Setter
-	private boolean isLinear, isSingleStranded;
+	protected boolean isLinear, isSingleStranded;
 	
 	@Getter
 	@Setter
-	private Date submissionDate;
+	protected Date submissionDate;
+
+	// Should be replaced with Annotations on a Sequence
+	@Getter
+	@Setter
+	@Deprecated
+	protected List<Highlight> highlights;
 
 	@Getter
 	@Setter
-	private List<Highlight> highlights;
-
-	@Getter
-	@Setter
-	private String sequence;
+	@Reference
+	protected Sequence sequence;
 	
 	@Getter
 	@Setter
-	private Polynucleotide parentPolynucleotide;
+	@Reference
+	protected Polynucleotide parentPolynucleotide;
 	
 	public Polynucleotide(String name, boolean isLinear, boolean isSingleStranded, Person author) {
 		super(name, author);
