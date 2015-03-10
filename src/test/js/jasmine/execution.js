@@ -18,6 +18,8 @@ describe("run", function(){
     it("returns undefined if the function errors", function(done){
         done();
     });
+    //TODO:
+    //can handle options
 });
 
 describe("submit", function(){
