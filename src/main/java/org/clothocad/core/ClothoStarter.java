@@ -1,14 +1,16 @@
 package org.clothocad.core;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Properties;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.SecurityModule;
 import org.clothocad.core.util.JSON;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Properties;
 
 //Start then navigate to:  http://localhost:8080/#/
 public class ClothoStarter extends AbstractClothoStarter {
@@ -17,14 +19,13 @@ public class ClothoStarter extends AbstractClothoStarter {
             @Override public Injector
             getInjector(Properties config) {
                 return Guice.createInjector(
-                    new ClothoModule(config), 
-                    new SecurityModule(), 
+                    new ClothoModule(config),
+                    new SecurityModule(),
                     new JongoModule()
                 );
             }
 
-            @Override public void
-            call(Injector injector) {
+            @Override public void call(Injector injector) {
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ensureMinimalObjects(persistor);
             }
@@ -40,6 +41,6 @@ public class ClothoStarter extends AbstractClothoStarter {
     private static void ensureMinimalObjects(Persistor p) {
         JSON.importTestJSON(
             Paths.get("src", "main", "resources", "json", "essential")
-                 .toString(), p, false);
+            .toString(), p, false);
     }
 }
