@@ -7,16 +7,20 @@ package org.clothocad.core.persistence;
 import com.fasterxml.jackson.core.JsonToken;
 import de.undercouch.bson4jackson.BsonParser;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.clothocad.model.FreeForm;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.util.AuthorizedShiroTest;
+import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.BasicPart;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
@@ -198,9 +202,23 @@ public class PersistorTest extends AuthorizedShiroTest{
         assertEquals(size, newSize);
     }
     
+    //Bad data in db should not stop queries, etc, from working (non-existent id reference, non-existent schema reference, etc)
+    @Test 
+    public void canQueryPoisonedDatabase() throws IOException {
+        List<Map<String,Object>> badJSON = TestUtils.readJSON(Files.newDirectoryStream(Paths.get("src", "test", "resources", "badJSON")));
+        for(Map<String,Object> object : badJSON){
+            persistor.save(object);
+        }
+        Map<String,Object> query = new HashMap<>();
+        query.put("schema", "org.clothocad.model.Part");
+        persistor.find(query);
+        //assertEquals(query.size(), 5);
+        persistor.getAll(Part.class);
+    }
+
     //TODO: verify results are in appropriate style (id instead of _id), (schema instead of ClassName), etc
     
-    //TODO: Bad data in db should not stop queries, etc, from working (non-existent id reference, non-existent schema reference, etc)
+
     
     public static List<JsonToken> getAllBsonTokens(BsonParser parser) throws IOException{
         List<JsonToken> out = new ArrayList<>();
@@ -210,4 +228,5 @@ public class PersistorTest extends AuthorizedShiroTest{
         
         return out;
     }
+    
 }
