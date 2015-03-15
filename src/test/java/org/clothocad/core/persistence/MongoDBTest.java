@@ -32,7 +32,6 @@ public class MongoDBTest {
     @BeforeClass
     public static void setUpClass() throws UnknownHostException {
         conn = TestUtils.getDefaultTestInjector().getInstance(JongoConnection.class);
-        conn.connect();
     }
     
     @Before

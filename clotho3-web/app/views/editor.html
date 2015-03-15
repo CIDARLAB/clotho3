@@ -1,13 +1,5 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-9">
-      <form clotho-editor
-            sharable="editable"
-            sharable-id="editableId"
-            edit-mode="editModePass"
-            form-horizontal="true"></form>
-    </div>
-
     <div class="col-sm-3">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -20,7 +12,7 @@
                    type="text"
                    class="form-control"
                    ng-model="selectedSubtype"
-                   typeahead="schema.id as schema.name for schema in schemas | filter:{name:$viewValue} | limitTo:10"
+                   typeahead="schema.id as (schema.name + ' (' + schema.id + ')') for schema in schemas | filter:{name:$viewValue} | limitTo:10"
                    typeahead-on-select="createNewInstance($item, $model, $label); selectedSubtype = '';"
                    popover="Type and select a schema to create an object with pre-determined fields"
                    popover-title="Choose a Schema"
@@ -38,18 +30,24 @@
           <h5>Edit Existing Object</h5>
         </div>
         <div class="panel-body">
-          <input id="chooseInstance"
-                 type="text"
+
+          <input type="text"
+                 clotho-reference-autocomplete
                  class="form-control"
                  ng-model="selectedInstance"
-                 typeahead="c.id as c.name for c in queryWrapper($viewValue)"
-                 typeahead-on-select="editExisting($item, $model, $label); selectedInstance = '';"
-                 popover="Type to search for and edit an existing object"
-                 popover-trigger="focus"
-                 popover-append-to-body="true">
+                 ng-trim="false"
+                 placeholder="type query"
+                 autocomplete-on-select="editExisting($item, $query); selectedInstance = ''"
+                 autocomplete-popup-position="topRight">
         </div>
       </div>
     </div>
-
+    <div class="col-sm-9">
+      <form clotho-editor
+            sharable="editable"
+            sharable-id="editableId"
+            edit-mode="editModePass"
+            form-horizontal="true"></form>
+    </div>
   </div>
 </div>

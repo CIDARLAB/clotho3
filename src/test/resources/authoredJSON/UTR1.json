@@ -1,0 +1,9 @@
+{
+"id" : "org.clothocad.model.RBS.UTR1",
+"name" : "UTR1",
+"schema" : "org.clothocad.model.RBS",
+"utr5" : "ACCCGTTTTTTTGGGCTAACAGGAGGAATTAACCATG",
+"nativeHost" : "E. coli",
+"weblink" : "https://www.embl.de/pepcore/pepcore_services/strains_vectors/vectors/pdf/pBADHisA_map.pdf",
+"isIntergenic" : false
+}

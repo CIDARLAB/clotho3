@@ -44,15 +44,6 @@ import org.clothocad.core.datums.ObjectId;
 public interface ClothoConnection {
 
     /**
-     * To tell the connection to connect to its database 
-     * 
-     * throws XXX if connection fails
-     * 
-     * @return
-     */
-    void connect() throws UnknownHostException;
-
-    /**
      * Returns true if the database backing this connection adheres to the
      * Clotho data model.
      * XXX: what does it return if there is no connection?

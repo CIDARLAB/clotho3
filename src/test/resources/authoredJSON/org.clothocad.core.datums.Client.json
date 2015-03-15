@@ -1,29 +1,58 @@
 {
-  "id" : "org.clothocad.core.datums.Client",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.datums.Client",
-  "c" : "org.clothocad.core.datums.Client",
+  "id" : "org.clothocad.core.datums.Client",
   "name" : "Client",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.lang.String",
-    "name" : "macAddress",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "userId",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Boolean",
     "name" : "isLoggedIn",
     "type" : "boolean",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.util.Set",
+    "name" : "userId",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "macAddress",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "users",
     "type" : "array",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.Client",
+  "binaryName" : "org.clothocad.core.datums.Client"
 }

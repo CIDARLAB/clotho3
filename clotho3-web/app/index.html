@@ -7,10 +7,10 @@
     <meta name="description" content="Clotho is an open-source database and automation platform for synthetic biology">
     <meta name="viewport" content="width=1024, initial-scale=1">
 
-    <!-- not necessary until serving outside root directory / want html5 mode -->
+    <!-- required for angular html5 mode -->
     <base href="/">
 
-    <!-- process:remove:api,dist,trails -->
+    <!-- process:remove:api -->
     <!-- build:css({.tmp,app}) styles/command.css -->
     <link rel="stylesheet" href="css/command.css">
     <!-- endbuild -->
@@ -43,9 +43,10 @@
 <![endif]-->
 
 <!-- process:remove:api -->
-<div class="container">
-    <div clotho-command-bar></div>
-</div>
+<clotho-command-bar></clotho-command-bar>
+
+<!-- hotkey triggered terminal window -->
+<terminal-aside></terminal-aside>
 <!-- /process -->
 
 <!-- process:remove:command,api -->
@@ -54,9 +55,6 @@
 
 <!--catch for widgets, though not necessary. Useful if want to pull out of ng-view routing-->
 <div id="clothoAppWidgets"></div>
-
-<!-- hotkey triggered terminal window -->
-<terminal-aside></terminal-aside>
 
 <!-- /process -->
 
@@ -113,13 +111,17 @@ dependencies: none
 -->
 <script src="scripts/_core/_kickoff.js"></script>
 <script src="scripts/_core/angularAdditions.js"></script>
+<script src="scripts/_core/auth.js"></script>
 <script src="scripts/_core/debug.js"></script>
 <script src="scripts/_core/clothoAPI.js"></script>
 <script src="scripts/_core/clientAPI.js"></script>
 <script src="scripts/_core/clothoLocalStorage.js"></script>
 <script src="scripts/_core/collector.js"></script>
 <script src="scripts/_core/pubsub.js"></script>
+<script src="scripts/_core/communicator.js"></script>
+<script src="scripts/_core/clothoRest.js"></script>
 <script src="scripts/_core/socket.js"></script>
+<script src="scripts/_core/commandHistory.js"></script>
 <!--endbuild-->
 
 
@@ -137,12 +139,13 @@ dependencies: clotho.core
 <script src="scripts/_foundation/clotho-utils.js"></script>
 <script src="scripts/_foundation/clothoSchemas.js"></script>
 <script src="scripts/_foundation/clothoRun.js"></script>
-<script src="scripts/_foundation/clothoTool.js"></script>
 <script src="scripts/_foundation/clothoShow.js"></script>
 <script src="scripts/_foundation/clothoModal.js"></script>
 <script src="scripts/_foundation/popupProvider.js"></script>
 <script src="scripts/_foundation/sharablePopup.js"></script>
 <script src="scripts/_foundation/extensions.js"></script>
+<script src="scripts/_foundation/auth.js"></script>
+<script src="scripts/_foundation/facebook.js"></script>
 <!--endbuild-->
 
 
@@ -158,16 +161,21 @@ dependencies: clotho.core, jQuery, Lodash
 <script src="scripts/_command/commandBar.js"></script>
 <script src="scripts/_command/clothoCommandBar.js"></script>
 <script src="scripts/_command/terminal.js"></script>
+<script src="scripts/_command/terminalAside.js"></script>
 <script src="scripts/_command/logEntries.js"></script>
 <script src="scripts/_command/loginCtrl.js"></script>
+<script src="scripts/_command/clothoFunctionExecutor.js"></script>
 <!-- tokenizer -->
-<script src="scripts/_command/clothoAutocomplete.js"></script>
 <script src="scripts/_command/clothoAutocompleteListing.js"></script>
 <script src="scripts/_command/clothoAutocompleteMatch.js"></script>
 <script src="scripts/_command/clothoToken.js"></script>
 <script src="scripts/_command/clothoTokenCollectionFactory.js"></script>
 <script src="scripts/_command/clothoTokenFactory.js"></script>
-<script src="scripts/_command/clothoTokenizer.js"></script>
+<script src="scripts/_command/clothoReferenceListener.js"></script>
+<script src="scripts/_command/clothoReferenceParser.js"></script>
+<script src="scripts/_command/clothoTerminalInput.js"></script>
+<script src="scripts/_command/clothoReferenceAutocomplete.js"></script>
+<script src="scripts/_command/clothoReferenceTokenizer.js"></script>
 <!--endbuild-->
 <!-- /process -->
 
@@ -202,11 +210,10 @@ dependencies: ui.bootstrap, jQuery-UI for draggable + sortable directives, angul
 <script src="scripts/_interface/angular-ui/form-field.js"></script>
 <script src="scripts/_interface/angular-ui/modal-ext.js"></script>
 <script src="scripts/_interface/angular-ui/popoverHtmlUnsafe.js"></script>
-<script src="scripts/_interface/clotho/sharable.js"></script>
+<script src="scripts/_interface/clotho/clothoSharable.js"></script>
 <script src="scripts/_interface/dna/restrictionEnzymePopup.js"></script>
 <script src="scripts/_interface/dna/sequencePopup.js"></script>
 <script src="scripts/_interface/download/textfileDownload.js"></script>
-<script src="scripts/_interface/elements/aside.js"></script>
 <script src="scripts/_interface/elements/closeable.js"></script>
 <script src="scripts/_interface/elements/hintButton.js"></script>
 <script src="scripts/_interface/events/uiEvent.js"></script>
@@ -284,15 +291,21 @@ name: clotho.webapp
 function: Controllers etc. specific to this instance of clotho
 dependencies: clotho.foundation, clotho.interface
 -->
-<script src="scripts/controllers/_kickoff-webapp.js"></script>
-<script src="scripts/controllers/home.js"></script>
-<script src="scripts/controllers/team.js"></script>
-<script src="scripts/controllers/browser.js"></script>
-<script src="scripts/controllers/editor.js"></script>
-<script src="scripts/controllers/trail.js"></script>
-<script src="scripts/controllers/trails.js"></script>
-<script src="scripts/controllers/trail-splash.js"></script>
-<script src="scripts/controllers/widgets.js"></script>
+<script src="scripts/_webapp/_kickoff-webapp.js"></script>
+<script src="scripts/_webapp/home.js"></script>
+<script src="scripts/_webapp/settings.js"></script>
+<script src="scripts/_webapp/team.js"></script>
+<script src="scripts/_webapp/browser.js"></script>
+<script src="scripts/_webapp/editor.js"></script>
+<script src="scripts/_webapp/executor.js"></script>
+<script src="scripts/_webapp/trail.js"></script>
+<script src="scripts/_webapp/trails.js"></script>
+<script src="scripts/_webapp/trail-splash.js"></script>
+<script src="scripts/_webapp/widgets.js"></script>
+<script src="scripts/_webapp/import/intro.js"></script>
+<script src="scripts/_webapp/import/youtubePlaylist.js"></script>
+<script src="scripts/_webapp/import/ape.js"></script>
+<script src="scripts/_webapp/import/csv.js"></script>
 <!-- endbuild -->
 
 
@@ -334,14 +347,19 @@ dependencies: clotho.foundation, clotho.interface
 name: clotho.webapp
 function: experiments [pre-integration]
 -->
-<script src="scripts/controllers/test/schemaview.js"></script>
-<script src="scripts/controllers/test/playlistimport.js"></script>
-<script src="scripts/controllers/test/quiz.js"></script>
-<script src="scripts/controllers/test/construction.js"></script>
-<script src="scripts/controllers/test/contstructionTrail.js"></script>
-<script src="scripts/controllers/test/focus.js"></script>
+<script src="scripts/_webapp/test/schemaview.js"></script>
+<script src="scripts/_webapp/test/quiz.js"></script>
+<script src="scripts/_webapp/test/construction.js"></script>
+<script src="scripts/_webapp/test/contstructionTrail.js"></script>
+<script src="scripts/_webapp/test/focus.js"></script>
 <!-- endbuild -->
 
+<!-- /process -->
+
+<!-- process:include:trails partials/buildSpecific/googleAnalytics-trails.html -->
+<!-- /process -->
+
+<!-- process:include:dist partials/buildSpecific/googleAnalytics-dist.html -->
 <!-- /process -->
 
 </body>

@@ -22,6 +22,7 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.ClothoConnection;
 import org.clothocad.core.persistence.OverwriteConfirmationException;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 
 /**
@@ -35,8 +36,8 @@ public class FileHookPersistor extends Persistor{
     protected Path storageFolder;
     
     @Inject
-    public FileHookPersistor(final ClothoConnection connection, @Named("storagefolder") Path storageFolder) throws IOException{
-        super(connection, false);
+    public FileHookPersistor(final ClothoConnection connection, ClothoRealm realm, @Named("storagefolder") Path storageFolder) throws IOException{
+        super(connection, realm, false);
         this.storageFolder = storageFolder;
         if (!Files.exists(storageFolder)) Files.createDirectories(storageFolder);
     }

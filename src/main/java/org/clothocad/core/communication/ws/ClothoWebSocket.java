@@ -1,20 +1,25 @@
 package org.clothocad.core.communication.ws;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.util.JSON;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import org.eclipse.jetty.websocket.WebSocket;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 @Slf4j
 public class ClothoWebSocket
@@ -56,7 +61,7 @@ public class ClothoWebSocket
         try {
             String messageString = JSON.serializeForExternal(msg);
             connection.sendMessage(messageString);
-            log.trace("sent: {}", messageString);
+            log.trace("Sent: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
         }
@@ -64,12 +69,12 @@ public class ClothoWebSocket
 
     @Override
     public void onMessage(String messageString) {
-        log.trace("Websocket #{} recieved message {}", this.getId(), messageString);
+        log.trace("WebSocket #{} received message {}", this.getId(), messageString);
         try {
             Message message = JSON.mapper.readValue(messageString, Message.class);
             subject.execute(new CallRouter(this, message));
         } catch (JsonParseException ex) {
-            log.error("Websocket #{} recived malformed message: {}", this.getId(), messageString);
+            log.error("WebSocket #{} received malformed message: {}", this.getId(), messageString);
         } catch (JsonMappingException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
@@ -84,9 +89,10 @@ public class ClothoWebSocket
 
     @Override
     public void onOpen(Connection connection) {
+        log.debug("New connection opened. Connection id is {}.", this.getId());
         this.connection = connection;
-        //Close out after 1 hour idle time
-        connection.setMaxIdleTime(3600000);
+        // Close WebSocket after 1 week ofidle time
+        connection.setMaxIdleTime(7 * 24 * 3600000);
 
         subject = SecurityUtils.getSubject();
 
@@ -97,9 +103,9 @@ public class ClothoWebSocket
         String messageString = String.format("{\"channel\": \"%s\", \"requestId\": \"%s\"}", channel, requestId);
         try {
             connection.sendMessage(messageString);
-            log.trace("sent deregister: {}", messageString);
+            log.trace("Sent deregister: {}", messageString);
         } catch (IOException ex) {
-            log.error("cannot send deregister message:{}", ex.getMessage());
+            log.error("Cannot send deregister message:{}", ex.getMessage());
         }
     }
 }

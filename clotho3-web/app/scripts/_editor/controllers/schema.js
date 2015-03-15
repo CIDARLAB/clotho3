@@ -21,12 +21,6 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 
 	$scope.findSpacesRegExp = /\s/ig;
 
-	//necessary?
-	$scope.parseField = function(field) {
-		//only passed field.value so model maps onto options properly in html
-		field.reference = !angular.isEmpty($scope.simpleTypes[field.type]);
-	};
-
 	//TODO - dry. duplicates function editor code
 	$scope.paramTypes = [
 		{name:'object', type: "object", category:'Primitive', reference: false},
@@ -50,12 +44,11 @@ angular.module('clotho.editor').controller('Editor_SchemaCtrl', function($scope,
 	});
 
 	$scope.getSuperClass = function () {
-		if ($scope.sharable.superClass) {
-			Clotho.get($scope.sharable.superClass)
-			.then(function(result) {
-				$scope.superClassObj = result;
-			})
-		}
+		ClothoSchemas.getSuperclassFields($scope.sharable)
+		.then(function(result) {
+			$scope.superClassFields = result;
+			$scope.superClassObj = result;
+		});
 	};
 
 	$scope.newMethod = function() {

@@ -1,5 +1,6 @@
 package org.clothocad.core.communication;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -9,22 +10,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.Sharable;
-import static org.clothocad.core.communication.Channel.autocompleteDetail;
 import static org.clothocad.core.communication.Channel.create;
 import static org.clothocad.core.communication.Channel.destroy;
 import static org.clothocad.core.communication.Channel.log;
 import static org.clothocad.core.communication.Channel.submit;
 
+import org.clothocad.core.datums.ObjectId;
+
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.Sharable;
 import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
 
 @Slf4j
@@ -33,11 +37,15 @@ public class Router {
 
     @Getter
     protected Persistor persistor;
-   
+    
+    @Getter
+    protected ClothoRealm realm;
+    
     @Inject
-    public Router(Persistor persistor) {
+    public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
         this.persistor = persistor;
+        this.realm = realm;
     }
 
     // send message    
@@ -56,13 +64,17 @@ public class Router {
         //bind context to request
         Subject subject = SecurityUtils.getSubject();
         Mind mind;
+        boolean wasAuthenticated = false;
         if (subject.isAuthenticated()){
-            mind = getAuthenticatedMind(subject.getPrincipal().toString());
+            wasAuthenticated = true;
+            mind = getAuthenticatedMind(subject.getPrincipal().toString(), connection, request);
             mind.setConnection(connection);
         } else {
             mind = getMind(connection);
+            //Find a better way to become anonymous user?
+            subject.login(ClothoRealm.getAnonymousUserToken());
         }
-        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, request.getRequestId(), new MessageOptions(request.getOptions()));
+        ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId(), new MessageOptions(request.getOptions()));
 
         Object data = request.getData();
         
@@ -80,8 +92,13 @@ public class Router {
                     break;
                 case login:
                     Map map = (Map) data;
-                    boolean wasAuthenticated = subject.isAuthenticated();
-                    response = api.login(map.get("username").toString(), map.get("password").toString());
+                    if (!wasAuthenticated){
+                        //log out of anonymous user
+                        //XXX: all this is madness
+                        subject.logout();
+                    }
+                    response = api.login(map.get("username").toString(), map.get("credentials").toString());
+                    //we only reach this point if login was successful
                     if (!wasAuthenticated){
                         //remove the 'anonymous' mind
                         //currently this means you lose environment state if you login
@@ -89,6 +106,34 @@ public class Router {
                         minds.remove(connection.getId());
                     }
                     break;
+                case updatePassword:
+                    Map updatedPassword = (Map) data;
+                    response  = api.changePassword(updatedPassword.get("password").toString());
+                    
+                    break;
+                
+                case createUser:
+                    Map newusermap = (Map) data;
+                    
+                    if(newusermap.containsKey("password"))
+                    {
+                        response  = api.createUser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                    }
+                    else
+                    {
+                        //3rd Party OAuth?
+                    }
+                    
+                    break;
+                
+                    
+                /*
+                case getAssociatedPerson:
+                    
+                    response  = api.getAllPerson(data.toString());
+                    break;
+                */    
+                    
                 case logout:
                     String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();
@@ -112,9 +157,12 @@ public class Router {
                 case alert:
                     api.alert(data.toString());
                     break;
-
+                case convert:
+                    response = api.convert(data);
+                    break;
                 case get:
                     response = api.get(data);
+                    if (response == null) response = Void.TYPE;
                     break;
                 case set:
                     response = api.set(JSON.mappify(data));
@@ -122,8 +170,10 @@ public class Router {
                     break;
                 case create:
                     response = api.create(data);
+                    if (response == null) response = Void.TYPE;
                     break;
                 case destroy:
+                    //XXX: destroy should return status indicator
                     response = api.destroy(data);
                     if (response == null) response = Void.TYPE;
                     break;
@@ -160,6 +210,27 @@ public class Router {
                 case validate:
                     response = api.validate(JSON.mappify(data));
                     break;
+                case grant:
+                    Map dataMap = JSON.mappify(data);
+                    api.grant(
+                            JSON.convert(dataMap.get("id"), ObjectId.class),
+                            JSON.convert(dataMap.get("user"), String.class),
+                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
+                            );
+                    response = Void.TYPE;
+                    break;
+                    
+                case grantAll:
+                    dataMap = JSON.mappify(data);
+                    api.grantAll(                            
+                            (Set<ObjectId>) JSON.convert(dataMap.get("id"), new TypeReference<Set<ObjectId>>(){}),
+                            JSON.convert(dataMap.get("user"), String.class),
+                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
+                            );
+                    response = Void.TYPE;
+                    break;
                 default:
                     log.warn("Unimplemented channel {}", request.getChannel());
                     response = Void.TYPE;
@@ -180,9 +251,18 @@ public class Router {
                 ));
             
         } catch (Exception e) {
-            //TODO: message client with failure
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
+            //deregister failed call
+                        //TODO: message client with failure
+                connection.deregister(
+                    request.getChannel(),
+                    request.getRequestId()
+                );
+        } finally {
+            if (ClothoRealm.ANONYMOUS_USER.equals(SecurityUtils.getSubject().getPrincipal())){
+                SecurityUtils.getSubject().logout();
+            }
         }
     }
 
@@ -250,32 +330,38 @@ public class Router {
     private Map<String, Mind> minds;
     private Map<String, Mind> authenticatedMinds = new HashMap<>();
 
-    private Mind getAuthenticatedMind(String username)  {
+    private Mind getAuthenticatedMind(String username, ClientConnection connection, Message request) {
         //XXX: this whole method is janky
-        if (authenticatedMinds.containsKey(username)){
+        if (authenticatedMinds.containsKey(username)) {
             return authenticatedMinds.get(username);
         }
-        
-        
-        Map<String,Object> query = new HashMap();
+
+
+        Map<String, Object> query = new HashMap();
         query.put("username", username);
         query.put("schema", Mind.class.getCanonicalName());
-        try{
+        try {
             Iterable<ObjBase> minds = persistor.find(query);
 
-        Mind mind;
-        
-        if (!minds.iterator().hasNext()){
-            mind = new Mind();
+            Mind mind;
+
+            if (!minds.iterator().hasNext()) {
+                mind = new Mind();
+                authenticatedMinds.put(username, mind);
+            } else {
+                mind = (Mind) minds.iterator().next();
+            }
+
+            return mind;
+        } catch (Exception ex) {
+            Mind mind = new Mind();
+            mind.setConnection(connection);
             authenticatedMinds.put(username, mind);
-        } else {
-            mind = (Mind) minds.iterator().next();
-        }
-        
-        return mind;
-                }catch (Exception ex){
-            ex.printStackTrace();
-            throw ex;
+            
+            //tell user mind retrieval failed
+            ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId());
+            api.say("Mind retrieval encountered an exception: " + ex.getMessage(), ServerSideAPI.Severity.WARNING);
+            return mind;
         }
     }
     

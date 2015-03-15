@@ -1,0 +1,173 @@
+{
+	"id" : "org.clothocad.trails.WritingTrails",
+	"schema" : "org.clothocad.model.Trail",
+	"name" : "Writing Trails",
+	"author" : "Maxwell Bates",
+	"description" : "This Trail will walk you through how to write a Trail, introducing you to the relevant schemas, and built-in Clotho tools and services you can access.",
+	"mixin" : "partials/trails/writingTrails/writingTrails-controller.js",
+	"contents" : [
+		{
+			"chapter" : "Trail Overview",
+			"pages" : [
+				{
+					"title" : "Introduction",
+					"icon" : "info",
+					"contents" : [
+						{
+						"type" : "text",
+						"params" : "<blockquote><p>While you are testing, make sure you remove your trail from the localStorage by clicking the orange trash icon at the top (or calling <code>$clotho.$collector.clearStorage()</code> in your browser console.You will have to also reload all test modules, or restart the server.</p></blockquote><p>This trail will walk you through the basic composition of a Trail. Trails are JSON files, with components which adhere to several different schemas:</p><p><b>Trail</b>s consist of <b>Chapter</b>s.</p><p><b>Chapter</b>s contain either a set of <b>Page</b>s or a <b>TrailTransclude</b>.</p><p><b>Page</b>s are the primary composing unit of a trail, and contain text, templates, videos, <b>Quiz</b>s, etc.</p><hr><p>So a <b>Trail</b> might look like this (focusing only on layout, not content or description fields):<ul><li>Normal <b>Chapter</b><ul><li>Simple <b>Page</b></li><li><b>Page</b><ul><li><b>Quiz</b></li></ul></ul></li></ul></li><li>Transclusion <b>Chapter</b><ul><li><b>TrailTransclude</b></li></ul></li></ul></p>"
+						},
+						{
+							"type" : "hint",
+							"params" : "You can also have hints within a Page. They are currently limited to text."
+						},
+						{
+							"type" : "text",
+							"params" : "<p>Trails can take on several forms - check out other trails -  but essentially they revolve around videos and/or HTML content. <b>Be sure to check <a href='http://docs.angularjs.org/api/'>the Angular API</a> for several of its directives which you can obviously use anywhere in your trail, and the <a href='http://getbootstrap.com/2.3.2/'>Bootstrap CSS framework(v 2.3.2)</a></b></p>"
+						}
+					]
+				},
+				{
+					"title" : "Example Trail",
+					"controller" : "writingTrailsCtrl",
+					"contents" : [
+						{
+							"type" : "text",
+							"params" : "<p>Below is an example trail, in JSON format</p>"
+						},
+						{
+							"type" : "text",
+							"params" : "<pre ng-init=\"demoTrail = getTrail('Combined Trail')\">{{ demoTrail | json }}</pre>"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter" : "Trail Schemas",
+			"pages" : [
+				{
+					"title" : "Trail",
+					"controller" : "writingTrailsCtrl",
+					"contents" : [
+						{
+							"type" : "text",
+							"params" : "<p ng-init=\"getTrailHack()\">The Trail Schema is the container for the entire trail.</p>"
+						},
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/fieldEnumeration.html"
+						}
+					]
+				},
+				{
+					"title" : "Chapter",
+					"controller" : "writingTrailsCtrl",
+					"contents" : [
+						{
+							"type" : "text",
+							"params" :"<p ng-init=\"demoSchema = getSchema('Chapter')\">Chapter are essentially containers for TrailTranscludes and Pages. They break up content into meaningful blocks.</p>"
+						},
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/fieldEnumeration.html"
+						}
+					]
+				},
+				{
+					"title" : "TrailTransclude",
+					"controller" : "writingTrailsCtrl",
+					"contents" : [
+						{
+							"type" : "text",
+							"params" : "<p ng-init=\"demoSchema = getSchema('TrailTransclude')\">TrailTranscludes are used to transclude the content of another Trail.</p>"
+						},
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/fieldEnumeration.html"
+						}
+					]
+				},
+				{
+					"title" : "Page",
+					"controller" : "writingTrailsCtrl",
+					"contents" : [
+						{
+							"type" : "text",
+							"params" : "<p ng-init=\"demoSchema = getSchema('Page')\">Pages are the primary unit of content in Trails. They can contain several fields, enumerated below.</p>"
+						},
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/fieldEnumeration.html"
+						}
+					]
+				},
+				{
+					"title" : "Quiz",
+					"controller" : "writingTrailsCtrl",
+					"contents" : [
+						{
+							"type" : "text",
+							"params" : "<p ng-init=\"demoSchema = getSchema('Quiz')\">Quizzes are part of pages, generating questions dynamically and graded on the server. Currently Quizzes are in a state of flux, so below is described the SuperClass, pending its finalization and more importantly the finalization of dynamic content generation.</p>"
+						},
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/fieldEnumeration.html"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter" : "UI Elements",
+			"pages" : [
+				{
+					"title" : "Video",
+					"controller" : "writingTrailsUICtrl",
+					"contents" : [
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/video.html"
+						}
+					]
+				},
+				{
+					"title" : "$focus + $modal",
+					"controller" : "writingTrailsUICtrl",
+					"contents" : [
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/focus.html"
+						}
+					]
+				},
+				{
+					"title" : "Bootstrap",
+					"controller" : "writingTrailsUICtrl",
+					"contents" : [
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/bootstrap.html"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter" : "Clotho Directives",
+			"pages" : [
+				{
+					"title" : "clotho-run",
+					"controller" : "writingTrailsClothoCtrl",
+					"contents" : [
+						{
+							"type" : "template",
+							"params" : "partials/trails/writingTrails/clothoDirectives.html"
+						}
+					]
+				}
+			]
+		}
+
+	]
+}

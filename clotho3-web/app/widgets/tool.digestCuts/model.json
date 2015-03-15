@@ -1,0 +1,9 @@
+{
+  "id": "tool.digestCuts",
+
+  "files": [
+    "index.html"
+  ],
+
+  "dependencies": ["digestCuts.js"]
+}

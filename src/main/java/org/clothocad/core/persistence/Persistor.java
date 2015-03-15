@@ -26,7 +26,6 @@ ENHANCEMENTS, OR MODIFICATIONS.
 package org.clothocad.core.persistence;
 
 import org.clothocad.core.schema.Converters;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,8 +42,14 @@ import org.clothocad.core.datums.ObjBase;
 import org.reflections.Reflections;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.Callable;
 import javax.persistence.EntityNotFoundException;
 import lombok.Getter;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthenticatedException;
+import org.apache.shiro.subject.Subject;
 import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
@@ -54,6 +59,12 @@ import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
 import org.clothocad.core.schema.JavaSchema;
 import org.clothocad.core.schema.Schema;
+import static org.clothocad.core.security.ClothoAction.*;
+import org.clothocad.core.security.ClothoAction;
+import org.clothocad.core.security.ClothoPermission;
+import org.clothocad.core.security.ClothoRealm;
+import org.clothocad.core.security.ServerSubject;
+
 import org.clothocad.core.util.JSON;
 
 /**
@@ -82,9 +93,12 @@ import org.clothocad.core.util.JSON;
 @Slf4j
 public class Persistor{
     public static final int SEARCH_MAX = 5000;
+    public static final String VIRTUAL_FIELD_PREFIX = "$$";
     
     @Getter
     private ClothoConnection connection;
+    
+    private ClothoRealm realm;
     
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     
@@ -93,15 +107,15 @@ public class Persistor{
     private GlobalTrie globalTrie;
     
     @Inject
-    public Persistor(final ClothoConnection connection){
-        this(connection, true);
+    public Persistor(final ClothoConnection connection, ClothoRealm realm){
+        this(connection, realm, true);
     }
     
-    public Persistor(final ClothoConnection connection, boolean initializeBuiltins){
+    public Persistor(final ClothoConnection connection, ClothoRealm realm, boolean initializeBuiltins){
         this.connection = connection;
-        connect();
+        this.realm = realm;
         
-        if (initializeBuiltins) initializeBuiltInSchemas();
+       // if (initializeBuiltins) initializeBuiltInSchemas();
         
         converters = new Converters();       
         globalTrie = new GlobalTrie(connection.getCompletionData());
@@ -123,8 +137,17 @@ public class Persistor{
         }
     }
     
+    public <T extends ObjBase> T get(Class<T> type, ObjectId id) throws EntityNotFoundException {
+        return get(type,id,false);
+    }    
     
-    public <T extends ObjBase> T get(Class<T> type, ObjectId id){
+    public <T extends ObjBase> T get(Class<T> type, ObjectId id, boolean forRun) throws EntityNotFoundException {
+        try {
+            if (forRun) checkPriv(id, "run"); 
+            else checkPriv(id, "view");
+        } catch (AuthorizationException e){
+            throw new EntityNotFoundException("Did not find object: "+ id.toString());
+        }
         T obj = connection.get(type, id);
         if (obj == null) throw new EntityNotFoundException(id.toString());
         validate(obj);
@@ -137,55 +160,170 @@ public class Persistor{
         return save(obj, false);
     }
     
-    public ObjectId save(ObjBase obj, boolean overwrite) {
-        validate(obj);
-        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
-
+    public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
+        if (id == null) throw new IllegalArgumentException("Null ObjectId");
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (has(id)) {
+            try {
+                currentSubject.checkPermission("data:"+ priviliege + ":" + id.toString());            
+            } catch (AuthorizationException e){
+                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
+                throw e;
+            }
+        }
+    }
+    
+    public Set<String> getUserPermissionInfo(ObjectId id){
+        return null;
+    }
+    
+    public Set<String> getAllPermissionInfo(ObjectId id){
+        //must be owner
+        checkPriv(id, "grant");
+        return null;
+    }
         
+    
+    //user must be authenticated
+    
+    
+    //if no id, assign id
+    //if id in database, check permission
+      // if fail check, remove from save list
+    
+    
+    //if id not in database, assign ownership to current user
+    
+    public ObjectId save(ObjBase obj, boolean overwrite) {
+        Subject currentSubject = SecurityUtils.getSubject();
+        if (!currentSubject.isAuthenticated() ||
+            currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
+            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+        }
+        validate(obj);
+
+        Set<ObjBase> relevantObjects = getObjBaseSet(obj);
+        
+        //assign ids to no-id objects
+        for (ObjBase object : relevantObjects){
+            if (object.getId() == null)
+                object.setId(new ObjectId());
+        }
+
+        // if can't change original object, abort
+        if (has(obj.getId()) && 
+                !currentSubject.isPermitted("data:edit:"+obj.getId().toString())){
+            throw new AuthorizationException("Cannot edit "+ obj.getId());
+        }
+        
+        Set<ObjBase> filteredObjects = new HashSet();
+
+        for (ObjBase object : relevantObjects){
+            //check privileges on preexisting objects
+            if (!has(object.getId()) || 
+                    currentSubject.isPermitted("data:edit"+obj.getId().toString()))
+                    
+                    filteredObjects.add(object);
+            //give current user ownership of new objects
+            if (!has(object.getId()))
+                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
+        }
+
         if (!overwrite){
             Set<ObjBase> modifiedObjects = new HashSet<>();
-            for (ObjBase o : relevantObjects){
-                if (modified(o)) modifiedObjects.add(o);
+            for (ObjBase object : filteredObjects){
+                if (modified(object)) modifiedObjects.add(object);
             }
             if (modifiedObjects.size() > 0) throw new OverwriteConfirmationException(modifiedObjects);
         }
 
         //recurse in persistor
-        connection.saveAll(relevantObjects);
+        connection.saveAll(filteredObjects);
+        for (ObjBase object : filteredObjects){
+            globalTrie.put(object);
+        }
         return obj.getId();
     }
+
+    /*
+     * Remove fields starting with '$$', our marker for transient fields that
+     * augment 'actual' data. These fields are derived or otherwise not suitable 
+     * for persistence
+     * 
+     * Current only such field is $$permissions, which tells users which 
+     * permissions they have on an object
+     */
+    public static void stripVirtualFields(Map<String,Object> data){
+        Iterator<String> iterator = data.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            if (key.startsWith(VIRTUAL_FIELD_PREFIX)){
+                iterator.remove();
+            }
+        }
+    }
     
-    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException{
-       if (!data.containsKey(ID)){
+    public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
+        if (!SecurityUtils.getSubject().isAuthenticated() ||
+            SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
+            throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
+        }
+        if (!data.containsKey(ID)) {
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
             data.put(ID, id.toString());
+        } else {
+            checkPriv(new ObjectId(data.get(ID)), "edit");
         }
-        connection.save(data);
+        ObjectId id = new ObjectId(data.get(ID));
+        if (!has(id)) {
+             
+            //needs to bypass grant permission checking
+            realm.addPermissions(SecurityUtils.getSubject().getPrincipal().toString(), ClothoPermission.OWN.actions, id, false);
+        }
         
+        stripVirtualFields(data);
+        connection.save(data);
+
         //Update the GlobalTrie with the new object
         globalTrie.put(data);
-        
+
         return new ObjectId(data.get(ID).toString());
     }
-    
-    public void delete(ObjectId id){
+
+    public void delete(ObjectId id) throws AuthorizationException{
+        checkPriv(id, "delete");
         connection.delete(id);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId uuid){
-        return getAsJSON(uuid, null);
+    public Map<String, Object> getAsJSON(ObjectId id) throws EntityNotFoundException {
+        return getAsJSON(id, null, false);
     }
     
-    public Map<String, Object> getAsJSON(ObjectId uuid, Set<String> fields){
-        Map<String,Object> result = connection.getAsBSON(uuid, fields);
-        if (result == null) throw new EntityNotFoundException(uuid.toString());
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields) throws EntityNotFoundException {
+        return getAsJSON(id, fields, false);
+    }
+    
+    public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun) throws EntityNotFoundException{
+        try {
+            if (forRun) checkPriv(id, "run");
+            else checkPriv(id, "view");
+        } catch (AuthorizationException e){
+            throw new EntityNotFoundException(id.toString());
+        }
+
+        Map<String,Object> result = connection.getAsBSON(id, fields);
+        if (result == null) throw new EntityNotFoundException(id.toString());
+
+        //XXX: if we add more virtual fields, we will need a second filtering pass instead
+        if (!forRun && (fields == null || fields.size() == 0 || fields.contains(VIRTUAL_FIELD_PREFIX+"permissions")))
+            addPermissionInfo(result);
+
         return result;
     }
     
     
-    //XXX: should return set of possible schemas, not child objects
-    // then should not be used as currently is in save
+    //return set of child objects
     protected Set<ObjBase> getObjBaseSet(ObjBase obj){
         return getObjBaseSet(obj, new HashSet<ObjBase>());
     }
@@ -323,7 +461,17 @@ public class Persistor{
         query = addSubSchemas(query);
         List<ObjBase> result = connection.get(query, hitmax);
         //TODO: also add converted instances
-        return result;
+        
+        //filter results for permission
+        List<ObjBase> filteredResult = new ArrayList<>();
+        for (ObjBase obj : result){
+            try{
+                checkPriv(obj.getId(), "view");
+                filteredResult.add(obj);
+            } catch (AuthorizationException e){
+            }
+        }
+        return filteredResult;
     }
 
     private List<Map<String,Object>> getConvertedData(Schema originalSchema, Set<String> fields){
@@ -403,12 +551,11 @@ public class Persistor{
 //requires write privilege to change (different from instance schema set in that regard)
 //defaults to the first class an instance was saved as (?)
     
-    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec){
-        return findAsBSON(spec, null, 1000);
+    public List<Map<String, Object>> findAsJSON(Map<String, Object> spec){
+        return findAsJSON(spec, null, 1000);
     }
     
-    public List<Map<String, Object>> findAsBSON(Map<String, Object> spec, Set<String> fields, int hitmax) {
-        //TODO: limit results
+    public List<Map<String, Object>> findAsJSON(Map<String, Object> spec, Set<String> fields, int hitmax) {
         spec = addSubSchemas(spec);
         List<Map<String,Object>> out = connection.getAsBSON(spec, hitmax, fields);
 
@@ -436,7 +583,56 @@ public class Persistor{
                 }
             }
         }
-        return filterDuplicatesById(out);
+        out = filterDuplicatesById(out);
+        
+        //filter results for permission
+        out = filterByPermission(out, view);
+        
+        for (Map<String,Object> object : out) {
+            if (fields == null || fields.size() == 0 || fields.contains(VIRTUAL_FIELD_PREFIX+"permissions"))
+                addPermissionInfo(object);
+        }
+
+        return out;
+    }
+        
+    private void addPermissionInfo(Map<String,Object> object){
+            ObjectId id = new ObjectId(object.get(ID));
+            if (has(id)){
+                Map<String,Object> permissions = new HashMap<>();
+
+                permissions.put("mine", realm.getCurrentSubjectPermissions(id));
+                if (SecurityUtils.getSubject().isPermitted("data:grant:"+id.toString())){
+                    permissions.put("user", realm.getUserPermissions(id));
+                    permissions.put("group", realm.getGroupPermissions(id));
+                }
+                
+                object.put(VIRTUAL_FIELD_PREFIX+"permissions", permissions);
+            }
+    }
+
+    private List<Map<String,Object>> filterByPermission(Iterable<Map<String,Object>> objects, ClothoAction permission){
+        List<Map<String,Object>> filteredObjects = new ArrayList<>();
+        for (Map<String,Object> object : objects){
+            try{
+                checkPriv(new ObjectId(object.get(ID)), permission.name());
+                filteredObjects.add(object);
+            } catch (AuthorizationException e){
+            }
+        }
+        return filteredObjects;        
+    }
+
+    private List<ObjBase> filterObjBasesByPermission(Collection<ObjBase> objects, ClothoAction permission){
+        List<ObjBase> filteredObjects = new ArrayList<>();
+        for (ObjBase object : objects){
+            try{
+                checkPriv(object.getId(), permission.name());
+                filteredObjects.add(object);
+            } catch (AuthorizationException e){
+            }
+        }
+        return filteredObjects;        
     }
     
     private List<Map<String,Object>> filterDuplicatesById(List<Map<String,Object>> objects){
@@ -457,30 +653,37 @@ public class Persistor{
         //TODO
         return convertedData;
     }
-    
-    public void connect() {
-        try {
-            connection.connect();
-        } catch (UnknownHostException ex) {
-            log.error("Could not connect to database", ex);
-        }
-        
-    }
 
     public void deleteAll() {
         connection.deleteAll();
-        initializeBuiltInSchemas();
+        new ServerSubject().execute(new doInitializeBuiltIns(this));
    }
 
-    protected void initializeBuiltInSchemas() {
-        //XXX: just built-in models for now
-        Reflections models = new Reflections("org.clothocad");
+    private static class doInitializeBuiltIns implements Callable<Void> {
+        private Persistor persistor;
+        public doInitializeBuiltIns(Persistor p) {
+            persistor = p;
+        }
 
-        for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
-            //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
-            //not sure if this is a problem
-            
-            if (c.getSuperclass() == ObjBase.class){
+        @Override
+        public Void call() throws Exception {
+            persistor.initializeBuiltInSchemas();
+            return null;
+        }
+    }
+    
+    public void initializeBuiltInSchemas() {
+        //XXX: just built-in models for now
+        List<String> packages = new ArrayList<String>();
+        packages.add("org.clothocad");
+        packages.add("org.registry");
+        for(String pack : packages) {
+            Reflections models = new Reflections(pack);
+
+            for (Class<? extends ObjBase> c : models.getSubTypesOf(ObjBase.class)){
+                //XXX: this lets people inject their own implementations of various built-in schemas if they know the name and have db access
+                //not sure if this is a problem
+
                 makeBuiltIns(c, null, models);
             }
         }
@@ -493,7 +696,8 @@ public class Persistor{
         //XXX: inefficient
         BuiltInSchema builtIn = new BuiltInSchema(c, superSchema);
         if (!has(new ObjectId(c.getCanonicalName()))){
-            save(builtIn);           
+            save(builtIn);
+            realm.setPublic(builtIn.getId());
         }
         for (Class<? extends ObjBase> subClass : ref.getSubTypesOf(c)){
             if (subClass.getSuperclass() == c){
@@ -523,20 +727,19 @@ public class Persistor{
             for (Class c : r.getSubTypesOf(type)) {
                 out.add(c.getName());
             }
-            
-            //get any authored schemas
-            Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
-            for (Class<? extends Schema> c : authoredSchemas){
-                for (Schema schema : this.getAll(c)){
-                    if (schema.childOf(originalSchema)){
-                        out.add(schema.getBinaryName());
-                    }
+        } catch (ClassNotFoundException | RuntimeException ex) {
+            log.error("getRelatedSchemas: Cannot create java class from schema", ex);
+        }
+        //get any authored schemas
+        Schema originalSchema = resolveSchemaFromClassName(originalSchemaName);
+        for (Class<? extends Schema> c : authoredSchemas){
+            for (Schema schema : this.getAll(c)){
+                if (schema.childOf(originalSchema)){
+                    out.add(schema.getBinaryName());
                 }
             }
-            
-
-        } catch (ClassNotFoundException | RuntimeException ex) {
         }
+
         out.add(originalSchemaName);
         return out;
     }
@@ -560,13 +763,15 @@ public class Persistor{
     }
     
     public Schema resolveSchemaFromClassName(String className){
-        Map<String,Object> query = new HashMap();
-        query.put("binaryName",className);
-        return connection.getOne(Schema.class, query);
+        return connection.get(Schema.class, new ObjectId(className));
     }
     
  
-    public List<Map> getCompletions(String word){
-        return globalTrie.getCompletions(word);
+    public Iterable<Map<String,Object>> getCompletions(String word){
+        return filterByPermission(globalTrie.getCompletions(word), view);
+    }
+
+    public Object get(ObjectId objectId) throws EntityNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

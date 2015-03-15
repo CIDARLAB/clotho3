@@ -37,10 +37,10 @@ public class ScriptAPI {
     Persistor persistor;
     
     
-    public ScriptAPI(Mind mind, Persistor persistor, Router router, String requestId, MessageOptions options){
-        api = new ServerSideAPI(mind, persistor, router, requestId, options);
-        this.mind = mind;
-        this.persistor = persistor;
+    public ScriptAPI(ServerSideAPI api){
+        this.api = api;
+        this.mind = api.getMind();
+        this.persistor = api.getPersistor();
     }
 
     public ObjectId create(Map<String, Object> obj) {
@@ -112,10 +112,12 @@ public class ScriptAPI {
         api.say(text, Severity.NORMAL);
     }
 
+    //Commented out login function. 
+    /* 
     public boolean login(String username, String password){
         return api.login(username, password);
     }
-    
+    */
     //XXX: augh, would be best if we had scriptengines that could treat maps as native objects
     //TODO: handle multiple languages
     //XXX: doesn't reach values hidden by non-Map/List fields

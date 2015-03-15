@@ -1,34 +1,68 @@
 {
-  "id" : "org.clothocad.core.datums.Doo",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "binaryName" : "org.clothocad.core.datums.Doo",
-  "c" : "org.clothocad.core.datums.Doo",
+  "id" : "org.clothocad.core.datums.Doo",
   "name" : "Doo",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.util.List",
-    "name" : "messages",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "java.util.Date",
-    "name" : "dateEnded",
-    "type" : "date",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Exception",
-    "name" : "abortErr",
-    "type" : "object",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.Boolean",
     "name" : "savePolicy",
     "type" : "boolean",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.bson.types.ObjectId",
+    "name" : "abortErr",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "messages",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "dateEnded",
+    "type" : "date",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "parentDooId",
     "type" : "id",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.Doo",
+  "binaryName" : "org.clothocad.core.datums.Doo"
 }

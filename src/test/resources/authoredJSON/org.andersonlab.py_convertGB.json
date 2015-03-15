@@ -6,10 +6,7 @@
   "id" : "org.andersonlab.py_convertGB",
   "description" : "Converts a Genbank object into a Polynucleotide JSON representation.",
   "args" : [ {
-    "type" : "object",
-    "name" : "arg0"
-  }, {
     "type" : "string",
-    "name" : "arg1"
-  } ]
+    "name" : "arg0"
+  }]
 }

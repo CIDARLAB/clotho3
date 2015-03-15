@@ -1,0 +1,15 @@
+{
+  "schema" : "org.clothocad.core.util.DummyPackager",
+  "id" : "packager",
+  "name" : "packager",
+  "dateCreated" : null,
+  "visibility" : null,
+  "code" : null,
+  "dependencies" : [ ],
+  "language" : "JAVA",
+  "author" : null,
+  "args" : null,
+  "tests" : null,
+  "deleted" : false,
+  "children" : [ ]
+}

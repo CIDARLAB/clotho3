@@ -1,4 +1,4 @@
-//angular components needed, add a couple methods to prototype
+//Add a few utility functions to the angular global
 angular.module('clotho.angularAdditions', [])
 	.config(function() {
 

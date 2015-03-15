@@ -1,16 +1,28 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.schema.Schema",
-  "binaryName" : "org.clothocad.core.schema.ClothoSchema",
-  "c" : "org.clothocad.core.schema.ClothoSchema",
+  "id" : "org.clothocad.core.schema.ClothoSchema",
   "name" : "ClothoSchema",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "org.slf4j.Logger",
-    "name" : "logger",
+    "name" : "log",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.core.schema.ClothoSchema"
+  "methods" : null,
+  "superClass" : "org.clothocad.core.schema.Schema",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.ClothoSchema",
+  "binaryName" : "org.clothocad.core.schema.ClothoSchema"
 }

@@ -1,0 +1,113 @@
+{
+	"id" : "org.clothocad.trails.constructionFiles",
+	"schema":"org.clothocad.model.Trail",
+	"name" : "Construction Files",
+	"description" : "Discover how Clotho can parse your wet lab construction file to predict your assemblies.",
+	"icon" : "partials/trails/constructionFiles/pUC-GFP.png",
+	"about" : {
+		"help" : "This trail will introduce you to construction files, and provide you with several examples to work with",
+		"contents" : [
+			{
+				"type" : "text",
+				"params" : "<p>Construction Files define a series of unit operations which constitute a cloning experiment.</p><p>We'll first go through a practical example, mapping the construction file to the flow of the reaction. Then you'll see what the construction files look like in a UC Berkeley Synthetic Biology wet lab, and how they are parsed and automated in Clotho. Clotho can save all the intermediate sequences of your construction file, or simply show you the expected result.</p>"
+			}
+		]
+	},
+	"instructors" : ["clotho.developer.jcanderson", "clotho.developer.maxbates", "clotho.developer.billcao"],
+	"contents": [
+		{
+			"chapter": "Introduction",
+			"description" : "Introduce you to construction files, and the information they contain",
+			"pages": [
+				{
+					"title": "Video Overview",
+					"icon": "video",
+					"contents": [
+						{
+							"type": "text",
+							"params": "<div><blockquote><p>Construction Files define a series of unit operations which constitute a cloning experiment.</p></blockquote><p>Let's go through the process of ligating GFP into a backbone called pUC19.</p></div>"
+						},
+						{
+							"type": "video",
+							"params": {
+								"id": "U4qrf9MhSxE",
+								"autoplay": true
+							}
+						}
+					]
+				},
+				{
+					"title": "Wet Lab Examples",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabExamples.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/wetLabExamples.html"
+						}
+					]
+				},
+				{
+					"title": "Wet Lab Syntax",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/wetLabSyntax.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/wetLabSyntax.html"
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter": "Automation",
+			"description" : "See how Clotho can aid you in running Construction Files, reducing work in the wet lab.",
+			"pages": [
+				{
+					"title": "Construction Files in Clotho",
+					"icon": "eye",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/constructionFilesInClotho.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/constructionFilesInClotho.html"
+						}
+					]
+				},
+				{
+					"title": "Parsing",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/parsingConstructionFiles.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/parsingConstructionFiles.html"
+						}
+					]
+				},
+				{
+					"title": "Simulation",
+					"icon": "exercise",
+					"dependencies" : {
+						"mixin" : "partials/trails/constructionFiles/runningConstructionFiles.js"
+					},
+					"contents": [
+						{
+							"type": "template",
+							"params": "partials/trails/constructionFiles/runningConstructionFiles.html"
+						}
+					]
+				}
+			]
+		}
+	]
+}

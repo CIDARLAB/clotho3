@@ -125,13 +125,13 @@ angular.module('clotho.core').service('PubSub',
 			 @description
 			 Publish some data on a topic
 			 @param topic {string} channel to publish on, can be multiple space-separated
-			 @param args {*}  Array of arguments to apply to callback.
+			 @param args {*}  Array of arguments to apply to callback. If you want to pass a single arg, you don't need to wrap it in an array.
 			 */
 			var trigger = function pubsub_trigger (topic, args) {
 
 				//ensure arguments are array
 				//undefined is not a JSON value, so means nothing was sent over the socket
-				if (angular.isUndefined(args) || args === null) {
+				if (angular.isUndefined(args)) {
 					args = null;
 				} else {
 					args = [args];
@@ -195,6 +195,10 @@ angular.module('clotho.core').service('PubSub',
 			var on = function pubsub_on (topic, callback, ref, priority, one) {
 				ref = ref || null;
 				one = one == true;
+
+        if (!angular.isFunction(callback)) {
+          return angular.noop;
+        }
 
 				if (one) {
 					callback = angular.once(callback);

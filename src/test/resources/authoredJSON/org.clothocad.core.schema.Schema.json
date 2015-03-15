@@ -1,50 +1,98 @@
 {
-  "id" : "org.clothocad.core.schema.Schema",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
-  "binaryName" : "org.clothocad.core.schema.Schema",
-  "c" : "org.clothocad.core.schema.Schema",
+  "id" : "org.clothocad.core.schema.Schema",
   "name" : "Schema",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "java.util.Map",
     "name" : "dependencies",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.lang.String",
     "name" : "BASE_PACKAGE_BINARY",
     "type" : "string",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.util.Set",
-    "name" : "methods",
-    "type" : "array",
-    "reference" : false
-  }, {
-    "javaType" : "java.lang.String",
-    "name" : "source",
-    "type" : "string",
-    "reference" : false
-  }, {
-    "javaType" : "org.clothocad.core.schema.Schema",
-    "name" : "superClass",
-    "type" : "org.clothocad.core.schema.Schema",
-    "reference" : true
-  }, {
-    "javaType" : "org.slf4j.Logger",
     "name" : "log",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "java.util.Set",
+    "name" : "methods",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "fields",
     "type" : "array",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   }, {
-    "javaType" : "org.clothocad.core.persistence.DBClassLoader",
+    "name" : "source",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "superClass",
+    "type" : "org.clothocad.core.schema.Schema",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "cl",
     "type" : "object",
-    "reference" : false
-  } ]
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.Schema",
+  "binaryName" : "org.clothocad.core.schema.Schema"
 }

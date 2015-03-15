@@ -31,6 +31,4 @@ class ClothoAuthoringModule extends ClothoTestModule {
         bind(Path.class).annotatedWith(Names.named("storagefolder")).toInstance(Paths.get("src", "test", "resources", "authoredJSON"));
         bind(Persistor.class).to(FileHookPersistor.class);
     }
-    
-    
 }

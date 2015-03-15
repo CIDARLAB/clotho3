@@ -290,7 +290,7 @@ class _InsdcWriter(SequentialSequenceWriter):
         #self.handle.write('%s/%s="%s"\n' % (self.QUALIFIER_INDENT_STR, key, value))
         if quote is None:
             #Try to mimic unwritten rules about when quotes can be left out:
-            if _is_int_or_long(value) or key in self.FTQUAL_NO_QUOTE:
+            if _is_int_or_long(value) or key == 'ApEinfo_revColor' or key == 'ApEinfo_fwdcolor' or key in self.FTQUAL_NO_QUOTE:
                 quote = False
             else:
                 quote = True
@@ -549,8 +549,8 @@ class GenBankWriter(_InsdcWriter):
         if not locus or locus == "<unknown id>":
             locus = self._get_annotation_str(
                 record, "accession", just_first=True)
-        if len(locus) > 16:
-            raise ValueError("Locus identifier %r is too long" % str(locus))
+        #if len(locus) > 16:
+        #    raise ValueError("Locus identifier %r is too long" % str(locus))
 
         if len(record) > 99999999999:
             #Currently GenBank only officially support up to 350000, but
@@ -596,6 +596,7 @@ class GenBankWriter(_InsdcWriter):
                mol_type.ljust(6),
                division,
                self._get_date(record))
+        """
         assert len(line) == 79 + 1, repr(line)  # plus one for new line
 
         assert line[12:28].rstrip() == locus, \
@@ -626,7 +627,7 @@ class GenBankWriter(_InsdcWriter):
             'LOCUS line does not contain - at position 71 in date:\n' + line
         assert line[74:75] == '-', \
             'LOCUS line does not contain - at position 75 in date:\n' + line
-
+        """
         self.handle.write(line)
 
     def _write_references(self, record):

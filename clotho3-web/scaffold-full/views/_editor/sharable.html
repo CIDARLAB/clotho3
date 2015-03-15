@@ -1,0 +1,49 @@
+<div ng-controller="Editor_SharableCtrl"
+     class="panel"
+     ng-class="'panel-' + panelClass">
+  <div class="panel-heading">
+    <h3 class="panel-title">Sharable Editor</h3>
+  </div>
+  <div class="panel-body ng-cloak">
+
+    <fieldset ng-disabled="!editMode">
+
+      <div ng-include="_objBaseFields"></div>
+
+      <div form-field-enumeration sharable="sharable" strip-basic-fields="true"></div>
+
+      <div class="form-group"
+           ng-show="editMode"
+           ng-form="newField"
+           ng-class="{'has-error' : newField.$invalid}">
+        <div class="col-md-3">
+          <input type="text"
+                 class="form-control"
+                 ng-model="newFieldKey"
+                 placeholder="New Field Key"
+                 ng-required
+                 sharable-check-field-exists="sharable">
+        </div>
+        <div class="col-md-9">
+          <div class="input-group">
+            <textarea json-edit="newFieldVal"
+                      name="newFieldVal"
+                      rows="1"
+                      class="form-control"
+                      ng-required
+                      placeholder="Enter JSON Value - use quotes for string"> </textarea>
+                    <span class="input-group-btn">
+                         <button ng-click="addNewField()"
+                                 class="btn btn-default"
+                                 ng-disabled="newField.$invalid">
+                           <span class="glyphicon glyphicon-plus"></span>
+                         </button>
+                    </span>
+          </div>
+        </div>
+      </div>
+
+    </fieldset>
+  </div>
+  <div class="panel-footer" ng-include="_formActions"></div>
+</div>

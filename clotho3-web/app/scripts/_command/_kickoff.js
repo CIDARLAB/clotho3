@@ -1,2 +1,2 @@
 angular.module('clotho.tokenizer', []);
-angular.module('clotho.commandbar', ['clotho.core', 'clotho.tokenizer', 'ui.keypress']);
+angular.module('clotho.commandbar', ['clotho.foundation', 'clotho.tokenizer', 'ui.keypress']);

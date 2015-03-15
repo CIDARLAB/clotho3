@@ -1,0 +1,40 @@
+{
+    "isLinear": true, 
+    "description": "Drosophila virilis GJ12345 (Dvir\\GJ12345), mRNA.", 
+    "name": "XM_002046649", 
+    "sequence": "ATGACACCATCGCCCACAAAGGAGCTCATGAATGCGCCAACAATTTCGCGACGTCCGCGCGAGGAGTTTGCCGAAAAGGGTGTCATCATACGCGAGGTGGACGACGGCGTGCGCTGCGAGCAATGCAAAACAGAATGCCCCGGTTTTGCGGCACACGATTGGAGAAAAACTTGCCAATCCTGCAAGTGTCCGCGCGAGGCGCACGCCATTTACCAGCAACAGACGACCAATGTGCACGAGCGGCTGGGCTTCAAGGTGGTCTCGCCGGCGGATTCGGGCGTGGAGCCACGCGACTTGGGCTATACGTGGGTGCCGCCAGGCGTGCGCGCCTCGTCCCGGGTGAATCGCTACTTTGACCAGCTGCCCGACGAGAAGGTGCCGCGCCTGGGCAGCGAGGGAGCACGCCTGCGTGAACAGCAGATCGCGTACCAGCTGCCCAAGCAGGATCTGTCGCTGGAGCACTGCAAGCATCTGGAGGTGCAGCATGAGGCCTCATTCGAGGACTTTGTGACGGCACGCAACGAAATCGCATTAGACATAGCCTACATCAAGGATGCACCTTACGATGAGCACTGTGCGCACTGTGATAACGAGATTGCAGCCGGCGATTTGATTGTGGCCGCGCCCAAGTTTGTGGAGAGCGTCATGTGGCATCCCAAGTGCTTCACCTGCAGCACCTGCAACGAGCTGCTCGTGGATCTCACCTACTGTGTTCACGATGACAAGGTCTACTGTGAGCGTCATTATGCGGAAATGCTGAAACCCCGCTGCACGGGCTGTGATGAGGTGAGTCTCTTTCATCACCAAATTGCACACACACACACACACACACACACACACACACACATTTGTGTGTTGTCAAATGCTTAG", 
+    "date": "04-AUG-2008", 
+    "highlight": [
+        {
+            "forColor": "#602E4A", 
+            "end": 870, 
+            "description": null, 
+            "revColor": "#5D24A4", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#602E4A", 
+            "end": 870, 
+            "description": null, 
+            "revColor": "#5D24A4", 
+            "notes": null, 
+            "start": 0, 
+            "inference": null
+        }, 
+        {
+            "forColor": "#602E4A", 
+            "end": 870, 
+            "description": null, 
+            "revColor": "#5D24A4", 
+            "notes": "GJ12345 gene product from transcript GJ12345-RA; GJ12345-PA", 
+            "start": 0, 
+            "inference": null
+        }
+    ], 
+    "isSingleStranded": false, 
+    "accession": "XM_002046649", 
+    "id": "195375794", 
+    "schema": "org.clothocad.model.Polynucleotide"
+}

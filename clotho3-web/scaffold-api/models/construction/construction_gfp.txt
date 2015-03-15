@@ -1,0 +1,11 @@
+PCR primer1/primer2 on pPROBE-GFP[LVA]	(pcr_product)
+Digest pcr_product			(EcoRI/HindIII, fragments)
+GelPurify fragments			(L, probeDigested)
+Digest pUC19				(EcoRI/HindIII, fragments2)
+GelPurify fragments2			(pUC19Digested)
+Ligate probeDigested/pUC19Digested	(final)
+------------------------------------
+>primer1 Forward Primer
+gagctcgaattccctaactaactaaag
+>primer2 Reverse Primer
+ctaattaagcttattaagctac

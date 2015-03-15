@@ -3,13 +3,10 @@
   "language" : "PYTHON",
   "code" : "from convertpoly import run",
   "name" : "ConvertPoly",
-  "id" : "org.andersonlab.py_covertpoly",
-  "description" : "Converts a polynucleotide into Genbank",
+  "id" : "org.andersonlab.py_convertpoly",
+  "description" : "Converts a Polynucleotide into Genbank string",
   "args" : [ {
-    "type" : "string",
+    "type" : "org.clothocad.model.Polynucleotide",
     "name" : "arg0"
-  }, {
-    "type" : "string",
-    "name" : "arg1"
-  } ]
+  }]
 }

@@ -1,14 +1,17 @@
 package org.clothocad.core;
 
+import org.clothocad.core.util.Config;
+import org.clothocad.webserver.jetty.ClothoWebserver;
+
 import com.google.inject.Injector;
-import java.util.Properties;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
-import org.clothocad.core.util.Config;
-import org.clothocad.webserver.jetty.ClothoWebserver;
+
+import java.util.Properties;
 
 abstract public class AbstractClothoStarter implements Daemon {
     /** This is part of a mechanism to factor out common code
@@ -25,8 +28,7 @@ abstract public class AbstractClothoStarter implements Daemon {
     /** Generic program entry point.
       * Customized setup is passed in the hook parameter.
       */
-    protected static void
-    baseMain(String[] args, MainHook hook) throws Exception {
+    protected static void baseMain(String[] args, MainHook hook) throws Exception {
         final CommandLine commandLine;
         try {
             commandLine = Config.parseArgs(args);

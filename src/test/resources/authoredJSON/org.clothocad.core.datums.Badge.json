@@ -1,9 +1,18 @@
 {
-  "id" : "org.clothocad.core.datums.Badge",
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
-  "binaryName" : "org.clothocad.core.datums.Badge",
-  "c" : "org.clothocad.core.datums.Badge",
+  "id" : "org.clothocad.core.datums.Badge",
   "name" : "Badge",
-  "language" : "JAVA"
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ ],
+  "methods" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.Badge",
+  "binaryName" : "org.clothocad.core.datums.Badge"
 }

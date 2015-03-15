@@ -7,10 +7,11 @@ import java.util.Properties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.AbstractClothoStarter;
-import org.clothocad.core.persistence.ClothoConnection;
+import org.clothocad.core.persistence.InitializePersistor;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.persistence.jongo.JongoModule;
 import org.clothocad.core.security.ClothoRealm;
+import org.clothocad.core.security.SecurityModule;
+import org.clothocad.core.security.ServerSubject;
 import org.clothocad.core.testers.ClothoTestModule;
 
 /**
@@ -25,8 +26,9 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
             getInjector(Properties config) {
                 final Properties override = new Properties(config);
                 override.setProperty("dbname", "testClotho");
-                return Guice.createInjector(
+                return Guice.createInjector( 
                     new ClothoTestModule(override),
+                    new SecurityModule(),
                     //Test Module flushes database for clean environment
                     new JongoTestModule()
                 );
@@ -41,8 +43,12 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ClothoRealm realm = injector.getInstance(ClothoRealm.class);
                 realm.deleteAll();
-                TestUtils.setupTestData(persistor);
-                TestUtils.setupTestUsers(realm);
+                // we do not need persistor.deleteAll() - see TestEnvConnection
+                ServerSubject serverSubject = new ServerSubject();
+                serverSubject.execute(new InitializePersistor(persistor));
+                serverSubject.execute(new TestUtils.SetupTestData(persistor, realm));
+                serverSubject.execute(new TestUtils.SetupTestRealm(realm));
+                serverSubject.execute(new SecurityTestUtils.CreateTestRealmData(persistor, realm));
             }
         });
     }

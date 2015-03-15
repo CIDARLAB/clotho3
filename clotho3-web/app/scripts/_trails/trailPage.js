@@ -58,7 +58,7 @@ angular.module('clotho.trails')
 					}
 
 					$timeout(function () {
-						onloadFunction();
+						angular.isFunction(onloadFunction) && onloadFunction();
 					});
 				});
 			};

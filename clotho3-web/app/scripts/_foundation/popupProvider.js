@@ -58,7 +58,15 @@ angular.module('clotho.clothoDirectives')
 			});
 		}
 
-		this.$get = function ($animate, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas, hotkeys) {
+		this.$get = function ($animate, $injector, $window, $document, $compile, $timeout, $parse, Clotho, ClothoSchemas) {
+
+			//todo - just use native API
+			var hasHotkeys = $injector.has('hotkeys'),
+				hotkeys;
+			if (hasHotkeys) {
+				hotkeys = $injector.get('hotkeys');
+			}
+
 			return function (prefix, defaults) {
 
 				defaults = angular.extend({}, defaultOptions, defaults);
@@ -242,7 +250,9 @@ angular.module('clotho.clothoDirectives')
 								scope.popupOpen = true;
 
 								//bind hotkey to close
-								hotkeys.add('esc', hide);
+								if (hasHotkeys) {
+									hotkeys.bindTo(popupScope).add('esc', hide);
+								}
 
 								// Return positioning function as promise callback for correct
 								// positioning after draw.
@@ -257,8 +267,6 @@ angular.module('clotho.clothoDirectives')
 										removePopup();
 									}
 								}
-
-								hotkeys.del('esc');
 							}
 
 							function createPopup() {

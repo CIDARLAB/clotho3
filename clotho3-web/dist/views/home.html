@@ -2,39 +2,41 @@
 
     <clotho-modal title="Clotho Help" open="showHelp" content="modalContent"></clotho-modal>
 
-    <div class="jumbotron clearfix shadowBox" style="padding-top: 30px; padding-bottom: 0px;">
+    <div class="jumbotron clearbox" style="padding-top: 10px; padding-bottom: 0px;">
 
-        <img src="images/clothologo.png" class="float-left col-xs-4" style="width: 257px; height: 336px" />
-
-        <div class="col-xs-6" style="padding-left: 15px;">
-            <h2>Learning Clotho</h2>
-
-            <p>Clotho is a software environment for authoring and sharing the tools and data needed to perform a synthetic biology project. This tutorial will guide you through the basics of genetic design and Clotho usage.</p>
-
-            <button class="btn btn-lg btn-primary" ng-click="enterClotho()">Get Started</button>
-
-            <!--
-                <p>Join our mailing list to learn keep up to date!</p>
-
-            <div class="input-group">
-                <input class="input-xlarge" type="email" style="padding: 11px 19px;
-    font-size: 17.5px; line-height: 1.33; border-radius: 6px 0 0 6px;" placeholder="your@email.com" ng-model="newEmail" required>
-                <button class="btn btn-lg btn-primary" type="button" ng-click="joinMailingList()" ng-disabled="!newEmail">Join List</button>
-            </div>-->
+        <div class="col-xs-12" style="padding-top: 15px;" >
+          <p style="text-align: left">Clotho is a framework for engineering synthetic biological systems and managing the data used to create them. Author data schemas, run functions and algorithms, and tie Clotho into existing applications.</p>
         </div>
 
     </div>
 
-    <div class="row">
-        <!--<div class="col-xs-4" style="cursor: pointer;" ng-click="enterClotho()">
-            <img src="../images/clothologo.png" class="shadowBox img-rounded pull-left" />
-        </div>-->
-        <div class="col-xs-6" style="cursor: pointer;" ng-click="enterEugene()">
-            <img src="images/logo-Eugene.png" class="shadowBox hover img-rounded pull-left" />
+  <div class="jumbotron clearfix">
+        <div class="col-xs-7 shadowBox " >
+            <img src="images/clothologo.png" class="float-left hover img-rounded pull-left" style="width: 184px;height: 240px;" />
+            <div class="col-xs-7" style="padding-left: 15px;">
+              <h2>Learning Clotho</h2>
 
+              <p>An introduction to the basics of DNA and genetic design</p>
+              <button class="btn btn-lg btn-primary" ng-click="enterClotho()">Get Started</button>
+
+            </div>
         </div>
-        <div class="col-xs-6 img-rounded" style="cursor: pointer;" ng-click="enterRaven()">
-            <img src="images/logo-Raven.png" class="shadowBox hover img-rounded pull-left" />
+        <div class="col-xs-5 " >
+
+            <img src="images/clothocadfiles/button_download.png" style="cursor: pointer;margin-top: 15px;margin-left: 20px;" ng-click="downloadClotho()" />
+            <br>
+            <br>
+            <img src="images/clothocadfiles/button_browse.png" style="cursor: pointer;margin-top: 15px;margin-left: 20px;" ng-click="browseApps()" />
         </div>
+    </div>
+
+    <div id="sponsors">
+        <a href="http://www.autodesk.com/" ><img style="height: 40px" src="images/sponsors/autodesk.png"/></a>
+        <a href="http://qb3.org/"><img style="height: 40px" src="images/sponsors/backup/qb3.gif"/></a>
+        <a href="http://www.quintarabio.com/"><img style="height: 40px" src="images/sponsors/quintara.png"/></a>
+        <a href="http://www.synberc.org/"><img style="height: 40px" src="images/sponsors/synberc.png"/></a>
+        <a href="http://www.nsf.gov/"><img style="height: 40px" src="images/sponsors/nsf_logo.png"/></a>
+        <span class="stretch"></span>
     </div>
 </div>
+

@@ -1,9 +1,4 @@
 {
-  "id" : "org.clothocad.trails.LearningClotho",
-  "schema" : "org.clothocad.model.Trail",
-  "name" : "Learning Clotho",
-  "description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
-  "icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
   "about" : {
     "help" : "Welcome to the Clotho Intro Trail. Get started to learn the Basics of DNA and how to use Clotho to automate your synthetic biology workflow.",
     "contents" : [ {
@@ -11,7 +6,6 @@
       "params" : "<p>Get a brief overview of DNA structure and manipulation. Through a focus on reverse complementation, learn how to use Clotho to perform basic sequence manipulation, and automate your synthetic biology workflow.</p><p>This course is comprehensible by anyone with a basic understanding of Biology, but is most translational for those in a synthetic biology wet-lab, or looking to gain a greater understanding of automated genetic engineering.</p>"
     } ]
   },
-  "instructors" : [ "clotho.developer.jcanderson", "clotho.developer.maxbates" ],
   "contents" : [ {
     "chapter" : "Introducing Clotho",
     "description" : "Introduce concepts of DNA and basic sequence manipulation, and learn how to use Clotho to automate those manipulations",
@@ -75,9 +69,9 @@
         "type" : "text",
         "params" : "<p>Clotho can automate several common tasks, such as reverse complementing a sequence. While you can use a UI for many of these functions, they can also be run programmatically (learn how in the next section).</p>"
       }, {
-        "type" : "tool",
+        "type" : "view",
         "params" : {
-          "name" : "revcomp"
+          "id" : "tool.revcomp"
         }
       }, {
         "type" : "quizQuestion",
@@ -169,9 +163,9 @@
         "type" : "text",
         "params" : "Select an Enzyme from the tool below to see where it will cut the sequence. Cut marks are denoted by arrows, and the recognition site is colored in."
       }, {
-        "type" : "tool",
+        "type" : "view",
         "params" : {
-          "name" : "digestCuts"
+          "id" : "tool.digestCuts"
         }
       } ]
     }, {
@@ -193,9 +187,9 @@
         "type" : "template",
         "params" : "partials/trails/clotho-intro/Ligation.html"
       }, {
-        "type" : "tool",
+        "type" : "view",
         "params" : {
-          "name" : "ligation"
+          "id" : "tool.ligation"
         }
       } ]
     }, {
@@ -211,11 +205,17 @@
         "type" : "text",
         "params" : "<p>The tool below includes a few sets of primers and backbones. You can see the alignment of the primers, and the DNA fragment that results after PCR. Notice that some will copy the inner fragment (normal PCR), and others the outer fragment (EIPCR), depending on the orientation of the primers.</p><p>Try editing the primers or sequence yourself!</p>"
       }, {
-        "type" : "tool",
+        "type" : "view",
         "params" : {
-          "name" : "pcr"
+          "id" : "tool.pcr"
         }
       } ]
-    } ] 
-  } ]
+    } ]
+  } ],
+  "description" : "Learn how Clotho can simplify and automate your genetic engineering workflows.",
+  "icon" : "partials/trails/clotho-intro/assets/intro_icon.jpg",
+  "instructors" : [ "clotho.developer.jcanderson", "clotho.developer.maxbates" ],
+  "name" : "Learning Clotho",
+  "schema" : "org.clothocad.model.Trail",
+  "id" : "org.clothocad.trails.LearningClotho"
 }

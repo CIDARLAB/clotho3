@@ -136,7 +136,7 @@ angular.module('clotho.core').service('clothoLocalStorage',
 				try {
 					refStorage.setItem(prefix + key, value);
 				} catch (err) {
-					Debugger.error('couldnt save ' + key, err);
+					Debugger.warn('couldnt save ' + key, err);
 				}
 				return true;
 			};

@@ -22,16 +22,18 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.model;
 
-import org.clothocad.core.persistence.annotations.Reference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 /**
@@ -50,7 +52,7 @@ public class Collection extends ObjBase {
         super(collectionName);
         this.description = description;
         this.author = myauthor;
-        this.items = new ArrayList<ObjBase>();
+        this.items = new HashMap<ObjBase,Object>();
     }
 
     /**Constructor for a transient Collection.  Transient collections
@@ -63,7 +65,7 @@ public class Collection extends ObjBase {
     public Collection() {
         super("Results");
         description = "Transient Collection";
-        items = new ArrayList<ObjBase>();
+        items = new HashMap<ObjBase,Object>();
     }
 
 
@@ -73,12 +75,13 @@ public class Collection extends ObjBase {
      * @param dropObject is the object being dropped
      * @return is true if the drop is accepted for the receiver type
      */
-    public boolean addObject(ObjBase dropObject) {
-        if (items.contains(dropObject)) {
+    public boolean addObject(ObjBase dropObject, Object objitem) {
+        
+        if (items.containsKey(dropObject)) {
             return false;
         }
 
-        AddAnyItem(dropObject);
+        AddAnyItem(dropObject,objitem);
         System.out.println("****Collection added an object " + dropObject.getName());
         return true;
     }
@@ -90,7 +93,7 @@ public class Collection extends ObjBase {
      * @param item = the item you want to remove
      */
     public boolean removeItem(ObjBase item) {
-        if (!items.contains(item)){
+        if (!items.containsKey(item)){
             return false;
         }
         items.remove(item);
@@ -106,12 +109,19 @@ public class Collection extends ObjBase {
      */
     public List<ObjBase> getAll() {
         List<ObjBase> out = new ArrayList<ObjBase>();
-        for (ObjBase obj : items) {
-            if (obj == null) {
+        for(Map.Entry<ObjBase, Object> entry: items.entrySet()){
+            if (entry.getKey() == null) {
+                continue;
+            }
+            out.add(entry.getKey());
+        }
+           
+        /*for (ObjBase obj : items) {
+            if (entry.getKey() == null) {
                 continue;
             }
             out.add(obj);
-        }
+        }*/
         return out;
     }
 
@@ -154,9 +164,11 @@ public class Collection extends ObjBase {
      */
     public <T extends ObjBase> Set<UUID> getAllLinksOf(Class<T> type) {
         HashSet out = new HashSet<UUID>();
-        for (ObjBase item : items){
-            if (type.isInstance(item)) {
-                out.add(item.getId());
+        for(Map.Entry<ObjBase, Object> entry: items.entrySet())
+        {
+            if(type.isInstance(entry.getKey()))
+            {
+                out.add(entry.getKey().getId());
             }
         }
         return out;
@@ -168,12 +180,18 @@ public class Collection extends ObjBase {
      * @return a List of ObjBase of that type
      */
     public <T extends ObjBase> List<T> getAll(Class<T> type) {
-        ArrayList out = new ArrayList<T>();
-        for (ObjBase item : items){
+        List out = new ArrayList<T>();
+        for(Map.Entry<ObjBase, Object> entry: items.entrySet())
+        {
+                if (type.isInstance(entry.getKey())) {
+                out.add(entry.getKey());
+            }
+        }
+        /*for (ObjBase item : items){
             if (type.isInstance(item)) {
                 out.add(item);
             }
-        }
+        }*/
         return out;
     }
 
@@ -218,9 +236,9 @@ public class Collection extends ObjBase {
         return out;
     }*/
 
-    private void AddAnyItem(ObjBase item) {
-        if (!items.contains(item)){
-            items.add(item);
+    private void AddAnyItem(ObjBase item, Object obj) {
+        if (!items.containsKey(item)){
+            items.put(item, obj);
         }
     }
 
@@ -245,7 +263,8 @@ public class Collection extends ObjBase {
     @Reference
     private Person author;
     @ReferenceCollection
-    private List<ObjBase> items;
+    //private List<ObjBase> items;
+    private Map<ObjBase, Object> items;
             
    /* public static class CollectionDatum extends ObjBaseDatum {
 

@@ -1,0 +1,13 @@
+<div class="trail-page">
+  <div class="trail-page-materials"
+       ng-if="page.materials.length">
+    <div ng-repeat="material in page.materials"
+         trail-material="material"></div>
+  </div>
+  <div ng-repeat="comp in pageComponents">
+    <div trail-page-component="comp"></div>
+  </div>
+  <div ng-if="!page" class="alert alert-warning">
+    <p>This section of the trail does not exist - please select another</p>
+  </div>
+</div>

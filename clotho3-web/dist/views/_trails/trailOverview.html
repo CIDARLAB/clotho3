@@ -42,22 +42,6 @@
         </div>
       </div>
 
-      <!-- Sharing -->
-      <div class="trail-section" ng-controller="SharingCtrl">
-        <div class="trail-section-heading">
-          <h3 class="trail-section-title">Share</h3>
-        </div>
-        <div class="trail-section-content" style="text-align: center;">
-          <div style="display: inline-block; margin: 0 auto;">
-            <img ng-repeat="site in social"
-                 ng-src="{{site.icon}}"
-                 ng-click="share(site, true)"
-                 ng-style="{'width' : '36px',
-                          'padding-right' : ($last ? '0' : '5px') }"
-                 class="hoverFade"/>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -72,5 +56,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Sharing -->
+<!--   <div class="trail-section" ng-controller="SharingCtrl">
+    <div class="trail-section-heading">
+      <h3 class="trail-section-title">Share</h3>
+    </div>
+    <div class="trail-section-content" style="text-align: center;">
+      <div style="display: inline-block; margin: 0 auto;">
+        <img ng-repeat="site in social"
+             ng-src="{{site.icon}}"
+             ng-click="share(site, true)"
+             ng-style="{'width' : '36px',
+                      'padding-right' : ($last ? '0' : '5px') }"
+             class="hoverFade"/>
+      </div>
+    </div>
+  </div> -->
 
 </div>

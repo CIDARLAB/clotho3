@@ -8,9 +8,9 @@ public enum Channel {
     recent,  //Return N most recently used sharables
     submit, //Run this sloppy or concrete command
     clear, //Replace the scriptengine behind mind with a fresh version
-    login, //Log me into Clotho on this client with this login/password
-    logout, //Log me out of Clotho
-    changePassword, //Change my password to this new value
+    createUser, //Create a new user account for me.
+    linkPerson, //Link an existing? or new Person to an existing Person Object
+    getAssociatedPerson, //Get a list of all Person Objects associated with that primaryEmail.
     learn, //associate this String with this execution statement
     like,
     dislike,
@@ -31,6 +31,8 @@ public enum Channel {
     destroy, //Delete a sharable with this uuid
     query, //Find all Sharables that satisfy this formally-expressed constraint
     
+    convert, //Convert one data object from one type to another. 
+    
     getAll,
     createAll,
     destroyAll,
@@ -43,6 +45,15 @@ public enum Channel {
     run, //run this Function
     listen, //Listen for events, and in response do this execution statement
     unlisten, //Remove a listener for an event
+    
+//SECURITY
+    grant,
+    grantAll,
+    login, //Log me into Clotho on this client with this login/password
+    logout, //Log me out of Clotho
+    changePassword, //Change my password to this new value
+    createAccount,
+    updatePassword, //Update the userPassword
     
 //OTHER
     reloadModels, //convenience function for reloading test data

@@ -3,18 +3,14 @@ angular.module('clotho.clothoDirectives')
  * @name clotho-show
  *
  * @usage <div clotho-show="VIEW_ID"></div>
+ *
+ * todo - declarative passage of params from scope
  */
 .directive('clothoShow', function ($q, $http, $timeout, $browser, $rootScope, $compile, Clotho, PubSub, ClothoUtils) {
 
 	var generateWidgetUrl = ClothoUtils.generateWidgetUrl;
 
-	//client polyfill for Clotho.get() to retrieve a view for testing
-	var clientGetView = function(viewId) {
-		return $http.get(generateWidgetUrl(viewId) + '/model.json')
-		.then(function(data){
-			return data.data
-		});
-	};
+  var reg_image = /([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/i;
 
 	return {
 		terminal: true,
@@ -28,12 +24,8 @@ angular.module('clotho.clothoDirectives')
 		},
 		link: function linkFunction (scope, element, attrs) {
 
-			console.log('directive linked');
-
 			scope.$watch('id', function (newval, oldval) {
 				if (!!newval) {
-
-					console.log(newval);
 
 					//todo - basic check to make sure proper form
 
@@ -41,17 +33,19 @@ angular.module('clotho.clothoDirectives')
 					element.addClass('clothoWidget');
 
 					//retrieve view
-					$q.when(clientGetView(scope.id))              //testing
-						//Clotho.get(scope.id)                      //when server handles
+					$q.when(ClothoUtils.getViewInfo(scope.id))
 						.then(function(view){
+
+              console.log(view);
+
 							return ClothoUtils.downloadViewDependencies(view);
 						})
 						.then(function (view) {
 
 							//configure dictionary
-							view.dictionary = angular.extend({}, view.dictionary, view.importedViews);
-							view.dictionary.id = view.id;
+							view.dictionary = angular.extend({}, view.dictionary, view.importedViews, {id : view.id});
 
+              //todo - move this into angular specific section along with controller
 							if (view.bootstrap) {
 								//creating custom module so we can set some stuff up without taking the module creation out of the user's control
 								var customModuleName = view.id + '-additions';
@@ -138,10 +132,16 @@ angular.module('clotho.clothoDirectives')
 							//if don't pass bootstrap clause, handle appropriately
 							else {
 
+                //only works if not bootstrapping a new app - need to declare there as well if are
+                scope.prefixUrl = function (url, specifyView) {
+                  return generateWidgetUrl(specifyView ? specifyView : view.id, url)
+                };
+
 								//this is what will be inserted
 								var htmlString;
 
 								//if pass index.html, include template
+                //todo - remove lodash dep
 								if (_.indexOf(view.files, 'index.html') >= 0) {
 
 									htmlString = '<div ';
@@ -158,8 +158,6 @@ angular.module('clotho.clothoDirectives')
 
 									//todo - other types?
 
-									var reg_image = /([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/i;
-
 									//if image, create img tag
 									if (reg_image.test(view.files[0])) {
 										htmlString = '<img src="' +
@@ -174,10 +172,8 @@ angular.module('clotho.clothoDirectives')
 							}
 
 
-
-
 							//CALLBACK
-							//can also use run clause of module, but not passed the element
+							//can also use run clause of module when don't need to communicate back to parent app, but not passed the element (use $rootElement instead if angular app)
 							$timeout(function() {
 								angular.isFunction(scope.callback) && scope.callback(element);
 								PubSub.trigger('clothoShow:' + scope.id, [scope.id, element, view])

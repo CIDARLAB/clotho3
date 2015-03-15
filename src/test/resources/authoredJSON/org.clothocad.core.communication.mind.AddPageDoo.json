@@ -1,16 +1,28 @@
 {
   "schema" : "org.clothocad.core.schema.BuiltInSchema",
-  "superClass" : "org.clothocad.core.datums.Doo",
-  "binaryName" : "org.clothocad.core.communication.mind.AddPageDoo",
-  "c" : "org.clothocad.core.communication.mind.AddPageDoo",
+  "id" : "org.clothocad.core.communication.mind.AddPageDoo",
   "name" : "AddPageDoo",
-  "language" : "JAVA",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
   "fields" : [ {
-    "javaType" : "org.clothocad.core.communication.mind.PageMode",
     "name" : "mode",
     "type" : "object",
-    "reference" : false
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
-  "_id" : "{new=false}",
-  "id" : "org.clothocad.core.communication.mind.AddPageDoo"
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.communication.mind.AddPageDoo",
+  "binaryName" : "org.clothocad.core.communication.mind.AddPageDoo"
 }

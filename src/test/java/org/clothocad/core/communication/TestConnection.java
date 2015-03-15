@@ -20,6 +20,7 @@ public class TestConnection extends ClientConnection{
     }
 
     public List<Message> messages = new ArrayList<>();
+    public List<Channel> deregisters = new ArrayList<>();
     public Map<String, Object> messageDataByChannelAndId= new HashMap<>();
     
     @Override
@@ -27,5 +28,11 @@ public class TestConnection extends ClientConnection{
         messages.add(msg);
         messageDataByChannelAndId.put(msg.getChannel().name() + msg.getRequestId(), msg.getData());
     }
+
+    @Override
+    public void deregister(Channel channel, String requestId) {
+        deregisters.add(channel);
+    }
+    
     
 }

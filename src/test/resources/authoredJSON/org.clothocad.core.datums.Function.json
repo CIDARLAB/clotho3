@@ -30,12 +30,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "args",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : true,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -50,12 +50,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "args",
-    "type" : "array",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

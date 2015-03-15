@@ -79,10 +79,15 @@ angular.module('clotho.trails').directive('trailPageComponent', function ($compi
 					};
 
 					//todo - allow passage of attrs
+          //DEPRECATED
 					pageComponentTypes.tool = function loadTool(params) {
 						var template = '<div clotho-tool="' + params.name + '"></div>';
 						return $q.when(template);
 					};
+
+          pageComponentTypes.view = function (params) {
+            return $q.when('<clotho-show id="'+params.id+'"></clotho-show>');
+          };
 
 					pageComponentTypes.error = function loadError(error) {
 						return $q.when('<h4>Something didn&apos;t work - that type of Page wasn&apos;t recognized</h4>' +

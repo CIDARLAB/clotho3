@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "nickName",
+    "name" : "snailMailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -40,17 +40,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "snailMailAddress",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "surName",
+    "name" : "registryName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -70,7 +60,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "givenName",
+    "name" : "surName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -80,7 +70,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "registryName",
+    "name" : "nickName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "givenName",
     "type" : "string",
     "subtype" : null,
     "example" : null,

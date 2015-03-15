@@ -13,7 +13,7 @@
       </form-field>
 
       <form-field name="Schema" horizontal="formHorizontal">
-        <select id="sharableSchema" ng-model="sharable.schema" ng-options="s.id as s.name for s in clothoSchemas | orderBy:'name'"></select>
+        <select id="sharableSchema" ng-model="sharable.schema" ng-options="s.id as (s.name + ' (' + s.id + ')') for s in clothoSchemas | orderBy:'name'"></select>
       </form-field>
 
       <form-field name="ID" horizontal="formHorizontal">
@@ -92,6 +92,18 @@
             </div>
           </div>
         </div>
+        <div class="panel-footer">
+          <div class="form-group clearfix" style="margin-bottom: 0px;">
+            <label class="col-sm-3 control-label">Output Type</label>
+            <div class="col-sm-9">
+              <select ng-model="sharable.outputType"
+                      class="form-control"
+                      ng-required
+                      ng-options="c.id as c.name group by c.category for c in paramTypes | orderBy:'name'">
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="panel panel-default">
@@ -108,7 +120,9 @@
                     ng-required>
           </div>
         </div>
-        <div function-code-drop update-on-read="sharable.code" show-drop="true" show-browser="false"></div>
+        <div function-code-drop
+             update-on-read="sharable.code"
+             show-drop="true"></div>
       </div>
 
     </fieldset>
@@ -120,7 +134,7 @@
         <div class="btn-group pull-right" style="margin-top: -4px;">
           <button class="btn btn-default btn-sm"
                   ng-click="runAllTests()"
-                  ng-disabled="form.$invalid || sharable.tests.length < 1">
+                  ng-disabled="form.$invalid || !sharable.tests.length">
             <span class="glyphicon glyphicon-play"></span> Run All
           </button>
           <button class="btn btn-default btn-sm"
@@ -165,7 +179,7 @@
                   </form-field>
                 </div>
                 <div ng-if="!simpleTypes[param.type]">
-                  <!-- cannot wrap with form-field while using typeahead becuase creates sibling element -->
+                  <!-- cannot wrap with form-field while using typeahead because creates sibling element -->
                   <input type="text"
                          id="functionTestArg{{ $index }}"
                          class="form-control"

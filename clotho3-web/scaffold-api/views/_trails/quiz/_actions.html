@@ -1,0 +1,35 @@
+<div>
+  <div class="btn-group" ng-hide="$meta.submitted">
+    <button class="btn btn-default"
+            ng-disabled="inputEmpty()"
+            ng-click="grade()">
+      Grade Quiz
+    </button>
+    <!--<button class="btn btn-default"
+            ng-if="quiz.options.checkAnswer"
+            ng-disabled="inputEmpty()"
+            ng-click="checkAnswer()">
+      Check Answer
+    </button>-->
+    <button class="btn btn-default"
+            ng-if="quizOptions.showAnswer"
+            ng-click="showAnswer()">
+      Show Answer
+    </button>
+  </div>
+  <div class="btn-group" ng-show="$meta.submitted">
+    <button class="btn btn-danger"
+            ng-if="quizOptions.allowMultiple"
+            ng-show="$meta.response === false"
+            ng-click="reset()">
+      Try Again
+    </button>
+    <button class="btn btn-default"
+            ng-if="quizOptions.allowRetry"
+            ng-class="{'btn-success' : $meta.response === true,
+                       'btn-danger' : $meta.response === false}"
+            ng-click="retry()">
+      New Question
+    </button>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+{
+"id" : "org.clothocad.model.RBS.UTR24",
+"name" : "UTR24",
+"schema" : "org.clothocad.model.RBS",
+"utr5" : "gggcgaattgggtaccgggccccccctcgaggtcgacggtatcgataagcttgatatcgaattcctgcagcccgggGAGGAGAGAAATTatg",
+"nativeHost" : "E. coli",
+"weblink" : "http://onlinelibrary.wiley.com/doi/10.1002/bit.20912/abstract",
+"isIntergenic" : false
+}

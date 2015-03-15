@@ -4,9 +4,12 @@
  */
 package org.clothocad.core.execution;
 
+import com.google.inject.Injector;
 import javax.script.ScriptException;
+import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.datums.util.Language;
 import org.clothocad.core.persistence.Persistor;
+import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +24,8 @@ public class ScriptEngineTest {
     MetaEngine engine;
     
     public ScriptAPI genAPI(){
-        return new ScriptAPI(null, TestUtils.getDefaultTestInjector().getInstance(Persistor.class), null, null, null);
+        Injector injector = TestUtils.getDefaultTestInjector();
+        return new ScriptAPI(new ServerSideAPI(null, injector.getInstance(Persistor.class), null,injector.getInstance(ClothoRealm.class),  null));
     }
     
     @Before

@@ -16,16 +16,13 @@ import java.util.Random;
 import org.clothocad.model.FreeForm;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.util.TestUtils;
+import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.model.BasicPart;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,35 +30,18 @@ import static org.junit.Assert.*;
  *
  * @author spaige
  */
-public class PersistorTest {
+public class PersistorTest extends AuthorizedShiroTest{
 
     public PersistorTest() {
+        persistor = injector.getInstance(Persistor.class);
     }
     private static Persistor persistor;
-
-    @BeforeClass
-    public static void setUpClass() {
-        persistor = TestUtils.getDefaultTestInjector().getInstance(Persistor.class);
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
 
     @Before
     public void setUp() {
         persistor.deleteAll();
     }
-
-    @After
-    public void tearDown() {
-    }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
+    
     @Test
     public void testSharedObject() {
 
@@ -220,6 +200,7 @@ public class PersistorTest {
     
     //TODO: verify results are in appropriate style (id instead of _id), (schema instead of ClassName), etc
     
+    //TODO: Bad data in db should not stop queries, etc, from working (non-existent id reference, non-existent schema reference, etc)
     
     public static List<JsonToken> getAllBsonTokens(BsonParser parser) throws IOException{
         List<JsonToken> out = new ArrayList<>();

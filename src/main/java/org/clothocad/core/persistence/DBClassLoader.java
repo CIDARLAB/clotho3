@@ -7,6 +7,7 @@ package org.clothocad.core.persistence;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import javax.persistence.EntityNotFoundException;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
@@ -74,14 +75,16 @@ public class DBClassLoader extends ClassLoader {
     @Override
     public Class<?> findClass(String id) throws ClassNotFoundException{
         ObjectId dbId = new ObjectId(id);
-        Schema s = getPersistor().get(Schema.class, dbId);
-        if (s == null){
+        try {
+            Schema s = getPersistor().get(Schema.class, dbId);
+            byte[] classData = s.getClassData();
+            String className = s.getBinaryName();
+            logger.debug("Loading schema with id {} named {} as {} ...", id, s.getName(), className);
+            return this.defineClass(className, classData, 0, classData.length);
+        }
+        catch (EntityNotFoundException e){
             logger.error("Could not find schema with id {} in database.", id);
             throw new ClassNotFoundException();
         }
-        byte[] classData = s.getClassData();
-        String className = s.getBinaryName();
-        logger.debug("Loading schema with id {} named {} as {} ...", id, s.getName(), className);
-        return this.defineClass(className, classData, 0, classData.length);
     }
 }

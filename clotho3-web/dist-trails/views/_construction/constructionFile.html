@@ -1,0 +1,22 @@
+<div class="construction-file panel panel-default">
+  <div class="cf-heading panel-heading">
+    <span ng-if="!noProcess && file"
+          class="btn btn-sm btn-default pull-right"
+          style="margin-top: -7px"
+          ng-click="process()"
+          ng-disabled="processing || processed || processError"
+          ng-class="{'btn-success' : processed, 'btn-danger' : processError}">
+      Process
+    </span>
+    <h4 class="cf-title panel-title">{{file.name || 'Construction File Simulation'}}</h4>
+  </div>
+
+  <div class="loading" ng-if="!file"></div>
+
+  <div class="panel-body" ng-show="file.description">
+    <p ng-bind="file.description" style="margin-bottom: 0;"></p>
+  </div>
+
+  <div ng-repeat="step in file.steps"
+       construction-step></div>
+</div>

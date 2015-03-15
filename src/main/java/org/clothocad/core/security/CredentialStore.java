@@ -4,18 +4,24 @@
  */
 package org.clothocad.core.security;
 
-import org.apache.shiro.authc.SimpleAccount;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
+import java.util.Map;
+import java.util.Set;
+import org.clothocad.core.datums.ObjectId;
 
 /**
  *
  * @author spaige
  */
 public interface CredentialStore {
-    SimpleAccount getAccount(String username);
     
-    public void saveAccount(String username, SimpleHash hashedPw, ByteSource salt);
-    
+    public ClothoAccount getAccount(String username);
+    public void saveAccount(ClothoAccount account);
+
+    public AuthGroup getGroup(String groupName);        
+    public void saveGroup(AuthGroup authGroup);
+
+    public Map<String, Set<ClothoAction>> getUserPermissions(ObjectId id);
+    public Map<String, Set<ClothoAction>> getGroupPermissions(ObjectId id);
+
     public void deleteAllCredentials();
 }
