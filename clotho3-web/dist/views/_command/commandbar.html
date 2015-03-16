@@ -34,6 +34,7 @@
     <button class="btn btn-default" ng-click="goHome()"><i class="glyphicon glyphicon-home"></i></button>
     <button class="btn btn-default" ng-click="goBrowser()"><i class="glyphicon glyphicon-folder-open"></i></button>
     <button class="btn btn-default" ng-click="goEditor()"><i class="glyphicon glyphicon-edit"></i></button>
+    <button class="btn btn-default" ng-if="$root.interfaceConfig.loginVisible !== false" ng-click="toggleLogin()" alt="Clotho Login"><i class="glyphicon glyphicon-user"></i>
     </button>
     <a class="btn btn-default dropdown-toggle"
        ng-click="showHelpDropdown = !showHelpDropdown"
