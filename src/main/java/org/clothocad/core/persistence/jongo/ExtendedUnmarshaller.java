@@ -5,7 +5,6 @@
 package org.clothocad.core.persistence.jongo;
 
 import com.fasterxml.jackson.databind.InjectableValues;
-import com.mongodb.DBObject;
 import org.jongo.bson.BsonDocument;
 import org.jongo.marshall.Unmarshaller;
 

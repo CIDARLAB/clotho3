@@ -22,7 +22,7 @@ import org.clothocad.core.util.BasicObjBase;
  *
  * @author spaige
  */
-public class InstantiatedReferencesCache extends InjectableValues.Std{
+public class InstantiatedReferencesProxyingCache extends InjectableValues.Std{
     
     List<ObjBase> undone = new ArrayList<>();
     
