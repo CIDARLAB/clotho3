@@ -30,8 +30,7 @@ public class ServerAPITest extends AbstractServerAPITest {
     @Test
     public void get() {
         Map<String, Object> result = api.get(ids.get(2));
-        new ObjectId(((List)result.get("composition")).get(0).toString());
-
+        assertTrue(result.containsKey("assemblies"));
     }
 
     @Test
