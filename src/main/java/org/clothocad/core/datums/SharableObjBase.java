@@ -7,6 +7,7 @@ package org.clothocad.core.datums;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.model.Person;
 
 /**
@@ -26,7 +27,7 @@ public abstract class SharableObjBase extends ObjBase implements Sharable {
         this.description = description;
     }
     
-    @Getter @Setter
+    @Getter @Setter @Reference
     private Person author;
 
     @Getter @Setter
