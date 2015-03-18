@@ -24,6 +24,10 @@ public class ClothoModule extends AbstractModule {
         this.config = config == null ?
             ConfigOption.getDefaultConfig() : config;
     }
+    
+    public ClothoModule() {
+        this(null);
+    }
 
     @Override
     protected void configure() {

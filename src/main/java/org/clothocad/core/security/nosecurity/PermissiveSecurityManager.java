@@ -2,18 +2,24 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.util;
+package org.clothocad.core.security.nosecurity;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.clothocad.core.util.ClothoAuthoringEnvironment.AuthoringSubjectFactory;
+import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
+import org.apache.shiro.web.subject.WebSubjectContext;
 
 /**
  *
@@ -88,5 +94,32 @@ public class PermissiveSecurityManager extends DefaultWebSecurityManager {
     public boolean isPermittedAll(PrincipalCollection principals, String... permissions) {
         return true;
     }
+    public static class AuthoringSubjectFactory extends DefaultWebSubjectFactory {
 
+        @Override
+        public Subject createSubject(SubjectContext context) {
+            if (!(context instanceof WebSubjectContext)) {
+                org.apache.shiro.mgt.SecurityManager securityManager = context.resolveSecurityManager();
+                Session session = context.resolveSession();
+                boolean sessionCreationEnabled = context.isSessionCreationEnabled();
+                PrincipalCollection principals = context.resolvePrincipals();
+                boolean authenticated = context.resolveAuthenticated();
+                String host = context.resolveHost();
+
+                return new LoggedInSubject(principals, authenticated, host, session, sessionCreationEnabled, securityManager);
+            }
+            WebSubjectContext wsc = (WebSubjectContext) context;
+            org.apache.shiro.mgt.SecurityManager securityManager = wsc.resolveSecurityManager();
+            Session session = wsc.resolveSession();
+            boolean sessionEnabled = wsc.isSessionCreationEnabled();
+            PrincipalCollection principals = wsc.resolvePrincipals();
+            boolean authenticated = wsc.resolveAuthenticated();
+            String host = wsc.resolveHost();
+            ServletRequest request = wsc.resolveServletRequest();
+            ServletResponse response = wsc.resolveServletResponse();
+
+            return new LoggedInWebSubject(principals, authenticated, host, session, sessionEnabled,
+                    request, response, securityManager);
+        }
+    }
 }

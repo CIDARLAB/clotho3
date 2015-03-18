@@ -1,5 +1,6 @@
 package org.clothocad.core.util;
 
+import org.clothocad.core.security.nosecurity.NoSecurityModule;
 import static org.clothocad.core.util.ClothoTestEnvironment.main;
 
 import com.google.inject.Guice;
@@ -40,7 +41,7 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
                 override.setProperty("dbname", "authoringenv");
                 return Guice.createInjector(
                     new ClothoAuthoringModule(override),
-                    new AuthoringSecurityModule(),
+                    new NoSecurityModule(),
                     new JongoModule()
                 );
             }
@@ -83,32 +84,5 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
         main(context.getArguments());
     }
     
-    public static class AuthoringSubjectFactory extends DefaultWebSubjectFactory {
 
-        @Override
-        public Subject createSubject(SubjectContext context) {
-            if (!(context instanceof WebSubjectContext)) {
-                SecurityManager securityManager = context.resolveSecurityManager();
-                Session session = context.resolveSession();
-                boolean sessionCreationEnabled = context.isSessionCreationEnabled();
-                PrincipalCollection principals = context.resolvePrincipals();
-                boolean authenticated = context.resolveAuthenticated();
-                String host = context.resolveHost();
-
-                return new LoggedInSubject(principals, authenticated, host, session, sessionCreationEnabled, securityManager);
-            }
-            WebSubjectContext wsc = (WebSubjectContext) context;
-            SecurityManager securityManager = wsc.resolveSecurityManager();
-            Session session = wsc.resolveSession();
-            boolean sessionEnabled = wsc.isSessionCreationEnabled();
-            PrincipalCollection principals = wsc.resolvePrincipals();
-            boolean authenticated = wsc.resolveAuthenticated();
-            String host = wsc.resolveHost();
-            ServletRequest request = wsc.resolveServletRequest();
-            ServletResponse response = wsc.resolveServletResponse();
-
-            return new LoggedInWebSubject(principals, authenticated, host, session, sessionEnabled,
-                    request, response, securityManager);
-        }
-    }
 }

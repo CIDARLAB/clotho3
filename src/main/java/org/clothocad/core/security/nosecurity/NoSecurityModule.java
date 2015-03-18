@@ -2,10 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.util;
+package org.clothocad.core.security.nosecurity;
 
+import org.clothocad.core.security.nosecurity.PermissiveSecurityManager;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import java.util.Collection;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.ConfigurationException;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.clothocad.core.security.SecurityModule;
@@ -15,13 +17,13 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
  *
  * @author spaige
  */
-public class AuthoringSecurityModule extends SecurityModule {
+public class NoSecurityModule extends SecurityModule {
 
-    public AuthoringSecurityModule() {
+    public NoSecurityModule() {
         super();
     }
 
-    public AuthoringSecurityModule(ServletContextHandler servletContextHandler) {
+    public NoSecurityModule(ServletContextHandler servletContextHandler) {
         super(servletContextHandler);
     }
 

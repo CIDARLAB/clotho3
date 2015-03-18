@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.util;
+package org.clothocad.core.security.nosecurity;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
