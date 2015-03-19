@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.jongo.bson.Bson;
 import org.jongo.marshall.MarshallingException;
 import org.jongo.query.QueryFactory;
@@ -55,7 +56,8 @@ public class InstantiatedReferencesQueryingCache extends InjectableValues.Std{
         if (type.isCollectionLikeType() | type.isArrayType()){
             type = type.getContentType();
         }
-        if (ObjBase.class.isAssignableFrom(type.getRawClass())){                
+        //checking annotation catches properties with interface types
+        if (ObjBase.class.isAssignableFrom(type.getRawClass()) || forProperty.getMember().getAnnotated().isAnnotationPresent(Reference.class)){                
             try {
                 return super.findInjectableValue(valueId, ctxt, forProperty, beanInstance);
             } catch (IllegalArgumentException e){
