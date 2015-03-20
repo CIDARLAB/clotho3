@@ -73,7 +73,7 @@ public class ClothoWebSocketAPI {
            }
        }
        if(ws.gotMessage(uri)){
-           System.out.println(ws.getMessage(uri));
+           System.out.println("DATA RECEIVED:" + ws.getMessage(uri).getData());
            return new HashMap<String, Object>();
        }else{
            //message not received
