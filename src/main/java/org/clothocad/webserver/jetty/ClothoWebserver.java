@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.clothocad.core.communication.Router;
 
 import org.clothocad.core.communication.ws.ClothoWebSocket;
+import org.clothocad.core.communication.ws.ClothoWebSocketServer;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Server;
@@ -71,7 +72,7 @@ public class ClothoWebserver {
             @Override
             public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
 //                return new ClothoWebSocket(request.getSession().getId(), router); 
-                  return ClothoWebSocket.getInstance(request.getSession().getId(), router);
+                  return ClothoWebSocketServer.getInstance(request.getSession().getId(), router);
             }
             
         };

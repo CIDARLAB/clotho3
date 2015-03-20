@@ -1,27 +1,25 @@
 package org.clothocad.core.communication.ws;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.util.JSON;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketClient;
-import org.eclipse.jetty.websocket.WebSocketClientFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 @Slf4j
 public class ClothoWebSocket
@@ -31,20 +29,7 @@ public class ClothoWebSocket
     private WebSocket.Connection connection;
     private Subject subject;
     private final Router router;
-    private WebSocket.Connection serverConnection;
-    private static HashMap<String, Object> serverResponse;
-    
-    private static boolean gotMessage = false;
-    
-    private static int YESRESPONSE = 0;
-    private static int NORESPONSE = 1;
-    private static int REQUEST = 3;
-    
-    private String stringResponse = null;
-    private HashMap<WebSocket.Connection,String > serverConnections;
-    private HashMap<String, Integer> serverResponses;
-    
-    
+
     private class CallRouter implements Callable {
 
         private final Message message;
@@ -61,23 +46,12 @@ public class ClothoWebSocket
             return null;
         }
     }
-    private static ClothoWebSocket clothoWebSocket; //by Jin
-    
-    private ClothoWebSocket(String id, Router router) { //changed to private
+
+    public ClothoWebSocket(String id, Router router) {
         super(id);
         this.router = router;
-        
     }
-    public static ClothoWebSocket getInstance(){
-        return clothoWebSocket;
-    }
-    //method to get the instance of clothowebsocket
-    public static ClothoWebSocket getInstance(String id, Router router){
-        if(clothoWebSocket == null){
-            clothoWebSocket = new ClothoWebSocket(id, router);
-        }
-        return clothoWebSocket;
-    }
+
     @Override
     public void onClose(int closeCode, String message) {
     }
@@ -87,75 +61,20 @@ public class ClothoWebSocket
         try {
             String messageString = JSON.serializeForExternal(msg);
             connection.sendMessage(messageString);
-            if(serverConnection != null){
-                serverConnection.sendMessage(messageString);
-            }
-            log.trace("sent: {}", messageString);
+            log.trace("Sent: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
         }
-    }
-    private WebSocket.Connection findConnection(String connectionID){
-        WebSocket.Connection con = null;
-        for(Map.Entry<WebSocket.Connection, String> entry: serverConnections.entrySet()){
-            if(entry.getValue() == connectionID){
-                con = entry.getKey();
-            }
-        }
-        return con;
-    }
-    
-    
-    public void serverSend(String connectionID, Message msg){
-        try {
-            String messageString = JSON.serializeForExternal(msg);
-            WebSocket.Connection conn = findConnection(connectionID);
-            conn.sendMessage(messageString);
-        } catch (IOException ex) {
-            log.error("Cannot send message", ex);
-        }
-        
-
     }
 
     @Override
     public void onMessage(String messageString) {
-        log.trace("Websocket #{} recieved message {}", this.getId(), messageString);
+        log.trace("WebSocket #{} received message {}", this.getId(), messageString);
         try {
-            if(messageString.contains("Identification")){
-                WebSocket.Connection con = null;
-                for(Map.Entry<WebSocket.Connection, String> entry: serverConnections.entrySet()){
-                    if(entry.getValue() == "request"){
-                        con = entry.getKey();
-                    }
-                }
-                serverConnections.put(con ,messageString.split(" ")[2]);
-                System.out.println("ID is" + this.getId().toString());
-                con.sendMessage(this.getId().toString());
-            }else if(messageString.contains("WebSocket")){
-                System.out.println("The id is received");
-                this.stringResponse = messageString.split(" ")[2];
-                gotMessage = true;
-            
-            }else{
-
-                Message message = JSON.mapper.readValue(messageString, Message.class);
-                System.out.println("The messageString: " + messageString);
-
-                if(message.getOptions() == null && messageString.contains("options")){
-                    //server response should go to the clothowebsocket
-                    System.out.println("Server received a response, not a message from the client");
-                    //should send back to the clothoconnection, not the clientConnection
-                    serverResponse = (HashMap<String, Object>)message.getData();
-                    gotMessage = true;
-
-                }else{  
-                    System.out.println("Server received a query");
-                    subject.execute(new CallRouter(this, message));
-                }
-            }
+            Message message = JSON.mapper.readValue(messageString, Message.class);
+            subject.execute(new CallRouter(this, message));
         } catch (JsonParseException ex) {
-            log.error("Websocket #{} recived malformed message: {}", this.getId(), messageString);
+            log.error("WebSocket #{} received malformed message: {}", this.getId(), messageString);
         } catch (JsonMappingException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
@@ -171,22 +90,9 @@ public class ClothoWebSocket
     @Override
     public void onOpen(Connection connection) {
         log.debug("New connection opened. Connection id is {}.", this.getId());
-        // before storing, send a message back to see what kind of connection it is
-        
-        this.connection = connection;//This needs to be in the else
-        if(this.connection != null){
-            try {
-                connection.sendMessage("Identification request" + this.getId());
-                while(!gotMessage){    
-                }
-                serverConnections.put(connection, this.stringResponse);
-            } catch (IOException ex) {
-                Logger.getLogger(ClothoWebSocket.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        //System.out.println("The connection this is made to is:" + serverConnections);
-        //Close out after 1 hour idle time
-        connection.setMaxIdleTime(3600000);
+        this.connection = connection;
+        // Close WebSocket after 1 week ofidle time
+        connection.setMaxIdleTime(7 * 24 * 3600000);
 
         subject = SecurityUtils.getSubject();
 
@@ -197,36 +103,9 @@ public class ClothoWebSocket
         String messageString = String.format("{\"channel\": \"%s\", \"requestId\": \"%s\"}", channel, requestId);
         try {
             connection.sendMessage(messageString);
-            log.trace("sent deregister: {}", messageString);
+            log.trace("Sent deregister: {}", messageString);
         } catch (IOException ex) {
-            log.error("cannot send deregister message:{}", ex.getMessage());
+            log.error("Cannot send deregister message:{}", ex.getMessage());
         }
-    }
-    
-    public static HashMap<String, Object> getServerResponse(){
-        if(gotMessage){
-            return serverResponse;
-        }else{
-            return null;
-        }
-    }
-    public static boolean getGotMessage(){
-        return gotMessage;
-    }
-    
-    public Connection createConnection(String destUri){
-        try{
-            WebSocketClientFactory factory = new WebSocketClientFactory();
-            factory.start();
-            WebSocketClient wsClient = factory.newWebSocketClient();
-            URI uri = new URI(destUri);
-            Future fut = wsClient.open(uri, clothoWebSocket); 
-            serverConnection = (Connection) fut.get(10, TimeUnit.SECONDS);
-            serverConnections.put(serverConnection, "request");
-            return serverConnection;
-        }catch(Throwable t){
-            t.printStackTrace();
-        }
-        return null;
     }
 }

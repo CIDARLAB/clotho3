@@ -191,47 +191,6 @@ public class Persistor{
         return result;
     }
     
-    //would return as the same as getAsJson --> Map<String, Object>
-    public void getFromSocket(String uuid, String rawUri, Router router){
-        //establish websocket connection --> decompose from the uuid
-        
-        System.out.println("The getFromSocket is being called");
-        try{
-              
-            ClothoWebSocket ws = ClothoWebSocket.getInstance();
-            System.out.println("Is ClothoWebsocket open? " + ws.isOpen());
-            System.out.println("The Id of the ClothoWebsocket: " + ws.getId());
-//            WebSocketClientFactory factory = new WebSocketClientFactory();
-//            factory.start();
-//            WebSocketClient wsClient = factory.newWebSocketClient();
-//            
-            String destURI = buildUri(rawUri);
-//            System.out.println(destURI);
-//            URI uri = new URI(destURI);
-//            Future fut = wsClient.open(uri, ws);            
-//            Connection connect = (Connection) fut.get(10, TimeUnit.SECONDS);
-            Connection connect = ws.createConnection(destURI);
-            String getCommand = "{\"channel\":\"get\", \"data\":\""+ uuid + "\"}";
-            System.out.println("Command sent to the websocket: " + getCommand);
-            connect.sendMessage(getCommand);
-            
-        }catch(Throwable t){
-            t.printStackTrace();
-        }
-        
-    }
-    private String buildUri(String rawUri){
-        String output = "wss://";
-        Boolean changePrefix = rawUri.contains("http://") || rawUri.contains("https://");
-        if(changePrefix){
-            int position = rawUri.indexOf("//")+2;
-            output = output.concat(rawUri.substring(position));
-        }else{
-            output = output.concat(rawUri);
-        }
-        output += "/websocket";
-        return output;
-    }
     //XXX: should return set of possible schemas, not child objects
     // then should not be used as currently is in save
     protected Set<ObjBase> getObjBaseSet(ObjBase obj){

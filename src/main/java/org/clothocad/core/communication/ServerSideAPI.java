@@ -53,6 +53,9 @@ import org.clothocad.core.ReservedFieldNames;
 import org.clothocad.core.aspects.Interpreter.Interpreter;
 import org.clothocad.core.communication.mind.Widget;
 import org.clothocad.core.communication.ws.ClothoWebSocket;
+import org.clothocad.core.communication.ws.ClothoWebSocketAPI;
+
+
 import org.clothocad.core.datums.Function;
 import org.clothocad.core.datums.Module;
 import org.clothocad.core.datums.ObjBase;
@@ -517,29 +520,20 @@ public class ServerSideAPI {
     }
 
     public Map<String, Object> get(ObjectId id) {
+        Map<String, Object> out = null;
         try {
-            //place to put the check if the request is made to a specific websocket and call persistor.getFromSocket
-            Map<String, Object> out;
-            //socket request format https://url.com/data/object
-//            String[] tempID = id.getValue().split("\\\\");
             boolean socketRequest = id.getValue().contains("http");
             if(socketRequest){
+
                 String[] temp = id.getValue().split("/");
                 String url = "https://" + temp[2];
-                System.out.println("From the getFromSocket: the URL " + url);
                 String requestObject = temp[temp.length-1];
-                System.out.println("From the getFromSocket: the object  "+ requestObject);
-                persistor.getFromSocket(requestObject, url, router);
-                //need a way to retrieve the hashmap
-                while(!ClothoWebSocket.getGotMessage()){
-                    System.out.println("waiting for response");
-                }
-                out = ClothoWebSocket.getServerResponse();
-                System.out.println("Final output: "  + out.toString());
+                String uri = ClothoWebSocketAPI.buildUri(url);
+                ClothoWebSocketAPI.getFromSocket(requestObject, uri);
+                out = ClothoWebSocketAPI.receiveFromSocket(uri);
             }else{
                 System.out.println("not a socket request");
                 out = persistor.getAsJSON(id, options.getPropertiesFilter());
-                System.out.println("size of out: " + out.size());
             }
             say(String.format("Retrieved object #%s", id.toString()), Severity.SUCCESS);
             return out;
