@@ -13,7 +13,7 @@ import org.jongo.marshall.Unmarshaller;
  * @author spaige
  */
 public interface ExtendedUnmarshaller extends Unmarshaller {
-    <T> T unmarshall(BsonDocument document, Class clazz, InjectableValues cache);
+    <T> T unmarshall(BsonDocument document, Class<T> clazz, InjectableValues cache);
     <T> T unmarshall(BsonDocument document, T toUpdate, InjectableValues cache);
 
     public String getId(BsonDocument document);
