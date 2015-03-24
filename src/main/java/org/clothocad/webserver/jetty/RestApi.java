@@ -1,26 +1,24 @@
 package org.clothocad.webserver.jetty;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.io.BufferedReader;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.clothocad.core.communication.*;
+import org.clothocad.core.communication.Channel;
+import org.clothocad.core.communication.Message;
+import org.clothocad.core.communication.RestConnection;
+import org.clothocad.core.communication.Router;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.shiro.authz.UnauthorizedException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author mosnicholas
- * @author billcao
- */
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
 
@@ -28,7 +26,6 @@ public class RestApi extends HttpServlet {
     private static Message m, loginMessage, logoutMessage;
     private static Map<String, String> loginMap;
     private static RestConnection rc = new RestConnection("RestConnection");
-    // Test set with following url , change sequence: https://localhost:8443/rest/52410adf50763ce31f941915
 
     // http://stackoverflow.com/questions/15051712/how-to-do-authentication-with-a-rest-api-right-browser-native-clients
     // http://shiro-user.582556.n2.nabble.com/Shiro-and-RESTful-web-services-td5539212.html
@@ -99,7 +96,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        
+
         if (pathID.length == 0) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"Required\": \"ID required for delete\"}");
@@ -112,10 +109,8 @@ public class RestApi extends HttpServlet {
 
         String id = pathID[1];
 
-        // We build our new message
         m = new Message(Channel.destroy, id, null, null);
 
-        // Now we send that message to the router
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -157,10 +152,8 @@ public class RestApi extends HttpServlet {
 
         login(unamePass);
 
-        // We build our new message
         m = new Message(Channel.create, p, null, null);
 
-        // Now we send that message to the router
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -171,11 +164,10 @@ public class RestApi extends HttpServlet {
             return;
         }
 
-        // Get the result & check to see if it was successful/if it failed
         String result = this.rc.getResult().toString();
 
         logout(unamePass);
-        
+
         response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
@@ -192,7 +184,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        
+
         if (pathID.length == 0) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"Required\": \"ID required for set\"}");
@@ -214,15 +206,13 @@ public class RestApi extends HttpServlet {
         String id = pathID[1];
 
         if (id.equals("run")) {
-            // you can change the url schema, but this makes it a run instead of a set
+            // You can change the url schema, but this makes it a run instead of a set
             m = new Message(Channel.run, p, null, null);
         } else {
             p.put("id", id);
-            // We build our new message
             m = new Message(Channel.set, p, null, null);
         }
 
-        // Now we send that message to the router
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -233,11 +223,10 @@ public class RestApi extends HttpServlet {
             return;
         }
 
-        // Get the result & check to see if it was successful/if it failed
         String result = this.rc.getResult().toString();
 
         logout(unamePass);
-        
+
         response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {

@@ -58,6 +58,9 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
                 Path storageFolder = injector.getInstance(
                     Key.get(Path.class, Names.named("storagefolder"))
                 );
+                
+                //clear db so that authored JSON directory is single source of truth
+                persistor.deleteAll();
                 persistor.initializeBuiltInSchemas();
 
                 TestUtils.importJSONFromDirectory(

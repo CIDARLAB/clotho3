@@ -1,0 +1,9 @@
+{
+  "id" : "526aec6144ae288aa0ce3adf",
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "superClass" : "526aec6144ae288aa0ce3adc",
+  "binaryName" : "org.clothocad.core.aspects.Proctor.QuizDoo",
+  "c" : "org.clothocad.core.aspects.Proctor.QuizDoo",
+  "name" : "QuizDoo",
+  "language" : "JAVA"
+}
