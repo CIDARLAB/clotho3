@@ -16,6 +16,10 @@ import java.util.Properties;
 
 import javax.inject.Singleton;
 
+/**
+ * General-purpose Guice module.
+ * Processes config options and handles singletons
+ */
 public class ClothoModule extends AbstractModule {
 
     protected final Properties config;
@@ -33,6 +37,10 @@ public class ClothoModule extends AbstractModule {
         bind(DBClassLoader.class).in(Singleton.class);
     }
 
+    /**
+     * Provides an SslConnector backed by a KeyStore to Guice.
+     * Uses the 'keystorepath' and 'keystorepass' config options
+     */
     @Provides
     protected SslConnector provideSslConnector() throws Exception {
         SslContextFactory cf = new SslContextFactory();

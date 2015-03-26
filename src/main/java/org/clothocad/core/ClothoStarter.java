@@ -12,7 +12,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 
-//Start then navigate to:  http://localhost:8080/#/
+/**
+ * Starts the clotho server 
+ */
 public class ClothoStarter extends AbstractClothoStarter {
     public static void main(String[] args) throws Exception {
         baseMain(args, new MainHook() {

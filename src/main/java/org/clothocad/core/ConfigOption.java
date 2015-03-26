@@ -6,7 +6,11 @@ import org.apache.commons.cli.Options;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+/**
+ * Command-line options for Clotho
+ */
 public enum ConfigOption {
+    //option("description", "default value", "option argument name")
     port("HTTP listening port", "8080", "port"),
     confidentialport("HTTPS listening port", "8443", "port"),
     dbname("database name", "clotho", "name"),
@@ -47,6 +51,7 @@ public enum ConfigOption {
         return out;
     }
 
+    /** Returns Options object for use with a Commons-CLI parser */
     public static Options getOptions() {
         Options options = new Options();
         for (ConfigOption opt : ConfigOption.values()) {
@@ -56,7 +61,7 @@ public enum ConfigOption {
         return options;
     }
 
-    /** TODO: the only legitimate user is org.clothocad.core.util.Config.get */
+    /** Build & return default config from default config option values */
     public static Properties getDefaultConfig() {
         final Properties out = new Properties();
         for (final ConfigOption c : ConfigOption.values()) {
