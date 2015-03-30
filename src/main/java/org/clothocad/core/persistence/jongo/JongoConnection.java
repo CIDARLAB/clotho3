@@ -50,6 +50,7 @@ import org.clothocad.core.security.CredentialStore;
 import org.clothocad.core.security.PermissionsOnObject;
 import org.clothocad.core.util.JSON;
 import org.jongo.MongoCollection;
+import org.jongo.MongoCursor;
 import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
 
@@ -250,9 +251,15 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     
     @Override
     public List<Map<String, Object>> getAsBSON(Map query, int hitmax, Set<String> filter) {
-        return Lists.newArrayList(data.find(serialize(mongifyIdField(query)))
+        MongoCursor<Map<String,Object>> cursor = data.find(serialize(mongifyIdField(query)))
                 .limit(hitmax).projection(generateProjection(filter))
-                .map(DemongifyHandler.get()));
+                .map(DemongifyHandler.get());
+        
+        List<Map<String,Object>> out = new ArrayList();
+        while(cursor.hasNext()){
+            out.add(cursor.next());
+        }
+        return out;
     }
 
     @Override
