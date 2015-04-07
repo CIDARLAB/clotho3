@@ -16,9 +16,9 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcernException;
-import static com.mongodb.MongoException.DuplicateKey;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,7 +132,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         try{
             data.save(obj);
         }
-        catch (DuplicateKey e){
+        catch (DuplicateKeyException e){
             data.update("{_id:#}", obj.getId().toString()).with(obj);
         }
     }
