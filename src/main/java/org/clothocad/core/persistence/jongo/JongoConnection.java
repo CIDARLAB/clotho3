@@ -21,6 +21,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
 import com.mongodb.WriteConcernException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -155,19 +156,23 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     @Override
     public void save(Map obj) {
         obj = mongifyIdField(obj);
-        if (obj.get("_id") == null){
+        if (obj.get("_id") == null) {
             //must create new id
             rawDataCollection.insert(new BasicDBObject(obj));
             return;
         }
-        DBObject idQuery = new BasicDBObject("_id", obj.get("_id"));
-        obj.remove("_id");
-        Map<String,Object> setExpression = new HashMap<>();
-        setExpression.put("$set", obj);
         try {
-            rawDataCollection.update(idQuery, new BasicDBObject(setExpression),true, false);  //upsert true, multi false        
-        } catch (WriteConcernException ex) {
-            log.error("Invalid JSON/failed to save object", obj.toString());
+            rawDataCollection.insert(new BasicDBObject(obj));
+        } catch (MongoException e) {
+            DBObject idQuery = new BasicDBObject("_id", obj.get("_id"));
+            obj.remove("_id");
+            Map<String, Object> setExpression = new HashMap<>();
+            setExpression.put("$set", obj);
+            try {
+                rawDataCollection.update(idQuery, new BasicDBObject(setExpression));  //upsert true, multi false        
+            } catch (WriteConcernException ex) {
+                log.error("Invalid JSON/failed to save object", obj.toString());
+            }
         }
     }
 
