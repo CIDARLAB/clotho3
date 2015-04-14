@@ -91,16 +91,19 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     private void connect() throws UnknownHostException {
         //TODO: cover reconnect case?
 
-        //Mimic Jongo customization         
+        //Mimic Jongo's JacksonMapper customization         
         mapper = new ObjectMapper();
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.setSerializationInclusion(NON_NULL);
         mapper.disable(FAIL_ON_EMPTY_BEANS);
         //mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
         //jongo mimicking over
+        //following customizations need to be repeated (which is not great)
+        //in ClothoMapper.ClothoMapperBuilder.createMapping
         mapper.registerModule(new JSON.ClothoJacksonModule());
+        mapper.registerModule(new MongoJacksonModule());
 
-        /**
+        /*
          * redundant with ObjBase annotations
          *
          * mapper.disable(AUTO_DETECT_GETTERS);
