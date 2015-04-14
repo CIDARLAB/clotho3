@@ -4,6 +4,9 @@
  */
 package org.clothocad.core.persistence.jongo;
 
+import org.clothocad.core.persistence.jongo.reference.ClothoMapper;
+import org.clothocad.core.persistence.jongo.reference.RefJongo;
+import org.clothocad.core.persistence.jongo.reference.RefMongoCollection;
 import org.clothocad.core.persistence.jackson.JSONFilter;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.fasterxml.jackson.core.JsonProcessingException;

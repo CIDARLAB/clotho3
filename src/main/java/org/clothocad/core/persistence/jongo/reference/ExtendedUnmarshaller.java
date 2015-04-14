@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.persistence.jongo;
+package org.clothocad.core.persistence.jongo.reference;
 
 import com.fasterxml.jackson.databind.InjectableValues;
 import com.mongodb.DBObject;

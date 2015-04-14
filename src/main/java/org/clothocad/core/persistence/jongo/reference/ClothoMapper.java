@@ -2,13 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clothocad.core.persistence.jongo;
+package org.clothocad.core.persistence.jongo.reference;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.persistence.jackson.IdRenamingMixin;
+import org.clothocad.core.persistence.jongo.ClothoObjectIdUpdater;
 import org.clothocad.core.persistence.jongo.ClothoObjectIdUpdater.ClothoIdFieldSelector;
+import org.clothocad.core.persistence.jongo.MongoJacksonModule;
+import org.clothocad.core.persistence.jongo.ShiroJacksonModule;
 import org.clothocad.core.util.JSON.ClothoJacksonModule;
 import org.jongo.Mapper;
 import org.jongo.ObjectIdUpdater;
