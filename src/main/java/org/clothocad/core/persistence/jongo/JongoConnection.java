@@ -473,16 +473,22 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         //this will have problems if there are circular dstructures, though that should be impossible
         @Override
         public Map<String,Object> map(DBObject result) {
+            return mapBson(result);
+        }
+        
+        public Map<String,Object> mapBson(BSONObject result){
             Map<String,Object> resultMap = toMap(result);
             //recurse on any sub objects
             for (String key : resultMap.keySet()){
                  Object value = resultMap.get(key);
-                 if (value instanceof DBObject){
-                     resultMap.put(key,toMapOrList((DBObject)value));
+                 if (value instanceof BSONObject){
+                     resultMap.put(key,toMapOrList((BSONObject)value));
                  }
             }
             return demongifyIdField(resultMap);
         }
+        
+        
         
         //some dbobjects don't support toMap
         private Map<String,Object> toMap(BSONObject dbObject){
@@ -492,7 +498,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
             return resultMap;
         }
         
-        private Object toMapOrList(DBObject value) {
+        private Object toMapOrList(BSONObject value) {
             if (value instanceof LazyBSONList) {
                 //convert members
                 List convertedList = new ArrayList();
@@ -506,7 +512,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
                 return convertedList;
 
             } else {
-                return map(value);
+                return mapBson(value);
             }
         }
 
