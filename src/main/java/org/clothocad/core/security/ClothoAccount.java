@@ -7,7 +7,6 @@ package org.clothocad.core.security;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Delegate;
 import lombok.Getter;
 import org.apache.shiro.authc.Account;
@@ -25,7 +24,6 @@ import org.jongo.marshall.jackson.oid.Id;
  *
  * @author spaige
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class ClothoAccount implements Account, MergableAuthenticationInfo, SaltedAuthenticationInfo {
 
     

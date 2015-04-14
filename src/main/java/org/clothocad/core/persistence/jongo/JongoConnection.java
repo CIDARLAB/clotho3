@@ -52,9 +52,11 @@ import org.clothocad.core.security.ClothoAction;
 import org.clothocad.core.security.CredentialStore;
 import org.clothocad.core.security.PermissionsOnObject;
 import org.clothocad.core.util.JSON;
+import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.jongo.MongoCursor;
 import org.jongo.ResultHandler;
+import org.jongo.marshall.jackson.JacksonMapper;
 import org.python.google.common.collect.Lists;
 
 /**
@@ -65,6 +67,7 @@ import org.python.google.common.collect.Lists;
 public class JongoConnection implements ClothoConnection, CredentialStore, RolePermissionResolver {
 
     protected RefJongo jongo;
+    protected Jongo realm;
     protected DB db;
     protected MongoClient client;
     protected ObjectMapper mapper;
@@ -111,9 +114,15 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
          **/
 
         jongo = new RefJongo(db, new ClothoMapper());
-        data = jongo.getCollection("data");
-        cred = jongo.getCollection("cred");
-        roles = jongo.getCollection("roles");
+        data = jongo.getCollection("data");        
+        realm = new Jongo(db, new JacksonMapper.Builder()
+                .registerModule(new MongoJacksonModule())
+                .registerModule(new ShiroJacksonModule())
+                .addModifier(new TypingMapperModifier())
+                .build());  
+
+        cred = realm.getCollection("cred");
+        roles = realm.getCollection("roles");
     }
 
     //Do we really need this?
@@ -436,7 +445,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         Map<String, Set<ClothoAction>> permissionsByUser = new HashMap<>();
         
         for (ClothoAccount account : cred.find("{'authzInfo.permissions.#':{$exists:true}}", id)
-            .projection("{'authzInfo.permissions.#':1, '@class':1}", id).as(ClothoAccount.class)){
+            .projection("{'authzInfo.permissions.#':1, 'authzInfo.permissions.@class':1, '@class':1}", id).as(ClothoAccount.class)){
             permissionsByUser.put(account.getId(), account.getActions(id));
         }
         
@@ -448,7 +457,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         Map<String, Set<ClothoAction>> permissionsByGroup = new HashMap<>();
         
         for (AuthGroup group : roles.find("{'permissions.#':{$exists:true}}", id)
-            .projection("{'permissions.#':1, '$class':1}", id).as(AuthGroup.class)){
+            .projection("{'permissions.#':1, 'permissions.@class':1, '@class':1}", id).as(AuthGroup.class)){
             permissionsByGroup.put(group.getName(), group.getActions(id));
         }
         
