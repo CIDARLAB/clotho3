@@ -136,7 +136,11 @@ public class Persistor{
             throw new ConstraintViolationException(violations);
         }
     }
-    
+
+    public Object get(ObjectId objectId) throws EntityNotFoundException {
+        return get(ObjBase.class, objectId, false);
+    }
+
     public <T extends ObjBase> T get(Class<T> type, ObjectId id) throws EntityNotFoundException {
         return get(type,id,false);
     }    
@@ -771,7 +775,4 @@ public class Persistor{
         return filterByPermission(globalTrie.getCompletions(word), view);
     }
 
-    public Object get(ObjectId objectId) throws EntityNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
