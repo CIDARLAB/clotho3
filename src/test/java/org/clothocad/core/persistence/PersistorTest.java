@@ -5,7 +5,9 @@
 package org.clothocad.core.persistence;
 
 import com.fasterxml.jackson.core.JsonToken;
+
 import de.undercouch.bson4jackson.BsonParser;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,18 +18,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import org.clothocad.model.FreeForm;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.util.AuthorizedShiroTest;
+
+import org.clothocad.model.Feature.FeatureRole;
+import org.clothocad.model.Format;
+import org.clothocad.model.Part;
 import org.clothocad.core.util.TestUtils;
-import org.clothocad.model.BasicPart;
+
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
-import org.clothocad.model.Part;
+import org.clothocad.model.SimpleSequence;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -52,8 +60,13 @@ public class PersistorTest extends AuthorizedShiroTest{
         LabPersonForTests testPerson = new LabPersonForTests("Test Person", null, null);
 
         //class w/ composition
-        Part part1 = Part.generateBasic("test part", "This part is a test", "ATCG", new FreeForm(), testPerson);
-        Part part2 = Part.generateBasic("different test part", "This part is another test", "TCAG", new FreeForm(), testPerson);
+        Part part1 = new Part("test part", "This part is a test", 
+        		new SimpleSequence("ATCG", testPerson), testPerson);
+        Format freeFormat = new FreeForm(testPerson);
+        part1.setFormat(freeFormat);
+        Part part2 = new Part("different test part", "This part is another test", 
+        		new SimpleSequence("TCAG", testPerson), testPerson);
+        part2.setFormat(freeFormat);
         persistor.save(part1);
 
         ObjectId id1 = part1.getId();
@@ -97,7 +110,9 @@ public class PersistorTest extends AuthorizedShiroTest{
 
     @Test
     public void testCompositeSuperAndSubClass() {
-        Part p = Part.generateBasic("test part", "This part is a test", "ATCG", new FreeForm(), null);
+        Part p = new Part("test part", "This part is a test", 
+        		new SimpleSequence("ATCG", null), null);
+        p.setFormat(new FreeForm(null));
         persistor.save(p);
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
         persistor.save(i);
@@ -105,12 +120,12 @@ public class PersistorTest extends AuthorizedShiroTest{
         i = persistor.get(Institution.class, id);
         
         id = p.getId();
-        p = persistor.get(BasicPart.class, id);
+        p = persistor.get(Part.class, id);
         ExtendedPart ep = persistor.get(ExtendedPart.class, id);
 
         assertEquals(p.getId(), ep.getId());
         assertEquals("test part", ep.getName());
-        assertEquals("This part is a test", ep.getShortDescription());
+        assertEquals("This part is a test", ep.getDescription());
 
         ep.setAdditionalParameters("test params");
 
@@ -129,14 +144,17 @@ public class PersistorTest extends AuthorizedShiroTest{
     @Test
     public void testGetAllBasicParts() {
         int N = 100;
-
         // first, we create N parts
         for (int i = 1; i <= N; i++) {
-            persistor.save(Part.generateBasic("part-" + i, "This is test part " + i, randomSequence(i), new FreeForm(), null));
+        	Part testPart = new Part("part-" + i, "This is test part " + i, 
+        			new SimpleSequence(randomSequence(i), null), null);
+        	Format freeFormat = new FreeForm(null);
+        	testPart.setFormat(freeFormat);
+            persistor.save(testPart);
         }
 
         // then, retrieve all parts
-        Collection<BasicPart> results = persistor.getAll(BasicPart.class);
+        Collection<Part> results = persistor.getAll(Part.class);
         assertEquals(N, results.size());
     }
     
@@ -166,8 +184,9 @@ public class PersistorTest extends AuthorizedShiroTest{
 
     @Test
     public void testCreateGFPInstance() {
-        Feature gfp = Feature.generateFeature("GFPuv", "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA",
-                null, true);
+        Feature gfp = new Feature("GFPuv", FeatureRole.CDS, null);
+        gfp.setSequence(new SimpleSequence("ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA",
+        		null));
         saveAndGet(gfp);
     }
 

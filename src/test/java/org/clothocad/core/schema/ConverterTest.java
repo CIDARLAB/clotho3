@@ -5,16 +5,19 @@
 package org.clothocad.core.schema;
 
 import com.fasterxml.jackson.core.JsonParseException;
+
 import java.io.IOException;
 import java.util.Map;
+
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
-import org.clothocad.model.BasicPart;
+import org.clothocad.model.Feature.FeatureRole;
+import org.clothocad.model.Part;
 import org.clothocad.model.BasicPartConverter;
-import org.clothocad.model.Part.PartFunction;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -27,10 +30,10 @@ public class ConverterTest extends AuthorizedShiroTest {
         super();
         p = injector.getInstance(Persistor.class);
         p.initializeBuiltInSchemas();
-        basicPartSchema = p.get(Schema.class, new ObjectId("org.clothocad.model.BasicPart"));
+        partSchema = p.get(Schema.class, new ObjectId("org.clothocad.model.Part"));
     }
     public Persistor p;
-    public Schema basicPartSchema ;
+    public Schema partSchema ;
 
     @Test
     public void testCanConvert() {
@@ -42,12 +45,12 @@ public class ConverterTest extends AuthorizedShiroTest {
     @Test
     public void testConvertsTo() {
         Converter converter = new BasicPartConverter(p);
-        assertEquals(basicPartSchema, converter.convertsTo());
+        assertEquals(partSchema, converter.convertsTo());
     }
 
     @Test
     public void testConvert() throws JsonParseException, IOException {
-        Converter<BasicPart> converter = new BasicPartConverter(p);
+        Converter<Part> converter = new BasicPartConverter(p);
         Schema eugenePartSchema = new InferredSchema("eugene.dom.components.Part");
         Map<String, Object> eugeneJSON = JSON.deserializeObjectToMap("    {\n"
                 + "         \"Name\":\"B0015\",\n"
@@ -57,9 +60,9 @@ public class ConverterTest extends AuthorizedShiroTest {
                 + "         \"Pigeon\":\"t B0015\"\n"
                 + "      }");
 
-        BasicPart convertedPart = converter.convert(eugeneJSON, eugenePartSchema);
-        assertEquals(PartFunction.TERMINATOR, convertedPart.getType());
-        assertEquals(eugeneJSON.get("Sequence").toString(), convertedPart.getSequence().getSeq());
+        Part convertedPart = converter.convert(eugeneJSON, eugenePartSchema);
+        assertEquals(FeatureRole.TERMINATOR, convertedPart.getRoles().get(0));
+        assertEquals(eugeneJSON.get("Sequence").toString(), convertedPart.getSequence().getSequence());
         assertEquals(eugeneJSON.get("Name").toString(), convertedPart.getName());
     }
 }

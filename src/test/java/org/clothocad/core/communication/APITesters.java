@@ -9,10 +9,12 @@ package org.clothocad.core.communication;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.NucSeq;
+import org.clothocad.model.Person;
 import org.clothocad.model.SimpleSequence;
 
 /**
@@ -34,8 +36,9 @@ public class APITesters extends AbstractServerAPITest {
     
     public void logintest() throws IOException
     {
-        SimpleSequence s = new SimpleSequence("Simple Seq","atgc");
-        NucSeq ns = new NucSeq("ATTGGCCTTAAAA");
+        Person author = new Person("Temp");
+    	SimpleSequence s = new SimpleSequence("atgc", author);
+        NucSeq ns = new NucSeq("ATTGGCCTTAAAA", author);
         //System.out.println("SimpleSeq Class : "+s.getClass().getCanonicalName());
         Argument arguments[];
         Argument arg1 = new Argument("",s.getClass());

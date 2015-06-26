@@ -841,6 +841,7 @@ public class ServerSideAPI {
     }
 
     //TODO: needs serious cleaning up
+    //The message format is nonsensical
     public final Object run(Object o)
             throws ScriptException,
             IllegalAccessException,
@@ -865,12 +866,12 @@ public class ServerSideAPI {
 
         //XXX: check that functionData exists
         Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get(ID)), null, true);
+        ObjBase executable = persistor.get(ObjBase.class, new ObjectId(data.get(ID)), true);
 
 
-        if (functionData.containsKey("schema") && (functionData.get("schema").toString().endsWith("Function")
-                || functionData.get("schema").toString().endsWith("Module"))) {
+        if (executable instanceof Module && ((Module) executable).getLanguage() != Language.JAVA) {
 
-            Module module = persistor.get(Module.class, new ObjectId(data.get(ID)), true);
+            Module module = (Module) executable;
 
             if (executeExternal.contains(module.getLanguage())) {
                 //execute using process launcher

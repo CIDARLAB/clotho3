@@ -7,11 +7,14 @@
 package org.clothocad.core.execution;
 
 import com.google.inject.Injector;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static org.clothocad.core.ReservedFieldNames.ID;
+
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.ClientConnection;
 import org.clothocad.core.communication.Message;
@@ -25,6 +28,7 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.NucSeq;
+import org.clothocad.model.Person;
 import org.clothocad.model.SimpleSequence;
 import org.junit.Test;
 
@@ -50,8 +54,9 @@ public class ConverterTest {
     
     public void converttest() throws IOException
     {
-        SimpleSequence s = new SimpleSequence("Simple Seq","atgc");
-        NucSeq ns = new NucSeq("ATTGGCCTTAAAA");
+    	Person author = new Person("Temp");
+        SimpleSequence s = new SimpleSequence("atgc", author);
+        NucSeq ns = new NucSeq("ATTGGCCTTAAAA", author);
         Argument arguments[];
         Argument arg1 = new Argument("",s.getClass());
         //Argument arg2 = new Argument();
