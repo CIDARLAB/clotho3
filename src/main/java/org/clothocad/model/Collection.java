@@ -1,26 +1,12 @@
-/*
-Copyright (c) 2009 The Regents of the University of California.
-All rights reserved.
-Permission is hereby granted, without written agreement and without
-license or royalty fees, to use, copy, modify, and distribute this
-software and its documentation for any purpose, provided that the above
-copyright notice and the following two paragraphs appear in all copies
-of this software.
-
-IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
-FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
-ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
-THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-
-THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
-PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
-CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
-ENHANCEMENTS, OR MODIFICATIONS..
- */
 package org.clothocad.model;
+
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.annotations.Reference;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,12 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
-import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.persistence.annotations.Reference;
-import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 /**
  *
@@ -42,6 +22,16 @@ import org.clothocad.core.persistence.annotations.ReferenceCollection;
  */
 //name must be unique
 public class Collection extends ObjBase {
+	
+	@Getter
+    @Setter        
+    private String description;
+    
+    @Getter
+    @Reference
+    private Person author;
+    @ReferenceCollection
+    private Map<ObjBase, Object> items;
 
     /**Constructor for collections from raw data
      *
@@ -115,13 +105,6 @@ public class Collection extends ObjBase {
             }
             out.add(entry.getKey());
         }
-           
-        /*for (ObjBase obj : items) {
-            if (entry.getKey() == null) {
-                continue;
-            }
-            out.add(obj);
-        }*/
         return out;
     }
 
@@ -187,54 +170,8 @@ public class Collection extends ObjBase {
                 out.add(entry.getKey());
             }
         }
-        /*for (ObjBase item : items){
-            if (type.isInstance(item)) {
-                out.add(item);
-            }
-        }*/
         return out;
     }
-
-    /**
-     * This one probably shouldn't exists
-     * deprecated
-     * @param _myPart
-     * @return
-     *
-    Deprecated
-    public ArrayList<Plasmid> getPlasmidsOf(Part _myPart) {
-        @SuppressWarnings(value = "unchecked")
-        ArrayList<Plasmid> allplas = (ArrayList<Plasmid>) getAll(ObjType.PLASMID);
-        ArrayList<Plasmid> out = new ArrayList<Plasmid>();
-        for (Plasmid p : allplas) {
-            if (p.getPart().getId().equals(_myPart.getId())) {
-                out.add(p);
-            }
-        }
-        return out;
-    }*/
-
-    /**
-     * This one probably shouldn't exists
-     * deprecated
-     * @param _myPart
-     * @return
-     *
-    Deprecated
-    public ArrayList<PlasmidSample> getSamplesOf(Plasmid _myPlasmid) {
-        @SuppressWarnings(value = "unchecked")
-        ArrayList<Sample> allsam = (ArrayList<Sample>) getAll(ObjType.SAMPLE);
-        ArrayList<PlasmidSample> out = new ArrayList<PlasmidSample>();
-        for (Sample p : allsam) {
-            PlasmidSample ps = (PlasmidSample) p;
-            System.out.println("comparing " + ps.getPlasmid().getId() + "  " + _myPlasmid.getId());
-
-            if (ps.getPlasmid().getId().equals(_myPlasmid.getId())) {
-                out.add(ps);
-            }
-        }
-        return out;
-    }*/
 
     private void AddAnyItem(ObjBase item, Object obj) {
         if (!items.containsKey(item)){
@@ -249,34 +186,5 @@ public class Collection extends ObjBase {
     public static Collection retrieveByName(String name) {
         throw new UnsupportedOperationException();
     }
-
-
-    /*-----------------
-    variables
-    -----------------*/
-    
-    @Getter
-    @Setter        
-    private String description;
-    
-    @Getter
-    @Reference
-    private Person author;
-    @ReferenceCollection
-    //private List<ObjBase> items;
-    private Map<ObjBase, Object> items;
             
-   /* public static class CollectionDatum extends ObjBaseDatum {
-
-        public Map<String, ObjType> uuidTypeHash = new HashMap<String, ObjType>();
-        public Map<ObjType, HashSet<String>> typeUUIDHash = new EnumMap<ObjType, HashSet<String>>(ObjType.class);
-        public ArrayList<String> itemUUIDs = new ArrayList<String>();
-        public String _authorUUID;
-        public String _description;
-
-        @Override
-        public ObjType getType() {
-            return ObjType.COLLECTION;
-        }
-    }*/
 }

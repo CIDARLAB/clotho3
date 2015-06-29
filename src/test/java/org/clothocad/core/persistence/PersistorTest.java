@@ -32,7 +32,7 @@ import org.clothocad.core.util.TestUtils;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Institution;
 import org.clothocad.model.Lab;
-import org.clothocad.model.SimpleSequence;
+import org.clothocad.model.Sequence;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,11 +61,11 @@ public class PersistorTest extends AuthorizedShiroTest{
 
         //class w/ composition
         Part part1 = new Part("test part", "This part is a test", 
-        		new SimpleSequence("ATCG", testPerson), testPerson);
+        		new Sequence("seq1", "ATCG", testPerson), testPerson);
         Format freeFormat = new FreeForm(testPerson);
         part1.setFormat(freeFormat);
         Part part2 = new Part("different test part", "This part is another test", 
-        		new SimpleSequence("TCAG", testPerson), testPerson);
+        		new Sequence("seq2","TCAG", testPerson), testPerson);
         part2.setFormat(freeFormat);
         persistor.save(part1);
 
@@ -111,7 +111,7 @@ public class PersistorTest extends AuthorizedShiroTest{
     @Test
     public void testCompositeSuperAndSubClass() {
         Part p = new Part("test part", "This part is a test", 
-        		new SimpleSequence("ATCG", null), null);
+        		new Sequence("seq", "ATCG", null), null);
         p.setFormat(new FreeForm(null));
         persistor.save(p);
         Institution i = new Institution("Test institution", "Townsville", "Massachusetts", "United States of America");
@@ -147,7 +147,7 @@ public class PersistorTest extends AuthorizedShiroTest{
         // first, we create N parts
         for (int i = 1; i <= N; i++) {
         	Part testPart = new Part("part-" + i, "This is test part " + i, 
-        			new SimpleSequence(randomSequence(i), null), null);
+        			new Sequence("seq", randomSequence(i), null), null);
         	Format freeFormat = new FreeForm(null);
         	testPart.setFormat(freeFormat);
             persistor.save(testPart);
@@ -185,7 +185,7 @@ public class PersistorTest extends AuthorizedShiroTest{
     @Test
     public void testCreateGFPInstance() {
         Feature gfp = new Feature("GFPuv", FeatureRole.CDS, null);
-        gfp.setSequence(new SimpleSequence("ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA",
+        gfp.setSequence(new Sequence("seq", "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCCCGTTATCCGGATCATATGAAACGGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAACGCACTATATCTTTCAAAGATGACGGGAACTACAAGACGCGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATCGTATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTCGGACACAAACTCGAGTACAACTATAACTCACACAATGTATACATCACGGCAGACAAACAAAAGAATGGAATCAAAGCTAACTTCAAAATTCGCCACAACATTGAAGATGGATCCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCGACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGCGTGACCACATGGTCCTTCTTGAGTTTGTAACTGCTGCTGGGATTACACATGGCATGGATGAGCTCTACAAATAA",
         		null));
         saveAndGet(gfp);
     }

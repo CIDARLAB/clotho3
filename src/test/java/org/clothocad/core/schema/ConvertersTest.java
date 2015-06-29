@@ -9,7 +9,7 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.TestUtils;
-import org.clothocad.model.BasicPartConverter;
+import org.clothocad.model.PartConverter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -31,7 +31,7 @@ public class ConvertersTest extends AuthorizedShiroTest {
 
     private Converters prepareConverters() {
         Converters converters = new Converters();
-        converters.addConverter(new BasicPartConverter(persistor));
+        converters.addConverter(new PartConverter(persistor));
         return converters;
     }
 

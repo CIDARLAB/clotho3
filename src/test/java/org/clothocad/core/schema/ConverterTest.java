@@ -15,7 +15,7 @@ import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.Feature.FeatureRole;
 import org.clothocad.model.Part;
-import org.clothocad.model.BasicPartConverter;
+import org.clothocad.model.PartConverter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -37,20 +37,20 @@ public class ConverterTest extends AuthorizedShiroTest {
 
     @Test
     public void testCanConvert() {
-        Converter converter = new BasicPartConverter(p);
+        Converter converter = new PartConverter(p);
         Schema eugenePartSchema = new InferredSchema("eugene.dom.components.Part");
         assertTrue(converter.canConvert(eugenePartSchema));
     }
 
     @Test
     public void testConvertsTo() {
-        Converter converter = new BasicPartConverter(p);
+        Converter converter = new PartConverter(p);
         assertEquals(partSchema, converter.convertsTo());
     }
 
     @Test
     public void testConvert() throws JsonParseException, IOException {
-        Converter<Part> converter = new BasicPartConverter(p);
+        Converter<Part> converter = new PartConverter(p);
         Schema eugenePartSchema = new InferredSchema("eugene.dom.components.Part");
         Map<String, Object> eugeneJSON = JSON.deserializeObjectToMap("    {\n"
                 + "         \"Name\":\"B0015\",\n"

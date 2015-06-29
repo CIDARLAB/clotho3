@@ -26,9 +26,8 @@ import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Format;
 import org.clothocad.model.Part;
 import org.clothocad.model.FreeForm;
-import org.clothocad.model.Part;
 import org.clothocad.model.Person;
-import org.clothocad.model.SimpleSequence;
+import org.clothocad.model.Sequence;
 
 /**
  *
@@ -126,7 +125,7 @@ public class IceImporter {
 
         shortdescription = parseDescription(entity);
         
-        Part part = new Part(name, shortdescription, new SimpleSequence(seq, author), author);
+        Part part = new Part(name, shortdescription, new Sequence("seq", seq, author), author);
         Format freeFormat = new FreeForm(author);
         part.setFormat(freeFormat);
       

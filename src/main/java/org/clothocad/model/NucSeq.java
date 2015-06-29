@@ -4,28 +4,33 @@
  */
 package org.clothocad.model;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.validation.constraints.NotNull;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.datums.SharableObjBase;
+import org.clothocad.core.persistence.annotations.Reference;
 import org.clothocad.model.Feature.FeatureRole;
 
-public class NucSeq 
-		extends Sequence 
-		implements Serializable {
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
+@NoArgsConstructor
+@Deprecated
+public class NucSeq extends SharableObjBase implements Serializable {
 
     /**
      * Constructor for a NucSeq (dna sequence) object.  The sequence ends up in the
@@ -43,16 +48,31 @@ public class NucSeq
     private boolean isDegenerate, isLinear, isRNA;
     private boolean isLocked;
     
-    public NucSeq( String inputSeq, boolean strandedness, boolean circularity, Person author) {
-        super("nucseq", inputSeq, author);
+    @NotNull
+    @Getter
+    @Setter
+    @javax.validation.constraints.Pattern(regexp="[ATUCGRYKMSWBDHVN]*", flags={javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE})
+    protected String sequence;
 
+    @Getter
+    @Setter
+    protected Set<Annotation> annotations;
+
+    @Getter
+    @Setter
+    @Reference
+    protected Sequence parentSequence;
+    
+    public NucSeq( String inputSeq, boolean strandedness, boolean circularity, Person author) {
+        super("nucSeq", author);
+
+        sequence = inputSeq;
         isSingleStranded = strandedness;
         isCircular = circularity;
         lowerArray = new boolean[ inputSeq.length() ];
         if ( !initiateNucSeq( inputSeq ) ) {
             return;
         }
-
 
         //NEED TO USE A DIFFERENT OBJBASE CONSTRUCTOR TO SET HASH AS UUID
         //_myUUID = generateUUIDAsHash(getSeq());
@@ -858,9 +878,30 @@ public class NucSeq
             }
         }
     }
+    
+    public Annotation createAnnotation(String name, int start, int end, boolean isForwardStrand,
+            Person author) {
+        Annotation annotation = new Annotation(name, start, end, isForwardStrand, author);
+        addAnnotation(annotation);
+        return annotation;
+    }
+
+    public Annotation createAnnotation(String name, String description, int start, int end,
+            boolean isForwardStrand, Person author) {
+        Annotation annotation = new Annotation(name, description, start, end, isForwardStrand, author);
+        addAnnotation(annotation);
+        return annotation;
+    }
+    
+    public void addAnnotation(Annotation annotation) {
+    	if (annotations == null) {
+    		annotations = new HashSet<Annotation>();
+    	}
+    	annotations.add(annotation);
+    }
 
     public void removeAnnotations() {
-        annotations = new LinkedList<Annotation>();
+        annotations = new HashSet<Annotation>();
         //setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.ANNOTATION_TO_NUCSEQ);
     }
 
