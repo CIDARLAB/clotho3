@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "onShowScript",
+    "name" : "graphicsCode",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "graphicsCode",
+    "name" : "onShowScript",
     "type" : "string",
     "subtype" : null,
     "example" : null,

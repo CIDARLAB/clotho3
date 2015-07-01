@@ -10,8 +10,18 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "isForwardStrand",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "feature",
+    "type" : "org.clothocad.model.Feature",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "reverseColor",
-    "type" : "object",
+    "name" : "symbol",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,16 +50,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "start",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "end",
     "type" : "number",
     "subtype" : null,
@@ -60,8 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isForwardStrand",
-    "type" : "boolean",
+    "name" : "start",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,32 +70,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "symbol",
-    "type" : "string",
+    "name" : "reverseColor",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "feature",
-    "type" : "org.clothocad.model.Feature",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "target",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "reactions",
     "type" : "array",
     "subtype" : null,
@@ -30,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "version",
+    "name" : "target",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -49,9 +39,19 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
+  }, {
+    "name" : "version",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.SinglePathway",
   "binaryName" : "org.clothocad.model.SinglePathway"

@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "passwordHash",
-    "type" : "string",
+    "name" : "clients",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isLoggedIn",
-    "type" : "boolean",
+    "name" : "passwordHash",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "clients",
-    "type" : "array",
+    "name" : "isLoggedIn",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

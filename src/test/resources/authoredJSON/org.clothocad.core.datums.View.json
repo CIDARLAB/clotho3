@@ -10,7 +10,17 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "graphicsScript",
+    "name" : "inputArguments",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "description",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,6 +40,26 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "canUpdate",
+    "type" : "org.clothocad.core.datums.Function",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "authorId",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "largeIconURL",
     "type" : "string",
     "subtype" : null,
@@ -40,8 +70,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "inputArguments",
-    "type" : "array",
+    "name" : "instanceCount",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -51,6 +81,26 @@
     "description" : null
   }, {
     "name" : "smallIconURL",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "graphicsScript",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "id",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -79,59 +129,9 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
-  }, {
-    "name" : "description",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "canUpdate",
-    "type" : "org.clothocad.core.datums.Function",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "id",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "authorId",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "instanceCount",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.datums.View",
   "binaryName" : "org.clothocad.core.datums.View"

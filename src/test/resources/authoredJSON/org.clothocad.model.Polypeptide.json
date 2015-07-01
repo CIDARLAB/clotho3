@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "sequence",
+    "name" : "version",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "version",
+    "name" : "sequence",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -41,7 +41,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Polypeptide",
   "binaryName" : "org.clothocad.model.Polypeptide"

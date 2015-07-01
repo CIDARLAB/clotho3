@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "format",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "type",
-    "type" : "object",
+    "name" : "sequence",
+    "type" : "org.clothocad.model.Sequence",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isForwardOrientation",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "shortDescription",
-    "type" : "string",
+    "name" : "assemblies",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,32 +50,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "log",
-    "type" : "object",
+    "name" : "parentPart",
+    "type" : "org.clothocad.model.Part",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "format",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "riskGroup",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

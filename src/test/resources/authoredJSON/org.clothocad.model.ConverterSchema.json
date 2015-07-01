@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "convertTo",
+    "name" : "convertFrom",
     "type" : "org.clothocad.core.schema.Schema",
     "subtype" : null,
     "example" : null,
@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "convertFrom",
+    "name" : "convertTo",
     "type" : "org.clothocad.core.schema.Schema",
     "subtype" : null,
     "example" : null,
@@ -31,7 +31,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.ConverterSchema",
   "binaryName" : "org.clothocad.model.ConverterSchema"

@@ -20,22 +20,22 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "superClass",
-    "type" : "org.clothocad.core.schema.BuiltInSchema",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "log",
     "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "superClass",
+    "type" : "org.clothocad.core.schema.BuiltInSchema",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -51,7 +51,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.schema.JavaSchema",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.schema.BuiltInSchema",
   "binaryName" : "org.clothocad.core.schema.BuiltInSchema"

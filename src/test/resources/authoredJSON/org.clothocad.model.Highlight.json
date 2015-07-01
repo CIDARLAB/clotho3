@@ -10,18 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "notes",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "plusStrand",
-    "type" : "boolean",
+    "name" : "forColor",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -31,6 +21,16 @@
     "description" : null
   }, {
     "name" : "revColor",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "description",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "notes",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,6 +70,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "end",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "refSeq",
     "type" : "org.clothocad.core.datums.SharableObjBase",
     "subtype" : null,
@@ -80,18 +90,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "forColor",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "end",
-    "type" : "number",
+    "name" : "plusStrand",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

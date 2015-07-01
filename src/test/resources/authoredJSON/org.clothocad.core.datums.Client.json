@@ -10,8 +10,18 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "isLoggedIn",
-    "type" : "boolean",
+    "name" : "macAddress",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "users",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,18 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "macAddress",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "users",
-    "type" : "array",
+    "name" : "isLoggedIn",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

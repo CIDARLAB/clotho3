@@ -10,36 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "highlights",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "isSingleStranded",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "isLinear",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "accession",
     "type" : "string",
     "subtype" : null,
@@ -51,7 +21,17 @@
     "description" : null
   }, {
     "name" : "sequence",
-    "type" : "string",
+    "type" : "org.clothocad.model.Sequence",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "highlights",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,8 +50,28 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
-    "type" : "string",
+    "name" : "parentPolynucleotide",
+    "type" : "org.clothocad.model.Polynucleotide",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isLinear",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isSingleStranded",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,

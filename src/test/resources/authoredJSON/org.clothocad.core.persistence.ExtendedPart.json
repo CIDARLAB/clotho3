@@ -21,7 +21,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.BasicPart",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.persistence.ExtendedPart",
   "binaryName" : "org.clothocad.core.persistence.ExtendedPart"

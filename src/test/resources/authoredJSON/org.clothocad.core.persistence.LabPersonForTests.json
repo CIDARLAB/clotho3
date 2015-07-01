@@ -10,12 +10,32 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "givenName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "lab",
     "type" : "org.clothocad.model.Lab",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "nickName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -30,27 +50,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "myCollection",
-    "type" : "org.clothocad.model.Collection",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "registryName",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "emailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -70,17 +70,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "nickName",
-    "type" : "string",
+    "name" : "myCollection",
+    "type" : "org.clothocad.model.Collection",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "givenName",
+    "name" : "emailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,
