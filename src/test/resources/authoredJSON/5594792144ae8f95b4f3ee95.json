@@ -1,0 +1,17 @@
+{
+  "discouraged" : [ ],
+  "oligoNameRoot" : "phoenix",
+  "meltingTemperature" : null,
+  "targetHomologyLength" : null,
+  "recommended" : [ ],
+  "minPCRLength" : null,
+  "schema" : "org.cidarlab.phoenix.core.dom.AssemblyParameters",
+  "maxPrimerLength" : null,
+  "name" : "default",
+  "method" : "moclo",
+  "efficiency" : [ "1.0", "1.0", "1.0", "1.0", "1.0" ],
+  "minCloneLength" : null,
+  "required" : [ ],
+  "forbidden" : [ ],
+  "id" : "5594792144ae8f95b4f3ee95"
+}
