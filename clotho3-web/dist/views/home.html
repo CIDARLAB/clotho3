@@ -12,40 +12,52 @@
 
   <div class="jumbotron clearfix">
 
-    <div  style="padding-top: 15px;" >
-      <p style="text-align: match-parent">Clotho is a framework for engineering synthetic biological systems and managing the data used to create them. Author data schemas, run functions and algorithms, and tie Clotho into existing applications.</p>
-    </div>
+      <p class="p1">Clotho is a framework for engineering synthetic biological systems and managing the data used to create them. You can author data schemas, run functions and algorithms, and tie Clotho into existing applications.</p>
+    <div style="margin-top: 20px;">
+      <div class="col-xs-8 shadowBox" >
+        <img src="images/clothologo.png" class=" hover img-rounded pull-left" style="width: 165px;height: 197px;"/>
 
-    <div class="col-xs-8 shadowBox " >
-            <img src="images/clothologo.png" class=" hover img-rounded pull-left" style="width: 165px;height: 215px;" />
-            <div class="col-xs-8.5" style="padding-left: 15px;">
-              <h2>Learning Clotho</h2>
-              <p style="text-align: match-parent">An introduction to the basics of DNA and genetic design. </p>
-              <button class="btn btn-lg btn-primary" ng-click="enterClotho()">Get Started</button>
+        <div class="col-xs-8.5" >
+          <h2>Learning Clotho</h2>
 
-            </div>
+          <p class="p2" style="text-align: match-parent">An introduction to the basics of DNA, Genetic Design and Synthetic
+            Biology. </p>
+          <button class="btn btn-lg btn-primary" ng-click="enterClotho()">Get Started</button>
+
         </div>
-        <div class="col-xs-4" >
+      </div>
+      <div class="col-xs-4" style="text-align: right">
+        <!-- Back up config
+        <img src="images/clothocadfiles/button_download.png" style="cursor: pointer; margin-top: 10px;margin-left: 20px;"
+             ng-click="downloadClotho()"/>
+        -->
 
-            <img src="images/clothocadfiles/button_download.png"  style="cursor: pointer;margin-top: 10px;margin-left: 20px;" ng-click="downloadClotho()" />
-            <br>
-            <br>
-            <img src="images/clothocadfiles/button_browse.png"  style="cursor: pointer;margin-top: 15px;margin-left: 20px;" ng-click="browseApps()" />
-        </div>
+        <img src="images/clothocadfiles/button_download.png" style="cursor: pointer; max-width: 100%;height: auto; text-align: right"
+             ng-click="downloadClotho()"/>
+        <br>
+        <br>
+        <img src="images/clothocadfiles/button_browse.png" style="cursor: pointer; max-width: 100%;height: auto; text-align: right"
+             ng-click="browseApps()"/>
+      </div>
     </div>
-
-
-  <div class="modal-footer">
-    <div id="sponsors">
-      <a href="http://www.autodesk.com/" ><img style="height: 40px" src="images/sponsors/autodesk.png"/></a>
-      <a href="http://qb3.org/"><img style="height: 40px" src="images/sponsors/backup/qb3.gif"/></a>
-      <a href="http://www.quintarabio.com/"><img style="height: 40px" src="images/sponsors/quintara.png"/></a>
-      <a href="http://www.synberc.org/"><img style="height: 40px" src="images/sponsors/synberc.png"/></a>
-      <a href="http://www.nsf.gov/"><img style="height: 40px" src="images/sponsors/nsf_logo.png"/></a>
-      <span class="stretch"></span>
-    </div>
-    <p>Clotho is a trademark of Nona Research Foundation, Inc.  </p>
-    <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>
   </div>
+
+
+  <div class="jumbotron" >
+
+    <div class="modal-footer" >
+      <div id="sponsors">
+        <a href="http://www.autodesk.com/" ><img style="height: 40px" src="images/sponsors/autodesk.png"/></a>
+        <a href="http://qb3.org/"><img style="height: 40px" src="images/sponsors/backup/qb3.gif"/></a>
+        <a href="http://www.cidarlab.org/"><img style="height: 40px" src="images/sponsors/cidar.png"/></a>
+        <a href="http://www.synberc.org/"><img style="height: 40px" src="images/sponsors/synberc.png"/></a>
+        <a href="http://www.nsf.gov/"><img style="height: 40px" src="images/sponsors/nsf_logo.png"/></a>
+        <span class="stretch"></span>
+      </div>
+      <p>Clotho is a trademark of <a href="http://www.nonasoftware.org/" target="_blank"> Nona Research Foundation, Inc. </a> </p>
+      <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>
+    </div>
+  </div>
+
 </div>
 

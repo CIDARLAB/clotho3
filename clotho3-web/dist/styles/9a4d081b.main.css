@@ -4141,19 +4141,27 @@ table td[class*=col-], table th[class*=col-] {
   cursor: not-allowed;
 }
 .jumbotron {
-  padding: 30px;
-  margin-bottom: 30px;
+  padding: 20px;
+  margin-bottom: 20px;
   color: inherit;
   background-color: #eee;
 }
 .jumbotron .h1, .jumbotron h1 {
   color: inherit;
 }
-.jumbotron p {
+.jumbotron .p1 {
+  text-align: left;
   margin-bottom: 15px;
   font-size: 21px;
   font-weight: 200;
 }
+
+.jumbotron .p2 {
+  margin-bottom: 15px;
+  font-size: 21px;
+  font-weight: 200;
+}
+
 .jumbotron>hr {
   border-top-color: #d5d5d5;
 }
@@ -4164,8 +4172,8 @@ table td[class*=col-], table th[class*=col-] {
   max-width: 100%}
 @media screen and (min-width:768px) {
   .jumbotron {
-    padding-top: 48px;
-    padding-bottom: 48px;
+    padding-top: 28px;
+    padding-bottom: 10px;
   }
   .container .jumbotron {
     padding-left: 60px;
@@ -5176,7 +5184,7 @@ img {
 .shadowBox {
   position: relative;
   box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
-  margin: 10px 0;
+  /*margin: 10px 0;*/
 }
 .shadowBox.hover:hover {
   box-shadow: 0 1px 4px rgba(0, 0, 0, .4), 0 0 40px rgba(0, 0, 0, .2) inset;
@@ -5210,6 +5218,14 @@ body {
 .container {
   min-width: 750px;
 }
+
+
+.modifiedJumbotron {
+
+
+
+}
+
 body {
   background-color: #FFF;
   -webkit-transition: background-color .25s ease-out;
