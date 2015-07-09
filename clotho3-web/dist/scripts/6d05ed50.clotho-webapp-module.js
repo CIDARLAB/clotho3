@@ -2,7 +2,8 @@ angular.module("clotho.webapp", ["clotho.foundation", "clotho.interface", "cloth
   a.modalContent = "<p>Welcome to Clotho!</p><p>Clotho is a platform for automating your genetic engineering projects. Learn how to use Clotho by starting the trail below!</p>", a.downloadClotho = function() {
     window.open("https://github.com/CIDARLAB/clotho3", "_blank")
   }, a.browseApps = function() {
-    window.open("https://github.com/CIDARLAB/clotho3apps", "_blank")
+    window.open('/#!/apps');
+    //window.open("https://github.com/CIDARLAB/clotho3apps", "_blank")
   }, a.enterClotho = function() {
     window.open("http://www.synbiotrails.org", "_blank")
 
