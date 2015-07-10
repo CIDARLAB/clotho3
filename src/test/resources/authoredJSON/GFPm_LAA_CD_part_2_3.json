@@ -1,0 +1,68 @@
+{
+  "id" : "GFPm_LAA_CD_part_2_3",
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "isVector" : false,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "isSingleStranded" : false,
+    "sequence" : "AATGATGCGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCGGTTATGGTGTTCAATGCTTTGCGAGATACCCAGATCATATGAAACAGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAAAGAACTATATTTTTCAAAGATGACGGGAACTACAAGACACGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATAGAATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTTGGACACAAATTGGAATACAACTATAACTCACACAATGTATACATCATGGCAGACAAACAAAAGAATGGAATCAAAGTTAACTTCAAAATTAGACACAACATTGAAGATGGAAGCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCCACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGAGAGATCACATGGTCCTTCTTGAGTTTGTAACAGCTGCTGGGATTACACATGGCATGGATGAACTATACAAAGCGGCGAACGATGAAAACTATGCGCTGGCGGCGTAAAGGT",
+    "name" : "nucseq",
+    "isCircular" : false,
+    "annotations" : [ {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=177,g=255,b=103]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 718,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=177,g=255,b=103]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "GCGGCGAACGATGAAAACTATGCGCTGGCGGCGTAA"
+        },
+        "name" : "LAA",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "CDS_TAG"
+        },
+        "reverseColor" : "java.awt.Color[r=177,g=255,b=103]"
+      },
+      "reverseColor" : "java.awt.Color[r=177,g=255,b=103]",
+      "end" : 754
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=199,g=176,b=227]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=199,g=176,b=227]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "ATGCGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCGGTTATGGTGTTCAATGCTTTGCGAGATACCCAGATCATATGAAACAGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAAAGAACTATATTTTTCAAAGATGACGGGAACTACAAGACACGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATAGAATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTTGGACACAAATTGGAATACAACTATAACTCACACAATGTATACATCATGGCAGACAAACAAAAGAATGGAATCAAAGTTAACTTCAAAATTAGACACAACATTGAAGATGGAAGCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCCACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGAGAGATCACATGGTCCTTCTTGAGTTTGTAACAGCTGCTGGGATTACACATGGCATGGATGAACTATACAAA"
+        },
+        "name" : "EGFPm",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "CDS_FLUORESCENT"
+        },
+        "reverseColor" : "java.awt.Color[r=199,g=176,b=227]"
+      },
+      "reverseColor" : "java.awt.Color[r=199,g=176,b=227]",
+      "end" : 718
+    } ]
+  },
+  "name" : "GFPm_LAA_CD_part_2_3"
+}

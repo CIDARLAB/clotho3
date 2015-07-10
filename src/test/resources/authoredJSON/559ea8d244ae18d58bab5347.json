@@ -1,0 +1,15 @@
+{
+  "forwardColor" : "java.awt.Color[r=177,g=255,b=103]",
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "GCGGCGAACGATGAAAACTATGCGCTGGCGGCGTAA"
+  },
+  "name" : "LAA.ref",
+  "role" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Feature.FeatureRole",
+    "FeatureRole" : "CDS_TAG"
+  },
+  "reverseColor" : "java.awt.Color[r=177,g=255,b=103]",
+  "id" : "559ea8d244ae18d58bab5347"
+}

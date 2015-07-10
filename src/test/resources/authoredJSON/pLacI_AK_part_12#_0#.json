@@ -1,0 +1,41 @@
+{
+  "id" : "pLacI_AK_part_12#_0#",
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "isVector" : false,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "isSingleStranded" : false,
+    "sequence" : "GCATTGTGTGAAATTGTTATCCGCTCACAATTGAATCTAAGTATCATTGTTATCCGCTCACAAGTCAACACTCTTTTTGATAAATTTTCTCC",
+    "name" : "nucseq",
+    "isCircular" : false,
+    "annotations" : [ {
+      "isForwardStrand" : false,
+      "forwardColor" : "java.awt.Color[r=117,g=198,b=169]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=117,g=198,b=169]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "AAAATTTATCAAAAAGAGTGTTGACTTGTGAGCGGATAACAATGATACTTAGATTCAATTGTGAGCGGATAACAATTTCACACA"
+        },
+        "name" : "pA1LacO",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "PROMOTER_REPRESSIBLE"
+        },
+        "reverseColor" : "java.awt.Color[r=117,g=198,b=169]"
+      },
+      "reverseColor" : "java.awt.Color[r=117,g=198,b=169]",
+      "end" : 88
+    } ]
+  },
+  "name" : "pLacI_AK_part_12#_0#"
+}

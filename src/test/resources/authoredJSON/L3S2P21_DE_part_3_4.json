@@ -1,0 +1,14 @@
+{
+  "id" : "L3S2P21_DE_part_3_4",
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "isVector" : false,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "isSingleStranded" : false,
+    "sequence" : "AGGTTCGGTACCAAATTCCAGAAAAGAGGCCTCCCGAAAGGGGGGCCTTTTTTCGTTTTGGTCCGCTT",
+    "name" : "nucseq",
+    "isCircular" : false,
+    "annotations" : [ ]
+  },
+  "name" : "L3S2P21_DE_part_3_4"
+}
