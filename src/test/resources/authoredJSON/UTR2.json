@@ -1,9 +1,0 @@
-{
-"id" : "org.clothocad.model.RBS.UTR2",
-"name" : "UTR2",
-"schema" : "org.clothocad.model.RBS",
-"utr5" : "GGGAGACCACAACGGTTTCCCTCTAGAAATAATTTTGTTTAACTTTAAGAAGGAGATATACATATG",
-"nativeHost" : "E. coli",
-"weblink" : "https://www.embl.de/pepcore/pepcore_services/strains_vectors/vectors/pdf/pET-3a-d_Map.pdf",
-"isIntergenic" : false
-}

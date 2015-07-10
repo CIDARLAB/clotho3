@@ -1,8 +1,0 @@
-{
-  "code" : "def run(): return clotho.get('org.andersonlab.py_selfie')['code']",
-  "description" : "Kelvin test of invoking clotho.get in a python Function",
-  "language" : "PYTHON",
-  "name" : "py_selfie",
-  "schema" : "org.clothocad.core.datums.Function",
-  "id" : "org.andersonlab.py_selfie"
-}

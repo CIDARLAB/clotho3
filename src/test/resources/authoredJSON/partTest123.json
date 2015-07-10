@@ -1,6 +1,0 @@
-{
-  "schema" : "org.clothocad.model.newTestSchema",
-  "id" : "partTest123",
-  "name" : "randomTestPart",
-  "sequence" : "AATTCCGGTCGGATATGGAAAAAAAAAAAAAAAATCGGATAGATAGCGGCTAGAGCTAAAGGCTAAGCT"
-}

@@ -1,9 +1,0 @@
-{
-"id" : "org.clothocad.model.RBS.UTR4",
-"name" : "UTR4",
-"schema" : "org.clothocad.model.RBS",
-"utr5" : "accCGTTTTTTTGGGCTAACATCTAGAAATAATTTTGTTTAACTTTAAGAAGGAGATATACATATG",
-"nativeHost" : "E. coli",
-"weblink" : "http://www.addgene.org/browse/sequence/47454/",
-"isIntergenic" : false
-}
