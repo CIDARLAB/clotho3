@@ -1,0 +1,32 @@
+{
+  "arcs" : [ {
+    "schema" : "org.cidarlab.phoenix.core.dom.Arc",
+    "regulatee" : "pPhlF.ref",
+    "molecules" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.SmallMolecule",
+      "name" : "DAPG",
+      "role" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.SmallMolecule.SmallMoleculeRole",
+        "SmallMoleculeRole" : "REPRESSION"
+      }
+    } ],
+    "role" : {
+      "schema" : "org.cidarlab.phoenix.core.dom.Arc.ArcRole",
+      "ArcRole" : "REPRESSION"
+    },
+    "regulator" : "phlF.ref"
+  } ],
+  "forwardColor" : "java.awt.Color[r=199,g=176,b=227]",
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "TTCGTTACCAATTGACATGATACGAAACGTACCGTATCGTTAAGGT"
+  },
+  "name" : "pPhlF.ref",
+  "role" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Feature.FeatureRole",
+    "FeatureRole" : "PROMOTER_REPRESSIBLE"
+  },
+  "reverseColor" : "java.awt.Color[r=199,g=176,b=227]",
+  "id" : "55a0073744ae6898c3628712"
+}

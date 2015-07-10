@@ -2,18 +2,204 @@
   <div class="teamIntro">
     <h2>The Clotho Team</h2>
   </div>
+  <div class="teamIntro ">
+    <h2 class="lead">Team Leaders</h2>
+    <ul class="row">
+      <li style="width: 450px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <a href="http://cidarlab.org/doug-densmore/" target="_blank">
+          <img class="img-circle" style="width: 150px" src="../images/people/DougDensmore.png">
+        </a>
 
-  <div class="row">
-    <article class="col-sm-6 profile" ng-repeat="person in ClothoTeam | orderBy:['order', 'surName']" >
-      <div class="profile-header">
-        <img ng-src="{{ (person.icon) ? person.icon :  'images/assets/user-default.png' }}" alt="{{person.name}}" class="img-circle">
-      </div>
+        <h3>Douglas Densmore</h3>
 
-      <div class="profile-content">
-        <h3>{{person.name}}</h3>
-        <p class="lead position">{{person.title}}</p>
-        <p class="description" ng-bind="person.description | limitTo:681"></p>
-      </div>
-    </article>
+        <p style="text-align: justify">Doug was the original creator of Clotho when he was a UC Chancellor’s post
+          doctoral fellow at UC Berkeley. He
+          also served as the research advisor for the 2008, 2009, and 2011 Clotho iGEM teams. He is is a Kern Faculty
+          Fellow, a Hariri Institute for Computing and Computational Science and Engineering Junior Faculty Fellow, and
+          Associate Professor in the Department of Electrical and Computer Engineering at Boston University. His
+          research focuses on the development of tools for the specification, design, and assembly of synthetic
+          biological systems, drawing upon his experience with embedded system level design and electronic design
+          automation (EDA). He received his B.S.E in Computer Engineering from the University of Michigan and his M.S.
+          and PhD in Electrical Engineering from UC Berkeley.
+          He is the director of the Cross-disciplinary Integration of Design Automation Research (CIDAR) group at Boston
+          University, which develop computational and experimental tools for synthetic biology. His research interests
+          include Synthetic Biology, Bio-Electronic Systems, Cyber Physical Systems, Digital Logic Design, and System
+          Level Design.</p>
+      </li>
+      <li style="width: 450px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <a href="http://openwetware.org/wiki/User:JCAnderson" target="_blank">
+          <img class="img-circle" style="width: 150px" src="../images/people/ChrisAnderson.jpg">
+        </a>
+
+        <h3>J. Christopher Anderson</h3>
+
+        <p style="text-align: justify">Chris leads the Anderson Lab to resolve bottleneck steps in the design and
+          implementation of genetic
+          engineering projects. Currently the lab is focused on developing the Clotho and Act Synthesizer tools,
+          multiplex characterize technologies, and formal solutions to biosafety problems.</p>
+      </li>
+    </ul>
+    <h2 class="lead">Current Team</h2>
+    <ul class="row">
+      <li style="width: 450px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <a href="https://github.com/PrashantVaidyanathan" target="_blank">
+          <img class="img-circle" style="width: 150px" src="../images/people/prash.jpg">
+        </a>
+
+        <h3>Prashant Vaidyanathan</h3>
+
+        <p style="text-align: justify">Prashant received his M.S. degree in Computer Engineering from Boston University
+          and B.E. (Hons.) degree in Electrical and Electronics Engineering from Birla Institute of Technology and
+          Science. He is currently pursuing a Ph.D. in Computer Engineering at Boston University, focusing on Functional
+          Specification in Genetic Circuits. As a part of the Cross-disciplinary Integration of Design Automation
+          Research (CIDAR) group, he developed various computational tools for Synthetic Biology including a Logic
+          synthesis tool for Genetic Circuits.
+
+          His research interests include Computer Architecture, Computer Arithmetic, Reconfigurable Computing, Embedded
+          Systems, Logic Synthesis and Synthetic Biology.</p>
+      </li>
+      <li style="width: 450px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-circle" style="width: 150px" src="../images/people/nic.png">
+        <h3>Nicholas Roehner</h3>
+
+        <p style="text-align: justify">Nicholas received the B.S. and Ph.D. degrees in bioengineering from the University of
+          Washington in 2010 and the University of Utah in 2014, respectively, and is currently working as a
+          postdoctoral researcher at Boston University. He has developed methodologies and algorithms for technology
+          mapping of genetic circuits, which are implemented as part of the genetic design automation software tool
+          iBioSim, and he has contributed as an editor to the development of the Synthetic Biology Open Language (SBOL),
+          a community standard for the digital reuse and sharing of biological designs. He is currently developing
+          Double Dutch, a web application for designing libraries of variant metabolic pathways that are tailored for
+          use in a design of experiments framework. His research interests include biodesign automation and standards
+          and their reconciliation with laboratory practice.</p>
+      </li>
+      <li style="width: 450px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-circle" style="width: 150px" src="../images/people/BillCao.jpg">
+
+        <h3>Bill Cao</h3>
+
+        <p style="text-align: justify">Bill Cao graduated from UC Berkeley with a B.S. in Electrical
+          Engineering & Computer Sciences and a B.S. in Bioengineering. He joined the Clotho team with a goal to
+          facilitate innovation in synthetic biology utilizing the power of computation. His interests include
+          computational medicine, entrepreneurship, and anything fun that gets him away from a computer screen.</p>
+      </li>
+
+    </ul>
+    <h2 class="lead">Past Clotho 3.0 Collaborators</h2>
+    <ul class="row">
+      <li style="width: 350px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+          <img class="img-circle" style="width: 150px" src="../images/people/MaxwellBates.jpg">
+        <h3>Maxwell Bates</h3>
+      </li>
+      <li style="width: 350px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-circle" style="width: 150px" src="../images/people/StephaniePaige.jpg">
+        <h3>Stephanie Paige</h3>
+      </li>
+      <li style="width: 350px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-circle" style="width: 150px" src="../images/people/MinaLi.jpg">
+        <h3>Mina Li</h3>
+      </li>
+    </ul>
+    <h2 class="lead">Clotho Alumini</h2>
+    <ul class="row">
+
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_adam_liu.jpg">
+        <h4>Adam Liu</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_anne_van_devender.jpg">
+        <h4>Anne Vandevender</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_ben_bubenheim.jpg">
+        <h4>Ben Bubenheim</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_bing_xia.jpg">
+        <h4>Bing Xia</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_carlos_olguin.jpg">
+        <h4>Carlos Olguin</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/cesar_resized.png">
+        <h4>Cesar</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_joanna_chen.jpg">
+        <h4>Joanna Chen</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_josh_kittleson.jpg">
+        <h4>Josh Kittleson</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_lesia_bilitchenko.jpg">
+        <h4>Lesia Bilitchenko</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/marc_resized.png">
+        <h4>Marc</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_matthew_johnson.jpg">
+        <h4>Matthew Johnson</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_michal_galdzicki.jpg">
+        <h4>Michal Galdzicki</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_nade_sritanyaratana.jpg">
+        <h4>Nade Sritanyaratana</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_nina_revko.jpg">
+        <h4>Nina Revko</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_richard_mar.jpg">
+        <h4>Richard Mar</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/Swapnil_cropped.png">
+        <h4>Swapnil Bhatia</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_thien_nguyen.jpg">
+        <h4>Thien Nguyen</h4>
+      </li>
+      <li style="width: 200px" class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+        <img class="img-rounded" style="width: 100px" src="../images/people/alum/team_timothy_ham.jpg">
+        <h4>Timothy Ham</h4>
+      </li>
+
+    </ul>
   </div>
+
+  <link rel="stylesheet" href="../styles/appsPage.css">
+  <div class="jumbotron">
+
+    <div class="modal-footer">
+      <div id="sponsors">
+        <a href="http://www.autodesk.com/"><img style="height: 40px" src="images/sponsors/autodesk.png"/></a>
+        <a href="http://qb3.org/"><img style="height: 40px" src="images/sponsors/backup/qb3.gif"/></a>
+        <a href="http://www.cidarlab.org/"><img style="height: 40px" src="images/sponsors/cidar.png"/></a>
+        <a href="http://www.synberc.org/"><img style="height: 40px" src="images/sponsors/synberc.png"/></a>
+        <a href="http://www.nonasoftware.org/"><img style="height: 40px" src="images/sponsors/nona.png"/></a>
+        <a href="http://www.nsf.gov/"><img style="height: 40px" src="images/sponsors/nsf_logo.png"/></a>
+        <span class="stretch"></span>
+      </div>
+      <p>Clotho is a trademark of <a href="http://www.nonasoftware.org/" target="_blank"> Nona Research Foundation,
+        Inc. </a></p>
+      <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License"
+                                                                               style="border-width:0"
+                                                                               src="https://i.creativecommons.org/l/by/4.0/88x31.png"/></a><br/>This
+      work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons
+      Attribution 4.0 International License</a>
+    </div>
+  </div>
+
+
 </div>

@@ -1,0 +1,203 @@
+{
+  "id" : "pBetI_AB_part_0_1",
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "isVector" : false,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "isSingleStranded" : false,
+    "sequence" : "GGAGTTCATGGATTCGTTACCAATTGACAATTGATTGGACGTTCAATATAATGCTAGCTACT",
+    "name" : "nucseq",
+    "isCircular" : false,
+    "annotations" : [ {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : ""
+        },
+        "name" : "c1",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "CDS_ACTIVATOR"
+        },
+        "reverseColor" : "java.awt.Color[r=0,g=0,b=0]"
+      },
+      "reverseColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "end" : 4
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 2,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : ""
+        },
+        "name" : "cr",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "CDS_ACTIVATOR"
+        },
+        "reverseColor" : "java.awt.Color[r=0,g=0,b=0]"
+      },
+      "reverseColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "end" : 2
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=133,g=218,b=233]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=133,g=218,b=233]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "TTCATGGATTCGTTACCAATTGACAATTGATTGGACGTTCAATATAATGCTAGC"
+        },
+        "name" : "pBetI",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "PROMOTER_REPRESSIBLE"
+        },
+        "reverseColor" : "java.awt.Color[r=133,g=218,b=233]"
+      },
+      "reverseColor" : "java.awt.Color[r=133,g=218,b=233]",
+      "end" : 58
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 5,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : ""
+        },
+        "name" : "c2",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "CDS_ACTIVATOR"
+        },
+        "reverseColor" : "java.awt.Color[r=0,g=0,b=0]"
+      },
+      "reverseColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "end" : 5
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 0,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : ""
+        },
+        "name" : "p2",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "PROMOTER"
+        },
+        "reverseColor" : "java.awt.Color[r=0,g=0,b=0]"
+      },
+      "reverseColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "end" : 0
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 1,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : ""
+        },
+        "name" : "p1",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "PROMOTER"
+        },
+        "reverseColor" : "java.awt.Color[r=0,g=0,b=0]"
+      },
+      "reverseColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "end" : 1
+    }, {
+      "isForwardStrand" : true,
+      "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 3,
+      "feature" : {
+        "forwardColor" : "java.awt.Color[r=0,g=0,b=0]",
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : ""
+        },
+        "name" : "vFINAL",
+        "role" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.FeatureRole",
+          "FeatureRole" : "VECTOR"
+        },
+        "reverseColor" : "java.awt.Color[r=0,g=0,b=0]"
+      },
+      "reverseColor" : "java.awt.Color[r=0,g=0,b=0]",
+      "end" : 3
+    } ]
+  },
+  "name" : "pBetI_AB_part_0_1"
+}

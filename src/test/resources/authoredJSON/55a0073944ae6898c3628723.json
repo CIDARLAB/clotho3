@@ -1,0 +1,24 @@
+{
+  "arcs" : [ {
+    "schema" : "org.cidarlab.phoenix.core.dom.Arc",
+    "regulatee" : "pLmrA.ref",
+    "role" : {
+      "schema" : "org.cidarlab.phoenix.core.dom.Arc.ArcRole",
+      "ArcRole" : "REPRESSION"
+    },
+    "regulator" : "lmrA.ref"
+  } ],
+  "forwardColor" : "java.awt.Color[r=132,g=176,b=220]",
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "TTCGTTACCAATTGACAACTGGTGGTCGAATCAAGATAATAGACCAGTCACTATATTT"
+  },
+  "name" : "pLmrA.ref",
+  "role" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Feature.FeatureRole",
+    "FeatureRole" : "PROMOTER_REPRESSIBLE"
+  },
+  "reverseColor" : "java.awt.Color[r=132,g=176,b=220]",
+  "id" : "55a0073944ae6898c3628723"
+}
