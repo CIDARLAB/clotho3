@@ -1,0 +1,28 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org.clothocad.core.execution.ConverterFunction",
+  "name" : "ConverterFunction",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "convFunction",
+    "type" : "org.clothocad.core.datums.Function",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org.clothocad.model.ConverterSchema",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.execution.ConverterFunction",
+  "binaryName" : "org.clothocad.core.execution.ConverterFunction"
+}

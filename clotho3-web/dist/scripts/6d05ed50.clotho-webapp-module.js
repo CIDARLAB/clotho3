@@ -1,6 +1,6 @@
 angular.module("clotho.webapp", ["clotho.foundation", "clotho.interface", "clotho.dna", "ngSanitize", "ngRoute"]), angular.module("clotho.webapp").controller("HomeCtrl", ["$scope", "Clotho", "hotkeys", function(a, b, c) {
   a.modalContent = "<p>Welcome to Clotho!</p><p>Clotho is a platform for automating your genetic engineering projects. Learn how to use Clotho by starting the trail below!</p>", a.downloadClotho = function() {
-    window.open("https://github.com/CIDARLAB/clotho3", "_blank")
+    window.open("https://github.com/CIDARLAB/clotho3crud", "_blank")
   }, a.browseApps = function() {
     window.open('/#!/apps');
     //window.open("https://github.com/CIDARLAB/clotho3apps", "_blank")

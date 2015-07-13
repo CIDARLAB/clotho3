@@ -1,0 +1,18 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org.clothocad.core.schema.InferredSchema",
+  "name" : "InferredSchema",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.InferredSchema",
+  "binaryName" : "org.clothocad.core.schema.InferredSchema"
+}
