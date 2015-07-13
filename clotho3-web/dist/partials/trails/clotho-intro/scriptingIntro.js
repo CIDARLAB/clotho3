@@ -13,7 +13,7 @@ $clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', function($scope,
     };
 
     $scope.getHelp = function(){
-      window.open("https://www.clothohelp.org", "_blank");
+      window.open("http://www.clothohelp.org", "_blank");
     };
 
     $scope.showMeHow = function() {

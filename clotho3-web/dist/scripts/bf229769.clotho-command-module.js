@@ -173,7 +173,7 @@ angular.module("clotho.tokenizer", []), angular.module("clotho.commandbar", ["cl
             a.startTrail(b[0].id)
           })
         }, b.getHelp = function() {
-          window.open("https://www.clothohelp.org", "_blank");
+          window.open("http://www.clothohelp.org", "_blank");
         }, b.goHome = function() {
           e.path("/")
         }, b.aboutClotho = function() {
