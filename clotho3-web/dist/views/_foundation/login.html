@@ -91,7 +91,11 @@
               ng-click="createMode = true">
         Create Account
       </button>
-
+      <!--<button class="btn btn-danger"
+              ng-click="logout()"
+              >
+        Logout
+      </button>-->
       <button class="btn btn-default"
               ng-if="createMode"
               ng-disabled="loginForm.$invalid || cred.password != cred.confirm"
