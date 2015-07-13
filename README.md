@@ -3,6 +3,8 @@ Clotho
 
 Clotho is a framework for building synthetic biology software. 
 
+''Please Note, Clotho 3 is still under Beta testing. For a more stable version (with reduced functionality) please try https://github.com/CIDARLAB/clotho3crud ''
+
 Installation
 ------------
 
