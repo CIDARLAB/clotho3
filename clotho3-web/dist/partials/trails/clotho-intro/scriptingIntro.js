@@ -13,7 +13,7 @@ $clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', function($scope,
     };
 
     $scope.getHelp = function(){
-      window.open("http://www.clothohelp.org", "_blank");
+      window.open("https://github.com/CIDARLAB/clotho3crud/wiki", "_blank");
     };
 
     $scope.showMeHow = function() {
