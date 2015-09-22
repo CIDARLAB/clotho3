@@ -42,7 +42,7 @@ import org.clothocad.model.Lab;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
-import org.clothocad.model.SimpleSequence;
+import org.clothocad.model.Sequence;
 
 import static org.clothocad.core.ReservedFieldNames.*;
 
@@ -216,7 +216,7 @@ public class TestUtils {
 
         persistor.save(newperson);
         //persistor.save(newperson2);
-        Sequence partSeq1 = new SimpleSequence("AAAAAAAAAAAAAAAAAAA", person);
+        Sequence partSeq1 = new Sequence("seq1", "AAAAAAAAAAAAAAAAAAA", person);
         Part part1 = new Part("Test Part 1", "the first test part", partSeq1, person);
         Format freeFormat = new FreeForm(person);
         part1.setFormat(freeFormat);
@@ -226,7 +226,7 @@ public class TestUtils {
         feature1.setSequence(partSeq1);
         seqAnnotation1.setFeature(feature1);
         
-        Sequence partSeq2 = new SimpleSequence("TTTTTTTTTTTTTTTTTT", person);
+        Sequence partSeq2 = new Sequence("seq2", "TTTTTTTTTTTTTTTTTT", person);
         Part part2 = new Part("Test Part 2", "the second test part", partSeq2, person);
         part2.setFormat(freeFormat);
         Annotation seqAnnotation2 = partSeq2.createAnnotation("Test Feature 2", 0, partSeq2.getSequence().length() - 1, 

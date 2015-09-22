@@ -17,12 +17,12 @@ import org.clothocad.core.schema.Schema;
  *
  * @author spaige
  */
-public class BasicPartConverter extends Converter<Part> {
+public class PartConverter extends Converter<Part> {
         static Set<String> names = new HashSet<String>();
         static {
             names.add("eugene.dom.components.Part");
         }
-    public BasicPartConverter(Persistor p) {
+    public PartConverter(Persistor p) {
         super(p.get(Schema.class, new ObjectId("org.clothocad.model.Part")), new HashSet<Schema>(), names);
     }
 
@@ -30,16 +30,16 @@ public class BasicPartConverter extends Converter<Part> {
     protected Part guardedConvert(Map data, String schemaName) {
         switch (schemaName){
             case "eugene.dom.components.Part":
-                return convertEugenePartToBasicPart(data);
+                return convertEugenePartToClothoPart(data);
             default:
                 return null;
         }
         
     }
 
-    public static Part convertEugenePartToBasicPart(Map<String, Object> eugenePart) {
+    public static Part convertEugenePartToClothoPart(Map<String, Object> eugenePart) {
     	Person author = new Person("Anonymous");
-    	Sequence partSeq = new SimpleSequence(eugenePart.get("Sequence").toString(), author);
+    	Sequence partSeq = new Sequence("seq", eugenePart.get("Sequence").toString(), author);
     	Part part = new Part(eugenePart.get("Name").toString(), partSeq, author);
     	if (eugenePart.containsKey("_id")) 
     		part.setId(new ObjectId(eugenePart.get("_id").toString()));

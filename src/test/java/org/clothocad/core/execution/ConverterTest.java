@@ -29,7 +29,7 @@ import org.clothocad.core.schema.Schema;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.NucSeq;
 import org.clothocad.model.Person;
-import org.clothocad.model.SimpleSequence;
+import org.clothocad.model.Sequence;
 import org.junit.Test;
 
 /**
@@ -55,7 +55,7 @@ public class ConverterTest {
     public void converttest() throws IOException
     {
     	Person author = new Person("Temp");
-        SimpleSequence s = new SimpleSequence("atgc", author);
+        Sequence s = new Sequence("seq", "atgc", author);
         NucSeq ns = new NucSeq("ATTGGCCTTAAAA", author);
         Argument arguments[];
         Argument arg1 = new Argument("",s.getClass());
@@ -67,9 +67,9 @@ public class ConverterTest {
         ConverterFunction convfunc2 = new ConverterFunction();
         
         convfunc1.convertTo = persistor.get(Schema.class, new ObjectId("org.clothocad.model.NucSeq"));
-        convfunc1.convertFrom = persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence"));
+        convfunc1.convertFrom = persistor.get(Schema.class, new ObjectId("org.clothocad.model.Sequence"));
         convfunc1.setName("Func1");
-        convfunc2.convertTo = persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence"));
+        convfunc2.convertTo = persistor.get(Schema.class, new ObjectId("org.clothocad.model.Sequence"));
         convfunc2.convertFrom = persistor.get(Schema.class, new ObjectId("org.clothocad.model.NucSeq"));
         convfunc2.setName("Func2");
         Function func1 = new Function();
@@ -97,13 +97,13 @@ public class ConverterTest {
         
         Map<String,Object> simpleseqData = new HashMap<>();
         simpleseqData.put("name", "SimplestSequence");
-        simpleseqData.put("schema","org.clothocad.model.SimpleSequence");
+        simpleseqData.put("schema","org.clothocad.model.Sequence");
         simpleseqData.put("sequence","ATTGGCCTTAAACCC");
         persistor.save(ns);
         Map<String,Object> convertparams = new HashMap<>();
         //convertparams.put("name","convertAct");
         convertparams.put("convert", ns);
-        convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence")));
+        convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.Sequence")));
         
         
         
@@ -123,14 +123,14 @@ public class ConverterTest {
         convfunction1.put("name","NucSeqtoSimpleSeq");
         //convfunction1.put("convFunction", convFunc);
         convfunction1.put("convertFrom", "org.clothocad.model.NucSeq");
-        convfunction1.put("convertTo", "org.clothocad.mode.SimpleSequence");
+        convfunction1.put("convertTo", "org.clothocad.mode.Sequence");
         convfunction1.put(ID,id1.toString());
         
         
         Map<String,Object> convfunction2 = new HashMap<>();
         convfunction2.put("schema", "org.clothocad.core.execution.ConverterFunction");
         convfunction2.put("name","SimpleSeqtoNucSeq");
-        convfunction2.put("convertFrom", "org.clothocad.mode.SimpleSequence");
+        convfunction2.put("convertFrom", "org.clothocad.mode.Sequence");
         convfunction2.put("convertTo", "org.clothocad.model.NucSeq");
         convfunction2.put(ID,id2.toString());
         
@@ -152,7 +152,7 @@ public class ConverterTest {
                 
                 if(convF.equals(persistor.get(Schema.class, new ObjectId("org.clothocad.model.NucSeq"))))
                 {
-                    if(convF.equals(persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence"))))
+                    if(convF.equals(persistor.get(Schema.class, new ObjectId("org.clothocad.model.Sequence"))))
                     {
                         System.out.println("Found the converter we were looking for!!");
                         System.out.println("Name of this converter is : "+ result.get("name").toString());

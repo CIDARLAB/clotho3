@@ -13,9 +13,8 @@ import java.util.Map;
 import org.clothocad.core.datums.Argument;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.util.JSON;
-import org.clothocad.model.NucSeq;
 import org.clothocad.model.Person;
-import org.clothocad.model.SimpleSequence;
+import org.clothocad.model.Sequence;
 
 /**
  *
@@ -37,11 +36,11 @@ public class APITesters extends AbstractServerAPITest {
     public void logintest() throws IOException
     {
         Person author = new Person("Temp");
-    	SimpleSequence s = new SimpleSequence("atgc", author);
-        NucSeq ns = new NucSeq("ATTGGCCTTAAAA", author);
+    	Sequence s1 = new Sequence("seq1", "atgc", author);
+    	Sequence s2 = new Sequence("seq2","ATTGGCCTTAAAA", author);
         //System.out.println("SimpleSeq Class : "+s.getClass().getCanonicalName());
         Argument arguments[];
-        Argument arg1 = new Argument("",s.getClass());
+        Argument arg1 = new Argument("",s1.getClass());
         //Argument arg2 = new Argument();
         
         
@@ -52,13 +51,13 @@ public class APITesters extends AbstractServerAPITest {
         
         Map<String,Object> simpleseqData = new HashMap<>();
         simpleseqData.put("name", "SimplestSequence");
-        simpleseqData.put("schema","org.clothocad.model.SimpleSequence");
+        simpleseqData.put("schema","org.clothocad.model.Sequence");
         simpleseqData.put("sequence","ATTGGCCTTAAACCC");
-        persistor.save(ns);
+        persistor.save(s2);
         
         Map<String,Object> convertparams = new HashMap<>();
        
-        //convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.SimpleSequence")));
+        //convertparams.put("convertTo", persistor.get(Schema.class, new ObjectId("org.clothocad.model.Sequence")));
          //credentials.put("username", "testuser");
         //credentials.put("password", "password");
          /*final Message message = new Message(

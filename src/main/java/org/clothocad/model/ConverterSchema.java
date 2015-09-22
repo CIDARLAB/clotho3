@@ -7,7 +7,6 @@
 package org.clothocad.model;
 
 import org.clothocad.core.datums.SharableObjBase;
-import org.clothocad.core.schema.Converters;
 import org.clothocad.core.schema.Schema;
 
 /**

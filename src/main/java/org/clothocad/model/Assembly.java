@@ -1,37 +1,46 @@
 package org.clothocad.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.clothocad.core.persistence.annotations.ReferenceCollection;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.clothocad.core.persistence.annotations.ReferenceCollection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 *
 * @author Nicholas Roehner
 */
+@NoArgsConstructor
 public class Assembly {
-	
-	@Getter
-	@Setter
-	@ReferenceCollection
-	protected List<Part> parts;
-	
-	@Getter
-	protected List<Assembly> subAssemblies;
-	
-	protected Assembly() {
-		
-	}
-	
-	public Assembly createSubAssembly() {
-		if (subAssemblies == null) {
-			subAssemblies = new ArrayList<Assembly>();
+
+    @Getter
+    @Setter
+    @ReferenceCollection
+    protected List<Part> parts;
+
+    @Getter
+    protected List<Assembly> subAssemblies;
+    
+    public Assembly createSubAssembly() {
+        Assembly subAssembly = new Assembly();
+       	addSubAssembly(subAssembly);
+        return subAssembly;
+    }
+    
+    public void addPart(Part part) {
+    	if (parts == null) {
+    		parts = new ArrayList<Part>();
     	}
-		Assembly subAssembly = new Assembly();
-		subAssemblies.add(subAssembly);
-		return subAssembly;
-	}
+    	parts.add(part);
+    }
+    
+    public void addSubAssembly(Assembly subAssembly) {
+    	if (subAssemblies == null) {
+    		subAssemblies = new ArrayList<Assembly>();
+    	}
+    	subAssemblies.add(subAssembly);
+    }
 }
