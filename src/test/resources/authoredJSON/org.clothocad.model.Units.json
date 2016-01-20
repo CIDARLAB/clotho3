@@ -1,0 +1,18 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org.clothocad.model.Units",
+  "name" : "Units",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ ],
+  "methods" : null,
+  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Units",
+  "binaryName" : "org.clothocad.model.Units"
+}
