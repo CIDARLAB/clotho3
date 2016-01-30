@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "cachedCode",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "description",
     "type" : "string",
     "subtype" : null,
@@ -30,8 +20,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "code",
+    "name" : "log",
     "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "cachedCode",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,7 +50,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "log",
+    "name" : "language",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -60,7 +60,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "language",
+    "name" : "code",
     "type" : "object",
     "subtype" : null,
     "example" : null,

@@ -10,47 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "username",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "connection",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "MAX_SIZE_LAST_SHARABLES",
-    "type" : "number",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "userDictionary",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "lastCommands",
+    "name" : "lastSharables",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -70,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "engine",
-    "type" : "object",
+    "name" : "username",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -80,7 +40,17 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "lastSharables",
+    "name" : "MAX_SIZE_LAST_SHARABLES",
+    "type" : "number",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "lastCommands",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -100,7 +70,37 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "connection",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "commandHistory",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "userDictionary",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "engine",
     "type" : "object",
     "subtype" : null,
     "example" : null,

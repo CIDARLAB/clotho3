@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "description",
-    "type" : "string",
+    "name" : "parameter",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "parameter",
-    "type" : "object",
+    "name" : "description",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

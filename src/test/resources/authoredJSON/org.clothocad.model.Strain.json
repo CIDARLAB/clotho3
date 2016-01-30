@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "polynucleotides",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "parentStrain",
     "type" : "org.clothocad.model.Strain",
     "subtype" : null,
@@ -27,6 +17,16 @@
     "access" : null,
     "reference" : true,
     "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "polynucleotides",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
     "constraints" : null,
     "description" : null
   } ],

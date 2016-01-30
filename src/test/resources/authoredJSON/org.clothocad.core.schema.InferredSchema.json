@@ -11,7 +11,7 @@
   "source" : null,
   "fields" : [ ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.schema.Schema",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.schema.InferredSchema",
   "binaryName" : "org.clothocad.core.schema.InferredSchema"

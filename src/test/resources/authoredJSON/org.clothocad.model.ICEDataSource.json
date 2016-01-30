@@ -21,7 +21,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.DataSource",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.ICEDataSource",
   "binaryName" : "org.clothocad.model.ICEDataSource"

@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "givenName",
+    "name" : "surName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "surName",
+    "name" : "givenName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -40,7 +40,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "snailMailAddress",
+    "name" : "emailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -50,7 +50,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "emailAddress",
+    "name" : "primaryEmail",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -70,7 +70,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "primaryEmail",
+    "name" : "snailMailAddress",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -81,7 +81,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Person",
   "binaryName" : "org.clothocad.model.Person"

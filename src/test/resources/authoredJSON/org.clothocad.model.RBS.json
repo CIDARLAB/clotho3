@@ -10,26 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "isIntergenic",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "nativeHost",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "utr5",
     "type" : "string",
     "subtype" : null,
@@ -40,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "nativeContext",
+    "name" : "isIntergenic",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -61,6 +41,26 @@
     "description" : null
   }, {
     "name" : "weblink",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "nativeHost",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "nativeContext",
     "type" : "string",
     "subtype" : null,
     "example" : null,

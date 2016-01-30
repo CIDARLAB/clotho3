@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "isForwardOrientation",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "assemblies",
     "type" : "array",
     "subtype" : null,
@@ -30,12 +40,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isForwardOrientation",
-    "type" : "boolean",
+    "name" : "format",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -49,19 +59,9 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
-  }, {
-    "name" : "format",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Part",
   "binaryName" : "org.clothocad.model.Part"

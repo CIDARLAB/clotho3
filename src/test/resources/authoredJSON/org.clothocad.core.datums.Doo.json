@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "messages",
-    "type" : "array",
+    "name" : "savePolicy",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "dateEnded",
-    "type" : "date",
+    "name" : "messages",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "savePolicy",
-    "type" : "boolean",
+    "name" : "dateEnded",
+    "type" : "date",
     "subtype" : null,
     "example" : null,
     "access" : null,

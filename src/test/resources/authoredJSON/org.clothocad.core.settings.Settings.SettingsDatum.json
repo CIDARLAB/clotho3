@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "this$0",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "recordAllDoos",
     "type" : "boolean",
     "subtype" : null,
@@ -32,6 +22,16 @@
   }, {
     "name" : "id",
     "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "this$0",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

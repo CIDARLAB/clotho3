@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "version",
+    "name" : "sequence",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
+    "name" : "version",
     "type" : "string",
     "subtype" : null,
     "example" : null,

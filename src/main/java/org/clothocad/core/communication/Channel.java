@@ -1,4 +1,4 @@
-package org.clothocad.core.communication;
+ package org.clothocad.core.communication;
 
 public enum Channel {
 
@@ -40,6 +40,10 @@ public enum Channel {
     queryOne,
     
     validate,
+    
+    startsWith,
+    endsWith,
+    contains,
     
 //EXECUTION
     run, //run this Function

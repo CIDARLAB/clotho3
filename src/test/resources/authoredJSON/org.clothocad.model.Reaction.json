@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "products",
-    "type" : "array",
+    "name" : "version",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "version",
-    "type" : "string",
+    "name" : "products",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -41,7 +41,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Reaction",
   "binaryName" : "org.clothocad.model.Reaction"

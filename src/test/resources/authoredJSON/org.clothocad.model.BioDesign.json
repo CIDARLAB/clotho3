@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "strains",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "media",
     "type" : "array",
     "subtype" : null,
@@ -30,6 +40,26 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "polynucleotides",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "parentDesign",
+    "type" : "org.clothocad.model.BioDesign",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "module",
     "type" : "org.clothocad.model.Module",
     "subtype" : null,
@@ -40,17 +70,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "strains",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "polynucleotides",
+    "name" : "subDesigns",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -67,26 +87,6 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "parentDesign",
-    "type" : "org.clothocad.model.BioDesign",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "subDesigns",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
     "constraints" : null,
     "description" : null
   } ],

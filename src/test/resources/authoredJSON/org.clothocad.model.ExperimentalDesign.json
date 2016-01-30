@@ -20,22 +20,32 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "experimentalConditions",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "bioDesign",
     "type" : "org.clothocad.model.BioDesign",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "controlledVariables",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "experimentalConditions",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -57,16 +67,6 @@
     "access" : null,
     "reference" : true,
     "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "controlledVariables",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
     "constraints" : null,
     "description" : null
   } ],

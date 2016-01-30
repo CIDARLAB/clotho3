@@ -20,22 +20,22 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "PI",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "address",
     "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "institution",
-    "type" : "org.clothocad.model.Institution",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -50,8 +50,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "PI",
-    "type" : "org.clothocad.model.Person",
+    "name" : "institution",
+    "type" : "org.clothocad.model.Institution",
     "subtype" : null,
     "example" : null,
     "access" : null,

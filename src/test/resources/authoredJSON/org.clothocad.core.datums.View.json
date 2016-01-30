@@ -10,37 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "inputArguments",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "canUpdate",
-    "type" : "org.clothocad.core.datums.Function",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "authorId",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "name",
+    "name" : "graphicsScript",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -60,7 +30,27 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "id",
+    "name" : "canUpdate",
+    "type" : "org.clothocad.core.datums.Function",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "onShowScript",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "authorId",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -90,7 +80,27 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "onShowScript",
+    "name" : "inputArguments",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "id",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "name",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -119,19 +129,9 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
-  }, {
-    "name" : "graphicsScript",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.datums.View",
   "binaryName" : "org.clothocad.core.datums.View"

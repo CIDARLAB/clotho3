@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "bioDesign",
-    "type" : "org.clothocad.model.BioDesign",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "levels",
     "type" : "array",
     "subtype" : null,
@@ -27,6 +17,16 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "bioDesign",
+    "type" : "org.clothocad.model.BioDesign",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   }, {

@@ -11,7 +11,7 @@
   "source" : null,
   "fields" : [ ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.Sequence",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.SimpleSequence",
   "binaryName" : "org.clothocad.model.SimpleSequence"

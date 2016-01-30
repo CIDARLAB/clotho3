@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "subExperiments",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : true,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "experimentalDesign",
     "type" : "org.clothocad.model.ExperimentalDesign",
     "subtype" : null,
@@ -47,6 +37,16 @@
     "access" : null,
     "reference" : false,
     "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "subExperiments",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
     "constraints" : null,
     "description" : null
   } ],

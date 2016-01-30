@@ -10,12 +10,12 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "type",
-    "type" : "object",
+    "name" : "influencingFeature",
+    "type" : "org.clothocad.model.Feature",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -30,12 +30,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "influencingFeature",
-    "type" : "org.clothocad.model.Feature",
+    "name" : "type",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : true,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

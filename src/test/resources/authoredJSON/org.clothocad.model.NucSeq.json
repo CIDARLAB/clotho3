@@ -10,17 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "isSingleStranded",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "isRNA",
+    "name" : "isLocked",
     "type" : "boolean",
     "subtype" : null,
     "example" : null,
@@ -32,6 +22,46 @@
   }, {
     "name" : "featureTable",
     "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isSingleStranded",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "initiating",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isCircular",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isRNA",
+    "type" : "boolean",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -60,16 +90,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isDegenerate",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "START_CODONS",
     "type" : "array",
     "subtype" : null,
@@ -80,27 +100,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "translation",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "initiating",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "isLocked",
+    "name" : "isDegenerate",
     "type" : "boolean",
     "subtype" : null,
     "example" : null,
@@ -120,8 +120,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isCircular",
-    "type" : "boolean",
+    "name" : "translation",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -141,7 +141,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.Sequence",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.NucSeq",
   "binaryName" : "org.clothocad.model.NucSeq"
