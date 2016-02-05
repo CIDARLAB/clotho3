@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "lastSharables",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "logger",
     "type" : "object",
     "subtype" : null,
@@ -20,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "engine",
-    "type" : "object",
+    "name" : "username",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,18 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "commandHistory",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "lastSharables",
-    "type" : "array",
+    "name" : "MAX_SIZE_LAST_SHARABLES",
+    "type" : "number",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,8 +70,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "MAX_SIZE_LAST_SHARABLES",
-    "type" : "number",
+    "name" : "connection",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -80,7 +80,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "connection",
+    "name" : "commandHistory",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -100,8 +100,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "username",
-    "type" : "string",
+    "name" : "engine",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,

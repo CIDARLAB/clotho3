@@ -41,7 +41,7 @@ public class GlobalTrie {
     }
     
     /*
-     * New constructor to accept the persigstor from the ServerSideAPI
+     * New constructor to accept the persistor from the ServerSideAPI
      */
     public GlobalTrie(List<Map> data) {
         trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
@@ -55,7 +55,20 @@ public class GlobalTrie {
             }
         }
     }
-
+    
+    public GlobalTrie(List<Map> data, String key) {
+        trie = new PatriciaTrie<String, Object> (StringKeyAnalyzer.INSTANCE);
+        List<Map> temp = data;
+        for(Map map : temp){
+            try {
+                String value = (String) map.get(key);
+                trie.put(value.toLowerCase(), map);
+            } catch(Exception err) {
+                System.out.println("Couldn't add to autocomplete Trie: " + map.toString());
+            }
+        }
+    }
+    
     /**
      * JCA:  this is the important method -- when constructing the message
      * to send autocompletes to the Client, this is where those are extracted.

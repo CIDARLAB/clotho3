@@ -41,6 +41,7 @@ public class Feature extends SharableObjBase {
 
     /**
      * Constructor of a new Feature
+     *
      * @param name
      * @param role
      * @param author
@@ -52,6 +53,7 @@ public class Feature extends SharableObjBase {
 
     /**
      * Constructor of a new Feature
+     *
      * @param name
      * @param description
      * @param role
@@ -63,14 +65,15 @@ public class Feature extends SharableObjBase {
     }
 
     /**
-     * Change the risk group of the Feature.  You can only raise the risk group.
+     * Change the risk group of the Feature. You can only raise the risk group.
+     *
      * @param newrg the new risk group (1 through 5)
      */
     public final void setRiskGroup(short newrg) {
         if (newrg > riskGroup && newrg <= 5) {
             //addUndo("_riskGroup", _featDatum._riskGroup, newrg);
             riskGroup = newrg;
-           // setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.RISK_GROUP_CHANGED);
+            // setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.RISK_GROUP_CHANGED);
         }
         //todo: throw appropriate invalid operation exception
     }
@@ -78,6 +81,7 @@ public class Feature extends SharableObjBase {
     // Feel free to add more of these
     public static enum FeatureRole {
     	BARCODE, CDS, DEGRADATION_TAG, GENE, LOCALIZATION_TAG, OPERATOR, PROMOTER, SCAR, SPACER, RBS, RIBOZYME, TERMINATOR;
+
     }
 
 }

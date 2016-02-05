@@ -31,7 +31,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Enzyme",
   "binaryName" : "org.clothocad.model.Enzyme"

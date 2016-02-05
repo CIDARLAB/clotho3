@@ -10,26 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "featureTable",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "isLinear",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "isLocked",
     "type" : "boolean",
     "subtype" : null,
@@ -40,27 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "annotations",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "START_CODONS",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "translation",
+    "name" : "featureTable",
     "type" : "object",
     "subtype" : null,
     "example" : null,
@@ -70,17 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "STOP_CODONS",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "featuresInitiated",
+    "name" : "isSingleStranded",
     "type" : "boolean",
     "subtype" : null,
     "example" : null,
@@ -100,16 +50,6 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isRNA",
-    "type" : "boolean",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "isCircular",
     "type" : "boolean",
     "subtype" : null,
@@ -120,7 +60,27 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "lowerArray",
+    "name" : "isRNA",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "isLinear",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "STOP_CODONS",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -130,8 +90,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isSingleStranded",
-    "type" : "boolean",
+    "name" : "START_CODONS",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -150,8 +110,28 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
-    "type" : "string",
+    "name" : "featuresInitiated",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "translation",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "lowerArray",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,

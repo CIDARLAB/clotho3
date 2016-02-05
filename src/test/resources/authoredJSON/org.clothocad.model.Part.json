@@ -10,42 +10,32 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "isForwardOrientation",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "assemblies",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "sequence",
+    "type" : "org.clothocad.model.Sequence",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "type",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "shortDescription",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "log",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -55,17 +45,17 @@
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "riskGroup",
-    "type" : "number",
+    "name" : "parentPart",
+    "type" : "org.clothocad.model.Part",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

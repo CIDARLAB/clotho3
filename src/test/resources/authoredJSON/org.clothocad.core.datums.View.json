@@ -20,67 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "onUpdateScript",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "largeIconURL",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "inputArguments",
-    "type" : "array",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "smallIconURL",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "name",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "onShowScript",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -100,7 +40,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "id",
+    "name" : "onShowScript",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -120,6 +60,16 @@
     "constraints" : null,
     "description" : null
   }, {
+    "name" : "largeIconURL",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "instanceCount",
     "type" : "number",
     "subtype" : null,
@@ -129,9 +79,59 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
+  }, {
+    "name" : "inputArguments",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "id",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "name",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "onUpdateScript",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.datums.View",
   "binaryName" : "org.clothocad.core.datums.View"

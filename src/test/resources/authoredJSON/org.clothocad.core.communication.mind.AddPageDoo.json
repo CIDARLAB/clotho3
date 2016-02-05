@@ -21,7 +21,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : null,
+  "superClass" : "org.clothocad.core.datums.Doo",
   "innerClasses" : null,
   "c" : "org.clothocad.core.communication.mind.AddPageDoo",
   "binaryName" : "org.clothocad.core.communication.mind.AddPageDoo"

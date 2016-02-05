@@ -84,6 +84,12 @@ public class Router {
                 case autocomplete:
                     response = api.autocomplete(data.toString());
                     break;
+                case startsWith:
+                    Map autocompleteMap = (Map) data;
+                    String query = autocompleteMap.get("query").toString();
+                    String autoCompleteKey = autocompleteMap.get("key").toString();
+                    response = api.autocomplete(query, autoCompleteKey);
+                    break;
                 case submit:
                     response = api.submit(data);
                     break;

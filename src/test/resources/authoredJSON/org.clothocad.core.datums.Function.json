@@ -10,7 +10,17 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "tests",
+    "name" : "author",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "args",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -30,7 +40,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "args",
+    "name" : "tests",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -49,19 +59,9 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
-  }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.Module",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.datums.Function",
   "binaryName" : "org.clothocad.core.datums.Function"

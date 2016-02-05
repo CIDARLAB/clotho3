@@ -12,7 +12,12 @@ $clotho.extensions.controller('clothoIntro_scriptingIntroCtrl', function($scope,
         }
     };
 
+    $scope.getHelp = function(){
+      window.open("https://github.com/CIDARLAB/clotho3crud/wiki", "_blank");
+    };
+
     $scope.showMeHow = function() {
+
 
 	    $modal.messageBox('Entering Commands', 'To reverse complement a sequence, you would call the function <code>DNA.revcomp</code> and pass your sequence in the array of arguments like so: <code>DNA.revcomp("' + $scope.quiz.questionValue + '")</code>', [{label: "OK", cssClass: "btn-primary", result: true}])
 		    .result

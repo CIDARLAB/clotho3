@@ -1,9 +1,0 @@
-{
-"id" : "org.clothocad.model.RBS.UTR21",
-"name" : "UTR21",
-"schema" : "org.clothocad.model.RBS",
-"utr5" : "aattgtgagcggataacaatttcacaCAAGGAGGAAACAGCTatg",
-"nativeHost" : "E. coli",
-"weblink" : "http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.119.6883",
-"isIntergenic" : false
-}

@@ -10,16 +10,6 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "description",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "items",
     "type" : "object",
     "subtype" : null,
@@ -36,6 +26,16 @@
     "example" : null,
     "access" : null,
     "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

@@ -10,6 +10,56 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "emailAddress",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "myCollection",
+    "type" : "org.clothocad.model.Collection",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "nickName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "registryName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "givenName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "lab",
     "type" : "org.clothocad.model.Lab",
     "subtype" : null,
@@ -30,57 +80,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "myCollection",
-    "type" : "org.clothocad.model.Collection",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : true,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "registryName",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "emailAddress",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
     "name" : "surName",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "nickName",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "givenName",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -91,7 +91,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.model.Person",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.core.persistence.LabPersonForTests",
   "binaryName" : "org.clothocad.core.persistence.LabPersonForTests"

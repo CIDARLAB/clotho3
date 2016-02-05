@@ -20,18 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "passwordHash",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "authKey",
-    "type" : "string",
+    "name" : "clients",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -50,8 +40,18 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "clients",
-    "type" : "array",
+    "name" : "passwordHash",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "authKey",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,

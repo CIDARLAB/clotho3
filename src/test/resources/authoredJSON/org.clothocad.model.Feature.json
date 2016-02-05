@@ -10,48 +10,18 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "isCDS",
-    "type" : "boolean",
+    "name" : "sequence",
+    "type" : "org.clothocad.model.Sequence",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "reverseColor",
-    "type" : "object",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "PDBId",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
   }, {
     "name" : "genbankId",
     "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "forwardColor",
-    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -70,12 +40,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "author",
-    "type" : "org.clothocad.model.Person",
+    "name" : "PDBId",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : true,
+    "reference" : false,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -90,8 +60,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
-    "type" : "org.clothocad.model.NucSeq",
+    "name" : "parentFeature",
+    "type" : "org.clothocad.model.Feature",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -99,9 +69,19 @@
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
+  }, {
+    "name" : "role",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Feature",
   "binaryName" : "org.clothocad.model.Feature"

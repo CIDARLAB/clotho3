@@ -1,8 +1,0 @@
-{
-  "schema" : "org.clothocad.core.datums.Function",
-  "language" : "PYTHON",
-  "name" : "py_die_early",
-  "id" : "org.andersonlab.py_die_early",
-  "description" : "Kelvin test",
-  "code" : "raise Exception('dying during definition!')"
-}

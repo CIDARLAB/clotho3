@@ -10,8 +10,8 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "target",
-    "type" : "string",
+    "name" : "intermediates",
+    "type" : "array",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -40,8 +40,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "intermediates",
-    "type" : "array",
+    "name" : "target",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -51,7 +51,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.SinglePathway",
   "binaryName" : "org.clothocad.model.SinglePathway"

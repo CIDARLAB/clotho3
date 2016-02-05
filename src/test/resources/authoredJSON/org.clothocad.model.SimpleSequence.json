@@ -9,17 +9,7 @@
   "icon" : null,
   "dependencies" : null,
   "source" : null,
-  "fields" : [ {
-    "name" : "sequence",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  } ],
+  "fields" : [ ],
   "methods" : null,
   "superClass" : null,
   "innerClasses" : null,

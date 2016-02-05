@@ -93,7 +93,8 @@ public class ClothoWebSocket
         this.connection = connection;
         // Close WebSocket after 1 week ofidle time
         connection.setMaxIdleTime(7 * 24 * 3600000);
-
+        connection.setMaxBinaryMessageSize(999999);
+        connection.setMaxTextMessageSize(999999);
         subject = SecurityUtils.getSubject();
 
     }

@@ -774,5 +774,9 @@ public class Persistor{
     public Iterable<Map<String,Object>> getCompletions(String word){
         return filterByPermission(globalTrie.getCompletions(word), view);
     }
-
+    public Iterable<Map<String,Object>> getCompletionsForKey(String word,String key){
+        globalTrie = new GlobalTrie(connection.getCompletionData(),key);
+        return filterByPermission(globalTrie.getCompletions(word), view);
+    }
+    
 }

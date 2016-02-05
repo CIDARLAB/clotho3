@@ -75,11 +75,11 @@
   <div class="row">
     <div ng-cloak
          class="col-sm-offset-3 col-sm-9">
-      <button class="btn btn-primary"
+      <!--<button class="btn btn-primary"
               ng-if="!facebookRetrieved && !retrieved"
               ng-click="facebookLogin()">
         Retrieve Facebook
-      </button>
+      </button>-->
       <button class="btn btn-primary"
               ng-click="login()"
               ng-if="!createMode"
@@ -91,7 +91,11 @@
               ng-click="createMode = true">
         Create Account
       </button>
-
+      <!--<button class="btn btn-danger"
+              ng-click="logout()"
+              >
+        Logout
+      </button>-->
       <button class="btn btn-default"
               ng-if="createMode"
               ng-disabled="loginForm.$invalid || cred.password != cred.confirm"

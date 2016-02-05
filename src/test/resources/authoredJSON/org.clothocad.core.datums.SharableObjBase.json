@@ -10,7 +10,7 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
-    "name" : "icon",
+    "name" : "description",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "description",
+    "name" : "icon",
     "type" : "string",
     "subtype" : null,
     "example" : null,
@@ -35,7 +35,7 @@
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

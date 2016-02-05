@@ -10,6 +10,16 @@
   "dependencies" : null,
   "source" : null,
   "fields" : [ {
+    "name" : "isLinear",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
     "name" : "highlights",
     "type" : "array",
     "subtype" : null,
@@ -30,12 +40,22 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "isLinear",
-    "type" : "boolean",
+    "name" : "submissionDate",
+    "type" : "date",
     "subtype" : null,
     "example" : null,
     "access" : null,
     "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "sequence",
+    "type" : "org.clothocad.model.Sequence",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null
@@ -50,32 +70,12 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "sequence",
-    "type" : "string",
+    "name" : "parentPolynucleotide",
+    "type" : "org.clothocad.model.Polynucleotide",
     "subtype" : null,
     "example" : null,
     "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "submissionDate",
-    "type" : "date",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
-    "referenceCollection" : false,
-    "constraints" : null,
-    "description" : null
-  }, {
-    "name" : "description",
-    "type" : "string",
-    "subtype" : null,
-    "example" : null,
-    "access" : null,
-    "reference" : false,
+    "reference" : true,
     "referenceCollection" : false,
     "constraints" : null,
     "description" : null

@@ -20,7 +20,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "products",
+    "name" : "enzymes",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -30,7 +30,7 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "enzymes",
+    "name" : "products",
     "type" : "array",
     "subtype" : null,
     "example" : null,
@@ -41,7 +41,7 @@
     "description" : null
   } ],
   "methods" : null,
-  "superClass" : "org.clothocad.core.datums.SharableObjBase",
+  "superClass" : null,
   "innerClasses" : null,
   "c" : "org.clothocad.model.Reaction",
   "binaryName" : "org.clothocad.model.Reaction"

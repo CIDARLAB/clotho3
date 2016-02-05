@@ -20,8 +20,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "language",
-    "type" : "object",
+    "name" : "graphicsCode",
+    "type" : "string",
     "subtype" : null,
     "example" : null,
     "access" : null,
@@ -30,8 +30,8 @@
     "constraints" : null,
     "description" : null
   }, {
-    "name" : "graphicsCode",
-    "type" : "string",
+    "name" : "language",
+    "type" : "object",
     "subtype" : null,
     "example" : null,
     "access" : null,
