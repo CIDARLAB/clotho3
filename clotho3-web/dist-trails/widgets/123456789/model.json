@@ -1,0 +1,35 @@
+{
+	"id": "123456789",
+
+	"importedViews": {
+		"otherView": "987654321"
+	},
+
+	"files": [
+		"index.html",
+		"lazyPartial.html"
+	],
+
+	"dependencies": [
+		"trackingExecutable.js",
+		"external-module.js",
+		"widgetModule.js",
+		"widgetController.js"
+	],
+
+	"dictionary": {
+		"dictString": "My String",
+		"dictObject": {
+			"myKey": "myValue"
+		},
+		"myPerson" : {
+			"type" : "Person"
+		}
+	},
+
+	"controller": "123456789_parentController",
+
+	"bootstrap": {
+		"modules": ["123456789"]
+	}
+}

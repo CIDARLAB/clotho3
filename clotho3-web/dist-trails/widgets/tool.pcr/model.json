@@ -1,0 +1,9 @@
+{
+  "id": "tool.pcr",
+
+  "files": [
+    "index.html"
+  ],
+
+  "dependencies": ["pcr.js"]
+}

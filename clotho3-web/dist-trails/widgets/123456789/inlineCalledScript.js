@@ -1,0 +1,1 @@
+console.log('WIDGET 123456789 - script called from index.html (not inline)');

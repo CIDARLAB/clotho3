@@ -1,0 +1,37 @@
+<div class="container settings-page">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <span class="glyphicon glyphicon-cog"></span> Settings
+    </div>
+    <div class="panel-body">
+      <div class="col-sm-2">
+        <img ng-src="{{ (person.icon) ? person.icon :  'images/assets/user-default.png' }}"
+             alt="{{person.name}}"
+             class="img-circle">
+        <button class="btn btn-sm btn-default center-block"
+                style="margin-top: 15px;"
+                ng-click="Clotho.edit(person.id)">
+          <span class="glyphicon glyphicon-cog"></span>
+          Edit
+        </button>
+      </div>
+      <div class="col-sm-10">
+        <div class="profile-content">
+          <h3>{{person.name}}</h3>
+
+          <p class="lead position">{{person.title}}</p>
+
+          <p class="description" ng-bind="person.description | limitTo:600"></p>
+        </div>
+      </div>
+    </div>
+    <div class="list-group">
+      <div class="list-group-item">
+        <h5>Another Section</h5>
+      </div>
+      <div class="list-group-item">
+        <h5>Another Section</h5>
+      </div>
+    </div>
+  </div>
+</div>
