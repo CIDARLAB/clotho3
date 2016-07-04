@@ -25,7 +25,7 @@ public enum ConfigOption {
                     .toString(),
                 "path"),
     clientdirectory("path to client files directory",
-                Paths.get("clotho3-web", "dist").toString(),
+                Paths.get("clotho3-web", "dist-trails").toString(),
                 "path");
 
     final String description;
