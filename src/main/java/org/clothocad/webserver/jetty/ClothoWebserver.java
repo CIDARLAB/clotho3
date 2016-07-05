@@ -11,8 +11,8 @@ import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.server.ssl.SslConnector;
+//import org.eclipse.jetty.server.nio.SelectChannelConnector;
+//import org.eclipse.jetty.server.ssl.SslConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -42,6 +42,10 @@ public class ClothoWebserver {
         server = new Server();
 
         //Connectors
+        
+        
+        
+        
         SelectChannelConnector connector0 = new SelectChannelConnector();
         connector0.setPort(nPort);
         connector0.setMaxIdleTime(3600000);
@@ -93,6 +97,8 @@ public class ClothoWebserver {
     }
 
     public void start() throws Exception {
+        
         server.start();
+        //server.doStart();
     }
 }

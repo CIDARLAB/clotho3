@@ -37,7 +37,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
-import com.fasterxml.jackson.databind.type.SimpleType;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
 import java.io.IOException;
 import java.lang.Object;
@@ -62,7 +61,6 @@ import org.clothocad.core.schema.Constraint;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.annotation.AnnotationType;
 /**
  * @author John Christopher Anderson
  */

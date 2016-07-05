@@ -195,32 +195,35 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>8.1.10.v20130312</version>
+            <version>${jetty-version}</version>
         </dependency>
     
     
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>8.1.10.v20130312</version>
+            <!--<version>8.1.10.v20130312</version>-->
+            <version>${jetty-version}</version>
         </dependency>
 	
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>8.1.10.v20130312</version>
+            <!--<version>8.1.10.v20130312</version>-->
+            <version>${jetty-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-websocket</artifactId>
-            <version>8.1.10.v20130312</version>
+            <!--<version>8.1.10.v20130312</version>-->
+            <version>${jetty-websocket-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
-            <version>9.0.2.v20130417</version>
+            <version>${jetty-version}</version>
         </dependency>
 
         <dependency>
@@ -425,7 +428,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-rewrite</artifactId>
-            <version>8.1.10.v20130312</version>
+            <version>${jetty-version}</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -457,6 +460,8 @@
 	
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jetty-version>9.3.10.v20160621</jetty-version>
+        <jetty-websocket-version>8.1.19.v20160209</jetty-websocket-version>
     </properties>
   
 </project>
