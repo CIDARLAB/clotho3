@@ -5,45 +5,48 @@ import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.*;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketClient;
-
-public class ClothoLoadClient 
-	implements WebSocket.OnTextMessage {
+@WebSocket
+public class ClothoLoadClient{
 	
 	private static final AtomicLong sent = new AtomicLong(0);
 	private static final AtomicLong received = new AtomicLong(0);
 	private static final Set<ClothoLoadClient> members = new CopyOnWriteArraySet<ClothoLoadClient>();
 	private final String name;
-	private final Connection connection;
+	private final Session session;
  
-	public ClothoLoadClient(
-		  String username, WebSocketClient client,String host, int port)
+	public ClothoLoadClient(String username, WebSocketClient client,String host, int port)
 				  throws Exception {
 		name=username;
-		connection=client.open(new URI("ws://"+host+":"+port+"/websocket"),this).get();
+		session = client.connect(this, new URI("ws://"+host+":"+port+"/websocket")).get();
 	}
  
 	public void send(String message) 
 			throws IOException {
-		connection.sendMessage(message);
+		session.getRemote().sendString(message);
 	}
  
-	public void onOpen(Connection connection) {
+        @OnWebSocketConnect
+	public void onOpen(Session session) {
 		members.add(this);
 	}
  
+        @OnWebSocketClose
 	public void onClose(int closeCode, String message) {
 		members.remove(this);
 	}
  
+        
 	public void onMessage(String data) {
 		received.incrementAndGet();
 	}
  
 	public void disconnect() 
 		throws IOException {
-		connection.disconnect();
+		session.close();
 	}
 }

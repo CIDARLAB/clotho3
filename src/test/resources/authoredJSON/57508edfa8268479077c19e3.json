@@ -1,0 +1,23 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "reverseColor" : -3690269,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "TTCGTTACCAATTGACATGATACGAAACGTACCGTATCGTTAAGGT"
+  },
+  "role" : "PROMOTER_REPRESSIBLE",
+  "name" : "pPhlF.ref",
+  "forwardColor" : -3690269,
+  "arcs" : [ {
+    "schema" : "org.cidarlab.phoenix.core.dom.Arc",
+    "role" : "REPRESSION",
+    "regulatee" : "pPhlF.ref",
+    "molecules" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.SmallMolecule",
+      "role" : "REPRESSION",
+      "name" : "DAPG"
+    } ],
+    "regulator" : "phlF.ref"
+  } ],
+  "id" : "57508edfa8268479077c19e3"
+}

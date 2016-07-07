@@ -13,20 +13,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
-import org.eclipse.jetty.websocket.WebSocket;
-
+import org.eclipse.jetty.websocket.api.Session;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
+import org.eclipse.jetty.websocket.api.annotations.*;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 @Slf4j
+// Close WebSocket after 1 week ofidle time
+@WebSocket(maxBinaryMessageSize = 999999, maxIdleTime = 7 * 24 * 3600000, maxTextMessageSize = 999999)
 public class ClothoWebSocket
-        extends ClientConnection
-        implements WebSocket.OnTextMessage {
+        extends ClientConnection {
 
-    private WebSocket.Connection connection;
+    private Session session;
+    //private WebSocket.Connection connection;
     private Subject subject;
     private final Router router;
 
@@ -52,7 +52,7 @@ public class ClothoWebSocket
         this.router = router;
     }
 
-    @Override
+    @OnWebSocketClose
     public void onClose(int closeCode, String message) {
     }
 
@@ -60,14 +60,14 @@ public class ClothoWebSocket
     public void send(Message msg) {
         try {
             String messageString = JSON.serializeForExternal(msg);
-            connection.sendMessage(messageString);
+            session.getRemote().sendString(messageString);
             log.trace("Sent: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send message", ex);
         }
     }
 
-    @Override
+    @OnWebSocketMessage
     public void onMessage(String messageString) {
         log.trace("WebSocket #{} received message {}", this.getId(), messageString);
         try {
@@ -82,19 +82,16 @@ public class ClothoWebSocket
             throw new RuntimeException(ex);
         }
     }
-
+ 
     public boolean isOpen() {
-        return connection.isOpen();
+        return session.isOpen();
     }
 
-    @Override
-    public void onOpen(Connection connection) {
+    @OnWebSocketConnect
+    public void onOpen(Session session) {
         log.debug("New connection opened. Connection id is {}.", this.getId());
-        this.connection = connection;
-        // Close WebSocket after 1 week ofidle time
-        connection.setMaxIdleTime(7 * 24 * 3600000);
-        connection.setMaxBinaryMessageSize(999999);
-        connection.setMaxTextMessageSize(999999);
+        this.session = session;
+        
         subject = SecurityUtils.getSubject();
 
     }
@@ -103,7 +100,7 @@ public class ClothoWebSocket
     public void deregister(Channel channel, String requestId) {
         String messageString = String.format("{\"channel\": \"%s\", \"requestId\": \"%s\"}", channel, requestId);
         try {
-            connection.sendMessage(messageString);
+            session.getRemote().sendString(messageString);
             log.trace("Sent deregister: {}", messageString);
         } catch (IOException ex) {
             log.error("Cannot send deregister message:{}", ex.getMessage());

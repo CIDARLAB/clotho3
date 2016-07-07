@@ -1,0 +1,13 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "reverseColor" : -349087,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCTGCGGAGGGTTTCT"
+  },
+  "role" : "RBS",
+  "name" : "BCD12.ref",
+  "forwardColor" : -349087,
+  "arcs" : [ ],
+  "id" : "57508edfa8268479077c19e1"
+}

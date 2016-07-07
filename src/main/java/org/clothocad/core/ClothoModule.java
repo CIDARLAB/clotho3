@@ -8,8 +8,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.Provides;
 
-import org.eclipse.jetty.server.ssl.SslConnector;
-import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.util.Properties;
@@ -34,11 +33,11 @@ public class ClothoModule extends AbstractModule {
     }
 
     @Provides
-    protected SslConnector provideSslConnector() throws Exception {
+    protected SslContextFactory provideSslConnector() throws Exception {
         SslContextFactory cf = new SslContextFactory();
         cf.setKeyStorePath(config.getProperty("keystorepath"));
         cf.setKeyStorePassword(config.getProperty("keystorepass"));
-        SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);
-        return sslConnector;
+        //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);
+        return cf;
     }
 }

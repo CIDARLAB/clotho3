@@ -20,8 +20,6 @@ import org.bouncycastle.x509.X509V1CertificateGenerator;
 import org.clothocad.core.ClothoModule;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.util.TestRouter;
-import org.eclipse.jetty.server.ssl.SslConnector;
-import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 /**
@@ -48,11 +46,11 @@ public class ClothoTestModule extends ClothoModule {
     }
 
     @Override
-    protected SslConnector provideSslConnector() throws Exception {
+    protected SslContextFactory provideSslConnector() throws Exception {
         SslContextFactory cf = new SslContextFactory();
         cf.setKeyStore(provideKeyStore());
-        SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);                
-        return sslConnector;
+        //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);                
+        return cf;
     }
     
     protected KeyStore provideKeyStore() throws Exception {

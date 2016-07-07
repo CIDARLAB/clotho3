@@ -1,0 +1,13 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "reverseColor" : -685474,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "GCTGCAAACGACGAAAACTACGCTTTAGTAGCTTAA"
+  },
+  "role" : "CDS_TAG",
+  "name" : "LVA.ref",
+  "forwardColor" : -685474,
+  "arcs" : [ ],
+  "id" : "57508edea8268479077c19ce"
+}

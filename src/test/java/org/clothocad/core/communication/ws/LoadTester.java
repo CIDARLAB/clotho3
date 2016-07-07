@@ -1,9 +1,7 @@
 package org.clothocad.core.communication.ws;
 
 import java.util.Random;
-
-import org.eclipse.jetty.websocket.WebSocketClient;
-import org.eclipse.jetty.websocket.WebSocketClientFactory;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 public class LoadTester {
 
@@ -15,13 +13,11 @@ public class LoadTester {
 	
 	public static void main(String[] args) 
 			throws Exception {
-		WebSocketClientFactory factory = new WebSocketClientFactory();
-		factory.setBufferSize(4096);
-		factory.start();
 		
-		WebSocketClient client = factory.newWebSocketClient();
-		client.setMaxIdleTime(30000);
-		client.setMaxTextMessageSize(1024);
+		WebSocketClient client = new WebSocketClient();
+		client.setConnectTimeout(30000);
+		client.setMaxTextMessageBufferSize(1024 * 64);
+                client.start();
 		
 		ClothoLoadClient[] clotho = new ClothoLoadClient[NR_OF_CLIENTS];
 		for (int i=0; i<NR_OF_CLIENTS; i++) {

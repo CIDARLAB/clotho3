@@ -17,12 +17,15 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.ServerConnector;
 
 //TODO: convert config to guice module
 //TODO: make easy to switch ssl requirement on/off for deploy testing
@@ -34,7 +37,7 @@ public class ClothoWebserver {
     @Inject
     public ClothoWebserver(@Named("port") int nPort,
             @Named("confidentialport") int confidentialPort,
-            SslConnector sslConnector,
+//            SslConnector sslConnector,
             @Named("containerServletContext") ServletContextHandler servletHandler,
             final Router router, @Named("clientdirectory") String clientDirectory)
             throws Exception {
@@ -43,18 +46,20 @@ public class ClothoWebserver {
 
         //Connectors
         
+        HttpConfiguration http_config = new HttpConfiguration();
+        http_config.setSecurePort(confidentialPort);
+        http_config.setOutputBufferSize(8129);
         
         
-        
-        SelectChannelConnector connector0 = new SelectChannelConnector();
-        connector0.setPort(nPort);
-        connector0.setMaxIdleTime(3600000);
-        connector0.setRequestHeaderSize(8192);
-        connector0.setConfidentialPort(confidentialPort);
-        server.addConnector(connector0);
+        ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
+        http.setPort(nPort);
+        http.setIdleTimeout(3600000);
+//        connector0.setMaxIdleTIme(3600000);
+//        connector0.setRequestHeaderSize(8192);
+//        server.addConnector(connector0);
 
-        sslConnector.setPort(confidentialPort);
-        server.addConnector(sslConnector);
+//        sslConnector.setPort(confidentialPort);
+//        server.addConnector(sslConnector);
 
         // Connection constraints
         Constraint constraint = new Constraint();
@@ -67,14 +72,6 @@ public class ClothoWebserver {
         ConstraintSecurityHandler constraintHandler = new ConstraintSecurityHandler();
         constraintHandler.setConstraintMappings(new ConstraintMapping[]{cm});
 
-        // Websocket
-
-        WebSocketServlet wsServlet = new WebSocketServlet() {
-            @Override
-            public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
-                return new ClothoWebSocket(request.getSession().getId(), router); 
-            }
-        };
 
         // Static resources
         DefaultServlet staticServlet = new DefaultServlet();
@@ -87,13 +84,23 @@ public class ClothoWebserver {
         servletHandler.addFilter(GuiceFilter.class, "/*", null);
 
         servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
-        servletHandler.addServlet(new ServletHolder(wsServlet), "/websocket");
+        servletHandler.addServlet(new ServletHolder(ClothoServlet.class), "/websocket");
         servletHandler.addServlet(new ServletHolder(new RestApi(router)), "/data/*");
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(constraintHandler);
         constraintHandler.setHandler(servletHandler);
         server.setHandler(handlers);
+    }
+    
+    @SuppressWarnings("serial")
+    public class ClothoServlet extends WebSocketServlet
+    {
+        @Override
+        public void configure(WebSocketServletFactory factory)
+        {
+            factory.register(ClothoWebSocket.class);
+        }
     }
 
     public void start() throws Exception {

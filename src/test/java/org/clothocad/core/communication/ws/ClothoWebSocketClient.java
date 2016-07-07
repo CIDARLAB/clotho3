@@ -4,44 +4,61 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import org.clothocad.core.util.FileUtils;
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketClient;
-import org.eclipse.jetty.websocket.WebSocketClientFactory;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.*;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
+import java.util.concurrent.Future;
 
 public class ClothoWebSocketClient {
 
 	private final String CLOTHO_WEBSOCKET_LOCATION = "ws://localhost:9090/websocket";
+        
+        @WebSocket
+        private class ClothoWebSocket {
+            @OnWebSocketConnect
+            public void onOpen(Session session) {
+                    // open notification
+            }
+            @OnWebSocketClose
+            public void onClose(int closeCode, String message) {
+                    // close notification
+            }
+            @OnWebSocketMessage
+            public void onMessage(String data) {
+                    System.out.println("[ClothoWebSocketClient.onMessage] RECEIVED MESSAGE "+data);
+            }
+        }
 	
 	public ClothoWebSocketClient(String jsonFile) 
 			throws Exception {
 		
-		WebSocketClientFactory factory = new WebSocketClientFactory();
-		factory.start();		
-		
-		WebSocketClient client = factory.newWebSocketClient();
-		
-		WebSocket.Connection connection = client.open(
-			new URI(CLOTHO_WEBSOCKET_LOCATION), 
-			new WebSocket.OnTextMessage() {					
-                                public void onOpen(Connection connection) {
-                                        // open notification
-                                }
-
-                                public void onClose(int closeCode, String message) {
-                                        // close notification
-                                }
-
-                                public void onMessage(String data) {
-                                        System.out.println("[ClothoWebSocketClient.onMessage] RECEIVED MESSAGE "+data);
-                                }
-			}
-		).get(5, TimeUnit.SECONDS);
+		SslContextFactory factory = new SslContextFactory(true);
+		WebSocketClient client = new WebSocketClient(factory);
+		Future<Session> fut = client.connect(new ClothoWebSocket(), new URI(CLOTHO_WEBSOCKET_LOCATION));
+//		WebSocket.Connection connection = client.open(
+//			new URI(CLOTHO_WEBSOCKET_LOCATION), 
+//			new WebSocket.OnTextMessage() {					
+//                                public void onOpen(Connection connection) {
+//                                        // open notification
+//                                }
+//
+//                                public void onClose(int closeCode, String message) {
+//                                        // close notification
+//                                }
+//
+//                                public void onMessage(String data) {
+//                                        System.out.println("[ClothoWebSocketClient.onMessage] RECEIVED MESSAGE "+data);
+//                                }
+//			}
+//		).get(5, TimeUnit.SECONDS);
 				
 		String json = FileUtils.readFile(jsonFile);
 		System.out.println("sending...");
 		System.out.println(json);
-		
-		connection.sendMessage(json);
+                
+		fut.get(5, TimeUnit.SECONDS).getRemote().sendString(json);
 	}
 	
 	public static void main(String[] args) 

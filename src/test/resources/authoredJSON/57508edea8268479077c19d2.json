@@ -1,0 +1,13 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "reverseColor" : -4936788,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "GGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCCTGAGTAGGACAAATCCGCCGCCCTAGA"
+  },
+  "role" : "TERMINATOR",
+  "name" : "T1.ref",
+  "forwardColor" : -4936788,
+  "arcs" : [ ],
+  "id" : "57508edea8268479077c19d2"
+}
