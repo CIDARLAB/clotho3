@@ -25,7 +25,9 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 //TODO: convert config to guice module
 //TODO: make easy to switch ssl requirement on/off for deploy testing
@@ -37,7 +39,7 @@ public class ClothoWebserver {
     @Inject
     public ClothoWebserver(@Named("port") int nPort,
             @Named("confidentialport") int confidentialPort,
-//            SslConnector sslConnector,
+            SslContextFactory sslContextFactory,
             @Named("containerServletContext") ServletContextHandler servletHandler,
             final Router router, @Named("clientdirectory") String clientDirectory)
             throws Exception {
@@ -48,18 +50,26 @@ public class ClothoWebserver {
         
         HttpConfiguration http_config = new HttpConfiguration();
         http_config.setSecurePort(confidentialPort);
-        http_config.setOutputBufferSize(8129);
+        http_config.setOutputBufferSize(8192);
         
         
         ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
         http.setPort(nPort);
         http.setIdleTimeout(3600000);
-//        connector0.setMaxIdleTIme(3600000);
-//        connector0.setRequestHeaderSize(8192);
-//        server.addConnector(connector0);
-
-//        sslConnector.setPort(confidentialPort);
-//        server.addConnector(sslConnector);
+        
+        HttpConfiguration https_config = new HttpConfiguration(http_config);
+        SecureRequestCustomizer src = new SecureRequestCustomizer();
+        src.setStsMaxAge(2000);
+        src.setStsIncludeSubDomains(true);
+        https_config.setOutputBufferSize(8192);
+        https_config.addCustomizer(src);
+        
+        ServerConnector https = new ServerConnector(server, sslContextFactory, new HttpConnectionFactory(https_config));
+        https.setPort(confidentialPort);
+        https.setIdleTimeout(3600000);
+        
+        server.addConnector(http);
+        server.addConnector(https);
 
         // Connection constraints
         Constraint constraint = new Constraint();

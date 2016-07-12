@@ -191,11 +191,12 @@
             <version>6.0.30</version>
             <type>jar</type>
         </dependency>
-
+        
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>${jetty-version}</version>
+            <version>9.3.10.v20160621</version>
         </dependency>
     
     
