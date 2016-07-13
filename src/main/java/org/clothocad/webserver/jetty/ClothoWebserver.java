@@ -28,6 +28,10 @@ import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
+import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
+import org.yaml.snakeyaml.events.Event;
 
 //TODO: convert config to guice module
 //TODO: make easy to switch ssl requirement on/off for deploy testing
@@ -92,9 +96,13 @@ public class ClothoWebserver {
         servletHandler.setWelcomeFiles(new String[]{"index.html"});
 
         servletHandler.addFilter(GuiceFilter.class, "/*", null);
+        
+        ClothoServlet clothoServ = new ClothoServlet();
+        clothoServ.id = "some ID";
+        clothoServ.router = router;
 
         servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
-        servletHandler.addServlet(new ServletHolder(ClothoServlet.class), "/websocket");
+        servletHandler.addServlet(new ServletHolder(clothoServ), "/websocket");
         servletHandler.addServlet(new ServletHolder(new RestApi(router)), "/data/*");
 
         HandlerList handlers = new HandlerList();
@@ -106,10 +114,19 @@ public class ClothoWebserver {
     @SuppressWarnings("serial")
     public class ClothoServlet extends WebSocketServlet
     {
+        public String id;
+        public Router router;
+        
         @Override
         public void configure(WebSocketServletFactory factory)
         {
-            factory.register(ClothoWebSocket.class);
+            factory.getPolicy().setIdleTimeout(10000);
+            factory.setCreator(new WebSocketCreator() {
+                @Override
+                public Object createWebSocket(ServletUpgradeRequest sur, ServletUpgradeResponse sur1) {
+                    return new ClothoWebSocket(id, router); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
         }
     }
 

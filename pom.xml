@@ -198,6 +198,14 @@
             <artifactId>jetty-server</artifactId>
             <version>${jetty-version}</version>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-server -->
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>9.3.10.v20160621</version>
+        </dependency>
+
     
     
         <dependency>
