@@ -54,6 +54,8 @@ public class ClothoWebSocket
 
     @OnWebSocketClose
     public void onClose(int closeCode, String message) {
+        subject.logout();
+        session.close(closeCode, message);
     }
 
     @Override
