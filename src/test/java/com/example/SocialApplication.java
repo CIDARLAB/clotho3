@@ -120,7 +120,7 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	public static void main(String[] args) {
-                /*final CommandLine commandLine;
+                final CommandLine commandLine;
                 try {
                     commandLine = Config.parseArgs(args);
                 } catch (ParseException e) {
@@ -134,7 +134,7 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
                     new ClothoTestModule(override),
                     new SecurityModule(),
                     new JongoTestModule()
-                );*/
+                );
 		SpringApplication.run(SocialApplication.class, args);
 	}
 

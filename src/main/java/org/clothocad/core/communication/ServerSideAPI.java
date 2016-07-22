@@ -128,15 +128,15 @@ public class ServerSideAPI {
         //Add the word suggestions from the global Trie
         return persistor.getCompletions(userText);
     }
-    
+
     public final Iterable<Map<String, Object>> autocomplete(String userText, String key) {
         //This is needed because the subString is in the format {query=[subString]}
         //userText = userText.substring(7, userText.length() - 1);
 
         //Add the word suggestions from the global Trie
-        return persistor.getCompletionsForKey(userText,key);
+        return persistor.getCompletionsForKey(userText, key);
     }
-    
+
     public final String autocompleteDetail(String uuid) {
         try {
             Map<String, Object> msg = JSON.deserializeObjectToMap("{\"channel\":\"autocompleteDetail\",\"data\":{\"uuid\":\"1234567890\",\"text\":\"This is a command\",\"command\":\"clotho.run('230sdv-232', '18919e-18')\",\"versions\":[{\"uuid\":\"uuid123\",\"text\":\"Reverse Complement Tool\",\"author\":{\"uuid\":\"uuid_author_123\",\"name\":\"Joe Schmo\",\"email\":\"joe@schmo.com\",\"biography\":\"This is a biography about Joe Schmo. It's not too long. \"},\"description\":\"Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Maecenas faucibus mollis interdum. Etiam porta sem malesuada magna mollis euismod.\",\"usage\":{\"executed\":\"35\",\"successful\":\"27\",\"positive\":\"12\",\"negative\":\"3\"}},{\"uuid\":\"uuid456\",\"text\":\"pBca 1256\",\"author\":{\"uuid\":\"uuid_author_456\",\"name\":\"Chris Anderson\",\"email\":\"chris@anderson.com\",\"biography\":\"This is a biography about Chris Anderson. It's different than Joe's... It's a little longer. Yada yada yada. Here's some latin. It should get truncated on the server or we could write our own directive to handle truncating (easy). Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\"},\"description\":\"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\"usage\":{\"executed\":\"8\",\"successful\":\"8\",\"positive\":\"6\",\"negative\":\"0\"}}]}}");
@@ -521,9 +521,9 @@ public class ServerSideAPI {
     public final List<Map<String, Object>> getAll(List objects) {
         List<Map<String, Object>> returnData = new ArrayList<>();
         for (Object obj : objects) {
-            try{
+            try {
                 returnData.add(get(obj));
-            } catch (Exception e){
+            } catch (Exception e) {
                 returnData.add(null);
             }
         }
@@ -611,10 +611,10 @@ public class ServerSideAPI {
         List<String> returnData = new ArrayList<>();
         //list of selectors?
         for (Object obj : objects) {
-            try{
+            try {
                 ObjectId id = create(JSON.mappify(obj));
-                returnData.add(id == null? null : id.toString());               
-            } catch (Exception e){
+                returnData.add(id == null ? null : id.toString());
+            } catch (Exception e) {
                 returnData.add(null);
             }
         }
@@ -643,7 +643,6 @@ public class ServerSideAPI {
 
                 obj.put(idKey, new ObjectId(obj.get(idKey).toString()));
             }
-
 
             try {
                 ObjectId id = persistor.save(obj);
@@ -750,7 +749,6 @@ public class ServerSideAPI {
         Map<String, Object> objMap = persistor.getAsJSON(new ObjectId(idVal));
         Schema currentSchema = persistor.get(Schema.class, new ObjectId(objMap.get("schema")));
 
-
         boolean foundFunc = false;
         ConverterFunction resultCFunc = null;
         Collection<ConverterFunction> convlist = persistor.getAll(ConverterFunction.class);
@@ -785,13 +783,12 @@ public class ServerSideAPI {
             say("No suitable Converter Found.", Severity.FAILURE);
         }
 
-
         return result;
     }
 
     private Object runAsSubprocess(final Function function, final List<Object> args) {
-        final Map<String, Object> funcJSON =
-                persistor.getAsJSON(function.getId());
+        final Map<String, Object> funcJSON
+                = persistor.getAsJSON(function.getId());
         Object out = SubprocessExec.run(
                 this,
                 funcJSON,
@@ -875,7 +872,6 @@ public class ServerSideAPI {
         Map<String, Object> functionData = persistor.getAsJSON(new ObjectId(data.get(ID)), null, true);
         ObjBase executable = persistor.get(ObjBase.class, new ObjectId(data.get(ID)), true);
 
-
         if (executable instanceof Module && ((Module) executable).getLanguage() != Language.JAVA) {
 
             Module module = (Module) executable;
@@ -920,15 +916,16 @@ public class ServerSideAPI {
         }
 
         //"Old" run, for non-Module objects
-
         //resolve any ids to their objects
-        if (args != null) for (int i = 0; i < args.size(); i++) {
-            try {
-                ObjectId id = new ObjectId(args.get(i).toString());
-                //must have read privs on args
-                args.set(i, persistor.get(ObjBase.class, id));
-            } catch (EntityNotFoundException e) {
-                //XXX: warn here? fail here?
+        if (args != null) {
+            for (int i = 0; i < args.size(); i++) {
+                try {
+                    ObjectId id = new ObjectId(args.get(i).toString());
+                    //must have read privs on args
+                    args.set(i, persistor.get(ObjBase.class, id));
+                } catch (EntityNotFoundException e) {
+                    //XXX: warn here? fail here?
+                }
             }
         }
 
@@ -937,7 +934,6 @@ public class ServerSideAPI {
         persistor.checkPriv(id, "run");
         //reflectively (ugh) run function of instance
         ObjBase instance = persistor.get(ObjBase.class, id, true);
-
 
         Method method = ReflectionUtils.findMethodNamed(data.get("function").toString(), args.size(), instance.getClass());
         Object result = method.invoke(instance, args.toArray());
@@ -953,12 +949,10 @@ public class ServerSideAPI {
                     results.add(r);
                 }
             }
+        } else if (result instanceof ObjBase) {
+            return persistor.save((ObjBase) result);
         } else {
-            if (result instanceof ObjBase) {
-                return persistor.save((ObjBase) result);
-            } else {
-                return result;
-            }
+            return result;
         }
         return results;
     }
