@@ -74,8 +74,8 @@ public class Router {
             //Find a better way to become anonymous user?
             subject.login(ClothoRealm.getAnonymousUserToken());
         }
+        
         ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId(), new MessageOptions(request.getOptions()));
-
         Object data = request.getData();
         
         Object response = null;

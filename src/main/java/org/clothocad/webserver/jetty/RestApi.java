@@ -22,6 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
 
+    /*
+    
+    REST API servlet is at idontremember.url/data/*
+    
+    doGet: get, getAll, and query
+    doPost: pterry much any request you want, just specify the channel.
+    
+    haven't modified doDelete or doPut yet.
+    
+    
+     */
     private static Router router;
     private static Message m, loginMessage, logoutMessage;
     private static Map<String, String> loginMap;
@@ -31,14 +42,13 @@ public class RestApi extends HttpServlet {
     // http://shiro-user.582556.n2.nabble.com/Shiro-and-RESTful-web-services-td5539212.html
     // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
     // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
-
     // http://shiro.apache.org/
     public RestApi(Router router) {
         this.router = router;
     }
 
-    protected void doGet(HttpServletRequest request, 
-        HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 
         // Allows GET calls from domains other than this Clotho's domain
         response.addHeader("Access-Control-Allow-Origin", "*");
@@ -57,15 +67,27 @@ public class RestApi extends HttpServlet {
         login(unamePass);
 
         String id = pathID[1];
+        String data = pathID[2];
 
-        if (id.equals("query")) {
-            String queryString = request.getQueryString();
-            Map<String, String> p = splitQuery(queryString);
-            m = new Message(Channel.query, p, null, null);
-        } else {
-            m = new Message(Channel.get, id, null, null);
+        //example.com/data/channelID/data
+        //example.com/data/query?name=mimithedog
+        switch (id) {
+            case "query":
+                String queryString = request.getQueryString();
+                Map<String, String> p = splitQuery(queryString);
+                m = new Message(Channel.query, p, null, null);
+                break;
+                
+            case "get":
+                m = new Message(Channel.get, data, null, null);
+                break;
+            
+            case "getAll":
+                m = new Message(Channel.getAll, data, null, null);
+                break;
         }
 
+        //Toss the request to the router to funnel into the static RestConnection object
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -89,8 +111,8 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    protected void doDelete(HttpServletRequest request, 
-        HttpServletResponse response) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
@@ -134,16 +156,33 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    protected void doPost(HttpServletRequest request, 
-        HttpServletResponse response) throws ServletException, IOException {
+    
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
-
-        Map<String, String> p = getRequestBody(request.getReader());
+        
+        /*
+        Assuming the POST requests look like this... (the format of the Message class)
+        
+        {        
+        channel : "",
+        data : "",
+        requestID : "",
+        options : "",
+        }
+        
+        Seems like everytime we'll be using basic auth, so no user or pw?
+        
+        */
+        
+        
+        
+        Map<String, String> p = getRequestBody(request.getReader());        
 
         if (p.isEmpty()) {
-            response.getWriter().write("{\"Required\": \"new data to create item with\"}");
+            response.getWriter().write("{\"Required\": \"message body to process POST request\"}");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -151,8 +190,18 @@ public class RestApi extends HttpServlet {
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
 
         login(unamePass);
+        
+        String channel = p.get("channel");
+        for(Channel e : Channel.values())
+        {
+            if(e.name().equalsIgnoreCase(channel))
+            {
+                m = new Message(e, p.get("data"), null, null);
+            }
+        }
+        
 
-        m = new Message(Channel.create, p, null, null);
+//        m = new Message(Channel.create, p, null, null);
 
         try {
             this.router.receiveMessage(this.rc, m);
@@ -177,8 +226,8 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    protected void doPut(HttpServletRequest request, 
-        HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
