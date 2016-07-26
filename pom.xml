@@ -9,7 +9,7 @@
     <version>3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Clotho</name>
+    <name>ClothoSpring</name>
     <url>http://clothocad.org</url>
     <build>
         <plugins>
