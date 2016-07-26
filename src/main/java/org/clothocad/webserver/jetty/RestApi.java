@@ -67,23 +67,31 @@ public class RestApi extends HttpServlet {
         login(unamePass);
 
         String id = pathID[1];
-        String data = pathID[2];
+        String data;
+        if (id.contains("query")) {
+            String queryString = request.getQueryString();
+            Map<String, String> p = splitQuery(queryString);
+            m = new Message(Channel.query, p, null, null);
+            data = queryString;
+        }
+        else
+        {
+            data = pathID[2];
+        }
 
         //example.com/data/channelID/data
         //example.com/data/query?name=mimithedog
         switch (id) {
-            case "query":
-                String queryString = request.getQueryString();
-                Map<String, String> p = splitQuery(queryString);
-                m = new Message(Channel.query, p, null, null);
-                break;
-                
+
             case "get":
                 m = new Message(Channel.get, data, null, null);
                 break;
-            
+
             case "getAll":
                 m = new Message(Channel.getAll, data, null, null);
+                break;
+
+            default:
                 break;
         }
 
@@ -156,13 +164,12 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
-        
+
         /*
         Assuming the POST requests look like this... (the format of the Message class)
         
@@ -175,11 +182,8 @@ public class RestApi extends HttpServlet {
         
         Seems like everytime we'll be using basic auth, so no user or pw?
         
-        */
-        
-        
-        
-        Map<String, String> p = getRequestBody(request.getReader());        
+         */
+        Map<String, String> p = getRequestBody(request.getReader());
 
         if (p.isEmpty()) {
             response.getWriter().write("{\"Required\": \"message body to process POST request\"}");
@@ -190,19 +194,15 @@ public class RestApi extends HttpServlet {
         String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
 
         login(unamePass);
-        
+
         String channel = p.get("channel");
-        for(Channel e : Channel.values())
-        {
-            if(e.name().equalsIgnoreCase(channel))
-            {
+        for (Channel e : Channel.values()) {
+            if (e.name().equalsIgnoreCase(channel)) {
                 m = new Message(e, p.get("data"), null, null);
             }
         }
-        
 
 //        m = new Message(Channel.create, p, null, null);
-
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
