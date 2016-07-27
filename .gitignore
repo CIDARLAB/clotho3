@@ -13,4 +13,4 @@ data/
 .DS_Store
 phantomjsdriver.log
 
-/src/main/resources/application.properties
+application.properties
