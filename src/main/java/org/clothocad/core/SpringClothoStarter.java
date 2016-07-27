@@ -31,5 +31,5 @@ public class SpringClothoStarter extends SpringBootServletInitializer implements
     public static void main(String[] args) throws Exception {
         SpringApplication.run(SpringClothoStarter.class, args);
     }
-
 }
+
