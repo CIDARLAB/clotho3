@@ -12,3 +12,5 @@ data/
 .idea
 .DS_Store
 phantomjsdriver.log
+
+/src/main/resources/application.properties
