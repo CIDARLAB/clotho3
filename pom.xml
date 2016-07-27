@@ -514,6 +514,39 @@
             <version>${jetty-version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!-- To run javax.websocket in embedded server -->
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>javax-websocket-server-impl</artifactId>
+            <version>9.3.10.v20160621</version>
+        </dependency>
+        <!-- To run javax.websocket client -->
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>javax-websocket-client-impl</artifactId>
+            <version>9.3.10.v20160621</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-api</artifactId>
+            <version>${jetty-version}</version>
+        </dependency>
+        <!--To run websockets in embedded server-->
+    
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>8.1.10.v20130312</version>
+            <type>jar</type>
+        </dependency>
+    
+        
     </dependencies>
 	
     <properties>
