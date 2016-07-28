@@ -12,6 +12,7 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 //XXX: change later when we have time to deal with managing a classloader heirarchy
 @Singleton
+@Component
 public class DBClassLoader extends ClassLoader {
     final static Logger logger = LoggerFactory.getLogger(DBClassLoader.class);
     

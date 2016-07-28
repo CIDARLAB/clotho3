@@ -1,0 +1,16 @@
+<div ng-controller="clothoIntro_scriptingIntroCtrl">
+    <div class="pull-right" hint-button="Be sure to enclose your sequence in quotes like this: '{{ quiz.questionValue }}'"></div>
+    <p>It's easy to run several sequence manipulation functions, using this syntax:</p>
+    <p><code>myFunction(myArguments)</code></p>
+    <p>and here, <code>myFunction</code> is <code>DNA.revcomp</code></p>
+
+    <div trail-quiz ng-model="quiz" advance="next()"></div>
+
+    <button class="btn btn-info btn-lg" ng-click="showMeHow()"><i
+            class="glyphicon-white glyphicon glyphicon-eye-open"></i> Show me how</button>
+
+    <!--<button class="btn btn-default ng-click="showHelpTips()" >Show Tips</button>
+
+    <button class="btn btn-default popover="from the mouseenter button" popover-element-position="#clothoCommandBarInput" popover-show-bypass="true" popover-append-to-body="true" popover-trigger="mouseenter">Popover</button>-->
+
+</div>

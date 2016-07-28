@@ -1,0 +1,39 @@
+<div class="clothoQuizQuestion"
+     ng-class="{'ungraded' : !$meta.submitted,
+                'correct' : $meta.response === true,
+                'incorrect' : $meta.response === false}">
+  <div class="quizQuestionHeading">
+    <!-- question hint -->
+    <qq-hint class="quizQuestionHint" ng-if="quiz.question.hint"></qq-hint>
+    <h3 class="quizQuestionTitle">
+      {{quiz.question.title || ($meta.loading ? 'Loading...' : 'Quiz Question')}}
+    </h3>
+
+  </div>
+
+  <div class="quizQuestionContent">
+
+    <div class="loading" ng-show="$meta.loading"></div>
+    <!-- question itself -->
+    <qq-question class="quizQuestionQuestion"></qq-question>
+
+    <!-- dynamic template -->
+    <qq-template class="quizQuestionTemplate"></qq-template>
+
+    <!-- feedback -->
+    <div class="quizQuestionFeedback"
+         ng-show="$meta.submitted"
+         ng-class="{'correct' : $meta.response === true,
+                    'incorrect' : $meta.response === false}">
+      {{ $meta.currentFeedback || ($meta.response ? 'Correct!' : 'Sorry, that is not the answer') }}
+    </div>
+  </div>
+
+  <!-- unified submission + grading -->
+  <qq-actions class="quizQuestionActions"
+              ng-hide="$meta.submitted &&
+                       !quizOptions.allowRetry &&
+                       ($meta.response === true || !quizOptions.allowMultiple)">
+  </qq-actions>
+
+</div>

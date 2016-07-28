@@ -30,7 +30,10 @@ import org.clothocad.core.execution.Mind;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.util.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 @Slf4j
 @Singleton
 public class Router {
@@ -41,7 +44,7 @@ public class Router {
     @Getter
     protected ClothoRealm realm;
     
-    @Inject
+    @Autowired
     public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
         this.persistor = persistor;

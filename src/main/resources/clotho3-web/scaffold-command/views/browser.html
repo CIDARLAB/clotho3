@@ -1,0 +1,143 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span ng-class="queryIconClass"></span>
+          <span> Queries</span>
+        </div>
+        <div class="list-group">
+          <a class="list-group-item"
+             ng-class="{'active' : queryItem.query == currentQuery}"
+             ng-click="setCurrentQuery(queryItem.query)"
+             ng-repeat="queryItem in queries">
+            <span class="badge"></span>
+            {{queryItem.name}}
+          </a>
+          <a class="list-group-item list-group-item-info"
+             ng-click="createQueryMode = true"> Create new Query </a>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span ng-class="collectionIconClass"></span>
+          <span> Collections</span>
+        </div>
+        <div class="list-group">
+          <a class="list-group-item"
+             ng-repeat="coll in collections"
+             ng-class="{'active' : coll == currentQuery}"
+             ng-click="setCollection(coll)">
+            <span class="badge">{{col.items.length || ''}}</span>
+            {{coll.name}}
+          </a>
+          <a class="list-group-item list-group-item-info"
+             ng-click="createCollectionMode = true"> Create new Collection </a>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span ng-class="filterIconClass"></span>
+          <span> Filters</span>
+        </div>
+        <div class="list-group">
+          <a class="list-group-item"
+             ng-repeat="filter in filters"
+             ng-class="{'active' : filter.filter == currentFilter}"
+             ng-click="setFilter(filter.filter)">
+            {{filter.name}}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="btn-group btn-group-justified" style="margin-bottom: 10px">
+            <a ng-repeat="orderer in orderers"
+               ng-click="setOrder(orderer.criteria)"
+               class="btn btn-default"
+               ng-class="{'btn-info' : orderer.criteria == currentOrder}">
+          <span class="glyphicon"
+                ng-class="orderer.class"
+              ></span>
+              {{orderer.name}}
+            </a>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <input class="form-control"
+                 placeholder="Filter text"
+                 ng-model="searchFilter">
+        </div>
+      </div>
+
+
+      <div class="panel panel-info" ng-show="createQueryMode">
+        <div class="panel-heading">Create a new Query</div>
+        <div class="panel-body">
+          <div ng-form="queryConstruct" class="row">
+            <div class="col-sm-6">
+              <form-field>
+                <textarea class="form-control"
+                          json-edit="newQuery.query"
+                          rows="4"></textarea>
+              </form-field>
+            </div>
+            <div class="col-sm-6">
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text"
+                         class="form-control"
+                         ng-model="newQuery.name"
+                         placeholder="Query Name">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary"
+                            ng-click="saveNewQuery()"
+                            ng-disabled="queryConstruct.$invalid || !newQuery.name.length">
+                      Save Query
+                    </button>
+                  </span>
+                </div>
+              </div>
+
+              <button class="btn btn-default"
+                      ng-click="setCurrentQuery(newQuery.query)"
+                      ng-disabled="queryConstruct.$invalid">
+                Test Query
+              </button>
+              <span ng-show="currentQuery == newQuery.query">
+                Query generates {{resultArray.length || 0}} results</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning" ng-show="resultArray.length == 0">
+        <p>Query did not find any items</p>
+      </div>
+
+      <div class="row">
+        <!-- todo - arrange by type and show header when do -->
+
+<!--
+  <div ng-repeat="section in section">
+    <div ng-repeat="post in section.posts | filter:searchText">
+         <span ng-if="$first">{{section.name}}</span>
+         {{post.title}}
+    </div>
+  </div>
+-->
+        <div clotho-sharable="instance"
+             ng-repeat="instance in resultArray | filter:currentFilter | filter:searchFilter | orderBy:currentOrder track by $id(instance)"
+             class="col-xs-6"></div>
+      </div>
+    </div>
+
+  </div>
+</div>

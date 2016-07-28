@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="col-xs-12">
+
+    <p>
+      <button class="btn btn-default" ng-click="maxbatesPopupOpen = !maxbatesPopupOpen">Open maxbates (escape to close)</button> {{maxbatesPopupOpen}}
+    </p>
+
+    <p> here is a sharable:
+        <span sharable-popup
+              sharable-popup-id="{{retrievedId}}"
+              sharable-popup-open="{{maxbatesPopupOpen}}">maxbates</span>
+    </p>
+
+    <p> here is a schema, which should show differently:
+        <span sharable-popup
+              sharable-popup-id="org.clothocad.model.BasicPart">Basic Part Schema</span>
+    </p>
+
+    <p> and a function, popup on hover to the right:
+        <span sharable-popup
+              sharable-popup-id="org.clothocad.test.revcomp"
+              sharable-popup-trigger="mouseenter"
+              sharable-popup-placement="right">revcomp function</span>
+    </p>
+  </div>
+</div>

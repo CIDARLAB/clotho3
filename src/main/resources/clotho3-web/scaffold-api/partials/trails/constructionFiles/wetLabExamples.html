@@ -1,0 +1,20 @@
+<div ng-controller="constructionFiles_wetLabExamplesCtrl">
+
+  <blockquote><p>Wet labs often use human-readable construction files to succinctly describe a set of reactions.</p></blockquote>
+
+  <p>These construction files often refer to <b>Parts</b>, or DNA sequences with an encapsulated function, by name.</p>
+
+  <p>In our GFP cloning example, <code>pPROBE-GFP[LVA]</code> is the gene we want to clone, and <code>pUC19</code> is a plasmid backbone, and referred to by name.</p>
+
+  <div style="text-align: center">
+    <ul class="pagination pagination-lg" style="display: inline-block">
+      <li ng-repeat="file in files" ng-class="{'active' : file == showing}">
+        <a ng-click="showFile(file)">{{file.name}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div ng-if="showing.name == 'gfp'" class="img-thumbnail" style="padding: 10px; margin-bottom: 20px; "><img src="partials/trails/constructionFiles/pUC-GFP.png"></div>
+
+  <pre ng-bind="showing.data"></pre>
+</div>

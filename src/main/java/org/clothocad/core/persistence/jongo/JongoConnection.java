@@ -52,12 +52,18 @@ import org.clothocad.core.util.JSON;
 import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author spaige
  */
 @Slf4j
+@Component
 public class JongoConnection implements ClothoConnection, CredentialStore, RolePermissionResolver {
 
     protected RefJongo jongo;
@@ -73,8 +79,15 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     protected DBClassLoader classLoader;
     private static final TypeReference<Map<String, Object>> STRINGMAP = new TypeReference<Map<String, Object>>() {
     };
+    
+    
+    @Bean
+    private JongoConnection jongoPls(DBClassLoader classLoader) throws UnknownHostException
+    {
+        return new JongoConnection(8080, "WaffleHost", "testSpringJongo", classLoader);
+    }
 
-    @Inject
+//    @Inject
     public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
         log.info("Using mongo database '{}@{}:{}'", dbname, host, port);
         

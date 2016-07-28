@@ -28,6 +28,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -41,6 +42,7 @@ import static org.clothocad.core.security.ServerSubject.SERVER_USER;
         //                  add new user to local instance group 
  * @author spaige
  */
+@Component
 @Slf4j
 @Singleton
 public class ClothoRealm extends AuthorizingRealm {

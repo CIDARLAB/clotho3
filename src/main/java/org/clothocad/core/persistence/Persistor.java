@@ -66,6 +66,8 @@ import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.security.ServerSubject;
 
 import org.clothocad.core.util.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author jcanderson
@@ -89,6 +91,7 @@ import org.clothocad.core.util.JSON;
 //TODO: thread safety
 //TODO: check out date created/modified/accessed bugs
 //TODO: move backend-agnostic logic into persistor
+@Component
 @Singleton
 @Slf4j
 public class Persistor{
@@ -106,7 +109,7 @@ public class Persistor{
     
     private GlobalTrie globalTrie;
     
-    @Inject
+    @Autowired
     public Persistor(final ClothoConnection connection, ClothoRealm realm){
         this(connection, realm, true);
     }
