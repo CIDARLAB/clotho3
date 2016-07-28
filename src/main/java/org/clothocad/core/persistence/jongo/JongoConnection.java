@@ -76,24 +76,26 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     protected MongoCollection roles;
     protected DBCollection rawDataCollection;
     
+    @Autowired
     protected DBClassLoader classLoader;
     private static final TypeReference<Map<String, Object>> STRINGMAP = new TypeReference<Map<String, Object>>() {
     };
     
     
-    @Bean
-    private JongoConnection jongoPls(DBClassLoader classLoader) throws UnknownHostException
-    {
-        return new JongoConnection(8080, "WaffleHost", "testSpringJongo", classLoader);
+    public JongoConnection() throws UnknownHostException
+    { 
+        log.info("Testing testing spring jongo connection");
+        db = new MongoClient("Lubu-Waffle", 27017).getDB("testSpringJongo");
+        rawDataCollection = db.getCollection("data");
+        connect();
     }
 
 //    @Inject
-    public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
+    public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname) throws UnknownHostException {
         log.info("Using mongo database '{}@{}:{}'", dbname, host, port);
         
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
-        classLoader = dbClassLoader;
         connect();
     }
 

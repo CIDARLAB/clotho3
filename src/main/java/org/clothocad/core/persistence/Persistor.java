@@ -54,6 +54,7 @@ import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
+import org.clothocad.core.persistence.jongo.JongoConnection;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
@@ -99,6 +100,8 @@ public class Persistor{
     public static final String VIRTUAL_FIELD_PREFIX = "$$";
     
     @Getter
+    @Autowired
+//    private JongoConnection connection;
     private ClothoConnection connection;
     
     private ClothoRealm realm;
@@ -110,13 +113,12 @@ public class Persistor{
     private GlobalTrie globalTrie;
     
     @Autowired
-    public Persistor(final ClothoConnection connection, ClothoRealm realm){
-        this(connection, realm, true);
+    public Persistor(ClothoRealm realm){
+        this(realm, true);
     }
     
-    public Persistor(final ClothoConnection connection, ClothoRealm realm, boolean initializeBuiltins){
-        this.connection = connection;
-        this.realm = realm;
+    public Persistor(ClothoRealm realm, boolean initializeBuiltins){
+       this.realm = realm;
         
        // if (initializeBuiltins) initializeBuiltInSchemas();
         
