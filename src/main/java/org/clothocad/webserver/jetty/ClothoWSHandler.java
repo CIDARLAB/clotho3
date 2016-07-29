@@ -13,6 +13,7 @@ import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.communication.ws.ClothoWebSocket;
 import org.clothocad.core.util.JSON;
+import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.adapter.jetty.JettyWebSocketSession;
 
 /**
  *
@@ -30,10 +32,28 @@ import org.springframework.web.socket.WebSocketSession;
  */
 @Component
 public class ClothoWSHandler implements WebSocketHandler {
+    
+    
+    
+    /*
+    
+    JettyWebSocketHandlerAdapter exists, and so does JettyWebSocketSession. They are websocket adapters for Spring => Jetty 9
+    
+    We're currently trying to figure out how we can hand over the Spring Websocket & sessions to Jetty using the adapter library.
+    
+    
+    Very little documentation or samples on this library and implementing it. 
+    JettyWebSocketHandler Adapter does not implement WebSocket Handler, so we have to register the Spring websocket.
+    We also don't know if WebSocketSession that gets passed to the Spring WebSocketHandler is even a JettyWebSocketSession, but yolo we casted it.
+    
+    
+    Able to handle the message up to the point where the router actually receives the message.
+    
+    */
 
     private Router router;
+    private ClothoJettyHandler jettyHandler;
 
-    private ServerSideAPI api;
 
     private static Logger logger = LoggerFactory.getLogger(ClothoWSHandler.class);
 
@@ -43,70 +63,15 @@ public class ClothoWSHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        logger.debug("Session: " + session.getId());
-        logger.debug("Session: " + session.getId());
-        logger.debug("Session: " + session.getId());
-        logger.debug("Session: " + session.getId());
-
+        
+        jettyHandler = new ClothoJettyHandler(this, (JettyWebSocketSession) session);
+        
+        jettyHandler.setRouter(router);
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        logger.debug(message.getPayload().toString());
-        logger.debug(message.getPayload().toString());
-        logger.debug(message.getPayload().toString());
-        logger.debug(message.getPayload().toString());
-        logger.debug(message.getPayload().toString());
-        logger.debug(message.getPayload().toString());
-        logger.debug(message.getPayload().toString());
-
-        logger.debug("" + session.isOpen());
-
-        ClothoWebSocket ws = new ClothoWebSocket(session.getId(), router);
-
-        logger.debug("" + session.isOpen());
-
-        String payload = message.getPayload().toString();
-
-        JSONObject obj = new JSONObject(payload);
-        logger.debug("" + session.isOpen());
-        String channel = obj.getString("channel");
-        Channel realChannel = Channel.alert;
-
-        for (Channel n : Channel.values()) {
-            if (n.name().equalsIgnoreCase(channel)) {
-                realChannel = n;
-            }
-        }
-        if (realChannel == Channel.alert) {
-            realChannel = Channel.autocomplete;
-        }
-
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-        logger.debug(realChannel.name());
-
-        Object data = obj.get("data");
-        String rqID = obj.getString("requestId");
-        logger.debug("" + session.isOpen());
-//        Map<MessageOption, Object> opt = (Map<MessageOption, Object>) obj.get("options");
-
-        logger.debug("" + session.isOpen());
-
-        Message msg = new Message(realChannel, data, rqID);
-
-        logger.debug(msg.toString());
-        logger.debug("" + session.isOpen());
-        //Gets trapped and is sad. :<
-        router.receiveMessage(ws, msg);
-        logger.debug("" + session.isOpen());
-        logger.debug("Router is receiving message");
-
+        
     }
 
     @Override

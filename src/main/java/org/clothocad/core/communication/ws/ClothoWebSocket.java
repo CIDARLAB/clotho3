@@ -25,6 +25,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 public class ClothoWebSocket
         extends ClientConnection {
 
+    
     private Session session;
     //private WebSocket.Connection connection;
     private Subject subject;
