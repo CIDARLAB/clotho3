@@ -38,10 +38,9 @@ import org.springframework.stereotype.Component;
 @Singleton
 public class Router {
 
-    @Getter
+
     protected Persistor persistor;
     
-    @Getter
     protected ClothoRealm realm;
     
     @Autowired

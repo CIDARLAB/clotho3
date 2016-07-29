@@ -28,6 +28,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.clothocad.core.datums.ObjectId;
 import static org.clothocad.core.security.ServerSubject.SERVER_USER;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,7 +57,7 @@ public class ClothoRealm extends AuthorizingRealm {
         return new UsernamePasswordToken(ANONYMOUS_USER, ANONYMOUS_USER);
     }
 
-    @Inject
+    @Autowired
     public ClothoRealm(CredentialStore store, RolePermissionResolver roleResolver) {
         super();
         

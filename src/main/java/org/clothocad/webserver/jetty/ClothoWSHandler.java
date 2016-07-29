@@ -12,6 +12,7 @@ import org.clothocad.core.util.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
@@ -22,12 +23,12 @@ import org.springframework.web.socket.WebSocketSession;
  *
  * @author david
  */
+@Component
 public class ClothoWSHandler implements WebSocketHandler {
 
-    @Autowired
+    
     private Router router;
-
-    @Autowired
+    
     private ServerSideAPI api;
 
     private static Logger logger = LoggerFactory.getLogger(ClothoWSHandler.class);

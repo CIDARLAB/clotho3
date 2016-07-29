@@ -63,8 +63,8 @@ public class ClothoAuthoringEnvironment extends AbstractClothoStarter {
                 persistor.deleteAll();
                 persistor.initializeBuiltInSchemas();
 
-                TestUtils.importJSONFromDirectory(
-                    storageFolder, persistor.getConnection(), null, true, false);
+//                TestUtils.importJSONFromDirectory(
+//                    storageFolder, persistor.getConnection(), null, true, false);
             }
 
             private boolean isBoringDirectory(Path dir) {

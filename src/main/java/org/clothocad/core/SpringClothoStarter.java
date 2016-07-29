@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -35,7 +36,12 @@ public class SpringClothoStarter extends SpringBootServletInitializer implements
     
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(SpringClothoStarter.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(SpringClothoStarter.class, args);
+        Router rbean = ctx.getBean("router", Router.class);
+        Persistor pbean = ctx.getBean("persistor", Persistor.class);
+        
+        System.out.println("rbean: " + rbean.toString());
+        System.out.println("pbean: " + pbean.toString());
     }
 }
 
