@@ -24,6 +24,11 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @SpringBootApplication
 public class SpringClothoStarter extends SpringBootServletInitializer implements WebSocketConfigurer {
 
+    static ConfigurableApplicationContext ctx;
+    static Router rbean;
+    static Persistor pbean;
+    static ClothoRealm crbean;
+    
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SpringClothoStarter.class);
@@ -31,14 +36,18 @@ public class SpringClothoStarter extends SpringBootServletInitializer implements
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new ClothoWSHandler(), "/websocket");
+        ClothoWSHandler clothoPls = new ClothoWSHandler();
+        
+        clothoPls.setRouter(rbean);
+        
+        registry.addHandler(clothoPls, "/websocket");
     }
     
 
     public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext ctx = SpringApplication.run(SpringClothoStarter.class, args);
-        Router rbean = ctx.getBean("router", Router.class);
-        Persistor pbean = ctx.getBean("persistor", Persistor.class);
+        ctx = SpringApplication.run(SpringClothoStarter.class, args);
+        rbean = ctx.getBean("router", Router.class);
+        pbean = ctx.getBean("persistor", Persistor.class);
         
         System.out.println("rbean: " + rbean.toString());
         System.out.println("pbean: " + pbean.toString());

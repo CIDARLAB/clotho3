@@ -550,8 +550,12 @@
             <version>8.1.10.v20130312</version>
             <type>jar</type>
         </dependency>
-    
-        
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 	
     <properties>

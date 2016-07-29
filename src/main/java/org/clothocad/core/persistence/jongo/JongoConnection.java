@@ -85,7 +85,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     public JongoConnection() throws UnknownHostException
     { 
         log.info("Testing testing spring jongo connection");
-        db = new MongoClient("jacob-xps", 27017).getDB("testSpringJongo");
+        db = new MongoClient("Lubu-Waffle", 27017).getDB("testClotho");
         rawDataCollection = db.getCollection("data");
         connect();
     }
