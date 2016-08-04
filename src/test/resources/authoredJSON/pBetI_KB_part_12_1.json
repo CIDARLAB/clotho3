@@ -1,0 +1,38 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "sequence" : "ATGCTTCATGGATTCGTTACCAATTGACAATTGATTGGACGTTCAATATAATGCTAGCTACT",
+    "isSingleStranded" : false,
+    "isCircular" : false,
+    "name" : "nucseq",
+    "annotations" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -8004887,
+      "isForwardStrand" : true,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -8004887,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "TTCATGGATTCGTTACCAATTGACAATTGATTGGACGTTCAATATAATGCTAGC"
+        },
+        "role" : "PROMOTER_REPRESSIBLE",
+        "forwardColor" : -8004887,
+        "name" : "pBetI"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "forwardColor" : -8004887,
+      "end" : 58
+    } ]
+  },
+  "name" : "pBetI_KB_part_12_1",
+  "description" : "",
+  "id" : "pBetI_KB_part_12_1"
+}

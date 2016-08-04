@@ -1,0 +1,19 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+  "reverseColor" : -8004887,
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+    "sequence" : "TTCATGGATTCGTTACCAATTGACAATTGATTGGACGTTCAATATAATGCTAGC"
+  },
+  "role" : "PROMOTER_REPRESSIBLE",
+  "name" : "pBetI.ref",
+  "forwardColor" : -8004887,
+  "arcs" : [ {
+    "schema" : "org.cidarlab.phoenix.core.dom.Arc",
+    "role" : "REPRESSION",
+    "regulatee" : "pBetI.ref",
+    "molecules" : [ ],
+    "regulator" : "betI.ref"
+  } ],
+  "id" : "57913b9044ae520c3cd10882"
+}

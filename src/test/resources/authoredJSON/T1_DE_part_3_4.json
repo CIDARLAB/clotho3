@@ -1,0 +1,38 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "sequence" : "AGGTGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCCTGAGTAGGACAAATCCGCCGCCCTAGAGCTT",
+    "isSingleStranded" : false,
+    "isCircular" : false,
+    "name" : "nucseq",
+    "annotations" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -4936788,
+      "isForwardStrand" : true,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -4936788,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "GGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCCTGAGTAGGACAAATCCGCCGCCCTAGA"
+        },
+        "role" : "TERMINATOR",
+        "forwardColor" : -4936788,
+        "name" : "T1"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "forwardColor" : -4936788,
+      "end" : 109
+    } ]
+  },
+  "name" : "T1_DE_part_3_4",
+  "description" : "MoClo Level 0 basic part: Terminator                               ",
+  "id" : "T1_DE_part_3_4"
+}

@@ -1,0 +1,62 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "sequence" : "AAGAAGCTGCTGCTAAAGCTATGGCTTCCTCCGAGGATGTTATCAAAGAGTTCATGCGTTTCAAAGTTCGTATGGAAGGTTCCGTTAACGGTCACGAGTTCGAAATCGAAGGTGAAGGTGAAGGTCGTCCGTACGAAGGTACCCAGACCGCTAAACTGAAAGTTACCAAAGGTGGTCCGCTGCCGTTCGCTTGGGACATCCTGTCCCCGCAGTTCCAGTACGGTTCCAAAGCTTACGTTAAACACCCGGCTGACATCCCGGACTACCTGAAACTGTCCTTCCCGGAAGGTTTCAAATGGGAACGTGTTATGAACTTCGAAGATGGTGGTGTTGTTACCGTTACCCAGGACTCCTCCCTGCAAGACGGTGAGTTCATCTACAAAGTTAAACTGCGTGGTACCAACTTCCCGTCCGACGGTCCGGTTATGCAGAAAAAAACCATGGGTTGGGAAGCTTCCACCGAACGTATGTACCCGGAGGATGGTGCTCTGAAAGGTGAAATCAAAATGCGTCTGAAACTGAAAGACGGTGGTCACTACGACGCTGAAGTTAAAACCACCTACATGGCTAAAAAACCGGTTCAGCTGCCGGGTGCTTACAAAACCGACATCAAACTGGACATCACCTCCCACAACGAGGACTACACCATCGTTGAACAGTACGAACGTGCTGAAGGTCGTCACTCCACCGGTGCTGCGGCGAACGATGAAAACTATGCGGCGGCGGTGTAAAGGT",
+    "isSingleStranded" : false,
+    "isCircular" : false,
+    "name" : "nucseq",
+    "annotations" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -685474,
+      "isForwardStrand" : true,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -685474,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "GCGGCGAACGATGAAAACTATGCGGCGGCGGTGTAA"
+        },
+        "role" : "CDS_TAG",
+        "forwardColor" : -685474,
+        "name" : "AAV"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 695,
+      "forwardColor" : -685474,
+      "end" : 731
+    }, {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -2706795,
+      "isForwardStrand" : true,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -2706795,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "ATGGCTTCCTCCGAGGATGTTATCAAAGAGTTCATGCGTTTCAAAGTTCGTATGGAAGGTTCCGTTAACGGTCACGAGTTCGAAATCGAAGGTGAAGGTGAAGGTCGTCCGTACGAAGGTACCCAGACCGCTAAACTGAAAGTTACCAAAGGTGGTCCGCTGCCGTTCGCTTGGGACATCCTGTCCCCGCAGTTCCAGTACGGTTCCAAAGCTTACGTTAAACACCCGGCTGACATCCCGGACTACCTGAAACTGTCCTTCCCGGAAGGTTTCAAATGGGAACGTGTTATGAACTTCGAAGATGGTGGTGTTGTTACCGTTACCCAGGACTCCTCCCTGCAAGACGGTGAGTTCATCTACAAAGTTAAACTGCGTGGTACCAACTTCCCGTCCGACGGTCCGGTTATGCAGAAAAAAACCATGGGTTGGGAAGCTTCCACCGAACGTATGTACCCGGAGGATGGTGCTCTGAAAGGTGAAATCAAAATGCGTCTGAAACTGAAAGACGGTGGTCACTACGACGCTGAAGTTAAAACCACCTACATGGCTAAAAAACCGGTTCAGCTGCCGGGTGCTTACAAAACCGACATCAAACTGGACATCACCTCCCACAACGAGGACTACACCATCGTTGAACAGTACGAACGTGCTGAAGGTCGTCACTCCACCGGTGCT"
+        },
+        "role" : "CDS_FLUORESCENT",
+        "forwardColor" : -2706795,
+        "name" : "mRFP1.4m"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 20,
+      "forwardColor" : -2706795,
+      "end" : 695
+    } ]
+  },
+  "name" : "RFPm_AAV_MD_part_22_3",
+  "description" : "",
+  "id" : "RFPm_AAV_MD_part_22_3"
+}

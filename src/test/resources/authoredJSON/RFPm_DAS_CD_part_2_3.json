@@ -1,0 +1,62 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "sequence" : "AATGATGGCTTCCTCCGAGGATGTTATCAAAGAGTTCATGCGTTTCAAAGTTCGTATGGAAGGTTCCGTTAACGGTCACGAGTTCGAAATCGAAGGTGAAGGTGAAGGTCGTCCGTACGAAGGTACCCAGACCGCTAAACTGAAAGTTACCAAAGGTGGTCCGCTGCCGTTCGCTTGGGACATCCTGTCCCCGCAGTTCCAGTACGGTTCCAAAGCTTACGTTAAACACCCGGCTGACATCCCGGACTACCTGAAACTGTCCTTCCCGGAAGGTTTCAAATGGGAACGTGTTATGAACTTCGAAGATGGTGGTGTTGTTACCGTTACCCAGGACTCCTCCCTGCAAGACGGTGAGTTCATCTACAAAGTTAAACTGCGTGGTACCAACTTCCCGTCCGACGGTCCGGTTATGCAGAAAAAAACCATGGGTTGGGAAGCTTCCACCGAACGTATGTACCCGGAGGATGGTGCTCTGAAAGGTGAAATCAAAATGCGTCTGAAACTGAAAGACGGTGGTCACTACGACGCTGAAGTTAAAACCACCTACATGGCTAAAAAACCGGTTCAGCTGCCGGGTGCTTACAAAACCGACATCAAACTGGACATCACCTCCCACAACGAGGACTACACCATCGTTGAACAGTACGAACGTGCTGAAGGTCGTCACTCCACCGGTGCTGCGGCGAACGATGAAAACTATGCGGATGCGAGCTAAAGGT",
+    "isSingleStranded" : false,
+    "isCircular" : false,
+    "name" : "nucseq",
+    "annotations" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -4218,
+      "isForwardStrand" : true,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -4218,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "GCGGCGAACGATGAAAACTATGCGGATGCGAGCTAA"
+        },
+        "role" : "CDS_TAG",
+        "forwardColor" : -4218,
+        "name" : "DAS"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 679,
+      "forwardColor" : -4218,
+      "end" : 715
+    }, {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -2706795,
+      "isForwardStrand" : true,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -2706795,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "ATGGCTTCCTCCGAGGATGTTATCAAAGAGTTCATGCGTTTCAAAGTTCGTATGGAAGGTTCCGTTAACGGTCACGAGTTCGAAATCGAAGGTGAAGGTGAAGGTCGTCCGTACGAAGGTACCCAGACCGCTAAACTGAAAGTTACCAAAGGTGGTCCGCTGCCGTTCGCTTGGGACATCCTGTCCCCGCAGTTCCAGTACGGTTCCAAAGCTTACGTTAAACACCCGGCTGACATCCCGGACTACCTGAAACTGTCCTTCCCGGAAGGTTTCAAATGGGAACGTGTTATGAACTTCGAAGATGGTGGTGTTGTTACCGTTACCCAGGACTCCTCCCTGCAAGACGGTGAGTTCATCTACAAAGTTAAACTGCGTGGTACCAACTTCCCGTCCGACGGTCCGGTTATGCAGAAAAAAACCATGGGTTGGGAAGCTTCCACCGAACGTATGTACCCGGAGGATGGTGCTCTGAAAGGTGAAATCAAAATGCGTCTGAAACTGAAAGACGGTGGTCACTACGACGCTGAAGTTAAAACCACCTACATGGCTAAAAAACCGGTTCAGCTGCCGGGTGCTTACAAAACCGACATCAAACTGGACATCACCTCCCACAACGAGGACTACACCATCGTTGAACAGTACGAACGTGCTGAAGGTCGTCACTCCACCGGTGCT"
+        },
+        "role" : "CDS_FLUORESCENT",
+        "forwardColor" : -2706795,
+        "name" : "mRFP1.4m"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "forwardColor" : -2706795,
+      "end" : 679
+    } ]
+  },
+  "name" : "RFPm_DAS_CD_part_2_3",
+  "description" : "[MoClo Level 0 basic part: CDS [E1010m_DAS]                         , ]",
+  "id" : "RFPm_DAS_CD_part_2_3"
+}

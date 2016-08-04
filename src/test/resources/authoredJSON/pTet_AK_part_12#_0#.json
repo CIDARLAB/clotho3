@@ -1,0 +1,38 @@
+{
+  "schema" : "org.cidarlab.phoenix.core.dom.Part",
+  "sequence" : {
+    "schema" : "org.cidarlab.phoenix.core.dom.NucSeq",
+    "sequence" : "GCATTTCGGTCAGTGCGTCCTGCTGATGTGCTCAGTATCTCTATCACTGATAGGGATGTCAATCTCTATCACTGATAGGGACTCC",
+    "isSingleStranded" : false,
+    "isCircular" : false,
+    "name" : "nucseq",
+    "annotations" : [ {
+      "schema" : "org.cidarlab.phoenix.core.dom.Annotation",
+      "reverseColor" : -6377518,
+      "isForwardStrand" : false,
+      "feature" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Feature",
+        "reverseColor" : -6377518,
+        "sequence" : {
+          "schema" : "org.cidarlab.phoenix.core.dom.Sequence",
+          "sequence" : "TCCCTATCAGTGATAGAGATTGACATCCCTATCAGTGATAGAGATACTGAGCACATCAGCAGGACGCACTGACCGAA"
+        },
+        "role" : "PROMOTER_REPRESSIBLE",
+        "forwardColor" : -6377518,
+        "name" : "pLtetO-1"
+      },
+      "author" : {
+        "schema" : "org.cidarlab.phoenix.core.dom.Person",
+        "emailAddress" : null,
+        "surName" : null,
+        "givenName" : null
+      },
+      "start" : 4,
+      "forwardColor" : -6377518,
+      "end" : 81
+    } ]
+  },
+  "name" : "pTet_AK_part_12#_0#",
+  "description" : "",
+  "id" : "pTet_AK_part_12#_0#"
+}
