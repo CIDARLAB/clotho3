@@ -38,11 +38,10 @@ import org.springframework.stereotype.Component;
 @Singleton
 public class Router {
 
-
     protected Persistor persistor;
-    
+
     protected ClothoRealm realm;
-    
+
     @Autowired
     public Router(Persistor persistor, ClothoRealm realm) {
         minds = new HashMap<>();
@@ -64,25 +63,27 @@ public class Router {
     public void receiveMessage(ClientConnection connection, Message request) {
 
         //bind context to request
-        Subject subject = SecurityUtils.getSubject();
+        //shiro is broken in our spring migration so I commented it out. We'll hopefully be replacing it anyways
+//        Subject subject = SecurityUtils.getSubject();
         Mind mind;
         boolean wasAuthenticated = false;
-        if (subject.isAuthenticated()){
-            wasAuthenticated = true;
-            mind = getAuthenticatedMind(subject.getPrincipal().toString(), connection, request);
-            mind.setConnection(connection);
-        } else {
-            mind = getMind(connection);
-            //Find a better way to become anonymous user?
-            subject.login(ClothoRealm.getAnonymousUserToken());
-        }
-        
+//        if (subject.isAuthenticated()){
+//            wasAuthenticated = true;
+//            mind = getAuthenticatedMind(subject.getPrincipal().toString(), connection, request);
+//            mind.setConnection(connection);
+//        } else {
+//            mind = getMind(connection);
+//            //Find a better way to become anonymous user?
+//            subject.login(ClothoRealm.getAnonymousUserToken());
+//        }
+        mind = getMind(connection);
+
         ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId(), new MessageOptions(request.getOptions()));
         Object data = request.getData();
-        
+
         Object response = null;
         try {
-            switch (request.getChannel()) {                
+            switch (request.getChannel()) {
                 case autocomplete:
                     response = api.autocomplete(data.toString());
                     break;
@@ -100,14 +101,16 @@ public class Router {
                     break;
                 case login:
                     Map map = (Map) data;
-                    if (!wasAuthenticated){
+                    if (!wasAuthenticated) {
                         //log out of anonymous user
                         //XXX: all this is madness
-                        subject.logout();
+
+                        //shiro broken
+//                        subject.logout();
                     }
                     response = api.login(map.get("username").toString(), map.get("credentials").toString());
                     //we only reach this point if login was successful
-                    if (!wasAuthenticated){
+                    if (!wasAuthenticated) {
                         //remove the 'anonymous' mind
                         //currently this means you lose environment state if you login
                         //we could do something more sophisticated like merge the anonymous environment and the persisted mind, but that could get complicated
@@ -116,36 +119,31 @@ public class Router {
                     break;
                 case updatePassword:
                     Map updatedPassword = (Map) data;
-                    response  = api.changePassword(updatedPassword.get("password").toString());
-                    
+                    response = api.changePassword(updatedPassword.get("password").toString());
+
                     break;
-                
+
                 case createUser:
                     Map newusermap = (Map) data;
-                    
-                    if(newusermap.containsKey("password"))
-                    {
-                        response  = api.createUser(newusermap.get("username").toString(),newusermap.get("password").toString());
-                    }
-                    else
-                    {
+
+                    if (newusermap.containsKey("password")) {
+                        response = api.createUser(newusermap.get("username").toString(), newusermap.get("password").toString());
+                    } else {
                         //3rd Party OAuth?
                     }
-                    
+
                     break;
-                
-                    
+
                 /*
                 case getAssociatedPerson:
                     
                     response  = api.getAllPerson(data.toString());
                     break;
-                */    
-                    
+                 */
                 case logout:
-                    String key = SecurityUtils.getSubject().getPrincipal().toString();                    
+//                    String key = SecurityUtils.getSubject().getPrincipal().toString();                    
                     response = api.logout();
-                    authenticatedMinds.remove(key);
+//                    authenticatedMinds.remove(key);
                     break;
                 case changePassword:
                     api.changePassword(data.toString());
@@ -170,20 +168,28 @@ public class Router {
                     break;
                 case get:
                     response = api.get(data);
-                    if (response == null) response = Void.TYPE;
+                    if (response == null) {
+                        response = Void.TYPE;
+                    }
                     break;
                 case set:
                     response = api.set(JSON.mappify(data));
-                    if (response == null) response = Void.TYPE;
+                    if (response == null) {
+                        response = Void.TYPE;
+                    }
                     break;
                 case create:
                     response = api.create(data);
-                    if (response == null) response = Void.TYPE;
+                    if (response == null) {
+                        response = Void.TYPE;
+                    }
                     break;
                 case destroy:
                     //XXX: destroy should return status indicator
                     response = api.destroy(data);
-                    if (response == null) response = Void.TYPE;
+                    if (response == null) {
+                        response = Void.TYPE;
+                    }
                     break;
                 case query:
                     response = api.query(JSON.mappify(data));
@@ -223,20 +229,25 @@ public class Router {
                     api.grant(
                             JSON.convert(dataMap.get("id"), ObjectId.class),
                             JSON.convert(dataMap.get("user"), String.class),
-                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
-                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
-                            );
+                            (Set<String>) JSON.convert(dataMap.get("add"), new TypeReference<Set<String>>() {
+                            }),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>() {
+                            })
+                    );
                     response = Void.TYPE;
                     break;
-                    
+
                 case grantAll:
                     dataMap = JSON.mappify(data);
-                    api.grantAll(                            
-                            (Set<ObjectId>) JSON.convert(dataMap.get("id"), new TypeReference<Set<ObjectId>>(){}),
+                    api.grantAll(
+                            (Set<ObjectId>) JSON.convert(dataMap.get("id"), new TypeReference<Set<ObjectId>>() {
+                            }),
                             JSON.convert(dataMap.get("user"), String.class),
-                            (Set<String>) JSON.convert( dataMap.get("add"), new TypeReference<Set<String>>(){}),
-                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>(){}) 
-                            );
+                            (Set<String>) JSON.convert(dataMap.get("add"), new TypeReference<Set<String>>() {
+                            }),
+                            (Set<String>) JSON.convert(dataMap.get("remove"), new TypeReference<Set<String>>() {
+                            })
+                    );
                     response = Void.TYPE;
                     break;
                 default:
@@ -244,38 +255,38 @@ public class Router {
                     response = Void.TYPE;
                     break;
             }
-            
-            if (response == Void.TYPE)
+
+            if (response == Void.TYPE) {
                 connection.deregister(
-                    request.getChannel(),
-                    request.getRequestId()
+                        request.getChannel(),
+                        request.getRequestId()
                 );
-            else
+            } else {
                 connection.send(new Message(
-                    request.getChannel(),
-                    response,
-                    request.getRequestId(),
-                    null
+                        request.getChannel(),
+                        response,
+                        request.getRequestId(),
+                        null
                 ));
-            
+            }
+
         } catch (Exception e) {
             api.say(e.getMessage(), ServerSideAPI.Severity.FAILURE, request.getRequestId());
             log.error(e.getMessage(), e);
             //deregister failed call
-                        //TODO: message client with failure
-                connection.deregister(
+            //TODO: message client with failure
+            connection.deregister(
                     request.getChannel(),
                     request.getRequestId()
-                );
+            );
         } finally {
-            if (ClothoRealm.ANONYMOUS_USER.equals(SecurityUtils.getSubject().getPrincipal())){
-                SecurityUtils.getSubject().logout();
-            }
+//            if (ClothoRealm.ANONYMOUS_USER.equals(SecurityUtils.getSubject().getPrincipal())){
+//                SecurityUtils.getSubject().logout();
         }
     }
 
     //Start JCA's hack of a pubsub, to be replaced by Ernst
-   /* void publish(Sharable object) {
+    /* void publish(Sharable object) {
      try {
      System.out.println("Ernst, this needs to be implemented.  Push object via pubsub.");
      String uuid = object.getUUID().toString();
@@ -314,12 +325,12 @@ public class Router {
         pubsub.put(uuid, existing);
     }
     //End JCA's hack of a pubsub, to be replaced by Ernst
-    
+
     private Mind getMind(ClientConnection connection) {
         String id = connection.getId();
         if (minds.containsKey(id)) {
             Mind mind = minds.get(id);
-            if (mind.getConnection() != connection){
+            if (mind.getConnection() != connection) {
                 //XXX: this is probably disasterous in some edge cases
                 //because jetty preserves the sesson id across websocket close/open, need to check to see if the connection object in the mind is stale
                 mind.setConnection(connection);
@@ -330,11 +341,11 @@ public class Router {
         Mind mind = new Mind();
 
         mind.setConnection(connection);
-        
+
         minds.put(id, mind);
         return mind;
     }
-    
+
     private Map<String, Mind> minds;
     private Map<String, Mind> authenticatedMinds = new HashMap<>();
 
@@ -343,7 +354,6 @@ public class Router {
         if (authenticatedMinds.containsKey(username)) {
             return authenticatedMinds.get(username);
         }
-
 
         Map<String, Object> query = new HashMap();
         query.put("username", username);
@@ -365,24 +375,23 @@ public class Router {
             Mind mind = new Mind();
             mind.setConnection(connection);
             authenticatedMinds.put(username, mind);
-            
+
             //tell user mind retrieval failed
             ServerSideAPI api = new ServerSideAPI(mind, persistor, this, realm, request.getRequestId());
             api.say("Mind retrieval encountered an exception: " + ex.getMessage(), ServerSideAPI.Severity.WARNING);
             return mind;
         }
     }
-    
-    
+
     //TODO: make everything in the API use iterators instead of lists
-    private static List asList(Object o){
+    private static List asList(Object o) {
         //iterator case
-        if (Iterator.class.isInstance(o)){
+        if (Iterator.class.isInstance(o)) {
             return Lists.newArrayList((Iterator) o);
-        } else if (Iterable.class.isInstance(o)){
+        } else if (Iterable.class.isInstance(o)) {
             return Lists.newArrayList((Iterable) o);
-        } else if (o instanceof Object[]){
-            return Arrays.asList((Object []) o);
+        } else if (o instanceof Object[]) {
+            return Arrays.asList((Object[]) o);
         }
         throw new UnsupportedOperationException("Couldn't convert argument to a List");
     }

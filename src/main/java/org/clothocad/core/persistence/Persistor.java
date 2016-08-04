@@ -171,16 +171,18 @@ public class Persistor{
     }
     
     public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
-        if (id == null) throw new IllegalArgumentException("Null ObjectId");
-        Subject currentSubject = SecurityUtils.getSubject();
-        if (has(id)) {
-            try {
-                currentSubject.checkPermission("data:"+ priviliege + ":" + id.toString());            
-            } catch (AuthorizationException e){
-                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
-                throw e;
-            }
-        }
+        
+        //shiro is broken BROOOOKEN BROKEN
+//        if (id == null) throw new IllegalArgumentException("Null ObjectId");
+//        Subject currentSubject = SecurityUtils.getSubject();
+//        if (has(id)) {
+//            try {
+//                currentSubject.checkPermission("data:"+ priviliege + ":" + id.toString());            
+//            } catch (AuthorizationException e){
+//                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
+//                throw e;
+//            }
+//        }
     }
     
     public Set<String> getUserPermissionInfo(ObjectId id){

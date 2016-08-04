@@ -310,17 +310,22 @@ public class ServerSideAPI {
      method should optionally accept new person data*/
     public final Map<String, Object> createUser(String username, String password) {
 
-        Subject subject = SecurityUtils.getSubject();
-        if (!ClothoRealm.ANONYMOUS_USER.equals(subject.getPrincipal())) {
-            say("You are already logged in as " + subject.getPrincipal() + "!", Severity.FAILURE);
-            return null;
-        }
+        
+        //SHIRO IS BROKEEEEN!
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!ClothoRealm.ANONYMOUS_USER.equals(subject.getPrincipal())) {
+//            say("You are already logged in as " + subject.getPrincipal() + "!", Severity.FAILURE);
+//            return null;
+//        }
+
+
         try {
             realm.addAccount(username, password);
             say("New user " + username + " created.", Severity.SUCCESS);
 
-            subject.logout();
-            subject.login(new UsernamePasswordToken(username, password));
+            //goodbye shiro you're broken
+//            subject.logout();
+//            subject.login(new UsernamePasswordToken(username, password));
 
             Person newPerson = new Person(username);
             newPerson.setPrimaryEmail(username);
@@ -342,42 +347,46 @@ public class ServerSideAPI {
             logAndSayError("There was a problem creating the new account.", e);
             return null;
         } finally {
-            subject.logout();
-            subject.login(ClothoRealm.getAnonymousUserToken());
+            //shiro go broke broke
+//            subject.logout();
+//            subject.login(ClothoRealm.getAnonymousUserToken());
         }
     }
 
     public final Map<String, Object> login(String username, String password) {
         ObjectId userId = null;
-        Subject subject = SecurityUtils.getSubject();
+        //gosh darnit shiro you're broken
+//        Subject subject = SecurityUtils.getSubject();
 
-        if (!subject.isAuthenticated()) {
-            try {
-                subject.login(new UsernamePasswordToken(username, password));
-            } catch (AuthenticationException e) {
-                logAndSayError("Authentication attempt failed for username " + username, e);
-                return null;
-            }
-
-            say("Welcome, " + username, Severity.SUCCESS);
-            Map<String, Object> result = new HashMap<>();
-            Object personId;
-            Collection personPrincipals = subject.getPrincipals().fromRealm("persons");
-            if (personPrincipals.isEmpty()) {
-                personId = null;
-            } else {
-                personId = personPrincipals.iterator().next();
-            }
-            result.put("id", personId);
-            result.put("accessToken", "dummy");
-            result.put("app_id", "dummy");
-            log.info("User {} logged in", username);
-
-            return result;
-        } else {
-            say("Please logout first.", Severity.FAILURE);
-            return null;
-        }
+//        if (!subject.isAuthenticated()) {
+//            try {
+//                subject.login(new UsernamePasswordToken(username, password));
+//            } catch (AuthenticationException e) {
+//                logAndSayError("Authentication attempt failed for username " + username, e);
+//                return null;
+//            }
+//
+//            say("Welcome, " + username, Severity.SUCCESS);
+//            Map<String, Object> result = new HashMap<>();
+//            Object personId;
+//            Collection personPrincipals = subject.getPrincipals().fromRealm("persons");
+//            if (personPrincipals.isEmpty()) {
+//                personId = null;
+//            } else {
+//                personId = personPrincipals.iterator().next();
+//            }
+//            result.put("id", personId);
+//            result.put("accessToken", "dummy");
+//            result.put("app_id", "dummy");
+//            log.info("User {} logged in", username);
+//
+//            return result;
+//        } else {
+//            say("Please logout first.", Severity.FAILURE);
+//            return null;
+//        }
+        say("Shiro is broken, sorry logins will be broken", Severity.FAILURE);
+        return null;
 
     }
 
@@ -387,20 +396,20 @@ public class ServerSideAPI {
     }
 
     public final boolean logout() {
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
-            mind.setUsername(username);
-            //XXX: need some kind of error recovery if mind save fails
-            try {
-                persistor.save(mind);
-            } catch (Exception e) {
-                say("There was a problem saving your mind. You will still be logged out, but some settings may not be saved.", Severity.WARNING);
-            }
-            SecurityUtils.getSubject().logout();
-            say("Logged out", Severity.SUCCESS);
-            log.info("User {} logged out", username);
-            return true;
-        }
+//        if (SecurityUtils.getSubject().isAuthenticated()) {
+//            String username = SecurityUtils.getSubject().getPrincipal().toString();
+//            mind.setUsername(username);
+//            //XXX: need some kind of error recovery if mind save fails
+//            try {
+//                persistor.save(mind);
+//            } catch (Exception e) {
+//                say("There was a problem saving your mind. You will still be logged out, but some settings may not be saved.", Severity.WARNING);
+//            }
+//            SecurityUtils.getSubject().logout();
+//            say("Logged out", Severity.SUCCESS);
+//            log.info("User {} logged out", username);
+//            return true;
+//        }
 
         say("You are not logged in", Severity.WARNING);
         return false;

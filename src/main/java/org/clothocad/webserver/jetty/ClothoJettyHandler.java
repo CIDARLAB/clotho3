@@ -20,6 +20,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.adapter.jetty.JettyWebSocketHandlerAdapter;
 import org.springframework.web.socket.adapter.jetty.JettyWebSocketSession;
@@ -33,14 +35,16 @@ public class ClothoJettyHandler extends JettyWebSocketHandlerAdapter {
     private Router router;
     private ClothoWebSocket ws;
     private String id;
+    
+    private static Logger logger = LoggerFactory.getLogger(ClothoJettyHandler.class);
 
     public ClothoJettyHandler(WebSocketHandler webSocketHandler, JettyWebSocketSession wsSession) {
         super(webSocketHandler, wsSession);
         id = wsSession.getId();
     }
-    
-    public void setRouter(Router router)
-    {
+
+    public void setRouter(Router router) {
+        this.router = router;
         ws = new ClothoWebSocket(id, router);
     }
 
@@ -48,15 +52,22 @@ public class ClothoJettyHandler extends JettyWebSocketHandlerAdapter {
     public void onClose(int closeCode, String message) {
         ws.onClose(closeCode, message);
     }
-    
+
     public void send(Message msg) {
         ws.send(msg);
-        
+
     }
 
     @OnWebSocketMessage
     public void onMessage(String messageString) {
-        ws.onMessage(messageString);
+        try {
+            logger.debug("Handing message over to ClothoWebSocket: " + messageString);
+            ws.onMessage(messageString);
+        }
+        catch(Throwable ex)
+        {
+            logger.debug(this.getClass().getName() + ": onMessageException - " + ex.getMessage());
+        }
     }
 
     public boolean isOpen() {

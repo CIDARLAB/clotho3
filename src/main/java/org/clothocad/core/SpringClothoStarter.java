@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.HandshakeHandler;
 import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
@@ -33,6 +34,7 @@ public class SpringClothoStarter extends SpringBootServletInitializer implements
     static Router rbean;
     static Persistor pbean;
     static ClothoRealm crbean;
+    static ClothoWSHandler clothoPls;
     
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -40,29 +42,33 @@ public class SpringClothoStarter extends SpringBootServletInitializer implements
     }
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        ClothoWSHandler clothoPls = new ClothoWSHandler();
-        
-        clothoPls.setRouter(rbean);
-        
-        registry.addHandler(clothoPls, "/websocket").setHandshakeHandler(handshaker());
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {        
+        clothoPls = new ClothoWSHandler();        
+        registry.addHandler(clothoPls, "/websocket").setHandshakeHandler(factoryBean());
     }
     
+    //Configure buffer size and timeouts
     @Bean
-    public DefaultHandshakeHandler handshaker()
+    public HandshakeHandler factoryBean()
     {
         WebSocketPolicy policy = new WebSocketPolicy(WebSocketBehavior.SERVER);
         policy.setInputBufferSize(8192);
-        policy.setIdleTimeout(600000);
-        
-        return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(new WebSocketServerFactory(policy)));
+        policy.setIdleTimeout(3600000);
+        WebSocketServerFactory factory = new WebSocketServerFactory(policy);
+        return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(factory));
     }
     
 
     public static void main(String[] args) throws Exception {
         ctx = SpringApplication.run(SpringClothoStarter.class, args);
+        
+        System.out.println("BEANS BEANS BEANS");
+        System.out.println("BEANS BEANS BEANS");
         rbean = ctx.getBean("router", Router.class);
         pbean = ctx.getBean("persistor", Persistor.class);
+        System.out.println("BEANS BEANS BEANS");
+        
+        clothoPls.setRouter(rbean);
         
         System.out.println("rbean: " + rbean.toString());
         System.out.println("pbean: " + pbean.toString());

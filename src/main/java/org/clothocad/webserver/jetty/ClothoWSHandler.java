@@ -5,6 +5,8 @@
  */
 package org.clothocad.webserver.jetty;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Map;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
@@ -13,7 +15,13 @@ import org.clothocad.core.communication.Router;
 import org.clothocad.core.communication.ServerSideAPI;
 import org.clothocad.core.communication.ws.ClothoWebSocket;
 import org.clothocad.core.util.JSON;
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.SuspendToken;
+import org.eclipse.jetty.websocket.api.UpgradeRequest;
+import org.eclipse.jetty.websocket.api.UpgradeResponse;
+import org.eclipse.jetty.websocket.api.WebSocketPolicy;
+import org.eclipse.jetty.websocket.server.WebSocketServerFactory;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +40,7 @@ import org.springframework.web.socket.adapter.jetty.JettyWebSocketSession;
  */
 @Component
 public class ClothoWSHandler implements WebSocketHandler {
-    
-    
-    
+
     /*
     
     JettyWebSocketHandlerAdapter exists, and so does JettyWebSocketSession. They are websocket adapters for Spring => Jetty 9
@@ -49,11 +55,11 @@ public class ClothoWSHandler implements WebSocketHandler {
     
     Able to handle the message up to the point where the router actually receives the message.
     
-    */
-
+     */
     private Router router;
     private ClothoJettyHandler jettyHandler;
-
+    private JettyWebSocketSession jettySession;
+    
 
     private static Logger logger = LoggerFactory.getLogger(ClothoWSHandler.class);
 
@@ -62,26 +68,47 @@ public class ClothoWSHandler implements WebSocketHandler {
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        
-        jettyHandler = new ClothoJettyHandler(this, (JettyWebSocketSession) session);
-        
-        jettyHandler.setRouter(router);
+    public void afterConnectionEstablished(WebSocketSession session) {
+        try {
+
+            //SpringClothoStarter adapts WebSocket connections to Jetty 9 API when registering handlers with the Jetty handshaker
+            //We can cast spring WebSocketSessions to JettyWebSocketSessions, and initialize it with itself.
+            jettySession = (JettyWebSocketSession) session;
+            jettySession.initializeNativeSession(jettySession.getNativeSession());
+            
+            //Setup our custom handler and populate the router, which was magically created by Spring using our annotated classes in Router and its dependencies.       
+            jettyHandler = new ClothoJettyHandler(this, jettySession);
+            jettyHandler.setRouter(router);
+            
+            //Let the jetty web socket commence!
+            jettyHandler.onOpen(jettySession.getNativeSession());
+        } catch (Throwable ex) {
+            logger.debug(this.getClass().getName() + ": afterConnectionEstablishedException - " + ex.toString() + ": " + ex.getMessage() + ": " + ex.getLocalizedMessage());
+        }
     }
 
     @Override
-    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
+        try {
+            logger.debug("Handler open: " + jettyHandler.isOpen());
+            logger.debug("Session still open: " + jettySession.isOpen());
+            logger.debug("Message being sent to router: " + message.getPayload().toString());
+            jettyHandler.onMessage(message.getPayload().toString());
+        } catch (Throwable ex) {
+            logger.debug(this.getClass().getName() + ": handleMessageException - " + ex.getCause().toString()+ ": " + ex.getMessage() + ": " + ex.getLocalizedMessage());
+        }
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+    public void handleTransportError(WebSocketSession session, Throwable exception
+    ) {
 
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws IOException {
         logger.debug("Closing the session: " + session.getId());
+        jettyHandler.onClose(closeStatus.getCode(), "Closing Connection");
         session.close(closeStatus);
     }
 

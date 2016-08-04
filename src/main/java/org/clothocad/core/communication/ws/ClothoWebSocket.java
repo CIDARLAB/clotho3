@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 // Close WebSocket after 1 week ofidle time
@@ -28,7 +29,8 @@ public class ClothoWebSocket
     
     private Session session;
     //private WebSocket.Connection connection;
-    private Subject subject;
+    
+//    private Subject subject;
     private final Router router;
 
     private class CallRouter implements Callable {
@@ -46,6 +48,11 @@ public class ClothoWebSocket
             router.receiveMessage(connection, message);
             return null;
         }
+        //springjetty9 -> router ends up being null, sooooo lets overload
+        public Object call(Router router) throws Exception {
+            router.receiveMessage(connection, message);
+            return null;
+        }
     }
 
     public ClothoWebSocket(String id, Router router) {
@@ -55,7 +62,7 @@ public class ClothoWebSocket
 
     @OnWebSocketClose
     public void onClose(int closeCode, String message) {
-        subject.logout();
+//        subject.logout();
         session.close(closeCode, message);
     }
 
@@ -75,7 +82,10 @@ public class ClothoWebSocket
         log.trace("WebSocket #{} received message {}", this.getId(), messageString);
         try {
             Message message = JSON.mapper.readValue(messageString, Message.class);
-            subject.execute(new CallRouter(this, message));
+            // replaced subject.execute(new CallRouter...);
+            CallRouter rout = new CallRouter(this, message);
+            rout.call(router);
+            //
         } catch (JsonParseException ex) {
             log.error("WebSocket #{} received malformed message: {}", this.getId(), messageString);
         } catch (JsonMappingException ex) {
@@ -95,7 +105,7 @@ public class ClothoWebSocket
         log.debug("New connection opened. Connection id is {}.", this.getId());
         this.session = session;
         
-        subject = SecurityUtils.getSubject();
+//        subject = SecurityUtils.getSubject();
 
     }
 
