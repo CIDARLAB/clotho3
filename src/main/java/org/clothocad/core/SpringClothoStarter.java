@@ -62,11 +62,8 @@ public class SpringClothoStarter extends SpringBootServletInitializer implements
     public static void main(String[] args) throws Exception {
         ctx = SpringApplication.run(SpringClothoStarter.class, args);
         
-        System.out.println("BEANS BEANS BEANS");
-        System.out.println("BEANS BEANS BEANS");
         rbean = ctx.getBean("router", Router.class);
         pbean = ctx.getBean("persistor", Persistor.class);
-        System.out.println("BEANS BEANS BEANS");
         
         clothoPls.setRouter(rbean);
         
