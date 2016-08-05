@@ -19,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcernException;
 import static com.mongodb.MongoException.DuplicateKey;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,9 +84,9 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     
     
     public JongoConnection() throws UnknownHostException
-    { 
-        log.info("Testing testing spring jongo connection");
-        db = new MongoClient("Lubu-Waffle", 27017).getDB("testClotho");
+    {
+        log.info("Initializing JongoConnection");
+        db = new MongoClient(InetAddress.getLocalHost().getHostName(), 27017).getDB("testClotho");
         rawDataCollection = db.getCollection("data");
         connect();
     }

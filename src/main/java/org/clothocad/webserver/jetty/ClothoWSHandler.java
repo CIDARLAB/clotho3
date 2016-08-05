@@ -6,29 +6,11 @@
 package org.clothocad.webserver.jetty;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Map;
-import org.clothocad.core.communication.Channel;
-import org.clothocad.core.communication.Message;
-import org.clothocad.core.communication.MessageOption;
 import org.clothocad.core.communication.Router;
-import org.clothocad.core.communication.ServerSideAPI;
-import org.clothocad.core.communication.ws.ClothoWebSocket;
-import org.clothocad.core.util.JSON;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.SuspendToken;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.UpgradeResponse;
-import org.eclipse.jetty.websocket.api.WebSocketPolicy;
-import org.eclipse.jetty.websocket.server.WebSocketServerFactory;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -84,11 +66,12 @@ public class ClothoWSHandler implements WebSocketHandler {
             jettyHandler.onOpen(jettySession.getNativeSession());
         } catch (Throwable ex) {
             logger.debug(this.getClass().getName() + ": afterConnectionEstablishedException - " + ex.toString() + ": " + ex.getMessage() + ": " + ex.getLocalizedMessage());
+        
         }
     }
 
     @Override
-    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws IOException {
         try {
             logger.debug("Handler open: " + jettyHandler.isOpen());
             logger.debug("Session still open: " + jettySession.isOpen());
@@ -96,6 +79,7 @@ public class ClothoWSHandler implements WebSocketHandler {
             jettyHandler.onMessage(message.getPayload().toString());
         } catch (Throwable ex) {
             logger.debug(this.getClass().getName() + ": handleMessageException - " + ex.getCause().toString()+ ": " + ex.getMessage() + ": " + ex.getLocalizedMessage());
+            session.close();
         }
     }
 

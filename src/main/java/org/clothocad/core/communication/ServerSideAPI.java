@@ -715,6 +715,7 @@ public class ServerSideAPI {
     public List<Map<String, Object>> query(Map<String, Object> spec) {
         List<Map<String, Object>> objs;
         try {
+            log.debug("Query Specs: " + spec.toString());
             //Relay the query to Persistor and return the hits
             objs = persistor.findAsJSON(spec, options.getPropertiesFilter(), options.getMaxResults());
             say("Found " + objs.size() + " objects that satisfy your query", Severity.SUCCESS);

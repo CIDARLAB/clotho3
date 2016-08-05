@@ -257,11 +257,13 @@ public class Router {
             }
 
             if (response == Void.TYPE) {
+                log.warn("Router response is Void.TYPE");
                 connection.deregister(
                         request.getChannel(),
                         request.getRequestId()
                 );
             } else {
+                log.debug("Router response is proper! : " + response.toString());
                 connection.send(new Message(
                         request.getChannel(),
                         response,
