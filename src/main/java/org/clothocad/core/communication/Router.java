@@ -125,10 +125,14 @@ public class Router {
 
                 case createUser:
                     Map newusermap = (Map) data;
-
-                    if (newusermap.containsKey("password")) {
-                        response = api.createUser(newusermap.get("username").toString(), newusermap.get("password").toString());
-                    } else {
+                    
+                    if(newusermap.containsKey("credentials"))
+                    {
+                        log.debug("Yes indeed I want an account please.");
+                        response  = api.createUser(newusermap.get("username").toString(),newusermap.get("credentials").toString());
+                    }
+                    else
+                    {
                         //3rd Party OAuth?
                     }
 
