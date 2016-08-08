@@ -98,10 +98,10 @@ import org.springframework.stereotype.Component;
 public class Persistor {
 
     public static final int SEARCH_MAX = 5000;
+
     public static final String VIRTUAL_FIELD_PREFIX = "$$";    
     
 //    private JongoConnection connection;
-
     private ClothoConnection connection;
 
     private ClothoRealm realm;
@@ -111,7 +111,6 @@ public class Persistor {
     private Converters converters;
 
     private GlobalTrie globalTrie;
-
     
     @Autowired
     public Persistor(ClothoConnection connection, ClothoRealm realm){
@@ -125,6 +124,7 @@ public class Persistor {
        // if (initializeBuiltins) initializeBuiltInSchemas();
         
         converters = new Converters();       
+
         globalTrie = new GlobalTrie(connection.getCompletionData());
     }
 
