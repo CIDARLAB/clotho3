@@ -309,8 +309,8 @@ public class ServerSideAPI {
      currently assumes that new person should be created with no data - generic 
      method should optionally accept new person data*/
     public final Map<String, Object> createUser(String username, String password) {
-
         Subject subject = SecurityUtils.getSubject();
+        
         if (!ClothoRealm.ANONYMOUS_USER.equals(subject.getPrincipal())) {
             say("You are already logged in as " + subject.getPrincipal() + "!", Severity.FAILURE);
             return null;
@@ -321,7 +321,7 @@ public class ServerSideAPI {
 
             subject.logout();
             subject.login(new UsernamePasswordToken(username, password));
-
+            
             Person newPerson = new Person(username);
             newPerson.setPrimaryEmail(username);
             newPerson.setEmailAddress(username);
