@@ -1,58 +1,65 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.clothocad.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.clothocad.core.datums.SharableObjBase;
-
+import java.util.Set;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotNull;
+import org.clothocad.core.datums.SharableObjBase;
 import org.json.simple.JSONObject;
 
 /**
- *org.clothocad.model.Institution
- * @author jcanderson
+ *
  * @author mardian
  */
-@NoArgsConstructor
-public class Institution extends SharableObjBase {
-
-    /**
-     * Constructor from raw data
-     * @param name
-     * @param city
-     * @param state
-     * @param country
-     */
+public class Grant extends SharableObjBase {
     
     @Setter
     @Getter
-    @NotNull
-    private String city, state, country;
+    private String grantName;
     
-    public Institution(String name, String description, Person author) {
+    @Setter
+    @Getter
+    private double amount;
+    
+    @Setter
+    @Getter
+    private Date start, finished;
+    
+    @Setter
+    @Getter
+    private Person PI;
+    
+    @Setter
+    @Getter
+    private Set<Lab> labs;
+    
+    @Setter
+    @Getter
+    private Institution sponsor;
+    
+    public Grant(String name, String description, Person author) {
         super(name, author, description);
     }
     
-    //TODO:unique name constraint
-    public Institution(String name, String city, String state, String country) {
-        super(name, null);
-        this.city = city;
-        this.state = state;
-        this.country = country;
+    public Grant(String name, String description, String sponsor, Person author) {
+        super(name, author, description);
+        this.sponsor = new Institution(sponsor, "", author);
     }
-
+    
     public Map getMap(){
         Map map = new HashMap();
         //map.put("id", this.getId().getValue());
         map.put("name", this.getName());
         map.put("author", this.getAuthor().getName());
         map.put("description", this.getDescription());
-        map.put("city", this.city);
-        map.put("state", this.state);
-        map.put("country", this.country);
+        map.put("sponsor", this.sponsor.getName());
         return map;
     }
     
@@ -62,9 +69,7 @@ public class Institution extends SharableObjBase {
         obj.put("name", this.getName());
         obj.put("author", this.getAuthor().getName());
         obj.put("description", this.getDescription());
-        obj.put("city", this.city);
-        obj.put("state", this.state);
-        obj.put("country", this.country);
+        obj.put("sponsor", this.sponsor.getName());
         return obj;
     }
     
@@ -74,9 +79,7 @@ public class Institution extends SharableObjBase {
         str += "Name : " + this.getName() + "\n";
         str += "Author : " + this.getAuthor().getName() + "\n";
         str += "Description : " + this.getDescription() + "\n";
-        str += "City : " + this.city + "\n";
-        str += "State : "+ this.state + "\n";
-        str += "Country : " + this.country;
+        str += "Sponsor : " + this.sponsor.getName();
         return str;
     }
 }

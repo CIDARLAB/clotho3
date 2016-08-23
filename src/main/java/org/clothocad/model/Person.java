@@ -1,15 +1,19 @@
 package org.clothocad.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.json.simple.JSONObject;
 
 /**
  *
  * @author J. Christopher Anderson
+ * @author mardian
  */
 @NoArgsConstructor
 public class Person extends SharableObjBase {
@@ -38,9 +42,17 @@ public class Person extends SharableObjBase {
      */
     //unique name criterion
     //valid or nonexistent email
-    public Person( String displayname) {
-        //XXX:  Do people have authors?
+    public Person(String displayname) {
+        //XXX:  Do people have authors? null whenever they are self-entry
         super(displayname, null);
+        //changePassword( rawPassword );
+        myCollection = new Collection();
+        //biography = new WikiText("");
+    }
+    
+    public Person(String displayname, Person author) {
+        //XXX:  Person's author can be the user who made the entry or himself
+        super(displayname, author);
         //changePassword( rawPassword );
         myCollection = new Collection();
         //biography = new WikiText("");
@@ -238,9 +250,46 @@ public class Person extends SharableObjBase {
         return myCollection;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return getName();
+    }*/
+    
+    
+    public Map getMap(){
+        Map map = new HashMap();
+        map.put("name", this.getName());
+        if (this.getAuthor()!=null)
+            map.put("author", this.getAuthor().getName());
+        map.put("surName", this.surName);
+        map.put("nickName", this.nickName);
+        map.put("givenName", this.givenName);
+        map.put("emailAddress", this.emailAddress);
+        return map;
+    }
+    
+    public JSONObject getJSON(){
+        JSONObject obj = new JSONObject();
+        obj.put("name", this.getName());
+        if (this.getAuthor()!=null)
+            obj.put("author", this.getAuthor().getName());
+        obj.put("surName", this.surName);
+        obj.put("nickName", this.nickName);
+        obj.put("givenName", this.givenName);
+        obj.put("emailAddress", this.emailAddress);
+        return obj;
+    }
+    
+    public String toString(){
+        String str = "";
+        str += "Name : " + this.getName() + "\n";
+        if (this.getAuthor()!=null)
+            str += "Author" + this.getAuthor().getName() + "\n";
+        str += "Surname" + this.surName + "\n";
+        str += "Nickname" + this.nickName + "\n";
+        str += "Given Name" + this.givenName + "\n";
+        str += "Email Address" + this.emailAddress;
+        return str;
     }
 
 }

@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
+import org.json.simple.JSONObject;
 
 /**
  * An Annotation is a single line of Genbank essentially.  It maps a Feature
@@ -20,6 +23,7 @@ import javax.validation.constraints.NotNull;
  * 
  * @author J. Christopher Anderson
  * @author Nicholas Roehner
+ * @author mardian
  */
 @NoArgsConstructor
 public class Annotation extends SharableObjBase {
@@ -54,7 +58,7 @@ public class Annotation extends SharableObjBase {
      * @param author
      * @param isForwardStrand
      */
-   protected Annotation(String name, int start, int end, boolean isForwardStrand, Person author) {
+    public Annotation(String name, int start, int end, boolean isForwardStrand, Person author) {
         super(name, author);
         this.start = start;
         this.end = end;
@@ -70,7 +74,7 @@ public class Annotation extends SharableObjBase {
      * @param author
      * @param isForwardStrand
      */
-   protected Annotation(String name, String description, int start, int end,
+    public Annotation(String name, String description, int start, int end,
             boolean isForwardStrand, Person author) {
         super(name, author, description);
         this.start = start;
@@ -159,4 +163,57 @@ public class Annotation extends SharableObjBase {
         reverseColor = new Color(intVal[1][0], intVal[1][1], intVal[1][2]);
     }
 
+    public Map getMap(){
+        Map map = new HashMap();
+        map.put("name", this.getName());
+        map.put("author", this.getAuthor().getName());
+        map.put("description", this.getDescription());
+        map.put("symbol", this.symbol);
+        map.put("isForwardStrand", this.isForwardStrand);
+        if (feature!=null)
+            map.put("feature", this.feature.getName());
+        map.put("start", this.start);
+        map.put("end", this.end);
+        if (forwardColor!=null)
+            map.put("forwardColor", this.forwardColor.toString());
+        if (reverseColor!=null)
+            map.put("reverseColor", this.reverseColor.toString());
+        return map;
+    }
+    
+    public JSONObject getJSON(){
+        JSONObject obj = new JSONObject();
+        obj.put("name", this.getName());
+        obj.put("author", this.getAuthor().getName());
+        obj.put("description", this.getDescription());
+        obj.put("symbol", this.symbol);
+        obj.put("isForwardStrand", this.isForwardStrand);
+        if (feature!=null)
+            obj.put("feature", this.feature.getName());
+        obj.put("start", this.start);
+        obj.put("end", this.end);
+        if (forwardColor!=null)
+            obj.put("forwardColor", this.forwardColor.toString());
+        if (reverseColor!=null)
+            obj.put("reverseColor", this.reverseColor.toString());
+        return obj;
+    }
+    
+    public String toString(){
+        String str = "";
+        str += "name" + this.getName() + "\n";
+        str += "author" + this.getAuthor().getName() + "\n";
+        str += "description" + this.getDescription() + "\n";
+        str += "symbol" + this.symbol + "\n";
+        str += "isForwardStrand" + this.isForwardStrand + "\n";
+        if (feature!=null)
+            str += "feature" + this.feature.getName() + "\n";
+        str += "start" + this.start + "\n";
+        str += "end" + this.end;
+        if (forwardColor!=null)
+            str += "\nforwardColor" + this.forwardColor.toString();
+        if (reverseColor!=null)
+            str += "\nreverseColor" + this.reverseColor.toString();
+        return str;
+    }
 }
