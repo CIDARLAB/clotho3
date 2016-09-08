@@ -22,6 +22,8 @@ public class ClothoLoadClient{
 	public ClothoLoadClient(String username, WebSocketClient client,String host, int port)
 				  throws Exception {
 		name=username;
+                client.setMaxBinaryMessageBufferSize(999999);
+                client.setMaxTextMessageBufferSize(999999);
 		session = client.connect(this, new URI("ws://"+host+":"+port+"/websocket")).get();
 	}
  

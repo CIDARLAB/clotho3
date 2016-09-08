@@ -67,6 +67,7 @@ public class ClothoWebserver {
         ServerConnector https = new ServerConnector(server, sslContextFactory, new HttpConnectionFactory(https_config));
         https.setPort(confidentialPort);
         https.setIdleTimeout(3600000);
+               
         
         server.addConnector(http);
         server.addConnector(https);
@@ -116,6 +117,10 @@ public class ClothoWebserver {
         public void configure(WebSocketServletFactory factory)
         {
             factory.getPolicy().setIdleTimeout(10000);
+            factory.getPolicy().setMaxBinaryMessageBufferSize(999999);
+            factory.getPolicy().setMaxTextMessageBufferSize(999999);
+            factory.getPolicy().setMaxBinaryMessageSize(999999);
+            factory.getPolicy().setMaxTextMessageSize(999999);
             factory.setCreator(new WebSocketCreator() {
                 @Override
                 public Object createWebSocket(ServletUpgradeRequest sur, ServletUpgradeResponse sur1) {

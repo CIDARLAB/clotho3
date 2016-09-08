@@ -36,6 +36,8 @@ public class ClothoWebSocketClient {
 		
 		SslContextFactory factory = new SslContextFactory(true);
 		WebSocketClient client = new WebSocketClient(factory);
+                client.setMaxBinaryMessageBufferSize(999999);
+                client.setMaxTextMessageBufferSize(999999);
 		Future<Session> fut = client.connect(new ClothoWebSocket(), new URI(CLOTHO_WEBSOCKET_LOCATION));
 //		WebSocket.Connection connection = client.open(
 //			new URI(CLOTHO_WEBSOCKET_LOCATION), 

@@ -19,8 +19,8 @@ import java.util.concurrent.Callable;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-@Slf4j
 // Close WebSocket after 1 week ofidle time
+@Slf4j
 @WebSocket(maxBinaryMessageSize = 999999, maxIdleTime = 7 * 24 * 3600000, maxTextMessageSize = 999999)
 public class ClothoWebSocket
         extends ClientConnection {
