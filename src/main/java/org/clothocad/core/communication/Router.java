@@ -119,11 +119,13 @@ public class Router {
                     break;
                 
                 case createUser:
+                    log.debug("made it to the create user amg");
                     Map newusermap = (Map) data;
                     
-                    if(newusermap.containsKey("password"))
+                    if(newusermap.containsKey("credentials"))
                     {
-                        response  = api.createUser(newusermap.get("username").toString(),newusermap.get("password").toString());
+                        log.debug("Yes indeed I want an account please.");
+                        response  = api.createUser(newusermap.get("username").toString(),newusermap.get("credentials").toString());
                     }
                     else
                     {
