@@ -289,7 +289,7 @@ public class RestApi extends HttpServlet {
         if (userPass != null) {
             loginMap = new HashMap<String, String>();
             loginMap.put("username", userPass[0]);
-            loginMap.put("password", userPass[1]);
+            loginMap.put("credentials", userPass[1]);
             loginMessage = new Message(Channel.login, loginMap, null, null);
             this.router.receiveMessage(this.rc, loginMessage);
         }
