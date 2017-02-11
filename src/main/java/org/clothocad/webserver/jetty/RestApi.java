@@ -4,13 +4,12 @@ import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
 import org.clothocad.core.communication.Router;
+import org.clothocad.core.persistence.Persistor;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.shiro.authz.UnauthorizedException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.shiro.authz.UnauthorizedException;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -34,6 +34,7 @@ public class RestApi extends HttpServlet {
     
      */
     private static Router router;
+    private static Persistor persistor;
     private static Message m, loginMessage, logoutMessage;
     private static Map<String, String> loginMap;
     private static RestConnection rc = new RestConnection("RestConnection");
@@ -55,10 +56,40 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         Map<String, String> body = getRequestBody(request.getReader());
-//        System.out.println("\n\n\n" + pathID[1] + ":" + pathID[2] + "\n\n\n");]
+
+        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        
+        System.out.println("\n\n\n" + Arrays.toString(auth) + "\n\n\n");
+        
+        login(auth);
+        
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
+
+        String result = this.rc.getResult().toString();
+        System.out.println("\n\n\n" + result + "\n\n\n");
+        //logout(unamePass);
+
+        response.getWriter().write(result);
+
+        if (result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        
+        logout(auth);
+        
+//        System.out.println("\n\n\n" + body + "\n\n\n");
 
     }
-
 
     protected void doDelete(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -67,6 +98,34 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         Map<String, String> body = getRequestBody(request.getReader());
+        
+        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        
+        login(auth);
+        
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
+
+        String result = this.rc.getResult().toString();
+        System.out.println("\n\n\n" + result + "\n\n\n");
+        //logout(unamePass);
+
+        response.getWriter().write(result);
+
+        if (result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        
+        logout(auth);
     }
 
     protected void doPost(HttpServletRequest request,
@@ -76,7 +135,45 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         Map<String, String> body = getRequestBody(request.getReader());
+        
+        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        
+        if (pathID[2].equals("createUser")) {
+            Map<String,String> credentials = new HashMap<>();
+            credentials.put("username", auth[0]);
+            credentials.put("credentials", auth[1]);
+            credentials.put("displayname", auth[0]);
+            m = new Message(Channel.createUser, credentials, null, null);
+        }
+
+        login(auth);
+        
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
+
+        String result = this.rc.getResult().toString();
+        System.out.println("\n\n\n" + result + "\n\n\n");
+        //logout(unamePass);
+
+        response.getWriter().write(result);
+
+        if (result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        
+        logout(auth);
     }
+        
+                        
 
     protected void doPut(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -85,6 +182,35 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         Map<String, String> body = getRequestBody(request.getReader());
+        
+        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        
+        login(auth);
+        
+        try {
+            this.router.receiveMessage(this.rc, m);
+        } catch (UnauthorizedException ue) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+            response.addHeader("HTTP/1.0 401", "Unauthorized");
+            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+            return;
+        }
+
+        String result = this.rc.getResult().toString();
+        System.out.println("\n\n\n" + result + "\n\n\n");
+        //logout(unamePass);
+
+        response.getWriter().write(result);
+
+        if (result.contains("FAILURE")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        
+        logout(auth);
+        
     }
 
     private void login(String[] userPass) {
@@ -135,16 +261,5 @@ public class RestApi extends HttpServlet {
             queryPairs.put(pair.substring(0, i), pair.substring(i + 1));
         }
         return queryPairs;
-    }
-
-    private String[] getBasicAuth(String authHeader) {
-        try {
-            String credentials = new String(Base64.decodeBase64(authHeader), "UTF-8");
-            return credentials.split(":");
-        } catch (UnsupportedEncodingException uee) {
-            return null;
-        } catch (NullPointerException nee) {
-            return null;
-        }
     }
 }
