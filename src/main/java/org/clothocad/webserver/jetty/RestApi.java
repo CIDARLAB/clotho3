@@ -50,239 +50,41 @@ public class RestApi extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-        // Allows GET calls from domains other than this Clotho's domain
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        Map<String, String> body = getRequestBody(request.getReader());
+//        System.out.println("\n\n\n" + pathID[1] + ":" + pathID[2] + "\n\n\n");]
 
-        if (pathID.length == 0) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"greeting\": \"Hello Friend!\"}");
-            return;
-        }
-
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String id = pathID[1];
-        String data;
-        if (id.contains("query")) {
-            String queryString = request.getQueryString();
-            Map<String, String> p = splitQuery(queryString);
-            m = new Message(Channel.query, p, null, null);
-            data = queryString;
-        }
-        else
-        {
-            data = pathID[2];
-        }
-
-        //example.com/data/channelID/data
-        //example.com/data/query?name=mimithedog
-        switch (id) {
-
-            case "get":
-                m = new Message(Channel.get, data, null, null);
-                break;
-
-            case "getAll":
-                m = new Message(Channel.getAll, data, null, null);
-                break;
-
-            default:
-                break;
-        }
-
-        //Toss the request to the router to funnel into the static RestConnection object
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
     }
+
 
     protected void doDelete(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-
-        if (pathID.length == 0) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"Required\": \"ID required for delete\"}");
-            return;
-        }
-
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String id = pathID[1];
-
-        m = new Message(Channel.destroy, id, null, null);
-
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
+        Map<String, String> body = getRequestBody(request.getReader());
     }
 
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("application/json");
-
-        /*
-        Assuming the POST requests look like this... (the format of the Message class)
-        
-        {        
-        channel : "",
-        data : "",
-        requestID : "",
-        options : "",
-        }
-        
-        Seems like everytime we'll be using basic auth, so no user or pw?
-        
-         */
-        Map<String, String> p = getRequestBody(request.getReader());
-
-        if (p.isEmpty()) {
-            response.getWriter().write("{\"Required\": \"message body to process POST request\"}");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String channel = p.get("channel");
-        for (Channel e : Channel.values()) {
-            if (e.name().equalsIgnoreCase(channel)) {
-                m = new Message(e, p.get("data"), null, null);
-            }
-        }
-
-//        m = new Message(Channel.create, p, null, null);
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-    }
-
-    protected void doPut(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        Map<String, String> body = getRequestBody(request.getReader());
+    }
 
-        if (pathID.length == 0) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"Required\": \"ID required for set\"}");
-            return;
-        }
+    protected void doPut(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
 
-        Map<String, String> p = getRequestBody(request.getReader());
-
-        if (p.isEmpty()) {
-            response.getWriter().write("{\"Required\": \"new data to set item to\"}");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String id = pathID[1];
-
-        if (id.equals("run")) {
-            // You can change the url schema, but this makes it a run instead of a set
-            m = new Message(Channel.run, p, null, null);
-        } else {
-            p.put("id", id);
-            m = new Message(Channel.set, p, null, null);
-        }
-
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        }
+        String[] pathID = request.getPathInfo().split("/");
+        Map<String, String> body = getRequestBody(request.getReader());
     }
 
     private void login(String[] userPass) {
