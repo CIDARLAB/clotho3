@@ -55,26 +55,42 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        String id = pathID[2];
+        
         Map<String, String> body = getRequestBody(request.getReader());
 
         String[] auth = new String(request.getHeader("Authorization")).split(":");
         
-        System.out.println("\n\n\n" + Arrays.toString(auth) + "\n\n\n");
+//        System.out.println("\n\n\n" + Arrays.toString(pathID) + "\n\n\n");
+        
         
         login(auth);
         
         
-        String id = pathID[2];
-        String data = pathID[3];
         
-        
+        //String data = pathID[3];
         switch (id) {
+                case "get":
+                    System.out.println("\n\n\n get \n\n\n"); 
+                    m = new Message(Channel.get, body, null, null);
+                    break;
+            
                 case "getAll":
+                    System.out.println("\n\n\n getAll \n\n\n"); 
+                    m = new Message(Channel.getAll, body, null, null);
+                    break;
+                    
+                case "query":
+                    System.out.println("\n\n\n query \n\n\n");
+                    m = new Message(Channel.query, body, null, null);
+                    break;
+                
+                    
+                case "queryOne":
+                    System.out.println("\n\n\n queryOne \n\n\n");
+                    m = new Message(Channel.queryOne, body, null, null);
+                    break;
             }
-        
-        
-        
-        
         
         
         try {
@@ -89,7 +105,6 @@ public class RestApi extends HttpServlet {
 
         String result = this.rc.getResult().toString();
         System.out.println("\n\n\n" + result + "\n\n\n");
-        //logout(unamePass);
 
         response.getWriter().write(result);
 
@@ -111,11 +126,22 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        String id = pathID[2];
+                
         Map<String, String> body = getRequestBody(request.getReader());
         
         String[] auth = new String(request.getHeader("Authorization")).split(":");
         
         login(auth);
+        
+        
+        switch (id) {
+                case "destroy":
+                    System.out.println("\n\n\n get \n\n\n"); 
+                    m = new Message(Channel.destroy, body, null, null);
+                    break;
+        }
+        
         
         try {
             this.router.receiveMessage(this.rc, m);
@@ -129,7 +155,6 @@ public class RestApi extends HttpServlet {
 
         String result = this.rc.getResult().toString();
         System.out.println("\n\n\n" + result + "\n\n\n");
-        //logout(unamePass);
 
         response.getWriter().write(result);
 
