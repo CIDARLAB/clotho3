@@ -63,6 +63,20 @@ public class RestApi extends HttpServlet {
         
         login(auth);
         
+        
+        String id = pathID[2];
+        String data = pathID[3];
+        
+        
+        switch (id) {
+                case "getAll":
+            }
+        
+        
+        
+        
+        
+        
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -138,7 +152,9 @@ public class RestApi extends HttpServlet {
         
         String[] auth = new String(request.getHeader("Authorization")).split(":");
         
-        if (pathID[2].equals("createUser")) {
+        String id = pathID[2];
+        
+        if (id.equals("createUser")) {
             Map<String,String> credentials = new HashMap<>();
             credentials.put("username", auth[0]);
             credentials.put("credentials", auth[1]);
@@ -213,6 +229,10 @@ public class RestApi extends HttpServlet {
         
     }
 
+    
+    
+    
+    
     private void login(String[] userPass) {
         if (userPass != null) {
             loginMap = new HashMap<String, String>();
