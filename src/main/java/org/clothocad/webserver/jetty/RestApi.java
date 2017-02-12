@@ -173,11 +173,12 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        String id = pathID[2];
+
         Map<String, String> body = getRequestBody(request.getReader());
         
         String[] auth = new String(request.getHeader("Authorization")).split(":");
         
-        String id = pathID[2];
         
         if (id.equals("createUser")) {
             Map<String,String> credentials = new HashMap<>();
@@ -188,6 +189,16 @@ public class RestApi extends HttpServlet {
         }
 
         login(auth);
+        
+        switch (id) {
+            case "create":
+                m = new Message(Channel.create, body, null, null);
+                break;
+                
+            case "createAll":
+                m = new Message(Channel.createAll, body, null, null);
+                break;               
+        }
         
         try {
             this.router.receiveMessage(this.rc, m);
@@ -201,7 +212,6 @@ public class RestApi extends HttpServlet {
 
         String result = this.rc.getResult().toString();
         System.out.println("\n\n\n" + result + "\n\n\n");
-        //logout(unamePass);
 
         response.getWriter().write(result);
 
@@ -222,11 +232,24 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        String id = pathID[2];
+
         Map<String, String> body = getRequestBody(request.getReader());
         
         String[] auth = new String(request.getHeader("Authorization")).split(":");
         
         login(auth);
+        
+        
+        switch (id) {
+            case "set":
+                m = new Message(Channel.set, body, null, null);
+                break;
+                
+            case "setAll":
+                m = new Message(Channel.setAll, body, null, null);
+                break;               
+        }
         
         try {
             this.router.receiveMessage(this.rc, m);
@@ -240,7 +263,6 @@ public class RestApi extends HttpServlet {
 
         String result = this.rc.getResult().toString();
         System.out.println("\n\n\n" + result + "\n\n\n");
-        //logout(unamePass);
 
         response.getWriter().write(result);
 
