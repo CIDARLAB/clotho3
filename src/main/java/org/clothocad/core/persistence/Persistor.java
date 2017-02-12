@@ -744,6 +744,10 @@ public class Persistor {
     public <T extends ObjBase> Collection<T> getAll(Class<T> aClass) {
         return connection.getAll(aClass);
     }
+    
+    public Collection<ObjBase> listAll(){
+        return connection.listAll();
+    }
 
     private static final List<Class<? extends Schema>> authoredSchemas = new ArrayList<>();
 

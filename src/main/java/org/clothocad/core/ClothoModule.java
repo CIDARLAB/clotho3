@@ -35,8 +35,13 @@ public class ClothoModule extends AbstractModule {
     @Provides
     protected SslContextFactory provideSslConnector() throws Exception {
         SslContextFactory cf = new SslContextFactory();
+        
         cf.setKeyStorePath(config.getProperty("keystorepath"));
         cf.setKeyStorePassword(config.getProperty("keystorepass"));
+        
+
+
+
         //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);
         return cf;
     }

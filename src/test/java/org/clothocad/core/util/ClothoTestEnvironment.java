@@ -2,6 +2,7 @@ package org.clothocad.core.util;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 import org.apache.shiro.mgt.SecurityManager;
@@ -26,6 +27,7 @@ public class ClothoTestEnvironment extends AbstractClothoStarter {
             getInjector(Properties config) {
                 final Properties override = new Properties(config);
                 override.setProperty("dbname", "testClotho");
+                
                 return Guice.createInjector( 
                     new ClothoTestModule(override),
                     new SecurityModule(),

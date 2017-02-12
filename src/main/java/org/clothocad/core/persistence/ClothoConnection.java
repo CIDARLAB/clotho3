@@ -146,7 +146,8 @@ public interface ClothoConnection {
     Map<String,Object> getOneAsBSON(Map query);
     Map<String,Object> getOneAsBSON(Map query, Set<String> fields);
     
-    <T extends ObjBase> List<T> getAll(Class<T> type);
+    <T extends ObjBase> List<T> getAll(Class<T> type);  //get all documents with a certain schema
+    <T extends ObjBase> List<T> listAll();              //list all documents in db.data
     
     //Deletes everything
     void deleteAll();

@@ -12,12 +12,16 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.SecurityUtils;
+
 //Start then navigate to:  http://localhost:8080/#/
 public class ClothoStarter extends AbstractClothoStarter {
     public static void main(String[] args) throws Exception {
         baseMain(args, new MainHook() {
             @Override public Injector
             getInjector(Properties config) {
+                
                 return Guice.createInjector(
                     new ClothoModule(config),
                     new SecurityModule(),

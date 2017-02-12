@@ -49,7 +49,7 @@ public class ClothoTestModule extends ClothoModule {
     protected SslContextFactory provideSslConnector() throws Exception {
         SslContextFactory cf = new SslContextFactory();
         cf.setKeyStore(provideKeyStore());
-        //SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);                
+//        SslSelectChannelConnector sslConnector = new SslSelectChannelConnector(cf);                
         return cf;
     }
     

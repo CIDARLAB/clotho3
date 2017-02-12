@@ -33,7 +33,8 @@ public enum Channel {
     
     convert, //Convert one data object from one type to another. 
     
-    getAll,
+    getAll, //Get all that match a class
+    listAll, //Return all objects from the database.
     createAll,
     destroyAll,
     setAll,

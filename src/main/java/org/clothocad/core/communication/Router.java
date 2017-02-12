@@ -191,6 +191,9 @@ public class Router {
                 case getAll:
                     response = api.getAll(asList(data));
                     break;
+                case listAll:
+                    response = api.listAll();
+                    break;
                 case createAll:
                     response = api.createAll(asList(data));
                     break;

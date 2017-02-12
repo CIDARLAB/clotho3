@@ -49,6 +49,7 @@ import org.clothocad.core.security.ClothoAction;
 import org.clothocad.core.security.CredentialStore;
 import org.clothocad.core.security.PermissionsOnObject;
 import org.clothocad.core.util.JSON;
+import org.jongo.Find;
 import org.jongo.MongoCollection;
 import org.jongo.ResultHandler;
 import org.python.google.common.collect.Lists;
@@ -271,8 +272,13 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     }
 
     @Override
-    public <T extends ObjBase> List<T> getAll(Class<T> type) {
+    public <T extends ObjBase> List<T> getAll(Class<T> type) {     
         return Lists.newArrayList(data.resolvingFind("{schema:#}", type.getCanonicalName()).as(type));
+    }
+    
+    @Override
+    public List<ObjBase> listAll() {
+        return Lists.newArrayList(data.resolvingFind("{schema:{$exists : true}}").as(ObjBase.class));
     }
 
     @Override
@@ -365,6 +371,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
             Object id = obj.get(ID);
             if (id instanceof ObjectId){
                 id = ((ObjectId) id).toString();
+                System.out.println(id);
             }
             obj.remove(ID);
             obj.put("_id", id);
