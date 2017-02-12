@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
 import java.io.IOException;
 
@@ -59,7 +60,7 @@ public class WideningAsPropertyTypeDeserializer extends AsPropertyTypeDeserializ
                 return modifiedDeserializeTypedForId(jp, ctxt, tb);
             }
             if (tb == null) {
-                tb = new TokenBuffer(null);
+                tb = new TokenBuffer((JsonParser) null);
             }
             tb.writeFieldName(name);
             tb.copyCurrentStructure(jp);
@@ -75,7 +76,7 @@ public class WideningAsPropertyTypeDeserializer extends AsPropertyTypeDeserializ
         JsonDeserializer<Object> deser = modifiedFindDeserializer(ctxt, typeId);
         if (_typeIdVisible) { // need to merge id back in JSON input?
             if (tb == null) {
-                tb = new TokenBuffer(null);
+                tb = new TokenBuffer((JsonParser)null);
             }
             tb.writeFieldName(jp.getCurrentName());
             tb.writeString(typeId);
@@ -115,10 +116,15 @@ public class WideningAsPropertyTypeDeserializer extends AsPropertyTypeDeserializ
                      *   type in process (getting SimpleType of Map.class which will not work as expected)
                      */
                     if (_baseType != null && _baseType.getClass() == type.getClass()) {
+                        
+                        //David - I believe this is the jackson 2.7.3 way of narrowing/widening
+                        TypeFactory factory = ctxt.getTypeFactory();
                         try{ //the actual modification behind layers of final methods!
-                            type = _baseType.narrowBy(type.getRawClass());
+//                            type = _baseType.narrowBy(type.getRawClass());
+                            type = factory.constructSpecializedType(_baseType,type.getRawClass());
                         } catch (IllegalArgumentException iae){
-                            type = _baseType.widenBy(type.getRawClass());
+//                            type = _baseType.widenBy(type.getRawClass());
+                            type = factory.constructGeneralizedType(_baseType, type.getRawClass());
                         }
                     }
                     deser = ctxt.findContextualValueDeserializer(type, _property);

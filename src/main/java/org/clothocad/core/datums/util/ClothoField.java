@@ -164,7 +164,7 @@ public class ClothoField {
                     try {
                         return Class.forName(typeName, true, Schema.cl);
                     } catch (ClassNotFoundException ex) {
-                        throw ctxt.weirdStringException(Class.class, typeName + " is not a schema id or field type");
+                        throw ctxt.weirdStringException(typeName, Class.class, typeName + " is not a schema id or field type");
                     }
             }
         }

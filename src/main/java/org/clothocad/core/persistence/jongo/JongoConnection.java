@@ -18,7 +18,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcernException;
-import static com.mongodb.MongoException.DuplicateKey;
+import com.mongodb.DuplicateKeyException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,7 +132,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         try{
             data.save(obj);
         }
-        catch (DuplicateKey e){
+        catch (DuplicateKeyException e){
             data.update("{_id:#}", obj.getId().toString()).with(obj);
         }
     }
@@ -251,7 +251,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     
     @Override
     public List<Map<String, Object>> getAsBSON(Map query, int hitmax, Set<String> filter) {
-        return Lists.newArrayList(data.find(serialize(mongifyIdField(query)))
+        return Lists.newArrayList((Iterable)data.find(serialize(mongifyIdField(query)))
                 .limit(hitmax).projection(generateProjection(filter))
                 .map(DemongifyHandler.get()));
     }
