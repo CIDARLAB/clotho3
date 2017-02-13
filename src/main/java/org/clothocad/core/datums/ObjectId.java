@@ -19,16 +19,16 @@ public class ObjectId {
     
     @JsonCreator
     public ObjectId(String value){
-        this.value = value;
+        this.value = value.replaceAll("[.]", "_");
     }
     
     public ObjectId(Object value){
         if (value == null) throw new IllegalArgumentException();
-        this.value = value.toString();
+        this.value = value.toString().replaceAll("[.]", "_");
     }
     
     public ObjectId(){
-        this.value = new org.bson.types.ObjectId().toString();
+        this.value = new org.bson.types.ObjectId().toString().replaceAll("[.]", "_");
     }
     
     @JsonValue

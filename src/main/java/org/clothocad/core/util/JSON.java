@@ -241,9 +241,9 @@ public class JSON {
     
     static abstract class UseTypeInfoForCredentials{
         
-        @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="$class")
+        @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="_class")
         protected PrincipalCollection principals;
-        @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="$class")
+        @JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="_class")
         protected Object credentials;
     }
     
