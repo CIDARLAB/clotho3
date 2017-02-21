@@ -135,6 +135,9 @@ public interface ClothoConnection {
     List<ObjBase> get(Map query);
     List<ObjBase> get(Map query, int hitmax);
     
+    //formats for regex
+    List<ObjBase> getRegex(Map query);
+    
     <T extends ObjBase> List<T> get(Class<T> type, Map query);
     <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax);
     
@@ -147,6 +150,7 @@ public interface ClothoConnection {
     Map<String,Object> getOneAsBSON(Map query, Set<String> fields);
     
     <T extends ObjBase> List<T> getAll(Class<T> type);  //get all documents with a certain schema
+    
     <T extends ObjBase> List<T> listAll();              //list all documents in db.data
     
     //Deletes everything

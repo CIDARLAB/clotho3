@@ -23,6 +23,7 @@ import org.clothocad.model.Strain;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,20 +63,29 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
         
         List<Map<String, Object>> all = new ArrayList<>();
         Collection<ObjBase> raw = persistor.listAll();
+        Map<String, Object> query = new HashMap<>();
+        
+        query.put("name", "bba.*K"); //List should include BBa_K249006
+        Iterable<ObjBase> rawtwo = persistor.findWild(query);
         
         for(ObjBase each : raw)
         {
-            all.add(persistor.getAsJSON(each.getId()));
+            System.out.println("ALL LIST : " + each);
+//            all.add(persistor.getAsJSON(each.getId()));
+        }
+        for(ObjBase each : rawtwo)
+        {
+            System.out.println("REGEX LIST : " + each);
         }
         
         int counter = 0;
-        for(Map<String, Object> bd : all)
-        {
-            counter++;
-            logger.info(bd.toString());
-        }
-        
-        logger.info("Counted objects : " + counter);
+//        for(Map<String, Object> bd : all)
+//        {
+//            counter++;
+//            logger.info(bd.toString());
+//        }
+//        
+//        logger.info("Counted objects : " + counter);
     }
     
     public static void updateObjBaseName(ObjectId objectID, String rename, Persistor persistor) {
@@ -112,6 +122,7 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 		
 		// Elowitz RBS sequence
 		Sequence seqB0034 = new Sequence("B0034 Sequence", "aaagaggagaaa", vinay);
+                
 		// Terminator sequences
 		Sequence seqB0010 = new Sequence("B0010 Sequence", "ccaggcatcaaataaaacgaaaggctcagtcgaaagactgggcctttcgttttatctgttgtttgtcggtgaacgctctc", randy);
 		Sequence seqB0012 = new Sequence("B0012 Sequence", "tcacactggctcaccttcgggtgggcctttctgcgtttata", reshma);
