@@ -489,6 +489,12 @@ public class Persistor {
         return filteredResult;
     }
 
+    public Iterable<ObjBase> findWild(Map<String, Object> query){
+        List<ObjBase> result = connection.getWild(query);
+        
+        return result;
+    }
+    
     private List<Map<String, Object>> getConvertedData(Schema originalSchema, Set<String> fields) {
         List<Map<String, Object>> results = new ArrayList<>();
 

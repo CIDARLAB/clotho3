@@ -231,11 +231,35 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).limit(hitmax).as(ObjBase.class));
     }
 
+    //Format query for wildcard search
+    public List<ObjBase> getWild(Map wildQuery)
+    {
+        //Wildcard search queries: (assuming that you're searching in name)
+        
+        //** Jongo does not currently support queries in the JavaScript syntax like /myQuery/g
+        
+        
+        //"fieldName", "[regex].*\S?t.r.i.n.g\b"
+        
+        //Example uses:
+        //"name", "seq" -> will return list of objects that include "seq" somewhere in the "name" field. (Case insensitive)
+        //"name", "Sy.*ase" -> will return a list of objects that have Sy____ase somewhere in the "name" field. Ex: Synthase, Sympathetic steeplechase
+        
+        for(Object key : wildQuery.keySet())
+        {
+            String query = "{"+ key.toString() +": {$regex: '" + wildQuery.get(key).toString() + "', $options: 'i'}}";
+            System.out.println(query);
+            return Lists.newArrayList(data.resolvingFind(query).as(ObjBase.class));
+        }
+        
+        //should not reach here, but i mean if you do we'll just pass it along then.
+        return get(wildQuery);
+    }
+    
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
         return get(type, query, Persistor.SEARCH_MAX);
     }
-    
     
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax) {
