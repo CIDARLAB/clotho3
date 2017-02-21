@@ -233,6 +233,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
 
     //Format query for regex search
     public List<ObjBase> getRegex(Map query)
+
     {
         //Wildcard search queries: (assuming that you're searching in name)
         

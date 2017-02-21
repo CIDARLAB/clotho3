@@ -56,10 +56,10 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
     @Test
     public void testLumazineExample() {
         ObjectId designID = createDesignK542008(persistor);
-        
-        BioDesign design = (BioDesign) readObjBase(designID, persistor);
-        
-        updateObjBaseName(design.getModule().getId(), "Nicholas Roehner", persistor);
+//        
+//        BioDesign design = (BioDesign) readObjBase(designID, persistor);
+//        
+//        updateObjBaseName(design.getModule().getId(), "Nicholas Roehner", persistor);
         
         List<Map<String, Object>> all = new ArrayList<>();
         Collection<ObjBase> raw = persistor.listAll();
