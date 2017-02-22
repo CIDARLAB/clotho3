@@ -66,7 +66,7 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
         Map<String, Object> query = new HashMap<>();
         
         query.put("name", "bba.*K"); //List should include BBa_K249006
-        Iterable<ObjBase> rawtwo = persistor.findWild(query);
+        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
         
         for(ObjBase each : raw)
         {
