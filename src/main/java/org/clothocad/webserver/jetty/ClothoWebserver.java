@@ -20,6 +20,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.clothocad.core.persistence.Persistor;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
@@ -41,6 +42,7 @@ public class ClothoWebserver {
             @Named("confidentialport") int confidentialPort,
             SslContextFactory sslContextFactory,
             @Named("containerServletContext") ServletContextHandler servletHandler,
+            final Persistor persistor,
             final Router router, @Named("clientdirectory") String clientDirectory)
             throws Exception {
 
@@ -100,7 +102,7 @@ public class ClothoWebserver {
 
         servletHandler.addServlet(new ServletHolder(staticServlet), "/*");
         servletHandler.addServlet(new ServletHolder(clothoServ), "/websocket");
-        servletHandler.addServlet(new ServletHolder(new RestApi(router)), "/data/*");
+        servletHandler.addServlet(new ServletHolder(new RestApi(persistor, router)), "/data/*");
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(constraintHandler);

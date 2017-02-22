@@ -1,5 +1,6 @@
 package org.clothocad.webserver.jetty;
 
+
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,8 +46,11 @@ public class RestApi extends HttpServlet {
     // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
     // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
     // http://shiro.apache.org/
-    public RestApi(Router router) {
+
+    @Inject
+    public RestApi(Persistor persistor, Router router) {
         this.router = router;
+        this.persistor = persistor;
     }
 
     protected void doGet(HttpServletRequest request,
