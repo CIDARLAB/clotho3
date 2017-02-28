@@ -64,12 +64,24 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
+        Map<String, Object> query = new HashMap<>();
 
         String[] auth = new String(request.getHeader("Authorization")).split(":");
 
 //        System.out.println("\n\n\n" + Arrays.toString(pathID) + "\n\n\n");
         login(auth);
 
+        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
+        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
+        
+        System.out.println("\n\n\n query \n\n\n");
+
+        for (ObjBase each : rawtwo) {
+            System.out.println("REGEX LIST : " + each);
+        }
+
+        System.out.println("\n\n\n");
+        
         //String data = pathID[3];
         switch (id) {
             case "get":
@@ -172,7 +184,6 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
-        Map<String, Object> query = new HashMap<>();
         Collection<ObjBase> raw = persistor.listAll();
 
         String[] auth = new String(request.getHeader("Authorization")).split(":");
@@ -187,16 +198,12 @@ public class RestApi extends HttpServlet {
 
         login(auth);
         Person user = new Person(auth[0]);
-        
+
         // Elowitz RBS sequence
         Sequence seqB0034 = new Sequence("B0034 Sequence", "aaagaggagaaa", user);
         persistor.save(seqB0034);
-        
-        
-        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
-        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
 
-        System.out.println("\n\n\n here \n\n\n");
+        System.out.println("\n\n\n Make \n\n\n");
 
         for (ObjBase each : raw) {
             System.out.println("ALL LIST : " + each);
@@ -204,10 +211,6 @@ public class RestApi extends HttpServlet {
         }
         System.out.println("\n\n\n");
 
-        for (ObjBase each : rawtwo) {
-            System.out.println("REGEX LIST : " + each);
-        }
-        System.out.println("\n\n\n there \n\n\n");
         switch (id) {
             case "create":
                 m = new Message(Channel.create, body, null, null);
