@@ -64,16 +64,19 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
-        Map<String, Object> query = new HashMap<>();
+        Collection<ObjBase> raw = persistor.listAll();
 
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        String username = body.get("username");
+        String password = body.get("password");
+        String[] auth = {username, password};
 
-//        System.out.println("\n\n\n" + Arrays.toString(pathID) + "\n\n\n");
         login(auth);
+
+        Map<String, Object> query = new HashMap<>();
 
         query.put("name", "B0034 Sequence"); //List should include BBa_K249006
         Iterable<ObjBase> rawtwo = persistor.findRegex(query);
-        
+
         System.out.println("\n\n\n query \n\n\n");
 
         for (ObjBase each : rawtwo) {
@@ -81,7 +84,7 @@ public class RestApi extends HttpServlet {
         }
 
         System.out.println("\n\n\n");
-        
+
         //String data = pathID[3];
         switch (id) {
             case "get":
@@ -140,8 +143,11 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
 
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        String username = body.get("username");
+        String password = body.get("password");
+        String[] auth = {username, password};
 
         login(auth);
 
@@ -186,7 +192,9 @@ public class RestApi extends HttpServlet {
         Map<String, String> body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        String username = body.get("username");
+        String password = body.get("password");
+        String[] auth = {username, password};
 
         if (id.equals("createUser")) {
             Map<String, String> credentials = new HashMap<>();
@@ -194,9 +202,12 @@ public class RestApi extends HttpServlet {
             credentials.put("credentials", auth[1]);
             credentials.put("displayname", auth[0]);
             m = new Message(Channel.createUser, credentials, null, null);
+            login(auth);
+            logout(auth);
         }
 
         login(auth);
+
         Person user = new Person(auth[0]);
 
         // Elowitz RBS sequence
@@ -213,9 +224,7 @@ public class RestApi extends HttpServlet {
 
         switch (id) {
             case "create":
-                m = new Message(Channel.create, body, null, null);
                 break;
-
             case "createAll":
                 m = new Message(Channel.createAll, body, null, null);
                 break;
@@ -254,19 +263,15 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
 
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
+        String username = body.get("username");
+        String password = body.get("password");
+        String[] auth = {username, password};
 
         login(auth);
 
         switch (id) {
-            case "set":
-                m = new Message(Channel.set, body, null, null);
-                break;
-
-            case "setAll":
-                m = new Message(Channel.setAll, body, null, null);
-                break;
         }
 
         try {
@@ -313,15 +318,14 @@ public class RestApi extends HttpServlet {
     private Map<String, String> getRequestBody(BufferedReader reader) {
         String parts[];
         String keyValue[] = new String[2];
-        String currChar = "";
-        String key = "";
+
 
         Map<String, String> map = new HashMap<String, String>();
 
         try {
-            parts = reader.readLine().split("&");
+            parts = reader.readLine().split(",");
             for (String kv : parts) {
-                keyValue = kv.split("=");
+                keyValue = kv.split(":");
                 map.put(keyValue[0], keyValue[1]);
             }
         } catch (IOException ie) {
@@ -331,15 +335,5 @@ public class RestApi extends HttpServlet {
         }
 
         return map;
-    }
-
-    private Map<String, String> splitQuery(String queryInfo) {
-        Map<String, String> queryPairs = new HashMap<String, String>();
-        String[] pairs = queryInfo.split("&");
-        for (String pair : pairs) {
-            int i = pair.indexOf("=");
-            queryPairs.put(pair.substring(0, i), pair.substring(i + 1));
-        }
-        return queryPairs;
     }
 }
