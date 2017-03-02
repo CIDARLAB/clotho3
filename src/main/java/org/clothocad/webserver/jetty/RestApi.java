@@ -24,6 +24,7 @@ import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
 import org.json.JSONObject;
+import org.apache.shiro.SecurityUtils;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -73,7 +74,11 @@ public class RestApi extends HttpServlet {
         String password = body.get("password").toString();
         String[] auth = {username, password};
 
-        login(auth);
+        if(!login(auth)) 
+        {
+            response.getWriter().write("Login Failed\r\n");
+            return;
+        }
 
 //        Map<String, Object> query = new HashMap<>();
 //        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
@@ -167,7 +172,11 @@ public class RestApi extends HttpServlet {
         String password = body.get("password").toString();
         String[] auth = {username, password};
 
-        login(auth);
+        if(!login(auth)) 
+        {
+            response.getWriter().write("Login Failed\r\n");
+            return;
+        }
 
         switch (id) {
             case "destroy":
@@ -224,11 +233,19 @@ public class RestApi extends HttpServlet {
             credentials.put("credentials", auth[1]);
             credentials.put("displayname", auth[0]);
             m = new Message(Channel.createUser, credentials, null, null);
-            login(auth);
+            if(!login(auth)) 
+            {
+                response.getWriter().write("Login Failed\r\n");
+                return;
+            }
             logout(auth);
         }
 
-        login(auth);
+        if(!login(auth)) 
+        {
+            response.getWriter().write("Login Failed\r\n");
+            return;
+        }
 
         // Elowitz RBS sequence
 //        Sequence seqB0034 = new Sequence("B0034 Sequence", "aaagaggagaaa", user);
@@ -309,7 +326,11 @@ public class RestApi extends HttpServlet {
         String password = body.get("password").toString();
         String[] auth = {username, password};
 
-        login(auth);
+        if(!login(auth)) 
+        {
+            response.getWriter().write("Login Failed\r\n");
+            return;
+        }
 
         switch (id) {
             case "changePassword":
@@ -346,7 +367,7 @@ public class RestApi extends HttpServlet {
         logout(auth);
     }
 
-    private void login(String[] userPass) {
+    private boolean login(String[] userPass) {
         if (userPass != null) {
             loginMap = new HashMap<String, String>();
             loginMap.put("username", userPass[0]);
@@ -354,6 +375,7 @@ public class RestApi extends HttpServlet {
             loginMessage = new Message(Channel.login, loginMap, null, null);
             this.router.receiveMessage(this.rc, loginMessage);
         }
+        return SecurityUtils.getSubject().isAuthenticated();
     }
 
     private void logout(String[] userPass) {
