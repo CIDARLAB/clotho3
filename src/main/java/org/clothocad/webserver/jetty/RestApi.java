@@ -306,7 +306,7 @@ public class RestApi extends HttpServlet {
             case "set":
                 body.remove("username");
                 body.remove("password");
-                if (body.getString("id") == null) {
+                if (!body.has("id")) {
                     response.getWriter().write("You must supply an id \r\n");
                     break;
                 }
@@ -317,10 +317,18 @@ public class RestApi extends HttpServlet {
                     response.getWriter().write("No object with this id exists\r\n");
                     break;
                 }
+                
+                Map<String, Object> original = persistor.getAsJSON(id);
+                
+                Iterator<String> keysItr = body.keys();
+                while(keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    Object value = body.get(key);
+                    original.put(key,value);
+                }
 
                 persistor.save(jsonToMap(body));
-
-               
+          
                 //Contact the user to notify them that they modified an object
                 response.getWriter().write("Successfully modified object");
 
