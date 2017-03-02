@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
 
@@ -64,7 +65,6 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
-        Collection<ObjBase> raw = persistor.listAll();
 
         String username = body.get("username");
         String password = body.get("password");
@@ -72,39 +72,53 @@ public class RestApi extends HttpServlet {
 
         login(auth);
 
-        Map<String, Object> query = new HashMap<>();
-
-        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
-        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
-
-        System.out.println("\n\n\n query \n\n\n");
-
-        for (ObjBase each : rawtwo) {
-            System.out.println("REGEX LIST : " + each);
-        }
-
+//        Map<String, Object> query = new HashMap<>();
+//        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
+//        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
+//        for (ObjBase each : rawtwo) {
+//            System.out.println("REGEX LIST : " + each);
+//        }
         System.out.println("\n\n\n");
 
         //String data = pathID[3];
         switch (id) {
+            case "autocomplete":
+                break;
+
+            case "startsWith":
+                break;
+
             case "get":
-                System.out.println("\n\n\n get \n\n\n");
-                m = new Message(Channel.get, body, null, null);
+//                String type = body.get("type");
+                Map<String, Object> query = new HashMap<>();
+
+//                switch (type) {
+//                    case "sequence":
+                String name = body.get("name");
+                query.put("name", name);
+
+//                }
+                Iterable<ObjBase> rawtwo = persistor.findRegex(query);
+
+                for (ObjBase each : rawtwo) {
+                    System.out.println("REGEX LIST : " + each);
+                }
+
                 break;
 
             case "getAll":
-                System.out.println("\n\n\n getAll \n\n\n");
-                m = new Message(Channel.getAll, body, null, null);
+                break;
+
+            case "learn":
                 break;
 
             case "query":
-                System.out.println("\n\n\n query \n\n\n");
-                m = new Message(Channel.query, body, null, null);
                 break;
 
             case "queryOne":
-                System.out.println("\n\n\n queryOne \n\n\n");
-                m = new Message(Channel.queryOne, body, null, null);
+                break;
+
+            case "validate":
                 break;
         }
 
@@ -143,7 +157,6 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         Map<String, String> body = getRequestBody(request.getReader());
-        Collection<ObjBase> raw = persistor.listAll();
 
         String username = body.get("username");
         String password = body.get("password");
@@ -155,6 +168,10 @@ public class RestApi extends HttpServlet {
             case "destroy":
                 System.out.println("\n\n\n get \n\n\n");
                 m = new Message(Channel.destroy, body, null, null);
+                break;
+            case "destroyAll":
+                break;
+            case "clear":
                 break;
         }
 
@@ -208,25 +225,44 @@ public class RestApi extends HttpServlet {
 
         login(auth);
 
-        Person user = new Person(auth[0]);
-
         // Elowitz RBS sequence
-        Sequence seqB0034 = new Sequence("B0034 Sequence", "aaagaggagaaa", user);
-        persistor.save(seqB0034);
-
-        System.out.println("\n\n\n Make \n\n\n");
-
-        for (ObjBase each : raw) {
-            System.out.println("ALL LIST : " + each);
-//            all.add(persistor.getAsJSON(each.getId()));
-        }
-        System.out.println("\n\n\n");
+//        Sequence seqB0034 = new Sequence("B0034 Sequence", "aaagaggagaaa", user);
+//        persistor.save(seqB0034);
+//
+//        System.out.println("\n\n\n Make \n\n\n");
+//
+//        for (ObjBase each : raw) {
+//            System.out.println("ALL LIST : " + each);
+//        }
+//        System.out.println("\n\n\n");
 
         switch (id) {
             case "create":
+                Person user = new Person(auth[0]);
+                String type = body.get("type");
+                String name = body.get("name");
+                String value = body.get("value");
+
+                switch (type) {
+                    case "sequence":
+                        Sequence seq = new Sequence(name, value, user);
+                        persistor.save(seq);
+                        break;
+                }
+
                 break;
             case "createAll":
                 m = new Message(Channel.createAll, body, null, null);
+                break;
+            case "convert":
+                break;
+            case "log":
+                break;
+            case "run":
+                break;
+            case "say":
+                break;
+            case "submit":
                 break;
         }
 
@@ -250,7 +286,6 @@ public class RestApi extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
         }
-
         logout(auth);
     }
 
@@ -272,6 +307,14 @@ public class RestApi extends HttpServlet {
         login(auth);
 
         switch (id) {
+            case "changePassword":
+                break;
+            case "grant":
+                break;
+            case "set":
+                break;
+            case "setAll":
+                break;
         }
 
         try {
@@ -318,7 +361,6 @@ public class RestApi extends HttpServlet {
     private Map<String, String> getRequestBody(BufferedReader reader) {
         String parts[];
         String keyValue[] = new String[2];
-
 
         Map<String, String> map = new HashMap<String, String>();
 
