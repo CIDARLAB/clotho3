@@ -214,8 +214,8 @@ public class RestApi extends HttpServlet {
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username").toString();
-        String password = body.get("password").toString();
+        String username = body.getString("username");
+        String password = body.getString("password");
         String[] auth = {username, password};
 
         if (id.equals("createUser")) {
@@ -244,9 +244,9 @@ public class RestApi extends HttpServlet {
         switch (id) {
             case "create":
                 Person user = new Person(auth[0]);
-                String type = body.get("type").toString();
-                String name = body.get("name").toString();
-                String value = body.get("value").toString();
+                String type = body.getString("type");
+                String name = body.getString("name");
+                String value = body.getString("value");
 
                 switch (type) {
                     case "sequence":
