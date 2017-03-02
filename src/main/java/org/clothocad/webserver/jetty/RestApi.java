@@ -31,21 +31,16 @@ import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
+import static org.clothocad.webserver.jetty.ConvenienceMethods.createPart;
 import org.json.JSONArray;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
 
     /*
+    This is history. Never delete this comment:
     
-    REST API servlet is at idontremember.url/data/*
-    
-    doGet: get, getAll, and query
-    doPost: pterry much any request you want, just specify the channel.
-    
-    haven't modified doDelete or doPut yet.
-    
-    
+    REST API servlet is at idontremember.url/data/*    
      */
     private static Router router;
     private static Persistor persistor;
@@ -202,18 +197,18 @@ public class RestApi extends HttpServlet {
             return;
         }
 
+        Person user = new Person(auth[0]);
+        Sequence sequence = null;
+        Part part = null;
+        Feature feature = null;
+        String objectName = "";
+        String role = "";
+        String sequenceName = "";
+
         String result = "";
 
         switch (method) {
             case "create":
-                Person user = new Person(auth[0]);
-                Sequence sequence = null;
-                Part part = null;
-                Feature feature = null;
-                String objectName = "";
-                String role = "";
-                String sequenceName = "";
-
                 switch (type) {
                     case "sequence":
                         objectName = body.getString("objectName");
@@ -233,7 +228,7 @@ public class RestApi extends HttpServlet {
                         } else {
                             part = new Part(objectName, user);
                         }
-                        
+
                         ObjectId partObj = persistor.save(part);
                         result = partObj.toString();
                         break;
@@ -249,7 +244,7 @@ public class RestApi extends HttpServlet {
                     case "module":
                         objectName = body.getString("objectName");
                         role = body.getString("role");
-                        
+
                         if (body.has("id")) {
                             String featureId = body.getString("id");
                             ObjectId id = new ObjectId(featureId);
@@ -262,6 +257,20 @@ public class RestApi extends HttpServlet {
                         BasicModule module = new BasicModule(objectName, role, features, user);
                         ObjectId moduleObj = persistor.save(module);
                         result = moduleObj.toString();
+                        break;
+                }
+                break;
+
+            case "convenience":
+                switch (type) {
+                    case "createPart":
+                        Map<String, String> params = new HashMap<>();
+                        params.put("role", body.getString("role"));
+                        params.put("sequence", body.getString("sequence"));
+                        objectName = body.getString("objectName");
+
+                        ObjectId partObj = createPart(persistor, objectName, params, user.toString());
+                        result = partObj.toString();
                         break;
                 }
                 break;
@@ -299,10 +308,6 @@ public class RestApi extends HttpServlet {
         }
 
         switch (method) {
-//            case "changePassword":
-//                break;
-//            case "grant":
-//                break;
             case "set":
                 body.remove("username");
                 body.remove("password");
@@ -328,35 +333,11 @@ public class RestApi extends HttpServlet {
                 }
 
                 persistor.save(jsonToMap(body));
-          
-                //Contact the user to notify them that they modified an object
+                
                 response.getWriter().write("Successfully modified object");
 
                 break;
-//            case "setAll":
-//                break;
         }
-
-//        try {
-//            this.router.receiveMessage(this.rc, m);
-//        } catch (UnauthorizedException ue) {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-//            response.addHeader("HTTP/1.0 401", "Unauthorized");
-//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-//            return;
-//        }
-//
-//        String result = this.rc.getResult().toString();
-//        System.out.println("\n\n\n" + result + "\n\n\n");
-//
-//        response.getWriter().write(result);
-//
-//        if (result.contains("FAILURE")) {
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//        } else {
-//            response.setStatus(HttpServletResponse.SC_OK);
-//        }
 
         logout(auth);
     }
