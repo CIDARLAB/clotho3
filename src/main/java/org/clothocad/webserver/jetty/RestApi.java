@@ -21,8 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.util.JSON;
-import org.clothocad.model.Person;
-import org.clothocad.model.Sequence;
+import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
@@ -65,7 +64,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -87,14 +86,14 @@ public class RestApi extends HttpServlet {
 //        }
         String result = "";
         //String data = pathID[3];
-        switch (id) {
+        switch (method) {
             case "autocomplete":
                 break;
 
             case "startsWith":
                 break;
 
-            case "get":
+            case "getByName":
 //                String type = body.get("type");
                 Map<String, Object> query = new HashMap<>();
 
@@ -110,11 +109,16 @@ public class RestApi extends HttpServlet {
                     last = each;
                 }
 
-                result = last.getName() + ":" + last.getId().toString();
+                result = last.toString();
 
                 break;
 
-            case "getAll":
+            case "getById":
+
+                String id = body.getString("id");
+                ObjectId objId = new ObjectId(id);
+                Object obj = persistor.get(objId);
+                result = obj.toString();
                 break;
 
             case "learn":
@@ -142,12 +146,9 @@ public class RestApi extends HttpServlet {
 //            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
 //            return;
 //        }
-
 //        String result = this.rc.getResult().toString();
 //        System.out.println("\n\n\n" + result + "\n\n\n");
-
 //        response.getWriter().write(result);
-
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
@@ -165,7 +166,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
 
@@ -180,7 +181,7 @@ public class RestApi extends HttpServlet {
         
         String result = "";
 
-        switch (id) {
+        switch (method) {
             case "delete":
                 persistor.delete(new ObjectId(body.getString("id")));
                 break;
@@ -218,7 +219,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -227,7 +228,7 @@ public class RestApi extends HttpServlet {
         String password = body.getString("password");
         String[] auth = {username, password};
 
-        if (id.equals("createUser")) {
+        if (method.equals("createUser")) {
             Map<String, String> credentials = new HashMap<>();
             credentials.put("username", auth[0]);
             credentials.put("credentials", auth[1]);
@@ -248,25 +249,42 @@ public class RestApi extends HttpServlet {
 
         String result = "";
 
-        switch (id) {
+        switch (method) {
             case "create":
                 Person user = new Person(auth[0]);
-                String type = body.getString("type");
-                String name = body.getString("name");
-                String value = body.getString("value");
+                String type = pathID[3];
+                Sequence sequence = null;
+                Part part = null;
+                String name = "";
+                String sequenceName = "";
 
                 switch (type) {
                     case "sequence":
-                        Sequence seq = new Sequence(name, value, user);
-                        ObjectId obj = persistor.save(seq);
-                        result = obj.toString();
+                        name = body.getString("name");
+                        sequenceName = body.getString("sequence");
+                        sequence = new Sequence(name, sequenceName, user);
+                        ObjectId sequenceObj = persistor.save(sequence);
+                        result = sequenceObj.toString();
+                        break;
 
+                    case "part":
+                        if (body.has("id")) {
+                            String sequenceId = body.getString("id");
+                            ObjectId id = new ObjectId(sequenceId);
+                            sequence = persistor.get(Sequence.class, id);
+                        }
+                        part = new Part(name, user);
+                        ObjectId partObj = persistor.save(part);
+                        result = partObj.toString();
+                        break;
+
+                    case "feature":
+                        break;
+
+                    case "module":
                         break;
                 }
 
-                break;
-            case "createAll":
-                m = new Message(Channel.createAll, body, null, null);
                 break;
             case "convert":
                 break;
@@ -297,7 +315,6 @@ public class RestApi extends HttpServlet {
 //        System.out.println("\n\n\n" + result + "\n\n\n");
 //
 //        response.getWriter().write(result);
-
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
@@ -312,7 +329,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -326,7 +343,7 @@ public class RestApi extends HttpServlet {
             return;
         }
 
-        switch (id) {
+        switch (method) {
             case "changePassword":
                 break;
             case "grant":
