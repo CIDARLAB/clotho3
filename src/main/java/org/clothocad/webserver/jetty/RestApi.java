@@ -168,42 +168,41 @@ public class RestApi extends HttpServlet {
         String id = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
-        Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username").toString();
-        String password = body.get("password").toString();
+        String username = body.getString("username"); //sequence part feature module
+        String password = body.getString("password");
         String[] auth = {username, password};
 
         if (!login(auth)) {
             response.getWriter().write("Login Failed\r\n");
             return;
         }
+        
+        String result = "";
 
         switch (id) {
-            case "destroy":
-                System.out.println("\n\n\n get \n\n\n");
-                m = new Message(Channel.destroy, body, null, null);
-                break;
-            case "destroyAll":
-                break;
-            case "clear":
+            case "delete":
+                persistor.delete(new ObjectId(body.getString("id")));
                 break;
         }
-
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-        System.out.println("\n\n\n" + result + "\n\n\n");
-
+        
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
+
+//        try {
+//            this.router.receiveMessage(this.rc, m);
+//        } catch (UnauthorizedException ue) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+//            response.addHeader("HTTP/1.0 401", "Unauthorized");
+//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+//            return;
+//        }
+//
+//        String result = this.rc.getResult().toString();
+//        System.out.println("\n\n\n" + result + "\n\n\n");
+//
+//        response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -234,6 +233,7 @@ public class RestApi extends HttpServlet {
             credentials.put("credentials", auth[1]);
             credentials.put("displayname", auth[0]);
             m = new Message(Channel.createUser, credentials, null, null);
+            this.router.receiveMessage(this.rc, m);
             if (!login(auth)) {
                 response.getWriter().write("Login Failed\r\n");
                 return;
