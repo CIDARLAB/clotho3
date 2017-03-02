@@ -22,6 +22,7 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
+import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -63,11 +64,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username");
-        String password = body.get("password");
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         login(auth);
@@ -142,11 +143,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username");
-        String password = body.get("password");
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         login(auth);
@@ -189,11 +190,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username");
-        String password = body.get("password");
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         if (id.equals("createUser")) {
@@ -262,11 +263,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username");
-        String password = body.get("password");
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         login(auth);
@@ -315,25 +316,16 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    private Map<String, String> getRequestBody(BufferedReader reader) {
-        String parts[];
-        String keyValue[] = new String[2];
-
-
-        Map<String, String> map = new HashMap<String, String>();
-
-        try {
-            parts = reader.readLine().split(",");
-            for (String kv : parts) {
-                keyValue = kv.split(":");
-                map.put(keyValue[0], keyValue[1]);
-            }
-        } catch (IOException ie) {
-            map = new HashMap<String, String>();
-        } catch (NullPointerException ne) {
-            map = new HashMap<String, String>();
+    private JSONObject getRequestBody(BufferedReader reader) throws IOException {
+        
+        StringBuilder buffer = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
         }
-
-        return map;
+        String data = buffer.toString();
+        
+        return new JSONObject(data);
+        
     }
 }
