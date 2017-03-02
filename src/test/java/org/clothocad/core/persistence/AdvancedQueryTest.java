@@ -58,7 +58,8 @@ public class AdvancedQueryTest extends AuthorizedShiroTest {
         Collection<ObjBase> list = persistor.listAll();
 
         for (ObjBase each : list) {
-            System.out.println("ALL LIST : " + each);
+            Map<String, Object> obj = persistor.getAsJSON(each.getId());
+            System.out.println("ALL LIST : " + obj.toString());
         }
     }
     
