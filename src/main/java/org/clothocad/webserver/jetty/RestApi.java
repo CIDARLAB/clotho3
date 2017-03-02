@@ -23,6 +23,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.util.JSON;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
+import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -64,10 +65,12 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
 
-        String username = body.get("username");
-        String password = body.get("password");
+        JSONObject body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
+
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         login(auth);
@@ -94,7 +97,7 @@ public class RestApi extends HttpServlet {
 
 //                switch (type) {
 //                    case "sequence":
-                String name = body.get("name");
+                String name = body.get("name").toString();
                 query.put("name", name);
 
 //                }
@@ -156,10 +159,12 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
 
-        String username = body.get("username");
-        String password = body.get("password");
+        JSONObject body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
+
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         login(auth);
@@ -206,11 +211,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username");
-        String password = body.get("password");
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         if (id.equals("createUser")) {
@@ -239,9 +244,9 @@ public class RestApi extends HttpServlet {
         switch (id) {
             case "create":
                 Person user = new Person(auth[0]);
-                String type = body.get("type");
-                String name = body.get("name");
-                String value = body.get("value");
+                String type = body.get("type").toString();
+                String name = body.get("name").toString();
+                String value = body.get("value").toString();
 
                 switch (type) {
                     case "sequence":
@@ -297,11 +302,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
 
-        String username = body.get("username");
-        String password = body.get("password");
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         login(auth);
@@ -358,24 +363,16 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    private Map<String, String> getRequestBody(BufferedReader reader) {
-        String parts[];
-        String keyValue[] = new String[2];
-
-        Map<String, String> map = new HashMap<String, String>();
-
-        try {
-            parts = reader.readLine().split(",");
-            for (String kv : parts) {
-                keyValue = kv.split(":");
-                map.put(keyValue[0], keyValue[1]);
-            }
-        } catch (IOException ie) {
-            map = new HashMap<String, String>();
-        } catch (NullPointerException ne) {
-            map = new HashMap<String, String>();
+    private JSONObject getRequestBody(BufferedReader reader) throws IOException {
+        
+        StringBuilder buffer = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
         }
-
-        return map;
+        String data = buffer.toString();
+        
+        return new JSONObject(data);
+        
     }
 }
