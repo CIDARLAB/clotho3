@@ -183,7 +183,12 @@ public class RestApi extends HttpServlet {
 
         switch (method) {
             case "delete":
-                persistor.delete(new ObjectId(body.getString("id")));
+                if (persistor.has(new ObjectId(body.getString("id"))))
+                {
+                    persistor.delete(new ObjectId(body.getString("id")));
+                    response.getWriter().write("Object has been deleted\r\n");
+                }
+                else response.getWriter().write("Object with id " + body.getString("id") + " does not exist\r\n");
                 break;
         }
         
