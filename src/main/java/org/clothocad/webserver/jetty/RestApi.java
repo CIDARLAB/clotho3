@@ -64,7 +64,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -86,14 +86,14 @@ public class RestApi extends HttpServlet {
 //        }
         String result = "";
         //String data = pathID[3];
-        switch (id) {
+        switch (method) {
             case "autocomplete":
                 break;
 
             case "startsWith":
                 break;
 
-            case "get":
+            case "getByName":
 //                String type = body.get("type");
                 Map<String, Object> query = new HashMap<>();
 
@@ -109,11 +109,16 @@ public class RestApi extends HttpServlet {
                     last = each;
                 }
 
-                result = last.getName() + ":" + last.getId().toString();
+                result = last.toString();
 
                 break;
 
-            case "getAll":
+            case "getById":
+
+                String id = body.getString("id");
+                ObjectId objId = new ObjectId(id);
+                Object obj = persistor.get(objId);
+                result = obj.toString();
                 break;
 
             case "learn":
@@ -161,7 +166,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -175,7 +180,7 @@ public class RestApi extends HttpServlet {
             return;
         }
 
-        switch (id) {
+        switch (method) {
             case "destroy":
                 System.out.println("\n\n\n get \n\n\n");
                 m = new Message(Channel.destroy, body, null, null);
@@ -261,19 +266,14 @@ public class RestApi extends HttpServlet {
                         ObjectId sequenceObj = persistor.save(sequence);
                         result = sequenceObj.toString();
                         break;
-                        
+
                     case "part":
                         if (body.has("id")) {
                             String sequenceId = body.getString("id");
                             ObjectId id = new ObjectId(sequenceId);
                             sequence = persistor.get(Sequence.class, id);
-                        } else {
-                            name = body.getString("name");
-                            sequenceName = body.getString("value");
-                            sequence = new Sequence(name, sequenceName, user);
-                            persistor.save(sequence);
                         }
-                        part = new Part(name, sequence, user);
+                        part = new Part(name, user);
                         ObjectId partObj = persistor.save(part);
                         result = partObj.toString();
                         break;
@@ -329,7 +329,7 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String id = pathID[2];
+        String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -343,7 +343,7 @@ public class RestApi extends HttpServlet {
             return;
         }
 
-        switch (id) {
+        switch (method) {
             case "changePassword":
                 break;
             case "grant":
