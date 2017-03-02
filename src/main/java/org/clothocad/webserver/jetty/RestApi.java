@@ -199,6 +199,7 @@ public class RestApi extends HttpServlet {
                 Person user = new Person(auth[0]);
                 Sequence sequence = null;
                 Part part = null;
+                Feature feature = null;
                 String objectName = "";
                 String role = "";
                 String sequenceName = "";
@@ -213,13 +214,16 @@ public class RestApi extends HttpServlet {
                         break;
 
                     case "part":
+                        objectName = body.getString("objectName");
                         if (body.has("id")) {
                             String sequenceId = body.getString("id");
                             ObjectId id = new ObjectId(sequenceId);
                             sequence = persistor.get(Sequence.class, id);
+                            part = new Part(objectName, sequence, user);
+                        } else {
+                            part = new Part(objectName, user);
                         }
-                        objectName = body.getString("objectName");
-                        part = new Part(objectName, user);
+                        
                         ObjectId partObj = persistor.save(part);
                         result = partObj.toString();
                         break;
@@ -227,16 +231,27 @@ public class RestApi extends HttpServlet {
                     case "feature":
                         objectName = body.getString("objectName");
                         role = body.getString("role");
-                        Feature feature = new Feature(objectName, role, user);
+                        feature = new Feature(objectName, role, user);
+                        ObjectId featureObj = persistor.save(feature);
+                        result = featureObj.toString();
                         break;
 
                     case "module":
                         objectName = body.getString("objectName");
                         role = body.getString("role");
-                        Feature needFeature = new Feature(objectName, role, user);
+                        
+                        if (body.has("id")) {
+                            String featureId = body.getString("id");
+                            ObjectId id = new ObjectId(featureId);
+                            feature = persistor.get(Feature.class, id);
+                        } else {
+                            feature = new Feature(objectName, role, user);
+                        }
                         Set<Feature> features = new HashSet<Feature>();
-                        features.add(needFeature);
+                        features.add(feature);
                         BasicModule module = new BasicModule(objectName, role, features, user);
+                        ObjectId moduleObj = persistor.save(module);
+                        result = moduleObj.toString();
                         break;
                 }
                 break;
