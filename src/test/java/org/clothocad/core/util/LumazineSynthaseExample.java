@@ -11,11 +11,9 @@ import org.clothocad.model.BioDesign;
 import org.clothocad.model.CompositeModule;
 import org.clothocad.model.Feature;
 import org.clothocad.model.Variable;
-import org.clothocad.model.Feature.FeatureRole;
 import org.clothocad.model.Influence;
 import org.clothocad.model.Influence.InfluenceType;
 import org.clothocad.model.Module;
-import org.clothocad.model.Module.ModuleRole;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
@@ -419,49 +417,49 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 		*/
 		
 		// Elowitz RBS feature
-		Feature featB0034 = constructFeature("RBS (Elowitz 1999) -- defines RBS efficiency", FeatureRole.RBS, seqB0034, vinay);
+		Feature featB0034 = constructFeature("RBS (Elowitz 1999) -- defines RBS efficiency", "RBS", seqB0034, vinay);
 		seqB0034.createAnnotation("Conserved", 5, 8, true, vinay);
 		
 		// Terminator features
-		Feature featB0010 = constructFeature("T1 from E. coli rrnB", FeatureRole.TERMINATOR, seqB0010, randy);
+		Feature featB0010 = constructFeature("T1 from E. coli rrnB", "TERMINATOR", seqB0010, randy);
 		seqB0010.createAnnotation("stem loop", 12, 55, true, randy);
-		Feature featB0012 = constructFeature("TE from coliphageT7", FeatureRole.TERMINATOR, seqB0012, reshma);
+		Feature featB0012 = constructFeature("TE from coliphageT7", "TERMINATOR", seqB0012, reshma);
 		seqB0012.createAnnotation("stem loop", 8, 27, true, reshma);
 		seqB0012.createAnnotation("Stop", 34, 34, true, reshma);
 		seqB0012.createAnnotation("PolyA", 28, 41, true, reshma);
 		
 		// Lumazine Synthase gene features
-		Feature featR0010 = constructFeature("promoter (lacI regulated)", FeatureRole.PROMOTER, seqR0010, anonymous);
-		constructFeature("end of LacI coding region (inactive)", FeatureRole.CDS, seqR0010, 1, 88, anonymous);
-		constructFeature("CAP binding site", FeatureRole.OPERATOR, seqR0010, 89, 126, anonymous);
-		constructFeature("-35", FeatureRole.PROMOTER, seqR0010, 137, 142, anonymous);
-		constructFeature("-10", FeatureRole.PROMOTER, seqR0010, 161, 166, anonymous);
-		constructFeature("LacI binding site", FeatureRole.OPERATOR, seqR0010, 166, 200, anonymous);
+		Feature featR0010 = constructFeature("promoter (lacI regulated)", "PROMOTER", seqR0010, anonymous);
+		constructFeature("end of LacI coding region (inactive)", "CDS", seqR0010, 1, 88, anonymous);
+		constructFeature("CAP binding site", "OPERATOR", seqR0010, 89, 126, anonymous);
+		constructFeature("-35", "PROMOTER", seqR0010, 137, 142, anonymous);
+		constructFeature("-10", "PROMOTER", seqR0010, 161, 166, anonymous);
+		constructFeature("LacI binding site", "OPERATOR", seqR0010, 166, 200, anonymous);
 		seqR0010.createAnnotation("start", 173, 173, true, anonymous);
-		Feature featK249002 = constructFeature("Lumazine Synthase", FeatureRole.CDS, seqK249002, roxanne);
+		Feature featK249002 = constructFeature("Lumazine Synthase", "CDS", seqK249002, roxanne);
 		
 		// TetR gene features
-		Feature featI13453 = constructFeature("Pbad promoter", FeatureRole.PROMOTER, seqI13453,  jkm);
-		Feature featC0040 = constructFeature("tetracycline repressor from transposon Tn10 (+LVA)", FeatureRole.CDS, seqC0040, june);
-		constructFeature("tetR", FeatureRole.CDS, seqC0040, 1, 620, june);
-		constructFeature("SsrA", FeatureRole.DEGRADATION_TAG, seqC0040, 621, 654, june);
-		constructFeature("barcode", FeatureRole.BARCODE, seqC0040, 661, 685, june);
+		Feature featI13453 = constructFeature("Pbad promoter", "PROMOTER", seqI13453,  jkm);
+		Feature featC0040 = constructFeature("tetracycline repressor from transposon Tn10 (+LVA)", "CDS", seqC0040, june);
+		constructFeature("tetR", "CDS", seqC0040, 1, 620, june);
+		constructFeature("SsrA", "DEGRADATION_TAG", seqC0040, 621, 654, june);
+		constructFeature("barcode", "BARCODE", seqC0040, 661, 685, june);
 		
 		// ECFP/EYFP gene features
-		Feature featR0040 = constructFeature("TetR repressible promoter", FeatureRole.PROMOTER, seqR0040, june);
-		constructFeature("TetR 1", FeatureRole.OPERATOR, seqR0040, 1, 19, june);
-		constructFeature("-35", FeatureRole.PROMOTER, seqR0040, 20, 25, june);
-		constructFeature("TetR 2", FeatureRole.OPERATOR, seqR0040, 26, 44, june);
-		constructFeature("-10", FeatureRole.PROMOTER, seqR0040, 43, 48, june);
-		Feature featK331002 = constructFeature("ECFP with C-terminal Arginine Tag", FeatureRole.CDS, seqK331002, lisza);
+		Feature featR0040 = constructFeature("TetR repressible promoter", "PROMOTER", seqR0040, june);
+		constructFeature("TetR 1", "OPERATOR", seqR0040, 1, 19, june);
+		constructFeature("-35", "PROMOTER", seqR0040, 20, 25, june);
+		constructFeature("TetR 2", "OPERATOR", seqR0040, 26, 44, june);
+		constructFeature("-10", "PROMOTER", seqR0040, 43, 48, june);
+		Feature featK331002 = constructFeature("ECFP with C-terminal Arginine Tag", "CDS", seqK331002, lisza);
 		seqK331002.createAnnotation("start", 1, 3, true, lisza);
-		constructFeature("Arginine Tag", FeatureRole.LOCALIZATION_TAG, seqK331002, 725, 753, lisza);
+		constructFeature("Arginine Tag", "LOCALIZATION_TAG", seqK331002, 725, 753, lisza);
 		seqK331002.createAnnotation("stop", 754, 756, true, lisza);
-		Feature featK249006 = constructFeature("Fusion EYFP with C-terminal Arginine Tag", FeatureRole.CDS, seqK249006, roxanne);
+		Feature featK249006 = constructFeature("Fusion EYFP with C-terminal Arginine Tag", "CDS", seqK249006, roxanne);
 		
 		// Double terminator feature and annotations
 		// seqB0015 is annotated with featB0010 and featB0012
-		Feature featB0015 = constructFeature("double terminator (B0010-B0012)", FeatureRole.TERMINATOR, seqB0015, reshma);
+		Feature featB0015 = constructFeature("double terminator (B0010-B0012)", "TERMINATOR", seqB0015, reshma);
 		annotateWithFeature(seqB0015, featB0010, 1, 80, reshma);
 		annotateWithFeature(seqB0015, featB0012, 89, 129, reshma);
 		
@@ -498,13 +496,13 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 		annotateWithFeature(seqK331035, featB0015, 783, 911, adam);
 		
 		// Lumazine Synthase gene feature and annotations, TetR gene feature and annotations
-		Feature featK542001 = constructFeature("pLacI Regulated Lumazine Synthase", FeatureRole.GENE, seqK542001, anthony);
+		Feature featK542001 = constructFeature("pLacI Regulated Lumazine Synthase", "GENE", seqK542001, anthony);
 		// seqK542001 is annotated with featR0010 and featB0034 and featK249002 and featB0015
 		annotateWithFeature(seqK542001, featR0010, 1, 200, anthony);
 		annotateWithFeature(seqK542001, featB0034, 209, 220, anthony);
 		annotateWithFeature(seqK542001, featK249002, 227, 691, anthony);
 		annotateWithFeature(seqK542001, featB0015, 700, 828, anthony);
-		Feature featK542003 = constructFeature("pBAD Regulated TetR", FeatureRole.GENE, seqK542003, anthony);
+		Feature featK542003 = constructFeature("pBAD Regulated TetR", "GENE", seqK542003, anthony);
 		// seqK542003 is annotated with featI13453 and featB0034 and featC0040 and featB0015
 		annotateWithFeature(seqK542003, featI13453, 1, 130, anthony);
 		annotateWithFeature(seqK542003, featB0034, 139, 150, anthony);
@@ -515,7 +513,7 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 		// seqK542004 is annotated with featK542001 and featK542003
 		annotateWithFeature(seqK542004, featK542001, 1, 828, anthony);
 		annotateWithFeature(seqK542004, featK542003, 837, 1814, anthony);
-		Feature featK542005 = constructFeature("pTet Regulated Arg-tagged ECFP and EYFP (FRET Reporter)", FeatureRole.GENE, seqK542005, anthony);
+		Feature featK542005 = constructFeature("pTet Regulated Arg-tagged ECFP and EYFP (FRET Reporter)", "GENE", seqK542005, anthony);
 		// seqK542005 is annotated with featR0040 and featB0034 and featK331002 and featK249006 and featB0015
 		annotateWithFeature(seqK542005, featR0040, 1, 54, anthony);
 		annotateWithFeature(seqK542005, featB0034, 63, 74, anthony);
@@ -535,67 +533,67 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 		*/
 		
 		// RBS module
-		Module modB0034 = constructBasicModule("Translation via Elowitz RBS", ModuleRole.TRANSLATION, featB0034, nic);
+		Module modB0034 = constructBasicModule("Translation via Elowitz RBS", "TRANSLATION", featB0034, nic);
 		
 		// Terminator modules
-		Module modB0010 = constructBasicModule("Transcription with T1 from E. coli rrnB", ModuleRole.TRANSCRIPTION, featB0010, nic);
-		Module modB0012 = constructBasicModule("Transcription with TE from coliphageT7", ModuleRole.TRANSCRIPTION, featB0012, nic);
+		Module modB0010 = constructBasicModule("Transcription with T1 from E. coli rrnB", "TRANSCRIPTION", featB0010, nic);
+		Module modB0012 = constructBasicModule("Transcription with TE from coliphageT7", "TRANSCRIPTION", featB0012, nic);
 		
 		// Lumazine Synthase gene modules
-		Module modR0010 = constructBasicModule("Transcription via pLac", ModuleRole.TRANSCRIPTION, featR0010, nic);
-		Module modK249002 = constructBasicModule("Lumazine Synthase Expression", ModuleRole.EXPRESSION, featK249002, nic);
+		Module modR0010 = constructBasicModule("Transcription via pLac", "TRANSCRIPTION", featR0010, nic);
+		Module modK249002 = constructBasicModule("Lumazine Synthase Expression", "EXPRESSION", featK249002, nic);
 		
 		// TetR gene modules
-		Module modI13453 = constructBasicModule("Transcription via pBad", ModuleRole.TRANSCRIPTION, featI13453, nic);
-		Module modC0040 = constructBasicModule("TetR Expression", ModuleRole.EXPRESSION, featC0040, nic);
+		Module modI13453 = constructBasicModule("Transcription via pBad", "TRANSCRIPTION", featI13453, nic);
+		Module modC0040 = constructBasicModule("TetR Expression", "EXPRESSION", featC0040, nic);
 		
 		// ECFP/EYFP gene modules
-		Module modR0040 = constructBasicModule("Transcription via pTet", ModuleRole.TRANSCRIPTION, featR0040, nic);
-		Module modK331002 = constructBasicModule("ECFP Expression", ModuleRole.EXPRESSION, featK331002, nic);
-		Module modK249006 = constructBasicModule("EYFP Expression", ModuleRole.EXPRESSION, featK249006, nic);
+		Module modR0040 = constructBasicModule("Transcription via pTet", "TRANSCRIPTION", featR0040, nic);
+		Module modK331002 = constructBasicModule("ECFP Expression", "EXPRESSION", featK331002, nic);
+		Module modK249006 = constructBasicModule("EYFP Expression", "EXPRESSION", featK249006, nic);
 		
 		// Double terminator module
-		Module modB0015 = constructCompositeModule("Transcription with Double Terminator", ModuleRole.TRANSCRIPTION, modB0010, modB0012, nic);
+		Module modB0015 = constructCompositeModule("Transcription with Double Terminator", "TRANSCRIPTION", modB0010, modB0012, nic);
 		
 		// Lumazine Synthase gene modules
 		// modJ04500 is comprised of modR0010 and modB0034
-		Module modJ04500 = constructCompositeModule("Expression via pLac and Elowitz RBS", ModuleRole.EXPRESSION, modR0010, modB0034, nic);
+		Module modJ04500 = constructCompositeModule("Expression via pLac and Elowitz RBS", "EXPRESSION", modR0010, modB0034, nic);
 		// modK542000 is comprised of modK249002 and modB0015
-		Module modK542000 = constructCompositeModule("Lumazine Synthase Expression", ModuleRole.EXPRESSION, modK249002, modB0015, nic);
+		Module modK542000 = constructCompositeModule("Lumazine Synthase Expression", "EXPRESSION", modK249002, modB0015, nic);
 		
 		// TetR gene module
 		// modP0440 is comprised of modB0034 and modC0040 and modB0015
-		CompositeModule modP0440 = constructCompositeModule("TetR Expression", ModuleRole.EXPRESSION, modB0034, modC0040, nic);
+		CompositeModule modP0440 = constructCompositeModule("TetR Expression", "EXPRESSION", modB0034, modC0040, nic);
 		modP0440.addSubModule(modB0015);
 		
 		// ECFP/EYFP gene modules
 		// modK331025 is comprised of modB0034 and modK331002
-		Module modK331025 = constructCompositeModule("ECFP Expression", ModuleRole.EXPRESSION, modB0034, modK331002, nic);
+		Module modK331025 = constructCompositeModule("ECFP Expression", "EXPRESSION", modB0034, modK331002, nic);
 		// modK331023 is comprised of modB0034 and modK249006
-		Module modK331023 = constructCompositeModule("EYFP Expression", ModuleRole.EXPRESSION, modB0034, modK249006, nic);
+		Module modK331023 = constructCompositeModule("EYFP Expression", "EXPRESSION", modB0034, modK249006, nic);
 		
 		// ECFP/EYFP gene modules
 		// modK331033 is comprised of modR0040 and modK331025
-		Module modK331033 = constructCompositeModule("ECFP Expression", ModuleRole.EXPRESSION, modR0040, modK331025, nic);
+		Module modK331033 = constructCompositeModule("ECFP Expression", "EXPRESSION", modR0040, modK331025, nic);
 		// modK331035 is comprised of modK331023 and modB0015
-		Module modK331035 = constructCompositeModule("EYFP Expression", ModuleRole.EXPRESSION, modK331023, modB0015, nic);
+		Module modK331035 = constructCompositeModule("EYFP Expression", "EXPRESSION", modK331023, modB0015, nic);
 		
 		// Lumazine Synthase gene module, TetR gene module
 		// modK542001 is comprised of modJ04500 and modK542000
-		Module modK542001 = constructCompositeModule("Lumazine Synthase Expression", ModuleRole.EXPRESSION, modJ04500, modK542000, nic);
+		Module modK542001 = constructCompositeModule("Lumazine Synthase Expression", "EXPRESSION", modJ04500, modK542000, nic);
 		// modK542003 is comprised of modI13453 and modP0440
-		Module modK542003 = constructCompositeModule("TetR Expression", ModuleRole.EXPRESSION, modI13453, modP0440, nic);
+		Module modK542003 = constructCompositeModule("TetR Expression", "EXPRESSION", modI13453, modP0440, nic);
 		
 		// Lumazine Synthase gene and TetR gene module, ECFP/EYFP gene module
 		// modK542004 is comprised of modK542001 and modK542003
-		Module modK542004 = constructCompositeModule("Lumazine Microcompartment Controller", ModuleRole.COMPARTMENTALIZATION, modK542001, modK542003, 
+		Module modK542004 = constructCompositeModule("Lumazine Microcompartment Controller", "COMPARTMENTALIZATION", modK542001, modK542003, 
 				nic);
 		// modK542005 is comprised of modK331033 and modK331035
-		Module modK542005 = constructCompositeModule("FRET Reporter", ModuleRole.REPORTER, modK331033, modK331035, nic);
+		Module modK542005 = constructCompositeModule("FRET Reporter", "REPORTER", modK331033, modK331035, nic);
 		
 		// Lumazine Synthase gene and TetR gene and ECFP/EYFP gene module and influence
 		// modK542008 is comprised of modK542004 and modK542005
-		Module modK542008 = constructCompositeModule("FRET Colocalization", ModuleRole.LOCALIZATION, modK542004, modK542005, nic);
+		Module modK542008 = constructCompositeModule("FRET Colocalization", "LOCALIZATION", modK542004, modK542005, nic);
 		Influence inflC0040_R0040 = new Influence("Repression via TetR", featC0040, featR0040, InfluenceType.REPRESSION, nic);
 		Set<Influence> inflsK542008 = new HashSet<Influence>();
 		inflsK542008.add(inflC0040_R0040);
@@ -832,14 +830,14 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 	* Convenience construction methods
 	*/
 	
-	public static Feature constructFeature(String name, FeatureRole role, Sequence sequence, Person author) {
+	public static Feature constructFeature(String name, String role, Sequence sequence, Person author) {
 		Feature feature = new Feature(name, role, author);
 		feature.setSequence(sequence);
 		annotateWithFeature(sequence, feature, 1, sequence.getSequence().length(), author);
 		return feature;
 	}
 	
-	public static Feature constructFeature(String name, FeatureRole role, Sequence sequence, int start, int end, Person author) {
+	public static Feature constructFeature(String name, String role, Sequence sequence, int start, int end, Person author) {
 		Feature feature = new Feature(name, role, author);
 		feature.setSequence(new Sequence(name + " Sequence", sequence.getSequence().substring(start - 1, end), author));
 		annotateWithFeature(sequence, feature, start, end, author);
@@ -851,13 +849,13 @@ public class LumazineSynthaseExample extends AuthorizedShiroTest{
 		annotation.setFeature(feature);
 	}
 	
-	public static BasicModule constructBasicModule(String name, ModuleRole role, Feature feature, Person author) {
+	public static BasicModule constructBasicModule(String name, String role, Feature feature, Person author) {
 		Set<Feature> features = new HashSet<Feature>();
 		features.add(feature);
 		return new BasicModule(name, role, features, author);
 	}
 	
-	public static CompositeModule constructCompositeModule(String name, ModuleRole role, Module subModule1, Module subModule2, 
+	public static CompositeModule constructCompositeModule(String name, String role, Module subModule1, Module subModule2, 
 			Person author) {
 		Set<Module> subModules = new HashSet<Module>();
 		subModules.add(subModule1);

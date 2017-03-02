@@ -23,7 +23,6 @@ import lombok.Setter;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
-import org.clothocad.model.Feature.FeatureRole;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -813,7 +812,7 @@ public class NucSeq extends SharableObjBase implements Serializable {
                 }
                 int start = matcher.start();
                 int end = matcher.end();
-                if(f.getRole().equals(FeatureRole.CDS)) {
+                if(f.getRole().equalsIgnoreCase("CDS")) {
                     try {
                         //For CDS features, if the 5' sequences is a start codon, include that in annotation
                         String fiveprime = text[i].substring(start-3, start);
@@ -852,7 +851,7 @@ public class NucSeq extends SharableObjBase implements Serializable {
                 int index = sequence.length() - matcher.start();
                 int start = index - teststring.length();
                 int end = index;
-                if(f.getRole().equals(FeatureRole.CDS)) {
+                if(f.getRole().equalsIgnoreCase("CDS")) {
                     try {
                         //For CDS features, if the 5' sequences is a an RC stop codon, include it
                         String fiveprime = text[i].substring(start-3, start);

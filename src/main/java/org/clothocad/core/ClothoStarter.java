@@ -28,7 +28,7 @@ public class ClothoStarter extends AbstractClothoStarter {
                     new JongoModule()
                 );
             }
-
+            
             @Override public void call(Injector injector) {
                 Persistor persistor = injector.getInstance(Persistor.class);
                 ensureMinimalObjects(persistor);

@@ -23,7 +23,7 @@ public abstract class Module extends SharableObjBase {
     @NotNull
     @Getter
     @Setter
-    protected ModuleRole role;
+    protected String role;
 
     @Getter
     @Setter
@@ -35,20 +35,20 @@ public abstract class Module extends SharableObjBase {
     @Reference
     protected Module parentModule;
 
-    public Module(String name, ModuleRole role, Person author) {
+    public Module(String name, String role, Person author) {
         super(name, author);
         this.role = role;
     }
 
-    public Module(String name, String description, ModuleRole role, Person author) {
+    public Module(String name, String description, String role, Person author) {
         super(name, author, description);
         this.role = role;
     }
 
     // Feel free to add more of these
-    public static enum ModuleRole {
-        TRANSCRIPTION, TRANSLATION, EXPRESSION, COMPARTMENTALIZATION, LOCALIZATION, SENSOR, REPORTER, ACTIVATION, REPRESSION;
-    }
+//    public static enum ModuleRole {
+//        TRANSCRIPTION, TRANSLATION, EXPRESSION, COMPARTMENTALIZATION, LOCALIZATION, SENSOR, REPORTER, ACTIVATION, REPRESSION;
+//    }
     
     public void addInfluence(Influence influence) {
     	if (influences == null) {

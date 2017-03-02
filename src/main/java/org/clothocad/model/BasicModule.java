@@ -26,12 +26,12 @@ public class BasicModule extends Module {
     @ReferenceCollection
     protected Set<Feature> features;
 
-    public BasicModule(String name, ModuleRole role, Set<Feature> features, Person author) {
+    public BasicModule(String name, String role, Set<Feature> features, Person author) {
         super(name, role, author);
         this.features = features;
     }
 
-    public BasicModule(String name, String description, ModuleRole role, Set<Feature> features, Person author) {
+    public BasicModule(String name, String description, String role, Set<Feature> features, Person author) {
         super(name, description, role, author);
         this.features = features;
     }

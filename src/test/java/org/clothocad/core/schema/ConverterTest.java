@@ -13,7 +13,6 @@ import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.core.util.AuthorizedShiroTest;
 import org.clothocad.core.util.JSON;
-import org.clothocad.model.Feature.FeatureRole;
 import org.clothocad.model.Part;
 import org.clothocad.model.PartConverter;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class ConverterTest extends AuthorizedShiroTest {
                 + "      }");
 
         Part convertedPart = converter.convert(eugeneJSON, eugenePartSchema);
-        assertEquals(FeatureRole.TERMINATOR, convertedPart.getRoles().get(0));
+        assertEquals("TERMINATOR", convertedPart.getRoles().get(0));
         assertEquals(eugeneJSON.get("Sequence").toString(), convertedPart.getSequence().getSequence());
         assertEquals(eugeneJSON.get("Name").toString(), convertedPart.getName());
     }

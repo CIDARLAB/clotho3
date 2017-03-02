@@ -32,19 +32,13 @@ public class AdvancedQueryTest extends AuthorizedShiroTest {
 
     
     private static Persistor persistor;
-    private static Router router;
-    private boolean first = true;
 
     public AdvancedQueryTest() {
-        if (first) {
 
-            persistor = injector.getInstance(Persistor.class);
-            router = injector.getInstance(Router.class);
+        persistor = injector.getInstance(Persistor.class);
 
-            //this is expensive. Let's just initialize the data once please.
-            createDesignK542008(persistor);
-            first = false;
-        }
+        //this is expensive. Let's just initialize the data once please.
+        createDesignK542008(persistor);
 
         System.out.println();
         System.out.println();

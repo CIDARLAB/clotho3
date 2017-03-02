@@ -2,7 +2,6 @@ package org.clothocad.model;
 
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
-import org.clothocad.model.Feature.FeatureRole;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,7 @@ public class Part extends SharableObjBase {
     @Getter
     protected List<Assembly> assemblies;
 
-    @NotNull
+//    @NotNull
     @Getter
     @Setter
     @Reference
@@ -51,6 +50,15 @@ public class Part extends SharableObjBase {
         super(name, author); 
         this.sequence = sequence;
     }
+    
+    public Part(String name, Person author){
+        super(name, author);
+    }
+    
+    public Part(String name, String description, Person author)
+    {
+        super(name, author, description);
+    }
 
     /**
      * Change the Format of the Part
@@ -62,8 +70,8 @@ public class Part extends SharableObjBase {
         }
     }
 
-    public List<FeatureRole> getRoles() {
-        List<FeatureRole> roles = new LinkedList<FeatureRole>();
+    public List<String> getRoles() {
+        List<String> roles = new LinkedList<String>();
         for (Annotation annotation : sequence.getAnnotations()) {
             Feature feature = annotation.getFeature();
             if (feature != null) {
