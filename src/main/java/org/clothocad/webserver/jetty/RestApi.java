@@ -84,8 +84,8 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "getByName":
                 Map<String, Object> query = new HashMap<>();
-                String name = body.get("name").toString();
-                query.put("name", name);
+                String objectName = body.get("objectName").toString();
+                query.put("name", objectName);
 
                 Iterable<ObjBase> rawtwo = persistor.find(query);
                 ObjBase last = null;
@@ -164,6 +164,7 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
+        String type = pathID[3];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -172,7 +173,7 @@ public class RestApi extends HttpServlet {
         String password = body.getString("password");
         String[] auth = {username, password};
 
-        if (method.equals("createUser")) {
+        if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
             credentials.put("username", auth[0]);
             credentials.put("credentials", auth[1]);
@@ -196,18 +197,17 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "create":
                 Person user = new Person(auth[0]);
-                String type = pathID[3];
                 Sequence sequence = null;
                 Part part = null;
-                String name = "";
+                String objectName = "";
                 String role = "";
                 String sequenceName = "";
 
                 switch (type) {
                     case "sequence":
-                        name = body.getString("name");
+                        objectName = body.getString("objectName");
                         sequenceName = body.getString("sequence");
-                        sequence = new Sequence(name, sequenceName, user);
+                        sequence = new Sequence(objectName, sequenceName, user);
                         ObjectId sequenceObj = persistor.save(sequence);
                         result = sequenceObj.toString();
                         break;
@@ -218,25 +218,25 @@ public class RestApi extends HttpServlet {
                             ObjectId id = new ObjectId(sequenceId);
                             sequence = persistor.get(Sequence.class, id);
                         }
-                        name = body.getString("name");
-                        part = new Part(name, user);
+                        objectName = body.getString("objectName");
+                        part = new Part(objectName, user);
                         ObjectId partObj = persistor.save(part);
                         result = partObj.toString();
                         break;
 
                     case "feature":
-                        name = body.getString("name");
+                        objectName = body.getString("objectName");
                         role = body.getString("role");
-                        Feature feature = new Feature(name, role, user);
+                        Feature feature = new Feature(objectName, role, user);
                         break;
 
                     case "module":
-                        name = body.getString("name");
+                        objectName = body.getString("objectName");
                         role = body.getString("role");
-                        Feature needFeature = new Feature(name, role, user);
+                        Feature needFeature = new Feature(objectName, role, user);
                         Set<Feature> features = new HashSet<Feature>();
                         features.add(needFeature);
-                        BasicModule module = new BasicModule(name, role, features, user);
+                        BasicModule module = new BasicModule(objectName, role, features, user);
                         break;
                 }
                 break;
