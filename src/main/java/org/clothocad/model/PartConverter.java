@@ -45,7 +45,7 @@ public class PartConverter extends Converter<Part> {
     		part.setId(new ObjectId(eugenePart.get("_id").toString()));
     	try {
     		Feature feature = new Feature(eugenePart.get("Name").toString(), 
-    				Feature.FeatureRole.valueOf(eugenePart.get("PartType").toString().toUpperCase()),
+    				eugenePart.get("PartType").toString().toUpperCase(),
     				author);
     		feature.setSequence(partSeq);
     		Annotation seqAnnotation = partSeq.createAnnotation(eugenePart.get("Name").toString(),

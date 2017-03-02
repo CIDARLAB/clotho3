@@ -34,7 +34,6 @@ import org.clothocad.core.security.ClothoRealm;
 import org.clothocad.core.testers.ClothoTestModule;
 import org.clothocad.model.Annotation;
 import org.clothocad.model.Feature;
-import org.clothocad.model.Feature.FeatureRole;
 import org.clothocad.model.Format;
 import org.clothocad.model.FreeForm;
 import org.clothocad.model.Institution;
@@ -222,7 +221,7 @@ public class TestUtils {
         part1.setFormat(freeFormat);
         Annotation seqAnnotation1 = partSeq1.createAnnotation("Test Feature 1", 0, partSeq1.getSequence().length() - 1, 
         		true, person);
-        Feature feature1 = new Feature("Test Feature 1", FeatureRole.CDS, person);
+        Feature feature1 = new Feature("Test Feature 1", "CDS", person);
         feature1.setSequence(partSeq1);
         seqAnnotation1.setFeature(feature1);
         
@@ -231,7 +230,7 @@ public class TestUtils {
         part2.setFormat(freeFormat);
         Annotation seqAnnotation2 = partSeq2.createAnnotation("Test Feature 2", 0, partSeq2.getSequence().length() - 1, 
         		true, person);
-        Feature feature2 = new Feature("Test Feature 2", FeatureRole.CDS, person);
+        Feature feature2 = new Feature("Test Feature 2", "CDS", person);
         feature2.setSequence(partSeq2);
         seqAnnotation2.setFeature(feature2);
         
