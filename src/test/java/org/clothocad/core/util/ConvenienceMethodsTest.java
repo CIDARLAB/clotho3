@@ -12,7 +12,8 @@ import java.util.Set;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
-import org.clothocad.core.webserver.jetty.ConvenienceMethods;
+import org.clothocad.webserver.jetty.ConvenienceMethods;
+import static org.clothocad.webserver.jetty.ConvenienceMethods.createPart;
 import org.junit.Test;
 
 /**
@@ -63,20 +64,21 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     
     @Test
     public void testCreations(){
+        ConvenienceMethods.
         createPart(persistor,"mySpecialPart", "David");
         
         Map<String, String> roleParam = new HashMap<>();
         roleParam.put("role", "PROMOTER");
-        createPart("roleOnlyPart", roleParam, "David");
+        createPart(persistor,"roleOnlyPart", roleParam, "David");
         
         Map<String, String> seqParam = new HashMap<>();
         seqParam.put("sequence", "catcatcatcatcatcatcatcatcat");
-        createPart("FunCatPart", seqParam, "David");
+        createPart(persistor,"FunCatPart", seqParam, "David");
         
         Map<String, String> bothParams = new HashMap<>();
         bothParams.put("role", "GENE");
         bothParams.put("sequence", "tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac");
-        createPart("R0040 Sequence", "June Rhee");
+        createPart(persistor, "R0040 Sequence",bothParams, "June Rhee");
         
         Map<String, Object> query = new HashMap<>();
         query.put("author", "david");

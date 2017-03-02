@@ -76,7 +76,8 @@ public class ClothoWebserver {
 
         // Connection constraints
         Constraint constraint = new Constraint();
-        constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
+        constraint.setDataConstraint(Constraint.DC_NONE);
+//        constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
 
         ConstraintMapping cm = new ConstraintMapping();
         cm.setConstraint(constraint);

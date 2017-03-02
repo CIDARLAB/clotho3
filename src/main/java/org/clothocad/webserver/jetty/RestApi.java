@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import javax.inject.Inject;
 
 import javax.servlet.ServletException;
@@ -85,18 +87,12 @@ public class RestApi extends HttpServlet {
 
         String result = "";
         switch (method) {
-            case "autocomplete":
-                break;
-
-            case "startsWith":
-                break;
-
             case "getByName":
                 Map<String, Object> query = new HashMap<>();
-                String name = body.get("name").toString();
-                query.put("name", name);
-                
-                Iterable<ObjBase> rawtwo = persistor.findRegex(query);
+                String objectName = body.get("objectName").toString();
+                query.put("name", objectName);
+
+                Iterable<ObjBase> rawtwo = persistor.find(query);
                 ObjBase last = null;
                 for (ObjBase each : rawtwo) {
                     last = each;
@@ -113,23 +109,11 @@ public class RestApi extends HttpServlet {
                 Object obj = persistor.get(objId);
                 result = obj.toString();
                 break;
-
-            case "learn":
-                break;
-
-            case "query":
-                break;
-
-            case "queryOne":
-                break;
-
-            case "validate":
-                break;
         }
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
-     
+
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
@@ -150,7 +134,7 @@ public class RestApi extends HttpServlet {
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String username = body.getString("username"); 
+        String username = body.getString("username");
         String password = body.getString("password");
         String[] auth = {username, password};
 
@@ -158,7 +142,7 @@ public class RestApi extends HttpServlet {
             response.getWriter().write("Login Failed\r\n");
             return;
         }
-        
+
         String result = "";
 
         switch (method) {
@@ -171,7 +155,7 @@ public class RestApi extends HttpServlet {
                 else response.getWriter().write("Object with id " + body.getString("id") + " does not exist\r\n");
                 break;
         }
-        
+
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
 
@@ -190,6 +174,7 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
+        String type = pathID[3];
 
         JSONObject body = getRequestBody(request.getReader());
         Collection<ObjBase> raw = persistor.listAll();
@@ -198,7 +183,7 @@ public class RestApi extends HttpServlet {
         String password = body.getString("password");
         String[] auth = {username, password};
 
-        if (method.equals("createUser")) {
+        if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
             credentials.put("username", auth[0]);
             credentials.put("credentials", auth[1]);
@@ -222,49 +207,63 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "create":
                 Person user = new Person(auth[0]);
-                String type = pathID[3];
                 Sequence sequence = null;
                 Part part = null;
-                String name = "";
+                Feature feature = null;
+                String objectName = "";
+                String role = "";
                 String sequenceName = "";
 
                 switch (type) {
                     case "sequence":
-                        name = body.getString("name");
+                        objectName = body.getString("objectName");
                         sequenceName = body.getString("sequence");
-                        sequence = new Sequence(name, sequenceName, user);
+                        sequence = new Sequence(objectName, sequenceName, user);
                         ObjectId sequenceObj = persistor.save(sequence);
                         result = sequenceObj.toString();
                         break;
 
                     case "part":
+                        objectName = body.getString("objectName");
                         if (body.has("id")) {
                             String sequenceId = body.getString("id");
                             ObjectId id = new ObjectId(sequenceId);
                             sequence = persistor.get(Sequence.class, id);
+                            part = new Part(objectName, sequence, user);
+                        } else {
+                            part = new Part(objectName, user);
                         }
-                        part = new Part(name, user);
+                        
                         ObjectId partObj = persistor.save(part);
                         result = partObj.toString();
                         break;
 
                     case "feature":
+                        objectName = body.getString("objectName");
+                        role = body.getString("role");
+                        feature = new Feature(objectName, role, user);
+                        ObjectId featureObj = persistor.save(feature);
+                        result = featureObj.toString();
                         break;
 
                     case "module":
+                        objectName = body.getString("objectName");
+                        role = body.getString("role");
+                        
+                        if (body.has("id")) {
+                            String featureId = body.getString("id");
+                            ObjectId id = new ObjectId(featureId);
+                            feature = persistor.get(Feature.class, id);
+                        } else {
+                            feature = new Feature(objectName, role, user);
+                        }
+                        Set<Feature> features = new HashSet<Feature>();
+                        features.add(feature);
+                        BasicModule module = new BasicModule(objectName, role, features, user);
+                        ObjectId moduleObj = persistor.save(module);
+                        result = moduleObj.toString();
                         break;
                 }
-
-                break;
-            case "convert":
-                break;
-            case "log":
-                break;
-            case "run":
-                break;
-            case "say":
-                break;
-            case "submit":
                 break;
         }
 
@@ -300,10 +299,10 @@ public class RestApi extends HttpServlet {
         }
 
         switch (method) {
-            case "changePassword":
-                break;
-            case "grant":
-                break;
+//            case "changePassword":
+//                break;
+//            case "grant":
+//                break;
             case "set":
                 body.remove("username");
                 body.remove("password");
@@ -326,8 +325,8 @@ public class RestApi extends HttpServlet {
                 response.getWriter().write("Successfully modified object");
 
                 break;
-            case "setAll":
-                break;
+//            case "setAll":
+//                break;
         }
 
 //        try {
@@ -344,12 +343,12 @@ public class RestApi extends HttpServlet {
 //        System.out.println("\n\n\n" + result + "\n\n\n");
 //
 //        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
+//
+//        if (result.contains("FAILURE")) {
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//        } else {
+//            response.setStatus(HttpServletResponse.SC_OK);
+//        }
 
         logout(auth);
     }
@@ -373,7 +372,6 @@ public class RestApi extends HttpServlet {
     }
 
     private JSONObject getRequestBody(BufferedReader reader) throws IOException {
-
         StringBuilder buffer = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -382,7 +380,6 @@ public class RestApi extends HttpServlet {
         String data = buffer.toString();
 
         return new JSONObject(data);
-
     }
     
     public static Map<String, Object> jsonToMap(JSONObject json) {
