@@ -125,7 +125,7 @@ public class Persistor {
         Set<ConstraintViolation<?>> violations = new HashSet<>();
 
         for (ObjBase o : getObjBaseSet(obj)) {
-            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the constraints on currently instantiated classes
+            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(obj); //XXX: will only validate the constraints on currently instantiated classes
             for (ConstraintViolation violation : cvs) {
                 log.info("Constraint violation: {}", violation.getMessage());
                 violations.add(violation);

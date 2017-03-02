@@ -1,16 +1,15 @@
 package org.clothocad.webserver.jetty;
 
-
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
 import org.clothocad.core.communication.Router;
 import org.clothocad.core.persistence.Persistor;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -20,6 +19,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.clothocad.core.datums.ObjBase;
+import org.clothocad.core.util.JSON;
+import org.clothocad.model.Person;
+import org.clothocad.model.Sequence;
+import org.json.JSONObject;
+import org.apache.shiro.SecurityUtils;
+import org.clothocad.core.datums.ObjectId;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -46,7 +52,6 @@ public class RestApi extends HttpServlet {
     // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
     // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
     // http://shiro.apache.org/
-
     @Inject
     public RestApi(Persistor persistor, Router router) {
         this.router = router;
@@ -61,68 +66,97 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
-        
-        Map<String, String> body = getRequestBody(request.getReader());
 
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
-        
-//        System.out.println("\n\n\n" + Arrays.toString(pathID) + "\n\n\n");
-        
-        
-        login(auth);
-        
-        
-        
-        //String data = pathID[3];
-        switch (id) {
-                case "get":
-                    System.out.println("\n\n\n get \n\n\n"); 
-                    m = new Message(Channel.get, body, null, null);
-                    break;
-            
-                case "getAll":
-                    System.out.println("\n\n\n getAll \n\n\n"); 
-                    m = new Message(Channel.getAll, body, null, null);
-                    break;
-                    
-                case "query":
-                    System.out.println("\n\n\n query \n\n\n");
-                    m = new Message(Channel.query, body, null, null);
-                    break;
-                
-                    
-                case "queryOne":
-                    System.out.println("\n\n\n queryOne \n\n\n");
-                    m = new Message(Channel.queryOne, body, null, null);
-                    break;
-            }
-        
-        
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+        JSONObject body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
+
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
+        String[] auth = {username, password};
+
+        if (!login(auth)) {
+            response.getWriter().write("Login Failed\r\n");
             return;
         }
 
-        String result = this.rc.getResult().toString();
-        System.out.println("\n\n\n" + result + "\n\n\n");
+//        Map<String, Object> query = new HashMap<>();
+//        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
+//        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
+//        for (ObjBase each : rawtwo) {
+//            System.out.println("REGEX LIST : " + each);
+//        }
+        String result = "";
+        //String data = pathID[3];
+        switch (id) {
+            case "autocomplete":
+                break;
 
+            case "startsWith":
+                break;
+
+            case "get":
+//                String type = body.get("type");
+                Map<String, Object> query = new HashMap<>();
+
+//                switch (type) {
+//                    case "sequence":
+                String name = body.get("name").toString();
+                query.put("name", name);
+
+//                }
+                Iterable<ObjBase> rawtwo = persistor.findRegex(query);
+                ObjBase last = null;
+                for (ObjBase each : rawtwo) {
+                    last = each;
+                }
+
+                result = last.getName() + ":" + last.getId().toString();
+
+                break;
+
+            case "getAll":
+                break;
+
+            case "learn":
+                break;
+
+            case "query":
+                break;
+
+            case "queryOne":
+                break;
+
+            case "validate":
+                break;
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
+
+//        try {
+//            this.router.receiveMessage(this.rc, m);
+//        } catch (UnauthorizedException ue) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+//            response.addHeader("HTTP/1.0 401", "Unauthorized");
+//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+//            return;
+//        }
+
+//        String result = this.rc.getResult().toString();
+//        System.out.println("\n\n\n" + result + "\n\n\n");
+
+//        response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
         }
-        
-        logout(auth);
-        
-//        System.out.println("\n\n\n" + body + "\n\n\n");
 
+        logout(auth);
+
+//        System.out.println("\n\n\n" + body + "\n\n\n");
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -132,22 +166,30 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
-                
-        Map<String, String> body = getRequestBody(request.getReader());
-        
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
-        
-        login(auth);
-        
-        
-        switch (id) {
-                case "destroy":
-                    System.out.println("\n\n\n get \n\n\n"); 
-                    m = new Message(Channel.destroy, body, null, null);
-                    break;
+
+        JSONObject body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
+
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
+        String[] auth = {username, password};
+
+        if (!login(auth)) {
+            response.getWriter().write("Login Failed\r\n");
+            return;
         }
-        
-        
+
+        switch (id) {
+            case "destroy":
+                System.out.println("\n\n\n get \n\n\n");
+                m = new Message(Channel.destroy, body, null, null);
+                break;
+            case "destroyAll":
+                break;
+            case "clear":
+                break;
+        }
+
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -168,68 +210,101 @@ public class RestApi extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
         }
-        
+
         logout(auth);
     }
 
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
-        
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
-        
-        
+        JSONObject body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
+
+        String username = body.getString("username");
+        String password = body.getString("password");
+        String[] auth = {username, password};
+
         if (id.equals("createUser")) {
-            Map<String,String> credentials = new HashMap<>();
+            Map<String, String> credentials = new HashMap<>();
             credentials.put("username", auth[0]);
             credentials.put("credentials", auth[1]);
             credentials.put("displayname", auth[0]);
             m = new Message(Channel.createUser, credentials, null, null);
+            if (!login(auth)) {
+                response.getWriter().write("Login Failed\r\n");
+                return;
+            }
+            logout(auth);
         }
 
-        login(auth);
-        
-        switch (id) {
-            case "create":
-                m = new Message(Channel.create, body, null, null);
-                break;
-                
-            case "createAll":
-                m = new Message(Channel.createAll, body, null, null);
-                break;               
-        }
-        
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+        if (!login(auth)) {
+            response.getWriter().write("Login Failed\r\n");
             return;
         }
 
-        String result = this.rc.getResult().toString();
-        System.out.println("\n\n\n" + result + "\n\n\n");
+        String result = "";
 
+        switch (id) {
+            case "create":
+                Person user = new Person(auth[0]);
+                String type = body.getString("type");
+                String name = body.getString("name");
+                String value = body.getString("value");
+
+                switch (type) {
+                    case "sequence":
+                        Sequence seq = new Sequence(name, value, user);
+                        ObjectId obj = persistor.save(seq);
+                        result = obj.toString();
+
+                        break;
+                }
+
+                break;
+            case "createAll":
+                m = new Message(Channel.createAll, body, null, null);
+                break;
+            case "convert":
+                break;
+            case "log":
+                break;
+            case "run":
+                break;
+            case "say":
+                break;
+            case "submit":
+                break;
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
+
+//        try {
+//            this.router.receiveMessage(this.rc, m);
+//        } catch (UnauthorizedException ue) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+//            response.addHeader("HTTP/1.0 401", "Unauthorized");
+//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+//            return;
+//        }
+//
+//        String result = this.rc.getResult().toString();
+//        System.out.println("\n\n\n" + result + "\n\n\n");
+//
+//        response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
         }
-        
         logout(auth);
     }
-        
-                        
 
     protected void doPut(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -239,23 +314,29 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String id = pathID[2];
 
-        Map<String, String> body = getRequestBody(request.getReader());
-        
-        String[] auth = new String(request.getHeader("Authorization")).split(":");
-        
-        login(auth);
-        
-        
-        switch (id) {
-            case "set":
-                m = new Message(Channel.set, body, null, null);
-                break;
-                
-            case "setAll":
-                m = new Message(Channel.setAll, body, null, null);
-                break;               
+        JSONObject body = getRequestBody(request.getReader());
+        Collection<ObjBase> raw = persistor.listAll();
+
+        String username = body.get("username").toString();
+        String password = body.get("password").toString();
+        String[] auth = {username, password};
+
+        if (!login(auth)) {
+            response.getWriter().write("Login Failed\r\n");
+            return;
         }
-        
+
+        switch (id) {
+            case "changePassword":
+                break;
+            case "grant":
+                break;
+            case "set":
+                break;
+            case "setAll":
+                break;
+        }
+
         try {
             this.router.receiveMessage(this.rc, m);
         } catch (UnauthorizedException ue) {
@@ -276,16 +357,11 @@ public class RestApi extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
         }
-        
+
         logout(auth);
-        
     }
 
-    
-    
-    
-    
-    private void login(String[] userPass) {
+    private boolean login(String[] userPass) {
         if (userPass != null) {
             loginMap = new HashMap<String, String>();
             loginMap.put("username", userPass[0]);
@@ -293,6 +369,7 @@ public class RestApi extends HttpServlet {
             loginMessage = new Message(Channel.login, loginMap, null, null);
             this.router.receiveMessage(this.rc, loginMessage);
         }
+        return SecurityUtils.getSubject().isAuthenticated();
     }
 
     private void logout(String[] userPass) {
@@ -302,36 +379,16 @@ public class RestApi extends HttpServlet {
         }
     }
 
-    private Map<String, String> getRequestBody(BufferedReader reader) {
-        String parts[];
-        String keyValue[] = new String[2];
-        String currChar = "";
-        String key = "";
+    private JSONObject getRequestBody(BufferedReader reader) throws IOException {
 
-        Map<String, String> map = new HashMap<String, String>();
-
-        try {
-            parts = reader.readLine().split("&");
-            for (String kv : parts) {
-                keyValue = kv.split("=");
-                map.put(keyValue[0], keyValue[1]);
-            }
-        } catch (IOException ie) {
-            map = new HashMap<String, String>();
-        } catch (NullPointerException ne) {
-            map = new HashMap<String, String>();
+        StringBuilder buffer = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
         }
+        String data = buffer.toString();
 
-        return map;
-    }
+        return new JSONObject(data);
 
-    private Map<String, String> splitQuery(String queryInfo) {
-        Map<String, String> queryPairs = new HashMap<String, String>();
-        String[] pairs = queryInfo.split("&");
-        for (String pair : pairs) {
-            int i = pair.indexOf("=");
-            queryPairs.put(pair.substring(0, i), pair.substring(i + 1));
-        }
-        return queryPairs;
     }
 }
