@@ -1,6 +1,5 @@
 package org.clothocad.webserver.jetty;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
@@ -10,7 +9,6 @@ import org.clothocad.core.persistence.Persistor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,9 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.clothocad.core.datums.ObjBase;
-import org.clothocad.core.util.JSON;
 import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
@@ -48,11 +44,7 @@ public class RestApi extends HttpServlet {
     private static Map<String, String> loginMap;
     private static RestConnection rc = new RestConnection("RestConnection");
 
-    // http://stackoverflow.com/questions/15051712/how-to-do-authentication-with-a-rest-api-right-browser-native-clients
-    // http://shiro-user.582556.n2.nabble.com/Shiro-and-RESTful-web-services-td5539212.html
-    // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
-    // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
-    // http://shiro.apache.org/
+
     @Inject
     public RestApi(Persistor persistor, Router router) {
         this.router = router;
@@ -69,7 +61,6 @@ public class RestApi extends HttpServlet {
         String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
-        Collection<ObjBase> raw = persistor.listAll();
 
         String username = body.get("username").toString();
         String password = body.get("password").toString();
@@ -87,18 +78,21 @@ public class RestApi extends HttpServlet {
                 String objectName = body.get("objectName").toString();
                 query.put("name", objectName);
 
-                Iterable<ObjBase> rawtwo = persistor.find(query);
+                Iterable<ObjBase> queried = persistor.find(query);
                 ObjBase last = null;
-                for (ObjBase each : rawtwo) {
+                for (ObjBase each : queried) {
                     last = each;
                 }
-
-                result = last.toString();
-
+                
+                if (last == null) {
+                    result = "FAILURE";
+                } else {
+                    result = last.toString();
+                }
+                
                 break;
 
             case "getById":
-
                 String id = body.getString("id");
                 ObjectId objId = new ObjectId(id);
                 Object obj = persistor.get(objId);
@@ -172,7 +166,6 @@ public class RestApi extends HttpServlet {
         String type = pathID[3];
 
         JSONObject body = getRequestBody(request.getReader());
-        Collection<ObjBase> raw = persistor.listAll();
 
         String username = body.getString("username");
         String password = body.getString("password");
@@ -296,7 +289,6 @@ public class RestApi extends HttpServlet {
         String method = pathID[2];
 
         JSONObject body = getRequestBody(request.getReader());
-        Collection<ObjBase> raw = persistor.listAll();
 
         String username = body.get("username").toString();
         String password = body.get("password").toString();
