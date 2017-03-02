@@ -1,5 +1,6 @@
 package org.clothocad.webserver.jetty;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
@@ -8,9 +9,12 @@ import org.clothocad.core.persistence.Persistor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 
@@ -25,6 +29,7 @@ import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
+import org.json.JSONArray;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -300,25 +305,45 @@ public class RestApi extends HttpServlet {
             case "grant":
                 break;
             case "set":
+                body.remove("username");
+                body.remove("password");
+                if (body.getString("id") == null) {
+                    response.getWriter().write("You must supply an id \r\n");
+                    break;
+                }
+
+                ObjectId id = new ObjectId(body.getString("id"));
+
+                if (!persistor.has(id)) {
+                    response.getWriter().write("No object with this id exists\r\n");
+                    break;
+                }
+
+                persistor.save(jsonToMap(body));
+
+               
+                //Contact the user to notify them that they modified an object
+                response.getWriter().write("Successfully modified object");
+
                 break;
             case "setAll":
                 break;
         }
 
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-        System.out.println("\n\n\n" + result + "\n\n\n");
-
-        response.getWriter().write(result);
+//        try {
+//            this.router.receiveMessage(this.rc, m);
+//        } catch (UnauthorizedException ue) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
+//            response.addHeader("HTTP/1.0 401", "Unauthorized");
+//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
+//            return;
+//        }
+//
+//        String result = this.rc.getResult().toString();
+//        System.out.println("\n\n\n" + result + "\n\n\n");
+//
+//        response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -358,5 +383,50 @@ public class RestApi extends HttpServlet {
 
         return new JSONObject(data);
 
+    }
+    
+    public static Map<String, Object> jsonToMap(JSONObject json) {
+        Map<String, Object> retMap = new HashMap<String, Object>();
+
+        if(json != JSONObject.NULL) {
+            retMap = toMap(json);
+        }
+        return retMap;
+    }
+
+    public static Map<String, Object> toMap(JSONObject object) {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        Iterator<String> keysItr = object.keys();
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static List<Object> toList(JSONArray array) {
+        List<Object> list = new ArrayList<Object>();
+        for(int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }
+        return list;
     }
 }
