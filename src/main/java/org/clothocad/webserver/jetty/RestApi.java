@@ -78,14 +78,7 @@ public class RestApi extends HttpServlet {
             return;
         }
 
-//        Map<String, Object> query = new HashMap<>();
-//        query.put("name", "B0034 Sequence"); //List should include BBa_K249006
-//        Iterable<ObjBase> rawtwo = persistor.findRegex(query);
-//        for (ObjBase each : rawtwo) {
-//            System.out.println("REGEX LIST : " + each);
-//        }
         String result = "";
-        //String data = pathID[3];
         switch (method) {
             case "autocomplete":
                 break;
@@ -94,15 +87,10 @@ public class RestApi extends HttpServlet {
                 break;
 
             case "getByName":
-//                String type = body.get("type");
                 Map<String, Object> query = new HashMap<>();
-
-//                switch (type) {
-//                    case "sequence":
                 String name = body.get("name").toString();
                 query.put("name", name);
-
-//                }
+                
                 Iterable<ObjBase> rawtwo = persistor.findRegex(query);
                 ObjBase last = null;
                 for (ObjBase each : rawtwo) {
@@ -136,19 +124,7 @@ public class RestApi extends HttpServlet {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
-
-//        try {
-//            this.router.receiveMessage(this.rc, m);
-//        } catch (UnauthorizedException ue) {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-//            response.addHeader("HTTP/1.0 401", "Unauthorized");
-//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-//            return;
-//        }
-//        String result = this.rc.getResult().toString();
-//        System.out.println("\n\n\n" + result + "\n\n\n");
-//        response.getWriter().write(result);
+     
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
@@ -157,7 +133,6 @@ public class RestApi extends HttpServlet {
 
         logout(auth);
 
-//        System.out.println("\n\n\n" + body + "\n\n\n");
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -170,7 +145,7 @@ public class RestApi extends HttpServlet {
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String username = body.getString("username"); //sequence part feature module
+        String username = body.getString("username"); 
         String password = body.getString("password");
         String[] auth = {username, password};
 
@@ -189,21 +164,6 @@ public class RestApi extends HttpServlet {
         
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
-
-//        try {
-//            this.router.receiveMessage(this.rc, m);
-//        } catch (UnauthorizedException ue) {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-//            response.addHeader("HTTP/1.0 401", "Unauthorized");
-//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-//            return;
-//        }
-//
-//        String result = this.rc.getResult().toString();
-//        System.out.println("\n\n\n" + result + "\n\n\n");
-//
-//        response.getWriter().write(result);
 
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -301,20 +261,6 @@ public class RestApi extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
 
-//        try {
-//            this.router.receiveMessage(this.rc, m);
-//        } catch (UnauthorizedException ue) {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-//            response.addHeader("HTTP/1.0 401", "Unauthorized");
-//            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-//            return;
-//        }
-//
-//        String result = this.rc.getResult().toString();
-//        System.out.println("\n\n\n" + result + "\n\n\n");
-//
-//        response.getWriter().write(result);
         if (result.contains("FAILURE")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
