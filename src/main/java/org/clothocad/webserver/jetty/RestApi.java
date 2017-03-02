@@ -27,6 +27,7 @@ import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
+import static org.clothocad.webserver.jetty.ConvenienceMethods.createPart;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
@@ -192,18 +193,18 @@ public class RestApi extends HttpServlet {
             return;
         }
 
+        Person user = new Person(auth[0]);
+        Sequence sequence = null;
+        Part part = null;
+        Feature feature = null;
+        String objectName = "";
+        String role = "";
+        String sequenceName = "";
+
         String result = "";
 
         switch (method) {
             case "create":
-                Person user = new Person(auth[0]);
-                Sequence sequence = null;
-                Part part = null;
-                Feature feature = null;
-                String objectName = "";
-                String role = "";
-                String sequenceName = "";
-
                 switch (type) {
                     case "sequence":
                         objectName = body.getString("objectName");
@@ -223,7 +224,7 @@ public class RestApi extends HttpServlet {
                         } else {
                             part = new Part(objectName, user);
                         }
-                        
+
                         ObjectId partObj = persistor.save(part);
                         result = partObj.toString();
                         break;
@@ -239,7 +240,7 @@ public class RestApi extends HttpServlet {
                     case "module":
                         objectName = body.getString("objectName");
                         role = body.getString("role");
-                        
+
                         if (body.has("id")) {
                             String featureId = body.getString("id");
                             ObjectId id = new ObjectId(featureId);
@@ -252,6 +253,20 @@ public class RestApi extends HttpServlet {
                         BasicModule module = new BasicModule(objectName, role, features, user);
                         ObjectId moduleObj = persistor.save(module);
                         result = moduleObj.toString();
+                        break;
+                }
+                break;
+
+            case "convenience":
+                switch (type) {
+                    case "createPart":
+                        Map<String, String> params = new HashMap<>();
+                        params.put("role", body.getString("role"));
+                        params.put("sequence", body.getString("sequence"));
+                        objectName = body.getString("objectName");
+
+                        ObjectId partObj = createPart(persistor, objectName, params, user.toString());
+                        result = partObj.toString();
                         break;
                 }
                 break;
