@@ -64,7 +64,7 @@ public class RESTTester {
         }
 
         if (conn.getResponseCode() == 200) {
-            System.out.println("SUCCESS!");
+//            System.out.println("SUCCESS!");
 
             //print result
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
@@ -188,11 +188,16 @@ public class RESTTester {
     public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException
     {
         System.out.println("Testing Bulk Create");
-        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         long start = System.currentTimeMillis();
-        for (int i = 0; i <100; i++)
-        {           
+        for (int i = 0; i <1000; i++)
+        {    
+            String jsonString = "{'username':'jsmith','password':'asdf','objectName':'K249" + i + " Sequence','sequence':'atgcagatttatgaaggcaaactgaccgcggaaggcctgcgctttggcattgtggcgagccgctttaaccatgcgc"
+				+ "tggtggatcgcctggtggaaggcgcgattgattgcattgtgcgccatggtggtcgcgaagaagatattaccctggtgcgcgtgccgggcagctgggaaattccggtgg"
+				+ "cggcgggcgaactggcgcgcaaagaagatattgatgcggtgattgcgattggcgtgctgattgaaggcgcggaaccgcattttgattatattgcgagcgaagtgagca"
+				+ "aaggcctggcgaacctgagcctggaactgcgcaaaccgattacctttggcgtgattaccgcggatgaactggaagaagcgattgaacgcgcgggcaccaaacatggca"
+				+ "acaaaggctgggaagcggcgctgagcgcgattgaaatggcgaacctgtttaaaagcctgcgctag'}";
+            
             HTTPReq(url, jsonString, "POST");
         }
         long end = System.currentTimeMillis();

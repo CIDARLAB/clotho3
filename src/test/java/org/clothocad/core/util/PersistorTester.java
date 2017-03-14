@@ -28,10 +28,10 @@ public class PersistorTester extends AuthorizedShiroTest {
         System.out.println("Testing Bulk Create");
        
         long start = System.currentTimeMillis();
-        for (int i = 0; i <100; i++)
+        for (int i = 0; i <1000; i++)
         {           
             Person roxanne = new Person("Roxanne Shank");
-            Sequence seqK249002 = new Sequence("K249002 Sequence", "atgcagatttatgaaggcaaactgaccgcggaaggcctgcgctttggcattgtggcgagccgctttaaccatgcgc"
+            Sequence seqK249002 = new Sequence("K249" + i + " Sequence", "atgcagatttatgaaggcaaactgaccgcggaaggcctgcgctttggcattgtggcgagccgctttaaccatgcgc"
 				+ "tggtggatcgcctggtggaaggcgcgattgattgcattgtgcgccatggtggtcgcgaagaagatattaccctggtgcgcgtgccgggcagctgggaaattccggtgg"
 				+ "cggcgggcgaactggcgcgcaaagaagatattgatgcggtgattgcgattggcgtgctgattgaaggcgcggaaccgcattttgattatattgcgagcgaagtgagca"
 				+ "aaggcctggcgaacctgagcctggaactgcgcaaaccgattacctttggcgtgattaccgcggatgaactggaagaagcgattgaacgcgcgggcaccaaacatggca"
