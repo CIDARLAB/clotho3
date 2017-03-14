@@ -8,14 +8,28 @@ package org.clothocad.core.util;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.inject.Inject;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -26,31 +40,204 @@ import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.HttpParams;
+import org.clothocad.core.communication.Router;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.model.Person;
+import org.clothocad.model.Sequence;
+import org.json.JSONObject;
 import org.junit.Test;
 
 /**
  *
  * @author David
  */
-public class RESTTester {
+public class RESTTester extends AuthorizedShiroTest {
     
+    private Persistor persistor;
+
+    public RESTTester() {
+        this.persistor = injector.getInstance(Persistor.class);
+    }
+
+    private String url = "https://localhost:8443/data/post";
+
+    TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }
+    };
+
+    public String HTTPReq(URL url, String jsonString, String verb) throws ProtocolException, IOException, KeyManagementException, NoSuchAlgorithmException {
+
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setDoInput(true);
+        conn.setRequestMethod(verb);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Cache-Control", "no-cache");
+        conn.setInstanceFollowRedirects(false);
+        if (!verb.equals("GET")) {
+            conn.setDoOutput(true);
+            OutputStream os = conn.getOutputStream();
+            os.write(jsonString.getBytes());
+            os.flush();
+        }
+
+        if (conn.getResponseCode() == 200) {
+            System.out.println("SUCCESS!");
+
+            //print result
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+            String output;
+            String alloutput = "";
+            while ((output = br.readLine()) != null) {
+                alloutput += output;
+            }
+            conn.disconnect();
+            return alloutput;
+        }
+        conn.disconnect();
+        return "ERROR";
+    }
+
     @Test
-    public void testCreateUser() throws UnirestException{
-        String url = "https://localhost:8080/data/post/createUser";
-//      "{"username":"jasmith","password":"asdf","type":"sequence","name":"B34 Sequence","value":"atag"}";
-    
-        HttpResponse<String> res = Unirest.post(url)
-                .header("accept", "application/json")
-                .field("username", "jasmith")
-                .field("password", "asdf")
-                .field("type","sequence")
-                .field("name", "B34 Sequence")
-                .field("value", "atag").asString();
-        
-        String body = res.getBody();
-        
-        
-        System.out.println(body);
+    public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Create User");
+        String jsonString = "{'username':'jsmith','password':'asdf'}";
+        URL url = new URL(this.url + "/create/user");
+
+        String output = HTTPReq(url, jsonString, "POST");
+
+        System.out.println(output);
+    }
+
+    @Test
+    public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Create Sequence");
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+
+        String output = HTTPReq(url, jsonString, "POST");
+
+        System.out.println(output);
+    }
+
+    @Test
+    public void testCreatePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+        String seqId = HTTPReq(url, jsonString, "POST");
+
+        System.out.println("Testing Create Part");
+        jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Part', 'id':'" + seqId + "'}";
+        url = new URL(this.url + "/create/part");
+
+        String output = HTTPReq(url, jsonString, "POST");
+
+        System.out.println(output);
+    }
+
+    @Test
+    public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Get Sequence by Name");
+
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'TestSequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+        String seqId = HTTPReq(url, jsonString, "POST");
+
+
+        url = new URL("https://localhost:8443/data/get/getByName/TestSequence/jsmith:asdf");
+
+        String output = HTTPReq(url, "", "GET");
+
+        System.out.println(output);
+    }
+
+    @Test
+    public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+        String seqId = HTTPReq(url, jsonString, "POST");
+
+        System.out.println("Testing Get By Id");
+        url = new URL("https://localhost:8443/data/get/getById/" + seqId + "/jsmith:asdf");
+
+        String output = HTTPReq(url, "", "GET");
+
+        System.out.println(output);
+
+    }
+
+    @Test
+    public void testSet() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+        String seqId = HTTPReq(url, jsonString, "POST");
+
+        System.out.println("Testing Set");
+        jsonString = "{'username':'jsmith','password':'asdf', 'squence' : 'atatatatatatat','id' : '" + seqId + "a'}";
+        url = new URL(this.url + "/set");
+
+        String output = HTTPReq(url, jsonString, "PUT");
+
+        System.out.println(output);
+    }
+
+    @Test
+    public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Delete Sequence");
+
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+
+        String sequenceId = HTTPReq(url, jsonString, "POST");
+
+        jsonString = "{'username':'jsmith','password':'asdf','id':" + sequenceId + "}";
+        url = new URL(this.url + "/delete/delete");
+
+        String output = HTTPReq(url, jsonString, "DELETE");
+
+        System.out.println(output);
     }
     
+    @Test
+    public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException
+    {
+        System.out.println("Testing Bulk Create");
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i <100; i++)
+        {           
+            HTTPReq(url, jsonString, "POST");
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Bulk Create in Rest API took " + (end - start) + " MilliSeconds");
+        
+        start = System.currentTimeMillis();
+        for (int i = 0; i <100; i++)
+        {           
+            persistor.save(new Sequence("Test", "ata", new Person("jsmith")));
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
+    }
 }

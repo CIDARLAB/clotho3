@@ -44,7 +44,6 @@ public class RestApi extends HttpServlet {
     private static Map<String, String> loginMap;
     private static RestConnection rc = new RestConnection("RestConnection");
 
-
     @Inject
     public RestApi(Persistor persistor, Router router) {
         this.router = router;
@@ -59,11 +58,10 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
+        String toGet = pathID[3];
+        String username = pathID[4].split(":")[0];
+        String password = pathID[4].split(":")[1];
 
-        JSONObject body = getRequestBody(request.getReader());
-
-        String username = body.get("username").toString();
-        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         if (!login(auth)) {
@@ -75,26 +73,24 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "getByName":
                 Map<String, Object> query = new HashMap<>();
-                String objectName = body.get("objectName").toString();
-                query.put("name", objectName);
+                query.put("name", toGet);
 
                 Iterable<ObjBase> queried = persistor.find(query);
                 ObjBase last = null;
                 for (ObjBase each : queried) {
                     last = each;
                 }
-                
+
                 if (last == null) {
                     result = "FAILURE";
                 } else {
                     result = last.toString();
                 }
-                
+
                 break;
 
             case "getById":
-                String id = body.getString("id");
-                ObjectId objId = new ObjectId(id);
+                ObjectId objId = new ObjectId(toGet);
                 Object obj = persistor.get(objId);
                 result = obj.toString();
                 break;
@@ -109,7 +105,7 @@ public class RestApi extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
         }
 
-        logout(auth);
+//        logout(auth);
 
     }
 
@@ -136,12 +132,12 @@ public class RestApi extends HttpServlet {
 
         switch (method) {
             case "delete":
-                if (persistor.has(new ObjectId(body.getString("id"))))
-                {
+                if (persistor.has(new ObjectId(body.getString("id")))) {
                     persistor.delete(new ObjectId(body.getString("id")));
                     response.getWriter().write("Object has been deleted\r\n");
+                } else {
+                    response.getWriter().write("Object with id " + body.getString("id") + " does not exist\r\n");
                 }
-                else response.getWriter().write("Object with id " + body.getString("id") + " does not exist\r\n");
                 break;
         }
 
@@ -314,18 +310,18 @@ public class RestApi extends HttpServlet {
                     response.getWriter().write("No object with this id exists\r\n");
                     break;
                 }
-                
+
                 Map<String, Object> original = persistor.getAsJSON(id);
-                
+
                 Iterator<String> keysItr = body.keys();
-                while(keysItr.hasNext()) {
+                while (keysItr.hasNext()) {
                     String key = keysItr.next();
                     Object value = body.get(key);
-                    original.put(key,value);
+                    original.put(key, value);
                 }
 
                 persistor.save(jsonToMap(body));
-                
+
                 response.getWriter().write("Successfully modified object");
 
                 break;
@@ -362,11 +358,11 @@ public class RestApi extends HttpServlet {
 
         return new JSONObject(data);
     }
-    
+
     public static Map<String, Object> jsonToMap(JSONObject json) {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
-        if(json != JSONObject.NULL) {
+        if (json != JSONObject.NULL) {
             retMap = toMap(json);
         }
         return retMap;
@@ -376,15 +372,13 @@ public class RestApi extends HttpServlet {
         Map<String, Object> map = new HashMap<String, Object>();
 
         Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext()) {
+        while (keysItr.hasNext()) {
             String key = keysItr.next();
             Object value = object.get(key);
 
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             map.put(key, value);
@@ -394,13 +388,11 @@ public class RestApi extends HttpServlet {
 
     public static List<Object> toList(JSONArray array) {
         List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             Object value = array.get(i);
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             list.add(value);
