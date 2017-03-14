@@ -54,11 +54,11 @@ import org.junit.Test;
  */
 public class RESTTester extends AuthorizedShiroTest {
     
-    private Persistor persistor;
-
-    public RESTTester() {
-        this.persistor = injector.getInstance(Persistor.class);
-    }
+//    private Persistor persistor;
+//
+//    public RESTTester() {
+//        this.persistor = injector.getInstance(Persistor.class);
+//    }
 
     private String url = "https://localhost:8443/data/post";
 
@@ -232,12 +232,12 @@ public class RESTTester extends AuthorizedShiroTest {
         long end = System.currentTimeMillis();
         System.out.println("Bulk Create in Rest API took " + (end - start) + " MilliSeconds");
         
-        start = System.currentTimeMillis();
-        for (int i = 0; i <100; i++)
-        {           
-            persistor.save(new Sequence("Test", "ata", new Person("jsmith")));
-        }
-        end = System.currentTimeMillis();
-        System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
+//        start = System.currentTimeMillis();
+//        for (int i = 0; i <100; i++)
+//        {           
+//            persistor.save(new Sequence("Test", "ata", new Person("jsmith")));
+//        }
+//        end = System.currentTimeMillis();
+//        System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
     }
 }
