@@ -25,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -39,6 +40,11 @@ import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.HttpParams;
+import org.clothocad.core.communication.Router;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.Persistor;
+import org.clothocad.model.Person;
+import org.clothocad.model.Sequence;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -46,7 +52,13 @@ import org.junit.Test;
  *
  * @author David
  */
-public class RESTTester {
+public class RESTTester extends AuthorizedShiroTest {
+    
+    private Persistor persistor;
+
+    public RESTTester() {
+        this.persistor = injector.getInstance(Persistor.class);
+    }
 
     private String url = "https://localhost:8443/data/post";
 
@@ -204,5 +216,28 @@ public class RESTTester {
         String output = HTTPReq(url, jsonString, "DELETE");
 
         System.out.println(output);
+    }
+    
+    @Test
+    public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException
+    {
+        System.out.println("Testing Bulk Create");
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i <100; i++)
+        {           
+            HTTPReq(url, jsonString, "POST");
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Bulk Create in Rest API took " + (end - start) + " MilliSeconds");
+        
+        start = System.currentTimeMillis();
+        for (int i = 0; i <100; i++)
+        {           
+            persistor.save(new Sequence("Test", "ata", new Person("jsmith")));
+        }
+        end = System.currentTimeMillis();
+        System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
     }
 }
