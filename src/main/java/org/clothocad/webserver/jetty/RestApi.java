@@ -59,15 +59,15 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String toGet = pathID[3];
-        
-//        String username = body.get("username").toString();
-//        String password = body.get("password").toString();
-//        String[] auth = {username, password};
+        String username = pathID[4].split(":")[0];
+        String password = pathID[4].split(":")[1];
 
-//        if (!login(auth)) {
-//            response.getWriter().write("Login Failed\r\n");
-//            return;
-//        }
+        String[] auth = {username, password};
+
+        if (!login(auth)) {
+            response.getWriter().write("Login Failed\r\n");
+            return;
+        }
 
         String result = "";
         switch (method) {
