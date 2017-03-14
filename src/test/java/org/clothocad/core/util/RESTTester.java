@@ -49,38 +49,33 @@ import org.junit.Test;
 public class RESTTester {
 
     private String url = "https://localhost:8443/data/post";
-
-    //@Test
-    public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
-
-        TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
-
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
+    
+    TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
             }
-        };
+
+            public void checkClientTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }
+    };
+    
+    public String HTTPReq(URL url, String jsonString, String verb) throws ProtocolException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-        System.out.println("Testing Create User");
-        String jsonString = "{'username':'jsmith','password':'asdf'}";
-
-        URL url = new URL(this.url + "/create/user");
-
+        
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setDoInput(true);
         conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(verb);
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Cache-Control", "no-cache");
         conn.setInstanceFollowRedirects(false);
@@ -100,67 +95,33 @@ public class RESTTester {
             while ((output = br.readLine()) != null) {
                 alloutput += output;
             }
-            System.out.println(alloutput);
-            //JSONObject jsonresponse = new JSONObject(alloutput);
-            //return jsonresponse;
+            conn.disconnect();
+            return alloutput;
         }
         conn.disconnect();
+        return "ERROR";
+    }
+            
+
+    @Test
+    public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Create User");    
+        String jsonString = "{'username':'jsmith','password':'asdf'}";
+        URL url = new URL(this.url + "/create/user");
+       
+        String output = HTTPReq(url, jsonString, "POST");
+        
+        System.out.println(output);
     }
     
     @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
-
-        TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
-
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
-            }
-        };
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
         System.out.println("Testing Create Sequence");
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
-
         URL url = new URL(this.url + "/create/sequence");
-
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Cache-Control", "no-cache");
-        conn.setInstanceFollowRedirects(false);
-
-        OutputStream os = conn.getOutputStream();
-        os.write(jsonString.getBytes());
-        os.flush();
-
-        if (conn.getResponseCode() == 200) {
-            System.out.println("SUCCESS!");
-
-            //print result
-            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-            String output;
-            String alloutput = "";
-            while ((output = br.readLine()) != null) {
-                alloutput += output;
-            }
-            System.out.println(alloutput);
-            //JSONObject jsonresponse = new JSONObject(alloutput);
-            //return jsonresponse;
-        }
-        conn.disconnect();
+        
+        String output = HTTPReq(url, jsonString, "POST");
+        
+        System.out.println(output);
     }
 }
