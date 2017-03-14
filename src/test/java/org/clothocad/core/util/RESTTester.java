@@ -5,61 +5,27 @@
  */
 package org.clothocad.core.util;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.security.KeyManagementException;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.scheme.SchemeSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
-import org.apache.http.params.HttpParams;
-import org.clothocad.core.communication.Router;
-import org.clothocad.core.datums.ObjectId;
-import org.clothocad.core.persistence.Persistor;
-import org.clothocad.model.Person;
-import org.clothocad.model.Sequence;
-import org.json.JSONObject;
 import org.junit.Test;
 
 /**
  *
  * @author David
  */
-public class RESTTester extends AuthorizedShiroTest {
+public class RESTTester {
     
-//    private Persistor persistor;
-//
-//    public RESTTester() {
-//        this.persistor = injector.getInstance(Persistor.class);
-//    }
-
     private String url = "https://localhost:8443/data/post";
 
     TrustManager[] trustAllCerts = new TrustManager[]{
@@ -230,14 +196,6 @@ public class RESTTester extends AuthorizedShiroTest {
             HTTPReq(url, jsonString, "POST");
         }
         long end = System.currentTimeMillis();
-        System.out.println("Bulk Create in Rest API took " + (end - start) + " MilliSeconds");
-        
-//        start = System.currentTimeMillis();
-//        for (int i = 0; i <100; i++)
-//        {           
-//            persistor.save(new Sequence("Test", "ata", new Person("jsmith")));
-//        }
-//        end = System.currentTimeMillis();
-//        System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
+        System.out.println("Bulk Create in Rest API took " + (end - start) + " MilliSeconds");      
     }
 }
