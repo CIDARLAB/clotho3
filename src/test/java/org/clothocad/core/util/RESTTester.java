@@ -126,7 +126,6 @@ public class RESTTester {
     }
     
     @Test
-<<<<<<< HEAD
     public void testCreatePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -139,7 +138,10 @@ public class RESTTester {
         
         String output = HTTPReq(url, jsonString, "POST");
         
-=======
+        System.out.println(output);
+    }
+    
+    @Test
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
         
@@ -148,16 +150,14 @@ public class RESTTester {
         
         
         jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence'}";
-        url = new URL(this.url + "/get/getByName");
+        url = new URL("https://localhost:8443/data/get/getByName");
         
         String output = HTTPReq(url, jsonString, "GET");
                 
->>>>>>> 7e9ae75ef19e53448011d7384524d83111ad9510
         System.out.println(output);
     }
     
     @Test
-<<<<<<< HEAD
     public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {      
         
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -166,24 +166,44 @@ public class RESTTester {
         
         System.out.println("Testing Get By Id");
         jsonString = "{'username':'jsmith','password':'asdf','id':'"+ seqId +"'}";
-        url = new URL(this.url + "/get/getById");
+        url = new URL("https://localhost:8443/data/get/getById");
         
         String output = HTTPReq(url, jsonString, "GET");
-=======
+        
+        System.out.println(output);
+        
+    }
+    
+    @Test
+    public void testSet() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        URL url = new URL(this.url + "/create/sequence");      
+        String seqId = HTTPReq(url, jsonString, "POST");
+               
+        System.out.println("Testing Set");
+        jsonString = "{'username':'jsmith','password':'asdf', 'squence' : 'atatatatatatat','id' : '"+ seqId +"a'}";
+        url = new URL(this.url + "/set");
+        
+        String output = HTTPReq(url, jsonString, "PUT");
+        
+        System.out.println(output);
+    }
+    
+   @Test
     public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Delete Sequence");
         
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         
-        String sequenceId = HTTPReq(url, jsonString, "POST");;
+        String sequenceId = HTTPReq(url, jsonString, "POST");
         
         
         jsonString = "{'username':'jsmith','password':'asdf','id':" + sequenceId + "}";
         url = new URL(this.url + "/delete/delete");
         
         String output = HTTPReq(url, jsonString, "DELETE");
->>>>>>> 7e9ae75ef19e53448011d7384524d83111ad9510
         
         System.out.println(output);
     }
