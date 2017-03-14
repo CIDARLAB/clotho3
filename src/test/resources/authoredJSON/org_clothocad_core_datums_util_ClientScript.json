@@ -1,0 +1,48 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org_clothocad_core_datums_util_ClientScript",
+  "name" : "ClientScript",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "graphicsCode",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "language",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "onShowScript",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : null,
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.datums.util.ClientScript",
+  "binaryName" : "org.clothocad.core.datums.util.ClientScript"
+}

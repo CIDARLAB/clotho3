@@ -64,7 +64,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     
     @Test
     public void testCreations(){
-        ConvenienceMethods.
+        
         createPart(persistor,"mySpecialPart", "David");
         
         Map<String, String> roleParam = new HashMap<>();

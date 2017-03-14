@@ -1,0 +1,68 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org_clothocad_model_Lab",
+  "name" : "Lab",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "PI",
+    "type" : "org.clothocad.model.Person",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "address",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "institution",
+    "type" : "org.clothocad.model.Institution",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "department",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "website",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org_clothocad_core_datums_SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Lab",
+  "binaryName" : "org.clothocad.model.Lab"
+}

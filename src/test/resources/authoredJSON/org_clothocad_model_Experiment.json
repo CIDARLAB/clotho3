@@ -1,0 +1,58 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org_clothocad_model_Experiment",
+  "name" : "Experiment",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "experimentalDesign",
+    "type" : "org.clothocad.model.ExperimentalDesign",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "experimentalGroups",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "subExperiments",
+    "type" : "array",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : true,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "parentExperiment",
+    "type" : "org.clothocad.model.Experiment",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org_clothocad_core_datums_SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Experiment",
+  "binaryName" : "org.clothocad.model.Experiment"
+}

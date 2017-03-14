@@ -1,0 +1,58 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org_clothocad_core_schema_BuiltInSchema",
+  "name" : "BuiltInSchema",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "binaryName",
+    "type" : "string",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "log",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "c",
+    "type" : "object",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  }, {
+    "name" : "superClass",
+    "type" : "org.clothocad.core.schema.BuiltInSchema",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : true,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org_clothocad_core_schema_JavaSchema",
+  "innerClasses" : null,
+  "c" : "org.clothocad.core.schema.BuiltInSchema",
+  "binaryName" : "org.clothocad.core.schema.BuiltInSchema"
+}

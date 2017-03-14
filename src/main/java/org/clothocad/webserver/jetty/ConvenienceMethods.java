@@ -5,9 +5,17 @@
  */
 package org.clothocad.webserver.jetty;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import org.ahocorasick.trie.Emit;
+import org.ahocorasick.trie.Trie;
+import org.ahocorasick.trie.Trie.TrieBuilder;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Annotation;
@@ -48,6 +56,7 @@ public class ConvenienceMethods {
         boolean bRole = false, bSeq = false;
         String role = "", sequence = "";
 
+        //case insensitive check for parameters
         for (String field : parameters.keySet()) {
             if (field.equalsIgnoreCase("role")) {
                 bRole = true;
@@ -130,4 +139,147 @@ public class ConvenienceMethods {
             return createPart(persistor, name, author);
         }
     }
+    
+    /*
+        Create Device:
+        
+        No Role, No Sequence: 
+            BioDesign
+                ->subDesigns (createPart)
+            Part(s)
+                ->Assembly
+                    ->subparts (Refers to Part objects in the subdesigns)
+    
+        With Role: (orange and blue)
+            (BioDesign) -> BasicModule
+                -> Feature
+                    -> (if sequence) Sequence
+                        -> Annotation
+                            -> Feature (same one before Sequence)
+    
+        With Sequence: (red and blue)
+            (Part) -> Sequence
+                -> Annotations
+                    -> To own feature
+                    -> Features in subparts of the Assembly
+        
+    */
+    
+    
+    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, String author){
+        
+        Person auth = new Person(author);
+        Part devPart = new Part(name, auth);
+        devPart.createAssembly();
+        
+        BioDesign device = new BioDesign(name, auth);
+        device.addPart(devPart);
+        
+        for(String id : partIDs)
+        {
+            ObjectId objId = new ObjectId(id);
+            //partID refers to BioDesigns of parts
+            BioDesign subDesign = persistor.get(BioDesign.class, objId);
+            
+            device.addSubDesign(subDesign);
+            Set<Part> partSet = subDesign.getParts();
+            
+            for(Part p : partSet)
+            {
+                devPart.getAssemblies().get(0).addPart(p);
+            }
+        }
+        
+        ObjectId result = persistor.save(device);
+        
+        return result;
+    }
+    
+    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, Map<String, String> parameters, String author)
+    {
+        ObjectId dummy = null;
+        
+        if(parameters.isEmpty())
+        {
+            return createDevice(persistor, name, partIDs, author);
+        }
+        else
+        {
+            boolean bRole = false;
+            boolean bSeq = false;
+            String role = "", sequence = "";
+            //case insensitive check for parameters.
+            for(String key : parameters.keySet())
+            {
+                if(key.equalsIgnoreCase("role"))
+                {
+                    bRole = true;
+                    role = parameters.get(key);
+                }
+                if(key.equalsIgnoreCase("sequence"))
+                {
+                    bSeq = true;
+                    sequence = parameters.get(key);
+                }
+            }
+            
+            if(bSeq && bRole)
+            {
+                
+            }
+            else if(bSeq)
+            {
+                
+            }
+            else if(bRole)
+            {
+                
+            }
+            
+            
+        }
+        
+        return dummy;
+    }
+    
+    //Scan the sequence for multiple string patterns, annotate it
+    //Thank god someone invented the wheel (grep) already - Aho-Corasick Algorithm
+    static Sequence annotateMe(Persistor persistor, Sequence seq, String[] partIDs)
+    {
+        HashMap<String, String> names = new HashMap<>();
+        
+        TrieBuilder trieBuild = Trie.builder().removeOverlaps().caseInsensitive();
+        //initialize list for string matching
+        for(String s : partIDs)
+        {
+            ObjectId id = new ObjectId(s);
+            BioDesign bd = persistor.get(BioDesign.class, id);
+            Set<Part> parts = bd.getParts();
+            for(Part p : parts)
+            {
+                if(p.getSequence().getSequence().isEmpty())
+                {
+                    continue;
+                }
+                else
+                {
+                    trieBuild.addKeyword(p.getSequence().getSequence());
+                    names.put(p.getSequence().getSequence(), p.getName());
+                }
+            }
+        }
+        Trie trie = trieBuild.build();
+        
+        Collection<Emit> results = trie.parseText(seq.getSequence());
+        
+        
+        
+
+        
+        
+         
+        
+        
+    }
+    
 }
