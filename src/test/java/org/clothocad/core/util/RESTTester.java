@@ -145,13 +145,14 @@ public class RESTTester {
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
-        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'TestSequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
+        String seqId = HTTPReq(url, jsonString, "POST");
 
-        jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence'}";
-        url = new URL("https://localhost:8443/data/get/getByName");
 
-        String output = HTTPReq(url, jsonString, "GET");
+        url = new URL("https://localhost:8443/data/get/getByName/TestSequence/jsmith:asdf");
+
+        String output = HTTPReq(url, "", "GET");
 
         System.out.println(output);
     }
@@ -164,7 +165,6 @@ public class RESTTester {
         String seqId = HTTPReq(url, jsonString, "POST");
 
         System.out.println("Testing Get By Id");
-        jsonString = "{'username':'jsmith','password':'asdf','id':'" + seqId + "'}";
         url = new URL("https://localhost:8443/data/get/getById/" + seqId + "/jsmith:asdf");
 
         String output = HTTPReq(url, "", "GET");
