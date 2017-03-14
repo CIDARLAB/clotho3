@@ -73,8 +73,7 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "getByName":
                 Map<String, Object> query = new HashMap<>();
-                String objectName = toGet;
-                query.put("name", objectName);
+                query.put("name", toGet);
 
                 Iterable<ObjBase> queried = persistor.find(query);
                 ObjBase last = null;
@@ -91,8 +90,7 @@ public class RestApi extends HttpServlet {
                 break;
 
             case "getById":
-                String id = toGet;
-                ObjectId objId = new ObjectId(id);
+                ObjectId objId = new ObjectId(toGet);
                 Object obj = persistor.get(objId);
                 result = obj.toString();
                 break;
