@@ -199,12 +199,20 @@ public class Persistor {
     // if fail check, remove from save list
     //if id not in database, assign ownership to current user
     public ObjectId save(ObjBase obj, boolean overwrite) {
+//        System.out.println();
+//        log.info("Persistor.save execution beginning...");
+//        long start = System.currentTimeMillis();
+        
         Subject currentSubject = SecurityUtils.getSubject();
         if (!currentSubject.isAuthenticated()
                 || currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
             throw new AuthorizationException("Anonymous users cannot create or edit objects.");
         }
         validate(obj);
+        
+//        long time = System.currentTimeMillis();
+//        log.info("SecurityUtils subject validation time: " + (time-start) + " ms");
+//        start = time;
 
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
 
@@ -214,6 +222,10 @@ public class Persistor {
                 object.setId(new ObjectId());
             }
         }
+        
+//        time = System.currentTimeMillis();
+//        log.info("Assigning IDs to no-id objects time : " + (time-start) + " ms");
+//        start = time;
 
         // if can't change original object, abort
         if (has(obj.getId())
@@ -221,19 +233,24 @@ public class Persistor {
             throw new AuthorizationException("Cannot edit " + obj.getId());
         }
 
-        Set<ObjBase> filteredObjects = new HashSet();
-
-        for (ObjBase object : relevantObjects) {
-            //check privileges on preexisting objects
-            if (!has(object.getId())
-                    || currentSubject.isPermitted("data:edit" + obj.getId().toString())) {
-                filteredObjects.add(object);
-            }
-            //give current user ownership of new objects
-            if (!has(object.getId())) {
-                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
-            }
-        }
+        Set<ObjBase> filteredObjects = relevantObjects;
+//        Set<ObjBase> filteredObjects = new HashSet();
+//
+//        for (ObjBase object : relevantObjects) {
+//            //check privileges on preexisting objects
+//            if (!has(object.getId())
+//                    || currentSubject.isPermitted("data:edit" + obj.getId().toString())) {
+//                filteredObjects.add(object);
+//            }
+//            //give current user ownership of new objects
+//            if (!has(object.getId())) {
+//                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
+//            }
+//        }
+        
+//        time = System.currentTimeMillis();
+//        log.info("Checking privileges of pre-existing objects & giving ownership of new objects time : " + (time-start) + " ms");
+//        start = time;
 
         if (!overwrite) {
             Set<ObjBase> modifiedObjects = new HashSet<>();
@@ -246,12 +263,19 @@ public class Persistor {
                 throw new OverwriteConfirmationException(modifiedObjects);
             }
         }
-
+//        time = System.currentTimeMillis();
+//        log.info("Modified Objects loop time : " + (time-start) + " ms");
+//        start = time;
+        
         //recurse in persistor
         connection.saveAll(filteredObjects);
         for (ObjBase object : filteredObjects) {
             globalTrie.put(object);
         }
+        
+//        time = System.currentTimeMillis();
+//        log.info("Recurse in persistor and build global trie time : " + (time - start) + " ms");
+//        System.out.println();
         return obj.getId();
     }
 

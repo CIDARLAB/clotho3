@@ -81,7 +81,7 @@ public class RESTTester {
         return "ERROR";
     }
 
-    @Test
+//    @Test
     public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create User");
         String jsonString = "{'username':'jsmith','password':'asdf'}";
@@ -92,7 +92,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Sequence");
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -103,7 +103,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testCreatePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -119,7 +119,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
@@ -135,7 +135,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -151,7 +151,7 @@ public class RESTTester {
 
     }
 
-    @Test
+//    @Test
     public void testSet() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -167,7 +167,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Delete Sequence");
 
@@ -190,7 +190,7 @@ public class RESTTester {
         System.out.println("Testing Bulk Create");
         URL url = new URL(this.url + "/create/sequence");
         long start = System.currentTimeMillis();
-        for (int i = 0; i <1000; i++)
+        for (int i = 0; i < 5000; i++)
         {    
             String jsonString = "{'username':'jsmith','password':'asdf','objectName':'K249" + i + " Sequence','sequence':'atgcagatttatgaaggcaaactgaccgcggaaggcctgcgctttggcattgtggcgagccgctttaaccatgcgc"
 				+ "tggtggatcgcctggtggaaggcgcgattgattgcattgtgcgccatggtggtcgcgaagaagatattaccctggtgcgcgtgccgggcagctgggaaattccggtgg"

@@ -223,31 +223,61 @@ public class ConvenienceMethods {
                 }
             }
             
-            if(bSeq && bRole)
-            {
-                
+            Person auth = new Person(author);
+            Part devPart = new Part(name, auth);
+            devPart.createAssembly();
+
+            BioDesign device = new BioDesign(name, auth);
+            device.addPart(devPart);
+
+            for (String id : partIDs) {
+                ObjectId objId = new ObjectId(id);
+                //partID refers to BioDesigns of parts
+                BioDesign subDesign = persistor.get(BioDesign.class, objId);
+
+                device.addSubDesign(subDesign);
+                Set<Part> partSet = subDesign.getParts();
+
+                for (Part p : partSet) {
+                    devPart.getAssemblies().get(0).addPart(p);
+                }
             }
-            else if(bSeq)
-            {
+
+            if (bSeq && bRole) {
+                //Create objects
+                Sequence seq = new Sequence(name, sequence, auth);
+                Annotation seqAnno = seq.createAnnotation(name, 1, sequence.length(), true, auth); 
+                Feature annoFeat = new Feature(name, role, auth);                
                 
-            }
-            else if(bRole)
-            {
+                //Chain objects together
+                //      Search and attach all other annotations to sequence
+                annotateMe(persistor, seq, partIDs);
+                annoFeat.setSequence(seq);
+                seqAnno.setFeature(annoFeat);
+                seq.addAnnotation(seqAnno);
+                devPart.setSequence(seq);
                 
+                HashSet<Feature> setFeat = new HashSet();
+                setFeat.add(annoFeat);
+                BasicModule bMod = new BasicModule(name, role, setFeat, auth);
+                
+                device.setModule(bMod);
+            } else if (bSeq) {
+
+            } else if (bRole) {
+
             }
-            
-            
+
         }
-        
+
         return dummy;
     }
-    
+
     //Scan the sequence for multiple string patterns, annotate it
     //Thank god someone invented the wheel (grep) already - Aho-Corasick Algorithm
-    static Sequence annotateMe(Persistor persistor, Sequence seq, String[] partIDs)
-    {
-        HashMap<String, String> names = new HashMap<>();
-        
+    static void annotateMe(Persistor persistor, Sequence seq, List<String> partIDs) {
+        HashMap<String, Part> partMap = new HashMap<>();
+
         TrieBuilder trieBuild = Trie.builder().removeOverlaps().caseInsensitive();
         //initialize list for string matching
         for(String s : partIDs)
@@ -264,7 +294,7 @@ public class ConvenienceMethods {
                 else
                 {
                     trieBuild.addKeyword(p.getSequence().getSequence());
-                    names.put(p.getSequence().getSequence(), p.getName());
+                    partMap.put(p.getSequence().getSequence(), p);
                 }
             }
         }
@@ -273,13 +303,34 @@ public class ConvenienceMethods {
         Collection<Emit> results = trie.parseText(seq.getSequence());
         
         
-        
-
-        
-        
-         
-        
-        
+        //Annotate seq based on results **DOUBLE CHECK THIS PROCESS WITH NIC
+        //A lot of assumptions made, in practice I need to fully understand how 
+        //data model will be used by Clotho/users.
+        for(Emit em : results)
+        {
+            Part featPart = partMap.get(em.getKeyword());
+            
+            Feature feat = null;
+            for(Annotation anno : featPart.getSequence().getAnnotations())
+            {
+                if(anno.getFeature().getSequence()==featPart.getSequence())
+                {
+                    //found feature that == part
+                    feat = anno.getFeature();
+                    break;
+                }
+            }
+            //add 1 to start and end because clotho starts counting from 1
+            Annotation emAnno = seq.createAnnotation(featPart.getName(), em.getStart() + 1, em.getEnd() + 1, true, featPart.getAuthor());
+            if(feat != null)
+            {
+                emAnno.setFeature(feat);
+            }
+            else
+            {
+                //Doesn't look like this should ever have to be called based on the UML, but just in case.
+                feat = new Feature(featPart.getName(), featPart.getRoles().get(0), featPart.getAuthor());
+            }
+        }        
     }
-    
 }
