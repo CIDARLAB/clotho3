@@ -5,6 +5,7 @@
  */
 package org.clothocad.core.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.webserver.jetty.ConvenienceMethods;
+import static org.clothocad.webserver.jetty.ConvenienceMethods.createDevice;
 import static org.clothocad.webserver.jetty.ConvenienceMethods.createPart;
 import org.junit.Test;
 
@@ -61,10 +63,8 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     sequence
     */
     
-    
     @Test
-    public void testCreations(){
-        
+    public void testCreatePart(){
         createPart(persistor,"mySpecialPart", "David");
         
         Map<String, String> roleParam = new HashMap<>();
@@ -79,6 +79,44 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         bothParams.put("role", "GENE");
         bothParams.put("sequence", "tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac");
         createPart(persistor, "R0040 Sequence",bothParams, "June Rhee");
+    }
+    
+    @Test
+    public void testCreateDevice(){
+        
+        ArrayList<String> partIDs = new ArrayList<>();
+        
+        ObjectId zero = createDevice(persistor, "DevicePls", partIDs, "David T.");
+        
+        partIDs.add(zero.getValue());
+        
+        Map<String, String> seqParam = new HashMap<>();
+        seqParam.put("sequence", "catcat");
+        ObjectId first = createDevice(persistor, "Basic Device", partIDs, seqParam, "David T.");
+        
+        partIDs.add(first.getValue());
+        
+        //"Super Device" has "catcat" within its sequence, but an annotation will not be made for "Basic Device".
+        //This is because "Basic Device" does not have a feature because it lacks a role.
+        Map<String, String> bothParams = new HashMap<>();
+        bothParams.put("role", "GENE");
+        bothParams.put("sequence", "tcgcatcatgt");
+        ObjectId second = createDevice(persistor, "Super Device", partIDs, bothParams, "David T.");
+        
+        partIDs.add(second.getValue());
+        
+        Map<String, String> bothParamsAndSuperDevice = new HashMap<>();
+        bothParamsAndSuperDevice.put("role", "GENE");
+        bothParamsAndSuperDevice.put("sequence", "actacttcgcatcatgttcatca");
+        ObjectId third = createDevice(persistor, "Device with Super Device", partIDs, bothParamsAndSuperDevice, "David T.");
+        
+        partIDs.add(third.getValue());
+        
+    }
+    
+    
+    @Test
+    public void testCreations(){
         
         Map<String, Object> query = new HashMap<>();
         query.put("author", "david");
@@ -88,7 +126,6 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         {
             System.out.println(each.toString());
         }
-        
     }
     
     
