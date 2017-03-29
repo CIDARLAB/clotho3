@@ -66,6 +66,7 @@ public class RestApi extends HttpServlet {
 
         if (!login(auth)) {
             response.getWriter().write("Login Failed\r\n");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
@@ -82,7 +83,7 @@ public class RestApi extends HttpServlet {
                 }
 
                 if (last == null) {
-                    result = "FAILURE";
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 } else {
                     result = last.toString();
                 }
@@ -92,21 +93,19 @@ public class RestApi extends HttpServlet {
             case "getById":
                 ObjectId objId = new ObjectId(toGet);
                 Object obj = persistor.get(objId);
-                result = obj.toString();
+
+                if (obj == null) {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_FOUND);
+                    result = obj.toString();
+                }
                 break;
         }
 
-        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(result);
 
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-
-//        logout(auth);
-
+        logout(auth);
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -125,29 +124,21 @@ public class RestApi extends HttpServlet {
 
         if (!login(auth)) {
             response.getWriter().write("Login Failed\r\n");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-
-        String result = "";
 
         switch (method) {
             case "delete":
                 if (persistor.has(new ObjectId(body.getString("id")))) {
                     persistor.delete(new ObjectId(body.getString("id")));
                     response.getWriter().write("Object has been deleted\r\n");
+                    response.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     response.getWriter().write("Object with id " + body.getString("id") + " does not exist\r\n");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
                 break;
-        }
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
         }
 
         logout(auth);
@@ -172,10 +163,13 @@ public class RestApi extends HttpServlet {
             credentials.put("username", auth[0]);
             credentials.put("credentials", auth[1]);
             credentials.put("displayname", auth[0]);
+
             m = new Message(Channel.createUser, credentials, null, null);
             this.router.receiveMessage(this.rc, m);
+
             if (!login(auth)) {
                 response.getWriter().write("Login Failed\r\n");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
             logout(auth);
@@ -183,6 +177,7 @@ public class RestApi extends HttpServlet {
 
         if (!login(auth)) {
             response.getWriter().write("Login Failed\r\n");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
@@ -265,14 +260,14 @@ public class RestApi extends HttpServlet {
                 break;
         }
 
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
+        if (result.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
-            response.setStatus(HttpServletResponse.SC_OK);
+            response.setStatus(HttpServletResponse.SC_CREATED);
         }
+
+        response.getWriter().write(result);
+
         logout(auth);
     }
 
@@ -292,6 +287,7 @@ public class RestApi extends HttpServlet {
 
         if (!login(auth)) {
             response.getWriter().write("Login Failed\r\n");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
@@ -301,6 +297,7 @@ public class RestApi extends HttpServlet {
                 body.remove("password");
                 if (!body.has("id")) {
                     response.getWriter().write("You must supply an id \r\n");
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     break;
                 }
 
@@ -308,6 +305,7 @@ public class RestApi extends HttpServlet {
 
                 if (!persistor.has(id)) {
                     response.getWriter().write("No object with this id exists\r\n");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     break;
                 }
 
@@ -321,8 +319,7 @@ public class RestApi extends HttpServlet {
                 }
 
                 persistor.save(jsonToMap(body));
-
-                response.getWriter().write("Successfully modified object");
+                response.setStatus(HttpServletResponse.SC_OK);
 
                 break;
         }
