@@ -161,9 +161,9 @@ public class RestApi extends HttpServlet {
 
         if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
-            credentials.put("username", body.get("name").toString());
+            credentials.put("username", body.get("username").toString());
             credentials.put("credentials", body.get("password").toString());
-            credentials.put("displayname", body.get("name").toString());
+            credentials.put("displayname", body.get("username").toString());
 
             m = new Message(Channel.createUser, credentials, null, null);
             this.router.receiveMessage(this.rc, m);
@@ -182,7 +182,7 @@ public class RestApi extends HttpServlet {
 //            return;
 //        }
 
-        String name = body.get("name").toString();
+        String name = body.get("username").toString();
         Person user = new Person(name);
         Sequence sequence = null;
         Part part = null;

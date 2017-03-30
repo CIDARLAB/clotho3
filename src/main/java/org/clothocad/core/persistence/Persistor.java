@@ -302,10 +302,10 @@ public class Persistor {
     }
 
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
-        if (!SecurityUtils.getSubject().isAuthenticated()
-                || SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
-            throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
-        }
+//        if (!SecurityUtils.getSubject().isAuthenticated()
+//                || SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
+//            throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
+//        }
         if (!data.containsKey(ID)) {
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
@@ -648,7 +648,7 @@ public class Persistor {
         if (has(id)) {
             Map<String, Object> permissions = new HashMap<>();
 
-            permissions.put("mine", realm.getCurrentSubjectPermissions(id));
+//            permissions.put("mine", realm.getCurrentSubjectPermissions(id));
             if (SecurityUtils.getSubject().isPermitted("data:grant:" + id.toString())) {
                 permissions.put("user", realm.getUserPermissions(id));
                 permissions.put("group", realm.getGroupPermissions(id));
