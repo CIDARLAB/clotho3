@@ -59,10 +59,10 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String toGet = pathID[3];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
-
-        String[] auth = {username, password};
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
+//
+//        String[] auth = {username, password};
 
 //        if (!login(auth)) {
 //            response.getWriter().write("Login Failed\r\n");
@@ -115,12 +115,12 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String[] auth = {username, password};
+//        String[] auth = {username, password};
 
 //        if (!login(auth)) {
 //            response.getWriter().write("Login Failed\r\n");
@@ -151,12 +151,12 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String type = pathID[3];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String[] auth = {username, password};
+//        String[] auth = {username, password};
 
         if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
@@ -297,12 +297,12 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String[] auth = {username, password};
+//        String[] auth = {username, password};
 
 //        if (!login(auth)) {
 //            response.getWriter().write("Login Failed\r\n");

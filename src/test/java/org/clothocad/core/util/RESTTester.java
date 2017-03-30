@@ -97,11 +97,11 @@ public class RESTTester {
 //
 //        System.out.println(output);
 //    }
-//    @Test
+    @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Sequence");
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
-        URL url = new URL(this.url + "/create/sequence");
+        URL url = new URL(this.url + "/create/sequence/");
 
         String output = HTTPReq(url, jsonString, "POST");
 
@@ -200,7 +200,7 @@ public class RESTTester {
         System.out.println(output);
     }
     
-    @Test
+//    @Test
     public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
