@@ -14,6 +14,8 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -64,7 +66,7 @@ public class RESTTester {
         }
 
         int responseCode = conn.getResponseCode();
-        
+
         if (responseCode != 400 && responseCode != 404 && responseCode != 500) {
 //            System.out.println("SUCCESS!");
 
@@ -95,8 +97,7 @@ public class RESTTester {
 //
 //        System.out.println(output);
 //    }
-
-    @Test
+//    @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Sequence");
         String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
@@ -187,6 +188,34 @@ public class RESTTester {
         System.out.println(output);
     }
 
+//    @Test
+    public void testConveniencePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Create Convenience Part");
+
+        String jsonString = "{'objectName':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
+        URL url = new URL(this.url + "/create/conveniencePart/jsmith:asdf");
+
+        String output = HTTPReq(url, jsonString, "POST");
+
+        System.out.println(output);
+    }
+    
+    @Test
+    public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+        System.out.println("Testing Create Convenience Part");
+
+        String jsonString = "{'objectName':'Test Convenience Device Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
+        URL url = new URL(this.url + "/create/conveniencePart/jsmith:asdf");
+
+        String partIDs = HTTPReq(url, jsonString, "POST");
+        
+        jsonString = "{'objectName':'Test Convenience Device','sequence':'actacttcgcatcatgttcatca', 'role':'GENE', 'partIDs':'" + partIDs +"'}";
+        url = new URL(this.url + "/create/convenienceDevice/jsmith:asdf");
+
+        String output = HTTPReq(url, jsonString, "POST");
+
+        System.out.println(output);
+    }
 //    @Test
 //    public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException
 //    {

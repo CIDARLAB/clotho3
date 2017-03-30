@@ -27,7 +27,7 @@ import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
-import static org.clothocad.webserver.jetty.ConvenienceMethods.createPart;
+import static org.clothocad.webserver.jetty.ConvenienceMethods.*;
 import org.json.JSONArray;
 
 @SuppressWarnings("serial")
@@ -115,11 +115,11 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
+        String username = pathID[4].split(":")[0];
+        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String username = body.getString("username");
-        String password = body.getString("password");
         String[] auth = {username, password};
 
         if (!login(auth)) {
@@ -151,11 +151,11 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String type = pathID[3];
+        String username = pathID[4].split(":")[0];
+        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String username = body.getString("username");
-        String password = body.getString("password");
         String[] auth = {username, password};
 
         if (method.equals("create") && type.equals("user")) {
@@ -185,9 +185,10 @@ public class RestApi extends HttpServlet {
         Sequence sequence = null;
         Part part = null;
         Feature feature = null;
+        String[] partIDs = {};
         String objectName = "";
         String role = "";
-        String sequenceName = "";
+        String rawSequence = "";
 
         String result = "";
 
@@ -196,8 +197,8 @@ public class RestApi extends HttpServlet {
                 switch (type) {
                     case "sequence":
                         objectName = body.getString("objectName");
-                        sequenceName = body.getString("sequence");
-                        sequence = new Sequence(objectName, sequenceName, user);
+                        rawSequence = body.getString("sequence");
+                        sequence = new Sequence(objectName, rawSequence, user);
                         ObjectId sequenceObj = persistor.save(sequence);
                         result = sequenceObj.toString();
                         break;
@@ -242,19 +243,37 @@ public class RestApi extends HttpServlet {
                         ObjectId moduleObj = persistor.save(module);
                         result = moduleObj.toString();
                         break;
-                }
-                break;
 
-            case "convenience":
-                switch (type) {
-                    case "createPart":
-                        Map<String, String> params = new HashMap<>();
-                        params.put("role", body.getString("role"));
-                        params.put("sequence", body.getString("sequence"));
+                    case "conveniencePart":
+                        role = body.getString("role");
+                        rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
 
-                        ObjectId partObj = createPart(persistor, objectName, params, user.toString());
-                        result = partObj.toString();
+                        Map<String, String> partParams = new HashMap<>();
+                        partParams.put("role", role);
+                        partParams.put("sequence", rawSequence);
+
+                        ObjectId partId = createPart(persistor, objectName, partParams, username);
+                        result = partId.toString();
+                        break;
+
+                    case "convenienceDevice":
+                        role = body.getString("role");
+                        rawSequence = body.getString("sequence");
+                        objectName = body.getString("objectName");
+                        partIDs = body.getString("partIDs").split(",");
+                        ArrayList<String> partIDArray = new ArrayList<>();
+
+                        for (String partID : partIDs) {
+                            partIDArray.add(partID);
+                        }
+                        
+                        Map<String, String> deviceParams = new HashMap<>();
+                        deviceParams.put("role", role);
+                        deviceParams.put("sequence", rawSequence);
+
+                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, username);
+                        result = deviceID.toString();
                         break;
                 }
                 break;
@@ -278,11 +297,11 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
+        String username = pathID[4].split(":")[0];
+        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String username = body.get("username").toString();
-        String password = body.get("password").toString();
         String[] auth = {username, password};
 
         if (!login(auth)) {
