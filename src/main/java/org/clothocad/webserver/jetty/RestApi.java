@@ -85,6 +85,7 @@ public class RestApi extends HttpServlet {
                 if (last == null) {
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 } else {
+                    response.setStatus(HttpServletResponse.SC_FOUND);
                     result = last.toString();
                 }
 

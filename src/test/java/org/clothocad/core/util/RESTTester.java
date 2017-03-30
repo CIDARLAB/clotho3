@@ -97,10 +97,10 @@ public class RESTTester {
 //
 //        System.out.println(output);
 //    }
-    @Test
+//    @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Sequence");
-        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        String jsonString = "{'name':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence/");
 
         String output = HTTPReq(url, jsonString, "POST");
@@ -108,15 +108,15 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Tests
+//    @Test
     public void testCreatePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
-        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        String jsonString = "{'name':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
         System.out.println("Testing Create Part");
-        jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Part', 'id':'" + seqId + "'}";
+        jsonString = "{'name':'jsmith','objectName':'Test Part', 'id':'" + seqId + "'}";
         url = new URL(this.url + "/create/part");
 
         String output = HTTPReq(url, jsonString, "POST");
@@ -128,11 +128,11 @@ public class RESTTester {
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
-        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'TestSequence','sequence':'ata'}";
+        String jsonString = "{'name':'jsmith','objectName':'TestSequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
-        url = new URL("https://localhost:8443/data/get/getByName/TestSequence/jsmith:asdf");
+        url = new URL("https://localhost:8443/data/get/getByName/TestSequence/");
 
         String output = HTTPReq(url, "", "GET");
 
@@ -143,11 +143,11 @@ public class RESTTester {
     public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get By Id");
 
-        String jsonString = "{'username':'jsmith','password':'asdf','objectName':'Test Sequence','sequence':'ata'}";
+        String jsonString = "{'name':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
-        url = new URL("https://localhost:8443/data/get/getById/" + seqId + "/jsmith:asdf");
+        url = new URL("https://localhost:8443/data/get/getById/" + seqId);
 
         String output = HTTPReq(url, "", "GET");
 
@@ -188,12 +188,12 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testConveniencePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
-        String jsonString = "{'objectName':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
-        URL url = new URL(this.url + "/create/conveniencePart/jsmith:asdf");
+        String jsonString = "{'name':'jsmith','objectName':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
+        URL url = new URL(this.url + "/create/conveniencePart/");
 
         String output = HTTPReq(url, jsonString, "POST");
 
@@ -205,12 +205,12 @@ public class RESTTester {
         System.out.println("Testing Create Convenience Part");
 
         String jsonString = "{'objectName':'Test Convenience Device Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
-        URL url = new URL(this.url + "/create/conveniencePart/jsmith:asdf");
+        URL url = new URL(this.url + "/create/conveniencePart/");
 
         String partIDs = HTTPReq(url, jsonString, "POST");
         
-        jsonString = "{'objectName':'Test Convenience Device','sequence':'actacttcgcatcatgttcatca', 'role':'GENE', 'partIDs':'" + partIDs +"'}";
-        url = new URL(this.url + "/create/convenienceDevice/jsmith:asdf");
+        jsonString = "{'name':'jsmith','objectName':'Test Convenience Device','sequence':'actacttcgcatcatgttcatca', 'role':'GENE', 'partIDs':'" + partIDs +"'}";
+        url = new URL(this.url + "/create/convenienceDevice/");
 
         String output = HTTPReq(url, jsonString, "POST");
 

@@ -508,11 +508,11 @@ public class Persistor {
         //filter results for permission
         List<ObjBase> filteredResult = new ArrayList<>();
         for (ObjBase obj : result) {
-            try {
-                checkPriv(obj.getId(), "view");
+//            try {
+//                checkPriv(obj.getId(), "view");
                 filteredResult.add(obj);
-            } catch (AuthorizationException e) {
-            }
+//            } catch (AuthorizationException e) {
+//            }
         }
         return filteredResult;
     }
