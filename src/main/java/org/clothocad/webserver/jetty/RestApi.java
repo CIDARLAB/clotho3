@@ -154,15 +154,15 @@ public class RestApi extends HttpServlet {
 //        String username = pathID[4].split(":")[0];
 //        String password = pathID[4].split(":")[1];
 
-        JSONObject body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());;
 
 //        String[] auth = {username, password};
 
         if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
-            credentials.put("username", auth[0]);
-            credentials.put("credentials", auth[1]);
-            credentials.put("displayname", auth[0]);
+            credentials.put("username", body.get("name").toString());
+            credentials.put("credentials", body.get("password").toString());
+            credentials.put("displayname", body.get("name").toString());
 
             m = new Message(Channel.createUser, credentials, null, null);
             this.router.receiveMessage(this.rc, m);
@@ -181,7 +181,8 @@ public class RestApi extends HttpServlet {
 //            return;
 //        }
 
-        Person user = new Person(auth[0]);
+        String name = body.get("name").toString();
+        Person user = new Person(name);
         Sequence sequence = null;
         Part part = null;
         Feature feature = null;
@@ -253,7 +254,7 @@ public class RestApi extends HttpServlet {
                         partParams.put("role", role);
                         partParams.put("sequence", rawSequence);
 
-                        ObjectId partId = createPart(persistor, objectName, partParams, username);
+                        ObjectId partId = createPart(persistor, objectName, partParams, name);
                         result = partId.toString();
                         break;
 
@@ -272,7 +273,7 @@ public class RestApi extends HttpServlet {
                         deviceParams.put("role", role);
                         deviceParams.put("sequence", rawSequence);
 
-                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, username);
+                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, name);
                         result = deviceID.toString();
                         break;
                 }
