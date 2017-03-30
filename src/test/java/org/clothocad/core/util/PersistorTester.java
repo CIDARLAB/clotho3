@@ -22,7 +22,7 @@ public class PersistorTester extends AuthorizedShiroTest {
         this.persistor = injector.getInstance(Persistor.class);
     }
 
-    @Test
+//    @Test
     public void timeToBulkCreate()
     {
         System.out.println("Testing Bulk Create");
@@ -40,5 +40,11 @@ public class PersistorTester extends AuthorizedShiroTest {
         }
         long end = System.currentTimeMillis();
         System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
+    }
+    
+    public void authentication() {
+        Person tester = new Person("tester");
+        Sequence testSequence = new Sequence("Test Sequence", "atatatat", tester);
+        persistor.save(testSequence);
     }
 }
