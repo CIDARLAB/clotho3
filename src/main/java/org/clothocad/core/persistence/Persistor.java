@@ -168,20 +168,20 @@ public class Persistor {
         return save(obj, false);
     }
 
-    public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
-        if (id == null) {
-            throw new IllegalArgumentException("Null ObjectId");
-        }
-        Subject currentSubject = SecurityUtils.getSubject();
-        if (has(id)) {
-            try {
-                currentSubject.checkPermission("data:" + priviliege + ":" + id.toString());
-            } catch (AuthorizationException e) {
-                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
-                throw e;
-            }
-        }
-    }
+//    public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
+//        if (id == null) {
+//            throw new IllegalArgumentException("Null ObjectId");
+//        }
+//        Subject currentSubject = SecurityUtils.getSubject();
+//        if (has(id)) {
+//            try {
+//                currentSubject.checkPermission("data:" + priviliege + ":" + id.toString());
+//            } catch (AuthorizationException e) {
+//                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
+//                throw e;
+//            }
+//        }
+//    }
 
     public Set<String> getUserPermissionInfo(ObjectId id) {
         return null;
@@ -189,7 +189,7 @@ public class Persistor {
 
     public Set<String> getAllPermissionInfo(ObjectId id) {
         //must be owner
-        checkPriv(id, "grant");
+//        checkPriv(id, "grant");
         return null;
     }
 
@@ -311,7 +311,7 @@ public class Persistor {
             //Our ObjectId class isn't a BSON datatype, so use string representation
             data.put(ID, id.toString());
         } else {
-            checkPriv(new ObjectId(data.get(ID)), "edit");
+//            checkPriv(new ObjectId(data.get(ID)), "edit");
         }
         ObjectId id = new ObjectId(data.get(ID));
         if (!has(id)) {
@@ -330,7 +330,7 @@ public class Persistor {
     }
 
     public void delete(ObjectId id) throws AuthorizationException {
-        checkPriv(id, "delete");
+//        checkPriv(id, "delete");
         connection.delete(id);
     }
 
@@ -343,15 +343,15 @@ public class Persistor {
     }
 
     public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun) throws EntityNotFoundException {
-        try {
-            if (forRun) {
-                checkPriv(id, "run");
-            } else {
-                checkPriv(id, "view");
-            }
-        } catch (AuthorizationException e) {
-            throw new EntityNotFoundException(id.toString());
-        }
+//        try {
+//            if (forRun) {
+//                checkPriv(id, "run");
+//            } else {
+//                checkPriv(id, "view");
+//            }
+//        } catch (AuthorizationException e) {
+//            throw new EntityNotFoundException(id.toString());
+//        }
 
         Map<String, Object> result = connection.getAsBSON(id, fields);
         if (result == null) {
@@ -662,7 +662,7 @@ public class Persistor {
         List<Map<String, Object>> filteredObjects = new ArrayList<>();
         for (Map<String, Object> object : objects) {
             try {
-                checkPriv(new ObjectId(object.get(ID)), permission.name());
+//                checkPriv(new ObjectId(object.get(ID)), permission.name());
                 filteredObjects.add(object);
             } catch (AuthorizationException e) {
             }
@@ -674,7 +674,7 @@ public class Persistor {
         List<ObjBase> filteredObjects = new ArrayList<>();
         for (ObjBase object : objects) {
             try {
-                checkPriv(object.getId(), permission.name());
+//                checkPriv(object.getId(), permission.name());
                 filteredObjects.add(object);
             } catch (AuthorizationException e) {
             }
