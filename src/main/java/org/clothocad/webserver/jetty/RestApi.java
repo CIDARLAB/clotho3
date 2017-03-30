@@ -64,11 +64,11 @@ public class RestApi extends HttpServlet {
 
         String[] auth = {username, password};
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         String result = "";
         switch (method) {
@@ -105,7 +105,7 @@ public class RestApi extends HttpServlet {
 
         response.getWriter().write(result);
 
-        logout(auth);
+//        logout(auth);
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -122,11 +122,11 @@ public class RestApi extends HttpServlet {
 
         String[] auth = {username, password};
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         switch (method) {
             case "delete":
@@ -141,7 +141,7 @@ public class RestApi extends HttpServlet {
                 break;
         }
 
-        logout(auth);
+//        logout(auth);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -167,19 +167,19 @@ public class RestApi extends HttpServlet {
             m = new Message(Channel.createUser, credentials, null, null);
             this.router.receiveMessage(this.rc, m);
 
-            if (!login(auth)) {
-                response.getWriter().write("Login Failed\r\n");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
-            logout(auth);
+//            if (!login(auth)) {
+//                response.getWriter().write("Login Failed\r\n");
+//                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//                return;
+//            }
+//            logout(auth);
         }
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         Person user = new Person(auth[0]);
         Sequence sequence = null;
@@ -287,7 +287,7 @@ public class RestApi extends HttpServlet {
 
         response.getWriter().write(result);
 
-        logout(auth);
+//        logout(auth);
     }
 
     protected void doPut(HttpServletRequest request,
@@ -304,11 +304,11 @@ public class RestApi extends HttpServlet {
 
         String[] auth = {username, password};
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         switch (method) {
             case "set":
@@ -343,26 +343,26 @@ public class RestApi extends HttpServlet {
                 break;
         }
 
-        logout(auth);
+//        logout(auth);
     }
 
-    private boolean login(String[] userPass) {
-        if (userPass != null) {
-            loginMap = new HashMap<String, String>();
-            loginMap.put("username", userPass[0]);
-            loginMap.put("credentials", userPass[1]);
-            loginMessage = new Message(Channel.login, loginMap, null, null);
-            this.router.receiveMessage(this.rc, loginMessage);
-        }
-        return SecurityUtils.getSubject().isAuthenticated();
-    }
-
-    private void logout(String[] userPass) {
-        if (userPass != null) {
-            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-            this.router.receiveMessage(this.rc, logoutMessage);
-        }
-    }
+//    private boolean login(String[] userPass) {
+//        if (userPass != null) {
+//            loginMap = new HashMap<String, String>();
+//            loginMap.put("username", userPass[0]);
+//            loginMap.put("credentials", userPass[1]);
+//            loginMessage = new Message(Channel.login, loginMap, null, null);
+//            this.router.receiveMessage(this.rc, loginMessage);
+//        }
+//        return SecurityUtils.getSubject().isAuthenticated();
+//    }
+//
+//    private void logout(String[] userPass) {
+//        if (userPass != null) {
+//            logoutMessage = new Message(Channel.logout, loginMap, null, null);
+//            this.router.receiveMessage(this.rc, logoutMessage);
+//        }
+//    }
 
     private JSONObject getRequestBody(BufferedReader reader) throws IOException {
         StringBuilder buffer = new StringBuilder();

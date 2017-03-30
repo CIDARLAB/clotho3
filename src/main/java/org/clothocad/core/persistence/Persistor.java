@@ -146,15 +146,15 @@ public class Persistor {
     }
 
     public <T extends ObjBase> T get(Class<T> type, ObjectId id, boolean forRun) throws EntityNotFoundException {
-        try {
-            if (forRun) {
-                checkPriv(id, "run");
-            } else {
-                checkPriv(id, "view");
-            }
-        } catch (AuthorizationException e) {
-            throw new EntityNotFoundException("Did not find object: " + id.toString());
-        }
+//        try {
+//            if (forRun) {
+//                checkPriv(id, "run");
+//            } else {
+//                checkPriv(id, "view");
+//            }
+//        } catch (AuthorizationException e) {
+//            throw new EntityNotFoundException("Did not find object: " + id.toString());
+//        }
         T obj = connection.get(type, id);
         if (obj == null) {
             throw new EntityNotFoundException(id.toString());
@@ -202,12 +202,14 @@ public class Persistor {
 //        System.out.println();
 //        log.info("Persistor.save execution beginning...");
 //        long start = System.currentTimeMillis();
-        
-        Subject currentSubject = SecurityUtils.getSubject();
-        if (!currentSubject.isAuthenticated()
-                || currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
-            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
-        }
+
+
+// *auth*
+//        Subject currentSubject = SecurityUtils.getSubject();
+//        if (!currentSubject.isAuthenticated()
+//                || currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
+//            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+//        }
         validate(obj);
         
 //        long time = System.currentTimeMillis();
@@ -228,10 +230,12 @@ public class Persistor {
 //        start = time;
 
         // if can't change original object, abort
-        if (has(obj.getId())
-                && !currentSubject.isPermitted("data:edit:" + obj.getId().toString())) {
-            throw new AuthorizationException("Cannot edit " + obj.getId());
-        }
+
+// *auth*
+//        if (has(obj.getId())
+//                && !currentSubject.isPermitted("data:edit:" + obj.getId().toString())) {
+//            throw new AuthorizationException("Cannot edit " + obj.getId());
+//        }
 
         Set<ObjBase> filteredObjects = relevantObjects;
 //        Set<ObjBase> filteredObjects = new HashSet();
