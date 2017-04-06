@@ -159,20 +159,13 @@ public class RESTTester {
     @Test
     public void testSet() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
-<<<<<<< HEAD
-        String jsonString = "{'name':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
-=======
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
->>>>>>> d24bd7443a2e06fcae28c1dc5243f18cdc592221
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
         System.out.println("Testing Set");
-<<<<<<< HEAD
-        jsonString = "{'name':'jsmith', 'sequence' : 'atatatatatatat','id' : '" + seqId + "a'}";
-=======
+
         jsonString = "{'username':'jsmith','sequence' : 'atatatatatatat','id' : '" + seqId + "'}";
->>>>>>> d24bd7443a2e06fcae28c1dc5243f18cdc592221
         url = new URL(this.url + "/set");
 
         String output = HTTPReq(url, jsonString, "PUT");
