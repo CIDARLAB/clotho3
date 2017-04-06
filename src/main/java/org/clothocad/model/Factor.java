@@ -31,7 +31,7 @@ public class Factor extends ObjBase {
     @Getter
     @Setter
     @Reference
-    protected Variable variable;
+    protected String variable;
 
     @Getter
     @Setter
@@ -42,7 +42,7 @@ public class Factor extends ObjBase {
     @Setter
     protected String description;
 
-    protected Factor(String name, Variable variable) {
+    protected Factor(String name, String variable) {
         super(name);
         this.variable = variable;
     }

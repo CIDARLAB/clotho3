@@ -49,7 +49,7 @@ public class Sample extends SharableObjBase {
         this.container = container;
     }
     
-    public Parameter createParameter(double value, Variable variable) {
+    public Parameter createParameter(double value, String variable) {
         Parameter parameter = new Parameter(value, variable);
         addParameter(parameter);
         return parameter;

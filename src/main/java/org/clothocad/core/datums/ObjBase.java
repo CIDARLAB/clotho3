@@ -1,5 +1,6 @@
 package org.clothocad.core.datums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
@@ -41,6 +42,12 @@ public abstract class ObjBase {
         this.name = name;
     }
     
+    public ObjBase(String name, String displayID)
+    {
+        this.name = name;
+        this.displayID = displayID;
+    }
+    
     @JsonView(JSONViews.IdOnly.class)
     //@JsonProperty("_id")
     private ObjectId id;
@@ -51,6 +58,9 @@ public abstract class ObjBase {
     private Date dateCreated;
     @JsonView(JSONViews.Internal.class)
     private Date lastModified, lastAccessed;
+    @Setter
+    @JsonProperty("displayID")
+    private String displayID;
     
     @Getter
     @Setter

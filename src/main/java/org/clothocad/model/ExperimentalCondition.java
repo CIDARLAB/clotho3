@@ -21,7 +21,7 @@ public class ExperimentalCondition {
     @Getter
     protected Set<Parameter> parameters;
 
-    public Parameter createParameter(double value, Variable variable) {
+    public Parameter createParameter(double value, String variable) {
         Parameter parameter = new Parameter(value, variable);
         addParameter(parameter);
         return parameter;

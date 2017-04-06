@@ -33,7 +33,7 @@ public class Level extends ObjBase {
         super(name);
     }
 
-    public Parameter createParameter(double value, Variable variable) {
+    public Parameter createParameter(double value, String variable) {
         parameter = new Parameter(value, variable);
         return parameter;
     }

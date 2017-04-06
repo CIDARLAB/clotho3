@@ -50,7 +50,7 @@ public class Container extends SharableObjBase {
     	coordinates.add(coordinate);
     }
     
-    public Parameter createParameter(double value, Variable variable) {
+    public Parameter createParameter(double value, String variable) {
         Parameter parameter = new Parameter(value, variable);
         addParameter(parameter);
         return parameter;

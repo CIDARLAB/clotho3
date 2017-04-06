@@ -64,7 +64,7 @@ public class BioDesign extends SharableObjBase {
         super(name, author);
     }
 
-    public Parameter createParameter(double value, Variable variable) {
+    public Parameter createParameter(double value, String variable) {
         Parameter parameter = new Parameter(value, variable);
         addParameter(parameter);
         return parameter;

@@ -26,17 +26,17 @@ public class FactorialDesign extends ExperimentalDesign {
     @ReferenceCollection
     protected Set<Factor> factors = new HashSet<Factor>();
 
-    public FactorialDesign(String name, Set<Variable> responseVariables, Set<Variable> controlledVariables,
+    public FactorialDesign(String name, Set<String> responseVariables, Set<String> controlledVariables,
             Person author) {
         super(name, responseVariables, controlledVariables, author);
     }
 
-    public FactorialDesign(String name, String description, Set<Variable> responseVariables,
-            Set<Variable> controlledVariables, Person author) {
+    public FactorialDesign(String name, String description, Set<String> responseVariables,
+            Set<String> controlledVariables, Person author) {
         super(name, description, responseVariables, controlledVariables, author);
     }
 
-    public Factor createFactor(String name, Variable variable) {
+    public Factor createFactor(String name, String variable) {
         Factor factor = new Factor(name, variable);
         addFactor(factor);
         return factor;

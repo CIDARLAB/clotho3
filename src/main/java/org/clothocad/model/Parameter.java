@@ -19,25 +19,31 @@ public class Parameter {
     @Getter
     @Setter
     protected double value;
+    
+    @NotNull
+    @Getter
+    @Setter
+    protected String name;
 
     @NotNull
     @Getter
     @Setter
     @Reference
-    protected Variable variable;
+    protected String variable;
 
-    @NotNull
+//    @NotNull
     @Getter
     @Setter
     @Reference
-    protected Units units;
+    protected String units;
 
     @Getter
     @Setter
     @Reference
     protected Derivation derivation;
 
-    protected Parameter(double value, Variable variable) {
+    protected Parameter(String name, double value, String variable) {
+        this.name = name;
         this.value = value;
         this.variable = variable;
     }
