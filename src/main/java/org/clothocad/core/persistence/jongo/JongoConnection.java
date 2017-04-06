@@ -19,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcernException;
 import com.mongodb.DuplicateKeyException;
+import com.sun.corba.se.spi.oa.ObjectAdapterBase;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -229,6 +230,51 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     public List<ObjBase> get(Map query, int hitmax) {
         bindClassLoader();
         return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).limit(hitmax).as(ObjBase.class));
+    }
+    
+    public static class Pagination {
+        public List<ObjBase> list;
+        public int page;
+        public int per_page;
+        public int page_count;
+        public int total_count;
+    }
+    
+    @Override
+    public Pagination getByPage(String query, String sortOrder, int pageSize) {
+        bindClassLoader();
+        Pagination ret = new Pagination();
+        
+        //are we going to the previous page?
+        boolean reverse = false;
+        
+        //when going to the next page this equals remaining items to be paged (including those about to be paged)
+        //when going to the previous page this equals items that have already been paged
+        long remainingItems = data.count(query);
+        
+        //if going to previous page
+        if (query.contains("_id:{ $lte")) 
+        {
+            //we are going backwards, from the last id in last request, meaning we have to skip the page that was just shown
+            //sort is always processed before skip, and skip is always processed before limit
+            ret.list =  Lists.newArrayList((Iterable)data.resolvingFind(query).sort(sortOrder).skip(pageSize).limit(pageSize).as(ObjBase.class));
+            ret.page = (int)((remainingItems / pageSize) - 1);
+            reverse = true;
+        }
+        //if going to the next page
+        else ret.list =  Lists.newArrayList((Iterable)data.resolvingFind(query).sort(sortOrder).limit(pageSize).as(ObjBase.class));
+        
+        //replace the part of the query that limits by id so that we can get an absolute count
+        query = query.replaceAll(",_id.+?}", "");
+        ret.total_count = (int)data.count(query);
+        ret.per_page = pageSize;
+        ret.page_count = ret.total_count / pageSize;
+        if(ret.total_count % pageSize != 0) ret.page_count++;
+        
+        //if going to the next page, the calculation for determining the current page is slightly different than going to previous page
+        if(!reverse) ret.page = (int)((ret.total_count - remainingItems) / pageSize) + 1;
+                
+        return ret;
     }
 
     //Format query for regex search

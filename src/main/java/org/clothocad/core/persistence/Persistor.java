@@ -53,6 +53,7 @@ import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
+import org.clothocad.core.persistence.jongo.JongoConnection;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
@@ -515,6 +516,13 @@ public class Persistor {
 //            }
         }
         return filteredResult;
+    }
+    
+    public JongoConnection.Pagination findByPage(String query, String sortOrder, int pageSize) {
+
+        JongoConnection.Pagination result = connection.getByPage(query, sortOrder, pageSize);
+
+        return result;
     }
 
     public Iterable<ObjBase> findRegex(Map<String, Object> query){

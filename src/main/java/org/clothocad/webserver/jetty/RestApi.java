@@ -1,5 +1,6 @@
 package org.clothocad.webserver.jetty;
 
+import com.google.common.collect.Lists;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
@@ -27,6 +28,7 @@ import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.jongo.JongoConnection;
 import static org.clothocad.webserver.jetty.ConvenienceMethods.*;
 import org.json.JSONArray;
 
@@ -73,21 +75,68 @@ public class RestApi extends HttpServlet {
         String result = "";
         switch (method) {
             case "getByName":
-                Map<String, Object> query = new HashMap<>();
-                query.put("name", toGet);
+                String lastId = pathID[4];
+                String nextPrev = pathID[5];
+                String pageSize = pathID[6];
+                
+                if (pageSize != null && !pageSize.isEmpty())
+                {
+                
+                    String query = "{name:\""+toGet+"\"}";
+                    String sortOrder = "";
 
-                Iterable<ObjBase> queried = persistor.find(query);
-                ObjBase last = null;
-                for (ObjBase each : queried) {
-                    last = each;
-                }
+                    //if going to the next page
+                    if(nextPrev.equals("next") && (lastId != null && !lastId.isEmpty()))
+                    {
+                        query = "{name:\""+toGet+"\",_id:{ $gt : \"" + lastId + "\"}}";
+                        sortOrder = "{_id:1}";
+                    }
+                    
+                    //if going to the previous page
+                    if(nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) 
+                    {
+                        query = "{name:\""+toGet+"\",_id:{ $lte : \"" + lastId + "\"}}";
+                        sortOrder = "{_id:-1}";
+                    }
+                    int per_page = Integer.parseInt(pageSize);
+                    JongoConnection.Pagination queried = persistor.findByPage(query,sortOrder,per_page);
 
-                if (last == null) {
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                } else {
-                    response.setStatus(HttpServletResponse.SC_FOUND);
-                    result = last.toString();
+                    JSONObject jsono = new JSONObject();
+                    jsono.put("page", queried.page);
+                    jsono.put("per_page", queried.per_page);
+                    jsono.put("page_count", queried.page_count);
+                    jsono.put("total_count", queried.total_count);
+
+                    JSONArray arr = new JSONArray();
+                    JSONObject next = new JSONObject();
+                    
+                    //if we are going to the previous page, the results will be in the wrong direction because of the way the query and sort order go
+                    if(nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty()))
+                    {
+                        queried.list = Lists.reverse(queried.list);
+                    }
+                    //the last id in the records of the current page, used to navigate to next and previous pages
+                    String newLastId = String.valueOf(queried.list.get(per_page-1).getId());
+                    
+                    next.put("next", "/" + newLastId + "/next/" + String.valueOf(pageSize));
+                    if (queried.page != queried.page_count) arr.put(next);
+                    JSONObject prev = new JSONObject();
+                    prev.put("prev", "/" + newLastId + "/prev/" + String.valueOf(pageSize));
+                    if (queried.page != 1) arr.put(prev);
+
+                    jsono.put("links", arr);
+                    
+                    jsono.put("records", new JSONArray (queried.list));
+
+
+                    if (queried.list.isEmpty()) {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_FOUND);
+                        result = jsono.toString();
+                    }
                 }
+                else response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
                 break;
 
