@@ -5,6 +5,7 @@
  */
 package org.clothocad.core.util;
 
+import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Person;
 import org.clothocad.model.Sequence;
@@ -22,7 +23,7 @@ public class PersistorTester extends AuthorizedShiroTest {
         this.persistor = injector.getInstance(Persistor.class);
     }
 
-    @Test
+//    @Test
     public void timeToBulkCreate()
     {
         System.out.println("Testing Bulk Create");
@@ -40,5 +41,15 @@ public class PersistorTester extends AuthorizedShiroTest {
         }
         long end = System.currentTimeMillis();
         System.out.println("Bulk Create in Persistor took " + (end - start) + " MilliSeconds");      
+    }
+    
+    @Test
+    public void authentication() {
+        Person tester = new Person("tester");
+        Sequence testSequence = new Sequence("Test Sequence", "atatatat", tester);
+        ObjectId objId = persistor.save(testSequence);
+        
+        Object obj = persistor.get(objId);
+        System.out.println(obj.toString());
     }
 }

@@ -1,5 +1,6 @@
 package org.clothocad.webserver.jetty;
 
+import com.google.common.collect.Lists;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
@@ -27,6 +28,7 @@ import org.clothocad.model.*;
 import org.json.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.jongo.JongoConnection;
 import static org.clothocad.webserver.jetty.ConvenienceMethods.*;
 import org.json.JSONArray;
 
@@ -59,34 +61,82 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String toGet = pathID[3];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
+//
+//        String[] auth = {username, password};
 
-        String[] auth = {username, password};
-
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         String result = "";
         switch (method) {
             case "getByName":
-                Map<String, Object> query = new HashMap<>();
-                query.put("name", toGet);
+                String lastId = pathID[4];
+                String nextPrev = pathID[5];
+                String pageSize = pathID[6];
+                
+                if (pageSize != null && !pageSize.isEmpty())
+                {
+                
+                    String query = "{name:\""+toGet+"\"}";
+                    String sortOrder = "";
 
-                Iterable<ObjBase> queried = persistor.find(query);
-                ObjBase last = null;
-                for (ObjBase each : queried) {
-                    last = each;
-                }
+                    //if going to the next page
+                    if(nextPrev.equals("next") && (lastId != null && !lastId.isEmpty()))
+                    {
+                        query = "{name:\""+toGet+"\",_id:{ $gt : \"" + lastId + "\"}}";
+                        sortOrder = "{_id:1}";
+                    }
+                    
+                    //if going to the previous page
+                    if(nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) 
+                    {
+                        query = "{name:\""+toGet+"\",_id:{ $lte : \"" + lastId + "\"}}";
+                        sortOrder = "{_id:-1}";
+                    }
+                    int per_page = Integer.parseInt(pageSize);
+                    JongoConnection.Pagination queried = persistor.findByPage(query,sortOrder,per_page);
 
-                if (last == null) {
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                } else {
-                    result = last.toString();
+                    JSONObject jsono = new JSONObject();
+                    jsono.put("page", queried.page);
+                    jsono.put("per_page", queried.per_page);
+                    jsono.put("page_count", queried.page_count);
+                    jsono.put("total_count", queried.total_count);
+
+                    JSONArray arr = new JSONArray();
+                    JSONObject next = new JSONObject();
+                    
+                    //if we are going to the previous page, the results will be in the wrong direction because of the way the query and sort order go
+                    if(nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty()))
+                    {
+                        queried.list = Lists.reverse(queried.list);
+                    }
+                    //the last id in the records of the current page, used to navigate to next and previous pages
+                    String newLastId = String.valueOf(queried.list.get(per_page-1).getId());
+                    
+                    next.put("next", "/" + newLastId + "/next/" + String.valueOf(pageSize));
+                    if (queried.page != queried.page_count) arr.put(next);
+                    JSONObject prev = new JSONObject();
+                    prev.put("prev", "/" + newLastId + "/prev/" + String.valueOf(pageSize));
+                    if (queried.page != 1) arr.put(prev);
+
+                    jsono.put("links", arr);
+                    
+                    jsono.put("records", new JSONArray (queried.list));
+
+
+                    if (queried.list.isEmpty()) {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_FOUND);
+                        result = jsono.toString();
+                    }
                 }
+                else response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
                 break;
 
@@ -105,7 +155,7 @@ public class RestApi extends HttpServlet {
 
         response.getWriter().write(result);
 
-        logout(auth);
+//        logout(auth);
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -115,18 +165,18 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String[] auth = {username, password};
+//        String[] auth = {username, password};
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         switch (method) {
             case "delete":
@@ -141,7 +191,7 @@ public class RestApi extends HttpServlet {
                 break;
         }
 
-        logout(auth);
+//        logout(auth);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -151,37 +201,38 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String type = pathID[3];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
 
-        JSONObject body = getRequestBody(request.getReader());
+        JSONObject body = getRequestBody(request.getReader());;
 
-        String[] auth = {username, password};
+//        String[] auth = {username, password};
 
         if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
-            credentials.put("username", auth[0]);
-            credentials.put("credentials", auth[1]);
-            credentials.put("displayname", auth[0]);
+            credentials.put("username", body.get("username").toString());
+            credentials.put("credentials", body.get("password").toString());
+            credentials.put("displayname", body.get("username").toString());
 
             m = new Message(Channel.createUser, credentials, null, null);
             this.router.receiveMessage(this.rc, m);
 
-            if (!login(auth)) {
-                response.getWriter().write("Login Failed\r\n");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                return;
-            }
-            logout(auth);
+//            if (!login(auth)) {
+//                response.getWriter().write("Login Failed\r\n");
+//                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//                return;
+//            }
+//            logout(auth);
         }
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
-        Person user = new Person(auth[0]);
+        String name = body.get("username").toString();
+        Person user = new Person(name);
         Sequence sequence = null;
         Part part = null;
         Feature feature = null;
@@ -253,7 +304,7 @@ public class RestApi extends HttpServlet {
                         partParams.put("role", role);
                         partParams.put("sequence", rawSequence);
 
-                        ObjectId partId = createPart(persistor, objectName, partParams, username);
+                        ObjectId partId = createPart(persistor, objectName, partParams, name);
                         result = partId.toString();
                         break;
 
@@ -272,7 +323,7 @@ public class RestApi extends HttpServlet {
                         deviceParams.put("role", role);
                         deviceParams.put("sequence", rawSequence);
 
-                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, username);
+                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, name);
                         result = deviceID.toString();
                         break;
                 }
@@ -287,7 +338,7 @@ public class RestApi extends HttpServlet {
 
         response.getWriter().write(result);
 
-        logout(auth);
+//        logout(auth);
     }
 
     protected void doPut(HttpServletRequest request,
@@ -297,18 +348,18 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-        String username = pathID[4].split(":")[0];
-        String password = pathID[4].split(":")[1];
+//        String username = pathID[4].split(":")[0];
+//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-        String[] auth = {username, password};
+//        String[] auth = {username, password};
 
-        if (!login(auth)) {
-            response.getWriter().write("Login Failed\r\n");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+//        if (!login(auth)) {
+//            response.getWriter().write("Login Failed\r\n");
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return;
+//        }
 
         switch (method) {
             case "set":
@@ -343,26 +394,26 @@ public class RestApi extends HttpServlet {
                 break;
         }
 
-        logout(auth);
+//        logout(auth);
     }
 
-    private boolean login(String[] userPass) {
-        if (userPass != null) {
-            loginMap = new HashMap<String, String>();
-            loginMap.put("username", userPass[0]);
-            loginMap.put("credentials", userPass[1]);
-            loginMessage = new Message(Channel.login, loginMap, null, null);
-            this.router.receiveMessage(this.rc, loginMessage);
-        }
-        return SecurityUtils.getSubject().isAuthenticated();
-    }
-
-    private void logout(String[] userPass) {
-        if (userPass != null) {
-            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-            this.router.receiveMessage(this.rc, logoutMessage);
-        }
-    }
+//    private boolean login(String[] userPass) {
+//        if (userPass != null) {
+//            loginMap = new HashMap<String, String>();
+//            loginMap.put("username", userPass[0]);
+//            loginMap.put("credentials", userPass[1]);
+//            loginMessage = new Message(Channel.login, loginMap, null, null);
+//            this.router.receiveMessage(this.rc, loginMessage);
+//        }
+//        return SecurityUtils.getSubject().isAuthenticated();
+//    }
+//
+//    private void logout(String[] userPass) {
+//        if (userPass != null) {
+//            logoutMessage = new Message(Channel.logout, loginMap, null, null);
+//            this.router.receiveMessage(this.rc, logoutMessage);
+//        }
+//    }
 
     private JSONObject getRequestBody(BufferedReader reader) throws IOException {
         StringBuilder buffer = new StringBuilder();

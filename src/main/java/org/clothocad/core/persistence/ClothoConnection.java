@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.jongo.JongoConnection.Pagination;
 
 
 /**
@@ -134,6 +135,8 @@ public interface ClothoConnection {
      */
     List<ObjBase> get(Map query);
     List<ObjBase> get(Map query, int hitmax);
+    
+    Pagination getByPage(String query, String sortOrder, int pageSize);
     
     //formats for regex
     List<ObjBase> getRegex(Map query);
