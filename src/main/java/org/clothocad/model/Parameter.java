@@ -42,7 +42,7 @@ public class Parameter {
     @Reference
     protected Derivation derivation;
 
-    protected Parameter(String name, double value, String variable) {
+    public Parameter(String name, double value, String variable) {
         this.name = name;
         this.value = value;
         this.variable = variable;

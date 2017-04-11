@@ -71,35 +71,31 @@ public class RestApi extends HttpServlet {
 //            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 //            return;
 //        }
-
         String result = "";
         switch (method) {
             case "getByName":
                 String lastId = pathID[4];
                 String nextPrev = pathID[5];
                 String pageSize = pathID[6];
-                
-                if (pageSize != null && !pageSize.isEmpty())
-                {
-                
-                    String query = "{name:\""+toGet+"\"}";
+
+                if (pageSize != null && !pageSize.isEmpty()) {
+
+                    String query = "{name:\"" + toGet + "\"}";
                     String sortOrder = "";
 
                     //if going to the next page
-                    if(nextPrev.equals("next") && (lastId != null && !lastId.isEmpty()))
-                    {
-                        query = "{name:\""+toGet+"\",_id:{ $gt : \"" + lastId + "\"}}";
+                    if (nextPrev.equals("next") && (lastId != null && !lastId.isEmpty())) {
+                        query = "{name:\"" + toGet + "\",_id:{ $gt : \"" + lastId + "\"}}";
                         sortOrder = "{_id:1}";
                     }
-                    
+
                     //if going to the previous page
-                    if(nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) 
-                    {
-                        query = "{name:\""+toGet+"\",_id:{ $lte : \"" + lastId + "\"}}";
+                    if (nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) {
+                        query = "{name:\"" + toGet + "\",_id:{ $lte : \"" + lastId + "\"}}";
                         sortOrder = "{_id:-1}";
                     }
                     int per_page = Integer.parseInt(pageSize);
-                    JongoConnection.Pagination queried = persistor.findByPage(query,sortOrder,per_page);
+                    JongoConnection.Pagination queried = persistor.findByPage(query, sortOrder, per_page);
 
                     JSONObject jsono = new JSONObject();
                     jsono.put("page", queried.page);
@@ -109,25 +105,27 @@ public class RestApi extends HttpServlet {
 
                     JSONArray arr = new JSONArray();
                     JSONObject next = new JSONObject();
-                    
+
                     //if we are going to the previous page, the results will be in the wrong direction because of the way the query and sort order go
-                    if(nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty()))
-                    {
+                    if (nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) {
                         queried.list = Lists.reverse(queried.list);
                     }
                     //the last id in the records of the current page, used to navigate to next and previous pages
-                    String newLastId = String.valueOf(queried.list.get(per_page-1).getId());
-                    
+                    String newLastId = String.valueOf(queried.list.get(per_page - 1).getId());
+
                     next.put("next", "/" + newLastId + "/next/" + String.valueOf(pageSize));
-                    if (queried.page != queried.page_count) arr.put(next);
+                    if (queried.page != queried.page_count) {
+                        arr.put(next);
+                    }
                     JSONObject prev = new JSONObject();
                     prev.put("prev", "/" + newLastId + "/prev/" + String.valueOf(pageSize));
-                    if (queried.page != 1) arr.put(prev);
+                    if (queried.page != 1) {
+                        arr.put(prev);
+                    }
 
                     jsono.put("links", arr);
-                    
-                    jsono.put("records", new JSONArray (queried.list));
 
+                    jsono.put("records", new JSONArray(queried.list));
 
                     if (queried.list.isEmpty()) {
                         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -135,8 +133,9 @@ public class RestApi extends HttpServlet {
                         response.setStatus(HttpServletResponse.SC_FOUND);
                         result = jsono.toString();
                     }
+                } else {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
-                else response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
                 break;
 
@@ -171,13 +170,11 @@ public class RestApi extends HttpServlet {
         JSONObject body = getRequestBody(request.getReader());
 
 //        String[] auth = {username, password};
-
 //        if (!login(auth)) {
 //            response.getWriter().write("Login Failed\r\n");
 //            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 //            return;
 //        }
-
         switch (method) {
             case "delete":
                 if (persistor.has(new ObjectId(body.getString("id")))) {
@@ -207,7 +204,6 @@ public class RestApi extends HttpServlet {
         JSONObject body = getRequestBody(request.getReader());;
 
 //        String[] auth = {username, password};
-
         if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
             credentials.put("username", body.get("username").toString());
@@ -230,7 +226,6 @@ public class RestApi extends HttpServlet {
 //            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 //            return;
 //        }
-
         String name = body.get("username").toString();
         Person user = new Person(name);
         Sequence sequence = null;
@@ -240,7 +235,6 @@ public class RestApi extends HttpServlet {
         String objectName = "";
         String role = "";
         String rawSequence = "";
-
         String result = "";
 
         switch (method) {
@@ -300,11 +294,26 @@ public class RestApi extends HttpServlet {
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
 
-                        Map<String, String> partParams = new HashMap<>();
-                        partParams.put("role", role);
-                        partParams.put("sequence", rawSequence);
+                        JSONArray jsonArray = body.getJSONArray("params");
+                        List params = new ArrayList();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject childObject = jsonArray.getJSONObject(i);
+                            String paramName = childObject.getString("name");
+                            Double paramValue = childObject.getDouble("value");
+                            String paramVariable = childObject.getString("variable");
+                            Parameter p = new Parameter(paramName, paramValue, paramVariable);
+                            params.add(p);
+                        }
+                        
+                        //{"params": [{"name": "n", "value":"v", "variable":"var"]}
+                        double value;
 
-                        ObjectId partId = createPart(persistor, objectName, partParams, name);
+                        Map<String, String> sequenceRole = new HashMap<>();
+                        sequenceRole.put("role", role);
+                        sequenceRole.put("sequence", rawSequence);
+                        role = body.getString("role");
+
+                        ObjectId partId = createPart(persistor, objectName, sequenceRole, params, name);
                         result = partId.toString();
                         break;
 
@@ -318,13 +327,13 @@ public class RestApi extends HttpServlet {
                         for (String partID : partIDs) {
                             partIDArray.add(partID);
                         }
-                        
+
                         Map<String, String> deviceParams = new HashMap<>();
                         deviceParams.put("role", role);
                         deviceParams.put("sequence", rawSequence);
 
-                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, name);
-                        result = deviceID.toString();
+//                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, name);
+//                        result = deviceID.toString();
                         break;
                 }
                 break;
@@ -336,7 +345,8 @@ public class RestApi extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CREATED);
         }
 
-        response.getWriter().write(result);
+        response.getWriter()
+                .write(result);
 
 //        logout(auth);
     }
@@ -354,13 +364,11 @@ public class RestApi extends HttpServlet {
         JSONObject body = getRequestBody(request.getReader());
 
 //        String[] auth = {username, password};
-
 //        if (!login(auth)) {
 //            response.getWriter().write("Login Failed\r\n");
 //            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 //            return;
 //        }
-
         switch (method) {
             case "set":
                 body.remove("username");
@@ -414,7 +422,6 @@ public class RestApi extends HttpServlet {
 //            this.router.receiveMessage(this.rc, logoutMessage);
 //        }
 //    }
-
     private JSONObject getRequestBody(BufferedReader reader) throws IOException {
         StringBuilder buffer = new StringBuilder();
         String line;

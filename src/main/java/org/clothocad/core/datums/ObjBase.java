@@ -59,7 +59,7 @@ public abstract class ObjBase {
     @JsonView(JSONViews.Internal.class)
     private Date lastModified, lastAccessed;
     @Setter
-    @JsonProperty("displayID")
+//    @JsonProperty("displayID")
     private String displayID;
     
     @Getter
