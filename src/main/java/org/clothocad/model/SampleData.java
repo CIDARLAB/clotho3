@@ -47,8 +47,8 @@ public abstract class SampleData extends SharableObjBase {
         this.instrument = instrument;
     }
 
-    public Parameter createParameter(String name, double value, String variable) {
-        Parameter parameter = new Parameter(name, value, variable);
+    public Parameter createParameter(String name, double value, String variable, String units) {
+        Parameter parameter = new Parameter(name, value, variable, units);
         addParameter(parameter);
         return parameter;
     }

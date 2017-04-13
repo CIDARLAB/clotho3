@@ -1144,6 +1144,9 @@ public class ConvenienceMethods {
             if (featPart.getSequence() == null) {
                 continue;
             }
+            else if(featPart.getSequence().getAnnotations() == null){
+                continue;
+            }
 
             System.out.println("AnnotateMe found : " + em.getKeyword());
 

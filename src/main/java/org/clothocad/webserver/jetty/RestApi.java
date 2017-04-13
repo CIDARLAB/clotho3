@@ -301,7 +301,8 @@ public class RestApi extends HttpServlet {
                             String paramName = childObject.getString("name");
                             Double paramValue = childObject.getDouble("value");
                             String paramVariable = childObject.getString("variable");
-                            Parameter p = new Parameter(paramName, paramValue, paramVariable);
+                            String paramUnits = childObject.getString("units");
+                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
                         

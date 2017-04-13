@@ -28,10 +28,9 @@ public class Parameter {
     @NotNull
     @Getter
     @Setter
-    @Reference
     protected String variable;
 
-//    @NotNull
+    @NotNull
     @Getter
     @Setter
     @Reference
@@ -42,10 +41,11 @@ public class Parameter {
     @Reference
     protected Derivation derivation;
 
-    public Parameter(String name, double value, String variable) {
+    public Parameter(String name, double value, String variable, String units) {
         this.name = name;
         this.value = value;
         this.variable = variable;
+        this.units = units;
     }
 
 }
