@@ -85,7 +85,7 @@ public class RESTTester {
 
     }
 
-//    @Test
+    @Test
     public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create User");
         String jsonString = "{'username':'jsmith1','password':'asdf'}";
@@ -96,7 +96,7 @@ public class RESTTester {
         System.out.println(output);
     }
     
-//    @Test
+    @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Sequence");
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
@@ -107,7 +107,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testCreatePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
@@ -123,7 +123,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
@@ -138,7 +138,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get By Id");
 
@@ -154,7 +154,7 @@ public class RESTTester {
 
     }
 
-//    @Test
+    @Test
     public void testSet() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
@@ -171,7 +171,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Delete Sequence");
 
@@ -188,7 +188,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testConveniencePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
