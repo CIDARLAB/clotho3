@@ -68,8 +68,6 @@ public class RESTTester {
         int responseCode = conn.getResponseCode();
 
         if (responseCode != 400 && responseCode != 404 && responseCode != 500) {
-//            System.out.println("SUCCESS!");
-
             //print result
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
@@ -125,7 +123,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
@@ -190,7 +188,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testConveniencePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
@@ -202,16 +200,16 @@ public class RESTTester {
         System.out.println(output);
     }
     
-//    @Test
+    @Test
     public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
-        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
+        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
         URL url = new URL(this.url + "/create/conveniencePart/");
 
         String partIDs = HTTPReq(url, jsonString, "POST");
         
-        jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','sequence':'actacttcgcatcatgttcatca', 'role':'GENE', 'partIDs':'" + partIDs +"'}";
+        jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'ifParts':'true', 'partIDs'" + partIDs +"'}";
         url = new URL(this.url + "/create/convenienceDevice/");
 
         String output = HTTPReq(url, jsonString, "POST");

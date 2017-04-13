@@ -236,6 +236,10 @@ public class RestApi extends HttpServlet {
         String role = "";
         String rawSequence = "";
         String result = "";
+        JSONArray jsonArray = null;
+        List params = null;
+        Map<String, String> sequenceRole = null;
+
 
         switch (method) {
             case "create":
@@ -294,8 +298,34 @@ public class RestApi extends HttpServlet {
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
 
-                        JSONArray jsonArray = body.getJSONArray("params");
-                        List params = new ArrayList();
+                        jsonArray = body.getJSONArray("params");
+                        params = new ArrayList();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject childObject = jsonArray.getJSONObject(i);
+                            String paramName = childObject.getString("name");
+                            Double paramValue = childObject.getDouble("value");
+                            String paramVariable = childObject.getString("variable");
+                            String paramUnits = childObject.getString("units");
+                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                            params.add(p);
+                        }
+
+                        sequenceRole = new HashMap<>();
+                        sequenceRole.put("role", role);
+                        sequenceRole.put("sequence", rawSequence);
+
+                        ObjectId partId = createPart(persistor, objectName, sequenceRole, params, name);
+                        result = partId.toString();
+                        break;
+
+                    case "convenienceDevice":
+                        role = body.getString("role");
+                        rawSequence = body.getString("sequence");
+                        objectName = body.getString("objectName");
+                        boolean ifParts = body.getBoolean("ifParts");
+                        
+                        jsonArray = body.getJSONArray("params");
+                        params = new ArrayList();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject childObject = jsonArray.getJSONObject(i);
                             String paramName = childObject.getString("name");
@@ -306,35 +336,18 @@ public class RestApi extends HttpServlet {
                             params.add(p);
                         }
                         
-                        //{"params": [{"name": "n", "value":"v", "variable":"var"]}
-                        double value;
-
-                        Map<String, String> sequenceRole = new HashMap<>();
-                        sequenceRole.put("role", role);
-                        sequenceRole.put("sequence", rawSequence);
-                        role = body.getString("role");
-
-                        ObjectId partId = createPart(persistor, objectName, sequenceRole, params, name);
-                        result = partId.toString();
-                        break;
-
-                    case "convenienceDevice":
-                        role = body.getString("role");
-                        rawSequence = body.getString("sequence");
-                        objectName = body.getString("objectName");
                         partIDs = body.getString("partIDs").split(",");
                         ArrayList<String> partIDArray = new ArrayList<>();
-
                         for (String partID : partIDs) {
                             partIDArray.add(partID);
                         }
+                        
+                        sequenceRole = new HashMap<>();
+                        sequenceRole.put("role", role);
+                        sequenceRole.put("sequence", rawSequence);
 
-                        Map<String, String> deviceParams = new HashMap<>();
-                        deviceParams.put("role", role);
-                        deviceParams.put("sequence", rawSequence);
-
-//                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, name);
-//                        result = deviceID.toString();
+                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, sequenceRole, params, name, ifParts);
+                        result = deviceID.toString();
                         break;
                 }
                 break;
