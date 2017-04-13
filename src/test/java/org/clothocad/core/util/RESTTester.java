@@ -194,7 +194,7 @@ public class RESTTester {
     public void testConveniencePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
-        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var'}]}";
+        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
         URL url = new URL(this.url + "/create/conveniencePart/");
 
         String output = HTTPReq(url, jsonString, "POST");

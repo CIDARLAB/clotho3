@@ -33,7 +33,6 @@ public class Parameter {
     @NotNull
     @Getter
     @Setter
-    @Reference
     protected String units;
 
     @Getter
