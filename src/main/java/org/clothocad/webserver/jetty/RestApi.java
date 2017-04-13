@@ -236,7 +236,7 @@ public class RestApi extends HttpServlet {
         String role = "";
         String rawSequence = "";
         String result = "";
-        JSONArray jsonArray = null;
+        JSONArray paramsArray = null;
         List params = null;
         Map<String, String> sequenceRole = null;
 
@@ -298,10 +298,10 @@ public class RestApi extends HttpServlet {
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
 
-                        jsonArray = body.getJSONArray("params");
+                        paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject childObject = jsonArray.getJSONObject(i);
+                        for (int i = 0; i < paramsArray.length(); i++) {
+                            JSONObject childObject = paramsArray.getJSONObject(i);
                             String paramName = childObject.getString("name");
                             Double paramValue = childObject.getDouble("value");
                             String paramVariable = childObject.getString("variable");
@@ -322,12 +322,12 @@ public class RestApi extends HttpServlet {
                         role = body.getString("role");
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
-                        boolean ifParts = body.getBoolean("ifParts");
+                        boolean createSeqFromParts = body.getBoolean("createSeqFromParts");
                         
-                        jsonArray = body.getJSONArray("params");
+                        paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject childObject = jsonArray.getJSONObject(i);
+                        for (int i = 0; i < paramsArray.length(); i++) {
+                            JSONObject childObject = paramsArray.getJSONObject(i);
                             String paramName = childObject.getString("name");
                             Double paramValue = childObject.getDouble("value");
                             String paramVariable = childObject.getString("variable");
@@ -335,6 +335,7 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
+                        
                         
                         partIDs = body.getString("partIDs").split(",");
                         ArrayList<String> partIDArray = new ArrayList<>();
@@ -346,7 +347,7 @@ public class RestApi extends HttpServlet {
                         sequenceRole.put("role", role);
                         sequenceRole.put("sequence", rawSequence);
 
-                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, sequenceRole, params, name, ifParts);
+                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, sequenceRole, params, name, createSeqFromParts);
                         result = deviceID.toString();
                         break;
                 }

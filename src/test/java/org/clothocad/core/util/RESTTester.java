@@ -204,13 +204,19 @@ public class RESTTester {
     public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
-        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
-        URL url = new URL(this.url + "/create/conveniencePart/");
+        String jsonString1 = "{'username':'jsmith','objectName':'Test Convenience Device Part1','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        URL url1 = new URL(this.url + "/create/conveniencePart/");
 
-        String partIDs = HTTPReq(url, jsonString, "POST");
+        String jsonString2 = "{'username':'jsmith','objectName':'Test Convenience Device Part1','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        URL url2 = new URL(this.url + "/create/conveniencePart/");
         
-        jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'ifParts':'true', 'partIDs'" + partIDs +"'}";
-        url = new URL(this.url + "/create/convenienceDevice/");
+        String partID1 = HTTPReq(url1, jsonString1, "POST");
+        String partID2 = HTTPReq(url2, jsonString2, "POST");
+        
+        String partIDs = partID1 + "," + partID2;
+        
+        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'createSeqFromParts':'True', 'partIDs':'" + partIDs +"'}";
+        URL url = new URL(this.url + "/create/convenienceDevice/");
 
         String output = HTTPReq(url, jsonString, "POST");
 
