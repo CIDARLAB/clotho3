@@ -10,7 +10,6 @@ import org.clothocad.core.persistence.Persistor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,10 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.clothocad.core.datums.ObjBase;
 import org.clothocad.model.*;
 import org.json.JSONObject;
-import org.apache.shiro.SecurityUtils;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jongo.JongoConnection;
 import static org.clothocad.webserver.jetty.ConvenienceMethods.*;
@@ -40,10 +37,10 @@ public class RestApi extends HttpServlet {
     
     REST API servlet is at idontremember.url/data/*    
      */
+    
     private static Router router;
     private static Persistor persistor;
-    private static Message m, loginMessage, logoutMessage;
-    private static Map<String, String> loginMap;
+    private static Message m;
     private static RestConnection rc = new RestConnection("RestConnection");
 
     @Inject
@@ -61,16 +58,7 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String toGet = pathID[3];
-//        String username = pathID[4].split(":")[0];
-//        String password = pathID[4].split(":")[1];
-//
-//        String[] auth = {username, password};
 
-//        if (!login(auth)) {
-//            response.getWriter().write("Login Failed\r\n");
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            return;
-//        }
         String result = "";
         switch (method) {
             case "getByName":
@@ -111,7 +99,7 @@ public class RestApi extends HttpServlet {
                         queried.list = Lists.reverse(queried.list);
                     }
                     //the last id in the records of the current page, used to navigate to next and previous pages
-                    String newLastId = String.valueOf(queried.list.get(per_page - 1).getId());
+                    String newLastId = String.valueOf(queried.list.get(queried.list.size() - 1).getId());
 
                     next.put("next", "/" + newLastId + "/next/" + String.valueOf(pageSize));
                     if (queried.page != queried.page_count) {
@@ -134,6 +122,7 @@ public class RestApi extends HttpServlet {
                         result = jsono.toString();
                     }
                 } else {
+                    System.out.println("Error: " + pageSize);
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
 
@@ -153,8 +142,6 @@ public class RestApi extends HttpServlet {
         }
 
         response.getWriter().write(result);
-
-//        logout(auth);
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -164,17 +151,9 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-//        String username = pathID[4].split(":")[0];
-//        String password = pathID[4].split(":")[1];
-
+        
         JSONObject body = getRequestBody(request.getReader());
 
-//        String[] auth = {username, password};
-//        if (!login(auth)) {
-//            response.getWriter().write("Login Failed\r\n");
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            return;
-//        }
         switch (method) {
             case "delete":
                 if (persistor.has(new ObjectId(body.getString("id")))) {
@@ -187,8 +166,6 @@ public class RestApi extends HttpServlet {
                 }
                 break;
         }
-
-//        logout(auth);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -198,12 +175,9 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
         String type = pathID[3];
-//        String username = pathID[4].split(":")[0];
-//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());;
 
-//        String[] auth = {username, password};
         if (method.equals("create") && type.equals("user")) {
             Map<String, String> credentials = new HashMap<>();
             credentials.put("username", body.get("username").toString());
@@ -212,20 +186,8 @@ public class RestApi extends HttpServlet {
 
             m = new Message(Channel.createUser, credentials, null, null);
             this.router.receiveMessage(this.rc, m);
-
-//            if (!login(auth)) {
-//                response.getWriter().write("Login Failed\r\n");
-//                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//                return;
-//            }
-//            logout(auth);
         }
 
-//        if (!login(auth)) {
-//            response.getWriter().write("Login Failed\r\n");
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            return;
-//        }
         String name = body.get("username").toString();
         Person user = new Person(name);
         Sequence sequence = null;
@@ -236,6 +198,10 @@ public class RestApi extends HttpServlet {
         String role = "";
         String rawSequence = "";
         String result = "";
+        JSONArray paramsArray = null;
+        List params = null;
+        Map<String, String> sequenceRole = null;
+
 
         switch (method) {
             case "create":
@@ -294,10 +260,10 @@ public class RestApi extends HttpServlet {
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
 
-                        JSONArray jsonArray = body.getJSONArray("params");
-                        List params = new ArrayList();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject childObject = jsonArray.getJSONObject(i);
+                        paramsArray = body.getJSONArray("params");
+                        params = new ArrayList();
+                        for (int i = 0; i < paramsArray.length(); i++) {
+                            JSONObject childObject = paramsArray.getJSONObject(i);
                             String paramName = childObject.getString("name");
                             Double paramValue = childObject.getDouble("value");
                             String paramVariable = childObject.getString("variable");
@@ -305,14 +271,10 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
-                        
-                        //{"params": [{"name": "n", "value":"v", "variable":"var"]}
-                        double value;
 
-                        Map<String, String> sequenceRole = new HashMap<>();
+                        sequenceRole = new HashMap<>();
                         sequenceRole.put("role", role);
                         sequenceRole.put("sequence", rawSequence);
-                        role = body.getString("role");
 
                         ObjectId partId = createPart(persistor, objectName, sequenceRole, params, name);
                         result = partId.toString();
@@ -322,19 +284,33 @@ public class RestApi extends HttpServlet {
                         role = body.getString("role");
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
+                        boolean createSeqFromParts = body.getBoolean("createSeqFromParts");
+                        
+                        paramsArray = body.getJSONArray("params");
+                        params = new ArrayList();
+                        for (int i = 0; i < paramsArray.length(); i++) {
+                            JSONObject childObject = paramsArray.getJSONObject(i);
+                            String paramName = childObject.getString("name");
+                            Double paramValue = childObject.getDouble("value");
+                            String paramVariable = childObject.getString("variable");
+                            String paramUnits = childObject.getString("units");
+                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                            params.add(p);
+                        }
+                        
+                        
                         partIDs = body.getString("partIDs").split(",");
                         ArrayList<String> partIDArray = new ArrayList<>();
-
                         for (String partID : partIDs) {
                             partIDArray.add(partID);
                         }
+                        
+                        sequenceRole = new HashMap<>();
+                        sequenceRole.put("role", role);
+                        sequenceRole.put("sequence", rawSequence);
 
-                        Map<String, String> deviceParams = new HashMap<>();
-                        deviceParams.put("role", role);
-                        deviceParams.put("sequence", rawSequence);
-
-//                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, deviceParams, name);
-//                        result = deviceID.toString();
+                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, sequenceRole, params, name, createSeqFromParts);
+                        result = deviceID.toString();
                         break;
                 }
                 break;
@@ -346,10 +322,7 @@ public class RestApi extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CREATED);
         }
 
-        response.getWriter()
-                .write(result);
-
-//        logout(auth);
+        response.getWriter().write(result);
     }
 
     protected void doPut(HttpServletRequest request,
@@ -359,17 +332,9 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-//        String username = pathID[4].split(":")[0];
-//        String password = pathID[4].split(":")[1];
 
         JSONObject body = getRequestBody(request.getReader());
 
-//        String[] auth = {username, password};
-//        if (!login(auth)) {
-//            response.getWriter().write("Login Failed\r\n");
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            return;
-//        }
         switch (method) {
             case "set":
                 body.remove("username");
@@ -402,27 +367,8 @@ public class RestApi extends HttpServlet {
 
                 break;
         }
-
-//        logout(auth);
     }
 
-//    private boolean login(String[] userPass) {
-//        if (userPass != null) {
-//            loginMap = new HashMap<String, String>();
-//            loginMap.put("username", userPass[0]);
-//            loginMap.put("credentials", userPass[1]);
-//            loginMessage = new Message(Channel.login, loginMap, null, null);
-//            this.router.receiveMessage(this.rc, loginMessage);
-//        }
-//        return SecurityUtils.getSubject().isAuthenticated();
-//    }
-//
-//    private void logout(String[] userPass) {
-//        if (userPass != null) {
-//            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-//            this.router.receiveMessage(this.rc, logoutMessage);
-//        }
-//    }
     private JSONObject getRequestBody(BufferedReader reader) throws IOException {
         StringBuilder buffer = new StringBuilder();
         String line;

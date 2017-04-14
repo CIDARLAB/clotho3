@@ -20,6 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import org.json.JSONObject;
 import org.junit.Test;
 
 /**
@@ -68,8 +69,6 @@ public class RESTTester {
         int responseCode = conn.getResponseCode();
 
         if (responseCode != 400 && responseCode != 404 && responseCode != 500) {
-//            System.out.println("SUCCESS!");
-
             //print result
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
@@ -88,17 +87,17 @@ public class RESTTester {
     }
 
 //    @Test
-    public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
-        System.out.println("Testing Create User");
-        String jsonString = "{'username':'jsmith1','password':'asdf'}";
-        URL url = new URL(this.url + "/create/user");
-
-        String output = HTTPReq(url, jsonString, "POST");
-
-        System.out.println(output);
-    }
+//    public void testCreateUser() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
+//        System.out.println("Testing Create User");
+//        String jsonString = "{'username':'jsmith1','password':'asdf'}";
+//        URL url = new URL(this.url + "/create/user");
+//
+//        String output = HTTPReq(url, jsonString, "POST");
+//
+//        System.out.println(output);
+//    }
     
-//    @Test
+    @Test
     public void testCreateSequence() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Sequence");
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
@@ -109,7 +108,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testCreatePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
@@ -129,18 +128,23 @@ public class RESTTester {
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
-        String jsonString = "{'username':'jsmith','objectName':'TestSequence','sequence':'ata'}";
+        String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
-        url = new URL("https://localhost:8443/data/get/getByName/TestSequence/");
-
+        url = new URL("https://localhost:8443/data/get/getByName/Test%20Sequence///20");
         String output = HTTPReq(url, "", "GET");
-
+        JSONObject obj = new JSONObject(output);
         System.out.println(output);
+        while (obj.getJSONArray("links").getJSONObject(0).has("next")) {
+            url = new URL("https://localhost:8443/data/get/getByName/Test%20Sequence" + obj.getJSONArray("links").getJSONObject(0).getString("next"));
+            output = HTTPReq(url, "", "GET");
+            obj = new JSONObject(output);  
+            System.out.println(output);
+        }
     }
 
-//    @Test
+    @Test
     public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get By Id");
 
@@ -156,7 +160,7 @@ public class RESTTester {
 
     }
 
-//    @Test
+    @Test
     public void testSet() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
 
         String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
@@ -173,7 +177,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Delete Sequence");
 
@@ -202,22 +206,29 @@ public class RESTTester {
         System.out.println(output);
     }
     
-//    @Test
+    @Test
     public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
-        System.out.println("Testing Create Convenience Part");
+        System.out.println("Testing Create Convenience Device");
 
-        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE'}";
-        URL url = new URL(this.url + "/create/conveniencePart/");
+        String jsonString1 = "{'username':'jsmith','objectName':'Test Convenience Device Part1','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        URL url1 = new URL(this.url + "/create/conveniencePart/");
 
-        String partIDs = HTTPReq(url, jsonString, "POST");
+        String jsonString2 = "{'username':'jsmith','objectName':'Test Convenience Device Part2','sequence':'tccctatcagtgatagagattgacatccctatcgagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        URL url2 = new URL(this.url + "/create/conveniencePart/");
         
-        jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','sequence':'actacttcgcatcatgttcatca', 'role':'GENE', 'partIDs':'" + partIDs +"'}";
-        url = new URL(this.url + "/create/convenienceDevice/");
+        String partID1 = HTTPReq(url1, jsonString1, "POST");
+        String partID2 = HTTPReq(url2, jsonString2, "POST");
+        
+        String partIDs = partID1 + "," + partID2;
+        
+        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'createSeqFromParts':'True', 'partIDs':'" + partIDs +"'}";
+        URL url = new URL(this.url + "/create/convenienceDevice/");
 
         String output = HTTPReq(url, jsonString, "POST");
 
         System.out.println(output);
     }
+    
 //    @Test
 //    public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException
 //    {
