@@ -812,7 +812,7 @@ public class ConvenienceMethods {
 
             for (Part p : partSet) {
                 devPart.getAssemblies().get(0).addPart(p);
-                if(createSeqFromParts)
+                if(createSeqFromParts && p.getSequence() != null)
                 {
                     seq += p.getSequence().getSequence();
                 }
