@@ -99,7 +99,7 @@ public class RestApi extends HttpServlet {
                         queried.list = Lists.reverse(queried.list);
                     }
                     //the last id in the records of the current page, used to navigate to next and previous pages
-                    String newLastId = String.valueOf(queried.list.get(per_page - 1).getId());
+                    String newLastId = String.valueOf(queried.list.get(queried.list.size() - 1).getId());
 
                     next.put("next", "/" + newLastId + "/next/" + String.valueOf(pageSize));
                     if (queried.page != queried.page_count) {
@@ -122,6 +122,7 @@ public class RestApi extends HttpServlet {
                         result = jsono.toString();
                     }
                 } else {
+                    System.out.println("Error: " + pageSize);
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
 
