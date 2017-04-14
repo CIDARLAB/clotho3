@@ -20,6 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import org.json.JSONObject;
 import org.junit.Test;
 
 /**
@@ -123,19 +124,24 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    @Test
+    @Test
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
-        String jsonString = "{'username':'jsmith','objectName':'TestSequence','sequence':'ata'}";
+        String jsonString = "{'username':'jsmith','objectName':'Test Sequence','sequence':'ata'}";
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
-        url = new URL("https://localhost:8443/data/get/getByName/TestSequence/");
-
+        url = new URL("https://localhost:8443/data/get/getByName/Test%20Sequence///20");
         String output = HTTPReq(url, "", "GET");
-
+        JSONObject obj = new JSONObject(output);
         System.out.println(output);
+        while (obj.getJSONArray("links").getJSONObject(0).has("next")) {
+            url = new URL("https://localhost:8443/data/get/getByName/Test%20Sequence" + obj.getJSONArray("links").getJSONObject(0).getString("next"));
+            output = HTTPReq(url, "", "GET");
+            obj = new JSONObject(output);  
+            System.out.println(output);
+        }
     }
 
     @Test
