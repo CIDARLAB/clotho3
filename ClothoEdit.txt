@@ -1,0 +1,78 @@
+ClothoEdit.txt 
+Author: Jason Lu (jasonlu6@bu.edu) 
+
+# this file was made to assure alignment for my code, 
+# which is made as a fix for the JSON Token Error
+# from the RAML compiler. 
+
+# Edit 1: homepage method 
+
+properties:
+ # username for Clotho
+  username: string
+ # password for Clotho
+  password: string
+example: |
+    {
+    "username": "jsmith",
+    "password": "allstar"
+    }
+
+# Edit 2: createPart method 
+
+properties:
+ # username for Clotho
+ # password for Clotho
+ # object name to create
+ # id to use for existing sequence
+  username: string
+  password: string
+  objectName: string
+  seqId: number
+  example: |
+   {
+   "username": "jsmith",
+   "password": "overwatch",
+   "objectName": "Test Part",
+   "seqId": 321
+   }
+
+# Edit 3: createConveniencePart 
+
+properties:
+ # username for Clotho
+ # object name for Clotho to create
+ # sequence to put into mongoDB
+ # role for the sequence
+  username: string
+  objectName: string
+  sequence: string
+  roleSequence: string
+  example: |
+   {
+   "username": "jsmith",
+   "objectName": "Test Convenience Part",
+   "sequence": "tccctatcagtgatagagattgacatccctatcagtgatagagatac",
+   "roleSequence": "GENE"
+   }
+
+# Edit 4: createConvenienceDevice 
+
+properties:
+ # username for Clotho
+ # object name for Clotho to create
+ # sequence to put into mongoDB (may be duplicated)
+ # role for the sequence
+ # part-IDs: id for the part of device (array)
+  username: string
+  objectName: string
+  sequence: string
+  roleSequence: string
+
+  example: |
+   {
+    "username": "jsmith",
+    "objectName": "Test Convenience Device",
+    "sequence": "actacttcgcatcatgttcatca",
+    "roleSequence": "GENE"
+    }

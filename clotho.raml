@@ -1,0 +1,268 @@
+#%RAML 1.0
+
+# File: clotho.raml
+# Modified file for Clotho 4/17/2017 meeting
+# Author: Jason Lu (jasonlu6@bu.edu)
+# Collaborator: Nick Pierce (npeace@bu.edu)
+# CIDAR Lab Spring 2017
+# Mentors:
+# Professor Douglas Densmore
+# David Tran
+# Jacob Kozol
+# Alex Vahid
+# Date: 4/15/2017
+
+# Description: this is a RAML file that will document
+# the general usage of the Clotho REST api, which
+# can be found in the Netbeans file:
+# RestApi.java
+
+# Made based on the information of the
+# Clotho wiki, which is a github wiki page:
+# https://github.com/CIDARLAB/clotho3/wiki/REST-API
+
+# For parameteric purposes, all
+# usernames and passwords are assumed
+# to be fictional (or not in public domain)
+
+title: Clotho RestAPI # Title
+version: 1
+# use Github base URI
+# URI: Universal Resource Identifier
+baseUri: http://example.com/{version}
+documentation:
+  - title: Clotho REST API
+    content: |
+      This is the basic documentation for Clotho Rest API framework.
+      It has the following methods: (based on example curl requests)
+        - homepage: direct the user to Clotho homepage
+        - createUser: create a user for Clotho
+        - createSequence: create a DNA/RNA sequence for Clotho to query
+        - createPart: create part of an existing sequence
+        - createConveniencePart: create part of an existing sequence
+        using a convenience method in the class file: Convenience.java
+        - getById: get a user profile / object by id
+        - getByName: get a user profile / object by name
+        - set: a put method that sets the profile
+        - delete: a delete method that deletes a profile
+        # generic example site to show where the HTML is generated
+        - [example.com](https://www.example.com).
+
+annotationTypes:
+/arguments:
+  # get the response from the user to use Clotho
+  get:
+    responses:
+      # RAML 100 status code
+      100:
+        body:
+          # connection to the JSON arguments
+          application/json:
+
+# User Homepage Parameters
+/homepage:
+  post:
+    body:
+      application/json:
+        type: object
+        properties:
+         # username for Clotho
+          username: string
+          # password for Clotho
+          password: string
+        example: |
+            {
+            "username": "jsmith",
+            "password": "allstar"
+            }
+
+# getByName method
+/getByName:
+  get:
+    body:
+      application/json:
+        type: object
+        properties:
+          # username for Clotho
+          username: string
+          # password for Clotho
+          password: string
+        example: |
+          {
+          "username": "jsmith",
+          "password": "allstar"
+          }
+
+
+
+  # getByID method
+  /getByID:
+    get:
+      body:
+        application/json:
+          type: object
+          properties:
+            # username for Clotho
+            # password for Clotho
+            # id to retrieve the identification of user
+            username: string
+            password: string
+          example: |
+           {
+           "username": "jsmith",
+           "password": "allstar"
+           }
+
+  # createUser method
+  /createUser:
+    post:
+      body:
+        application/json:
+          type: object
+          properties:
+            # username for Clotho
+            # password for Clotho
+            username: string
+            password: string
+          example: |
+           {
+           "username": "jsmith",
+           "password": "ece"
+           }
+
+  # createSequence method
+  /createSequence:
+    post:
+      body:
+        application/json:
+          type: object
+          properties:
+            # username for Clotho
+            # password for Clotho
+            # object name to create
+            # DNA / RNA sequence to put into Clotho
+            # mongoDB
+            username: string
+            password: string
+            objectName: string
+            sequence: string
+          example: |
+            {
+            "username": "jsmith",
+            "password": "asdf",
+            "objectName": "Test Sequence",
+            "sequence": "ata"
+            }
+
+    # createPart method
+    /createPart:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # password for Clotho
+              # object name to create
+              # id to use for existing sequence
+              username: string
+              password: string
+              objectName: string
+              seqId: number
+            example: |
+             {
+             "username": "jsmith",
+             "password": "overwatch",
+             "objectName": "Test Part",
+             "seqId": 321
+             }
+
+    # createConveniencePart method
+    /createConveniencePart:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # object name for Clotho to create
+              # sequence to put into mongoDB
+              # role for the sequence
+              username: string
+              objectName: string
+              sequence: string
+              roleSequence: string
+            example: |
+             {
+             "username": "jsmith",
+             "objectName": "Test Convenience Part",
+             "sequence": "tccctatcagtgatagagattgacatccctatcagtgatagagatac",
+             "roleSequence": "GENE"
+               }
+
+    # createConvenienceDevice method
+    /createConvenienceDevice:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # object name for Clotho to create
+              # sequence to put into mongoDB (may be duplicated)
+              # role for the sequence
+              # part-IDs: id for the part of device (array)
+              username: string
+              objectName: string
+              sequence: string
+              roleSequence: string
+
+            example: |
+               {
+               "username": "jsmith",
+               "objectName": "Test Convenience Device",
+               "sequence": "actacttcgcatcatgttcatca",
+               "roleSequence": "GENE"
+                 }
+
+      # set method
+      /set:
+        put:
+          body:
+            application/json:
+              type: object
+              properties:
+              # username for Clotho
+              # password for Clotho
+              # primary email (to add as contact)
+              # id for in case of change of user
+               username: string
+               password: string
+               primaryEmail: string
+               id: number
+              example: |
+                {
+                "username": "jsmith",
+                "password": "asdfasdf",
+                "primaryEmail": "jsmove@bu.edu",
+                "id": 232422526
+                }
+    # delete method
+    /delete:
+      delete:
+        body:
+          application/json:
+            type: object
+            properties:
+            # username for Clotho
+            # password for Clotho
+            # id to select to delete from Clotho mongoDB
+             username: string
+             password: string
+             id: number
+            example: |
+              {
+              "username": "jsmith",
+              "password": "mcga",
+              "id": 123321123
+              }
