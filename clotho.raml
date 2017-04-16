@@ -1,6 +1,7 @@
 #%RAML 1.0
 
 # File: clotho.raml
+# Modified file for Clotho 4/17/2017 meeting
 # Author: Jason Lu (jasonlu6@bu.edu)
 # Collaborator: Nick Pierce (npeace@bu.edu)
 # CIDAR Lab Spring 2017
@@ -9,7 +10,7 @@
 # David Tran
 # Jacob Kozol
 # Alex Vahid
-# Date: 3/30/2017
+# Date: 4/15/2017
 
 # Description: this is a RAML file that will document
 # the general usage of the Clotho REST api, which
@@ -24,25 +25,42 @@
 # usernames and passwords are assumed
 # to be fictional (or not in public domain)
 
-title: Clotho RestAPI
-version: v1
+title: Clotho RestAPI # Title
+version: 1
 # use Github base URI
 # URI: Universal Resource Identifier
-baseUri: http://api.github.com
+baseUri: http://example.com/{version}
+documentation:
+  - title: Clotho REST API
+    content: |
+      This is the basic documentation for Clotho Rest API framework.
+      It has the following methods: (based on example curl requests)
+        - homepage: direct the user to Clotho homepage
+        - createUser: create a user for Clotho
+        - createSequence: create a DNA/RNA sequence for Clotho to query
+        - createPart: create part of an existing sequence
+        - createConveniencePart: create part of an existing sequence
+        using a convenience method in the class file: Convenience.java
+        - getById: get a user profile / object by id
+        - getByName: get a user profile / object by name
+        - set: a put method that sets the profile
+        - delete: a delete method that deletes a profile
+        # generic example site to show where the HTML is generated
+        - [example.com](https://www.example.com).
 
 annotationTypes:
 /arguments:
   # get the response from the user to use Clotho
   get:
     responses:
-      # RAML 100 usage
+      # RAML 100 status code
       100:
         body:
           # connection to the JSON arguments
           application/json:
 
-  # post the response so
-  # that users can add in examples
+# User Homepage Parameters
+/homepage:
   post:
     body:
       application/json:
@@ -52,29 +70,11 @@ annotationTypes:
           username: string
           # password for Clotho
           password: string
-          # object name (what to do with clotho)
-          objectName: string
-          # id: get the id of the user
-          id: number
-          # sequence: DNA sequence to input for Clotho
-          sequence: string
-          # role: what type of role for Clotho the
-          # object will implement
-          role: string
-          # implement partID later
-          # partIDs: integer
-          partIDS: number
-         # example (from Clotho Wiki page)
         example: |
-          {
-          "username": "jsmith",
-          "password": "easy",
-          "objectName": "Test Sequence",
-          "id": 12345,
-          "sequence": "actgactgactg",
-          "role": "GENE",
-          "partIDs": 1,
-          }
+            {
+            "username": "jsmith",
+            "password": "allstar"
+            }
 
 # getByName method
 /getByName:
@@ -93,6 +93,8 @@ annotationTypes:
           "password": "allstar"
           }
 
+
+
   # getByID method
   /getByID:
     get:
@@ -105,13 +107,11 @@ annotationTypes:
             # id to retrieve the identification of user
             username: string
             password: string
-            id: number
           example: |
-            {
-            "username": "jsmith",
-            "password": "python",
-            id: 31416
-            }
+           {
+           "username": "jsmith",
+           "password": "allstar"
+           }
 
   # createUser method
   /createUser:
@@ -194,12 +194,11 @@ annotationTypes:
               roleSequence: string
             example: |
              {
-             "username": "jsmith"
+             "username": "jsmith",
              "objectName": "Test Convenience Part",
-             # really long sequence
              "sequence": "tccctatcagtgatagagattgacatccctatcagtgatagagatac",
              "roleSequence": "GENE"
-             }
+               }
 
     # createConvenienceDevice method
     /createConvenienceDevice:
@@ -217,15 +216,15 @@ annotationTypes:
               objectName: string
               sequence: string
               roleSequence: string
-              # partID: array
+
             example: |
-              {
-              "username": "jsmith",
-              "objectName: "Test Convenience Device",
-              "sequence": "actacttcgcatcatgttcatca",
-              roleSequence: "GENE"
-              # partIDs: [1,3,5,7,8]
-              }
+               {
+               "username": "jsmith",
+               "objectName": "Test Convenience Device",
+               "sequence": "actacttcgcatcatgttcatca",
+               "roleSequence": "GENE"
+                 }
+
       # set method
       /set:
         put:
