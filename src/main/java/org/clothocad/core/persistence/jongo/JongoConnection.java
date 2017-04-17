@@ -71,7 +71,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     protected MongoCollection cred;
     protected MongoCollection roles;
     protected DBCollection rawDataCollection;
-    
+
     protected DBClassLoader classLoader;
     private static final TypeReference<Map<String, Object>> STRINGMAP = new TypeReference<Map<String, Object>>() {
     };
@@ -79,7 +79,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     @Inject
     public JongoConnection(@Named("dbport") int port, @Named("dbhost") String host, @Named("dbname") String dbname, DBClassLoader dbClassLoader) throws UnknownHostException {
         log.info("Using mongo database '{}@{}:{}'", dbname, host, port);
-        
+
         db = new MongoClient(host, port).getDB(dbname);
         rawDataCollection = db.getCollection("data");
         classLoader = dbClassLoader;
@@ -103,8 +103,8 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
          *
          * mapper.disable(AUTO_DETECT_GETTERS);
          * mapper.disable(AUTO_DETECT_IS_GETTERS);
-         **/
-
+         *
+         */
         jongo = new RefJongo(db, new ClothoMapper());
         data = jongo.getCollection("data");
         cred = jongo.getCollection("cred");
@@ -130,10 +130,9 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
 
     @Override
     public void save(ObjBase obj) {
-        try{
+        try {
             data.save(obj);
-        }
-        catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             data.update("{_id:#}", obj.getId().toString()).with(obj);
         }
     }
@@ -141,17 +140,17 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     @Override
     public void save(Map obj) {
         obj = mongifyIdField(obj);
-        if (obj.get("_id") == null){
+        if (obj.get("_id") == null) {
             //must create new id
             rawDataCollection.insert(new BasicDBObject(obj));
             return;
         }
         DBObject idQuery = new BasicDBObject("_id", obj.get("_id"));
         obj.remove("_id");
-        Map<String,Object> setExpression = new HashMap<>();
+        Map<String, Object> setExpression = new HashMap<>();
         setExpression.put("$set", obj);
         try {
-            rawDataCollection.update(idQuery, new BasicDBObject(setExpression),true, false);  //upsert true, multi false        
+            rawDataCollection.update(idQuery, new BasicDBObject(setExpression), true, false);  //upsert true, multi false        
         } catch (WriteConcernException ex) {
             log.error("Invalid JSON/failed to save object", obj.toString());
         }
@@ -214,7 +213,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     public Map<String, Object> getAsBSON(ObjectId uuid) {
         return getAsBSON(uuid, null);
     }
-    
+
     @Override
     public Map<String, Object> getAsBSON(ObjectId uuid, Set<String> filter) {
         return data.findOne("{_id:#}", uuid.toString()).projection(generateProjection(filter)).map(DemongifyHandler.get());
@@ -225,88 +224,120 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         return get(query, Persistor.SEARCH_MAX);
     }
 
-    
     @Override
     public List<ObjBase> get(Map query, int hitmax) {
         bindClassLoader();
         return Lists.newArrayList(data.resolvingFind(serialize(mongifyIdField(query))).limit(hitmax).as(ObjBase.class));
     }
-    
+
     public static class Pagination {
+
         public List<ObjBase> list;
         public int page;
         public int per_page;
         public int page_count;
         public int total_count;
     }
-    
+
     @Override
     public Pagination getByPage(String query, String sortOrder, int pageSize) {
         bindClassLoader();
         Pagination ret = new Pagination();
-        
+
         //are we going to the previous page?
         boolean reverse = false;
-        
+
         //when going to the next page this equals remaining items to be paged (including those about to be paged)
         //when going to the previous page this equals items that have already been paged
         long remainingItems = data.count(query);
-        
+
         //if going to previous page
-        if (query.contains("_id:{ $lte")) 
-        {
+        if (query.contains("_id:{ $lte")) {
             //we are going backwards, from the last id in last request, meaning we have to skip the page that was just shown
             //sort is always processed before skip, and skip is always processed before limit
-            ret.list =  Lists.newArrayList((Iterable)data.resolvingFind(query).sort(sortOrder).skip(pageSize).limit(pageSize).as(ObjBase.class));
-            ret.page = (int)((remainingItems / pageSize) - 1);
+            ret.list = Lists.newArrayList((Iterable) data.resolvingFind(query).sort(sortOrder).skip(pageSize).limit(pageSize).as(ObjBase.class));
+            ret.page = (int) ((remainingItems / pageSize) - 1);
             reverse = true;
+        } //if going to the next page
+        else {
+            ret.list = Lists.newArrayList((Iterable) data.resolvingFind(query).sort(sortOrder).limit(pageSize).as(ObjBase.class));
         }
-        //if going to the next page
-        else ret.list =  Lists.newArrayList((Iterable)data.resolvingFind(query).sort(sortOrder).limit(pageSize).as(ObjBase.class));
-        
+
         //replace the part of the query that limits by id so that we can get an absolute count
         query = query.replaceAll(",_id.+?}", "");
-        ret.total_count = (int)data.count(query);
+        ret.total_count = (int) data.count(query);
         ret.per_page = pageSize;
         ret.page_count = ret.total_count / pageSize;
-        if(ret.total_count % pageSize != 0) ret.page_count++;
-        
+        if (ret.total_count % pageSize != 0) {
+            ret.page_count++;
+        }
+
         //if going to the next page, the calculation for determining the current page is slightly different than going to previous page
-        if(!reverse) ret.page = (int)((ret.total_count - remainingItems) / pageSize) + 1;
-                
+        if (!reverse) {
+            ret.page = (int) ((ret.total_count - remainingItems) / pageSize) + 1;
+        }
+
         return ret;
     }
 
     //Format query for regex search
-    public List<ObjBase> getRegex(Map query)
-
-    {
+    public List<ObjBase> getRegex(Map query) {
         //Wildcard search queries: (assuming that you're searching in name)
-        
+
         //** Jongo does not currently support queries in the JavaScript syntax like /myQuery/g
-        
         //"fieldName", "[regex].*\S?t.r.i.n.g\b"
-        
         //Example uses:
         //"name", "seq" -> will return list of objects that include "seq" somewhere in the "name" field. (Case insensitive)
         //"name", "Sy.*ase" -> will return a list of objects that have Sy____ase somewhere in the "name" field. Ex: Synthase, Sympathetic steeplechase
-        
-        for(Object key : query.keySet())
-        {
-            String queryString = "{"+ key.toString() +": {$regex: '" + query.get(key).toString() + "', $options: 'i'}}";
-            System.out.println(queryString);
-            return Lists.newArrayList(data.resolvingFind(queryString).as(ObjBase.class));
+        String queryString = "{";
+        String parametersString = "'parameters': {$all:["; // $all (AND logic) because we're searching by field
+        String partsString = "'parts': {$in:[";         // has to be $in (OR logic) because we're searching parts by ID -> multiple parts with the same name/displayID (hard to differentiate)
+        String parametersEnd = "]},";
+        for (Object key : query.keySet()) {
+            
+            if(key.toString().contains("multiMatch"))
+            {
+                if(key.toString().contains("parameters"))
+                {
+                    parametersString += "{'$elemMatch':" + query.get(key) + "},";
+                }
+                else if(key.toString().contains("parts"))
+                {
+                    //parts array just needs to include all IDs
+                    //not querying for nested json objects
+                    
+                    partsString += "'" + query.get(key.toString()) + "',";
+                }
+            }
+            else
+            {
+                queryString += "'" + key.toString() + "': {$regex: '" + query.get(key).toString() + "', $options: 'i'},";
+            }
         }
         
-        //should not reach here, but i mean if you do we'll just pass it along then.
-        return get(query);
+        //if parameters and/or parts included
+        if(parametersString.length() > 21)
+        {
+            parametersString = parametersString.substring(0, parametersString.length()-1) + parametersEnd;
+            queryString += parametersString;
+        }
+        if(partsString.length() > 16)
+        {
+            partsString = partsString.substring(0,partsString.length() - 1) + parametersEnd;
+            queryString += partsString;
+        }
+        queryString = queryString.substring(0, queryString.length()-1) + "}";
+
+        //DEBUG
+//        System.out.println("JongoConnection Regex query: " + queryString);
+        return Lists.newArrayList(data.resolvingFind(queryString).as(ObjBase.class));
     }
-    
+
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query) {
         return get(type, query, Persistor.SEARCH_MAX);
     }
-    
+
     @Override
     public <T extends ObjBase> List<T> get(Class<T> type, Map query, int hitmax) {
         bindClassLoader();
@@ -314,14 +345,13 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     }
 
     @Override
-    public List<Map<String, Object>> getAsBSON(Map query) {    
+    public List<Map<String, Object>> getAsBSON(Map query) {
         return getAsBSON(query, Persistor.SEARCH_MAX, null);
     }
-    
-    
+
     @Override
     public List<Map<String, Object>> getAsBSON(Map query, int hitmax, Set<String> filter) {
-        return Lists.newArrayList((Iterable)data.find(serialize(mongifyIdField(query)))
+        return Lists.newArrayList((Iterable) data.find(serialize(mongifyIdField(query)))
                 .limit(hitmax).projection(generateProjection(filter))
                 .map(DemongifyHandler.get()));
     }
@@ -336,16 +366,17 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     public Map<String, Object> getOneAsBSON(Map query) {
         return getOneAsBSON(query, null);
     }
+
     @Override
     public Map<String, Object> getOneAsBSON(Map query, Set<String> filter) {
         return data.findOne(serialize(mongifyIdField(query))).projection(generateProjection(filter)).map(DemongifyHandler.get());
     }
 
     @Override
-    public <T extends ObjBase> List<T> getAll(Class<T> type) {     
+    public <T extends ObjBase> List<T> getAll(Class<T> type) {
         return Lists.newArrayList(data.resolvingFind("{schema:#}", type.getCanonicalName()).as(type));
     }
-    
+
     @Override
     public List<ObjBase> listAll() {
         return Lists.newArrayList(data.resolvingFind("{schema:{$exists : true}}").as(ObjBase.class));
@@ -364,18 +395,18 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     @Override
     public ClothoAccount getAccount(String username) {
         return cred.findOne("{_id:#}", username).as(ClothoAccount.class);
-        }
+    }
 
     @Override
     public void saveAccount(ClothoAccount account) {
         cred.save(account);
     }
 
-    public AuthGroup getGroup(String groupName){
+    public AuthGroup getGroup(String groupName) {
         return roles.findOne("{_id:#}", groupName).as(AuthGroup.class);
     }
 
-    public void saveGroup (AuthGroup group){
+    public void saveGroup(AuthGroup group) {
         roles.save(group);
     }
 
@@ -384,33 +415,34 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         cred.drop();
         roles.drop();
     }
-    
+
     @Override
-    public List<Map> getCompletionData(){
+    public List<Map> getCompletionData() {
         DBCursor cursor = rawDataCollection.find();
         Iterator<DBObject> iter = cursor.iterator();
         List<Map> out = new ArrayList<Map>();
         int i = 0;
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             try {
                 DBObject temp = iter.next();
                 Map map = new HashMap();
                 map.put("name", temp.get("name"));
                 map.put("schema", temp.get("schema"));
                 map.put("id", temp.get("_id").toString());
-                if(temp.containsKey("description")) {
+                if (temp.containsKey("description")) {
                     map.put("description", temp.get("description"));
-                } else if(temp.containsKey("shortDescription")) {
+                } else if (temp.containsKey("shortDescription")) {
                     map.put("description", temp.get("shortDescription"));
                 }
                 out.add(map);
-            } catch(Exception err) {
+            } catch (Exception err) {
                 err.printStackTrace();
             }
             i++;
         }
         return out;
     }
+
     private List<Map<String, Object>> mappify(Iterable<JSONFilter> objs) {
         List<Map<String, Object>> out = new ArrayList<>();
         for (JSONFilter obj : objs) {
@@ -418,7 +450,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         }
         return out;
     }
-    
+
     private Map<String, Object> mappify(JSONFilter obj) {
 
         return mapper.convertValue(obj, STRINGMAP);
@@ -433,13 +465,13 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
     }
 
     //renames "id" key to "_id", and replaces ObjectId with String
-    protected static Map<String,Object> mongifyIdField(Map<String, Object> obj) {
-        if (obj.containsKey(ID)){
-            Map<String,Object> copy = new HashMap<>();
+    protected static Map<String, Object> mongifyIdField(Map<String, Object> obj) {
+        if (obj.containsKey(ID)) {
+            Map<String, Object> copy = new HashMap<>();
             copy.putAll(obj);
             obj = copy;
             Object id = obj.get(ID);
-            if (id instanceof ObjectId){
+            if (id instanceof ObjectId) {
                 id = ((ObjectId) id).toString();
                 System.out.println(id);
             }
@@ -448,12 +480,12 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         }
         return obj;
     }
-    
+
     //renames "_id" to "id" 
     //doesn't recurse on sub-objects, since no embedded object will have an objectid
     //mutates instead of returning new object
-    protected static Map<String,Object> demongifyIdField(Map<String,Object> obj){
-        if (obj.containsKey("_id")){
+    protected static Map<String, Object> demongifyIdField(Map<String, Object> obj) {
+        if (obj.containsKey("_id")) {
             Object id = obj.get("_id");
             obj.remove("_id");
             obj.put(ID, id);
@@ -467,81 +499,86 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         //classloader is singleton that delegates to root classloader, so no classloader hairiness should happen
         Thread.currentThread().setContextClassLoader(classLoader);
     }
-    
-    private String generateProjection(Set<String> fields){
-        if (fields == null) return "{}";
+
+    private String generateProjection(Set<String> fields) {
+        if (fields == null) {
+            return "{}";
+        }
         StringBuilder builder = new StringBuilder();
         builder.append("{");
-        for (String field: fields){
+        for (String field : fields) {
             builder.append(String.format("%s:1, ", field));
         }
         builder.append("}");
-        
+
         return builder.toString();
     }
-    
+
     @Override
     public Collection<Permission> resolvePermissionsInRole(String role) {
         Collection<Permission> permissions = new HashSet<>();
         AuthGroup group = roles.findOne("{_id:#}", role).as(AuthGroup.class);
-        
-        if (group == null) return permissions;
-        
-        for (PermissionsOnObject p : group.getPermissions().values()){
-            for (String permString : p.getPermissions()){
+
+        if (group == null) {
+            return permissions;
+        }
+
+        for (PermissionsOnObject p : group.getPermissions().values()) {
+            for (String permString : p.getPermissions()) {
                 permissions.add(new WildcardPermission(permString));
             }
         }
         return permissions;
     }
-    
+
     @Override
-    public Map<String, Set<ClothoAction>> getUserPermissions(ObjectId id){
+    public Map<String, Set<ClothoAction>> getUserPermissions(ObjectId id) {
         Map<String, Set<ClothoAction>> permissionsByUser = new HashMap<>();
-        
+
         for (ClothoAccount account : cred.find("{'authzInfo.permissions.#':{$exists:true}}", id)
-            .projection("{'authzInfo.permissions.#':1, '@class':1}", id).as(ClothoAccount.class)){
+                .projection("{'authzInfo.permissions.#':1, '@class':1}", id).as(ClothoAccount.class)) {
             permissionsByUser.put(account.getId(), account.getActions(id));
         }
-        
+
         return permissionsByUser;
     }
 
     @Override
-    public Map<String, Set<ClothoAction>> getGroupPermissions(ObjectId id){
+    public Map<String, Set<ClothoAction>> getGroupPermissions(ObjectId id) {
         Map<String, Set<ClothoAction>> permissionsByGroup = new HashMap<>();
-        
+
         for (AuthGroup group : roles.find("{'permissions.#':{$exists:true}}", id)
-            .projection("{'permissions.#':1, '_class':1}", id).as(AuthGroup.class)){
+                .projection("{'permissions.#':1, '_class':1}", id).as(AuthGroup.class)) {
             permissionsByGroup.put(group.getName(), group.getActions(id));
         }
-        
-        return permissionsByGroup;        
+
+        return permissionsByGroup;
     }
-    
-    protected static class DemongifyHandler implements ResultHandler<Map<String,Object>>{
+
+    protected static class DemongifyHandler implements ResultHandler<Map<String, Object>> {
+
         //this will have problems if there are circular dstructures, though that should be impossible
         @Override
-        public Map<String,Object> map(DBObject result) {
-            Map<String,Object> resultMap = toMap(result);
+        public Map<String, Object> map(DBObject result) {
+            Map<String, Object> resultMap = toMap(result);
             //recurse on any sub objects
-            for (String key : resultMap.keySet()){
-                 Object value = resultMap.get(key);
-                 if (value instanceof DBObject){
-                     resultMap.put(key,toMapOrList((DBObject)value));
-                 }
+            for (String key : resultMap.keySet()) {
+                Object value = resultMap.get(key);
+                if (value instanceof DBObject) {
+                    resultMap.put(key, toMapOrList((DBObject) value));
+                }
             }
             return demongifyIdField(resultMap);
         }
-        
+
         //some dbobjects don't support toMap
-        private Map<String,Object> toMap(BSONObject dbObject){
+        private Map<String, Object> toMap(BSONObject dbObject) {
             BasicDBObject basicResult = new BasicDBObject();
             basicResult.putAll(dbObject);
-            Map<String,Object> resultMap = basicResult.toMap();
+            Map<String, Object> resultMap = basicResult.toMap();
             return resultMap;
         }
-        
+
         private Object toMapOrList(DBObject value) {
             if (value instanceof LazyBSONList) {
                 //convert members
@@ -561,13 +598,13 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         }
 
         private static DemongifyHandler instance;
-        
-          public static DemongifyHandler get(){
-            if (instance == null){
+
+        public static DemongifyHandler get() {
+            if (instance == null) {
                 instance = new DemongifyHandler();
             }
             return instance;
         }
 
-    } 
+    }
 }

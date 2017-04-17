@@ -16,6 +16,7 @@ import java.util.List;
 import org.ahocorasick.trie.Emit;
 import org.ahocorasick.trie.Trie;
 import org.ahocorasick.trie.Trie.TrieBuilder;
+import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Annotation;
@@ -34,6 +35,29 @@ import org.clothocad.model.Sequence;
  */
 public class ConvenienceMethods {
 
+    /*
+    
+    TO DO:
+    Condense the create methods using the same format as the query methods,
+    because as they are right now it's ugly and bad design.
+    
+    I started with only 2 iterations of each (the most basic forms), but both 
+    times we needed to make revisions and add more parameters in a short time 
+    span, the quick and dirty method was to just copy, paste, and adjust.
+    
+    __TLDR__ 
+    Sorry, I know it's menial work but someone should condense the 
+    create methods to match the query methods <3 - David T.
+    
+     */
+ /*
+    
+        Create Methods
+    
+     */
+    //////////////////////////
+    //      Create Part     //
+    //////////////////////////
     //Base function
     public static ObjectId createPart(Persistor persistor, String name, String author) {
         Person auth = new Person(author);
@@ -64,7 +88,7 @@ public class ConvenienceMethods {
 
         return id;
     }
-    
+
     //Optional Map containing sequence and/or role
     public static ObjectId createPart(Persistor persistor, String name, Map<String, String> seqrole, String author) {
         if (seqrole.isEmpty()) {
@@ -126,7 +150,7 @@ public class ConvenienceMethods {
         } else if (bRole) {
             Part part = new Part(name, auth);
             Feature feat = new Feature(name, role, auth);
-            
+
             Set<Feature> feats = new HashSet<>();
             feats.add(feat);
 
@@ -236,9 +260,9 @@ public class ConvenienceMethods {
             return createPart(persistor, name, author);
         }
     }
-    
+
     //Variations of above that also have displayID option
-    public static ObjectId createPart(Persistor persistor, String name, String displayID, String author){
+    public static ObjectId createPart(Persistor persistor, String name, String displayID, String author) {
         Person auth = new Person(author);
         Part part = new Part(name, auth);
         part.setDisplayID(displayID);
@@ -251,8 +275,8 @@ public class ConvenienceMethods {
 
         return id;
     }
-    
-    public static ObjectId createPart(Persistor persistor, String name, String displayID, List<Parameter> parameters, String author){
+
+    public static ObjectId createPart(Persistor persistor, String name, String displayID, List<Parameter> parameters, String author) {
         Person auth = new Person(author);
         Part part = new Part(name, auth);
         part.setDisplayID(displayID);
@@ -260,9 +284,8 @@ public class ConvenienceMethods {
         BioDesign design = new BioDesign(name, auth);
         design.addPart(part);
         design.setDisplayID(displayID);
-        
-        for(Parameter p : parameters)
-        {
+
+        for (Parameter p : parameters) {
             design.addParameter(p);
         }
 
@@ -271,8 +294,8 @@ public class ConvenienceMethods {
         return id;
     }
 
-    public static ObjectId createPart(Persistor persistor, String name, String displayID, Map<String, String> seqrole, String author){
-        
+    public static ObjectId createPart(Persistor persistor, String name, String displayID, Map<String, String> seqrole, String author) {
+
         if (seqrole.isEmpty()) {
             return createPart(persistor, name, displayID, author);
         }
@@ -301,7 +324,7 @@ public class ConvenienceMethods {
 
             Part part = new Part(name, seq, auth);
             part.setDisplayID(displayID);
-            
+
             Feature feat = new Feature(name, role, auth);
             feat.setSequence(seq);
             feat.setDisplayID(displayID);
@@ -314,7 +337,7 @@ public class ConvenienceMethods {
 
             Module bMod = new BasicModule(name, role, feats, auth);
             bMod.setDisplayID(displayID);
-            
+
             BioDesign design = new BioDesign(name, auth);
             design.addPart(part);
             design.setModule(bMod);
@@ -327,7 +350,7 @@ public class ConvenienceMethods {
 
             Part part = new Part(name, seq, auth);
             part.setDisplayID(displayID);
-            
+
             BioDesign design = new BioDesign(name, auth);
             design.addPart(part);
             design.setDisplayID(displayID);
@@ -339,7 +362,7 @@ public class ConvenienceMethods {
         } else if (bRole) {
             Part part = new Part(name, auth);
             part.setDisplayID(displayID);
-            
+
             Feature feat = new Feature(name, role, auth);
             feat.setDisplayID(displayID);
 
@@ -348,12 +371,12 @@ public class ConvenienceMethods {
 
             Module bMod = new BasicModule(name, role, feats, auth);
             bMod.setDisplayID(displayID);
-            
+
             BioDesign design = new BioDesign(name, auth);
             design.addPart(part);
             design.setModule(bMod);
             design.setDisplayID(displayID);
-            
+
             ObjectId id = persistor.save(design);
 
             return id;
@@ -362,9 +385,9 @@ public class ConvenienceMethods {
             return createPart(persistor, name, author);
         }
     }
-    
-    public static ObjectId createPart(Persistor persistor, String name, String displayID, Map<String, String> seqrole, List<Parameter> parameters, String author){
-        
+
+    public static ObjectId createPart(Persistor persistor, String name, String displayID, Map<String, String> seqrole, List<Parameter> parameters, String author) {
+
         if (seqrole.isEmpty()) {
             return createPart(persistor, name, displayID, parameters, author);
         }
@@ -390,10 +413,10 @@ public class ConvenienceMethods {
 
             Sequence seq = new Sequence(name, sequence, auth);
             seq.setDisplayID(displayID);
-            
+
             Part part = new Part(name, seq, auth);
             part.setDisplayID(displayID);
-            
+
             Feature feat = new Feature(name, role, auth);
             feat.setSequence(seq);
             feat.setDisplayID(displayID);
@@ -425,7 +448,7 @@ public class ConvenienceMethods {
 
             Part part = new Part(name, seq, auth);
             part.setDisplayID(displayID);
-            
+
             BioDesign design = new BioDesign(name, auth);
             design.addPart(part);
             design.setDisplayID(displayID);
@@ -441,7 +464,7 @@ public class ConvenienceMethods {
         } else if (bRole) {
             Part part = new Part(name, auth);
             part.setDisplayID(displayID);
-            
+
             Feature feat = new Feature(name, role, auth);
             feat.setDisplayID(displayID);
 
@@ -455,7 +478,7 @@ public class ConvenienceMethods {
             design.addPart(part);
             design.setModule(bMod);
             design.setDisplayID(displayID);
-            
+
             for (Parameter p : parameters) {
                 design.addParameter(p);
             }
@@ -468,31 +491,10 @@ public class ConvenienceMethods {
             return createPart(persistor, name, author);
         }
     }
-    /*
-        Create Device:
-        
-        No Role, No Sequence: 
-            BioDesign
-                ->subDesigns (createPart)
-            Part(s)
-                ->Assembly
-                    ->subparts (Refers to Part objects in the subdesigns)
-    
-        With Role: (orange and blue)
-            (BioDesign) -> BasicModule
-                -> Feature
-                    -> (if sequence) Sequence
-                        -> Annotation
-                            -> Feature (same one before Sequence)
-    
-        With Sequence: (red and blue)
-            (Part) -> Sequence
-                -> Annotations
-                    -> To own feature
-                    -> Features in subparts of the Assembly
-        
-     */
-    
+
+    //////////////////////////////
+    //      Create Device       //
+    //////////////////////////////
     //Base function
     public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, String author, boolean createSeqFromParts) {
 
@@ -514,15 +516,13 @@ public class ConvenienceMethods {
 
             for (Part p : partSet) {
                 devPart.getAssemblies().get(0).addPart(p);
-                if(createSeqFromParts)
-                {
+                if (createSeqFromParts) {
                     seq += p.getSequence().getSequence();
                 }
             }
         }
-        
-        if(createSeqFromParts)
-        {
+
+        if (createSeqFromParts) {
             Sequence sequence = new Sequence(name, seq, auth);
             annotateMe(persistor, sequence, partIDs);
             devPart.setSequence(sequence);
@@ -532,10 +532,10 @@ public class ConvenienceMethods {
 
         return result;
     }
-    
+
     //Optional List of parameters
-    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, List<Parameter> parameters, String author, boolean createSeqFromParts){
-        
+    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, List<Parameter> parameters, String author, boolean createSeqFromParts) {
+
         Person auth = new Person(author);
         Part devPart = new Part(name, auth);
         devPart.createAssembly();
@@ -554,21 +554,18 @@ public class ConvenienceMethods {
 
             for (Part p : partSet) {
                 devPart.getAssemblies().get(0).addPart(p);
-                if(createSeqFromParts)
-                {
+                if (createSeqFromParts) {
                     seq += p.getSequence().getSequence();
                 }
             }
         }
-        if(createSeqFromParts)
-        {
+        if (createSeqFromParts) {
             Sequence sequence = new Sequence(name, seq, auth);
             annotateMe(persistor, sequence, partIDs);
             devPart.setSequence(sequence);
         }
-        
-        for(Parameter p : parameters)
-        {
+
+        for (Parameter p : parameters) {
             device.addParameter(p);
         }
 
@@ -617,8 +614,7 @@ public class ConvenienceMethods {
                     devPart.getAssemblies().get(0).addPart(p);
                     //Even if we enable it, make sure you are NOT overwriting.
                     //Passing a sequence overrides the bool.
-                    if(createSeqFromParts && sequence == "")
-                    {
+                    if (createSeqFromParts && sequence == "") {
                         sequence += p.getSequence().getSequence();
                     }
                 }
@@ -657,7 +653,7 @@ public class ConvenienceMethods {
                 //Chain together objects
                 //Annotate sequence with subfeatures from assembly and self
                 annotateMe(persistor, seq, partIDs);
-                
+
                 //Attach sequence to part
                 devPart.setSequence(seq);
 
@@ -682,8 +678,8 @@ public class ConvenienceMethods {
     }
 
     //Both options
-    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, Map<String, String> seqrole, List<Parameter> parameters, String author, boolean createSeqFromParts){
-        
+    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, Map<String, String> seqrole, List<Parameter> parameters, String author, boolean createSeqFromParts) {
+
         if (seqrole.isEmpty()) {
             return createDevice(persistor, name, partIDs, author, createSeqFromParts);
         } else {
@@ -721,14 +717,13 @@ public class ConvenienceMethods {
                     devPart.getAssemblies().get(0).addPart(p);
                     //Even if we enable it, make sure you are NOT overwriting.
                     //Passing a sequence overrides the bool.                   
-                    if(createSeqFromParts && sequence == "")
-                    {
+                    if (createSeqFromParts && sequence == "") {
                         sequence += p.getSequence().getSequence();
                     }
                 }
             }
-            
-            for(Parameter p : parameters){
+
+            for (Parameter p : parameters) {
                 device.addParameter(p);
             }
 
@@ -761,11 +756,11 @@ public class ConvenienceMethods {
 
                 //Create objects
                 Sequence seq = new Sequence(name, sequence, auth);
-                
+
                 //Chain together objects
                 //Annotate sequence with subfeatures from assembly and self
                 annotateMe(persistor, seq, partIDs);
-                
+
                 //Attach sequence to part
                 devPart.setSequence(seq);
 
@@ -788,10 +783,10 @@ public class ConvenienceMethods {
             return result;
         }
     }
-    
+
     //Variations of above that also have the displayID option
-    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, String displayID, String author, boolean createSeqFromParts){
-        
+    public static ObjectId createDevice(Persistor persistor, String name, String displayID, List<String> partIDs, String author, boolean createSeqFromParts) {
+
         Person auth = new Person(author);
         Part devPart = new Part(name, auth);
         devPart.createAssembly();
@@ -812,15 +807,13 @@ public class ConvenienceMethods {
 
             for (Part p : partSet) {
                 devPart.getAssemblies().get(0).addPart(p);
-                if(createSeqFromParts && p.getSequence() != null)
-                {
+                if (createSeqFromParts && p.getSequence() != null) {
                     seq += p.getSequence().getSequence();
                 }
             }
         }
-        
-        if(createSeqFromParts)
-        {
+
+        if (createSeqFromParts) {
             Sequence sequence = new Sequence(name, seq, auth);
             annotateMe(persistor, sequence, partIDs);
             devPart.setSequence(sequence);
@@ -831,9 +824,9 @@ public class ConvenienceMethods {
 
         return result;
     }
-    
-    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, List<Parameter> parameters, String displayID, String author, boolean createSeqFromParts){
-        
+
+    public static ObjectId createDevice(Persistor persistor, String name, String displayID, List<String> partIDs, List<Parameter> parameters, String author, boolean createSeqFromParts) {
+
         Person auth = new Person(author);
         Part devPart = new Part(name, auth);
         devPart.createAssembly();
@@ -854,22 +847,19 @@ public class ConvenienceMethods {
 
             for (Part p : partSet) {
                 devPart.getAssemblies().get(0).addPart(p);
-                if(createSeqFromParts)
-                {
+                if (createSeqFromParts) {
                     seq += p.getSequence().getSequence();
                 }
             }
         }
-        if(createSeqFromParts)
-        {
+        if (createSeqFromParts) {
             Sequence sequence = new Sequence(name, seq, auth);
             annotateMe(persistor, sequence, partIDs);
             devPart.setSequence(sequence);
             sequence.setDisplayID(displayID);
         }
-        
-        for(Parameter p : parameters)
-        {
+
+        for (Parameter p : parameters) {
             device.addParameter(p);
         }
 
@@ -877,9 +867,9 @@ public class ConvenienceMethods {
 
         return result;
     }
-    
-    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, Map<String, String> seqrole, String displayID, String author, boolean createSeqFromParts){
-        
+
+    public static ObjectId createDevice(Persistor persistor, String name, String displayID, List<String> partIDs, Map<String, String> seqrole, String author, boolean createSeqFromParts) {
+
         if (seqrole.isEmpty()) {
             return createDevice(persistor, name, partIDs, author, createSeqFromParts);
         } else {
@@ -919,8 +909,7 @@ public class ConvenienceMethods {
                     devPart.getAssemblies().get(0).addPart(p);
                     //Even if we enable it, make sure you are NOT overwriting.
                     //Passing a sequence overrides the bool.
-                    if(createSeqFromParts && sequence == "")
-                    {
+                    if (createSeqFromParts && sequence == "") {
                         sequence += p.getSequence().getSequence();
                     }
                 }
@@ -943,7 +932,7 @@ public class ConvenienceMethods {
                 seq.addAnnotation(seqAnno);
                 //Attach sequence to part
                 devPart.setSequence(seq);
-                
+
                 seq.setDisplayID(displayID);
                 annoFeat.setDisplayID(displayID);
 
@@ -953,7 +942,7 @@ public class ConvenienceMethods {
                 //Create a BasicModule with the feature set
                 BasicModule bMod = new BasicModule(name, role, setFeat, auth);
                 bMod.setDisplayID(displayID);
-                
+
                 //Attach BasicModule to BioDesign
                 device.setModule(bMod);
             } else if (bSeq) {
@@ -965,7 +954,7 @@ public class ConvenienceMethods {
                 //Chain together objects
                 //Annotate sequence with subfeatures from assembly and self
                 annotateMe(persistor, seq, partIDs);
-                
+
                 //Attach sequence to part
                 devPart.setSequence(seq);
 
@@ -977,7 +966,7 @@ public class ConvenienceMethods {
                 setFeat.add(annoFeat);
 
                 BasicModule bMod = new BasicModule(name, role, setFeat, auth);
-                
+
                 annoFeat.setDisplayID(displayID);
                 bMod.setDisplayID(displayID);
 
@@ -991,9 +980,9 @@ public class ConvenienceMethods {
             return result;
         }
     }
-    
-    public static ObjectId createDevice(Persistor persistor, String name, List<String> partIDs, Map<String, String> seqrole, List<Parameter> parameters, String displayID, String author, boolean createSeqFromParts){
-        
+
+    public static ObjectId createDevice(Persistor persistor, String name, String displayID, List<String> partIDs, Map<String, String> seqrole, List<Parameter> parameters, String author, boolean createSeqFromParts) {
+
         if (seqrole.isEmpty()) {
             return createDevice(persistor, name, partIDs, author, createSeqFromParts);
         } else {
@@ -1033,14 +1022,13 @@ public class ConvenienceMethods {
                     devPart.getAssemblies().get(0).addPart(p);
                     //Even if we enable it, make sure you are NOT overwriting.
                     //Passing a sequence overrides the bool.                   
-                    if(createSeqFromParts && sequence == "")
-                    {
+                    if (createSeqFromParts && sequence == "") {
                         sequence += p.getSequence().getSequence();
                     }
                 }
             }
-            
-            for(Parameter p : parameters){
+
+            for (Parameter p : parameters) {
                 device.addParameter(p);
             }
 
@@ -1069,7 +1057,7 @@ public class ConvenienceMethods {
                 BasicModule bMod = new BasicModule(name, role, setFeat, auth);
                 //Attach BasicModule to BioDesign
                 device.setModule(bMod);
-                
+
                 seq.setDisplayID(displayID);
                 annoFeat.setDisplayID(displayID);
                 bMod.setDisplayID(displayID);
@@ -1078,11 +1066,11 @@ public class ConvenienceMethods {
                 //Create objects
                 Sequence seq = new Sequence(name, sequence, auth);
                 seq.setDisplayID(displayID);
-                
+
                 //Chain together objects
                 //Annotate sequence with subfeatures from assembly and self
                 annotateMe(persistor, seq, partIDs);
-                
+
                 //Attach sequence to part
                 devPart.setSequence(seq);
 
@@ -1097,7 +1085,7 @@ public class ConvenienceMethods {
 
                 annoFeat.setDisplayID(displayID);
                 bMod.setDisplayID(displayID);
-                
+
                 //Chain objects together
                 device.setModule(bMod);
             }
@@ -1106,6 +1094,376 @@ public class ConvenienceMethods {
 
             return result;
         }
+    }
+
+    /*
+    
+        Query Methods
+    
+     */
+    //////////////////////
+    //      Get Part    //
+    //////////////////////
+    public static Map<String, Map<String, String>> getPart(Persistor persistor, Map<String, String> query) {
+        return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null);
+    }
+
+    public static Map<String, Map<String, String>> getPart(Persistor persistor, Map<String, String> query, List<Parameter> parameters) {
+        return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), parameters);
+    }
+
+    public static Map<String, Map<String, String>> getPart(Persistor persistor, String name, String displayID, String role, String sequence, List<Parameter> parameters) {
+        HashMap<String, Object> query = new HashMap<>();
+        Iterable<ObjBase> nameDisplayParameterList = null;
+        Iterable<ObjBase> sequenceList = null;
+        Iterable<ObjBase> roleList = null;
+
+        //nameDisplayParameter list
+        if (displayID != null) {
+            query.put("displayID", displayID);
+        }
+        if (name != null) {
+            query.put("name", name);
+        }
+        if (parameters != null) {
+            if (parameters.size() > 1) {
+                String valuePrefix = "{$regex: '";
+                String valueSuffix = "', $options: 'i'}";
+                for (Parameter p : parameters) {
+                    query.put("parameters multiMatch " + p.getName(),
+                            "{name: " + valuePrefix + p.getName() + valueSuffix
+                            + ", variable: " + valuePrefix + p.getVariable() + valueSuffix
+                            + ", units: " + valuePrefix + p.getUnits() + valueSuffix + "}"
+                    );
+                }
+            } else {
+                query.put("parameters.name", parameters.get(0).getName());
+                query.put("parameters.value", parameters.get(0).getValue());
+                query.put("parameters.variable", parameters.get(0).getVariable());
+                query.put("parameters.units", parameters.get(0).getUnits());
+            }
+        }
+        if (!query.isEmpty()) {
+            nameDisplayParameterList = persistor.findRegex(query);
+            query = new HashMap<>();
+        }
+
+        //sequenceList
+        if (sequence != null) {
+            if (name != null) {
+                query.put("name", name);
+            }
+            query.put("sequence", sequence);
+            sequenceList = persistor.findRegex(query);
+            query = new HashMap<>();
+        }
+
+        //roleList
+        if (role != null) {
+            if (name != null) {
+                query.put("name", name);
+            }
+            query.put("role", role);
+            roleList = persistor.findRegex(query);
+            query = new HashMap<>();
+        }
+
+        //Retrieve objects that matched
+        Map<String, Map<String, String>> returnList = new HashMap<>();
+
+        /*
+        Assumptions:
+        
+        nameDisplayParameterList SHOULD have found it. sequenceList and roleList
+        therefore only have to append role and sequence fields.
+        
+        If for some reason it wasn't found by nameDisplayParameterList, assume
+        that parameters did not match/don't exist. sequenceList will create an
+        entry with its own name, displayID (if exists), and sequence. roleList
+        will then append the role field.
+        
+        If for some reason it wasn't found by any of the above, roleList will
+        create an entry with its own name, displayID, and role.
+         */
+        if (nameDisplayParameterList != null) {
+            for (ObjBase each : nameDisplayParameterList) {
+                BioDesign bd = persistor.get(BioDesign.class, each.getId());
+                if (!returnList.containsKey(bd.getName())) {
+                    Map<String, String> insert = new HashMap<>();
+                    insert.put("name", bd.getName());
+                    if (bd.getDisplayID() != null) {
+                        insert.put("displayID", bd.getDisplayID());
+                    }
+                    if (bd.getParameters() != null) {
+                        String build = "[";
+                        for (Parameter p : bd.getParameters()) {
+                            build += "{name:'" + p.getName()
+                                    + "', value:" + p.getValue()
+                                    + ", variable:'" + p.getVariable()
+                                    + "', units:'" + p.getUnits() + "'},";
+                        }
+                        insert.put("parameters", build + "]");
+                    }
+                    returnList.put(bd.getName(), insert);
+                }
+            }
+        }
+        if (sequenceList != null) {
+            for (ObjBase each : sequenceList) {
+                Sequence s = persistor.get(Sequence.class, each.getId());
+
+                if (returnList.containsKey(s.getName())) {
+                    returnList.get(s.getName()).put("sequence", s.getSequence());
+                } else {
+                    HashMap<String, String> insert = new HashMap<>();
+                    insert.put("name", s.getName());
+                    if (s.getDisplayID() != null) {
+                        insert.put("displayID", s.getDisplayID());
+                    }
+                    insert.put("sequence", s.getSequence());
+                    returnList.put(s.getName(), insert);
+                }
+            }
+        }
+        if (roleList != null) {
+            for (ObjBase each : roleList) {
+                if (persistor.get(each.getId()).getClass().equals(Feature.class)) {
+                    Feature f = (Feature) persistor.get(each.getId());
+                    if (returnList.containsKey(f.getName())) {
+                        returnList.get(f.getName()).put("role", f.getRole());
+                    } else {
+                        HashMap<String, String> insert = new HashMap<>();
+                        insert.put("name", f.getName());
+                        if (f.getDisplayID() != null) {
+                            insert.put("displayID", f.getDisplayID());
+                        }
+                        insert.put("role", f.getRole());
+                        returnList.put(f.getName(), insert);
+                    }
+                } else {
+                    Module m = (Module) persistor.get(each.getId());
+                    if (returnList.containsKey(m.getName())) {
+                        returnList.get(m.getName()).put("role", m.getRole());
+                    } else {
+                        HashMap<String, String> insert = new HashMap<>();
+                        insert.put("name", m.getName());
+                        if (m.getDisplayID() != null) {
+                            insert.put("displayID", m.getDisplayID());
+                        }
+                        insert.put("role", m.getRole());
+                        returnList.put(m.getName(), insert);
+                    }
+                }
+            }
+        }
+        return returnList;
+    }
+
+    //////////////////////////
+    //      Get Device      //
+    //////////////////////////
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query) {
+        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null, null);
+    }
+
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query, Map<String, List> subObjects) {
+        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), (List<Part>) subObjects.get("parts"), (List<Parameter>) subObjects.get("parameters"));
+    }
+
+    //[String displayID], [String name], [String role], [String sequence], [Part[] parts]
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<Part> parts, List<Parameter> parameters) {
+
+        HashMap<String, Object> query = new HashMap<>();
+        Iterable<ObjBase> nameDisplayParameterList = null;
+        Iterable<ObjBase> sequenceList = null;
+        Iterable<ObjBase> roleList = null;
+
+        //nameDisplayParameter list
+        if (displayID != null) {
+            query.put("displayID", displayID);
+        }
+        if (name != null) {
+            query.put("name", name);
+        }
+        if (parameters != null) {
+            if (parameters.size() > 1) {
+                String valuePrefix = "{$regex: '";
+                String valueSuffix = "', $options: 'i'}";
+                for (Parameter p : parameters) {
+                    query.put("parameters multiMatch " + p.getName(),
+                            "{name: " + valuePrefix + p.getName() + valueSuffix
+                            + ", variable: " + valuePrefix + p.getVariable() + valueSuffix
+                            + ", units: " + valuePrefix + p.getUnits() + valueSuffix + "}"
+                    );
+                }
+            } else {
+                query.put("parameters.name", parameters.get(0).getName());
+                query.put("parameters.value", parameters.get(0).getValue());
+                query.put("parameters.variable", parameters.get(0).getVariable());
+                query.put("parameters.units", parameters.get(0).getUnits());
+            }
+        }
+        /*
+        List<ObjectId> possibleParts = new ArrayList<>();
+        if (parts != null) {
+            HashMap<String, Object> partsQuery;
+            //Just in case the parts were not queried before they were created.
+            for (Part p : parts) {
+                partsQuery = new HashMap<>();
+                partsQuery.put("schema", "org.clothocad.model.Part");
+                partsQuery.put("name", p.getName());
+                if (p.getDisplayID() != null) {
+                    partsQuery.put("displayID", p.getDisplayID());
+                }
+                //There should hopefully only be only a couple of objects in here at most
+                Iterable<ObjBase> partList = persistor.findRegex(partsQuery);
+                for (ObjBase each : partList) {
+                    System.out.println(each.getName() + " : " + each.getId().getValue());
+                    possibleParts.add(each.getId());
+                }
+            }
+            for (ObjectId each : possibleParts) {
+                query.put("parts multiMatch", each.getValue());
+            }
+        }
+        */
+        if (!query.isEmpty()) {
+            nameDisplayParameterList = persistor.findRegex(query);
+            query = new HashMap<>();
+        }
+
+        //sequenceList
+        if (sequence != null) {
+            if (name != null) {
+                query.put("name", name);
+            }
+            query.put("sequence", sequence);
+            sequenceList = persistor.findRegex(query);
+            query = new HashMap<>();
+        }
+
+        //roleList
+        if (role != null) {
+            if (name != null) {
+                query.put("name", name);
+            }
+            query.put("role", role);
+            roleList = persistor.findRegex(query);
+            query = new HashMap<>();
+        }
+
+        //Retrieve objects that matched
+        Map<String, Map<String, String>> returnList = new HashMap<>();
+
+        /*
+        Assumptions:
+        
+        nameDisplayParameterList SHOULD have found it. sequenceList and roleList
+        therefore only have to append role and sequence fields.
+        
+        If for some reason it wasn't found by nameDisplayParameterList, assume
+        that parameters did not match/don't exist. sequenceList will create an
+        entry with its own name, displayID (if exists), and sequence. roleList
+        will then append the role field.
+        
+        If for some reason it wasn't found by any of the above, roleList will
+        create an entry with its own name, displayID, and role.
+         */
+        if (nameDisplayParameterList != null) {
+            for (ObjBase each : nameDisplayParameterList) {
+                BioDesign bd = persistor.get(BioDesign.class, each.getId());
+                if (!returnList.containsKey(bd.getName())) {
+                    Map<String, String> insert = new HashMap<>();
+                    insert.put("name", bd.getName());
+                    if (bd.getDisplayID() != null) {
+                        insert.put("displayID", bd.getDisplayID());
+                    }
+                    if (bd.getParameters() != null) {
+                        String build = "[";
+                        for (Parameter p : bd.getParameters()) {
+                            build += "{name:'" + p.getName()
+                                    + "', value:" + p.getValue()
+                                    + ", variable:'" + p.getVariable()
+                                    + "', units:'" + p.getUnits() + "'},";
+                        }
+                        insert.put("parameters", build + "]");
+                    }
+                    //Get Device also needs to list parts.
+                    if (bd.getParts() != null) {
+                        System.out.println("Query found parts for " + bd.getName());
+                        String pbuild = "[";
+                        for (Part p : bd.getParts()) {
+                            pbuild += "{name:'" + p.getName()
+                                    + "', displayID:'" + p.getDisplayID();
+                            if (p.getSequence() != null) {
+                                if (p.getSequence().getAnnotations() != null) {
+                                    for (Annotation anno : p.getSequence().getAnnotations()) {
+                                        if (anno.getFeature().getName().equalsIgnoreCase(p.getName())) {
+                                            pbuild += "', role:'" + anno.getFeature().getName();
+                                            break;
+                                        }
+                                    }
+                                }
+                                pbuild += "', sequence:'" + p.getSequence().getSequence();
+                            }
+                            pbuild += "'},";
+                        }
+                        insert.put("parts", pbuild + "]");
+                    }
+                    System.out.println(insert.values());
+                    returnList.put(bd.getName(), insert);
+                }
+            }
+        }
+        if (sequenceList != null) {
+            for (ObjBase each : sequenceList) {
+                Sequence s = persistor.get(Sequence.class, each.getId());
+
+                if (returnList.containsKey(s.getName())) {
+                    returnList.get(s.getName()).put("sequence", s.getSequence());
+                } else {
+                    HashMap<String, String> insert = new HashMap<>();
+                    insert.put("name", s.getName());
+                    if (s.getDisplayID() != null) {
+                        insert.put("displayID", s.getDisplayID());
+                    }
+                    insert.put("sequence", s.getSequence());
+                    returnList.put(s.getName(), insert);
+                }
+            }
+        }
+        if (roleList != null) {
+            for (ObjBase each : roleList) {
+                if (persistor.get(each.getId()).getClass().equals(Feature.class)) {
+                    Feature f = (Feature) persistor.get(each.getId());
+                    if (returnList.containsKey(f.getName())) {
+                        returnList.get(f.getName()).put("role", f.getRole());
+                    } else {
+                        HashMap<String, String> insert = new HashMap<>();
+                        insert.put("name", f.getName());
+                        if (f.getDisplayID() != null) {
+                            insert.put("displayID", f.getDisplayID());
+                        }
+                        insert.put("role", f.getRole());
+                        returnList.put(f.getName(), insert);
+                    }
+                } else {
+                    Module m = (Module) persistor.get(each.getId());
+                    if (returnList.containsKey(m.getName())) {
+                        returnList.get(m.getName()).put("role", m.getRole());
+                    } else {
+                        HashMap<String, String> insert = new HashMap<>();
+                        insert.put("name", m.getName());
+                        if (m.getDisplayID() != null) {
+                            insert.put("displayID", m.getDisplayID());
+                        }
+                        insert.put("role", m.getRole());
+                        returnList.put(m.getName(), insert);
+                    }
+                }
+            }
+        }
+        return returnList;
     }
 
     //Scan the sequence for multiple string patterns, annotate it
@@ -1143,20 +1501,18 @@ public class ConvenienceMethods {
             Feature feat = null;
             if (featPart.getSequence() == null) {
                 continue;
-            }
-            else if(featPart.getSequence().getAnnotations() == null){
+            } else if (featPart.getSequence().getAnnotations() == null) {
                 continue;
             }
-
-            System.out.println("AnnotateMe found : " + em.getKeyword());
+//            System.out.println("AnnotateMe found : " + em.getKeyword());
 
             //Find part's annotation
             for (Annotation anno : featPart.getSequence().getAnnotations()) {
                 if (anno.getFeature() != null) {
-                    System.out.println("AnnotateMe annoFeat : " + anno.getFeature().getName());
+//                    System.out.println("AnnotateMe annoFeat : " + anno.getFeature().getName());
                     if (anno.getFeature().getSequence() != null) {
                         //found feature that == part
-                        System.out.println("Comparing with : " + anno.getFeature().getSequence().getSequence());
+//                        System.out.println("Comparing with : " + anno.getFeature().getSequence().getSequence());
 
                         if (anno.getFeature().getSequence() == featPart.getSequence()) {
                             feat = anno.getFeature();
