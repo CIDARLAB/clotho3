@@ -338,7 +338,6 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "set":
                 body.remove("username");
-                body.remove("password");
                 if (!body.has("id")) {
                     response.getWriter().write("You must supply an id \r\n");
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
