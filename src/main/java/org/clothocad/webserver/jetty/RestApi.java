@@ -139,6 +139,7 @@ public class RestApi extends HttpServlet {
                     result = obj.toString();
                 }
                 break;
+               
         }
 
         response.getWriter().write(result);
@@ -197,9 +198,12 @@ public class RestApi extends HttpServlet {
         String objectName = "";
         String role = "";
         String rawSequence = "";
+        String displayID = "";
         String result = "";
         JSONArray paramsArray = null;
         List params = null;
+        JSONArray partsArray = null;
+        List parts = null;
         Map<String, String> sequenceRole = null;
 
 
@@ -312,6 +316,71 @@ public class RestApi extends HttpServlet {
                         ObjectId deviceID = createDevice(persistor, objectName, partIDArray, sequenceRole, params, name, createSeqFromParts);
                         result = deviceID.toString();
                         break;
+                }
+            case "get":
+                switch (type) {
+                    case "conveniencePart":
+                        role = body.getString("role");
+                        rawSequence = body.getString("sequence");
+                        objectName = body.getString("objectName");
+                        displayID = body.getString("displayID");
+
+                        paramsArray = body.getJSONArray("params");
+                        params = new ArrayList();
+                        for (int i = 0; i < paramsArray.length(); i++) {
+                            JSONObject childObject = paramsArray.getJSONObject(i);
+                            String paramName = childObject.getString("name");
+                            Double paramValue = childObject.getDouble("value");
+                            String paramVariable = childObject.getString("variable");
+                            String paramUnits = childObject.getString("units");
+                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                            params.add(p);
+                        }
+                        
+                        Map<String, Map<String, String>> map = getPart(persistor, objectName, displayID, role, rawSequence, params);
+                        JSONObject jsonRes = new JSONObject(map);
+                        result = jsonRes.toString();
+                        break;
+                        
+                    case "convenienceDevice":
+                        role = body.getString("role");
+                        rawSequence = body.getString("sequence");
+                        objectName = body.getString("objectName");
+                        displayID = body.getString("displayID");
+                        
+                        paramsArray = body.getJSONArray("params");
+                        params = new ArrayList();
+                        for (int i = 0; i < paramsArray.length(); i++) {
+                            JSONObject childObject = paramsArray.getJSONObject(i);
+                            String paramName = childObject.getString("name");
+                            Double paramValue = childObject.getDouble("value");
+                            String paramVariable = childObject.getString("variable");
+                            String paramUnits = childObject.getString("units");
+                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                            params.add(p);
+                        }
+                        
+                        partsArray = body.getJSONArray("parts");
+                        parts = new ArrayList();
+                        for (int i = 0; i < partsArray.length(); i++) {
+                            JSONObject childObject = partsArray.getJSONObject(i);
+                            String partName = childObject.getString("name");
+                            String partDescription = childObject.getString("description");
+                            
+                            JSONObject sequenceObject = body.getJSONObject("sequence");
+                            objectName = sequenceObject.getString("objectName");
+                            rawSequence = sequenceObject.getString("sequence");
+                            sequence = new Sequence(objectName, rawSequence, user);
+
+                            Part p = new Part(partName, partDescription, sequence, user);
+                            parts.add(p);
+                        }
+
+                        Map<String, Map<String, String>> device_map = getDevice(persistor, objectName, displayID, role, rawSequence, parts, params);
+                        JSONObject jsonDeviceRes = new JSONObject(device_map);
+                        result = jsonDeviceRes.toString();
+                        break;
+                    
                 }
                 break;
         }
