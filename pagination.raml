@@ -1,0 +1,345 @@
+#%RAML 1.0
+
+# File: pagination.raml
+# Modified file for Clotho 4/21/2017 meeting
+# Author: Jason Lu (jasonlu6@bu.edu)
+# Collaborator: Nick Pierce (npeace@bu.edu)
+# CIDAR Lab Spring 2017
+# Mentors:
+# Professor Douglas Densmore
+# David Tran
+# Jacob Kozol
+# Alex Vahid
+# Date: 4/20/2017
+
+# Description: this is a RAML file that will document
+# the general usage of the Clotho REST api, which
+# can be found in the Netbeans file:
+
+# RestApi.java. However, it will have an additional element
+# of pagination for selected REST API methods:
+
+# getByName
+
+# Made based on the information of the
+# Clotho wiki, which is a github wiki page:
+# https://github.com/CIDARLAB/clotho3/wiki/REST-API
+
+# For parameteric purposes, all
+# usernames and passwords are assumed
+# to be fictional (or not in public domain)
+
+# Pagination: (definition):
+# the method of breaking down a large amount of records /
+# documents into discrete "pages" in order to ease the
+# workload of querying data in the records / docs
+
+title: Clotho RestAPI Paginated # Title
+version: 2
+# use Github base URI
+# URI: Universal Resource Identifier
+baseUri: http://example.com/{version_2}
+documentation:
+  - title: Clotho REST API (with Pagination)
+    content: |
+      This is the basic documentation for Clotho Rest API framework.
+      It has the following methods: (based on example curl requests)
+        - homepage: direct the user to Clotho homepage
+        - createUser: create a user for Clotho
+        - createSequence: create a DNA/RNA sequence for Clotho to query
+        - createPart: create part of an existing sequence
+        - createConveniencePart: create part of an existing sequence
+        using a convenience method in the class file: Convenience.java
+        - getById: get a user profile / object by id
+        - getByName: get a user profile / object by name
+        - set: a put method that sets the profile
+        - delete: a delete method that deletes a profile
+        - userPaginate: a paginated version of createUser
+
+      Paginated methods:
+        - getByName/{pagination}: a paginated version of getByName
+        in which we can allow the user to:
+        - paginate their name,
+        - store the maximum amount of names per page
+        - be able to see the previous and next page of names.
+        # generic example site to show where the HTML is generated
+        - [example.com](https://www.example.com).
+
+annotationTypes:
+/arguments:
+  # get the response from the user to use Clotho
+  get:
+    responses:
+      # RAML 100 status code
+      100:
+        body:
+          # connection to the JSON arguments
+          application/json:
+
+# User Homepage Parameters
+/homepage:
+  post:
+    body:
+      application/json:
+        type: object
+        properties:
+         # username for Clotho
+          username: string
+          # password for Clotho
+          password: string
+        example: |
+            {
+            "username": "jsmith",
+            "password": "allstar"
+            }
+
+# getByName method
+
+# pagination implementation
+/getByName:
+  get:
+    body:
+      application/json:
+        type: object
+        properties:
+          # username for Clotho
+          username: string
+          # password for Clotho
+          password: string
+        example: |
+          {
+          "username": "jsmith",
+          "password": "allstar"
+          }
+
+  # paginated getByName method
+  # using the queryParameter middleware functions
+  # Credit / Source:
+  # http://stackoverflow.com/questions/26452838/raml-traits-definition
+
+/getByName/{paginate}:
+  get:
+    description: Getting the names
+    responses:
+        # 200 code: successful http load
+        200:
+          body:
+              # parameter JSON files
+              # schema: !include name-output.json# paginated file (name-output.json)
+              # example: !include name-example.json # paginated name file
+
+        # 400-code: the http is not found (exception)
+        400:
+          body:
+            # parameter JSON files
+            # schema: !include schemas/error-schema.json
+            # example: !include schemas/client-error-500-example.json
+
+        # 500-code: Interal Server Error
+        500:
+          body:
+            # parameter JSON files
+            # schema: !include schemas/error-schema.json
+            # example: !include schemas/server-error-500-example.json
+
+  post:
+    # Paginate a new name on the page while being
+    # able to paginate functions
+    description: Paginate a new name for the page
+    queryParameters:
+          # page number of paginated name
+          pagenumber:
+            description: The page number of the name
+            type: integer
+            minimum: 1
+          pagesize:
+          # number of requests per page (quota of 10)
+            description: The number of requests per page
+            type: integer
+            minimum: 10
+          prev:
+          # move to the previously paginated page
+            description: Previous page
+            type: integer
+            maximum: 0
+          # move to the next paginated page
+          next:
+            description: Next page
+            type: integer
+            maximum: 20
+
+  # getByID method
+  /getByID:
+    get:
+      body:
+        application/json:
+          type: object
+          properties:
+            # username for Clotho
+            # password for Clotho
+            # id to retrieve the identification of user
+            username: string
+            password: string
+          example: |
+           {
+           "username": "jsmith",
+           "password": "allstar"
+           }
+
+  # getById paginated form
+
+  # createUser method
+  /createUser:
+    post:
+      body:
+        application/json:
+          type: object
+          properties:
+            # username for Clotho
+            # password for Clotho
+            username: string
+            password: string
+          example: |
+           {
+           "username": "jsmith",
+           "password": "ece"
+           }
+
+  # additional pagination for creating users
+
+  # createSequence method
+  /createSequence:
+    post:
+      body:
+        application/json:
+          type: object
+          properties:
+            # username for Clotho
+            # password for Clotho
+            # object name to create
+            # DNA / RNA sequence to put into Clotho
+            # mongoDB
+            username: string
+            password: string
+            objectName: string
+            sequence: string
+          example: |
+            {
+            "username": "jsmith",
+            "password": "asdf",
+            "objectName": "Test Sequence",
+            "sequence": "ata"
+            }
+
+    # createPart method
+    /createPart:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # password for Clotho
+              # object name to create
+              # id to use for existing sequence
+              username: string
+              password: string
+              objectName: string
+              seqId: number
+            example: |
+             {
+             "username": "jsmith",
+             "password": "overwatch",
+             "objectName": "Test Part",
+             "seqId": 321
+             }
+
+    # createConveniencePart method
+    /createConveniencePart:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # object name for Clotho to create
+              # sequence to put into mongoDB
+              # role for the sequence
+              username: string
+              objectName: string
+              sequence: string
+              roleSequence: string
+            example: |
+             {
+             "username": "jsmith",
+             "objectName": "Test Convenience Part",
+             "sequence": "tccctatcagtgatagagattgacatccctatcagtgatagagatac",
+             "roleSequence": "GENE"
+               }
+
+    # createConvenienceDevice method
+    /createConvenienceDevice:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # object name for Clotho to create
+              # sequence to put into mongoDB (may be duplicated)
+              # role for the sequence
+              # part-IDs: id for the part of device (array)
+              username: string
+              objectName: string
+              sequence: string
+              roleSequence: string
+
+            example: |
+               {
+               "username": "jsmith",
+               "objectName": "Test Convenience Device",
+               "sequence": "actacttcgcatcatgttcatca",
+               "roleSequence": "GENE"
+                 }
+
+      # set method
+      /set:
+        put:
+          body:
+            application/json:
+              type: object
+              properties:
+              # username for Clotho
+              # password for Clotho
+              # primary email (to add as contact)
+              # id for in case of change of user
+               username: string
+               password: string
+               primaryEmail: string
+               id: number
+              example: |
+                {
+                "username": "jsmith",
+                "password": "asdfasdf",
+                "primaryEmail": "jsmove@bu.edu",
+                "id": 232422526
+                }
+    # delete method
+    /delete:
+      delete:
+        body:
+          application/json:
+            type: object
+            properties:
+            # username for Clotho
+            # password for Clotho
+            # id to select to delete from Clotho mongoDB
+             username: string
+             password: string
+             id: number
+            example: |
+              {
+              "username": "jsmith",
+              "password": "mcga",
+              "id": 123321123
+              }
