@@ -37,7 +37,6 @@ public class RestApi extends HttpServlet {
     
     REST API servlet is at idontremember.url/data/*    
      */
-    
     private static Router router;
     private static Persistor persistor;
     private static Message m;
@@ -139,10 +138,10 @@ public class RestApi extends HttpServlet {
                     result = obj.toString();
                 }
                 break;
-               
+
         }
 
-        response.getWriter().write(result);
+        response.getWriter().write("\n" + result);
     }
 
     protected void doDelete(HttpServletRequest request,
@@ -152,17 +151,17 @@ public class RestApi extends HttpServlet {
 
         String[] pathID = request.getPathInfo().split("/");
         String method = pathID[2];
-        
+
         JSONObject body = getRequestBody(request.getReader());
 
         switch (method) {
             case "delete":
                 if (persistor.has(new ObjectId(body.getString("id")))) {
                     persistor.delete(new ObjectId(body.getString("id")));
-                    response.getWriter().write("Object has been deleted\r\n");
+                    response.getWriter().write("\n Object has been deleted\r\n");
                     response.setStatus(HttpServletResponse.SC_OK);
                 } else {
-                    response.getWriter().write("Object with id " + body.getString("id") + " does not exist\r\n");
+                    response.getWriter().write("\n Object with id " + body.getString("id") + " does not exist\r\n");
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
                 break;
@@ -205,7 +204,6 @@ public class RestApi extends HttpServlet {
         JSONArray partsArray = null;
         List parts = null;
         Map<String, String> sequenceRole = null;
-
 
         switch (method) {
             case "create":
@@ -263,6 +261,7 @@ public class RestApi extends HttpServlet {
                         role = body.getString("role");
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
+                        displayID = body.getString("displayID");
 
                         paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
@@ -280,16 +279,17 @@ public class RestApi extends HttpServlet {
                         sequenceRole.put("role", role);
                         sequenceRole.put("sequence", rawSequence);
 
-                        ObjectId partId = createPart(persistor, objectName, sequenceRole, params, name);
-                        result = partId.toString();
+                        ObjectId partId = createPart(persistor, objectName, displayID, sequenceRole, params, name);
+                        result = partId.getValue();
                         break;
 
                     case "convenienceDevice":
                         role = body.getString("role");
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
+                        displayID = body.getString("displayID");
                         boolean createSeqFromParts = body.getBoolean("createSeqFromParts");
-                        
+
                         paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
                         for (int i = 0; i < paramsArray.length(); i++) {
@@ -301,22 +301,22 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
-                        
-                        
+
                         partIDs = body.getString("partIDs").split(",");
                         ArrayList<String> partIDArray = new ArrayList<>();
                         for (String partID : partIDs) {
                             partIDArray.add(partID);
                         }
-                        
+
                         sequenceRole = new HashMap<>();
                         sequenceRole.put("role", role);
                         sequenceRole.put("sequence", rawSequence);
 
-                        ObjectId deviceID = createDevice(persistor, objectName, partIDArray, sequenceRole, params, name, createSeqFromParts);
-                        result = deviceID.toString();
+                        ObjectId deviceID = createDevice(persistor, objectName, displayID, partIDArray, sequenceRole, params, name, createSeqFromParts);
+                        result = deviceID.getValue();
                         break;
                 }
+                break;
             case "get":
                 switch (type) {
                     case "conveniencePart":
@@ -336,18 +336,18 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
-                        
+
                         Map<String, Map<String, String>> map = getPart(persistor, objectName, displayID, role, rawSequence, params);
                         JSONObject jsonRes = new JSONObject(map);
                         result = jsonRes.toString();
                         break;
-                        
+
                     case "convenienceDevice":
                         role = body.getString("role");
                         rawSequence = body.getString("sequence");
                         objectName = body.getString("objectName");
                         displayID = body.getString("displayID");
-                        
+
                         paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
                         for (int i = 0; i < paramsArray.length(); i++) {
@@ -359,20 +359,21 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
-                        
+
                         partsArray = body.getJSONArray("parts");
                         parts = new ArrayList();
                         for (int i = 0; i < partsArray.length(); i++) {
                             JSONObject childObject = partsArray.getJSONObject(i);
                             String partName = childObject.getString("name");
-                            String partDescription = childObject.getString("description");
-                            
+//                            String partDescription = childObject.getString("description");
+
                             JSONObject sequenceObject = body.getJSONObject("sequence");
                             objectName = sequenceObject.getString("objectName");
                             rawSequence = sequenceObject.getString("sequence");
                             sequence = new Sequence(objectName, rawSequence, user);
 
-                            Part p = new Part(partName, partDescription, sequence, user);
+//                            Part p = new Part(partName, partDescription, sequence, user);
+                            Part p = new Part(partName, sequence, user);
                             parts.add(p);
                         }
 
@@ -380,7 +381,7 @@ public class RestApi extends HttpServlet {
                         JSONObject jsonDeviceRes = new JSONObject(device_map);
                         result = jsonDeviceRes.toString();
                         break;
-                    
+
                 }
                 break;
         }
@@ -391,7 +392,7 @@ public class RestApi extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_CREATED);
         }
 
-        response.getWriter().write(result);
+        response.getWriter().write("\n" + result);
     }
 
     protected void doPut(HttpServletRequest request,
