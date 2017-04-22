@@ -216,26 +216,26 @@ public class RestApi extends HttpServlet {
             case "create":
                 switch (type) {
                     
-//                    FIX
-//                    case "user":
-//                        Map<String, String> credentials = new HashMap<>();
-//                        credentials.put("username", username);
-//                        credentials.put("credentials", password);
-//                        credentials.put("displayname", username);
-//
-//                        m = new Message(Channel.createUser, credentials, null, null);
-//                        this.router.receiveMessage(this.rc, m);
-//                    
-//                        break;
+//                  Needs error codes
+                    case "user":
+                        Map<String, String> credentials = new HashMap<>();
+                        credentials.put("username", username);
+                        credentials.put("credentials", password);
+                        credentials.put("displayname", username);
+
+                        m = new Message(Channel.createUser, credentials, null, null);
+                        this.router.receiveMessage(this.rc, m);
+                        result = "createUser";
+                        break;
 
                     case "sequence":
-                        sequence = new Sequence(objectName, rawSequence, person);
+                        sequence = new Sequence(objectName, description, rawSequence, person);
                         ObjectId sequenceObjID = persistor.save(sequence);
                         result = sequenceObjID.toString();
                         break;
 
                     case "part":
-                        if (body.has("id")) {
+                        if (id != null) {
                             sequence = persistor.get(Sequence.class, id);
                             part = new Part(objectName, description, sequence, person);
                         } else {
@@ -350,15 +350,16 @@ public class RestApi extends HttpServlet {
                         for (int i = 0; i < partsArray.length(); i++) {
                             JSONObject childObject = partsArray.getJSONObject(i);
                             String partName = childObject.getString("name");
-                            String partDescription = childObject.getString("description");
+                            String partDescription = childObject.has("description") ? childObject.getString("description") : null;
                             
-                            // What this?
-                            JSONObject sequenceObject = body.getJSONObject("sequence");
-                            String partObjectName = sequenceObject.getString("objectName");
-                            String partRawSequence = sequenceObject.getString("sequence");
-                            Sequence partSequence = new Sequence(partObjectName, partRawSequence, person);
+//                            'sequence':[{'sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac'}]
+//                            JSONObject sequenceObject = childObject.getJSONArray("sequence").getJSONObject(0);
+//                            String partObjectName = sequenceObject.getString("objectName");
+//                            String partRawSequence = sequenceObject.getString("sequence");
+//
+//                            Sequence partSequence = new Sequence(partObjectName, partRawSequence, person);
 
-                            Part p = new Part(partName, partDescription, partSequence, person);
+                            Part p = new Part(partName, partDescription, person);
                             parts.add(p);
                         }
 
