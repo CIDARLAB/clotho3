@@ -55,30 +55,31 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String method = pathID[2];
-        String toGet = pathID[3];
+        int pathLength = pathID.length;
+
+        String method = (pathLength >= 3) ? pathID[2] : null;
+        String toGet = (pathLength >= 4) ? pathID[3] : null;
+        String lastID = (pathLength >= 5) ? pathID[4] : null;
+        String nextPrev = (pathLength >= 6) ? pathID[5] : null;
+        String pageSize = (pathLength >= 7) ? pathID[6] : null;
 
         String result = "";
         switch (method) {
             case "getByName":
-                String lastId = pathID[4];
-                String nextPrev = pathID[5];
-                String pageSize = pathID[6];
-
                 if (pageSize != null && !pageSize.isEmpty()) {
 
                     String query = "{name:\"" + toGet + "\"}";
                     String sortOrder = "";
 
                     //if going to the next page
-                    if (nextPrev.equals("next") && (lastId != null && !lastId.isEmpty())) {
-                        query = "{name:\"" + toGet + "\",_id:{ $gt : \"" + lastId + "\"}}";
+                    if (nextPrev.equals("next") && (lastID != null && !lastID.isEmpty())) {
+                        query = "{name:\"" + toGet + "\",_id:{ $gt : \"" + lastID + "\"}}";
                         sortOrder = "{_id:1}";
                     }
 
                     //if going to the previous page
-                    if (nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) {
-                        query = "{name:\"" + toGet + "\",_id:{ $lte : \"" + lastId + "\"}}";
+                    if (nextPrev.equals("prev") && (lastID != null && !lastID.isEmpty())) {
+                        query = "{name:\"" + toGet + "\",_id:{ $lte : \"" + lastID + "\"}}";
                         sortOrder = "{_id:-1}";
                     }
                     int per_page = Integer.parseInt(pageSize);
@@ -94,7 +95,7 @@ public class RestApi extends HttpServlet {
                     JSONObject next = new JSONObject();
 
                     //if we are going to the previous page, the results will be in the wrong direction because of the way the query and sort order go
-                    if (nextPrev.equals("prev") && (lastId != null && !lastId.isEmpty())) {
+                    if (nextPrev.equals("prev") && (lastID != null && !lastID.isEmpty())) {
                         queried.list = Lists.reverse(queried.list);
                     }
                     //the last id in the records of the current page, used to navigate to next and previous pages
@@ -150,18 +151,21 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String method = pathID[2];
+        int pathLength = pathID.length;
 
         JSONObject body = getRequestBody(request.getReader());
 
+        String method = (pathLength >= 3) ? pathID[2] : null;
+        String id = body.has("id") ? body.getString("id") : null;
+
         switch (method) {
             case "delete":
-                if (persistor.has(new ObjectId(body.getString("id")))) {
-                    persistor.delete(new ObjectId(body.getString("id")));
+                if (persistor.has(new ObjectId(id))) {
+                    persistor.delete(new ObjectId(id));
                     response.getWriter().write("\n Object has been deleted\r\n");
                     response.setStatus(HttpServletResponse.SC_OK);
                 } else {
-                    response.getWriter().write("\n Object with id " + body.getString("id") + " does not exist\r\n");
+                    response.getWriter().write("\n Object with id " + id + " does not exist\r\n");
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
                 break;
@@ -173,58 +177,69 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String method = pathID[2];
-        String type = pathID[3];
+        int pathLength = pathID.length;
+
+        String method = (pathLength >= 3) ? pathID[2] : null;
+        String type = (pathLength >= 4) ? pathID[3] : null;
 
         JSONObject body = getRequestBody(request.getReader());;
 
-        if (method.equals("create") && type.equals("user")) {
-            Map<String, String> credentials = new HashMap<>();
-            credentials.put("username", body.get("username").toString());
-            credentials.put("credentials", body.get("password").toString());
-            credentials.put("displayname", body.get("username").toString());
+        // Input
+        String username = body.has("username") ? body.getString("username") : null;
+        String password = body.has("password") ? body.getString("password") : null;
+        String objectName = body.has("objectName") ? body.getString("objectName") : null;
+        String rawSequence = body.has("sequence") ? body.getString("sequence") : null;
+        String description = body.has("description") ? body.getString("description") : null;
+        String role = body.has("role") ? body.getString("role") : null;
+        String displayID = body.has("displayID") ? body.getString("displayID") : null;
+        String[] partIDs = body.has("partIDs") ? body.getString("partIDs").split(",") : null;
 
-            m = new Message(Channel.createUser, credentials, null, null);
-            this.router.receiveMessage(this.rc, m);
-        }
+        ObjectId id = body.has("id") ? new ObjectId(body.getString("id")) : null;
 
-        String name = body.get("username").toString();
-        Person user = new Person(name);
+        JSONArray paramsArray = body.has("params") ? body.getJSONArray("params") : null;
+        JSONArray partsArray = body.has("parts") ? body.getJSONArray("parts") : null;
+
+        // Created
+        String result = "";
+
         Sequence sequence = null;
+        Person person = new Person(username);
         Part part = null;
         Feature feature = null;
-        String[] partIDs = {};
-        String objectName = "";
-        String role = "";
-        String rawSequence = "";
-        String displayID = "";
-        String result = "";
-        JSONArray paramsArray = null;
+
         List params = null;
-        JSONArray partsArray = null;
         List parts = null;
+
         Map<String, String> sequenceRole = null;
 
         switch (method) {
             case "create":
                 switch (type) {
+                    
+//                    FIX
+//                    case "user":
+//                        Map<String, String> credentials = new HashMap<>();
+//                        credentials.put("username", username);
+//                        credentials.put("credentials", password);
+//                        credentials.put("displayname", username);
+//
+//                        m = new Message(Channel.createUser, credentials, null, null);
+//                        this.router.receiveMessage(this.rc, m);
+//                    
+//                        break;
+
                     case "sequence":
-                        objectName = body.getString("objectName");
-                        rawSequence = body.getString("sequence");
-                        sequence = new Sequence(objectName, rawSequence, user);
-                        ObjectId sequenceObj = persistor.save(sequence);
-                        result = sequenceObj.toString();
+                        sequence = new Sequence(objectName, rawSequence, person);
+                        ObjectId sequenceObjID = persistor.save(sequence);
+                        result = sequenceObjID.toString();
                         break;
 
                     case "part":
-                        objectName = body.getString("objectName");
                         if (body.has("id")) {
-                            String sequenceId = body.getString("id");
-                            ObjectId id = new ObjectId(sequenceId);
                             sequence = persistor.get(Sequence.class, id);
-                            part = new Part(objectName, sequence, user);
+                            part = new Part(objectName, description, sequence, person);
                         } else {
-                            part = new Part(objectName, user);
+                            part = new Part(objectName, description, person);
                         }
 
                         ObjectId partObj = persistor.save(part);
@@ -232,38 +247,25 @@ public class RestApi extends HttpServlet {
                         break;
 
                     case "feature":
-                        objectName = body.getString("objectName");
-                        role = body.getString("role");
-                        feature = new Feature(objectName, role, user);
+                        feature = new Feature(objectName, role, person);
                         ObjectId featureObj = persistor.save(feature);
                         result = featureObj.toString();
                         break;
 
                     case "module":
-                        objectName = body.getString("objectName");
-                        role = body.getString("role");
-
-                        if (body.has("id")) {
-                            String featureId = body.getString("id");
-                            ObjectId id = new ObjectId(featureId);
+                        if (id != null) {
                             feature = persistor.get(Feature.class, id);
                         } else {
-                            feature = new Feature(objectName, role, user);
+                            feature = new Feature(objectName, role, person);
                         }
                         Set<Feature> features = new HashSet<Feature>();
                         features.add(feature);
-                        BasicModule module = new BasicModule(objectName, role, features, user);
+                        BasicModule module = new BasicModule(objectName, role, features, person);
                         ObjectId moduleObj = persistor.save(module);
                         result = moduleObj.toString();
                         break;
 
                     case "conveniencePart":
-                        role = body.getString("role");
-                        rawSequence = body.getString("sequence");
-                        objectName = body.getString("objectName");
-                        displayID = body.getString("displayID");
-
-                        paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
                         for (int i = 0; i < paramsArray.length(); i++) {
                             JSONObject childObject = paramsArray.getJSONObject(i);
@@ -279,15 +281,11 @@ public class RestApi extends HttpServlet {
                         sequenceRole.put("role", role);
                         sequenceRole.put("sequence", rawSequence);
 
-                        ObjectId partId = createPart(persistor, objectName, displayID, sequenceRole, params, name);
+                        ObjectId partId = createPart(persistor, objectName, displayID, sequenceRole, params, username);
                         result = partId.getValue();
                         break;
 
                     case "convenienceDevice":
-                        role = body.getString("role");
-                        rawSequence = body.getString("sequence");
-                        objectName = body.getString("objectName");
-                        displayID = body.getString("displayID");
                         boolean createSeqFromParts = body.getBoolean("createSeqFromParts");
 
                         paramsArray = body.getJSONArray("params");
@@ -302,7 +300,6 @@ public class RestApi extends HttpServlet {
                             params.add(p);
                         }
 
-                        partIDs = body.getString("partIDs").split(",");
                         ArrayList<String> partIDArray = new ArrayList<>();
                         for (String partID : partIDs) {
                             partIDArray.add(partID);
@@ -312,7 +309,7 @@ public class RestApi extends HttpServlet {
                         sequenceRole.put("role", role);
                         sequenceRole.put("sequence", rawSequence);
 
-                        ObjectId deviceID = createDevice(persistor, objectName, displayID, partIDArray, sequenceRole, params, name, createSeqFromParts);
+                        ObjectId deviceID = createDevice(persistor, objectName, displayID, partIDArray, sequenceRole, params, username, createSeqFromParts);
                         result = deviceID.getValue();
                         break;
                 }
@@ -320,12 +317,6 @@ public class RestApi extends HttpServlet {
             case "get":
                 switch (type) {
                     case "conveniencePart":
-                        role = body.getString("role");
-                        rawSequence = body.getString("sequence");
-                        objectName = body.getString("objectName");
-                        displayID = body.getString("displayID");
-
-                        paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
                         for (int i = 0; i < paramsArray.length(); i++) {
                             JSONObject childObject = paramsArray.getJSONObject(i);
@@ -343,12 +334,6 @@ public class RestApi extends HttpServlet {
                         break;
 
                     case "convenienceDevice":
-                        role = body.getString("role");
-                        rawSequence = body.getString("sequence");
-                        objectName = body.getString("objectName");
-                        displayID = body.getString("displayID");
-
-                        paramsArray = body.getJSONArray("params");
                         params = new ArrayList();
                         for (int i = 0; i < paramsArray.length(); i++) {
                             JSONObject childObject = paramsArray.getJSONObject(i);
@@ -359,21 +344,21 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
-
-                        partsArray = body.getJSONArray("parts");
+                        
+                        
                         parts = new ArrayList();
                         for (int i = 0; i < partsArray.length(); i++) {
                             JSONObject childObject = partsArray.getJSONObject(i);
                             String partName = childObject.getString("name");
-//                            String partDescription = childObject.getString("description");
-
+                            String partDescription = childObject.getString("description");
+                            
+                            // What this?
                             JSONObject sequenceObject = body.getJSONObject("sequence");
-                            objectName = sequenceObject.getString("objectName");
-                            rawSequence = sequenceObject.getString("sequence");
-                            sequence = new Sequence(objectName, rawSequence, user);
+                            String partObjectName = sequenceObject.getString("objectName");
+                            String partRawSequence = sequenceObject.getString("sequence");
+                            Sequence partSequence = new Sequence(partObjectName, partRawSequence, person);
 
-//                            Part p = new Part(partName, partDescription, sequence, user);
-                            Part p = new Part(partName, sequence, user);
+                            Part p = new Part(partName, partDescription, partSequence, person);
                             parts.add(p);
                         }
 
@@ -381,7 +366,6 @@ public class RestApi extends HttpServlet {
                         JSONObject jsonDeviceRes = new JSONObject(device_map);
                         result = jsonDeviceRes.toString();
                         break;
-
                 }
                 break;
         }
@@ -401,20 +385,20 @@ public class RestApi extends HttpServlet {
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
-        String method = pathID[2];
+        int pathLength = pathID.length;
+        String method = (pathLength >= 3) ? pathID[2] : null;
 
         JSONObject body = getRequestBody(request.getReader());
+        ObjectId id = body.has("id") ? new ObjectId(body.getString("id")) : null;
 
         switch (method) {
             case "set":
-                body.remove("username");
+//                body.remove("username");
                 if (!body.has("id")) {
                     response.getWriter().write("You must supply an id \r\n");
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     break;
                 }
-
-                ObjectId id = new ObjectId(body.getString("id"));
 
                 if (!persistor.has(id)) {
                     response.getWriter().write("No object with this id exists\r\n");
@@ -424,6 +408,7 @@ public class RestApi extends HttpServlet {
 
                 Map<String, Object> original = persistor.getAsJSON(id);
 
+                // JACOBCHECK
                 Iterator<String> keysItr = body.keys();
                 while (keysItr.hasNext()) {
                     String key = keysItr.next();
