@@ -209,6 +209,7 @@ public class RestApi extends HttpServlet {
         List parts = null;
 
         Map<String, String> sequenceRole = null;
+        Map<String, String> query = null;
 
         switch (method) {
             case "create":
@@ -336,54 +337,81 @@ public class RestApi extends HttpServlet {
                         break;
                 }
                 break;
+                
             case "get":
                 switch (type) {
                     case "conveniencePart":
-                        params = new ArrayList();
-                        for (int i = 0; i < paramsArray.length(); i++) {
-                            JSONObject childObject = paramsArray.getJSONObject(i);
-                            String paramName = childObject.getString("name");
-                            Double paramValue = childObject.getDouble("value");
-                            String paramVariable = childObject.getString("variable");
-                            String paramUnits = childObject.getString("units");
-                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
-                            params.add(p);
+                        Map<String, Map<String, String>> part_map = new HashMap<String, Map<String, String>>();
+
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                            part_map = getPart(persistor, query, params);
+                        } else {
+                            part_map = getPart(persistor, query);
                         }
 
-                        Map<String, Map<String, String>> map = getPart(persistor, objectName, displayID, role, rawSequence, params);
-                        JSONObject jsonRes = new JSONObject(map);
+                        JSONObject jsonRes = new JSONObject(part_map);
                         result = jsonRes.toString();
                         break;
 
                     case "convenienceDevice":
-                        params = new ArrayList();
-                        for (int i = 0; i < paramsArray.length(); i++) {
-                            JSONObject childObject = paramsArray.getJSONObject(i);
-                            String paramName = childObject.getString("name");
-                            Double paramValue = childObject.getDouble("value");
-                            String paramVariable = childObject.getString("variable");
-                            String paramUnits = childObject.getString("units");
-                            Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
-                            params.add(p);
+                        Map<String, List> subObjects = new HashMap<String, List>();
+                        Map<String, Map<String, String>> device_map = new HashMap<String, Map<String, String>>();
+
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                            subObjects.put("params", params);
                         }
 
-                        parts = new ArrayList();
-                        for (int i = 0; i < partsArray.length(); i++) {
-                            JSONObject childObject = partsArray.getJSONObject(i);
-                            String partName = childObject.getString("name");
-                            String partDescription = childObject.has("description") ? childObject.getString("description") : null;
-
-//                            'sequence':[{'sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac'}]
-//                            JSONObject sequenceObject = childObject.getJSONArray("sequence").getJSONObject(0);
-//                            String partObjectName = sequenceObject.getString("objectName");
-//                            String partRawSequence = sequenceObject.getString("sequence");
-//
-//                            Sequence partSequence = new Sequence(partObjectName, partRawSequence, person);
-                            Part p = new Part(partName, partDescription, person);
-                            parts.add(p);
+                        if (partsArray != null) {
+                            parts = new ArrayList();
+                            for (int i = 0; i < partsArray.length(); i++) {
+                                JSONObject childObject = partsArray.getJSONObject(i);
+                                String partName = childObject.getString("name");
+                                String partDescription = childObject.has("description") ? childObject.getString("description") : null;
+                                
+                                Part p = new Part(partName, partDescription, person);
+                                parts.add(p);
+                            }
+                            subObjects.put("parts", parts);
                         }
 
-                        Map<String, Map<String, String>> device_map = getDevice(persistor, objectName, displayID, role, rawSequence, parts, params);
+                        if (paramsArray != null || partsArray != null) {
+                            device_map = getDevice(persistor, query, subObjects);
+                        } else {
+                            device_map = getDevice(persistor, query);
+                        }
+
                         JSONObject jsonDeviceRes = new JSONObject(device_map);
                         result = jsonDeviceRes.toString();
                         break;
@@ -414,8 +442,7 @@ public class RestApi extends HttpServlet {
 
         switch (method) {
             case "set":
-//                body.remove("username");
-                if (!body.has("id")) {
+                if (id == null) {
                     response.getWriter().write("You must supply an id \r\n");
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     break;
@@ -429,7 +456,6 @@ public class RestApi extends HttpServlet {
 
                 Map<String, Object> original = persistor.getAsJSON(id);
 
-                // JACOBCHECK
                 Iterator<String> keysItr = body.keys();
                 while (keysItr.hasNext()) {
                     String key = keysItr.next();
