@@ -123,7 +123,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    //@Test
+//    @Test
     public void testGetByName() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get Sequence by Name");
 
@@ -144,7 +144,7 @@ public class RESTTester {
         }
     }
 
-    @Test
+//    @Test
     public void testGetById() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Get By Id");
 
@@ -152,7 +152,7 @@ public class RESTTester {
         URL url = new URL(this.url + "/create/sequence");
         String seqId = HTTPReq(url, jsonString, "POST");
 
-        url = new URL("https://localhost:8443/data/get/getById/" + seqId);
+        url = new URL("https://localhost:8443/data/get/getByID/" + seqId);
 
         String output = HTTPReq(url, "", "GET");
 
@@ -177,7 +177,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    //@Test
+    @Test
     public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Delete Sequence");
 
@@ -186,8 +186,7 @@ public class RESTTester {
 
         String sequenceId = HTTPReq(url, jsonString, "POST");
 
-        jsonString = "{'username':'jsmith','id':'" + sequenceId + "'}";
-        url = new URL(this.url + "/delete/delete");
+        url = new URL(this.url + "/delete/" + sequenceId);
 
         String output = HTTPReq(url, jsonString, "DELETE");
 
@@ -213,7 +212,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-//    //@Test
+    //@Test
     public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Device");
 

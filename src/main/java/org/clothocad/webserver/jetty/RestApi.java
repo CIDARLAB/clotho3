@@ -128,7 +128,7 @@ public class RestApi extends HttpServlet {
 
                 break;
 
-            case "getById":
+            case "getByID":
                 ObjectId objId = new ObjectId(toGet);
                 Object obj = persistor.get(objId);
 
@@ -153,10 +153,8 @@ public class RestApi extends HttpServlet {
         String[] pathID = request.getPathInfo().split("/");
         int pathLength = pathID.length;
 
-        JSONObject body = getRequestBody(request.getReader());
-
         String method = (pathLength >= 3) ? pathID[2] : null;
-        String id = body.has("id") ? body.getString("id") : null;
+        String id = (pathLength >= 4) ? pathID[3] : null;
 
         switch (method) {
             case "delete":
@@ -215,7 +213,7 @@ public class RestApi extends HttpServlet {
         switch (method) {
             case "create":
                 switch (type) {
-                    
+
 //                  Needs error codes
                     case "user":
                         Map<String, String> credentials = new HashMap<>();
@@ -247,7 +245,7 @@ public class RestApi extends HttpServlet {
                         break;
 
                     case "feature":
-                        feature = new Feature(objectName, role, person);
+                        feature = new Feature(objectName, description, role, person);
                         ObjectId featureObj = persistor.save(feature);
                         result = featureObj.toString();
                         break;
@@ -260,7 +258,7 @@ public class RestApi extends HttpServlet {
                         }
                         Set<Feature> features = new HashSet<Feature>();
                         features.add(feature);
-                        BasicModule module = new BasicModule(objectName, role, features, person);
+                        BasicModule module = new BasicModule(objectName, description, role, features, person);
                         ObjectId moduleObj = persistor.save(module);
                         result = moduleObj.toString();
                         break;
@@ -344,21 +342,19 @@ public class RestApi extends HttpServlet {
                             Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                             params.add(p);
                         }
-                        
-                        
+
                         parts = new ArrayList();
                         for (int i = 0; i < partsArray.length(); i++) {
                             JSONObject childObject = partsArray.getJSONObject(i);
                             String partName = childObject.getString("name");
                             String partDescription = childObject.has("description") ? childObject.getString("description") : null;
-                            
+
 //                            'sequence':[{'sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac'}]
 //                            JSONObject sequenceObject = childObject.getJSONArray("sequence").getJSONObject(0);
 //                            String partObjectName = sequenceObject.getString("objectName");
 //                            String partRawSequence = sequenceObject.getString("sequence");
 //
 //                            Sequence partSequence = new Sequence(partObjectName, partRawSequence, person);
-
                             Part p = new Part(partName, partDescription, person);
                             parts.add(p);
                         }
