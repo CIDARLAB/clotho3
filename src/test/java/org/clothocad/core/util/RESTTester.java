@@ -177,7 +177,7 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    @Test
+//    @Test
     public void testDelete() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Delete Sequence");
 
@@ -193,26 +193,28 @@ public class RESTTester {
         System.out.println(output);
     }
 
-    //@Test
+//    @Test
     public void testConveniencePart() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Part");
 
-        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Part','displayID':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+//        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Part','displayID':'Test Convenience Part','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Part'}";
+
         URL url = new URL(this.url + "/create/conveniencePart/");
 
         String output = HTTPReq(url, jsonString, "POST");
 
         System.out.println(output);
 
-        System.out.println("Testing Get Convenience Part");
-
-        url = new URL(this.url + "/get/conveniencePart/");
-        output = HTTPReq(url, jsonString, "POST");
-
-        System.out.println(output);
+//        System.out.println("Testing Get Convenience Part");
+//
+//        url = new URL(this.url + "/get/conveniencePart/");
+//        output = HTTPReq(url, jsonString, "POST");
+//
+//        System.out.println(output);
     }
 
-    //@Test
+    @Test
     public void testConvenienceDevice() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException {
         System.out.println("Testing Create Convenience Device");
 
@@ -227,21 +229,20 @@ public class RESTTester {
 
         String partIDs = partID1 + "," + partID2;
 
-        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','displayID':'Test Convenience Device', 'sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'createSeqFromParts':'True', 'partIDs':'" + partIDs + "'}";
+        String jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','displayID':'Test Convenience Device', 'createSeqFromParts':'False', 'partIDs':'" + partIDs + "'}";
         URL url = new URL(this.url + "/create/convenienceDevice/");
 
         String output = HTTPReq(url, jsonString, "POST");
 
         System.out.println(output);
 
-        System.out.println("Testing Get Convenience Device");
-
-        jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','displayID':'Test Convenience Device', 'sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'parts':[{'name':'Test Convenience Device Part1', 'description':'Test Convenience Device Part1'}]}";
-        url = new URL(this.url + "/get/convenienceDevice/");
-        output = HTTPReq(url, jsonString, "POST");
-
-        System.out.println(output);
-
+//        System.out.println("Testing Get Convenience Device");
+//
+//        jsonString = "{'username':'jsmith','objectName':'Test Convenience Device','displayID':'Test Convenience Device', 'sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac','role':'GENE','params':[{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}], 'parts':[{'name':'Test Convenience Device Part1', 'description':'Test Convenience Device Part1'}]}";
+//        url = new URL(this.url + "/get/convenienceDevice/");
+//        output = HTTPReq(url, jsonString, "POST");
+//
+//        System.out.println(output);
     }
 
 //    //@Test
