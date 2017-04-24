@@ -136,7 +136,8 @@ public class RESTTester {
         JSONObject obj = new JSONObject(output);
         System.out.println(output);
         Object pages = obj.get("page_count");
-        while (obj.getJSONArray("links").getJSONObject(0).has("next")) {
+        
+        while (obj.getJSONArray("links").length() > 0  && obj.getJSONArray("links").getJSONObject(0).has("next")) {
             url = new URL("https://localhost:8443/data/get/getByName/Test%20Sequence" + obj.getJSONArray("links").getJSONObject(0).getString("next"));
             output = HTTPReq(url, "", "GET");
             obj = new JSONObject(output);
