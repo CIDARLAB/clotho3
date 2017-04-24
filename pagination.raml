@@ -1,0 +1,463 @@
+#%RAML 1.0
+
+# File: pagination.raml
+# Modified file for Clotho 4/21/2017 meeting
+# Author: Jason Lu (jasonlu6@bu.edu)
+# Collaborator: Nick Pierce (npeace@bu.edu)
+# CIDAR Lab Spring 2017
+# Mentors:
+# Professor Douglas Densmore
+# David Tran
+# Jacob Kozol
+# Alex Vahid
+# Date: 4/23/2017-4/24/2017
+
+# Description: this is a RAML file that will document
+# the general usage of the Clotho REST api, which
+# can be found in the Netbeans file:
+
+# RestApi.java. However, it will have an additional element
+# of pagination for selected REST API methods:
+
+# getByName
+
+# Made based on the information of the
+# Clotho wiki, which is a github wiki page:
+# https://github.com/CIDARLAB/clotho3/wiki/REST-API
+
+# Pagination: (definition):
+# the method of breaking down a large amount of records /
+# documents into discrete "pages" in order to ease the
+# workload of querying data in the records / docs
+
+# Make changes to the file (including splitting up the getByName into
+# two separate pagination methods for the first page, and the next and previous
+# page), deleted unncessary inputs and methods, and made a more detailed
+# documentation with realistic example per method
+
+title: Clotho RestAPI Paginated # Title
+version: 3
+# use Github base URI
+# URI: Universal Resource Identifier
+baseUri: http://example.com/{version_3}
+documentation:
+  - title: Clotho REST API (with Pagination)
+    content: |
+      This is the basic documentation for Clotho Rest API framework.
+      It has the following methods: (based on example curl requests)
+        - createUser: create a user for Clotho
+        - createSequence: create a DNA/RNA sequence for Clotho to query
+        - createPart: create part of an existing sequence
+        - createConveniencePart: create part of an existing sequence
+        using a convenience method in the class file: Convenience.java
+        - getById: get a user profile / object by id
+        - getByName: get a user profile / object by name
+        - set: a put method that sets the profile
+        - delete: a delete method that deletes a profile
+        - userPaginate: a paginated version of createUser
+
+        - JSON arguments (from the Github Clotho Wiki):
+        username: user name for Clotho
+        password: password for Clotho
+        objectName: object to be created with Clotho (example: "Test Parts")
+        id: identifies any part created by Clotho
+        sequence: DNA sequence input for Clotho
+        role: what type of role Clotho object will implement
+        partIDs: id list that stores id for all of parts to be
+        included in the device
+        createSeqFromParts: boolean dictating whether or not convenienceDevice
+        creates its sequence from given parts
+        params: JSON Array of parameters for use in convenience methods
+        - name, value, variable, units
+
+      Paginated methods:
+        - getByNamePaginated: a paginated version of getByName
+        in which we can allow the user to:
+        - paginate their name,
+        - store the maximum amount of names per page
+        - be able to see the previous and next page of names.
+
+# getByID method
+/getByID:
+  get:
+    body:
+      application/json:
+        type: object
+        properties:
+        # id to retrieve the identification of user
+          id: integer
+        example:
+          {
+          "id": 0001
+          }
+
+# getByName method
+# get By Name Unpaginated Version
+/getByName:
+  get:
+    body:
+      application/json:
+        type: object
+        properties:
+          # username for Clotho
+          username: string
+          # password for Clotho
+          password: string
+        example: |
+          {
+          "username": "jsmith",
+          "password": "allstar"
+          }
+
+  # paginated getByName method
+  # using the queryParameter middleware functions
+  # Credit / Source:
+  # http://stackoverflow.com/questions/26452838/raml-traits-definition
+
+/getByNamePaginatedFirstPage:
+  get:
+    description:
+      Paginated form of the getByName method
+      - objectName (required) - the name of the object being searched for
+      - pagesize (required) - the number of results per page
+      - id (required) - the id of the next/previous page
+      - direction(required) - either next or prev depending on whether one wants
+        the next or previous page
+    body:
+      application/json:
+        type: object
+        properties:
+          objectName: string
+          pagesize: integer
+        # first page
+        description: first page of the pagination method
+        example:
+          {
+          "objectName": "jsmith",
+          "pagesize": 50,
+          }
+
+/getByNamePaginatedNextPrevPage:
+  get:
+      description:
+        Paginated form of the getByName method
+        objectName (required) - the name of the object being searched for
+        pagesize (required) - the number of results per page
+        id (required) - the id of the next/previous page
+        direction(required) - either next or prev depending on whether one wants
+        the next or previous page
+
+        Catching exceptions to bad input
+
+        Successful http load - 200 code
+        HTTP not found - 400 code
+        Internal Server Error - 500 code
+
+      # responses to the querying methods
+      responses:
+            # 200 code: successful http load
+            200:
+              body:
+                  # parameter JSON files
+                  # schema: !include name-output.json# paginated file (name-output.json)
+                  # example: !include name-example.json # paginated name file
+
+            # 400-code: the http is not found (exception)
+            400:
+              body:
+                # parameter JSON files
+                # schema: !include schemas/error-schema.json
+                # example: !include schemas/client-error-500-example.json
+
+            # 500-code: Interal Server Error
+            500:
+              body:
+                # parameter JSON files
+                # schema: !include schemas/error-schema.json
+                # example: !include schemas/server-error-500-example.json
+      body:
+        application/json:
+          type: object
+          properties:
+            objectName: string
+            pagesize: integer
+            id: integer
+            direction: string
+            # next/prev page example:
+          description: previous and next page of the pagination method
+          example:
+            {
+            "objectName": "npearce",
+            "pagesize": 20,
+            "id": 0002,
+            "direction": right
+            }
+
+  post:
+    # Paginate a new name on the page while being
+    # able to paginate functions
+    description: Paginate a new name for the page
+    queryParameters:
+          # page number of paginated name
+          objectName:
+            description: The name of the object being searched for
+            type: integer
+            minimum: 1
+          pagesize:
+          # number of requests per page (quota of 10)
+            description: The number of requests per page
+            type: integer
+            minimum: 10
+          prev:
+          # move to the previously paginated page
+            description: Previous page
+            type: integer
+            maximum: 0
+          # move to the next paginated page
+          next:
+            description: Next page
+            type: integer
+            maximum: 20
+
+# createUser method
+/createUser:
+  post:
+      body:
+        application/json:
+          type: object
+          description:
+            username (required) - desired username
+            password (required) - desired password
+          properties:
+            # username for Clotho
+            # password for Clotho
+            username: string
+            password: string
+          example: |
+           {
+           "username": "npearce",
+           "password": "string"
+           }
+
+# createSequence method
+/createSequence:
+    post:
+      body:
+        application/json:
+          type: object
+          description:
+            username (required) - username for the author of the sequence
+            objectName (required) - name of the sequence
+            sequence (required) - the actual sequence
+            description (optional) - a description of the sequence
+          properties:
+            # username for Clotho
+            # password for Clotho
+            # object name to create
+            # DNA / RNA sequence to put into Clotho
+            # mongoDB
+            username: string
+            objectName: string
+            sequence: string
+            description: string
+          example:
+            {
+            "username": "djtran",
+            "objectName": "s001",
+            "sequence": "ctgcgaggcgataaacaggtaaaaaacctaccc",
+            "description": "Sequence of nucelotides"
+            }
+
+# createPart method
+/createPart:
+      post:
+        body:
+          application/json:
+            type: object
+            description:
+              username (required) - username for the author of the part
+              objectName (required) - name of the part
+              id (optional) - the id of a sequence used in the part
+              description (optional) - a description of the part
+            properties:
+              # username for Clotho
+              # password for Clotho
+              # object name to create
+              # id to use for existing sequence
+              username: string
+              objectName: string
+              # id: number
+              description: string
+            example:
+             {
+             "username": "jkozol",
+             "objectName": "p000",
+             "description": "Part made without sequence"
+             }
+
+# createFeature method
+/createFEature:
+      post:
+        body:
+          application/json:
+            type: object
+            description:
+              username (required) - username for the author of the feature
+              objectName (required) - name of the feature
+              role (required) - role of the feature
+              description (optional) - a description of the feature
+            properties:
+              # username, objectName, role, description all String types
+              username: string
+              objectName: string
+              role: string
+              # description: string
+            example:
+              {
+              "username": "mardian",
+              "objectName": "f001",
+              "role": "CDS",
+              }
+
+# createModule method with features
+/createModuleWithFeatures:
+      post:
+        body:
+          application/json:
+            type: object
+            description:
+              username (required) - username for the author of the module
+              objectName (required) - name of the module
+              role (required) - the role of the module
+              id (optional) - the id of a feature to be used in the module
+              description (optional) - a description of the module
+            properties:
+              # username, objectName, role, id, description all String types
+              username: string
+              objectName: string
+              role: string
+              id: string
+              description: string
+            # an example module with feature
+            example:
+              {
+              "username": "mardian",
+              "objectName": "m001",
+              "role": "CDS",
+              "id": "58f41f1a8aec4c36909b0342",
+              "description": "Module made with feature",
+              }
+
+# createModule method without features
+/createModuleWithoutFeatures:
+        post:
+          body:
+            application/json:
+              type: object
+              description:
+                username (required) - username for the author of the module
+                objectName (required) - name of the module
+                role (required) - the role of the module
+                id (optional) - the id of a feature to be used in the module
+                description (optional) - a description of the module
+              properties:
+                # username, objectName, role, id, description all String types
+                username: string
+                objectName: string
+                role: string
+                # id: string
+                description: string
+              # an example module with feature
+              example:
+                {
+                "username":"nroehner",
+                "objectName":"m002",
+                "role":"CDS",
+                "description":"Module made without feature",
+                }
+
+
+# createConveniencePart method
+/createConveniencePart:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # object name for Clotho to create
+              # sequence to put into mongoDB
+              # role for the sequence
+              username: string
+              objectName: string
+              sequence: string
+              roleSequence: string
+            example: |
+             {
+             "username": "jsmith",
+             "objectName": "Test Convenience Part",
+             "sequence": "tccctatcagtgatagagattgacatccctatcagtgatagagatac",
+             "roleSequence": "GENE"
+               }
+
+# createConvenienceDevice method
+/createConvenienceDevice:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              # username for Clotho
+              # object name for Clotho to create
+              # sequence to put into mongoDB (may be duplicated)
+              # role for the sequence
+              # part-IDs: id for the part of device (array)
+              username: string
+              objectName: string
+              sequence: string
+              roleSequence: string
+
+            example: |
+               {
+               "username": "jsmith",
+               "objectName": "Test Convenience Device",
+               "sequence": "actacttcgcatcatgttcatca",
+               "roleSequence": "GENE"
+                 }
+
+# set method
+/set:
+      put:
+          body:
+            application/json:
+              type: object
+              description:
+                id (required) - the id of the object to be modified
+                change (required) - the key and value to be changed
+              properties:
+              # username for Clotho
+              # password for Clotho
+              # primary email (to add as contact)
+              # id for in case of change of user
+               id: string
+               change: string
+              example: |
+                {
+                "id": "id-of-some-sequence",
+                "change": "id-of-new-sequence"
+                }
+
+# delete method
+/delete:
+      delete:
+        body:
+          application/json:
+            type: object
+            description:
+              id (required) - the id of the object to be deleted
+            properties:
+             id: number
+            example: |
+              {
+              "id": 123321123
+              }
