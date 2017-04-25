@@ -74,7 +74,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>com.github.searls</groupId>
                 <artifactId>jasmine-maven-plugin</artifactId>
                 <version>2.0-alpha-01</version>
@@ -102,16 +102,16 @@
                                 <capability>
                                     <name>phantomjs.cli.args</name>
                                     <list>
-                                        <value>--ignore-ssl-errors=true</value>
-                                        <value>--ssl-protocol=any</value>
-                                        <value>--web-security=false</value>
+                                        <value>ignore-ssl-errors=true</value> 
+                                        <value>ssl-protocol=any</value>
+                                        <value>web-security=false</value>
                                     </list>
                                 </capability>
                             </webDriverCapabilities>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>com.bazaarvoice.maven.plugins</groupId>
                 <artifactId>process-exec-maven-plugin</artifactId>
