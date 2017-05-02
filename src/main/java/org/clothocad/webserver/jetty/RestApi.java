@@ -186,7 +186,7 @@ public class RestApi extends HttpServlet {
         String username = body.has("username") ? body.getString("username") : null;
         String password = body.has("password") ? body.getString("password") : null;
         String objectName = body.has("objectName") ? body.getString("objectName") : null;
-        String rawSequence = body.has("sequence") ? body.getString("sequence") : null;
+        String rawSequence = body.has("sequence") ? body.getString("sequence").toLowerCase() : null;
         String description = body.has("description") ? body.getString("description") : null;
         String role = body.has("role") ? body.getString("role") : null;
         String displayID = body.has("displayID") ? body.getString("displayID") : null;
