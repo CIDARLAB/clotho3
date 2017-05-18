@@ -1112,6 +1112,7 @@ public class ConvenienceMethods {
         return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), parameters);
     }
 
+    @SuppressWarnings("UnusedAssignment")
     public static Map<String, Map<String, String>> getPart(Persistor persistor, String name, String displayID, String role, String sequence, List<Parameter> parameters) {
         HashMap<String, Object> query = new HashMap<>();
         Iterable<ObjBase> nameDisplayParameterList = null;
@@ -1271,6 +1272,7 @@ public class ConvenienceMethods {
     }
 
     //[String displayID], [String name], [String role], [String sequence], [Part[] parts]
+    @SuppressWarnings("UnusedAssignment")
     public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<Part> parts, List<Parameter> parameters) {
 
         HashMap<String, Object> query = new HashMap<>();
@@ -1468,6 +1470,7 @@ public class ConvenienceMethods {
 
     //Scan the sequence for multiple string patterns, annotate it
     //Thank god someone invented the wheel (grep) already - Aho-Corasick Algorithm
+    @SuppressWarnings("UnnecessaryContinue")
     static void annotateMe(Persistor persistor, Sequence seq, List<String> partIDs) {
         HashMap<String, Part> partMap = new HashMap<>();
 
@@ -1529,5 +1532,88 @@ public class ConvenienceMethods {
                 seq.addAnnotation(emAnno);
             }
         }
+    }
+    
+     /* 
+    @author: Jason 
+    
+    Functions:
+    Delete functions that will delete all instances of the convenience methods except for the BioDesign portions 
+    
+    */
+    
+    // function to delete a BioDesign 
+    public static boolean delete(ObjectId obj, BioDesign bdesign, Persistor persistor) {
+        ConvenienceMethods.delete(obj, persistor);
+        return true;
+    }
+    
+    
+    // helper delete function 
+    public static boolean delete(ObjectId obj, Persistor persistor) {
+        persistor.delete(obj);
+        return true;
+    }
+    
+    // function to delete a part 
+    // parameters required: 
+    // persistor object, name, role, sequence, <features> list, <parameters> list, role, sequence, author 
+    
+    public static void deletePart(Persistor persistor, String name, String role, String sequence, List<Parameter> parameters, String author) {
+        
+        // Person authorization object 
+        Person auth = new Person(author);
+        
+        // Part object 
+        Part part2 = new Part(name, auth); 
+        
+        // keep an instance of BioDesign
+        BioDesign design = new BioDesign(name, auth);
+        
+        /* Which one to use to permanently delete a part? */
+        // design.addPart(null); 
+        design.addPart(part2);
+        
+        // for loop to search through all of the subobjects 
+        for (Parameter p : parameters) {
+            // delete the Annotation first
+            Annotation ann = new Annotation();
+            
+            // then delete the features 
+            Feature feat = new Feature(name, role, auth);
+            
+            // delete the sequence
+            Sequence seq = new Sequence(name, sequence, auth); 
+            
+            // delete the basic module 
+            BasicModule basic = new BasicModule(name, role, auth);
+            
+            // delete the Bio Design
+            ObjectId obj1 = persistor.save(design);
+            ConvenienceMethods.delete(obj1, design, persistor);
+            
+            // delete the References 
+        }
+        // make the object ID instance 
+        ObjectId obj2 = persistor.save(design); 
+        
+        // make instance of a new BioDesign 
+        BioDesign design2 = new BioDesign(name, auth);
+
+        // call the delete main function 
+        ConvenienceMethods.delete(obj2, design2, persistor);
+    }
+
+    /* Extraneous Constructors for the Sub-Objects  */ 
+    
+    // extraneous Feature Constructor 
+    
+    private static Feature Feature(String name, String role, Person auth) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    // extraneous Sequence Constructor 
+    private static Sequence Sequence(String name, String sequence, Person auth) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
