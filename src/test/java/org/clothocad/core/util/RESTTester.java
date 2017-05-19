@@ -247,6 +247,29 @@ public class RESTTester {
         System.out.println(output);
     }
 
+    @Test
+    public void testRizki() throws MalformedURLException, IOException, KeyManagementException, NoSuchAlgorithmException{
+        /*    
+            
+        String jsonString1 = "{'username':'jsmith','objectName':'Test Convenience Device Part1','displayID':'Test Convenience Device Part1','sequence':'tccctatcagtgatagagattgacatccctatcagtgatagagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        URL url1 = new URL(this.url + "/create/conveniencePart/");
+
+        String jsonString2 = "{'username':'jsmith','objectName':'Test Convenience Device Part2','displayID':'Test Convenience Device Part2', 'sequence':'tccctatcagtgatagagattgacatccctatcgagatactgagcac', 'role':'GENE', 'params': [{'name':'n', 'value':'121.5', 'variable':'var', 'units' : 'unit'}]}";
+        URL url2 = new URL(this.url + "/create/conveniencePart/");
+
+        String partID1 = HTTPReq(url1, jsonString1, "POST");
+        String partID2 = HTTPReq(url2, jsonString2, "POST");
+        
+        */
+        //{'createSeqFromParts':'true','role':'Toxicity Test','objectName':'d30','partIDs':'5902c964ce369d0f73160aff,5902c964ce369d0f73160b1b,5902c964ce369d0f73160b06,5902c964ce369d0f73160aea,5902c964ce369d0f73160ae3','username':'mardian'}
+        
+        String jsonString = "{'createSeqFromParts':'true','role':'Toxicity Test','objectName':'d30','partIDs':'59039cba6832d7245c6692ab,59039cbb6832d7245c6692b2','username':'mardian'}";
+        URL url = new URL(this.url + "/create/convenienceDevice/");
+
+        String output = HTTPReq(url, jsonString, "POST");
+        System.out.println(output);
+    
+    }
 //    //@Test
 //    public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException
 //    {

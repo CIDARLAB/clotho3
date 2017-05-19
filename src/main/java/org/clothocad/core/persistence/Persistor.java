@@ -158,7 +158,9 @@ public class Persistor {
 //        }
         T obj = connection.get(type, id);
         if (obj == null) {
-            throw new EntityNotFoundException(id.toString());
+//            throw new EntityNotFoundException(id.toString());
+            System.out.println("[WARNING] Persistor.java: Object " + id.toString() + " was not found or was improperly casted to " + type.getName());
+            return null;
         }
         validate(obj);
         return obj;

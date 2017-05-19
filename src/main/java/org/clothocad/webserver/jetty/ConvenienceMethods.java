@@ -1138,7 +1138,6 @@ public class ConvenienceMethods {
                 }
             } else {
                 query.put("parameters.name", parameters.get(0).getName());
-                query.put("parameters.value", parameters.get(0).getValue());
                 query.put("parameters.variable", parameters.get(0).getVariable());
                 query.put("parameters.units", parameters.get(0).getUnits());
             }
@@ -1188,40 +1187,44 @@ public class ConvenienceMethods {
         if (nameDisplayParameterList != null) {
             for (ObjBase each : nameDisplayParameterList) {
                 BioDesign bd = persistor.get(BioDesign.class, each.getId());
-                if (!returnList.containsKey(bd.getName())) {
-                    Map<String, String> insert = new HashMap<>();
-                    insert.put("name", bd.getName());
-                    if (bd.getDisplayID() != null) {
-                        insert.put("displayID", bd.getDisplayID());
-                    }
-                    if (bd.getParameters() != null) {
-                        String build = "[";
-                        for (Parameter p : bd.getParameters()) {
-                            build += "{name:'" + p.getName()
-                                    + "', value:" + p.getValue()
-                                    + ", variable:'" + p.getVariable()
-                                    + "', units:'" + p.getUnits() + "'},";
+                if (bd != null) {
+                    if (!returnList.containsKey(bd.getName())) {
+                        Map<String, String> insert = new HashMap<>();
+                        insert.put("name", bd.getName());
+                        insert.put("id", bd.getId().toString());
+                        if (bd.getDisplayID() != null) {
+                            insert.put("displayID", bd.getDisplayID());
                         }
-                        insert.put("parameters", build + "]");
+                        if (bd.getParameters() != null) {
+                            String build = "[";
+                            for (Parameter p : bd.getParameters()) {
+                                build += "{name:'" + p.getName()
+                                        + "', value:" + p.getValue()
+                                        + ", variable:'" + p.getVariable()
+                                        + "', units:'" + p.getUnits() + "'},";
+                            }
+                            insert.put("parameters", build + "]");
+                        }
+                        returnList.put(bd.getName(), insert);
                     }
-                    returnList.put(bd.getName(), insert);
                 }
             }
         }
         if (sequenceList != null) {
             for (ObjBase each : sequenceList) {
                 Sequence s = persistor.get(Sequence.class, each.getId());
-
-                if (returnList.containsKey(s.getName())) {
-                    returnList.get(s.getName()).put("sequence", s.getSequence());
-                } else {
-                    HashMap<String, String> insert = new HashMap<>();
-                    insert.put("name", s.getName());
-                    if (s.getDisplayID() != null) {
-                        insert.put("displayID", s.getDisplayID());
+                if (s != null) {
+                    if (returnList.containsKey(s.getName())) {
+                        returnList.get(s.getName()).put("sequence", s.getSequence());
+                    } else {
+                        HashMap<String, String> insert = new HashMap<>();
+                        insert.put("name", s.getName());
+                        if (s.getDisplayID() != null) {
+                            insert.put("displayID", s.getDisplayID());
+                        }
+                        insert.put("sequence", s.getSequence());
+                        returnList.put(s.getName(), insert);
                     }
-                    insert.put("sequence", s.getSequence());
-                    returnList.put(s.getName(), insert);
                 }
             }
         }
@@ -1229,29 +1232,33 @@ public class ConvenienceMethods {
             for (ObjBase each : roleList) {
                 if (persistor.get(each.getId()).getClass().equals(Feature.class)) {
                     Feature f = (Feature) persistor.get(each.getId());
-                    if (returnList.containsKey(f.getName())) {
-                        returnList.get(f.getName()).put("role", f.getRole());
-                    } else {
-                        HashMap<String, String> insert = new HashMap<>();
-                        insert.put("name", f.getName());
-                        if (f.getDisplayID() != null) {
-                            insert.put("displayID", f.getDisplayID());
+                    if (f != null) {
+                        if (returnList.containsKey(f.getName())) {
+                            returnList.get(f.getName()).put("role", f.getRole());
+                        } else {
+                            HashMap<String, String> insert = new HashMap<>();
+                            insert.put("name", f.getName());
+                            if (f.getDisplayID() != null) {
+                                insert.put("displayID", f.getDisplayID());
+                            }
+                            insert.put("role", f.getRole());
+                            returnList.put(f.getName(), insert);
                         }
-                        insert.put("role", f.getRole());
-                        returnList.put(f.getName(), insert);
                     }
                 } else {
                     Module m = (Module) persistor.get(each.getId());
-                    if (returnList.containsKey(m.getName())) {
-                        returnList.get(m.getName()).put("role", m.getRole());
-                    } else {
-                        HashMap<String, String> insert = new HashMap<>();
-                        insert.put("name", m.getName());
-                        if (m.getDisplayID() != null) {
-                            insert.put("displayID", m.getDisplayID());
+                    if (m != null) {
+                        if (returnList.containsKey(m.getName())) {
+                            returnList.get(m.getName()).put("role", m.getRole());
+                        } else {
+                            HashMap<String, String> insert = new HashMap<>();
+                            insert.put("name", m.getName());
+                            if (m.getDisplayID() != null) {
+                                insert.put("displayID", m.getDisplayID());
+                            }
+                            insert.put("role", m.getRole());
+                            returnList.put(m.getName(), insert);
                         }
-                        insert.put("role", m.getRole());
-                        returnList.put(m.getName(), insert);
                     }
                 }
             }
@@ -1298,7 +1305,6 @@ public class ConvenienceMethods {
                 }
             } else {
                 query.put("parameters.name", parameters.get(0).getName());
-                query.put("parameters.value", parameters.get(0).getValue());
                 query.put("parameters.variable", parameters.get(0).getVariable());
                 query.put("parameters.units", parameters.get(0).getUnits());
             }
@@ -1326,7 +1332,7 @@ public class ConvenienceMethods {
                 query.put("parts multiMatch", each.getValue());
             }
         }
-        */
+         */
         if (!query.isEmpty()) {
             nameDisplayParameterList = persistor.findRegex(query);
             query = new HashMap<>();
@@ -1371,64 +1377,69 @@ public class ConvenienceMethods {
          */
         if (nameDisplayParameterList != null) {
             for (ObjBase each : nameDisplayParameterList) {
+
                 BioDesign bd = persistor.get(BioDesign.class, each.getId());
-                if (!returnList.containsKey(bd.getName())) {
-                    Map<String, String> insert = new HashMap<>();
-                    insert.put("name", bd.getName());
-                    if (bd.getDisplayID() != null) {
-                        insert.put("displayID", bd.getDisplayID());
-                    }
-                    if (bd.getParameters() != null) {
-                        String build = "[";
-                        for (Parameter p : bd.getParameters()) {
-                            build += "{name:'" + p.getName()
-                                    + "', value:" + p.getValue()
-                                    + ", variable:'" + p.getVariable()
-                                    + "', units:'" + p.getUnits() + "'},";
+                if (bd != null) {
+                    if (!returnList.containsKey(bd.getName())) {
+                        Map<String, String> insert = new HashMap<>();
+                        insert.put("name", bd.getName());
+                        insert.put("id", bd.getId().toString());
+                        if (bd.getDisplayID() != null) {
+                            insert.put("displayID", bd.getDisplayID());
                         }
-                        insert.put("parameters", build + "]");
-                    }
-                    //Get Device also needs to list parts.
-                    if (bd.getParts() != null) {
-                        System.out.println("Query found parts for " + bd.getName());
-                        String pbuild = "[";
-                        for (Part p : bd.getParts()) {
-                            pbuild += "{name:'" + p.getName()
-                                    + "', displayID:'" + p.getDisplayID();
-                            if (p.getSequence() != null) {
-                                if (p.getSequence().getAnnotations() != null) {
-                                    for (Annotation anno : p.getSequence().getAnnotations()) {
-                                        if (anno.getFeature().getName().equalsIgnoreCase(p.getName())) {
-                                            pbuild += "', role:'" + anno.getFeature().getName();
-                                            break;
+                        if (bd.getParameters() != null) {
+                            String build = "[";
+                            for (Parameter p : bd.getParameters()) {
+                                build += "{name:'" + p.getName()
+                                        + "', value:" + p.getValue()
+                                        + ", variable:'" + p.getVariable()
+                                        + "', units:'" + p.getUnits() + "'},";
+                            }
+                            insert.put("parameters", build + "]");
+                        }
+                        //Get Device also needs to list parts.
+                        if (bd.getParts() != null) {
+                            System.out.println("Query found parts for " + bd.getName());
+                            String pbuild = "[";
+                            for (Part p : bd.getParts()) {
+                                pbuild += "{id: '"+ p.getId() +"', name:'" + p.getName()
+                                        + "', displayID:'" + p.getDisplayID();
+                                if (p.getSequence() != null) {
+                                    if (p.getSequence().getAnnotations() != null) {
+                                        for (Annotation anno : p.getSequence().getAnnotations()) {
+                                            if (anno.getFeature().getName().equalsIgnoreCase(p.getName())) {
+                                                pbuild += "', role:'" + anno.getFeature().getName();
+                                                break;
+                                            }
                                         }
                                     }
+                                    pbuild += "', sequence:'" + p.getSequence().getSequence();
                                 }
-                                pbuild += "', sequence:'" + p.getSequence().getSequence();
+                                pbuild += "'},";
                             }
-                            pbuild += "'},";
+                            insert.put("parts", pbuild + "]");
                         }
-                        insert.put("parts", pbuild + "]");
+                        System.out.println(insert.values());
+                        returnList.put(bd.getName(), insert);
                     }
-                    System.out.println(insert.values());
-                    returnList.put(bd.getName(), insert);
                 }
             }
         }
         if (sequenceList != null) {
             for (ObjBase each : sequenceList) {
                 Sequence s = persistor.get(Sequence.class, each.getId());
-
-                if (returnList.containsKey(s.getName())) {
-                    returnList.get(s.getName()).put("sequence", s.getSequence());
-                } else {
-                    HashMap<String, String> insert = new HashMap<>();
-                    insert.put("name", s.getName());
-                    if (s.getDisplayID() != null) {
-                        insert.put("displayID", s.getDisplayID());
+                if (s != null) {
+                    if (returnList.containsKey(s.getName())) {
+                        returnList.get(s.getName()).put("sequence", s.getSequence());
+                    } else {
+                        HashMap<String, String> insert = new HashMap<>();
+                        insert.put("name", s.getName());
+                        if (s.getDisplayID() != null) {
+                            insert.put("displayID", s.getDisplayID());
+                        }
+                        insert.put("sequence", s.getSequence());
+                        returnList.put(s.getName(), insert);
                     }
-                    insert.put("sequence", s.getSequence());
-                    returnList.put(s.getName(), insert);
                 }
             }
         }
@@ -1436,29 +1447,33 @@ public class ConvenienceMethods {
             for (ObjBase each : roleList) {
                 if (persistor.get(each.getId()).getClass().equals(Feature.class)) {
                     Feature f = (Feature) persistor.get(each.getId());
-                    if (returnList.containsKey(f.getName())) {
-                        returnList.get(f.getName()).put("role", f.getRole());
-                    } else {
-                        HashMap<String, String> insert = new HashMap<>();
-                        insert.put("name", f.getName());
-                        if (f.getDisplayID() != null) {
-                            insert.put("displayID", f.getDisplayID());
+                    if (f != null) {
+                        if (returnList.containsKey(f.getName())) {
+                            returnList.get(f.getName()).put("role", f.getRole());
+                        } else {
+                            HashMap<String, String> insert = new HashMap<>();
+                            insert.put("name", f.getName());
+                            if (f.getDisplayID() != null) {
+                                insert.put("displayID", f.getDisplayID());
+                            }
+                            insert.put("role", f.getRole());
+                            returnList.put(f.getName(), insert);
                         }
-                        insert.put("role", f.getRole());
-                        returnList.put(f.getName(), insert);
                     }
                 } else {
                     Module m = (Module) persistor.get(each.getId());
-                    if (returnList.containsKey(m.getName())) {
-                        returnList.get(m.getName()).put("role", m.getRole());
-                    } else {
-                        HashMap<String, String> insert = new HashMap<>();
-                        insert.put("name", m.getName());
-                        if (m.getDisplayID() != null) {
-                            insert.put("displayID", m.getDisplayID());
+                    if (m != null) {
+                        if (returnList.containsKey(m.getName())) {
+                            returnList.get(m.getName()).put("role", m.getRole());
+                        } else {
+                            HashMap<String, String> insert = new HashMap<>();
+                            insert.put("name", m.getName());
+                            if (m.getDisplayID() != null) {
+                                insert.put("displayID", m.getDisplayID());
+                            }
+                            insert.put("role", m.getRole());
+                            returnList.put(m.getName(), insert);
                         }
-                        insert.put("role", m.getRole());
-                        returnList.put(m.getName(), insert);
                     }
                 }
             }
@@ -1476,14 +1491,16 @@ public class ConvenienceMethods {
         for (String s : partIDs) {
             ObjectId id = new ObjectId(s);
             BioDesign bd = persistor.get(BioDesign.class, id);
-            Set<Part> parts = bd.getParts();
-            for (Part p : parts) {
-                if (p.getSequence() != null) {
-                    if (p.getSequence().getSequence().isEmpty()) {
-                        continue;
-                    } else {
-                        trieBuild.addKeyword(p.getSequence().getSequence());
-                        partMap.put(p.getSequence().getSequence(), p);
+            if (bd != null) {
+                Set<Part> parts = bd.getParts();
+                for (Part p : parts) {
+                    if (p.getSequence() != null) {
+                        if (p.getSequence().getSequence().isEmpty()) {
+                            continue;
+                        } else {
+                            trieBuild.addKeyword(p.getSequence().getSequence());
+                            partMap.put(p.getSequence().getSequence(), p);
+                        }
                     }
                 }
             }

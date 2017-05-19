@@ -144,6 +144,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
 
         ObjectId sixth = createDevice(persistor, "Parameterized Device1", partIDs, paramObjs, "David T.", false);
         compareDesign(sixth, getDevice(persistor, "Parameterized Device1", null, null, null, null, paramObjs));
+//        compareDesign(sixth, getDevice(persistor, "Parameterized Device1", null, null, null, null, null));
 
         //Device will NOT have its sequence be equal to the concatenation of the part sequences because we provided it a sequence in "seqrole".
         ObjectId seventh = createDevice(persistor, "Parameterized Device2", partIDs, seqrole, "David T.", true);
@@ -151,6 +152,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
 
         ObjectId eighth = createDevice(persistor, "Full Device", "Full Device with Parameters", partIDs, seqrole, paramObjs, "David T.", false);
         compareDesign(eighth, getDevice(persistor, "Full Dev", "with Parameters", "gene", "cat", null, paramObjs));
+//        compareDesign(eighth, getDevice(persistor, "Full Dev", "with Parameters", "gene", "cat", null, null));
     }
     
     @Test
@@ -221,6 +223,10 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
     }
 
+    //////////////////////////
+    //      Debug tools     //
+    //////////////////////////
+    
     public void printDesign(ObjectId design) {
 
         BioDesign bd = persistor.get(BioDesign.class, design);
@@ -252,6 +258,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     public void compareDesign(ObjectId original, Map<String, Map<String, String>> found) {
         BioDesign bd = persistor.get(BioDesign.class, original);
 
+        System.out.println();
         System.out.println("Comparing " + bd.getName());
 
         for (String key : found.keySet()) {
@@ -264,7 +271,17 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                     } catch (ComparisonFailure cf) {
                         System.out.println("Name check failed");
                     }
-                } else if (field.equalsIgnoreCase("displayID")) {
+                    
+                } 
+                if(field.equalsIgnoreCase("id")){
+                    try{
+                        assertEquals(bd.getId().toString(), info.get(field));
+                        System.out.println("Id matched");
+                    }
+                    catch(ComparisonFailure cf){
+                        System.out.println("ID check failed");
+                    }
+                }else if (field.equalsIgnoreCase("displayID")) {
                     try {
                         assertEquals(bd.getDisplayID(), info.get(field));
                         System.out.println("DisplayID matched");
@@ -309,8 +326,8 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 } else if (field.equalsIgnoreCase("parts")) {
                     String pbuild = "[";
                     for (Part p : bd.getParts()) {
-                        System.out.println(p.getName());
-                        pbuild += "{name:'" + p.getName()
+                        pbuild += "{id:'" + p.getId() 
+                                + "', name:'" + p.getName()
                                 + "', displayID:'" + p.getDisplayID();
                         if (p.getSequence() != null) {
                             if (p.getSequence().getAnnotations() != null) {
