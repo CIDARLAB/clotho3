@@ -35,7 +35,12 @@ public class BasicModule extends Module {
         super(name, description, role, author);
         this.features = features;
     }
+
+    public BasicModule(String name, String role, Person auth) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
+    @SuppressWarnings("Convert2Diamond")
     public void addFeature(Feature feature) {
     	if (features == null) {
     		features = new HashSet<Feature>();
