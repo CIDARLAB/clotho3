@@ -243,8 +243,11 @@ public class RESTTester {
         jsonString = "{'objectName':'Test Convenience Device','displayID':'Test Convenience Device','role':'GENE'}";
         url = new URL(this.url + "/get/convenienceDevice/");
         output = HTTPReq(url, jsonString, "POST");
-
-        System.out.println(output);
+        System.out.println("Regex: " + output);
+        
+        url = new URL(this.url + "/get/convenienceDevice/exact");
+        output = HTTPReq(url, jsonString, "POST");
+        System.out.println("Exact: " + output);
     }
 
     @Test

@@ -1104,16 +1104,20 @@ public class ConvenienceMethods {
     //////////////////////
     //      Get Part    //
     //////////////////////
+    //More often than not, exact = false will do the job.
+    //I'd tiptoe around using exact = true unless you are absolutely certain you have exact fields (case sensitive)
+    
     public static Map<String, Map<String, String>> getPart(Persistor persistor, Map<String, String> query) {
-        return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null);
+        return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null, false);
     }
 
-    public static Map<String, Map<String, String>> getPart(Persistor persistor, Map<String, String> query, List<Parameter> parameters) {
-        return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), parameters);
+    public static Map<String, Map<String, String>> getPart(Persistor persistor, Map<String, String> query, List<Parameter> parameters, boolean exact) {
+        return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), parameters, exact);
     }
 
-    @SuppressWarnings("UnusedAssignment")
-    public static Map<String, Map<String, String>> getPart(Persistor persistor, String name, String displayID, String role, String sequence, List<Parameter> parameters) {
+    
+    //Exact uses find(), broken for parameters
+    public static Map<String, Map<String, String>> getPart(Persistor persistor, String name, String displayID, String role, String sequence, List<Parameter> parameters, boolean exact) {
         HashMap<String, Object> query = new HashMap<>();
         Iterable<ObjBase> nameDisplayParameterList = null;
         Iterable<ObjBase> sequenceList = null;
@@ -1144,7 +1148,7 @@ public class ConvenienceMethods {
             }
         }
         if (!query.isEmpty()) {
-            nameDisplayParameterList = persistor.findRegex(query);
+            nameDisplayParameterList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
         }
 
@@ -1154,7 +1158,7 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("sequence", sequence);
-            sequenceList = persistor.findRegex(query);
+            sequenceList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
         }
 
@@ -1164,7 +1168,7 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("role", role);
-            roleList = persistor.findRegex(query);
+            roleList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
         }
 
@@ -1267,20 +1271,37 @@ public class ConvenienceMethods {
         return returnList;
     }
 
+    public static List<String> getPartID(Persistor persistor, Map<String, String> query, List<Parameter> parameters, boolean exact)
+    {
+        Map<String, Map<String, String>> res = getPart(persistor, query, parameters, exact);
+        ArrayList<String> ids = new ArrayList<>();
+        
+        for(String key : res.keySet())
+        {
+            if(res.get(key).containsKey("id"))
+            {
+                ids.add(res.get(key).get("id"));
+            }
+        }
+        
+        return ids;
+    }
     //////////////////////////
     //      Get Device      //
     //////////////////////////
+    //More often than not, exact = false will do the job.
+    //I'd tiptoe around using exact = true unless you are absolutely certain you have exact fields (case sensitive)
+    
     public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query) {
-        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null, null);
+        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null, null, false);
     }
 
-    public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query, Map<String, List> subObjects) {
-        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), (List<Part>) subObjects.get("parts"), (List<Parameter>) subObjects.get("parameters"));
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query, Map<String, List> subObjects, boolean exact) {
+        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), (List<Part>) subObjects.get("parts"), (List<Parameter>) subObjects.get("parameters"), exact);
     }
 
     //[String displayID], [String name], [String role], [String sequence], [Part[] parts]
-    @SuppressWarnings("UnusedAssignment")
-    public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<Part> parts, List<Parameter> parameters) {
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<Part> parts, List<Parameter> parameters, boolean exact) {
 
         HashMap<String, Object> query = new HashMap<>();
         Iterable<ObjBase> nameDisplayParameterList = null;
@@ -1311,32 +1332,9 @@ public class ConvenienceMethods {
                 query.put("parameters.units", parameters.get(0).getUnits());
             }
         }
-        /*
-        List<ObjectId> possibleParts = new ArrayList<>();
-        if (parts != null) {
-            HashMap<String, Object> partsQuery;
-            //Just in case the parts were not queried before they were created.
-            for (Part p : parts) {
-                partsQuery = new HashMap<>();
-                partsQuery.put("schema", "org.clothocad.model.Part");
-                partsQuery.put("name", p.getName());
-                if (p.getDisplayID() != null) {
-                    partsQuery.put("displayID", p.getDisplayID());
-                }
-                //There should hopefully only be only a couple of objects in here at most
-                Iterable<ObjBase> partList = persistor.findRegex(partsQuery);
-                for (ObjBase each : partList) {
-                    System.out.println(each.getName() + " : " + each.getId().getValue());
-                    possibleParts.add(each.getId());
-                }
-            }
-            for (ObjectId each : possibleParts) {
-                query.put("parts multiMatch", each.getValue());
-            }
-        }
-         */
+        
         if (!query.isEmpty()) {
-            nameDisplayParameterList = persistor.findRegex(query);
+            nameDisplayParameterList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
         }
 
@@ -1346,7 +1344,7 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("sequence", sequence);
-            sequenceList = persistor.findRegex(query);
+            sequenceList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
         }
 
@@ -1356,7 +1354,7 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("role", role);
-            roleList = persistor.findRegex(query);
+            roleList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
         }
 
@@ -1483,9 +1481,25 @@ public class ConvenienceMethods {
         return returnList;
     }
 
+    public static List<String> getDeviceID(Persistor persistor, Map<String, String> query, Map<String, List> subObjects, boolean exact)
+    {
+        Map<String, Map<String, String>> res = getDevice(persistor, query, subObjects, exact);
+        ArrayList<String> ids = new ArrayList<>();
+        
+        for(String key : res.keySet())
+        {
+            if(res.get(key).containsKey("id"))
+            {
+                ids.add(res.get(key).get("id"));
+            }
+        }
+        
+        return ids;
+        
+    }
+    
     //Scan the sequence for multiple string patterns, annotate it
     //Thank god someone invented the wheel (grep) already - Aho-Corasick Algorithm
-    @SuppressWarnings("UnnecessaryContinue")
     static void annotateMe(Persistor persistor, Sequence seq, List<String> partIDs) {
         HashMap<String, Part> partMap = new HashMap<>();
 

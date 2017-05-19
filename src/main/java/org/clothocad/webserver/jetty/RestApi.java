@@ -179,6 +179,7 @@ public class RestApi extends HttpServlet {
 
         String method = (pathLength >= 3) ? pathID[2] : null;
         String type = (pathLength >= 4) ? pathID[3] : null;
+        String option = (pathLength >= 5) ? pathID[4] : null;
 
         JSONObject body = getRequestBody(request.getReader());;
 
@@ -337,8 +338,13 @@ public class RestApi extends HttpServlet {
                         break;
                 }
                 break;
-                
+
             case "get":
+
+                Map<String, List> subObjects = new HashMap<String, List>();
+                List<String> ids;
+                JSONObject jsonDeviceRes;
+
                 switch (type) {
                     case "conveniencePart":
                         Map<String, Map<String, String>> part_map = new HashMap<String, Map<String, String>>();
@@ -360,18 +366,89 @@ public class RestApi extends HttpServlet {
                                 Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
                                 params.add(p);
                             }
-                            part_map = getPart(persistor, query, params);
                         } else {
-                            part_map = getPart(persistor, query);
+                            params = null;
                         }
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        part_map = getPart(persistor, query, params, Boolean.valueOf(option));
 
                         JSONObject jsonRes = new JSONObject(part_map);
                         result = jsonRes.toString();
                         break;
 
+                    case "conveniencePartID":
+
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                        } else {
+                            params = null;
+                        }
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        ids = getPartID(persistor, query, params, Boolean.valueOf(option));
+
+                        jsonRes = new JSONObject(ids);
+                        result = jsonRes.toString();
+                        break;
+
                     case "convenienceDevice":
-                        Map<String, List> subObjects = new HashMap<String, List>();
+
                         Map<String, Map<String, String>> device_map = new HashMap<String, Map<String, String>>();
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                            subObjects.put("params", params);
+                        }
+
+                        if (partsArray != null) {
+                            parts = new ArrayList();
+                            for (int i = 0; i < partsArray.length(); i++) {
+                                JSONObject childObject = partsArray.getJSONObject(i);
+                                String partName = childObject.getString("name");
+                                String partDescription = childObject.has("description") ? childObject.getString("description") : null;
+
+                                Part p = new Part(partName, partDescription, person);
+                                parts.add(p);
+                            }
+                            subObjects.put("parts", parts);
+                        }
+
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        device_map = getDevice(persistor, query, subObjects, Boolean.valueOf(option));
+
+                        jsonDeviceRes = new JSONObject(device_map);
+                        result = jsonDeviceRes.toString();
+                        break;
+
+                    case "convenienceDeviceID":
 
                         query = new HashMap<String, String>();
                         query.put("name", objectName);
@@ -399,20 +476,17 @@ public class RestApi extends HttpServlet {
                                 JSONObject childObject = partsArray.getJSONObject(i);
                                 String partName = childObject.getString("name");
                                 String partDescription = childObject.has("description") ? childObject.getString("description") : null;
-                                
+
                                 Part p = new Part(partName, partDescription, person);
                                 parts.add(p);
                             }
                             subObjects.put("parts", parts);
                         }
+                        
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        ids = getDeviceID(persistor, query, subObjects, Boolean.valueOf(option));
 
-                        if (paramsArray != null || partsArray != null) {
-                            device_map = getDevice(persistor, query, subObjects);
-                        } else {
-                            device_map = getDevice(persistor, query);
-                        }
-
-                        JSONObject jsonDeviceRes = new JSONObject(device_map);
+                        jsonDeviceRes = new JSONObject(ids);
                         result = jsonDeviceRes.toString();
                         break;
                 }

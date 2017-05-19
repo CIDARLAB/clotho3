@@ -96,13 +96,13 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         paramObj.add(new Parameter("LacI Sensor Sensitivity", 0.5, "sensitivity", ""));
         ObjectId seventh = createPart(persistor, "FullPart", "Full Part with all Parameters", seqrole, paramObj, "David");
 
-        compareDesign(first, getPart(persistor, "mySpecialPart", null, null, null, null));
-        compareDesign(second, getPart(persistor, "roleOnlyPart", null, "promoter", null, null));
-        compareDesign(third, getPart(persistor, "funcat", null, null, "catcatcatcatcat", null));
-        compareDesign(fourth, getPart(persistor, "R0040", null, "gene", "tccctatcag", null));
-        compareDesign(fifth, getPart(persistor, "PartWithName", "name", null, null, null));
-        compareDesign(sixth, getPart(persistor, "AnotherPart", "worthy", null, null, null));
-        compareDesign(seventh, getPart(persistor, "FullPart", "Part with all", "gene", "tccctatcag", paramObj));
+        compareDesign(first, getPart(persistor, "mySpecialPart", null, null, null, null, false));
+        compareDesign(second, getPart(persistor, "roleOnlyPart", null, "promoter", null, null, false));
+        compareDesign(third, getPart(persistor, "funcat", null, null, "catcatcatcatcat", null, false));
+        compareDesign(fourth, getPart(persistor, "R0040", null, "gene", "tccctatcag", null, false));
+        compareDesign(fifth, getPart(persistor, "PartWithName", "name", null, null, null, false));
+        compareDesign(sixth, getPart(persistor, "AnotherPart", "worthy", null, null, null, false));
+        compareDesign(seventh, getPart(persistor, "FullPart", "Part with all", "gene", "tccctatcag", paramObj, false));
     }
 
     @Test
@@ -111,13 +111,13 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         ArrayList<String> partIDs = new ArrayList<>();
 
         ObjectId first = createDevice(persistor, "Barebones Device", partIDs, "David T.", false);
-        compareDesign(first, getDevice(persistor, "Barebones", null, null, null, null, null));
+        compareDesign(first, getDevice(persistor, "Barebones", null, null, null, null, null, false));
         partIDs.add(first.getValue());
 
         Map<String, String> sequence = new HashMap<>();
         sequence.put("sequence", "catcat");
         ObjectId second = createDevice(persistor, "Basic Device", partIDs, sequence, "David T.", false);
-        compareDesign(second, getDevice(persistor, "basic device", null, null, "catcat", null, null));
+        compareDesign(second, getDevice(persistor, "basic device", null, null, "catcat", null, null, false));
         partIDs.add(second.getValue());
 
         //"Super Device" has "catcat" within its sequence, but an annotation will not be made for "Basic Device".
@@ -126,46 +126,44 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         seqrole.put("role", "GENE");
         seqrole.put("sequence", "tcgcatcatgt");
         ObjectId third = createDevice(persistor, "Super Device", partIDs, seqrole, "David T.", false);
-        compareDesign(third, getDevice(persistor, "Super device", null, "gene", "tcgcat", null, null));
+        compareDesign(third, getDevice(persistor, "Super device", null, "gene", "tcgcat", null, null, false));
         partIDs.add(third.getValue());
 
         Map<String, String> seqroleAndSuperDevice = new HashMap<>();
         seqroleAndSuperDevice.put("role", "GENE");
         seqroleAndSuperDevice.put("sequence", "actacttcgcatcatgttcatca");
         ObjectId fourth = createDevice(persistor, "Device with Super Device", partIDs, seqroleAndSuperDevice, "David T.", false);
-        compareDesign(fourth, getDevice(persistor, "device with super device", null, "gene", "actacttcgcatcat", null, null));
+        compareDesign(fourth, getDevice(persistor, "device with super device", null, "gene", "actacttcgcatcat", null, null, false));
         partIDs.add(fourth.getValue());
 
         ArrayList<Parameter> paramObjs = new ArrayList<>();
         paramObjs.add(new Parameter("paramName", 252.2, "paramVar", "paramUnits"));
         //This device will have a sequence equivalent to the concatenation of devices 2, 3, and 4.
         ObjectId fifth = createDevice(persistor, "Spooky Device", "Barebones Device with Display ID", partIDs, "David T.", true);
-        compareDesign(fifth, getDevice(persistor, "Spooky", "bones", null, "actacttcgcatcat", null, null));
+        compareDesign(fifth, getDevice(persistor, "Spooky", "bones", null, "actacttcgcatcat", null, null, false));
 
         ObjectId sixth = createDevice(persistor, "Parameterized Device1", partIDs, paramObjs, "David T.", false);
-        compareDesign(sixth, getDevice(persistor, "Parameterized Device1", null, null, null, null, paramObjs));
-//        compareDesign(sixth, getDevice(persistor, "Parameterized Device1", null, null, null, null, null));
+        compareDesign(sixth, getDevice(persistor, "Parameterized Device1", null, null, null, null, paramObjs, false));
 
         //Device will NOT have its sequence be equal to the concatenation of the part sequences because we provided it a sequence in "seqrole".
         ObjectId seventh = createDevice(persistor, "Parameterized Device2", partIDs, seqrole, "David T.", true);
-        compareDesign(seventh, getDevice(persistor, "device2", null, "gene", "tcgcatcat", null, null));
+        compareDesign(seventh, getDevice(persistor, "device2", null, "gene", "tcgcatcat", null, null, false));
 
         ObjectId eighth = createDevice(persistor, "Full Device", "Full Device with Parameters", partIDs, seqrole, paramObjs, "David T.", false);
-        compareDesign(eighth, getDevice(persistor, "Full Dev", "with Parameters", "gene", "cat", null, paramObjs));
-//        compareDesign(eighth, getDevice(persistor, "Full Dev", "with Parameters", "gene", "cat", null, null));
+        compareDesign(eighth, getDevice(persistor, "Full Dev", "with Parameters", "gene", "cat", null, paramObjs, false));
     }
-    
+
     @Test
-    public void testExamples(){
+    public void testExamples() {
         Map<String, String> seqrole = new HashMap<>();
         ArrayList<Parameter> params = new ArrayList<>();
         ArrayList<String> idList = new ArrayList<>();
-        
+
         seqrole.put("role", "PROMOTER");
         seqrole.put("sequence", "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaatt");
         params.add(new Parameter("pTac", 676.3, "gene expression", "REU"));
         ObjectId pTac = createPart(persistor, "pTac", "p12", seqrole, params, "David T.");
-        
+
         /////////////////////////////////////////////////////////////
         seqrole = new HashMap<>();
         seqrole.put("role", "CDS");
@@ -173,37 +171,39 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         params = new ArrayList<>();
         params.add(new Parameter("YFP Degradation Rate", 0.075, "rate", "second-1"));
         ObjectId YFP = createPart(persistor, "YFP", "c32", seqrole, params, "David T.");
-        
+
         /////////////////////////////////////////////////////////////
         idList.add(pTac.getValue());
         idList.add(YFP.getValue());
         seqrole = new HashMap<>();
-        seqrole.put("role","PROMOTER");
+        seqrole.put("role", "PROMOTER");
         seqrole.put("sequence", "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaattatggtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacggccacaagttcagcgtgtccggcgagggcgagggcgatgccacctacggcaagctgaccctgaagttcatctgcaccacaggcaagctgcccgtgccctggcccaccctcgtgaccaccttcggctacggcctgcaatgcttcgcccgctaccccgaccacatgaagctgcacgacttcttcaagtccgccatgcccgaaggctacgtccaggagcgcaccatcttcttcaaggacgacggcaactacaagacccgcgccgaggtgaagttcgagggcgacaccctggtgaaccgcatcgagctgaagggcatcgacttcaaggaggacggcaacatcctggggcacaagctggagtacaactacaacagccacaacgtctatatcatggccgacaagcagaagaacggcatcaaggtgaacttcaagatccgccacaacatcgaggacggcagcgtgcagctcgccgaccactaccagcagaacaccccaatcggcgacggccccgtgctgctgcccgacaaccactaccttagctaccagtccgccctgagcaaagaccccaacgagaagcgcgatcacatggtcctgctggagttcgtgaccgccgccgggatcactctcggcatggacgagctgtacaagtaa");
         params = new ArrayList<>();
         params.add(new Parameter("Lacl-GFP Sensitivity", 0.1, "sensitivity", ""));
         ObjectId LaclSensor = createDevice(persistor, "Lacl Sensor", "s45", idList, seqrole, params, "David T.", false);
-        
+
         //Queries
         /////////////////////////////////////////////////////////////
         params = new ArrayList<>();
         params.add(new Parameter("pTac", 676.3, "gene expression", "REU"));
-        compareDesign(pTac, getPart(persistor, 
-                "ptac", 
-                "p12", 
-                "promoter", 
-                "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaatt", 
-                params));
-    
+        compareDesign(pTac, getPart(persistor,
+                "ptac",
+                "p12",
+                "promoter",
+                "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaatt",
+                params,
+                false));
+
         params = new ArrayList<>();
         params.add(new Parameter("YFP Degradation Rate", 0.075, "rate", "second-1"));
-        compareDesign(YFP, getPart(persistor, 
-                "yfp", 
-                "c32", 
-                "CDS", 
-                "atggtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacgg", 
-                params));
-    
+        compareDesign(YFP, getPart(persistor,
+                "yfp",
+                "c32",
+                "CDS",
+                "atggtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacgg",
+                params,
+                false));
+
         Part qpTac = new Part("pTac", new Person("doesn't matter"));
         qpTac.setDisplayID("p12");
         Part qyfp = new Part("yfp", new Person("bestAmoeba2016"));
@@ -214,19 +214,19 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         params = new ArrayList<>();
         params.add(new Parameter("Lacl-GFP Sensitivity", 0.1, "sensitivity", ""));
         compareDesign(LaclSensor, getDevice(persistor,
-                "lacl sensor", 
-                "s45", 
-                "promoter", 
-                "gatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaattatg", 
-                partList, 
-                params));
-        
+                "lacl sensor",
+                "s45",
+                "promoter",
+                "gatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaattatg",
+                partList,
+                params,
+                false));
+
     }
 
     //////////////////////////
     //      Debug tools     //
     //////////////////////////
-    
     public void printDesign(ObjectId design) {
 
         BioDesign bd = persistor.get(BioDesign.class, design);
@@ -271,17 +271,16 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                     } catch (ComparisonFailure cf) {
                         System.out.println("Name check failed");
                     }
-                    
-                } 
-                if(field.equalsIgnoreCase("id")){
-                    try{
+
+                }
+                if (field.equalsIgnoreCase("id")) {
+                    try {
                         assertEquals(bd.getId().toString(), info.get(field));
                         System.out.println("Id matched");
-                    }
-                    catch(ComparisonFailure cf){
+                    } catch (ComparisonFailure cf) {
                         System.out.println("ID check failed");
                     }
-                }else if (field.equalsIgnoreCase("displayID")) {
+                } else if (field.equalsIgnoreCase("displayID")) {
                     try {
                         assertEquals(bd.getDisplayID(), info.get(field));
                         System.out.println("DisplayID matched");
@@ -326,7 +325,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 } else if (field.equalsIgnoreCase("parts")) {
                     String pbuild = "[";
                     for (Part p : bd.getParts()) {
-                        pbuild += "{id:'" + p.getId() 
+                        pbuild += "{id:'" + p.getId()
                                 + "', name:'" + p.getName()
                                 + "', displayID:'" + p.getDisplayID();
                         if (p.getSequence() != null) {
