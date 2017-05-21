@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.Iterator;
+import javax.persistence.EntityNotFoundException;
 import org.ahocorasick.trie.Emit;
 import org.ahocorasick.trie.Trie;
 import org.ahocorasick.trie.Trie.TrieBuilder;
@@ -1590,50 +1592,82 @@ public class ConvenienceMethods {
     // parameters required: 
     // persistor object, name, role, sequence, <features> list, <parameters> list, role, sequence, author 
     
-    public static void deletePart(Persistor persistor, String name, String role, String sequence, List<Parameter> parameters, String author) {
+    public static void deletePart(ObjectId obj, Persistor persistor, String name, String role, String sequence, List<Parameter> parameters, String author) {
+        
+        // call the persistor method to get the id 
+        persistor.get(obj);
         
         // Person authorization object 
+        // use new or .this? 
+        
         Person auth = new Person(author);
         
         // Part object 
-        Part part2 = new Part(name, auth); 
+        Part part2 = persistor.get(Part.class , obj); 
         
         // keep an instance of BioDesign
-        BioDesign design = new BioDesign(name, auth);
-        
-        /* Which one to use to permanently delete a part? */
-        // design.addPart(null); 
-        design.addPart(part2);
+        BioDesign design = persistor.get(BioDesign.class , obj);
         
         // for loop to search through all of the subobjects 
         for (Parameter p : parameters) {
             // delete the Annotation first
-            Annotation ann = new Annotation();
+            Annotation ann = persistor.get(Annotation.class, obj);
             
-            // then delete the features 
-            Feature feat = new Feature(name, role, auth);
+            // delete the features 
+            Feature feat = persistor.get(Feature.class, obj);
             
             // delete the sequence
-            Sequence seq = new Sequence(name, sequence, auth); 
+            Sequence seq = persistor.get(Sequence.class, obj);
             
             // delete the basic module 
-            BasicModule basic = new BasicModule(name, role, auth);
+            BasicModule basic = persistor.get(BasicModule.class, obj); 
             
             // delete the Bio Design
             ObjectId obj1 = persistor.save(design);
             ConvenienceMethods.delete(obj1, design, persistor);
-            
-            // delete the References 
         }
-        // make the object ID instance 
-        ObjectId obj2 = persistor.save(design); 
         
-        // make instance of a new BioDesign 
-        BioDesign design2 = new BioDesign(name, auth);
-
+        // for loop to get through each part 
+        
+        // David's Hint: use the existing sub-classes instead of 
+        // creating your own 
+        
+        // iterating through the parts in a for-each loop 
+        for (Part p : design.getParts()) {
+            p.getSequence();
+            
+            // iterating through the annotations in a for-each loop 
+            
+            for (Annotation a : p.getSequence().getAnnotations()) {
+                a.getFeature();
+                ObjectId obj2 = persistor.save(design);
+                // delete the feature (from own method)
+                delete(obj2, (BioDesign) design.getParameters(), persistor);
+                // delete the annotation (from the Persistor class method) 
+                persistor.delete(obj2);
+            
+            // delete the sequence (from the Persistor class method) 
+            // is the sequence a Polynucleotide? 
+            delete(obj2, (BioDesign) design.getPolynucleotides(), persistor);
+            delete(obj2, (Persistor) persistor.get(obj2)); 
+            }
+        }
+        // delete the basic module 
+        persistor.delete(obj);
+        
         // call the delete main function 
-        ConvenienceMethods.delete(obj2, design2, persistor);
+        delete(obj, design, persistor);
     }
+    
+    
+    
+    // for reference only: 
+    // get method
+    /*
+      public Object get(ObjectId objectId) throws EntityNotFoundException {
+        return get(ObjBase.class, objectId, false);
+    }
+    */
 
     /* Extraneous Constructors for the Sub-Objects  */ 
     

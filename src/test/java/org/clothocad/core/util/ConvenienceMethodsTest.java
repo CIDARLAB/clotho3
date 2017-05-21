@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.clothocad.core.datums.ObjBase;
@@ -19,6 +20,7 @@ import org.clothocad.model.BioDesign;
 import org.clothocad.model.Parameter;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
+import org.clothocad.webserver.jetty.ConvenienceMethods;
 import static org.clothocad.webserver.jetty.ConvenienceMethods.*;
 import static org.junit.Assert.*;
 import org.junit.ComparisonFailure;
@@ -354,5 +356,64 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         }
         System.out.println();
     }
+    
+    /* 
+    @ author: Jason 
+    
+    Testing methods for my deletePart() method from ConvenienceMethods.java 
+    
+    */
+    
+    @Test
+    public void deletePartTest() {
+        
+        // test by deleting the feature first
+        // get an instance of object id 
+        
+        // create a part
+        // query 
+        // println 
+        
+        // delete a part 
+        // query 
+        // verify in mongo shell 
+        
+        System.out.println("Testing the delete function:");
+        
+        ObjectId test1 = createPart(persistor, "new special part", "Jason");
 
+        Map<String, String> roleParam = new HashMap<>();
+        
+        roleParam.put("role", "GENE");
+        
+        BioDesign design = persistor.get(BioDesign.class,test1);
+        
+        // figure out a way to make sure parameters 
+        // initialization will not cause error 
+        
+        List<Parameter> parameters = null;
+                // ("Jason",2.0,"hi","meters");
+        
+        // delete the part 
+        
+        // deletePart(test1, persistor, "new special part", "GENE", "catacatcat",null, "Jason");
+        
+        System.out.println("Test 1 passed!");
+        
+        ObjectId obj = persistor.save(design);
+        
+        // generic test 1 
+        // deletePart(obj, persistor, "Jason", "Clotho", "catcatcat", null, "David");
+        
+        System.out.println("Test 2 passed!");
+        
+        // generic test 2 
+        // deletePart()
+        
+        System.out.println("End delete test function");
+    }
+
+    private void deletePart(ObjectId test1, Persistor persistor, String new_special_part, String gene, String catacatcat, List<Parameter> parameters, String jason) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

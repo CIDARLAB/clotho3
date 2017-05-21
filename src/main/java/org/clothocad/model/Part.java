@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -95,6 +96,10 @@ public class Part extends SharableObjBase {
     		assemblies = new ArrayList<Assembly>();
     	}
     	assemblies.add(assembly);
+    }
+
+    public Iterator iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
