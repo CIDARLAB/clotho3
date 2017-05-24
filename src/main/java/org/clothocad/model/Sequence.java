@@ -50,6 +50,14 @@ public class Sequence extends SharableObjBase {
         addAnnotation(annotation);
         return annotation;
     }
+    
+    public Annotation createAnnotation(String name, int start, int end, boolean isForwardStrand,
+            Person author, Feature feature) {
+        Annotation annotation = new Annotation(name, start, end, isForwardStrand, author);
+        annotation.setFeature(feature);
+        addAnnotation(annotation);
+        return annotation;
+    }
 
     public Annotation createAnnotation(String name, String description, int start, int end,
             boolean isForwardStrand, Person author) {

@@ -33,7 +33,7 @@ public abstract class SampleData extends SharableObjBase {
     @Getter
     protected Set<Parameter> parameters;
 
-    public SampleData(String name, Sample sample, Instrument instrument, Set<Variable> responseVariables,
+    public SampleData(String name, Sample sample, Instrument instrument, Set<String> responseVariables,
             Person author) {
         super(name, author);
         this.sample = sample;
@@ -41,14 +41,14 @@ public abstract class SampleData extends SharableObjBase {
     }
 
     public SampleData(String name, String description, Sample sample, Instrument instrument,
-            Set<Variable> responseVariables, Person author) {
+            Set<String> responseVariables, Person author) {
         super(name, author, description);
         this.sample = sample;
         this.instrument = instrument;
     }
 
-    public Parameter createParameter(double value, Variable variable) {
-        Parameter parameter = new Parameter(value, variable);
+    public Parameter createParameter(String name, double value, String variable, String units) {
+        Parameter parameter = new Parameter(name, value, variable, units);
         addParameter(parameter);
         return parameter;
     }

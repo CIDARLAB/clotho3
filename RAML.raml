@@ -1,0 +1,101 @@
+#%RAML 1.0
+title: Clotho REST
+version: 3
+baseUri: https://localhost:8443/data
+#documentation:
+#  - title: Clotho REST API
+#      content: CRUD functions (with pagination)
+/post:
+  /create:
+    /user:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              username: string
+              password: string
+    /sequence:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              username: string
+              objectName: string
+              sequence: string
+              description:
+                required: false
+                type: string
+    /part:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              username: string
+              objectName: string
+              id:
+                required: false
+                type: string
+              description:
+                required: false
+                type: string
+    /feature:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              username: string
+              objectName: string
+              role: string
+              description:
+                required: false
+                type: string
+    /module:
+      post:
+        body:
+          application/json:
+            type: object
+            properties:
+              username: string
+              objectName: string
+              role: string
+              id:
+                required: false
+                type: string
+              description:
+                required: false
+                type: string
+    /conveniencePart:
+      post:
+    /convenienceDevice:
+      post:
+  /get:
+    /conveniencePart:
+      get:
+    /convenienceDevice:
+      get:
+/get:
+  /getByID/{id}:
+    get:
+  /getByName/{objectName}:
+    /{pageSize}:
+      get:
+        description: For first page
+    /{id}/{direction}/{pageSize}:
+      get:
+        description: For next/prev pages, follow links in returned JSON
+/put:
+  /set:
+    put:
+      body:
+        application/json:
+          type: object
+          properties:
+            id: string
+            key: any
+/delete:
+  /delete/{id}:
+    delete:

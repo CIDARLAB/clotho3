@@ -1,348 +1,598 @@
 package org.clothocad.webserver.jetty;
 
+import com.google.common.collect.Lists;
 import org.clothocad.core.communication.Channel;
 import org.clothocad.core.communication.Message;
 import org.clothocad.core.communication.RestConnection;
 import org.clothocad.core.communication.Router;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.shiro.authz.UnauthorizedException;
+import org.clothocad.core.persistence.Persistor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import javax.inject.Inject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.clothocad.model.*;
+import org.json.JSONObject;
+import org.clothocad.core.datums.ObjectId;
+import org.clothocad.core.persistence.jongo.JongoConnection;
+import static org.clothocad.webserver.jetty.ConvenienceMethods.*;
+import org.json.JSONArray;
 
 @SuppressWarnings("serial")
 public class RestApi extends HttpServlet {
 
     /*
+    This is history. Never delete this comment:
     
-    REST API servlet is at idontremember.url/data/*
-    
-    doGet: get, getAll, and query
-    doPost: pterry much any request you want, just specify the channel.
-    
-    haven't modified doDelete or doPut yet.
-    
-    
+    REST API servlet is at idontremember.url/data/*    
      */
     private static Router router;
-    private static Message m, loginMessage, logoutMessage;
-    private static Map<String, String> loginMap;
+    private static Persistor persistor;
+    private static Message m;
     private static RestConnection rc = new RestConnection("RestConnection");
 
-    // http://stackoverflow.com/questions/15051712/how-to-do-authentication-with-a-rest-api-right-browser-native-clients
-    // http://shiro-user.582556.n2.nabble.com/Shiro-and-RESTful-web-services-td5539212.html
-    // http://stackoverflow.com/questions/319530/restful-authentication?rq=1
-    // http://stackoverflow.com/questions/454355/security-of-rest-authentication-schemes
-    // http://shiro.apache.org/
-    public RestApi(Router router) {
+    @Inject
+    public RestApi(Persistor persistor, Router router) {
         this.router = router;
+        this.persistor = persistor;
     }
 
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-        // Allows GET calls from domains other than this Clotho's domain
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        int pathLength = pathID.length;
 
-        if (pathID.length == 0) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"greeting\": \"Hello Friend!\"}");
-            return;
-        }
+        String method = (pathLength >= 3) ? pathID[2] : null;
+        String toGet = (pathLength >= 4) ? pathID[3] : null;
+        String lastID = (pathLength >= 5) ? pathID[4] : null;
+        String nextPrev = (pathLength >= 6) ? pathID[5] : null;
+        String pageSize = (pathLength >= 7) ? pathID[6] : null;
 
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
+        String result = "";
+        switch (method) {
+            case "getByName":
+                if (pageSize != null && !pageSize.isEmpty()) {
 
-        login(unamePass);
+                    String query = "{name:\"" + toGet + "\"}";
+                    String sortOrder = "";
 
-        String id = pathID[1];
-        String data;
-        if (id.contains("query")) {
-            String queryString = request.getQueryString();
-            Map<String, String> p = splitQuery(queryString);
-            m = new Message(Channel.query, p, null, null);
-            data = queryString;
-        }
-        else
-        {
-            data = pathID[2];
-        }
+                    //if going to the next page
+                    if (nextPrev.equals("next") && (lastID != null && !lastID.isEmpty())) {
+                        query = "{name:\"" + toGet + "\",_id:{ $gt : \"" + lastID + "\"}}";
+                        sortOrder = "{_id:1}";
+                    }
 
-        //example.com/data/channelID/data
-        //example.com/data/query?name=mimithedog
-        switch (id) {
+                    //if going to the previous page
+                    if (nextPrev.equals("prev") && (lastID != null && !lastID.isEmpty())) {
+                        query = "{name:\"" + toGet + "\",_id:{ $lte : \"" + lastID + "\"}}";
+                        sortOrder = "{_id:-1}";
+                    }
+                    int per_page = Integer.parseInt(pageSize);
+                    JongoConnection.Pagination queried = persistor.findByPage(query, sortOrder, per_page);
 
-            case "get":
-                m = new Message(Channel.get, data, null, null);
+                    JSONObject jsono = new JSONObject();
+                    jsono.put("page", queried.page);
+                    jsono.put("per_page", queried.per_page);
+                    jsono.put("page_count", queried.page_count);
+                    jsono.put("total_count", queried.total_count);
+
+                    JSONArray arr = new JSONArray();
+                    JSONObject next = new JSONObject();
+
+                    //if we are going to the previous page, the results will be in the wrong direction because of the way the query and sort order go
+                    if (nextPrev.equals("prev") && (lastID != null && !lastID.isEmpty())) {
+                        queried.list = Lists.reverse(queried.list);
+                    }
+                    //the last id in the records of the current page, used to navigate to next and previous pages
+                    String newLastId = String.valueOf(queried.list.get(queried.list.size() - 1).getId());
+
+                    next.put("next", "/" + newLastId + "/next/" + String.valueOf(pageSize));
+                    if (queried.page != queried.page_count) {
+                        arr.put(next);
+                    }
+                    JSONObject prev = new JSONObject();
+                    prev.put("prev", "/" + newLastId + "/prev/" + String.valueOf(pageSize));
+                    if (queried.page != 1) {
+                        arr.put(prev);
+                    }
+
+                    jsono.put("links", arr);
+
+                    jsono.put("records", new JSONArray(queried.list));
+
+                    if (queried.list.isEmpty()) {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_FOUND);
+                        result = jsono.toString();
+                    }
+                } else {
+                    System.out.println("Error: " + pageSize);
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+
                 break;
 
-            case "getAll":
-                m = new Message(Channel.getAll, data, null, null);
+            case "getByID":
+                ObjectId objId = new ObjectId(toGet);
+                Object obj = persistor.get(objId);
+
+                if (obj == null) {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_FOUND);
+                    result = obj.toString();
+                }
                 break;
 
-            default:
-                break;
         }
 
-        //Toss the request to the router to funnel into the static RestConnection object
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
+        response.getWriter().write("\n" + result);
     }
 
     protected void doDelete(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        int pathLength = pathID.length;
 
-        if (pathID.length == 0) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"Required\": \"ID required for delete\"}");
-            return;
-        }
+        String method = (pathLength >= 3) ? pathID[2] : null;
+        String id = (pathLength >= 4) ? pathID[3] : null;
 
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String id = pathID[1];
-
-        m = new Message(Channel.destroy, id, null, null);
-
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
+        switch (method) {
+            case "delete":
+                if (persistor.has(new ObjectId(id))) {
+                    persistor.delete(new ObjectId(id));
+                    response.getWriter().write("\n Object has been deleted\r\n");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    response.getWriter().write("\n Object with id " + id + " does not exist\r\n");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                }
+                break;
         }
     }
 
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("application/json");
-
-        /*
-        Assuming the POST requests look like this... (the format of the Message class)
-        
-        {        
-        channel : "",
-        data : "",
-        requestID : "",
-        options : "",
-        }
-        
-        Seems like everytime we'll be using basic auth, so no user or pw?
-        
-         */
-        Map<String, String> p = getRequestBody(request.getReader());
-
-        if (p.isEmpty()) {
-            response.getWriter().write("{\"Required\": \"message body to process POST request\"}");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String channel = p.get("channel");
-        for (Channel e : Channel.values()) {
-            if (e.name().equalsIgnoreCase(channel)) {
-                m = new Message(e, p.get("data"), null, null);
-            }
-        }
-
-//        m = new Message(Channel.create, p, null, null);
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-    }
-
-    protected void doPut(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
 
         String[] pathID = request.getPathInfo().split("/");
+        int pathLength = pathID.length;
 
-        if (pathID.length == 0) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"Required\": \"ID required for set\"}");
-            return;
+        String method = (pathLength >= 3) ? pathID[2] : null;
+        String type = (pathLength >= 4) ? pathID[3] : null;
+        String option = (pathLength >= 5) ? pathID[4] : null;
+
+        JSONObject body = getRequestBody(request.getReader());;
+
+        // Input
+        String username = body.has("username") ? body.getString("username") : null;
+        String password = body.has("password") ? body.getString("password") : null;
+        String objectName = body.has("objectName") ? body.getString("objectName") : null;
+        String rawSequence = body.has("sequence") ? body.getString("sequence").toLowerCase() : null;
+        String description = body.has("description") ? body.getString("description") : null;
+        String role = body.has("role") ? body.getString("role") : null;
+        String displayID = body.has("displayID") ? body.getString("displayID") : null;
+        String[] partIDs = body.has("partIDs") ? body.getString("partIDs").split(",") : null;
+
+        ObjectId id = body.has("id") ? new ObjectId(body.getString("id")) : null;
+
+        JSONArray paramsArray = body.has("params") ? body.getJSONArray("params") : null;
+        JSONArray partsArray = body.has("parts") ? body.getJSONArray("parts") : null;
+
+        // Created
+        String result = "";
+
+        Sequence sequence = null;
+        Person person = new Person(username);
+        Part part = null;
+        Feature feature = null;
+
+        List params = null;
+        List parts = null;
+
+        Map<String, String> sequenceRole = null;
+        Map<String, String> query = null;
+
+        switch (method) {
+            case "create":
+                switch (type) {
+//                  Needs error codes
+                    case "user":
+                        Map<String, String> credentials = new HashMap<>();
+                        credentials.put("username", username);
+                        credentials.put("credentials", password);
+                        credentials.put("displayname", username);
+
+                        m = new Message(Channel.createUser, credentials, null, null);
+                        this.router.receiveMessage(this.rc, m);
+                        result = "createUser";
+                        break;
+
+                    case "sequence":
+                        sequence = new Sequence(objectName, description, rawSequence, person);
+                        ObjectId sequenceObjID = persistor.save(sequence);
+                        result = sequenceObjID.toString();
+                        break;
+
+                    case "part":
+                        if (id != null) {
+                            sequence = persistor.get(Sequence.class, id);
+                            part = new Part(objectName, description, sequence, person);
+                        } else {
+                            part = new Part(objectName, description, person);
+                        }
+
+                        ObjectId partObj = persistor.save(part);
+                        result = partObj.toString();
+                        break;
+
+                    case "feature":
+                        feature = new Feature(objectName, description, role, person);
+                        ObjectId featureObj = persistor.save(feature);
+                        result = featureObj.toString();
+                        break;
+
+                    case "module":
+                        if (id != null) {
+                            feature = persistor.get(Feature.class, id);
+                        } else {
+                            feature = new Feature(objectName, role, person);
+                        }
+                        Set<Feature> features = new HashSet<Feature>();
+                        features.add(feature);
+                        BasicModule module = new BasicModule(objectName, description, role, features, person);
+                        ObjectId moduleObj = persistor.save(module);
+                        result = moduleObj.toString();
+                        break;
+
+                    case "conveniencePart":
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                        }
+
+                        if (role != null && rawSequence != null) {
+                            sequenceRole = new HashMap<>();
+                            sequenceRole.put("role", role);
+                            sequenceRole.put("sequence", rawSequence);
+                        }
+
+                        if (paramsArray != null) {
+                            if (role != null && rawSequence != null) {
+                                result = createPart(persistor, objectName, displayID, sequenceRole, params, username).getValue();
+                            } else {
+                                result = createPart(persistor, objectName, displayID, params, username).getValue();
+                            }
+                        } else if (role != null && rawSequence != null) {
+                            result = createPart(persistor, objectName, displayID, sequenceRole, username).getValue();
+                        } else {
+                            result = createPart(persistor, objectName, displayID, username).getValue();
+                        }
+                        break;
+
+                    case "convenienceDevice":
+                        boolean createSeqFromParts = body.getBoolean("createSeqFromParts");
+
+                        ArrayList<String> partIDArray = new ArrayList<>();
+                        for (String partID : partIDs) {
+                            partIDArray.add(partID);
+                        }
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                        }
+
+                        if (role != null && rawSequence != null) {
+                            sequenceRole = new HashMap<>();
+                            sequenceRole.put("role", role);
+                            sequenceRole.put("sequence", rawSequence);
+                        }
+
+                        if (paramsArray != null) {
+                            if (role != null && rawSequence != null) {
+                                result = createDevice(persistor, objectName, displayID, partIDArray, sequenceRole, params, username, createSeqFromParts).getValue();
+                            } else {
+                                result = createDevice(persistor, objectName, displayID, partIDArray, params, username, createSeqFromParts).getValue();
+                            }
+                        } else if (role != null && rawSequence != null) {
+                            result = createDevice(persistor, objectName, displayID, partIDArray, sequenceRole, username, createSeqFromParts).getValue();
+                        } else {
+                            result = createDevice(persistor, objectName, displayID, partIDArray, username, createSeqFromParts).getValue();
+                        }
+                        break;
+                }
+                break;
+
+            case "get":
+
+                Map<String, List> subObjects = new HashMap<String, List>();
+                List<String> ids;
+                JSONObject jsonDeviceRes;
+
+                switch (type) {
+                    case "conveniencePart":
+                        Map<String, Map<String, String>> part_map = new HashMap<String, Map<String, String>>();
+
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                        } else {
+                            params = null;
+                        }
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        part_map = getPart(persistor, query, params, Boolean.valueOf(option));
+
+                        JSONObject jsonRes = new JSONObject(part_map);
+                        result = jsonRes.toString();
+                        break;
+
+                    case "conveniencePartID":
+
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                        } else {
+                            params = null;
+                        }
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        ids = getPartID(persistor, query, params, Boolean.valueOf(option));
+
+                        jsonRes = new JSONObject(ids);
+                        result = jsonRes.toString();
+                        break;
+
+                    case "convenienceDevice":
+
+                        Map<String, Map<String, String>> device_map = new HashMap<String, Map<String, String>>();
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                            subObjects.put("params", params);
+                        }
+
+                        if (partsArray != null) {
+                            parts = new ArrayList();
+                            for (int i = 0; i < partsArray.length(); i++) {
+                                JSONObject childObject = partsArray.getJSONObject(i);
+                                String partName = childObject.getString("name");
+                                String partDescription = childObject.has("description") ? childObject.getString("description") : null;
+
+                                Part p = new Part(partName, partDescription, person);
+                                parts.add(p);
+                            }
+                            subObjects.put("parts", parts);
+                        }
+
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        device_map = getDevice(persistor, query, subObjects, Boolean.valueOf(option));
+
+                        jsonDeviceRes = new JSONObject(device_map);
+                        result = jsonDeviceRes.toString();
+                        break;
+
+                    case "convenienceDeviceID":
+
+                        query = new HashMap<String, String>();
+                        query.put("name", objectName);
+                        query.put("displayID", displayID);
+                        query.put("role", role);
+                        query.put("sequence", rawSequence);
+
+                        if (paramsArray != null) {
+                            params = new ArrayList();
+                            for (int i = 0; i < paramsArray.length(); i++) {
+                                JSONObject childObject = paramsArray.getJSONObject(i);
+                                String paramName = childObject.getString("name");
+                                Double paramValue = childObject.getDouble("value");
+                                String paramVariable = childObject.getString("variable");
+                                String paramUnits = childObject.getString("units");
+                                Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                                params.add(p);
+                            }
+                            subObjects.put("params", params);
+                        }
+
+                        if (partsArray != null) {
+                            parts = new ArrayList();
+                            for (int i = 0; i < partsArray.length(); i++) {
+                                JSONObject childObject = partsArray.getJSONObject(i);
+                                String partName = childObject.getString("name");
+                                String partDescription = childObject.has("description") ? childObject.getString("description") : null;
+
+                                Part p = new Part(partName, partDescription, person);
+                                parts.add(p);
+                            }
+                            subObjects.put("parts", parts);
+                        }
+                        
+                        option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
+                        ids = getDeviceID(persistor, query, subObjects, Boolean.valueOf(option));
+
+                        jsonDeviceRes = new JSONObject(ids);
+                        result = jsonDeviceRes.toString();
+                        break;
+                }
+                break;
         }
 
-        Map<String, String> p = getRequestBody(request.getReader());
-
-        if (p.isEmpty()) {
-            response.getWriter().write("{\"Required\": \"new data to set item to\"}");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        String[] unamePass = getBasicAuth(request.getHeader("Authorization"));
-
-        login(unamePass);
-
-        String id = pathID[1];
-
-        if (id.equals("run")) {
-            // You can change the url schema, but this makes it a run instead of a set
-            m = new Message(Channel.run, p, null, null);
-        } else {
-            p.put("id", id);
-            m = new Message(Channel.set, p, null, null);
-        }
-
-        try {
-            this.router.receiveMessage(this.rc, m);
-        } catch (UnauthorizedException ue) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addHeader("WWW-Authenticate", "Basic realm=\"Clotho Rest\"");
-            response.addHeader("HTTP/1.0 401", "Unauthorized");
-            response.getWriter().write("{\"error\": \"unauthorized access of page\"}");
-            return;
-        }
-
-        String result = this.rc.getResult().toString();
-
-        logout(unamePass);
-
-        response.getWriter().write(result);
-
-        if (result.contains("FAILURE")) {
+        if (result.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             response.setStatus(HttpServletResponse.SC_CREATED);
         }
+
+        response.getWriter().write("\n" + result);
     }
 
-    private void login(String[] userPass) {
-        if (userPass != null) {
-            loginMap = new HashMap<String, String>();
-            loginMap.put("username", userPass[0]);
-            loginMap.put("password", userPass[1]);
-            loginMessage = new Message(Channel.login, loginMap, null, null);
-            this.router.receiveMessage(this.rc, loginMessage);
+    protected void doPut(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
+
+        String[] pathID = request.getPathInfo().split("/");
+        int pathLength = pathID.length;
+        String method = (pathLength >= 3) ? pathID[2] : null;
+
+        JSONObject body = getRequestBody(request.getReader());
+        ObjectId id = body.has("id") ? new ObjectId(body.getString("id")) : null;
+
+        switch (method) {
+            case "set":
+                if (id == null) {
+                    response.getWriter().write("You must supply an id \r\n");
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    break;
+                }
+
+                if (!persistor.has(id)) {
+                    response.getWriter().write("No object with this id exists\r\n");
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    break;
+                }
+
+                Map<String, Object> original = persistor.getAsJSON(id);
+
+                Iterator<String> keysItr = body.keys();
+                while (keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    Object value = body.get(key);
+                    original.put(key, value);
+                }
+
+                persistor.save(jsonToMap(body));
+                response.setStatus(HttpServletResponse.SC_OK);
+
+                break;
         }
     }
 
-    private void logout(String[] userPass) {
-        if (userPass != null) {
-            logoutMessage = new Message(Channel.logout, loginMap, null, null);
-            this.router.receiveMessage(this.rc, logoutMessage);
+    private JSONObject getRequestBody(BufferedReader reader) throws IOException {
+        StringBuilder buffer = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
         }
+        String data = buffer.toString();
+
+        return new JSONObject(data);
     }
 
-    private Map<String, String> getRequestBody(BufferedReader reader) {
-        String parts[];
-        String keyValue[] = new String[2];
-        String currChar = "";
-        String key = "";
+    public static Map<String, Object> jsonToMap(JSONObject json) {
+        Map<String, Object> retMap = new HashMap<String, Object>();
 
-        Map<String, String> map = new HashMap<String, String>();
+        if (json != JSONObject.NULL) {
+            retMap = toMap(json);
+        }
+        return retMap;
+    }
 
-        try {
-            parts = reader.readLine().split("&");
-            for (String kv : parts) {
-                keyValue = kv.split("=");
-                map.put(keyValue[0], keyValue[1]);
+    public static Map<String, Object> toMap(JSONObject object) {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        Iterator<String> keysItr = object.keys();
+        while (keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            } else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
             }
-        } catch (IOException ie) {
-            map = new HashMap<String, String>();
-        } catch (NullPointerException ne) {
-            map = new HashMap<String, String>();
+            map.put(key, value);
         }
-
         return map;
     }
 
-    private Map<String, String> splitQuery(String queryInfo) {
-        Map<String, String> queryPairs = new HashMap<String, String>();
-        String[] pairs = queryInfo.split("&");
-        for (String pair : pairs) {
-            int i = pair.indexOf("=");
-            queryPairs.put(pair.substring(0, i), pair.substring(i + 1));
+    public static List<Object> toList(JSONArray array) {
+        List<Object> list = new ArrayList<Object>();
+        for (int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if (value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            } else if (value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
         }
-        return queryPairs;
-    }
-
-    private String[] getBasicAuth(String authHeader) {
-        try {
-            String credentials = new String(Base64.decodeBase64(authHeader), "UTF-8");
-            return credentials.split(":");
-        } catch (UnsupportedEncodingException uee) {
-            return null;
-        } catch (NullPointerException nee) {
-            return null;
-        }
+        return list;
     }
 }

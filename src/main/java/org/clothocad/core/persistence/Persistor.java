@@ -53,6 +53,7 @@ import static org.clothocad.core.ReservedFieldNames.*;
 import org.clothocad.core.aspects.Interpreter.GlobalTrie;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.jackson.JSONFilter;
+import org.clothocad.core.persistence.jongo.JongoConnection;
 import org.clothocad.core.schema.BuiltInSchema;
 import org.clothocad.core.schema.ClothoSchema;
 import org.clothocad.core.schema.Converter;
@@ -125,7 +126,7 @@ public class Persistor {
         Set<ConstraintViolation<?>> violations = new HashSet<>();
 
         for (ObjBase o : getObjBaseSet(obj)) {
-            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(o); //XXX: will only validate the constraints on currently instantiated classes
+            Set<ConstraintViolation<ObjBase>> cvs = validator.validate(obj); //XXX: will only validate the constraints on currently instantiated classes
             for (ConstraintViolation violation : cvs) {
                 log.info("Constraint violation: {}", violation.getMessage());
                 violations.add(violation);
@@ -146,18 +147,20 @@ public class Persistor {
     }
 
     public <T extends ObjBase> T get(Class<T> type, ObjectId id, boolean forRun) throws EntityNotFoundException {
-        try {
-            if (forRun) {
-                checkPriv(id, "run");
-            } else {
-                checkPriv(id, "view");
-            }
-        } catch (AuthorizationException e) {
-            throw new EntityNotFoundException("Did not find object: " + id.toString());
-        }
+//        try {
+//            if (forRun) {
+//                checkPriv(id, "run");
+//            } else {
+//                checkPriv(id, "view");
+//            }
+//        } catch (AuthorizationException e) {
+//            throw new EntityNotFoundException("Did not find object: " + id.toString());
+//        }
         T obj = connection.get(type, id);
         if (obj == null) {
-            throw new EntityNotFoundException(id.toString());
+//            throw new EntityNotFoundException(id.toString());
+            System.out.println("[WARNING] Persistor.java: Object " + id.toString() + " was not found or was improperly casted to " + type.getName());
+            return null;
         }
         validate(obj);
         return obj;
@@ -168,20 +171,20 @@ public class Persistor {
         return save(obj, false);
     }
 
-    public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
-        if (id == null) {
-            throw new IllegalArgumentException("Null ObjectId");
-        }
-        Subject currentSubject = SecurityUtils.getSubject();
-        if (has(id)) {
-            try {
-                currentSubject.checkPermission("data:" + priviliege + ":" + id.toString());
-            } catch (AuthorizationException e) {
-                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
-                throw e;
-            }
-        }
-    }
+//    public final void checkPriv(ObjectId id, String priviliege) throws AuthorizationException {
+//        if (id == null) {
+//            throw new IllegalArgumentException("Null ObjectId");
+//        }
+//        Subject currentSubject = SecurityUtils.getSubject();
+//        if (has(id)) {
+//            try {
+//                currentSubject.checkPermission("data:" + priviliege + ":" + id.toString());
+//            } catch (AuthorizationException e) {
+//                log.warn("User {} attempted unauthorized {} on object# {}", currentSubject.getPrincipal(), priviliege, id);
+//                throw e;
+//            }
+//        }
+//    }
 
     public Set<String> getUserPermissionInfo(ObjectId id) {
         return null;
@@ -189,7 +192,7 @@ public class Persistor {
 
     public Set<String> getAllPermissionInfo(ObjectId id) {
         //must be owner
-        checkPriv(id, "grant");
+//        checkPriv(id, "grant");
         return null;
     }
 
@@ -199,12 +202,22 @@ public class Persistor {
     // if fail check, remove from save list
     //if id not in database, assign ownership to current user
     public ObjectId save(ObjBase obj, boolean overwrite) {
-        Subject currentSubject = SecurityUtils.getSubject();
-        if (!currentSubject.isAuthenticated()
-                || currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
-            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
-        }
+//        System.out.println();
+//        log.info("Persistor.save execution beginning...");
+//        long start = System.currentTimeMillis();
+
+
+// *auth*
+//        Subject currentSubject = SecurityUtils.getSubject();
+//        if (!currentSubject.isAuthenticated()
+//                || currentSubject.getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
+//            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
+//        }
         validate(obj);
+        
+//        long time = System.currentTimeMillis();
+//        log.info("SecurityUtils subject validation time: " + (time-start) + " ms");
+//        start = time;
 
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
 
@@ -214,26 +227,37 @@ public class Persistor {
                 object.setId(new ObjectId());
             }
         }
+        
+//        time = System.currentTimeMillis();
+//        log.info("Assigning IDs to no-id objects time : " + (time-start) + " ms");
+//        start = time;
 
         // if can't change original object, abort
-        if (has(obj.getId())
-                && !currentSubject.isPermitted("data:edit:" + obj.getId().toString())) {
-            throw new AuthorizationException("Cannot edit " + obj.getId());
-        }
 
-        Set<ObjBase> filteredObjects = new HashSet();
+// *auth*
+//        if (has(obj.getId())
+//                && !currentSubject.isPermitted("data:edit:" + obj.getId().toString())) {
+//            throw new AuthorizationException("Cannot edit " + obj.getId());
+//        }
 
-        for (ObjBase object : relevantObjects) {
-            //check privileges on preexisting objects
-            if (!has(object.getId())
-                    || currentSubject.isPermitted("data:edit" + obj.getId().toString())) {
-                filteredObjects.add(object);
-            }
-            //give current user ownership of new objects
-            if (!has(object.getId())) {
-                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
-            }
-        }
+        Set<ObjBase> filteredObjects = relevantObjects;
+//        Set<ObjBase> filteredObjects = new HashSet();
+//
+//        for (ObjBase object : relevantObjects) {
+//            //check privileges on preexisting objects
+//            if (!has(object.getId())
+//                    || currentSubject.isPermitted("data:edit" + obj.getId().toString())) {
+//                filteredObjects.add(object);
+//            }
+//            //give current user ownership of new objects
+//            if (!has(object.getId())) {
+//                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
+//            }
+//        }
+        
+//        time = System.currentTimeMillis();
+//        log.info("Checking privileges of pre-existing objects & giving ownership of new objects time : " + (time-start) + " ms");
+//        start = time;
 
         if (!overwrite) {
             Set<ObjBase> modifiedObjects = new HashSet<>();
@@ -246,12 +270,19 @@ public class Persistor {
                 throw new OverwriteConfirmationException(modifiedObjects);
             }
         }
-
+//        time = System.currentTimeMillis();
+//        log.info("Modified Objects loop time : " + (time-start) + " ms");
+//        start = time;
+        
         //recurse in persistor
         connection.saveAll(filteredObjects);
         for (ObjBase object : filteredObjects) {
             globalTrie.put(object);
         }
+        
+//        time = System.currentTimeMillis();
+//        log.info("Recurse in persistor and build global trie time : " + (time - start) + " ms");
+//        System.out.println();
         return obj.getId();
     }
 
@@ -274,16 +305,16 @@ public class Persistor {
     }
 
     public ObjectId save(Map<String, Object> data) throws ConstraintViolationException, OverwriteConfirmationException {
-        if (!SecurityUtils.getSubject().isAuthenticated()
-                || SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
-            throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
-        }
+//        if (!SecurityUtils.getSubject().isAuthenticated()
+//                || SecurityUtils.getSubject().getPrincipal().toString().equals(ClothoRealm.ANONYMOUS_USER)) {
+//            throw new UnauthenticatedException("Anonymous users cannot create or edit objects.");
+//        }
         if (!data.containsKey(ID)) {
             Object id = new ObjectId();
             //Our ObjectId class isn't a BSON datatype, so use string representation
             data.put(ID, id.toString());
         } else {
-            checkPriv(new ObjectId(data.get(ID)), "edit");
+//            checkPriv(new ObjectId(data.get(ID)), "edit");
         }
         ObjectId id = new ObjectId(data.get(ID));
         if (!has(id)) {
@@ -302,7 +333,7 @@ public class Persistor {
     }
 
     public void delete(ObjectId id) throws AuthorizationException {
-        checkPriv(id, "delete");
+//        checkPriv(id, "delete");
         connection.delete(id);
     }
 
@@ -315,15 +346,15 @@ public class Persistor {
     }
 
     public Map<String, Object> getAsJSON(ObjectId id, Set<String> fields, boolean forRun) throws EntityNotFoundException {
-        try {
-            if (forRun) {
-                checkPriv(id, "run");
-            } else {
-                checkPriv(id, "view");
-            }
-        } catch (AuthorizationException e) {
-            throw new EntityNotFoundException(id.toString());
-        }
+//        try {
+//            if (forRun) {
+//                checkPriv(id, "run");
+//            } else {
+//                checkPriv(id, "view");
+//            }
+//        } catch (AuthorizationException e) {
+//            throw new EntityNotFoundException(id.toString());
+//        }
 
         Map<String, Object> result = connection.getAsBSON(id, fields);
         if (result == null) {
@@ -480,15 +511,28 @@ public class Persistor {
         //filter results for permission
         List<ObjBase> filteredResult = new ArrayList<>();
         for (ObjBase obj : result) {
-            try {
-                checkPriv(obj.getId(), "view");
+//            try {
+//                checkPriv(obj.getId(), "view");
                 filteredResult.add(obj);
-            } catch (AuthorizationException e) {
-            }
+//            } catch (AuthorizationException e) {
+//            }
         }
         return filteredResult;
     }
+    
+    public JongoConnection.Pagination findByPage(String query, String sortOrder, int pageSize) {
 
+        JongoConnection.Pagination result = connection.getByPage(query, sortOrder, pageSize);
+
+        return result;
+    }
+
+    public Iterable<ObjBase> findRegex(Map<String, Object> query){
+        List<ObjBase> result = connection.getRegex(query);
+        
+        return result;
+    }
+    
     private List<Map<String, Object>> getConvertedData(Schema originalSchema, Set<String> fields) {
         List<Map<String, Object>> results = new ArrayList<>();
 
@@ -614,7 +658,7 @@ public class Persistor {
         if (has(id)) {
             Map<String, Object> permissions = new HashMap<>();
 
-            permissions.put("mine", realm.getCurrentSubjectPermissions(id));
+//            permissions.put("mine", realm.getCurrentSubjectPermissions(id));
             if (SecurityUtils.getSubject().isPermitted("data:grant:" + id.toString())) {
                 permissions.put("user", realm.getUserPermissions(id));
                 permissions.put("group", realm.getGroupPermissions(id));
@@ -628,7 +672,7 @@ public class Persistor {
         List<Map<String, Object>> filteredObjects = new ArrayList<>();
         for (Map<String, Object> object : objects) {
             try {
-                checkPriv(new ObjectId(object.get(ID)), permission.name());
+//                checkPriv(new ObjectId(object.get(ID)), permission.name());
                 filteredObjects.add(object);
             } catch (AuthorizationException e) {
             }
@@ -640,7 +684,7 @@ public class Persistor {
         List<ObjBase> filteredObjects = new ArrayList<>();
         for (ObjBase object : objects) {
             try {
-                checkPriv(object.getId(), permission.name());
+//                checkPriv(object.getId(), permission.name());
                 filteredObjects.add(object);
             } catch (AuthorizationException e) {
             }

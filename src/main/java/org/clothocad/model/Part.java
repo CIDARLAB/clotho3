@@ -2,13 +2,13 @@ package org.clothocad.model;
 
 import org.clothocad.core.datums.SharableObjBase;
 import org.clothocad.core.persistence.annotations.Reference;
-import org.clothocad.model.Feature.FeatureRole;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class Part extends SharableObjBase {
     @Getter
     protected List<Assembly> assemblies;
 
-    @NotNull
+//    @NotNull
     @Getter
     @Setter
     @Reference
@@ -51,6 +51,15 @@ public class Part extends SharableObjBase {
         super(name, author); 
         this.sequence = sequence;
     }
+    
+    public Part(String name, Person author){
+        super(name, author);
+    }
+    
+    public Part(String name, String description, Person author)
+    {
+        super(name, author, description);
+    }
 
     /**
      * Change the Format of the Part
@@ -62,8 +71,8 @@ public class Part extends SharableObjBase {
         }
     }
 
-    public List<FeatureRole> getRoles() {
-        List<FeatureRole> roles = new LinkedList<FeatureRole>();
+    public List<String> getRoles() {
+        List<String> roles = new LinkedList<String>();
         for (Annotation annotation : sequence.getAnnotations()) {
             Feature feature = annotation.getFeature();
             if (feature != null) {
@@ -87,6 +96,10 @@ public class Part extends SharableObjBase {
     		assemblies = new ArrayList<Assembly>();
     	}
     	assemblies.add(assembly);
+    }
+
+    public Iterator iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

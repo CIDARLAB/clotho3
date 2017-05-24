@@ -32,7 +32,7 @@ public class Feature extends SharableObjBase {
     @NotNull
     @Setter
     @Getter
-    protected FeatureRole role;
+    protected String role;
 
     @Getter
     @Setter
@@ -46,7 +46,7 @@ public class Feature extends SharableObjBase {
      * @param role
      * @param author
      */
-    public Feature(String name, FeatureRole role, Person author) {
+    public Feature(String name, String role, Person author) {
         super(name, author);
         this.role = role;
     }
@@ -59,7 +59,7 @@ public class Feature extends SharableObjBase {
      * @param role
      * @param author
      */
-    public Feature(String name, String description, FeatureRole role, Person author) {
+    public Feature(String name, String description, String role, Person author) {
         super(name, author, description);
         this.role = role;
     }
@@ -79,9 +79,9 @@ public class Feature extends SharableObjBase {
     }
 
     // Feel free to add more of these
-    public static enum FeatureRole {
-    	BARCODE, CDS, DEGRADATION_TAG, GENE, LOCALIZATION_TAG, OPERATOR, PROMOTER, SCAR, SPACER, RBS, RIBOZYME, TERMINATOR;
-
-    }
+//    public static enum FeatureRole {
+//    	BARCODE, CDS, DEGRADATION_TAG, GENE, LOCALIZATION_TAG, OPERATOR, PROMOTER, SCAR, SPACER, RBS, RIBOZYME, TERMINATOR;
+//
+//    }
 
 }

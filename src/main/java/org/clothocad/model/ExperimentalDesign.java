@@ -26,14 +26,14 @@ public class ExperimentalDesign extends SharableObjBase {
     @Getter
     @Setter
     @ReferenceCollection
-    protected Set<Variable> responseVariables;
+    protected Set<String> responseVariables;
 
     @NotNull
     @Size(min=1)
     @Getter
     @Setter
     @ReferenceCollection
-    protected Set<Variable> controlledVariables;
+    protected Set<String> controlledVariables;
 
     @Getter
     protected Set<ExperimentalCondition> experimentalConditions;
@@ -53,15 +53,15 @@ public class ExperimentalDesign extends SharableObjBase {
     @Reference
     protected ExperimentalDesign parentDesign;
 
-    public ExperimentalDesign(String name, Set<Variable> responseVariables, Set<Variable> controlledVariables,
+    public ExperimentalDesign(String name, Set<String> responseVariables, Set<String> controlledVariables,
             Person author) {
         super(name, author);
         this.responseVariables = responseVariables;
         this.controlledVariables = controlledVariables;
     }
 
-    public ExperimentalDesign(String name, String description, Set<Variable> responseVariables,
-            Set<Variable> controlledVariables, Person author) {
+    public ExperimentalDesign(String name, String description, Set<String> responseVariables,
+            Set<String> controlledVariables, Person author) {
         super(name, author, description);
         this.responseVariables = responseVariables;
         this.controlledVariables = controlledVariables;
@@ -87,16 +87,16 @@ public class ExperimentalDesign extends SharableObjBase {
     	subDesigns.add(subDesign);
     }
     
-    public void addResponseVariable(Variable responseVariable) {
+    public void addResponseVariable(String responseVariable) {
     	if (responseVariables == null) {
-    		responseVariables = new HashSet<Variable>();
+    		responseVariables = new HashSet<String>();
     	}
     	responseVariables.add(responseVariable);
     }
     
-    public void addControlledVariable(Variable controlledVariable) {
+    public void addControlledVariable(String controlledVariable) {
     	if (controlledVariables == null) {
-    		controlledVariables = new HashSet<Variable>();
+    		controlledVariables = new HashSet<String>();
     	}
     	controlledVariables.add(controlledVariable);
     }

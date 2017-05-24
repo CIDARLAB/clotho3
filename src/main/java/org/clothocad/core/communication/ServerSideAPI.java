@@ -954,7 +954,7 @@ public class ServerSideAPI {
 
         //check for permissions
         ObjectId id = new ObjectId(data.get(ID).toString());
-        persistor.checkPriv(id, "run");
+//        persistor.checkPriv(id, "run");
         //reflectively (ugh) run function of instance
         ObjBase instance = persistor.get(ObjBase.class, id, true);
 

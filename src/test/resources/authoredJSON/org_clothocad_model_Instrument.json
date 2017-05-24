@@ -1,0 +1,18 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org_clothocad_model_Instrument",
+  "name" : "Instrument",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ ],
+  "methods" : null,
+  "superClass" : "org_clothocad_core_datums_SharableObjBase",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.Instrument",
+  "binaryName" : "org.clothocad.model.Instrument"
+}

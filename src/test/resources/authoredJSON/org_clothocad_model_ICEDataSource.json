@@ -1,0 +1,28 @@
+{
+  "schema" : "org.clothocad.core.schema.BuiltInSchema",
+  "id" : "org_clothocad_model_ICEDataSource",
+  "name" : "ICEDataSource",
+  "dateCreated" : null,
+  "visibility" : null,
+  "author" : null,
+  "description" : null,
+  "icon" : null,
+  "dependencies" : null,
+  "source" : null,
+  "fields" : [ {
+    "name" : "canImport",
+    "type" : "boolean",
+    "subtype" : null,
+    "example" : null,
+    "access" : null,
+    "reference" : false,
+    "referenceCollection" : false,
+    "constraints" : null,
+    "description" : null
+  } ],
+  "methods" : null,
+  "superClass" : "org_clothocad_model_DataSource",
+  "innerClasses" : null,
+  "c" : "org.clothocad.model.ICEDataSource",
+  "binaryName" : "org.clothocad.model.ICEDataSource"
+}

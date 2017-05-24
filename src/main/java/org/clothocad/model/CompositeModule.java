@@ -26,12 +26,12 @@ public class CompositeModule extends Module {
     @ReferenceCollection
     protected Set<Module> subModules;
 
-    public CompositeModule(String name, ModuleRole role, Set<Module> subModules, Person author) {
+    public CompositeModule(String name, String role, Set<Module> subModules, Person author) {
         super(name, role, author);
         this.subModules = subModules;
     }
 
-    public CompositeModule(String name, String description, ModuleRole role, Set<Module> subModules,
+    public CompositeModule(String name, String description, String role, Set<Module> subModules,
             Person author) {
         super(name, description, role, author);
         this.subModules = subModules;

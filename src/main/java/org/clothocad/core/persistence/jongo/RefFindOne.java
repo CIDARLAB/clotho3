@@ -36,15 +36,32 @@ public class RefFindOne {
 
     public <T> T as(final Class<T> clazz) {
         DBObject result = collection.findOne(query.toDBObject(), getFieldsAsDBObject(), readPreference);
-        if (result == null) return null;
-        
+        if (result == null) {
+            return null;
+        }
+
         InstantiatedReferencesQueryingCache cache = new InstantiatedReferencesQueryingCache(queryFactory, unmarshaller, collection);
-        
-        T resultObj;
+
+        T resultObj = null;
         if (ObjBase.class.isAssignableFrom(clazz)) {
-            resultObj = (T) cache.makeValue(new ObjectId(result.get("_id")), result, (Class<? extends ObjBase>) clazz);
+
+            //Either match exactly or the schema should be a subclass
+            try {
+                if (clazz.isAssignableFrom(Class.forName(result.get("schema").toString()))) {
+                    resultObj = (T) cache.makeValue(new ObjectId(result.get("_id")), result, (Class<? extends ObjBase>) clazz);
+                }
+            } catch (ClassNotFoundException e) {
+                if(result.get("schema").toString().equalsIgnoreCase(clazz.getName()))
+                {
+                    resultObj = (T) cache.makeValue(new ObjectId(result.get("_id")), result, (Class<? extends ObjBase>) clazz);
+                }
+                else
+                {
+                    System.err.println("[ERROR] RefFindOne.java ClassNotFoundException" + e.getMessage());
+                }
+            }
         } else {
-            resultObj  = unmarshaller.unmarshall(Bson.createDocument(result), clazz, cache);
+            resultObj = unmarshaller.unmarshall(Bson.createDocument(result), clazz, cache);
         }
 
         return resultObj;
@@ -62,5 +79,5 @@ public class RefFindOne {
 
     private DBObject getFieldsAsDBObject() {
         return fields == null ? null : fields.toDBObject();
-    }    
+    }
 }

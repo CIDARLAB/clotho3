@@ -26,16 +26,21 @@ public class BasicModule extends Module {
     @ReferenceCollection
     protected Set<Feature> features;
 
-    public BasicModule(String name, ModuleRole role, Set<Feature> features, Person author) {
+    public BasicModule(String name, String role, Set<Feature> features, Person author) {
         super(name, role, author);
         this.features = features;
     }
 
-    public BasicModule(String name, String description, ModuleRole role, Set<Feature> features, Person author) {
+    public BasicModule(String name, String description, String role, Set<Feature> features, Person author) {
         super(name, description, role, author);
         this.features = features;
     }
+
+    public BasicModule(String name, String role, Person auth) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
+    @SuppressWarnings("Convert2Diamond")
     public void addFeature(Feature feature) {
     	if (features == null) {
     		features = new HashSet<Feature>();

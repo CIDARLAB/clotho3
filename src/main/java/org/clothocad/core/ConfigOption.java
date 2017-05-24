@@ -19,7 +19,7 @@ public enum ConfigOption {
                    .toString(),
                 "path"),
     //if not using .clothoconfig, change SSL keystore password's "" field to "changeit".
-    //This onyl works if your JDK's cacerts password is still the default.
+    //This only works if your JDK's cacerts password is still the default.
     keystorepass("SSL keystore password", "", "password"),
     configfile("path to configuration file",
                 Paths.get(System.getProperty("user.home"))
