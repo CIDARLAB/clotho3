@@ -1681,4 +1681,177 @@ public class ConvenienceMethods {
     private static Sequence Sequence(String name, String sequence, Person auth) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    /**********************
+     * 
+     *  Author: Jerome
+     *
+     * ********************/
+    
+    private static void updateBioDesign(
+            Persistor   persistor,
+            ObjectId    obj,
+            String      authName,
+            String      displayID,
+            String      name,
+            List<Parameter>     parameters,
+            List<String>        subPartIds,
+            Map<String,String>  seqrole){
+
+        BioDesign bio = persistor.get(BioDesign.class, obj);
+       
+        //Person author = persistor.get(Person.class, authName);
+        Person author = new Person(authName);
+        
+        // Update biodesign's displayID
+        if (displayID != null){
+            bio.setDisplayID(displayID);
+        }
+
+        // Update biodesign's name
+        if (name != null){
+            bio.setName(name);
+        }
+
+        // Update biodesign's parameters
+        if (parameters != null){
+            bio.getParameters().clear();
+            for (Parameter parameter: parameters){
+                bio.getParameters().add(parameter);
+            }
+        }
+        
+        
+        // Before updating Assemblies and Annotations
+        // Save old Part data if not updating seqrole & need to update subparts
+        Sequence oldSequence = null;
+        String   oldSeqString = "";
+        String   oldRoles = "";
+        
+        if (seqrole == null && subPartIds != null){
+            if (bio.getParts().size() > 0){
+                Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
+                Part oldPart = partArray[0]; // First element should be nominal part
+                oldSequence = oldPart.getSequence();
+                oldSeqString = oldPart.getSequence().getSequence();
+                for (String role: oldPart.getRoles()){
+                    role = oldRoles.concat(role);
+                }
+            }
+        }
+        
+        // Update biodesign's subPartIds
+        if (subPartIds != null){
+            if (bio.getParts().size() > 0){
+                Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
+                Part part = partArray[0];
+                
+                part.getAssemblies().clear();
+                Assembly assembly = part.createAssembly();
+
+                for (String subPartId : subPartIds){
+                    ObjectId id = new ObjectId(subPartId);
+                    Part subPart = persistor.get(Part.class, id);
+                    assembly.addPart(subPart);
+                }
+
+                bio.getParts().add(part);
+            }
+        }
+
+        // Update biodesign's seqrole  
+        if (seqrole != null){
+            if (bio.getParts().size() > 0){
+                Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
+                Part part = partArray[0];
+                
+                boolean bRole = false, bSeq = false;
+                String roleString = "", sequenceString = "";
+
+                //case insensitive check for sequence and/or role
+                for (String field : seqrole.keySet()) {
+                    if (field.equalsIgnoreCase("role")) {
+                        bRole = true;
+                        roleString = seqrole.get(field);
+                    }
+
+                    if (field.equalsIgnoreCase("sequence")) {
+                        bSeq = true;
+                        sequenceString = seqrole.get(field);
+                    }
+                }
+
+                if (bSeq && bRole){
+                    Sequence sequence = new Sequence(name, sequenceString, author);
+                    
+                    Feature feature = new Feature(name, roleString, author);
+                    feature.setSequence(sequence);
+                    
+                    sequence.getAnnotations().clear();                    
+                    sequence.createAnnotation(name, 1, 5, true, author, feature);
+                    
+                    part.setSequence(sequence);
+                } else if (bSeq){
+                    Sequence sequence = new Sequence(name, sequenceString, author);
+                    
+                    Feature feature = new Feature(name, oldRoles, author);
+                    feature.setSequence(sequence);
+                    
+                    sequence.getAnnotations().clear();                    
+                    sequence.createAnnotation(name, 1, 5, true, author, feature);
+                    
+                    part.setSequence(sequence);
+
+                } else if (bRole){
+                    Sequence sequence = oldSequence;
+                    if (sequence == null){
+                        System.out.println("Old Sequence is NULL. Role will not be updated.");
+                        return;
+                    }
+                    
+                    Feature feature = new Feature(name, roleString, author);
+                    feature.setSequence(sequence);
+                    
+                    sequence.getAnnotations().clear();
+                    sequence.createAnnotation(name, 1, oldSeqString.length(), true, author);
+                    
+                    part.setSequence(sequence);
+                    
+                } else {
+                    System.out.println("seqRole formatted incorrectly.");
+                }
+
+            }
+        }
+        
+        persistor.save(bio, true);
+    }
+    
+    public static void updatePart(
+            Persistor   persistor,
+            ObjectId    obj,
+            String      authName,
+            String      displayID,
+            String      name,
+            List<Parameter>     parameters,
+            List<String>        subPartIds,
+            Map<String,String>  seqrole){
+        
+        updateBioDesign(persistor, obj, authName, displayID, name, parameters, null, seqrole);
+    }
+    
+    public static void updateDevice(
+            Persistor   persistor,
+            ObjectId    obj,
+            String      authName,
+            String      displayID,
+            String      name,
+            List<Parameter>     parameters,
+            List<String>        subPartIds,
+            Map<String,String>  seqrole){
+        
+        updateBioDesign(persistor, obj, authName, displayID, name, parameters, subPartIds, seqrole); 
+    }
+}
+
 }
