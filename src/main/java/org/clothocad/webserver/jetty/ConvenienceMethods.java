@@ -1692,7 +1692,6 @@ public class ConvenienceMethods {
     private static void updateBioDesign(
             Persistor   persistor,
             ObjectId    obj,
-            String      authName,
             String      displayID,
             String      name,
             List<Parameter>     parameters,
@@ -1700,9 +1699,6 @@ public class ConvenienceMethods {
             Map<String,String>  seqrole){
 
         BioDesign bio = persistor.get(BioDesign.class, obj);
-       
-        //Person author = persistor.get(Person.class, authName);
-        Person author = new Person(authName);
         
         // Update biodesign's displayID
         if (displayID != null){
@@ -1833,25 +1829,23 @@ public class ConvenienceMethods {
     public static void updatePart(
             Persistor   persistor,
             ObjectId    obj,
-            String      authName,
             String      displayID,
             String      name,
             List<Parameter>     parameters,
             Map<String,String>  seqrole){
         
-        updateBioDesign(persistor, obj, authName, displayID, name, parameters, null, seqrole);
+        updateBioDesign(persistor, obj, displayID, name, parameters, null, seqrole);
     }
     
     public static void updateDevice(
             Persistor   persistor,
             ObjectId    obj,
-            String      authName,
             String      displayID,
             String      name,
             List<Parameter>     parameters,
             List<String>        subPartIds,
             Map<String,String>  seqrole){
         
-        updateBioDesign(persistor, obj, authName, displayID, name, parameters, subPartIds, seqrole); 
+        updateBioDesign(persistor, obj, displayID, name, parameters, subPartIds, seqrole); 
     }
 }

@@ -385,7 +385,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 for (Parameter p : params){
                     System.out.println("    " + p.getName() + ", " + p.getValue() + ", " + p.getVariable() + ", " + p.getUnits());
                 }
-            } else System.out.println("null");
+            } else System.out.println("    null");
             
             // subParts
             System.out.println("Subparts ... ");
@@ -396,7 +396,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 for (Part p : parts){
                     System.out.println("    " + p);
                 }
-            } else System.out.println("null");
+            } else System.out.println("    null");
             
             // seqrole
             System.out.println("Sequence = " + partA[0].getSequence().getSequence());
@@ -470,7 +470,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     }
     
     @Test
-    public void testUpdatePart() throws InterruptedException{
+    public void testUpdate() throws InterruptedException{
         
         System.out.println();
         System.out.println("===== Testing Convenience Update =====");
@@ -546,26 +546,20 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         printDesignFields(disPartId);
         /**/
         
-        // Test Just author, should do nothing
-        /**
-        updatePart(persistor, disPartId, "1", null, null, null, null);
-        printDesignFields(disPartId);
-        /**/
-        
         // Test displayId
         /**
-        updatePart(persistor, disPartId, null, "2", null, null, null);
+        updatePart(persistor, disPartId, "1", null, null, null);
         printDesignFields(disPartId);
         /**/
         
         // Test Name
         /**
-        updatePart(persistor, disPartId, null, null, "3", null, null);
+        updatePart(persistor, disPartId, null, "2", null, null);
         printDesignFields(disPartId);
         
         // Test Parameters
         /**
-        updatePart(persistor, disPartId, "1", null, null, newParams, null);
+        updatePart(persistor, disPartId, null, null, newParams, null);
         printDesignFields(disPartId);
         /**/
         
@@ -573,31 +567,37 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
         //Test justSeq
         /**
-        updatePart(persistor, disPartId, "1", null, null, null, justSeq);
+        updatePart(persistor, disPartId, null, null, null, justSeq);
         printDesignFields(disPartId);
         /**/
         
         //Test justRole
         /**
-        updatePart(persistor, disPartId, "1", null, null, null, justRole);
+        updatePart(persistor, disPartId, null, null, null, justRole);
         printDesignFields(disPartId);
         /**/
         
         //Test bothSeqRole
         /**
-        updatePart(persistor, disPartId, "1", null, null, null, bothSeqRole);
+        updatePart(persistor, disPartId, null, null, null, bothSeqRole);
         printDesignFields(disPartId);
         /**/
         
         //Test neitherSeqRole
         /**
-        updatePart(persistor, disPartId, "1", null, null, null, neitherSeqRole);
+        updatePart(persistor, disPartId, null, null, null, neitherSeqRole);
         printDesignFields(disPartId);
         /**/
         
         //Test brokenSeqRole
         /**
-        updatePart(persistor, disPartId, "1", null, null, null, brokenSeqRole);
+        updatePart(persistor, disPartId, null, null, null, brokenSeqRole);
+        printDesignFields(disPartId);
+        /**/
+        
+        //Test all update part arguments
+        /**/
+        updatePart(persistor, disPartId, "1", "2", newParams, bothSeqRole);
         printDesignFields(disPartId);
         /**/
         
