@@ -22,6 +22,7 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Annotation;
+import org.clothocad.model.Assembly;
 import org.clothocad.model.BasicModule;
 import org.clothocad.model.BioDesign;
 import org.clothocad.model.Feature;
@@ -1852,6 +1853,4 @@ public class ConvenienceMethods {
         
         updateBioDesign(persistor, obj, authName, displayID, name, parameters, subPartIds, seqrole); 
     }
-}
-
 }
