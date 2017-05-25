@@ -16,6 +16,8 @@ import org.clothocad.core.datums.ObjBase;
 import org.clothocad.core.datums.ObjectId;
 import org.clothocad.core.persistence.Persistor;
 import org.clothocad.model.Annotation;
+import org.clothocad.model.Assembly;
+import org.clothocad.model.BasicModule;
 import org.clothocad.model.BioDesign;
 import org.clothocad.model.Parameter;
 import org.clothocad.model.Part;
@@ -357,6 +359,56 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println();
     }
     
+    /*
+     *  Author: Jerome 
+     */
+    public void printDesignFields(ObjectId bioId){
+        BioDesign bio = persistor.get(BioDesign.class, bioId);
+        
+        if (bio != null){
+            // ObjId
+            System.out.println("ObjId = " + bio.getId());
+            
+            // authName
+            System.out.println("AuthName = " + bio.getAuthor().getDisplayID());
+            
+            // displayId
+            System.out.println("DisplayId = " + bio.getDisplayID());
+            
+            // name
+            System.out.println("Name = " + bio.getName());
+            
+            // parameters
+            if (bio.getParameters() != null){
+                System.out.println("Parameters ... ");
+                Parameter[] params = bio.getParameters().toArray(new Parameter[bio.getParameters().size()]);
+                for (Parameter p : params){
+                    System.out.println("    " + p.getName() + ", " + p.getValue() + ", " + p.getVariable() + ", " + p.getUnits());
+                }
+            } else System.out.println("null");
+            
+            // subParts
+            System.out.println("Subparts ... ");
+            Part[] partA = bio.getParts().toArray(new Part[bio.getParts().size()]);
+            if (partA[0].getAssemblies() != null && partA[0].getAssemblies().size() > 0){
+                Assembly assembly = partA[0].getAssemblies().get(0);
+                List<Part> parts = assembly.getParts();
+                for (Part p : parts){
+                    System.out.println("    " + p);
+                }
+            } else System.out.println("null");
+            
+            // seqrole
+            System.out.println("Sequence = " + partA[0].getSequence().getSequence());
+            System.out.println("ModuleRole = " + bio.getModule().getRole());
+            System.out.println("FeatureRole = " + partA[0].getRoles());
+        }
+        
+        else{
+            System.out.println("BioDesign not found.");
+        }
+    }
+    
     /* 
     @ author: Jason 
     
@@ -416,4 +468,146 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     private void deletePart(ObjectId test1, Persistor persistor, String new_special_part, String gene, String catacatcat, List<Parameter> parameters, String jason) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Test
+    public void testUpdatePart() throws InterruptedException{
+        
+        System.out.println();
+        System.out.println("===== Testing Convenience Update =====");
+        System.out.println();
+        System.out.println(" ==== Setup: Complete  ==== ");   
+        System.out.println("  === Setting up Parts ===");
+        String authName = "jerome";
+        String newAuthName = "steve";
+        
+        Person author = new Person(authName);
+        Person newAuthor = new Person(newAuthName);
+        
+        List<Parameter> newParams = new ArrayList<>();
+        //Parameter(String name, double value, String variable, String units)
+        newParams.add(new Parameter("the_sensitivity", 0.1, "sensitivity", "pounds?"));
+        newParams.add(new Parameter("the_brightness", 0.1, "brightness", "lux? lumens?"));
+        
+        Map<String, String> justSeq = new HashMap<>();
+        Map<String, String> justRole = new HashMap<>();
+        Map<String, String> bothSeqRole = new HashMap<>();
+        Map<String, String> neitherSeqRole = new HashMap<>();
+        Map<String, String> brokenSeqRole = new HashMap<>();
+        
+        justSeq.put("sequence", "actgactgactg");
+        
+        justRole.put("role", "notapromoteranymore");
+        
+        bothSeqRole.put("sequence", "ggggggggg");
+        bothSeqRole.put("role", "mightbeapromoter");
+        
+        brokenSeqRole.put("stuff", "whoknows");
+        
+        String disPartName = "disPart";
+        String datPartName = "datPart";
+        Map<String, String> createPartSeqRole = new HashMap<>();
+        createPartSeqRole.put("sequence","actg");
+        createPartSeqRole.put("role", "promoter");
+        
+        ObjectId disPartId = createPart(persistor, disPartName, createPartSeqRole, authName);
+        ObjectId datPartId = createPart(persistor, datPartName, createPartSeqRole, authName);
+        
+        //Wait for stuff
+        //Thread.sleep(10000);
+        
+        // Check that they are identical except for their names, ids
+        //printDesign(disPart); printDesign(datPart);
+        //compareDesign(disPartId, getPart(persistor, "datPart", null, "promoter", "actg", null, false));
+        //compareDesign(datPartId, getPart(persistor, "disPart", null, "promoter", "actg", null, false));
+        
+        BioDesign disPart = persistor.get(BioDesign.class, disPartId);
+        BioDesign datPart = persistor.get(BioDesign.class, datPartId);
+        System.out.println("  === Parts set up     ===");        
+        System.out.println(" ==== Setup: Complete  ==== ");
+        System.out.println("  === Listing Fields   ===");
+        
+        printDesignFields(disPartId);
+        System.out.println();
+        //printDesignFields(datPartId);
+        /*  Persistor   persistor,
+            ObjectId    obj,
+            String      authName,
+            String      displayID,
+            String      name,
+            List<Parameter>     parameters,
+            List<String>        subPartIds,
+            Map<String,String>  seqrole{*/
+        
+        System.out.println(" ==== Test 1: Parts    ==== ");
+        
+        // Test Nothing
+        /**
+        updatePart(persistor, disPartId, null, null, null, null, null);
+        printDesignFields(disPartId);
+        /**/
+        
+        // Test Just author, should do nothing
+        /**
+        updatePart(persistor, disPartId, "1", null, null, null, null);
+        printDesignFields(disPartId);
+        /**/
+        
+        // Test displayId
+        /**
+        updatePart(persistor, disPartId, null, "2", null, null, null);
+        printDesignFields(disPartId);
+        /**/
+        
+        // Test Name
+        /**
+        updatePart(persistor, disPartId, null, null, "3", null, null);
+        printDesignFields(disPartId);
+        
+        // Test Parameters
+        /**
+        updatePart(persistor, disPartId, "1", null, null, newParams, null);
+        printDesignFields(disPartId);
+        /**/
+        
+        //Test seqRole...
+        
+        //Test justSeq
+        /**
+        updatePart(persistor, disPartId, "1", null, null, null, justSeq);
+        printDesignFields(disPartId);
+        /**/
+        
+        //Test justRole
+        /**
+        updatePart(persistor, disPartId, "1", null, null, null, justRole);
+        printDesignFields(disPartId);
+        /**/
+        
+        //Test bothSeqRole
+        /**
+        updatePart(persistor, disPartId, "1", null, null, null, bothSeqRole);
+        printDesignFields(disPartId);
+        /**/
+        
+        //Test neitherSeqRole
+        /**
+        updatePart(persistor, disPartId, "1", null, null, null, neitherSeqRole);
+        printDesignFields(disPartId);
+        /**/
+        
+        //Test brokenSeqRole
+        /**
+        updatePart(persistor, disPartId, "1", null, null, null, brokenSeqRole);
+        printDesignFields(disPartId);
+        /**/
+        
+        
+        System.out.println(" ==== Test 1: Complete ==== ");
+//        System.out.println(" ===  Test 2: Devices   === ");
+//        
+//        System.out.println(" ===  Test 2: Complete  === ");
+        System.out.println("===== Testing Complete =====");
+    }
+    
+    
 }

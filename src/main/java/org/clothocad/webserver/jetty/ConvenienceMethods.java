@@ -1716,9 +1716,16 @@ public class ConvenienceMethods {
 
         // Update biodesign's parameters
         if (parameters != null){
-            bio.getParameters().clear();
-            for (Parameter parameter: parameters){
-                bio.getParameters().add(parameter);
+            if (bio.getParameters() != null){
+                bio.getParameters().clear();
+                for (Parameter parameter: parameters){
+                    bio.getParameters().add(parameter);
+                }
+            }
+            else{
+                for (Parameter parameter: parameters){
+                    bio.addParameter(parameter);
+                }
             }
         }
         
@@ -1729,17 +1736,17 @@ public class ConvenienceMethods {
         String   oldSeqString = "";
         String   oldRoles = "";
         
-        if (seqrole == null && subPartIds != null){
+        //if (subPartIds == null){
             if (bio.getParts().size() > 0){
                 Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
                 Part oldPart = partArray[0]; // First element should be nominal part
                 oldSequence = oldPart.getSequence();
                 oldSeqString = oldPart.getSequence().getSequence();
                 for (String role: oldPart.getRoles()){
-                    role = oldRoles.concat(role);
+                    oldRoles = oldRoles.concat(role);
                 }
             }
-        }
+        //}
         
         // Update biodesign's subPartIds
         if (subPartIds != null){
@@ -1783,25 +1790,23 @@ public class ConvenienceMethods {
                 }
 
                 if (bSeq && bRole){
-                    Sequence sequence = new Sequence(name, sequenceString, author);
+                    Sequence sequence = part.getSequence();
+                    sequence.setSequence(sequenceString);
                     
-                    Feature feature = new Feature(name, roleString, author);
-                    feature.setSequence(sequence);
+                    Annotation[] annos = sequence.getAnnotations().toArray(new Annotation[sequence.getAnnotations().size()]);
+                    Feature feature = annos[0].getFeature();
                     
-                    sequence.getAnnotations().clear();                    
-                    sequence.createAnnotation(name, 1, 5, true, author, feature);
+                    feature.setRole(roleString);
+                    bio.getModule().setRole(roleString);
                     
-                    part.setSequence(sequence);
+                    annos[0].setEnd(sequenceString.length());
+                    
                 } else if (bSeq){
-                    Sequence sequence = new Sequence(name, sequenceString, author);
+                    Sequence sequence = part.getSequence();
+                    sequence.setSequence(sequenceString);
                     
-                    Feature feature = new Feature(name, oldRoles, author);
-                    feature.setSequence(sequence);
-                    
-                    sequence.getAnnotations().clear();                    
-                    sequence.createAnnotation(name, 1, 5, true, author, feature);
-                    
-                    part.setSequence(sequence);
+                    Annotation[] annos = sequence.getAnnotations().toArray(new Annotation[sequence.getAnnotations().size()]);
+                    annos[0].setEnd(sequenceString.length());
 
                 } else if (bRole){
                     Sequence sequence = oldSequence;
@@ -1810,13 +1815,10 @@ public class ConvenienceMethods {
                         return;
                     }
                     
-                    Feature feature = new Feature(name, roleString, author);
-                    feature.setSequence(sequence);
-                    
-                    sequence.getAnnotations().clear();
-                    sequence.createAnnotation(name, 1, oldSeqString.length(), true, author);
-                    
-                    part.setSequence(sequence);
+                    Annotation[] annos = sequence.getAnnotations().toArray(new Annotation[sequence.getAnnotations().size()]);
+                    Feature feature = annos[0].getFeature();
+                    feature.setRole(roleString);                    
+                    bio.getModule().setRole(roleString);
                     
                 } else {
                     System.out.println("seqRole formatted incorrectly.");
@@ -1835,7 +1837,6 @@ public class ConvenienceMethods {
             String      displayID,
             String      name,
             List<Parameter>     parameters,
-            List<String>        subPartIds,
             Map<String,String>  seqrole){
         
         updateBioDesign(persistor, obj, authName, displayID, name, parameters, null, seqrole);
