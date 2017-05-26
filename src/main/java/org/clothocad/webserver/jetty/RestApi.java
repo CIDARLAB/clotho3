@@ -127,7 +127,7 @@ public class RestApi extends HttpServlet {
                 }
 
                 break;
-
+ 
             case "getByID":
                 ObjectId objId = new ObjectId(toGet);
                 Object obj = persistor.get(objId);
@@ -139,7 +139,6 @@ public class RestApi extends HttpServlet {
                     result = obj.toString();
                 }
                 break;
-
         }
 
         response.getWriter().write("\n" + result);
@@ -154,17 +153,65 @@ public class RestApi extends HttpServlet {
         int pathLength = pathID.length;
 
         String method = (pathLength >= 3) ? pathID[2] : null;
-        String id = (pathLength >= 4) ? pathID[3] : null;
+        String option = (pathLength >= 4) ? pathID[3] : null;
+        String id = (pathLength >= 5) ? pathID[4] : null;
 
         switch (method) {
             case "delete":
-                if (persistor.has(new ObjectId(id))) {
-                    persistor.delete(new ObjectId(id));
-                    response.getWriter().write("\n Object has been deleted\r\n");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    response.getWriter().write("\n Object with id " + id + " does not exist\r\n");
-                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                if (id != null) {
+                    if (persistor.has(new ObjectId(option))) {
+                        persistor.delete(new ObjectId(option));
+                        response.getWriter().write("\n Object has been deleted\r\n");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                    } else {
+                        response.getWriter().write("\n Object with id " + option + " does not exist\r\n");
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    }
+                }
+                else
+                {
+                   switch(option)
+                   {
+                       case "part":
+                           try{
+                               boolean result = delete(persistor, new ObjectId(id), false);
+                               if(result)
+                               {
+                                   response.getWriter().write("\n Part deleted\r\n");
+                                   response.setStatus(HttpServletResponse.SC_OK);
+                               }
+                               else
+                               {
+                                   response.getWriter().write("\n Part was not deleted or found\r\n");
+                                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                               }
+                           }catch(Exception e)
+                           {
+                               System.out.println("[ERROR] /delete/part encountered an exception " + e);
+                               response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                           }
+                           break;
+                           
+                       case "device":
+                           try{
+                               boolean result = delete(persistor, new ObjectId(id), true);
+                               if(result)
+                               {
+                                   response.getWriter().write("\n Device deleted\r\n");
+                                   response.setStatus(HttpServletResponse.SC_OK);
+                               }
+                               else
+                               {
+                                   response.getWriter().write("\n Device was not deleted or found\r\n");
+                                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                               }
+                           }catch(Exception e)
+                           {
+                               System.out.println("[ERROR] /delete/device encountered an exception " + e);
+                               response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                           }
+                           break;
+                   }
                 }
                 break;
         }
@@ -482,7 +529,7 @@ public class RestApi extends HttpServlet {
                             }
                             subObjects.put("parts", parts);
                         }
-                        
+
                         option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
                         ids = getDeviceID(persistor, query, subObjects, Boolean.valueOf(option));
 
@@ -490,6 +537,73 @@ public class RestApi extends HttpServlet {
                         result = jsonDeviceRes.toString();
                         break;
                 }
+                break;
+            case "update":
+
+                if (paramsArray != null) {
+                    params = new ArrayList();
+                    for (int i = 0; i < paramsArray.length(); i++) {
+                        JSONObject childObject = paramsArray.getJSONObject(i);
+                        String paramName = childObject.getString("name");
+                        Double paramValue = childObject.getDouble("value");
+                        String paramVariable = childObject.getString("variable");
+                        String paramUnits = childObject.getString("units");
+                        Parameter p = new Parameter(paramName, paramValue, paramVariable, paramUnits);
+                        params.add(p);
+                    }
+                }
+                if (partsArray != null) {
+                    parts = new ArrayList();
+                    for (int i = 0; i < partsArray.length(); i++) {
+                        JSONObject childObject = partsArray.getJSONObject(i);
+                        String partName = childObject.getString("name");
+                        String partDescription = childObject.has("description") ? childObject.getString("description") : null;
+
+                        Part p = new Part(partName, partDescription, person);
+                        parts.add(p);
+                    }
+                }
+
+                Map<String, String> seqrole = new HashMap<>();
+                if (rawSequence != null) {
+                    seqrole.put("sequence", rawSequence);
+                }
+                if (role != null) {
+                    seqrole.put("role", role);
+                }
+
+                switch (type) {
+                    case "part":
+                        /*
+                            objectName
+                            displayID
+                            paramsArray
+                            partsArray
+                            id
+                            rawSequence
+                            role
+                        
+                         */
+                        try {
+                            updatePart(persistor, id, displayID, objectName, params, seqrole);
+                            result = "updatePart";
+                        } catch (Exception e) {
+                            System.out.println("[ERROR] /data/update/part failed to execute");
+                        }
+
+                        break;
+
+                    case "device":
+                        boolean createSeqFromParts = body.getBoolean("createSeqFromParts");
+
+                        try {
+                            updateDevice(persistor, id, displayID, objectName, params, parts, seqrole, createSeqFromParts);
+                        } catch (Exception e) {
+                            System.out.println("[ERROR] /data/update/device failed to execute");
+                        }
+                        break;
+                }
+
                 break;
         }
 

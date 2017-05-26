@@ -291,7 +291,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         //"name", "Sy.*ase" -> will return a list of objects that have Sy____ase somewhere in the "name" field. Ex: Synthase, Sympathetic steeplechase
         String queryString = "{";
         String parametersString = "'parameters': {$all:["; // $all (AND logic) because we're searching by field
-        String partsString = "'parts': {$in:[";         // has to be $in (OR logic) because we're searching parts by ID -> multiple parts with the same name/displayID (hard to differentiate)
+        String partsString = "'subDesigns': {$in:[";         // has to be $in (OR logic) because we're searching parts by ID -> multiple parts with the same name/displayID (hard to differentiate)
         String parametersEnd = "]},";
         for (Object key : query.keySet()) {
             
@@ -321,7 +321,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
             parametersString = parametersString.substring(0, parametersString.length()-1) + parametersEnd;
             queryString += parametersString;
         }
-        if(partsString.length() > 16)
+        if(partsString.length() > 20)
         {
             partsString = partsString.substring(0,partsString.length() - 1) + parametersEnd;
             queryString += partsString;
@@ -329,7 +329,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         queryString = queryString.substring(0, queryString.length()-1) + "}";
 
         //DEBUG - You can feed this equivalent to the mongo shell in the terminal.
-        System.out.println("JongoConnection Regex query: " + queryString);
+//        System.out.println("JongoConnection Regex query: " + queryString);
         return Lists.newArrayList(data.resolvingFind(queryString).as(ObjBase.class));
     }
 

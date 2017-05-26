@@ -229,37 +229,24 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         boolean deleteDevice = true;
         ObjectId LaclSensor = createDevice(persistor, "Lacl Sensor", "s45", idList, seqrole, params, "David T.", false);
                 
-        System.out.println("Initialized: ");
-        if(persistor.get(pTac) != null)
-            System.out.println("pTac found from db");
-        if(persistor.get(YFP) != null)
-            System.out.println("YFP found from db");
-        if(persistor.get(LaclSensor) != null)
-            System.out.println("Lacl Sensor found from db");
+        System.out.println("Initialized pTac: " + pTac.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
         
+        System.out.println("Deleting pTac (Part)...");
         //Should have YFP and Lacl Sensor in DB after delete
         delete(persistor, pTac, !deleteDevice);
         
-        System.out.println("Delete Part: ");
-        if(persistor.get(pTac) != null)
-            System.out.println("pTac found from db");
-        if(persistor.get(YFP) != null)
-            System.out.println("YFP found from db");
-        if(persistor.get(LaclSensor) != null)
-            System.out.println("Lacl Sensor found from db");
+        assertEquals(null, persistor.get(pTac));
+        assertNotEquals(null, persistor.get(YFP));
+        assertNotEquals(null, persistor.get(LaclSensor));        
+        System.out.println("Deleting LaclSensor (Device)...");
         
         //Should not have any devices or parts left in DB
         delete(persistor, LaclSensor, deleteDevice);   
         
-        System.out.println("Delete Device: ");
-        if(persistor.get(pTac) != null)
-            System.out.println("pTac found from db");
-        if(persistor.get(YFP) != null)
-            System.out.println("YFP found from db");
-        if(persistor.get(LaclSensor) != null)
-            System.out.println("Lacl Sensor found from db");
+        assertEquals(null, persistor.get(pTac));
+        assertEquals(null, persistor.get(YFP));
+        assertEquals(null, persistor.get(LaclSensor));
     }
-
     //////////////////////////
     //      Debug tools     //
     //////////////////////////
@@ -442,67 +429,6 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             System.out.println("BioDesign not found.");
         }
     }
-    
-    /* 
-    @ author: Jason 
-    
-    Testing methods for my deletePart() method from ConvenienceMethods.java 
-    
-    */
-    
-    @Test
-    public void deletePartTest() {
-        
-        // test by deleting the feature first
-        // get an instance of object id 
-        
-        // create a part
-        // query 
-        // println 
-        
-        // delete a part 
-        // query 
-        // verify in mongo shell 
-        
-        System.out.println("Testing the delete function:");
-        
-        ObjectId test1 = createPart(persistor, "new special part", "Jason");
-
-        Map<String, String> roleParam = new HashMap<>();
-        
-        roleParam.put("role", "GENE");
-        
-        BioDesign design = persistor.get(BioDesign.class,test1);
-        
-        // figure out a way to make sure parameters 
-        // initialization will not cause error 
-        
-        List<Parameter> parameters = null;
-                // ("Jason",2.0,"hi","meters");
-        
-        // delete the part 
-        
-        // deletePart(test1, persistor, "new special part", "GENE", "catacatcat",null, "Jason");
-        
-        System.out.println("Test 1 passed!");
-        
-        ObjectId obj = persistor.save(design);
-        
-        // generic test 1 
-        // deletePart(obj, persistor, "Jason", "Clotho", "catcatcat", null, "David");
-        
-        System.out.println("Test 2 passed!");
-        
-        // generic test 2 
-        // deletePart()
-        
-        System.out.println("End delete test function");
-    }
-
-    private void deletePart(ObjectId test1, Persistor persistor, String new_special_part, String gene, String catacatcat, List<Parameter> parameters, String jason) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     @Test
     public void testUpdate() throws InterruptedException{
         
