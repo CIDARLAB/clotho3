@@ -41,37 +41,6 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println();
     }
 
-    /*
-    BioDesign
-    name
-    
-    Part
-    name
-    
-    Sequence - Only if sequence provided
-    name
-    sequence
-    
-    Annotation - Only if sequence or role provided
-    name
-    start
-    end
-    
-    Feature - Only if role provided
-    name
-    role
-    
-    BasicModule - Only if role provided
-    name
-    role
-     */
- /*
-    Had to change function signature to be able to capture all of the optional combinations of String parameters
-    
-    __optionals__:
-    role
-    sequence
-     */
     @Test
     public void testCreatePart() {
         ObjectId first = createPart(persistor, "mySpecialPart", "David");
@@ -206,15 +175,12 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 params,
                 false));
 
-        Part qpTac = new Part("pTac", new Person("doesn't matter"));
-        qpTac.setDisplayID("p12");
-        Part qyfp = new Part("yfp", new Person("bestAmoeba2016"));
-        qyfp.setDisplayID("c32");
-        ArrayList<Part> partList = new ArrayList<>();
-        partList.add(qpTac);
-        partList.add(qyfp);
+        ArrayList<String> partList = new ArrayList<>();
+        partList.add("ptac");
+        partList.add("yfp");
         params = new ArrayList<>();
         params.add(new Parameter("Lacl-GFP Sensitivity", 0.1, "sensitivity", ""));
+        
         compareDesign(LaclSensor, getDevice(persistor,
                 "lacl sensor",
                 "s45",
@@ -223,7 +189,72 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 partList,
                 params,
                 false));
+    }
+    
+    @Test
+    public void testDeleteDevice() {
+        /*
+            Devices and parts from testExamples()
+        */
+        
+        Map<String, String> seqrole = new HashMap<>();
+        ArrayList<Parameter> params = new ArrayList<>();
+        ArrayList<String> idList = new ArrayList<>();
 
+        seqrole.put("role", "PROMOTER");
+        seqrole.put("sequence", "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaatt");
+        params.add(new Parameter("pTac", 676.3, "gene expression", "REU"));
+        ObjectId pTac = createPart(persistor, "pTac", "p12", seqrole, params, "David T.");
+
+        /////////////////////////////////////////////////////////////
+        seqrole = new HashMap<>();
+        seqrole.put("role", "CDS");
+        seqrole.put("sequence", "atggtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacggccacaagttcagcgtgtccggcgagggcgagggcgatgccacctacggcaagctgaccctgaagttcatctgcaccacaggcaagctgcccgtgccctggcccaccctcgtgaccaccttcggctacggcctgcaatgcttcgcccgctaccccgaccacatgaagctgcacgacttcttcaagtccgccatgcccgaaggctacgtccaggagcgcaccatcttcttcaaggacgacggcaactacaagacccgcgccgaggtgaagttcgagggcgacaccctggtgaaccgcatcgagctgaagggcatcgacttcaaggaggacggcaacatcctggggcacaagctggagtacaactacaacagccacaacgtctatatcatggccgacaagcagaagaacggcatcaaggtgaacttcaagatccgccacaacatcgaggacggcagcgtgcagctcgccgaccactaccagcagaacaccccaatcggcgacggccccgtgctgctgcccgacaaccactaccttagctaccagtccgccctgagcaaagaccccaacgagaagcgcgatcacatggtcctgctggagttcgtgaccgccgccgggatcactctcggcatggacgagctgtacaagtaa");
+        params = new ArrayList<>();
+        params.add(new Parameter("YFP Degradation Rate", 0.075, "rate", "second-1"));
+        ObjectId YFP = createPart(persistor, "YFP", "c32", seqrole, params, "David T.");
+
+        /////////////////////////////////////////////////////////////
+        idList.add(pTac.getValue());
+        idList.add(YFP.getValue());
+        seqrole = new HashMap<>();
+        seqrole.put("role", "PROMOTER");
+        seqrole.put("sequence", "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaattatggtgagcaagggcgaggagctgttcaccggggtggtgcccatcctggtcgagctggacggcgacgtaaacggccacaagttcagcgtgtccggcgagggcgagggcgatgccacctacggcaagctgaccctgaagttcatctgcaccacaggcaagctgcccgtgccctggcccaccctcgtgaccaccttcggctacggcctgcaatgcttcgcccgctaccccgaccacatgaagctgcacgacttcttcaagtccgccatgcccgaaggctacgtccaggagcgcaccatcttcttcaaggacgacggcaactacaagacccgcgccgaggtgaagttcgagggcgacaccctggtgaaccgcatcgagctgaagggcatcgacttcaaggaggacggcaacatcctggggcacaagctggagtacaactacaacagccacaacgtctatatcatggccgacaagcagaagaacggcatcaaggtgaacttcaagatccgccacaacatcgaggacggcagcgtgcagctcgccgaccactaccagcagaacaccccaatcggcgacggccccgtgctgctgcccgacaaccactaccttagctaccagtccgccctgagcaaagaccccaacgagaagcgcgatcacatggtcctgctggagttcgtgaccgccgccgggatcactctcggcatggacgagctgtacaagtaa");
+        params = new ArrayList<>();
+        params.add(new Parameter("Lacl-GFP Sensitivity", 0.1, "sensitivity", ""));
+        
+        boolean deleteDevice = true;
+        ObjectId LaclSensor = createDevice(persistor, "Lacl Sensor", "s45", idList, seqrole, params, "David T.", false);
+                
+        System.out.println("Initialized: ");
+        if(persistor.get(pTac) != null)
+            System.out.println("pTac found from db");
+        if(persistor.get(YFP) != null)
+            System.out.println("YFP found from db");
+        if(persistor.get(LaclSensor) != null)
+            System.out.println("Lacl Sensor found from db");
+        
+        //Should have YFP and Lacl Sensor in DB after delete
+        delete(persistor, pTac, !deleteDevice);
+        
+        System.out.println("Delete Part: ");
+        if(persistor.get(pTac) != null)
+            System.out.println("pTac found from db");
+        if(persistor.get(YFP) != null)
+            System.out.println("YFP found from db");
+        if(persistor.get(LaclSensor) != null)
+            System.out.println("Lacl Sensor found from db");
+        
+        //Should not have any devices or parts left in DB
+        delete(persistor, LaclSensor, deleteDevice);   
+        
+        System.out.println("Delete Device: ");
+        if(persistor.get(pTac) != null)
+            System.out.println("pTac found from db");
+        if(persistor.get(YFP) != null)
+            System.out.println("YFP found from db");
+        if(persistor.get(LaclSensor) != null)
+            System.out.println("Lacl Sensor found from db");
     }
 
     //////////////////////////
@@ -357,63 +388,5 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println();
     }
     
-    /* 
-    @ author: Jason 
-    
-    Testing methods for my deletePart() method from ConvenienceMethods.java 
-    
-    */
-    
-    @Test
-    public void deletePartTest() {
-        
-        // test by deleting the feature first
-        // get an instance of object id 
-        
-        // create a part
-        // query 
-        // println 
-        
-        // delete a part 
-        // query 
-        // verify in mongo shell 
-        
-        System.out.println("Testing the delete function:");
-        
-        ObjectId test1 = createPart(persistor, "new special part", "Jason");
 
-        Map<String, String> roleParam = new HashMap<>();
-        
-        roleParam.put("role", "GENE");
-        
-        BioDesign design = persistor.get(BioDesign.class,test1);
-        
-        // figure out a way to make sure parameters 
-        // initialization will not cause error 
-        
-        List<Parameter> parameters = null;
-                // ("Jason",2.0,"hi","meters");
-        
-        // delete the part 
-        
-        // deletePart(test1, persistor, "new special part", "GENE", "catacatcat",null, "Jason");
-        
-        System.out.println("Test 1 passed!");
-        
-        ObjectId obj = persistor.save(design);
-        
-        // generic test 1 
-        // deletePart(obj, persistor, "Jason", "Clotho", "catcatcat", null, "David");
-        
-        System.out.println("Test 2 passed!");
-        
-        // generic test 2 
-        // deletePart()
-        
-        System.out.println("End delete test function");
-    }
-
-    private void deletePart(ObjectId test1, Persistor persistor, String new_special_part, String gene, String catacatcat, List<Parameter> parameters, String jason) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

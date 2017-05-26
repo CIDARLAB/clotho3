@@ -329,7 +329,7 @@ public class JongoConnection implements ClothoConnection, CredentialStore, RoleP
         queryString = queryString.substring(0, queryString.length()-1) + "}";
 
         //DEBUG - You can feed this equivalent to the mongo shell in the terminal.
-//        System.out.println("JongoConnection Regex query: " + queryString);
+        System.out.println("JongoConnection Regex query: " + queryString);
         return Lists.newArrayList(data.resolvingFind(queryString).as(ObjBase.class));
     }
 

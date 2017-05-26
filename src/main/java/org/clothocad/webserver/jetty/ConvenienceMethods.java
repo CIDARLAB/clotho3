@@ -1108,7 +1108,6 @@ public class ConvenienceMethods {
     //////////////////////
     //More often than not, exact = false will do the job.
     //I'd tiptoe around using exact = true unless you are absolutely certain you have exact fields (case sensitive)
-    
     public static Map<String, Map<String, String>> getPart(Persistor persistor, Map<String, String> query) {
         return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null, false);
     }
@@ -1117,7 +1116,6 @@ public class ConvenienceMethods {
         return getPart(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), parameters, exact);
     }
 
-    
     //Exact uses find(), broken for parameters
     public static Map<String, Map<String, String>> getPart(Persistor persistor, String name, String displayID, String role, String sequence, List<Parameter> parameters, boolean exact) {
         HashMap<String, Object> query = new HashMap<>();
@@ -1273,19 +1271,16 @@ public class ConvenienceMethods {
         return returnList;
     }
 
-    public static List<String> getPartID(Persistor persistor, Map<String, String> query, List<Parameter> parameters, boolean exact)
-    {
+    public static List<String> getPartID(Persistor persistor, Map<String, String> query, List<Parameter> parameters, boolean exact) {
         Map<String, Map<String, String>> res = getPart(persistor, query, parameters, exact);
         ArrayList<String> ids = new ArrayList<>();
-        
-        for(String key : res.keySet())
-        {
-            if(res.get(key).containsKey("id"))
-            {
+
+        for (String key : res.keySet()) {
+            if (res.get(key).containsKey("id")) {
                 ids.add(res.get(key).get("id"));
             }
         }
-        
+
         return ids;
     }
     //////////////////////////
@@ -1293,17 +1288,22 @@ public class ConvenienceMethods {
     //////////////////////////
     //More often than not, exact = false will do the job.
     //I'd tiptoe around using exact = true unless you are absolutely certain you have exact fields (case sensitive)
-    
+
     public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query) {
         return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), null, null, false);
     }
 
     public static Map<String, Map<String, String>> getDevice(Persistor persistor, Map<String, String> query, Map<String, List> subObjects, boolean exact) {
-        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), (List<Part>) subObjects.get("parts"), (List<Parameter>) subObjects.get("parameters"), exact);
+        return getDevice(persistor, query.get("name"), query.get("displayID"), query.get("role"), query.get("sequence"), (List<String>) subObjects.get("parts"), (List<Parameter>) subObjects.get("parameters"), exact);
+    }
+    
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, List<String> parts)
+    {
+        return getDevice(persistor, null, null, null, null, parts, null ,false);
     }
 
     //[String displayID], [String name], [String role], [String sequence], [Part[] parts]
-    public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<Part> parts, List<Parameter> parameters, boolean exact) {
+    public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<String> parts, List<Parameter> parameters, boolean exact) {
 
         HashMap<String, Object> query = new HashMap<>();
         Iterable<ObjBase> nameDisplayParameterList = null;
@@ -1334,7 +1334,7 @@ public class ConvenienceMethods {
                 query.put("parameters.units", parameters.get(0).getUnits());
             }
         }
-        
+
         if (!query.isEmpty()) {
             nameDisplayParameterList = (exact) ? persistor.find(query) : persistor.findRegex(query);
             query = new HashMap<>();
@@ -1404,7 +1404,7 @@ public class ConvenienceMethods {
                             System.out.println("Query found parts for " + bd.getName());
                             String pbuild = "[";
                             for (Part p : bd.getParts()) {
-                                pbuild += "{id: '"+ p.getId() +"', name:'" + p.getName()
+                                pbuild += "{id: '" + p.getId() + "', name:'" + p.getName()
                                         + "', displayID:'" + p.getDisplayID();
                                 if (p.getSequence() != null) {
                                     if (p.getSequence().getAnnotations() != null) {
@@ -1483,24 +1483,69 @@ public class ConvenienceMethods {
         return returnList;
     }
 
-    public static List<String> getDeviceID(Persistor persistor, Map<String, String> query, Map<String, List> subObjects, boolean exact)
-    {
+    public static List<String> getDeviceID(Persistor persistor, Map<String, String> query, Map<String, List> subObjects, boolean exact) {
         Map<String, Map<String, String>> res = getDevice(persistor, query, subObjects, exact);
         ArrayList<String> ids = new ArrayList<>();
-        
-        for(String key : res.keySet())
-        {
-            if(res.get(key).containsKey("id"))
-            {
+
+        for (String key : res.keySet()) {
+            if (res.get(key).containsKey("id")) {
                 ids.add(res.get(key).get("id"));
             }
         }
-        
+
         return ids;
-        
+
     }
+
+    //////////////////////
+    //      Delete      //
+    //////////////////////
     
-    //Scan the sequence for multiple string patterns, annotate it
+    public static boolean delete(Persistor persistor, ObjectId id, boolean bDevice) {
+        try {
+            BioDesign top = persistor.get(BioDesign.class, id);
+            
+            if (top.getSubDesigns() != null && bDevice) {
+                for (BioDesign bd : top.getSubDesigns()) {
+                    boolean bDeleted = delete(persistor, bd.getId(), bDevice);
+                    System.out.println(bd.getId() + " : " + bDeleted);
+                }
+            }
+
+            ArrayList<ObjBase> deleteList = new ArrayList<>();
+            deleteList.add(top);
+            if (top.getModule() != null) {
+                deleteList.add(top.getModule());
+            }
+
+            for (Part p : top.getParts()) {
+                deleteList.add(p);
+                for (Annotation anno : p.getSequence().getAnnotations()) {
+                    deleteList.add(anno);
+                    if (anno.getFeature() != null) {
+                        deleteList.add(anno.getFeature());
+                    }
+                }
+                if (p.getSequence() != null) {
+                    deleteList.add(p.getSequence());
+                }
+            }
+
+            persistor.delete(deleteList);
+
+            return true;
+        } catch (Exception e) {
+
+            System.out.println("[ERROR] Convenience Delete : " + e.toString());
+            return false;
+        }
+    }
+
+    
+    //////////////////////////////////
+    //      Utility Functions       //
+    //////////////////////////////////
+    //Scan a sequence for multiple string patterns, annotate it
     //Thank god someone invented the wheel (grep) already - Aho-Corasick Algorithm
     static void annotateMe(Persistor persistor, Sequence seq, List<String> partIDs) {
         HashMap<String, Part> partMap = new HashMap<>();
@@ -1566,119 +1611,21 @@ public class ConvenienceMethods {
             }
         }
     }
-    
-     /* 
-    @author: Jason 
-    
-    Functions:
-    Delete functions that will delete all instances of the convenience methods except for the BioDesign portions 
-    
-    */
-    
-    // function to delete a BioDesign 
-    public static boolean delete(ObjectId obj, BioDesign bdesign, Persistor persistor) {
-        ConvenienceMethods.delete(obj, persistor);
-        return true;
-    }
-    
-    
-    // helper delete function 
-    public static boolean delete(ObjectId obj, Persistor persistor) {
-        persistor.delete(obj);
-        return true;
-    }
-    
-    // function to delete a part 
-    // parameters required: 
-    // persistor object, name, role, sequence, <features> list, <parameters> list, role, sequence, author 
-    
-    public static void deletePart(ObjectId obj, Persistor persistor, String name, String role, String sequence, List<Parameter> parameters, String author) {
+
+    static void deleteReferences(Persistor persistor, ObjectId partId)
+    {
+        ArrayList<String> query = new ArrayList<>();
+        query.add(partId.getValue());
+        Map<String, Map<String, String>> ref = getDevice(persistor, query);
         
-        // call the persistor method to get the id 
-        persistor.get(obj);
-        
-        // Person authorization object 
-        // use new or .this? 
-        
-        Person auth = new Person(author);
-        
-        // Part object 
-        Part part2 = persistor.get(Part.class , obj); 
-        
-        // keep an instance of BioDesign
-        BioDesign design = persistor.get(BioDesign.class , obj);
-        
-        // for loop to search through all of the subobjects 
-        for (Parameter p : parameters) {
-            // delete the Annotation first
-            Annotation ann = persistor.get(Annotation.class, obj);
+        for(String key : ref.keySet())
+        {
+            String id = ref.get(key).get("id");
+            BioDesign obj = persistor.get(BioDesign.class, new ObjectId(id));
             
-            // delete the features 
-            Feature feat = persistor.get(Feature.class, obj);
-            
-            // delete the sequence
-            Sequence seq = persistor.get(Sequence.class, obj);
-            
-            // delete the basic module 
-            BasicModule basic = persistor.get(BasicModule.class, obj); 
-            
-            // delete the Bio Design
-            ObjectId obj1 = persistor.save(design);
-            ConvenienceMethods.delete(obj1, design, persistor);
+            //Remove the part from the list of parts, the annotations, etc.
+            //Update method will be useful. 
         }
         
-        // for loop to get through each part 
-        
-        // David's Hint: use the existing sub-classes instead of 
-        // creating your own 
-        
-        // iterating through the parts in a for-each loop 
-        for (Part p : design.getParts()) {
-            p.getSequence();
-            
-            // iterating through the annotations in a for-each loop 
-            
-            for (Annotation a : p.getSequence().getAnnotations()) {
-                a.getFeature();
-                ObjectId obj2 = persistor.save(design);
-                // delete the feature (from own method)
-                delete(obj2, (BioDesign) design.getParameters(), persistor);
-                // delete the annotation (from the Persistor class method) 
-                persistor.delete(obj2);
-            
-            // delete the sequence (from the Persistor class method) 
-            // is the sequence a Polynucleotide? 
-            delete(obj2, (BioDesign) design.getPolynucleotides(), persistor);
-            delete(obj2, (Persistor) persistor.get(obj2)); 
-            }
-        }
-        // delete the basic module 
-        persistor.delete(obj);
-        
-        // call the delete main function 
-        delete(obj, design, persistor);
-    }
-    
-    
-    
-    // for reference only: 
-    // get method
-    /*
-      public Object get(ObjectId objectId) throws EntityNotFoundException {
-        return get(ObjBase.class, objectId, false);
-    }
-    */
-
-    /* Extraneous Constructors for the Sub-Objects  */ 
-    
-    // extraneous Feature Constructor 
-    
-    private static Feature Feature(String name, String role, Person auth) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    // extraneous Sequence Constructor 
-    private static Sequence Sequence(String name, String sequence, Person auth) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
