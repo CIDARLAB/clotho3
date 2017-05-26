@@ -1804,8 +1804,10 @@ public class ConvenienceMethods {
 
                             if ( p.getSequence().getAnnotations() != null){
                                 if (p.getSequence().getAnnotations().size() > 0){
+                                    
                                     Annotation[] subPartSeqAnnoArray = p.getSequence().getAnnotations().toArray(new Annotation[p.getSequence().getAnnotations().size()]);
-                                        if (subPartSeqAnnoArray[0].getFeature() != null){
+                                    
+                                    if (subPartSeqAnnoArray[0].getFeature() != null){
                                         subAnno.setFeature(subPartSeqAnnoArray[0].getFeature());
                                         featSet.add(subPartSeqAnnoArray[0].getFeature());
                                     }

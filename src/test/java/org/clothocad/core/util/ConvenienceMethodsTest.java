@@ -406,6 +406,13 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             else
                 System.out.println("No BasicModule available");
             System.out.println("FeatureRole = " + partA[0].getRoles());
+            System.out.println("SubDesigns ...");
+            if (bio.getSubDesigns() != null)
+            {
+                for (BioDesign subBio: bio.getSubDesigns()){
+                    System.out.println("    " + subBio.getName());
+                }
+            }
         }
         
         else{
@@ -730,17 +737,29 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         /**/
         
         //Test partsList update
-        /**
+        /**/
         Person itsame = new Person("authName");
         Feature feat = new Feature(disDeviceName, "promoter", itsame);
         Set<Feature> featSet = new HashSet<>();
+        
         featSet.add(feat);
+        
         BioDesign bio = persistor.get(BioDesign.class, disDeviceId);
         BasicModule mod = new BasicModule(disDeviceName, "promoter", featSet, itsame);
+        mod.setRole("promoter");
         bio.setModule(mod);
+        
+        persistor.save(bio, true);
+        
+        System.out.println();
+        printDesignFields(disDeviceId);
+        System.out.println();
+                /**/
         updateDevice(persistor, disDeviceId, null, null, null, disDeviceChange, null, true);
         printDesignFields(disDeviceId);
+        System.out.println();
         printDesignFields(content1);
+        System.out.println();
         printDesignFields(content2);
         System.out.println();
         /**/
