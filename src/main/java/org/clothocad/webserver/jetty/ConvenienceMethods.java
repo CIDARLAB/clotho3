@@ -1779,17 +1779,20 @@ public class ConvenienceMethods {
                     }
                     
                     if (bio.getModule() != null){
-                        if (seqAnno.getFeature() != null)
+                        if (seqAnno.getFeature() != null){
                             featSet.add(seqAnno.getFeature());
+                        }
                     } else {
-                        for (String key : seqrole.keySet()){
-                            if (key.equalsIgnoreCase("role")){
-                                Feature feat = new Feature(name, seqrole.get(key), bio.getAuthor());
-                                feat.setSequence(seq);
-                                featSet.add(feat);
+                        if (seqrole != null){
+                            for (String key : seqrole.keySet()){
+                                if (key.equalsIgnoreCase("role")){
+                                    Feature feat = new Feature(name, seqrole.get(key), bio.getAuthor());
+                                    feat.setSequence(seq);
+                                    featSet.add(feat);
 
-                                BasicModule mod = new BasicModule(name, seqrole.get(key), featSet, bio.getAuthor());
-                                bio.setModule(mod);
+                                    BasicModule mod = new BasicModule(name, seqrole.get(key), featSet, bio.getAuthor());
+                                    bio.setModule(mod);
+                                }
                             }
                         }
                     }
@@ -1880,7 +1883,9 @@ public class ConvenienceMethods {
                     if (bio.getModule() != null)
                         bio.getModule().setRole(roleString);
                     else{
-                        BasicModule module = new BasicModule(name, roleString, bio.getAuthor());
+                        Set<Feature> featSet = new HashSet<>();
+                        featSet.add(feature);
+                        BasicModule module = new BasicModule(name, roleString, featSet, bio.getAuthor());
                         bio.setModule(module);
                     }
                     

@@ -19,6 +19,7 @@ import org.clothocad.model.Annotation;
 import org.clothocad.model.Assembly;
 import org.clothocad.model.BasicModule;
 import org.clothocad.model.BioDesign;
+import org.clothocad.model.Feature;
 import org.clothocad.model.Parameter;
 import org.clothocad.model.Part;
 import org.clothocad.model.Person;
@@ -509,11 +510,27 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         createPartSeqRole.put("role", "promoter");
         
         ObjectId disPartId = createPart(persistor, disPartName, createPartSeqRole, authName);
+        ObjectId datPartId = createPart(persistor, datPartName, createPartSeqRole, authName);
+        
+        Map<String, String> c1MapSeqRole = new HashMap<>();
+        c1MapSeqRole.put("sequence", "tttt");
+        c1MapSeqRole.put("role", "sortofapromoter");
+        
+        Map<String, String> c2MapSeqRole = new HashMap<>();
+        c2MapSeqRole.put("sequence", "gggg");
+        c2MapSeqRole.put("role", "definitelynotapromoter");
+        
+        ObjectId content1 = createPart(persistor, "first content", c1MapSeqRole, authName);
+        ObjectId content2 = createPart(persistor, "second content", c2MapSeqRole, authName);
+        
+        List <String> disDeviceChange = new ArrayList<>();
+        disDeviceChange.add(content1.getValue());
+        disDeviceChange.add(content2.getValue());
         
         String disDeviceName = "disDevice";
-        String datDeviceName = "disDeviceName";
         List<String> disDeviceComponents = new ArrayList<>();
         disDeviceComponents.add(disPartId.getValue());
+        disDeviceComponents.add(datPartId.getValue());
         //Persistor persistor, String name, List<String> partIDs, String author, boolean createSeqFromParts
         ObjectId disDeviceId = createDevice(persistor, disDeviceName, disDeviceComponents, authName, true);
         
@@ -524,8 +541,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         //printDesign(disPart); printDesign(datPart);
         //compareDesign(disPartId, getPart(persistor, "datPart", null, "promoter", "actg", null, false));
         //compareDesign(datPartId, getPart(persistor, "disPart", null, "promoter", "actg", null, false));
-        
-        BioDesign disPart = persistor.get(BioDesign.class, disPartId);
+
         System.out.println("  === Done BD setup    ===");        
         System.out.println(" ==== Setup: Complete  ==== ");
         System.out.println("  === Listing Fields   ===");
@@ -628,11 +644,123 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println();
         System.out.println(" ===  Test 2: Devices   === ");
         System.out.println();
+        
         /**
-        updateDevice(persistor, disDeviceId, "1", "2", newParams, disDeviceComponents, bothSeqRole, false);
-        printDesignFields(disPartId);
+            Persistor   persistor,
+            ObjectId    obj,
+            String      displayID,
+            String      name,
+            List<Parameter>     parameters,
+            List<String>        subPartIds,
+            Map<String,String>  seqrole,
+            boolean             createSeqFromParts
+        /**/
+        
+        // Test Nothing
+        /**
+        updateDevice(persistor, disDeviceId, null, null, null, null, null, false);
+        printDesignFields(disDeviceId);
         System.out.println();
         /**/
+        
+        // Test displayId
+        /**
+        updateDevice(persistor, disDeviceId, "1", null, null, null, null, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        // Test Name
+        /**
+        updateDevice(persistor, disDeviceId, null, "2", null, null, null, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        // Test Parameters
+        //No original parameters
+        /**
+        updateDevice(persistor, disDeviceId, null, null, newParams, null, null, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //clear parameters
+        /**
+        List<Parameter> emptyParams = new ArrayList<>();
+        updateDevice(persistor, disDeviceId, null, null, emptyParams, null, null, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //Test seqRole...
+        //Test justSeq
+        /**
+        updateDevice(persistor, disDeviceId, null, null, null, null, justSeq, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //Test justRole
+        /**
+        updateDevice(persistor, disDeviceId, null, null, null, null, justRole, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //Test bothSeqRole
+        /**
+        updateDevice(persistor, disDeviceId, null, null, null, null, bothSeqRole, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //Test neitherSeqRole
+        /**
+        updateDevice(persistor, disDeviceId, null, null, null, null, neitherSeqRole, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //Test brokenSeqRole
+        /**
+        updateDevice(persistor, disDeviceId, null, null, null, null, brokenSeqRole, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        //Test partsList update
+        /**
+        Person itsame = new Person("authName");
+        Feature feat = new Feature(disDeviceName, "promoter", itsame);
+        Set<Feature> featSet = new HashSet<>();
+        featSet.add(feat);
+        BioDesign bio = persistor.get(BioDesign.class, disDeviceId);
+        BasicModule mod = new BasicModule(disDeviceName, "promoter", featSet, itsame);
+        bio.setModule(mod);
+        updateDevice(persistor, disDeviceId, null, null, null, disDeviceChange, null, true);
+        printDesignFields(disDeviceId);
+        printDesignFields(content1);
+        printDesignFields(content2);
+        System.out.println();
+        /**/
+        
+        //Test all update part arguments
+        /**
+        Map<String, String> emptySeqRole = new HashMap<>();
+        emptySeqRole.put("sequence", "");
+        emptySeqRole.put("role", "");
+        updateDevice(persistor, disDeviceId, "0", "0", newParams, null, emptySeqRole, false);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
+        /**
+        updateDevice(persistor, disDeviceId, "9", "9", emptyParams, null, bothSeqRole, true);
+        printDesignFields(disDeviceId);
+        System.out.println();
+        /**/
+        
         
         //System.out.println("        Skipping...");
         System.out.println(" ===  Test 2: Complete  === ");
