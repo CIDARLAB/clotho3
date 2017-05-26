@@ -277,7 +277,7 @@ public class Persistor {
         //recurse in persistor
         connection.saveAll(filteredObjects);
         for (ObjBase object : filteredObjects) {
-            globalTrie.put(object);
+            //globalTrie.put(object);
         }
         
 //        time = System.currentTimeMillis();
