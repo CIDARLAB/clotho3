@@ -1690,13 +1690,14 @@ public class ConvenienceMethods {
      * ********************/
     
     private static void updateBioDesign(
-            Persistor   persistor,
-            ObjectId    obj,
-            String      displayID,
-            String      name,
+            Persistor           persistor,
+            ObjectId            obj,
+            String              displayID,
+            String              name,
             List<Parameter>     parameters,
             List<String>        subPartIds,
-            Map<String,String>  seqrole){
+            Map<String,String>  seqrole,
+            boolean             createSeqFromParts){
 
         BioDesign bio = persistor.get(BioDesign.class, obj);
         
@@ -1712,54 +1713,106 @@ public class ConvenienceMethods {
 
         // Update biodesign's parameters
         if (parameters != null){
+            // There exists a Set<Parameters>
             if (bio.getParameters() != null){
                 bio.getParameters().clear();
                 for (Parameter parameter: parameters){
                     bio.getParameters().add(parameter);
                 }
-            }
-            else{
+            } else{ //No Set<Parameters>; .addParameter creates new hashset
                 for (Parameter parameter: parameters){
                     bio.addParameter(parameter);
                 }
             }
         }
         
-        
-        // Before updating Assemblies and Annotations
-        // Save old Part data if not updating seqrole & need to update subparts
-        Sequence oldSequence = null;
-        String   oldSeqString = "";
-        String   oldRoles = "";
-        
-        //if (subPartIds == null){
-            if (bio.getParts().size() > 0){
-                Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
-                Part oldPart = partArray[0]; // First element should be nominal part
-                oldSequence = oldPart.getSequence();
-                oldSeqString = oldPart.getSequence().getSequence();
-                for (String role: oldPart.getRoles()){
-                    oldRoles = oldRoles.concat(role);
-                }
-            }
-        //}
-        
         // Update biodesign's subPartIds
         if (subPartIds != null){
+            // Check for null pointer. Should always be true.
             if (bio.getParts().size() > 0){
-                Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
-                Part part = partArray[0];
                 
-                part.getAssemblies().clear();
+                String sequenceString = "";
+                
+                Part[] partArray = bio.getParts().toArray(new Part[bio.getParts().size()]);
+                Part part = partArray[0];   // Nominal part
+                
+                // Clear if there is an existing Set<BioDesign>
+                if (bio.getSubDesigns() != null)
+                    bio.getSubDesigns().clear();
+                
+                // Clear if there is an existing assembly
+                if (part.getAssemblies() != null)
+                    part.getAssemblies().clear();
+                
                 Assembly assembly = part.createAssembly();
 
+                // Add to assembly and subdesigns
                 for (String subPartId : subPartIds){
                     ObjectId id = new ObjectId(subPartId);
-                    Part subPart = persistor.get(Part.class, id);
-                    assembly.addPart(subPart);
+                    
+                    BioDesign subPart = persistor.get(BioDesign.class, id);
+                    Part[] subPartArray = subPart.getParts().toArray(new Part[subPart.getParts().size()]);
+                    
+                    assembly.addPart(subPartArray[0]);
+                    bio.addSubDesign(subPart);
+                    
+                    sequenceString += subPartArray[0].getSequence().getSequence();
                 }
+                
+                if (createSeqFromParts) {
+                    
+                    Sequence seq;
+                    Annotation seqAnno;
+                    Set<Feature> featSet = new HashSet<>();
+                    
+                    if (part.getSequence() == null){
+                        seq = new Sequence(name, sequenceString, bio.getAuthor());
+                        seqAnno = seq.createAnnotation(name, 1, sequenceString.length(), true, bio.getAuthor());
+                        part.setSequence(seq);
+                        
+                    } else{
+                        seq = part.getSequence();
+                        part.getSequence().setSequence(sequenceString);
+                        Annotation[] annoArray = part.getSequence().getAnnotations().toArray(new Annotation[part.getSequence().getAnnotations().size()]);
+                        seqAnno = annoArray[0];
+                        seqAnno.setEnd(sequenceString.length());
+                    }
+                    
+                    if (bio.getModule() != null){
+                        if (seqAnno.getFeature() != null)
+                            featSet.add(seqAnno.getFeature());
+                    } else {
+                        for (String key : seqrole.keySet()){
+                            if (key.equalsIgnoreCase("role")){
+                                Feature feat = new Feature(name, seqrole.get(key), bio.getAuthor());
+                                feat.setSequence(seq);
+                                featSet.add(feat);
 
-                bio.getParts().add(part);
+                                BasicModule mod = new BasicModule(name, seqrole.get(key), featSet, bio.getAuthor());
+                                bio.setModule(mod);
+                            }
+                        }
+                    }
+                    
+                    for (Part p : assembly.getParts()){
+                        if (p.getSequence() != null){
+                            Annotation subAnno = seq.createAnnotation(name, 1, p.getSequence().getSequence().length(), true, bio.getAuthor());
+                            // assumption is that the first feature is its own sequence feature
+
+                            if ( p.getSequence().getAnnotations() != null){
+                                if (p.getSequence().getAnnotations().size() > 0){
+                                    Annotation[] subPartSeqAnnoArray = p.getSequence().getAnnotations().toArray(new Annotation[p.getSequence().getAnnotations().size()]);
+                                        if (subPartSeqAnnoArray[0].getFeature() != null){
+                                        subAnno.setFeature(subPartSeqAnnoArray[0].getFeature());
+                                        featSet.add(subPartSeqAnnoArray[0].getFeature());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else{
+                System.out.println("There are no parts in this BioDevice.");
             }
         }
 
@@ -1793,7 +1846,16 @@ public class ConvenienceMethods {
                     Feature feature = annos[0].getFeature();
                     
                     feature.setRole(roleString);
-                    bio.getModule().setRole(roleString);
+                    
+                    if (bio.getModule() != null)
+                        bio.getModule().setRole(roleString);
+                    else{
+                        Set<Feature> setFeat = new HashSet<>();
+                        setFeat.add(feature);
+                        BasicModule module = new BasicModule(name, roleString, setFeat, bio.getAuthor());
+                        bio.setModule(module);
+                        bio.getModule().setRole(roleString);
+                    }
                     
                     annos[0].setEnd(sequenceString.length());
                     
@@ -1805,16 +1867,22 @@ public class ConvenienceMethods {
                     annos[0].setEnd(sequenceString.length());
 
                 } else if (bRole){
-                    Sequence sequence = oldSequence;
+                    Sequence sequence = part.getSequence();
                     if (sequence == null){
                         System.out.println("Old Sequence is NULL. Role will not be updated.");
                         return;
                     }
                     
+                    
                     Annotation[] annos = sequence.getAnnotations().toArray(new Annotation[sequence.getAnnotations().size()]);
                     Feature feature = annos[0].getFeature();
                     feature.setRole(roleString);                    
-                    bio.getModule().setRole(roleString);
+                    if (bio.getModule() != null)
+                        bio.getModule().setRole(roleString);
+                    else{
+                        BasicModule module = new BasicModule(name, roleString, bio.getAuthor());
+                        bio.setModule(module);
+                    }
                     
                 } else {
                     System.out.println("seqRole formatted incorrectly.");
@@ -1834,7 +1902,7 @@ public class ConvenienceMethods {
             List<Parameter>     parameters,
             Map<String,String>  seqrole){
         
-        updateBioDesign(persistor, obj, displayID, name, parameters, null, seqrole);
+        updateBioDesign(persistor, obj, displayID, name, parameters, null, seqrole, false);
     }
     
     public static void updateDevice(
@@ -1844,8 +1912,9 @@ public class ConvenienceMethods {
             String      name,
             List<Parameter>     parameters,
             List<String>        subPartIds,
-            Map<String,String>  seqrole){
+            Map<String,String>  seqrole,
+            boolean             createSeqFromParts){
         
-        updateBioDesign(persistor, obj, displayID, name, parameters, subPartIds, seqrole); 
+        updateBioDesign(persistor, obj, displayID, name, parameters, subPartIds, seqrole, createSeqFromParts); 
     }
 }

@@ -370,7 +370,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             System.out.println("ObjId = " + bio.getId());
             
             // authName
-            System.out.println("AuthName = " + bio.getAuthor().getDisplayID());
+            System.out.println("AuthName = " + bio.getAuthor().getDisplayName());
             
             // displayId
             System.out.println("DisplayId = " + bio.getDisplayID());
@@ -379,8 +379,8 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             System.out.println("Name = " + bio.getName());
             
             // parameters
+            System.out.println("Parameters ... ");
             if (bio.getParameters() != null){
-                System.out.println("Parameters ... ");
                 Parameter[] params = bio.getParameters().toArray(new Parameter[bio.getParameters().size()]);
                 for (Parameter p : params){
                     System.out.println("    " + p.getName() + ", " + p.getValue() + ", " + p.getVariable() + ", " + p.getUnits());
@@ -400,7 +400,10 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             
             // seqrole
             System.out.println("Sequence = " + partA[0].getSequence().getSequence());
-            System.out.println("ModuleRole = " + bio.getModule().getRole());
+            if(bio.getModule() != null)
+                System.out.println("ModuleRole = " + bio.getModule().getRole());
+            else
+                System.out.println("No BasicModule available");
             System.out.println("FeatureRole = " + partA[0].getRoles());
         }
         
@@ -476,15 +479,11 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println("===== Testing Convenience Update =====");
         System.out.println();
         System.out.println(" ==== Setup: Complete  ==== ");   
-        System.out.println("  === Setting up Parts ===");
+        System.out.println("  === Set up BioDes    ===");
         String authName = "jerome";
-        String newAuthName = "steve";
-        
-        Person author = new Person(authName);
-        Person newAuthor = new Person(newAuthName);
         
         List<Parameter> newParams = new ArrayList<>();
-        //Parameter(String name, double value, String variable, String units)
+        
         newParams.add(new Parameter("the_sensitivity", 0.1, "sensitivity", "pounds?"));
         newParams.add(new Parameter("the_brightness", 0.1, "brightness", "lux? lumens?"));
         
@@ -510,7 +509,13 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         createPartSeqRole.put("role", "promoter");
         
         ObjectId disPartId = createPart(persistor, disPartName, createPartSeqRole, authName);
-        ObjectId datPartId = createPart(persistor, datPartName, createPartSeqRole, authName);
+        
+        String disDeviceName = "disDevice";
+        String datDeviceName = "disDeviceName";
+        List<String> disDeviceComponents = new ArrayList<>();
+        disDeviceComponents.add(disPartId.getValue());
+        //Persistor persistor, String name, List<String> partIDs, String author, boolean createSeqFromParts
+        ObjectId disDeviceId = createDevice(persistor, disDeviceName, disDeviceComponents, authName, true);
         
         //Wait for stuff
         //Thread.sleep(10000);
@@ -521,14 +526,14 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         //compareDesign(datPartId, getPart(persistor, "disPart", null, "promoter", "actg", null, false));
         
         BioDesign disPart = persistor.get(BioDesign.class, disPartId);
-        BioDesign datPart = persistor.get(BioDesign.class, datPartId);
-        System.out.println("  === Parts set up     ===");        
+        System.out.println("  === Done BD setup    ===");        
         System.out.println(" ==== Setup: Complete  ==== ");
         System.out.println("  === Listing Fields   ===");
         
-        printDesignFields(disPartId);
+        
+        //printDesignFields(disPartId);
         System.out.println();
-        //printDesignFields(datPartId);
+        printDesignFields(disDeviceId);
         /*  Persistor   persistor,
             ObjectId    obj,
             String      authName,
@@ -537,19 +542,21 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             List<Parameter>     parameters,
             List<String>        subPartIds,
             Map<String,String>  seqrole{*/
-        
+        System.out.println();
         System.out.println(" ==== Test 1: Parts    ==== ");
-        
+        System.out.println();
         // Test Nothing
         /**
-        updatePart(persistor, disPartId, null, null, null, null, null);
+        updatePart(persistor, disPartId, null, null, null, null);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         // Test displayId
         /**
         updatePart(persistor, disPartId, "1", null, null, null);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         // Test Name
@@ -558,9 +565,18 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         printDesignFields(disPartId);
         
         // Test Parameters
+        //No original parameters
         /**
         updatePart(persistor, disPartId, null, null, newParams, null);
         printDesignFields(disPartId);
+        System.out.println();
+        /**/
+        
+        //clear parameters
+        /**
+        List<Parameter> emptyParams = new ArrayList<>();
+        updatePart(persistor, disPartId, null, null, emptyParams, null);
+        System.out.println();
         /**/
         
         //Test seqRole...
@@ -569,43 +585,57 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         /**
         updatePart(persistor, disPartId, null, null, null, justSeq);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         //Test justRole
         /**
         updatePart(persistor, disPartId, null, null, null, justRole);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         //Test bothSeqRole
         /**
         updatePart(persistor, disPartId, null, null, null, bothSeqRole);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         //Test neitherSeqRole
         /**
         updatePart(persistor, disPartId, null, null, null, neitherSeqRole);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         //Test brokenSeqRole
         /**
         updatePart(persistor, disPartId, null, null, null, brokenSeqRole);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
         //Test all update part arguments
-        /**/
+        /**
         updatePart(persistor, disPartId, "1", "2", newParams, bothSeqRole);
         printDesignFields(disPartId);
+        System.out.println();
         /**/
         
-        
+        //System.out.println("        Skipping...");
         System.out.println(" ==== Test 1: Complete ==== ");
-//        System.out.println(" ===  Test 2: Devices   === ");
-//        
-//        System.out.println(" ===  Test 2: Complete  === ");
+        System.out.println();
+        System.out.println(" ===  Test 2: Devices   === ");
+        System.out.println();
+        /**
+        updateDevice(persistor, disDeviceId, "1", "2", newParams, disDeviceComponents, bothSeqRole, false);
+        printDesignFields(disPartId);
+        System.out.println();
+        /**/
+        
+        //System.out.println("        Skipping...");
+        System.out.println(" ===  Test 2: Complete  === ");
         System.out.println("===== Testing Complete =====");
     }
     
