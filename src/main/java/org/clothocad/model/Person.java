@@ -38,7 +38,7 @@ public class Person extends SharableObjBase {
      */
     //unique name criterion
     //valid or nonexistent email
-    public Person( String displayname) {
+    public Person(String displayname) {
         //XXX:  Do people have authors?
         super(displayname, null);
         //changePassword( rawPassword );

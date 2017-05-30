@@ -336,6 +336,10 @@ public class Persistor {
 //        checkPriv(id, "delete");
         connection.delete(id);
     }
+    
+    public void delete(Collection<ObjBase> objects){
+        connection.delete(objects);
+    }
 
     public Map<String, Object> getAsJSON(ObjectId id) throws EntityNotFoundException {
         return getAsJSON(id, null, false);
