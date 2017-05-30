@@ -1782,38 +1782,6 @@ public class ConvenienceMethods {
                         if (seqAnno.getFeature() != null){
                             featSet.add(seqAnno.getFeature());
                         }
-                    } else {
-                        if (seqrole != null){
-                            for (String key : seqrole.keySet()){
-                                if (key.equalsIgnoreCase("role")){
-                                    Feature feat = new Feature(name, seqrole.get(key), bio.getAuthor());
-                                    feat.setSequence(seq);
-                                    featSet.add(feat);
-
-                                    BasicModule mod = new BasicModule(name, seqrole.get(key), featSet, bio.getAuthor());
-                                    bio.setModule(mod);
-                                }
-                            }
-                        }
-                    }
-                    
-                    for (Part p : assembly.getParts()){
-                        if (p.getSequence() != null){
-                            Annotation subAnno = seq.createAnnotation(name, 1, p.getSequence().getSequence().length(), true, bio.getAuthor());
-                            // assumption is that the first feature is its own sequence feature
-
-                            if ( p.getSequence().getAnnotations() != null){
-                                if (p.getSequence().getAnnotations().size() > 0){
-                                    
-                                    Annotation[] subPartSeqAnnoArray = p.getSequence().getAnnotations().toArray(new Annotation[p.getSequence().getAnnotations().size()]);
-                                    
-                                    if (subPartSeqAnnoArray[0].getFeature() != null){
-                                        subAnno.setFeature(subPartSeqAnnoArray[0].getFeature());
-                                        featSet.add(subPartSeqAnnoArray[0].getFeature());
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             } else{
@@ -1849,8 +1817,8 @@ public class ConvenienceMethods {
                     
                     Annotation[] annos = sequence.getAnnotations().toArray(new Annotation[sequence.getAnnotations().size()]);
                     Feature feature = annos[0].getFeature();
-                    
-                    feature.setRole(roleString);
+                    annos[0].setEnd(sequenceString.length());
+                    annos[0].getFeature().setRole(roleString);                    
                     
                     if (bio.getModule() != null)
                         bio.getModule().setRole(roleString);
@@ -1861,8 +1829,6 @@ public class ConvenienceMethods {
                         bio.setModule(module);
                         bio.getModule().setRole(roleString);
                     }
-                    
-                    annos[0].setEnd(sequenceString.length());
                     
                 } else if (bSeq){
                     Sequence sequence = part.getSequence();

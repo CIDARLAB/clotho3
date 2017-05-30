@@ -755,7 +755,10 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         printDesignFields(disDeviceId);
         System.out.println();
                 /**/
-        updateDevice(persistor, disDeviceId, null, null, null, disDeviceChange, null, true);
+        Map<String, String> emptySeqRole = new HashMap<>();
+        emptySeqRole.put("sequence", "");
+        emptySeqRole.put("role", "");
+        updateDevice(persistor, disDeviceId, null, null, null, disDeviceChange, emptySeqRole, true);
         printDesignFields(disDeviceId);
         System.out.println();
         printDesignFields(content1);
@@ -766,9 +769,6 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
         //Test all update part arguments
         /**
-        Map<String, String> emptySeqRole = new HashMap<>();
-        emptySeqRole.put("sequence", "");
-        emptySeqRole.put("role", "");
         updateDevice(persistor, disDeviceId, "0", "0", newParams, null, emptySeqRole, false);
         printDesignFields(disDeviceId);
         System.out.println();
