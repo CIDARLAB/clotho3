@@ -234,11 +234,21 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         */
         
         // third main test (null cases) 
-        seqrole.put("role","nothing");
-        seqrole.put("sequence","nothing");
-        params.add(new Parameter("no ID", 2.0, "none", "none"));
-        ObjectId nullID2 = createPart(persistor,"none","none",seqrole,params,"none");
-
+        
+        // "\0" = null object (not string) in Java 
+        
+        // Third attempt: try/catch statement 
+        
+        try { 
+            seqrole.put("role",null);
+            seqrole.put("sequence",null);
+            params.add(new Parameter("no ID", 2.0, null, null));
+            ObjectId nullID2 = createPart(persistor,null,null,seqrole,params,null);
+        } catch (NullPointerException n) {
+            System.out.println(n);
+        }   
+            System.out.println("Exception caught!");
+            
         /////////////////////////////////////////////////////////////
         seqrole = new HashMap<>();
         seqrole.put("role", "CDS");
@@ -268,7 +278,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
         /* Fix the null case test */
         
-        System.out.println("Initialized nullID: " + nullID2.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
+        // System.out.println("Initialized nullID: " + nullID2.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
         
         System.out.println("Deleting pTac (Part)...");
         
