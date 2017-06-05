@@ -200,6 +200,16 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
             Devices and parts from testExamples()
         */
         
+        /*
+        Main author: David 
+        */
+        
+        /*
+        Edit: Jason (additional unit testing of the deleteDevice method) 
+        
+        Note: the null test does not yet work, but working on it 
+        */
+        
         Map<String, String> seqrole = new HashMap<>();
         ArrayList<Parameter> params = new ArrayList<>();
         ArrayList<String> idList = new ArrayList<>();
@@ -208,6 +218,24 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         seqrole.put("sequence", "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaatt");
         params.add(new Parameter("pTac", 676.3, "gene expression", "REU"));
         ObjectId pTac = createPart(persistor, "pTac", "p12", seqrole, params, "David T.");
+        
+        // secondary object test (with a person object) 
+        seqrole.put("role", "GENE");
+        seqrole.put("sequence", "actgactgactg");
+        params.add(new Parameter("pTac2", 676.3, "gene expression", "newgene"));
+        ObjectId pTac2 = createPart(persistor, "pTac2", "p12", seqrole, params, "Jason");
+        
+        // third (all null test) 
+        
+        // delete method should end up doing nothing 
+        /*
+        
+        seqrole.put("role", "nothing");
+        seqrole.put("sequence", null);
+        params.add(new Parameter(null, 0.0, null, null));
+        ObjectId nullID = createPart(persistor, null, null, seqrole, params, "nobody");
+        
+        */
 
         /////////////////////////////////////////////////////////////
         seqrole = new HashMap<>();
@@ -231,7 +259,10 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
                 
         System.out.println("Initialized pTac: " + pTac.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
         
+        System.out.println("Initialized pTac2: " + pTac2.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
+        
         System.out.println("Deleting pTac (Part)...");
+        
         //Should have YFP and Lacl Sensor in DB after delete
         delete(persistor, pTac, !deleteDevice);
         
@@ -240,12 +271,33 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         assertNotEquals(null, persistor.get(LaclSensor));        
         System.out.println("Deleting LaclSensor (Device)...");
         
+        // secondary null test 
+        
+        System.out.println("Deleting pTac (Second Part)...");
+        
+        /* Fix this error */ 
+        
+        // assertEquals(null, persistor.get(pTac2));
+        assertNotEquals(null, persistor.get(YFP));
+        assertNotEquals(null, persistor.get(LaclSensor));
+        System.out.println("Deleting LaclSensor (Part)...");
+        
         //Should not have any devices or parts left in DB
         delete(persistor, LaclSensor, deleteDevice);   
         
         assertEquals(null, persistor.get(pTac));
         assertEquals(null, persistor.get(YFP));
         assertEquals(null, persistor.get(LaclSensor));
+        
+        // secondary null test, make sure no parts and devices are left 
+        // after the method runs 
+        
+        // assertEquals(null, persistor.get(pTac2));
+        assertEquals(null, persistor.get(YFP));
+        assertEquals(null, persistor.get(LaclSensor));
+        
+        // confirm that the delete function is indeed a sucess 
+        System.out.println("No devices or parts left on the mongo database.");
     }
     //////////////////////////
     //      Debug tools     //
