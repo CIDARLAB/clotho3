@@ -207,35 +207,37 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         /*
         Edit: Jason (additional unit testing of the deleteDevice method) 
         
-        Note: the null test does not yet work, but working on it 
+        Note: the null test now works, 
+        but only with a null string (not with the "null" value) 
         */
         
         Map<String, String> seqrole = new HashMap<>();
         ArrayList<Parameter> params = new ArrayList<>();
         ArrayList<String> idList = new ArrayList<>();
 
+        // first object test (original gene object) 
+        
         seqrole.put("role", "PROMOTER");
         seqrole.put("sequence", "aacgatcgttggctgtgttgacaattaatcatcggctcgtataatgtgtggaattgtgagcgctcacaatt");
         params.add(new Parameter("pTac", 676.3, "gene expression", "REU"));
         ObjectId pTac = createPart(persistor, "pTac", "p12", seqrole, params, "David T.");
         
-        // secondary object test (with a person object) 
+        // secondary object test (with a new gene object) 
         seqrole.put("role", "GENE");
         seqrole.put("sequence", "actgactgactg");
-        params.add(new Parameter("pTac2", 676.3, "gene expression", "newgene"));
-        ObjectId pTac2 = createPart(persistor, "pTac2", "p12", seqrole, params, "Jason");
-        
-        // third (all null test) 
-        
-        // delete method should end up doing nothing 
-        /*
-        
-        seqrole.put("role", "nothing");
-        seqrole.put("sequence", null);
-        params.add(new Parameter(null, 0.0, null, null));
-        ObjectId nullID = createPart(persistor, null, null, seqrole, params, "nobody");
-        
+        params.add(new Parameter("pTac2", 123.4, "gene expression", "newgene"));
+        ObjectId pTac2 = createPart(persistor, "pTac2", "p11", seqrole, params, "Jason");
+                
+        /* delete method should end up doing nothing 
+        if the user puts in no role nor gene / sequence
+        as the required parameter(s)
         */
+        
+        // third main test (null cases) 
+        seqrole.put("role","nothing");
+        seqrole.put("sequence","nothing");
+        params.add(new Parameter("no ID", 2.0, "none", "none"));
+        ObjectId nullID2 = createPart(persistor,"none","none",seqrole,params,"none");
 
         /////////////////////////////////////////////////////////////
         seqrole = new HashMap<>();
@@ -261,6 +263,13 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
         System.out.println("Initialized pTac2: " + pTac2.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
         
+        // Null case test (the device should add nothing) 
+        System.out.println("Testing null case:");
+        
+        /* Fix the null case test */
+        
+        System.out.println("Initialized nullID: " + nullID2.getValue() + ", YFP: " + YFP.getValue() + ", LaclSensor: " + LaclSensor.getValue());
+        
         System.out.println("Deleting pTac (Part)...");
         
         //Should have YFP and Lacl Sensor in DB after delete
@@ -273,9 +282,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
         // secondary null test 
         
-        System.out.println("Deleting pTac (Second Part)...");
-        
-        /* Fix this error */ 
+        System.out.println("Deleting pTac2 (Second Part)...");
         
         // assertEquals(null, persistor.get(pTac2));
         assertNotEquals(null, persistor.get(YFP));
@@ -292,7 +299,8 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         // secondary null test, make sure no parts and devices are left 
         // after the method runs 
         
-        // assertEquals(null, persistor.get(pTac2));
+        // own version of YFP and LaclSensor, to avoid duplication 
+       
         assertEquals(null, persistor.get(YFP));
         assertEquals(null, persistor.get(LaclSensor));
         
