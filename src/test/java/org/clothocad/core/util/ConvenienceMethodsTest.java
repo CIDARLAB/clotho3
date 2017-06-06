@@ -239,6 +239,14 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         
         // Third attempt: try/catch statement 
         
+        /*
+        Purpose of the try/catch statement: if the user mistakenly / adversarily 
+        enters no role, sequence, nor values for the parameters in creating a new part,
+        then Clotho will be able to still store the reference from the user,
+        but the Java NullPointerException catch statement will 
+        throw an exception, and prevent the new part from being added in 
+        */
+        
         try { 
             seqrole.put("role",null);
             seqrole.put("sequence",null);
@@ -450,6 +458,11 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
     /*
      *  Author: Jerome 
      */
+    
+    /*
+    * Edit: Jason (for the more robust test cases) 
+    */
+    
     public void printDesignFields(ObjectId bioId){
         BioDesign bio = persistor.get(BioDesign.class, bioId);
         
@@ -583,6 +596,7 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         //printDesignFields(disPartId);
         System.out.println();
         printDesignFields(disDeviceId);
+        
         /*  Persistor   persistor,
             ObjectId    obj,
             String      authName,
@@ -594,12 +608,18 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println();
         System.out.println(" ==== Test 1: Parts    ==== ");
         System.out.println();
+        
         // Test Nothing
         /**
         updatePart(persistor, disPartId, null, null, null, null);
         printDesignFields(disPartId);
         System.out.println();
         /**/
+        
+        System.out.println("Testing the null case for updatePart(...): ");
+        updatePart(persistor, disPartId, null, null, null, null);
+        printDesignFields(disPartId);
+        System.out.println();
         
         // Test displayId
         /**
@@ -608,10 +628,21 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         System.out.println();
         /**/
         
+        System.out.println("Testing the displayId for updatePart(...): ");
+        updatePart(persistor, disPartId, "1", null, null, null);
+        printDesignFields(disPartId);
+        System.out.println(); 
+        
         // Test Name
         /**
         updatePart(persistor, disPartId, null, "2", null, null);
         printDesignFields(disPartId);
+        **/
+        
+        System.out.println("Testing the name for updatePart(...): ");
+        updatePart(persistor, disPartId, null, "2", null, null);
+        printDesignFields(disPartId);
+        System.out.println();
         
         // Test Parameters
         //No original parameters
@@ -620,6 +651,11 @@ public class ConvenienceMethodsTest extends AuthorizedShiroTest {
         printDesignFields(disPartId);
         System.out.println();
         /**/
+        
+        System.out.println("Testing the parameters for updatePart(...): ");
+        updatePart(persistor, disPartId, null, null, newParams, null);
+        printDesignFields(disPartId);
+        System.out.println();
         
         //clear parameters
         /**

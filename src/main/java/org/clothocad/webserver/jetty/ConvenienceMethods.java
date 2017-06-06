@@ -1509,6 +1509,7 @@ public class ConvenienceMethods {
     //////////////////////
     //      Delete      //
     //////////////////////
+    @SuppressWarnings("CallToPrintStackTrace")
     public static boolean delete(Persistor persistor, ObjectId id, boolean bDevice) {
         try {
             BioDesign top = persistor.get(BioDesign.class, id);
@@ -1872,6 +1873,12 @@ public class ConvenienceMethods {
         persistor.save(bio, true);
     }
 
+    
+    /*
+    Note: the updateBioDesign(...) is called as a wrapper for the updatePart(...) 
+    and updateDevice(...) functions 
+    */    
+    
     public static void updatePart(
             Persistor persistor,
             ObjectId obj,
