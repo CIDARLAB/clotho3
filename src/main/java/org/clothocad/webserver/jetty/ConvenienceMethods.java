@@ -735,7 +735,7 @@ public class ConvenienceMethods {
                 Sequence seq = new Sequence(name, sequence, auth);
                 Annotation seqAnno = seq.createAnnotation(name, 1, sequence.length(), true, auth);
                 Feature annoFeat = new Feature(name, role, auth);
-                
+
                 //Create a feature set with our feature
                 HashSet<Feature> setFeat = new HashSet();
                 setFeat.add(annoFeat);
@@ -743,7 +743,7 @@ public class ConvenienceMethods {
                 BasicModule bMod = new BasicModule(name, role, setFeat, auth);
                 //Attach BasicModule to BioDesign
                 device.setModule(bMod);
-                
+
                 //Chain objects together
                 //Search and attach all other annotations from assembly to sequence
                 annotateMe(persistor, seq, partIDs);
@@ -755,7 +755,7 @@ public class ConvenienceMethods {
                 seq.addAnnotation(seqAnno);
                 //Attach sequence to part
                 devPart.setSequence(seq);
-                
+
             } else if (bSeq) {
 
                 //Create objects
@@ -1121,9 +1121,9 @@ public class ConvenienceMethods {
     //Exact uses find(), broken for parameters
     public static Map<String, Map<String, String>> getPart(Persistor persistor, String name, String displayID, String role, String sequence, List<Parameter> parameters, boolean exact) {
         HashMap<String, Object> query = new HashMap<>();
-        Iterable<ObjBase> nameDisplayParameterList = null;
-        Iterable<ObjBase> sequenceList = null;
-        Iterable<ObjBase> roleList = null;
+        List<ObjBase> nameDisplayParameterList = null;
+        List<ObjBase> sequenceList = null;
+        List<ObjBase> roleList = null;
 
         //nameDisplayParameter list
         if (displayID != null) {
@@ -1150,7 +1150,10 @@ public class ConvenienceMethods {
             }
         }
         if (!query.isEmpty()) {
-            nameDisplayParameterList = (exact) ? persistor.find(query) : persistor.findRegex(query);
+            nameDisplayParameterList = (List) ((exact) ? persistor.find(query) : persistor.findRegex(query));
+            if (nameDisplayParameterList.isEmpty()) {
+                nameDisplayParameterList = null;
+            }
             query = new HashMap<>();
         }
 
@@ -1160,7 +1163,10 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("sequence", sequence);
-            sequenceList = (exact) ? persistor.find(query) : persistor.findRegex(query);
+            sequenceList = (List) ((exact) ? persistor.find(query) : persistor.findRegex(query));
+            if (sequenceList.isEmpty()) {
+                sequenceList = null;
+            }
             query = new HashMap<>();
         }
 
@@ -1170,8 +1176,10 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("role", role);
-            roleList = (exact) ? persistor.find(query) : persistor.findRegex(query);
-            query = new HashMap<>();
+            roleList = (List) ((exact) ? persistor.find(query) : persistor.findRegex(query));
+            if (roleList.isEmpty()) {
+                roleList = null;
+            }
         }
 
         //Retrieve objects that matched
@@ -1191,12 +1199,16 @@ public class ConvenienceMethods {
         If for some reason it wasn't found by any of the above, roleList will
         create an entry with its own name, displayID, and role.
          */
+        //Track if biodesign found
+        ArrayList<String> founds = new ArrayList<>();
+
         if (nameDisplayParameterList != null) {
             for (ObjBase each : nameDisplayParameterList) {
                 BioDesign bd = persistor.get(BioDesign.class, each.getId());
                 if (bd != null) {
-                    if (!returnList.containsKey(bd.getName())) {
+                    if (!returnList.containsKey(bd.getId().getValue())) {
                         Map<String, String> insert = new HashMap<>();
+                        founds.add(bd.getName());
                         insert.put("name", bd.getName());
                         insert.put("id", bd.getId().toString());
                         if (bd.getDisplayID() != null) {
@@ -1212,64 +1224,52 @@ public class ConvenienceMethods {
                             }
                             insert.put("parameters", build + "]");
                         }
-                        returnList.put(bd.getName(), insert);
+                        if (bd.getParts() != null) {
+                            for (Part p : bd.getParts()) {
+                                if (p.getSequence() != null && p.getName().equalsIgnoreCase(bd.getName())) {
+                                    insert.put("sequence", p.getSequence().getSequence());
+                                    if (p.getSequence().getAnnotations() != null) {
+                                        for (Annotation anno : p.getSequence().getAnnotations()) {
+                                            if (anno.getFeature() != null && anno.getFeature().getName().equalsIgnoreCase(bd.getName()) && !insert.containsKey("role")) {
+                                                insert.put("role", anno.getFeature().getRole());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (bd.getModule() != null && !insert.containsKey("role")) {
+                            insert.put("role", bd.getModule().getRole());
+                        }
+                        returnList.put(bd.getId().getValue(), insert);
                     }
                 }
             }
         }
+        HashMap<String, String> recur;
+
         if (sequenceList != null) {
-            for (ObjBase each : sequenceList) {
-                Sequence s = persistor.get(Sequence.class, each.getId());
-                if (s != null) {
-                    if (returnList.containsKey(s.getName())) {
-                        returnList.get(s.getName()).put("sequence", s.getSequence());
-                    } else {
-                        HashMap<String, String> insert = new HashMap<>();
-                        insert.put("name", s.getName());
-                        if (s.getDisplayID() != null) {
-                            insert.put("displayID", s.getDisplayID());
-                        }
-                        insert.put("sequence", s.getSequence());
-                        returnList.put(s.getName(), insert);
-                    }
+            for (ObjBase s : sequenceList) {
+                recur = new HashMap<>();
+                if (!founds.contains(s.getName())) {
+                    recur.put("name", s.getName());
+                    recur.put("displayID", s.getDisplayID());
+                    returnList.putAll(getPart(persistor, recur, parameters, exact));
                 }
             }
         }
+
         if (roleList != null) {
-            for (ObjBase each : roleList) {
-                if (persistor.get(each.getId()).getClass().equals(Feature.class)) {
-                    Feature f = (Feature) persistor.get(each.getId());
-                    if (f != null) {
-                        if (returnList.containsKey(f.getName())) {
-                            returnList.get(f.getName()).put("role", f.getRole());
-                        } else {
-                            HashMap<String, String> insert = new HashMap<>();
-                            insert.put("name", f.getName());
-                            if (f.getDisplayID() != null) {
-                                insert.put("displayID", f.getDisplayID());
-                            }
-                            insert.put("role", f.getRole());
-                            returnList.put(f.getName(), insert);
-                        }
-                    }
-                } else {
-                    Module m = (Module) persistor.get(each.getId());
-                    if (m != null) {
-                        if (returnList.containsKey(m.getName())) {
-                            returnList.get(m.getName()).put("role", m.getRole());
-                        } else {
-                            HashMap<String, String> insert = new HashMap<>();
-                            insert.put("name", m.getName());
-                            if (m.getDisplayID() != null) {
-                                insert.put("displayID", m.getDisplayID());
-                            }
-                            insert.put("role", m.getRole());
-                            returnList.put(m.getName(), insert);
-                        }
-                    }
+            for (ObjBase r : roleList) {
+                if (!founds.contains(r.getName())) {
+                    recur = new HashMap<>();
+                    recur.put("name", r.getName());
+                    recur.put("displayID", r.getDisplayID());
+                    returnList.putAll(getPart(persistor, recur, parameters, exact));
                 }
             }
         }
+
         return returnList;
     }
 
@@ -1278,9 +1278,7 @@ public class ConvenienceMethods {
         ArrayList<String> ids = new ArrayList<>();
 
         for (String key : res.keySet()) {
-            if (res.get(key).containsKey("id")) {
-                ids.add(res.get(key).get("id"));
-            }
+            ids.add(key);
         }
 
         return ids;
@@ -1307,11 +1305,11 @@ public class ConvenienceMethods {
     public static Map<String, Map<String, String>> getDevice(Persistor persistor, String name, String displayID, String role, String sequence, List<String> parts, List<Parameter> parameters, boolean exact) {
 
         HashMap<String, Object> query = new HashMap<>();
-        Iterable<ObjBase> nameDisplayParameterList = null;
-        Iterable<ObjBase> sequenceList = null;
-        Iterable<ObjBase> roleList = null;
+        List<ObjBase> nameDisplayParameterList = null;
+        List<ObjBase> sequenceList = null;
+        List<ObjBase> roleList = null;
 
-        //nameDisplayParameter list
+        //nameDisplayParameter & Parts list
         if (displayID != null) {
             query.put("displayID", displayID);
         }
@@ -1345,7 +1343,10 @@ public class ConvenienceMethods {
         }
 
         if (!query.isEmpty()) {
-            nameDisplayParameterList = (exact) ? persistor.find(query) : persistor.findRegex(query);
+            nameDisplayParameterList = (List) ((exact) ? persistor.find(query) : persistor.findRegex(query));
+            if (nameDisplayParameterList.isEmpty()) {
+                nameDisplayParameterList = null;
+            }
             query = new HashMap<>();
         }
 
@@ -1355,7 +1356,10 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("sequence", sequence);
-            sequenceList = (exact) ? persistor.find(query) : persistor.findRegex(query);
+            sequenceList = (List) ((exact) ? persistor.find(query) : persistor.findRegex(query));
+            if (sequenceList.isEmpty()) {
+                sequenceList = null;
+            }
             query = new HashMap<>();
         }
 
@@ -1365,13 +1369,14 @@ public class ConvenienceMethods {
                 query.put("name", name);
             }
             query.put("role", role);
-            roleList = (exact) ? persistor.find(query) : persistor.findRegex(query);
-            query = new HashMap<>();
+            roleList = (List) ((exact) ? persistor.find(query) : persistor.findRegex(query));
+            if (roleList.isEmpty()) {
+                roleList = null;
+            }
         }
 
         //Retrieve objects that matched
         Map<String, Map<String, String>> returnList = new HashMap<>();
-
         /*
         Assumptions:
         
@@ -1386,13 +1391,18 @@ public class ConvenienceMethods {
         If for some reason it wasn't found by any of the above, roleList will
         create an entry with its own name, displayID, and role.
          */
+
+        //Track if biodesign found
+        ArrayList<String> founds = new ArrayList<>();
+
         if (nameDisplayParameterList != null) {
             for (ObjBase each : nameDisplayParameterList) {
 
                 BioDesign bd = persistor.get(BioDesign.class, each.getId());
                 if (bd != null) {
-                    if (!returnList.containsKey(bd.getName())) {
+                    if (!returnList.containsKey(bd.getId().getValue())) {
                         Map<String, String> insert = new HashMap<>();
+                        founds.add(bd.getName());
                         insert.put("name", bd.getName());
                         insert.put("id", bd.getId().toString());
                         if (bd.getDisplayID() != null) {
@@ -1408,6 +1418,14 @@ public class ConvenienceMethods {
                             }
                             insert.put("parameters", build + "]");
                         }
+
+                        if (bd.getModule() != null) {
+                            if (!bd.getModule().getRole().equalsIgnoreCase(role)) {
+                                continue;
+                            }
+                            insert.put("role", bd.getModule().getRole());
+                        }
+
                         //Get Device also needs to list parts.
                         if (bd.getParts() != null) {
                             System.out.println("Query found parts for " + bd.getName());
@@ -1422,73 +1440,58 @@ public class ConvenienceMethods {
                                                 pbuild += "', role:'" + anno.getFeature().getName();
                                                 break;
                                             }
+
+                                            if (anno.getFeature().getName().equalsIgnoreCase(bd.getName()) && !insert.containsKey("role")) {
+                                                insert.put("role", anno.getFeature().getRole());
+                                            }
                                         }
                                     }
                                     pbuild += "', sequence:'" + p.getSequence().getSequence();
+                                    if (p.getName().equalsIgnoreCase(bd.getName())) {
+                                        insert.put("sequence", p.getSequence().getSequence());
+                                        founds.add(p.getSequence().getSequence());
+                                    }
                                 }
                                 pbuild += "'},";
                             }
                             insert.put("parts", pbuild + "]");
                         }
                         System.out.println(insert.values());
-                        returnList.put(bd.getName(), insert);
+                        returnList.put(bd.getId().getValue(), insert);
                     }
                 }
             }
         }
+
+        HashMap<String, String> recur;
+
+        HashMap<String, List> subObjs = new HashMap<>();
+        subObjs.put("parts", parts);
+        subObjs.put("parameters", parameters);
+
         if (sequenceList != null) {
-            for (ObjBase each : sequenceList) {
-                Sequence s = persistor.get(Sequence.class, each.getId());
-                if (s != null) {
-                    if (returnList.containsKey(s.getName())) {
-                        returnList.get(s.getName()).put("sequence", s.getSequence());
-                    } else {
-                        HashMap<String, String> insert = new HashMap<>();
-                        insert.put("name", s.getName());
-                        if (s.getDisplayID() != null) {
-                            insert.put("displayID", s.getDisplayID());
-                        }
-                        insert.put("sequence", s.getSequence());
-                        returnList.put(s.getName(), insert);
-                    }
+            for (ObjBase s : sequenceList) {
+                recur = new HashMap<>();
+                if (!founds.contains(s.getName())) {
+                    recur.put("name", s.getName());
+                    recur.put("displayID", s.getDisplayID());
+
+                    returnList.putAll(getDevice(persistor, recur, subObjs, exact));
                 }
             }
         }
+
         if (roleList != null) {
-            for (ObjBase each : roleList) {
-                if (persistor.get(each.getId()).getClass().equals(Feature.class)) {
-                    Feature f = (Feature) persistor.get(each.getId());
-                    if (f != null) {
-                        if (returnList.containsKey(f.getName())) {
-                            returnList.get(f.getName()).put("role", f.getRole());
-                        } else {
-                            HashMap<String, String> insert = new HashMap<>();
-                            insert.put("name", f.getName());
-                            if (f.getDisplayID() != null) {
-                                insert.put("displayID", f.getDisplayID());
-                            }
-                            insert.put("role", f.getRole());
-                            returnList.put(f.getName(), insert);
-                        }
-                    }
-                } else {
-                    Module m = (Module) persistor.get(each.getId());
-                    if (m != null) {
-                        if (returnList.containsKey(m.getName())) {
-                            returnList.get(m.getName()).put("role", m.getRole());
-                        } else {
-                            HashMap<String, String> insert = new HashMap<>();
-                            insert.put("name", m.getName());
-                            if (m.getDisplayID() != null) {
-                                insert.put("displayID", m.getDisplayID());
-                            }
-                            insert.put("role", m.getRole());
-                            returnList.put(m.getName(), insert);
-                        }
-                    }
+            for (ObjBase r : roleList) {
+                if (!founds.contains(r.getName())) {
+                    recur = new HashMap<>();
+                    recur.put("name", r.getName());
+                    recur.put("displayID", r.getDisplayID());
+                    returnList.putAll(getDevice(persistor, recur, subObjs, exact));
                 }
             }
         }
+
         return returnList;
     }
 
@@ -1497,9 +1500,7 @@ public class ConvenienceMethods {
         ArrayList<String> ids = new ArrayList<>();
 
         for (String key : res.keySet()) {
-            if (res.get(key).containsKey("id")) {
-                ids.add(res.get(key).get("id"));
-            }
+            ids.add(key);
         }
 
         return ids;
@@ -1727,7 +1728,7 @@ public class ConvenienceMethods {
         // Update biodesign's subPartIds
         if (subPartIds != null) {
             // Check for null pointer. Should always be true.
-            
+
             if (bio.getParts().size() > 0) {
 
                 String sequenceString = "";
@@ -1781,8 +1782,7 @@ public class ConvenienceMethods {
 
                     seq.getAnnotations().clear();
                     annotateMe(persistor, seq, subPartIds);
-                    
-                    
+
                     if (bio.getModule() != null) {
                         if (seqAnno.getFeature() != null) {
                             featSet.add(seqAnno.getFeature());
@@ -1825,7 +1825,7 @@ public class ConvenienceMethods {
 
                     annos[0].setEnd(sequenceString.length());
                     annos[0].getFeature().setRole(roleString);
-                    
+
                     if (bio.getModule() != null) {
                         bio.getModule().setRole(roleString);
                     } else {
@@ -1835,8 +1835,8 @@ public class ConvenienceMethods {
                         bio.setModule(module);
                         bio.getModule().setRole(roleString);
                     }
-                    
-                } else if (bSeq){
+
+                } else if (bSeq) {
 
                     Sequence sequence = part.getSequence();
                     sequence.setSequence(sequenceString);
@@ -1873,12 +1873,10 @@ public class ConvenienceMethods {
         persistor.save(bio, true);
     }
 
-    
     /*
     Note: the updateBioDesign(...) is called as a wrapper for the updatePart(...) 
     and updateDevice(...) functions 
-    */    
-    
+     */
     public static void updatePart(
             Persistor persistor,
             ObjectId obj,

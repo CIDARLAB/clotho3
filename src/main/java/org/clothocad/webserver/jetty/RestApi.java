@@ -230,6 +230,12 @@ public class RestApi extends HttpServlet {
 
         JSONObject body = getRequestBody(request.getReader());;
 
+        
+        
+        System.out.println("Received a POST request: ");
+        System.out.println(body.toString());
+        
+        
         // Input
         String username = body.has("username") ? body.getString("username") : null;
         String password = body.has("password") ? body.getString("password") : null;
@@ -448,8 +454,7 @@ public class RestApi extends HttpServlet {
                         option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
                         ids = getPartID(persistor, query, params, Boolean.valueOf(option));
 
-                        jsonRes = new JSONObject(ids);
-                        result = jsonRes.toString();
+                        result = ids.toString();
                         break;
 
                     case "convenienceDevice":
@@ -532,9 +537,8 @@ public class RestApi extends HttpServlet {
 
                         option = (option != null && option.equalsIgnoreCase("exact")) ? "true" : "false";
                         ids = getDeviceID(persistor, query, subObjects, Boolean.valueOf(option));
-
-                        jsonDeviceRes = new JSONObject(ids);
-                        result = jsonDeviceRes.toString();
+                        
+                        result = ids.toString();
                         break;
                 }
                 break;

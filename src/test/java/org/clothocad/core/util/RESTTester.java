@@ -266,12 +266,20 @@ public class RESTTester {
         */
         //{'createSeqFromParts':'true','role':'Toxicity Test','objectName':'d30','partIDs':'5902c964ce369d0f73160aff,5902c964ce369d0f73160b1b,5902c964ce369d0f73160b06,5902c964ce369d0f73160aea,5902c964ce369d0f73160ae3','username':'mardian'}
         
-        String jsonString = "{'createSeqFromParts':'true','role':'Toxicity Test','objectName':'d30','partIDs':'59039cba6832d7245c6692ab,59039cbb6832d7245c6692b2','username':'mardian'}";
+        String jsonString = "{'createSeqFromParts':'true','objectName':'PhlF_DC-01_LuxB','partIDs':'5939eb900e19583ca7310470','username':'robwarden'}";
         URL url = new URL(this.url + "/create/convenienceDevice/");
 
         String output = HTTPReq(url, jsonString, "POST");
         System.out.println(output);
+        
+        String queryString = "{'objectName':'PhlF_DC-01_LuxB'}";
+        URL qurl = new URL(this.url + "/get/convenienceDeviceID/");
+        
+        output = HTTPReq(qurl, queryString, "POST");
+        System.out.println(output);
     
+        
+        
     }
 //    //@Test
 //    public void timeToBulkCreate() throws MalformedURLException, IOException, ProtocolException, NoSuchAlgorithmException, KeyManagementException

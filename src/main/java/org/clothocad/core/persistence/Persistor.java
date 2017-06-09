@@ -185,7 +185,6 @@ public class Persistor {
 //            }
 //        }
 //    }
-
     public Set<String> getUserPermissionInfo(ObjectId id) {
         return null;
     }
@@ -206,7 +205,6 @@ public class Persistor {
 //        log.info("Persistor.save execution beginning...");
 //        long start = System.currentTimeMillis();
 
-
 // *auth*
 //        Subject currentSubject = SecurityUtils.getSubject();
 //        if (!currentSubject.isAuthenticated()
@@ -214,11 +212,10 @@ public class Persistor {
 //            throw new AuthorizationException("Anonymous users cannot create or edit objects.");
 //        }
         validate(obj);
-        
+
 //        long time = System.currentTimeMillis();
 //        log.info("SecurityUtils subject validation time: " + (time-start) + " ms");
 //        start = time;
-
         Set<ObjBase> relevantObjects = getObjBaseSet(obj);
 
         //assign ids to no-id objects
@@ -227,19 +224,16 @@ public class Persistor {
                 object.setId(new ObjectId());
             }
         }
-        
+
 //        time = System.currentTimeMillis();
 //        log.info("Assigning IDs to no-id objects time : " + (time-start) + " ms");
 //        start = time;
-
         // if can't change original object, abort
-
 // *auth*
 //        if (has(obj.getId())
 //                && !currentSubject.isPermitted("data:edit:" + obj.getId().toString())) {
 //            throw new AuthorizationException("Cannot edit " + obj.getId());
 //        }
-
         Set<ObjBase> filteredObjects = relevantObjects;
 //        Set<ObjBase> filteredObjects = new HashSet();
 //
@@ -254,11 +248,10 @@ public class Persistor {
 //                realm.addPermissions(currentSubject.getPrincipal().toString(), ClothoPermission.OWN.actions, object.getId(), false);
 //            }
 //        }
-        
+
 //        time = System.currentTimeMillis();
 //        log.info("Checking privileges of pre-existing objects & giving ownership of new objects time : " + (time-start) + " ms");
 //        start = time;
-
         if (!overwrite) {
             Set<ObjBase> modifiedObjects = new HashSet<>();
             for (ObjBase object : filteredObjects) {
@@ -273,13 +266,13 @@ public class Persistor {
 //        time = System.currentTimeMillis();
 //        log.info("Modified Objects loop time : " + (time-start) + " ms");
 //        start = time;
-        
+
         //recurse in persistor
         connection.saveAll(filteredObjects);
         for (ObjBase object : filteredObjects) {
             //globalTrie.put(object);
         }
-        
+
 //        time = System.currentTimeMillis();
 //        log.info("Recurse in persistor and build global trie time : " + (time - start) + " ms");
 //        System.out.println();
@@ -336,8 +329,8 @@ public class Persistor {
 //        checkPriv(id, "delete");
         connection.delete(id);
     }
-    
-    public void delete(Collection<ObjBase> objects){
+
+    public void delete(Collection<ObjBase> objects) {
         connection.delete(objects);
     }
 
@@ -517,13 +510,13 @@ public class Persistor {
         for (ObjBase obj : result) {
 //            try {
 //                checkPriv(obj.getId(), "view");
-                filteredResult.add(obj);
+            filteredResult.add(obj);
 //            } catch (AuthorizationException e) {
 //            }
         }
         return filteredResult;
     }
-    
+
     public JongoConnection.Pagination findByPage(String query, String sortOrder, int pageSize) {
 
         JongoConnection.Pagination result = connection.getByPage(query, sortOrder, pageSize);
@@ -531,12 +524,12 @@ public class Persistor {
         return result;
     }
 
-    public Iterable<ObjBase> findRegex(Map<String, Object> query){
+    public Iterable<ObjBase> findRegex(Map<String, Object> query) {
         List<ObjBase> result = connection.getRegex(query);
-        
+
         return result;
     }
-    
+
     private List<Map<String, Object>> getConvertedData(Schema originalSchema, Set<String> fields) {
         List<Map<String, Object>> results = new ArrayList<>();
 
@@ -712,16 +705,16 @@ public class Persistor {
     }
 
     private List<Map<String, Object>> filterDataByQuery(List<Map<String, Object>> convertedData, Map<String, Object> spec) {
-        
-    //Should filter inputted convertedData according to inputted spec.
+
+        //Should filter inputted convertedData according to inputted spec.
         List<Map<String, Object>> filteredObjects = new ArrayList<>();
-        
+
         //For each converted Data
         for (Map<String, Object> object : convertedData) {
             //assume it matches and add it to the filtered set.
             filteredObjects.add(object);
             for (Map.Entry<String, Object> specification : spec.entrySet()) {
-                
+
                 //When the object fails any test, remove it from the filtered set and move to the next object
                 if (object.get(specification.getKey()) != specification.getValue()) {
                     filteredObjects.remove(object);
@@ -792,8 +785,8 @@ public class Persistor {
     public <T extends ObjBase> Collection<T> getAll(Class<T> aClass) {
         return connection.getAll(aClass);
     }
-    
-    public Collection<ObjBase> listAll(){
+
+    public Collection<ObjBase> listAll() {
         return connection.listAll();
     }
 
